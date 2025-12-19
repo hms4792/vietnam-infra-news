@@ -212,7 +212,8 @@ class EmailNotifier:
     def create_html_briefing(self, data: Dict) -> str:
         top_news_html = ""
         for article in data.get("top_articles", [])[:5]:
-            title = article.get("title", "")[:80]
+            # Use English title/summary
+            title = article.get("summary_en", article.get("title", ""))[:80]
             source = article.get("source", "")
             date = article.get("published", "")
             top_news_html += f'<div style="background:white;padding:12px;margin:8px 0;border-radius:6px;border-left:4px solid #0d9488;"><strong>{title}</strong><br><small style="color:#666;">{source} | {date}</small></div>'
