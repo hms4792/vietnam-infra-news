@@ -1,6 +1,5 @@
 """
 Vietnam Infrastructure News Dashboard Updater
-Updates dashboard HTML and Excel database files
 """
 import json
 import logging
@@ -12,15 +11,12 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 try:
     import openpyxl
-    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from openpyxl.styles import Font, PatternFill, Alignment
     OPENPYXL_AVAILABLE = True
 except ImportError:
     OPENPYXL_AVAILABLE = False
 
-from config.settings import (
-    DATA_DIR, OUTPUT_DIR, TEMPLATE_DIR,
-    DASHBOARD_FILENAME, DATABASE_FILENAME
-)
+from config.settings import DATA_DIR, OUTPUT_DIR
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -30,31 +26,18 @@ class DashboardUpdater:
     """Updates HTML dashboard with latest data"""
     
     def __init__(self):
-        self.template_path = TEMPLATE_DIR / "dashboard_template.html"
-        self.output_path = OUTPUT_DIR / DASHBOARD_FILENAME
+        self.output_path = OUTPUT_DIR / "vietnam_dashboard.html"
     
     def update(self, articles: List[Dict]) -> str:
-        """Update dashboard HTML with new data"""
-        # Generate JavaScript data
+        """Generate dashboard HTML with real data"""
         js_data = self._generate_js_data(articles)
+        html = self._generate_full_html(articles, js_data)
         
-        # Read template or create new
-        if self.template_path.exists():
-            with open(self.template_path, 'r', encoding='utf-8') as f:
-                template = f.read()
-        else:
-            template = self._get_default_template()
-        
-        # Replace data placeholder
-        html = template.replace('const BACKEND_DATA = [];', f'const BACKEND_DATA = {js_data};')
-        html = html.replace('{{LAST_UPDATED}}', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-        
-        # Save
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(self.output_path, 'w', encoding='utf-8') as f:
             f.write(html)
         
-        logger.info(f"Dashboard updated: {self.output_path}")
+        logger.info(f"Dashboard updated with {len(articles)} articles: {self.output_path}")
         return str(self.output_path)
     
     def _generate_js_data(self, articles: List[Dict]) -> str:
@@ -62,6 +45,16 @@ class DashboardUpdater:
         js_articles = []
         
         for i, article in enumerate(articles, 1):
+            # Get title - prefer English
+            title_en = article.get("title", "")
+            title_ko = article.get("summary_ko", title_en)[:100]
+            title_vi = article.get("summary_vi", title_en)[:100]
+            
+            # Get summary
+            summary_en = article.get("summary_en", article.get("summary", ""))
+            summary_ko = article.get("summary_ko", summary_en)
+            summary_vi = article.get("summary_vi", summary_en)
+            
             js_article = {
                 "id": i,
                 "date": article.get("published", datetime.now().strftime("%Y-%m-%d")),
@@ -70,14 +63,14 @@ class DashboardUpdater:
                 "province": article.get("province", "Vietnam"),
                 "source": article.get("source", "Unknown"),
                 "title": {
-                    "ko": article.get("summary_ko", article.get("title", ""))[:100],
-                    "en": article.get("title", ""),
-                    "vi": article.get("summary_vi", article.get("title", ""))[:100]
+                    "ko": title_ko,
+                    "en": title_en,
+                    "vi": title_vi
                 },
                 "summary": {
-                    "ko": article.get("summary_ko", ""),
-                    "en": article.get("summary_en", article.get("summary", "")),
-                    "vi": article.get("summary_vi", "")
+                    "ko": summary_ko,
+                    "en": summary_en,
+                    "vi": summary_vi
                 },
                 "url": article.get("url", "")
             }
@@ -85,94 +78,212 @@ class DashboardUpdater:
         
         return json.dumps(js_articles, ensure_ascii=False, indent=2)
     
-    def _get_default_template(self) -> str:
-        """Return default dashboard template"""
-        return """<!DOCTYPE html>
-<html lang="ko">
+    def _generate_full_html(self, articles: List[Dict], js_data: str) -> str:
+        """Generate complete dashboard HTML"""
+        
+        # Calculate stats
+        area_counts = {"Environment": 0, "Energy Develop.": 0, "Urban Develop.": 0}
+        today = datetime.now().strftime("%Y-%m-%d")
+        today_count = 0
+        
+        for article in articles:
+            area = article.get("area", "")
+            if area in area_counts:
+                area_counts[area] += 1
+            if article.get("published", "").startswith(today):
+                today_count += 1
+        
+        return f'''<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vietnam Infrastructure News Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .news-card:hover {{ transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }}
+        .tab-active {{ border-bottom: 3px solid #0d9488; color: #0d9488; font-weight: 600; }}
+    </style>
 </head>
-<body class="bg-gray-50">
-    <div class="max-w-7xl mx-auto p-4">
-        <h1 class="text-2xl font-bold text-teal-700 mb-4">Vietnam Infrastructure News</h1>
-        <p class="text-sm text-gray-500 mb-4">Last Updated: {{LAST_UPDATED}}</p>
-        <div id="news-container"></div>
-    </div>
+<body class="bg-gray-50 min-h-screen">
+    <header class="bg-gradient-to-r from-teal-600 to-emerald-600 text-white py-6 px-4 shadow-lg">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-2xl md:text-3xl font-bold">🇻🇳 Vietnam Infrastructure News</h1>
+            <p class="text-teal-100 mt-1">Daily Intelligence Dashboard</p>
+            <p class="text-sm text-teal-200 mt-2">Last Updated: {datetime.now().strftime("%Y-%m-%d %H:%M")}</p>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-4">
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-xl p-4 shadow-md">
+                <div class="text-3xl font-bold text-teal-600">{len(articles)}</div>
+                <div class="text-sm text-gray-500">Total Articles</div>
+            </div>
+            <div class="bg-white rounded-xl p-4 shadow-md">
+                <div class="text-3xl font-bold text-green-600">{area_counts["Environment"]}</div>
+                <div class="text-sm text-gray-500">Environment</div>
+            </div>
+            <div class="bg-white rounded-xl p-4 shadow-md">
+                <div class="text-3xl font-bold text-amber-600">{area_counts["Energy Develop."]}</div>
+                <div class="text-sm text-gray-500">Energy</div>
+            </div>
+            <div class="bg-white rounded-xl p-4 shadow-md">
+                <div class="text-3xl font-bold text-purple-600">{area_counts["Urban Develop."]}</div>
+                <div class="text-sm text-gray-500">Urban Dev</div>
+            </div>
+        </div>
+
+        <!-- Language Tabs -->
+        <div class="bg-white rounded-xl shadow-md mb-6">
+            <div class="flex border-b">
+                <button onclick="setLanguage('en')" id="tab-en" class="px-6 py-3 tab-active">English</button>
+                <button onclick="setLanguage('ko')" id="tab-ko" class="px-6 py-3 text-gray-500 hover:text-teal-600">한국어</button>
+                <button onclick="setLanguage('vi')" id="tab-vi" class="px-6 py-3 text-gray-500 hover:text-teal-600">Tiếng Việt</button>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white rounded-xl shadow-md p-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Area</label>
+                    <select id="filterArea" onchange="filterNews()" class="w-full border rounded-lg p-2">
+                        <option value="">All Areas</option>
+                        <option value="Environment">Environment</option>
+                        <option value="Energy Develop.">Energy Development</option>
+                        <option value="Urban Develop.">Urban Development</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Source</label>
+                    <select id="filterSource" onchange="filterNews()" class="w-full border rounded-lg p-2">
+                        <option value="">All Sources</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                    <input type="text" id="searchInput" onkeyup="filterNews()" placeholder="Search..." class="w-full border rounded-lg p-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                    <input type="date" id="filterDate" onchange="filterNews()" class="w-full border rounded-lg p-2">
+                </div>
+            </div>
+        </div>
+
+        <!-- News List -->
+        <div class="bg-white rounded-xl shadow-md p-4">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">📰 Latest News <span id="newsCount" class="text-sm font-normal text-gray-500"></span></h2>
+            <div id="newsList" class="space-y-3"></div>
+        </div>
+    </main>
+
     <script>
-        const BACKEND_DATA = [];
+        const BACKEND_DATA = {js_data};
         
-        function renderNews() {
-            const container = document.getElementById('news-container');
-            container.innerHTML = BACKEND_DATA.slice(0, 20).map(n => `
-                <div class="bg-white p-4 rounded-lg shadow mb-2">
-                    <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">${n.sector}</span>
-                    <span class="text-xs text-gray-500 ml-2">${n.province}</span>
-                    <h3 class="font-semibold mt-2">${n.title.en}</h3>
-                    <p class="text-sm text-gray-600 mt-1">${n.summary.en}</p>
-                    <p class="text-xs text-gray-400 mt-2">${n.date} | ${n.source}</p>
+        let currentLang = 'en';
+        let filteredData = [...BACKEND_DATA];
+        
+        function setLanguage(lang) {{
+            currentLang = lang;
+            document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.remove('tab-active'));
+            document.getElementById('tab-' + lang).classList.add('tab-active');
+            renderNews();
+        }}
+        
+        function filterNews() {{
+            const area = document.getElementById('filterArea').value;
+            const source = document.getElementById('filterSource').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const date = document.getElementById('filterDate').value;
+            
+            filteredData = BACKEND_DATA.filter(item => {{
+                if (area && item.area !== area) return false;
+                if (source && item.source !== source) return false;
+                if (date && item.date !== date) return false;
+                if (search) {{
+                    const text = (item.title.en + ' ' + item.summary.en + ' ' + item.province).toLowerCase();
+                    if (!text.includes(search)) return false;
+                }}
+                return true;
+            }});
+            
+            renderNews();
+        }}
+        
+        function renderNews() {{
+            const container = document.getElementById('newsList');
+            document.getElementById('newsCount').textContent = '(' + filteredData.length + ' articles)';
+            
+            if (filteredData.length === 0) {{
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">No articles found</p>';
+                return;
+            }}
+            
+            container.innerHTML = filteredData.slice(0, 50).map(item => `
+                <div class="news-card border rounded-lg p-4 transition-all cursor-pointer hover:border-teal-300" onclick="openArticle('${{item.url}}')">
+                    <div class="flex flex-wrap gap-2 mb-2">
+                        <span class="px-2 py-1 bg-teal-100 text-teal-700 text-xs rounded-full">${{item.area}}</span>
+                        <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">${{item.sector}}</span>
+                        <span class="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded-full">${{item.province}}</span>
+                    </div>
+                    <h3 class="font-semibold text-gray-800 mb-1">${{item.title[currentLang] || item.title.en}}</h3>
+                    <p class="text-sm text-gray-600 mb-2">${{(item.summary[currentLang] || item.summary.en || '').substring(0, 150)}}...</p>
+                    <div class="flex justify-between items-center text-xs text-gray-400">
+                        <span>${{item.date}} | ${{item.source}}</span>
+                        <span class="text-teal-600 hover:underline">Read more →</span>
+                    </div>
                 </div>
             `).join('');
-        }
+        }}
         
+        function openArticle(url) {{
+            if (url) window.open(url, '_blank');
+        }}
+        
+        function initFilters() {{
+            const sources = [...new Set(BACKEND_DATA.map(d => d.source))].sort();
+            const sourceSelect = document.getElementById('filterSource');
+            sources.forEach(s => {{
+                const opt = document.createElement('option');
+                opt.value = s;
+                opt.textContent = s;
+                sourceSelect.appendChild(opt);
+            }});
+        }}
+        
+        // Initialize
+        initFilters();
         renderNews();
     </script>
 </body>
-</html>"""
+</html>'''
 
 
 class ExcelUpdater:
-    """Updates Excel database with latest data"""
+    """Updates Excel database"""
     
     def __init__(self):
-        self.output_path = OUTPUT_DIR / DATABASE_FILENAME
+        self.output_path = OUTPUT_DIR / "vietnam_infra_news_database.xlsx"
     
     def update(self, articles: List[Dict]) -> str:
-        """Update Excel database with new articles"""
         if not OPENPYXL_AVAILABLE:
-            logger.warning("openpyxl not available. Skipping Excel update.")
+            logger.warning("openpyxl not available")
             return ""
         
-        # Create or load workbook
-        if self.output_path.exists():
-            wb = openpyxl.load_workbook(self.output_path)
-        else:
-            wb = openpyxl.Workbook()
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Data"
         
-        # Update Data sheet
-        self._update_data_sheet(wb, articles)
+        headers = ["ID", "Date", "Area", "Sector", "Province", "Source", "Title", "Summary", "URL"]
+        for col, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col, value=header)
+            cell.font = Font(bold=True, color="FFFFFF")
+            cell.fill = PatternFill(start_color="0D9488", fill_type="solid")
         
-        # Update Summary sheet
-        self._update_summary_sheet(wb, articles)
-        
-        # Save
-        self.output_path.parent.mkdir(parents=True, exist_ok=True)
-        wb.save(self.output_path)
-        
-        logger.info(f"Excel database updated: {self.output_path}")
-        return str(self.output_path)
-    
-    def _update_data_sheet(self, wb, articles: List[Dict]):
-        """Update main data sheet"""
-        if "Data" in wb.sheetnames:
-            ws = wb["Data"]
-            ws.delete_rows(2, ws.max_row)  # Keep header
-        else:
-            ws = wb.active
-            ws.title = "Data"
-            
-            # Add headers
-            headers = ["ID", "Date", "Area", "Sector", "Province", "Source", 
-                      "Title (EN)", "Title (KO)", "Summary", "URL", "AI Processed"]
-            for col, header in enumerate(headers, 1):
-                cell = ws.cell(row=1, column=col, value=header)
-                cell.font = Font(bold=True, color="FFFFFF")
-                cell.fill = PatternFill(start_color="0D9488", end_color="0D9488", fill_type="solid")
-                cell.alignment = Alignment(horizontal="center")
-        
-        # Add data
         for i, article in enumerate(articles, 2):
             ws.cell(row=i, column=1, value=i-1)
             ws.cell(row=i, column=2, value=article.get("published", ""))
@@ -180,178 +291,75 @@ class ExcelUpdater:
             ws.cell(row=i, column=4, value=article.get("sector", ""))
             ws.cell(row=i, column=5, value=article.get("province", ""))
             ws.cell(row=i, column=6, value=article.get("source", ""))
-            ws.cell(row=i, column=7, value=article.get("title", ""))
-            ws.cell(row=i, column=8, value=article.get("summary_ko", ""))
-            ws.cell(row=i, column=9, value=article.get("summary", "")[:500])
-            ws.cell(row=i, column=10, value=article.get("url", ""))
-            ws.cell(row=i, column=11, value="Yes" if article.get("ai_processed") else "No")
-            
-            # Highlight 2025 data
-            if "2025" in article.get("published", ""):
-                for col in range(1, 12):
-                    ws.cell(row=i, column=col).fill = PatternFill(
-                        start_color="FFFF00", end_color="FFFF00", fill_type="solid"
-                    )
+            ws.cell(row=i, column=7, value=article.get("title", "")[:200])
+            ws.cell(row=i, column=8, value=article.get("summary_en", article.get("summary", ""))[:500])
+            ws.cell(row=i, column=9, value=article.get("url", ""))
         
-        # Auto-adjust column widths
-        for col in ws.columns:
-            max_length = max(len(str(cell.value or "")) for cell in col)
-            ws.column_dimensions[col[0].column_letter].width = min(max_length + 2, 50)
-    
-    def _update_summary_sheet(self, wb, articles: List[Dict]):
-        """Update summary sheet"""
-        if "Summary" in wb.sheetnames:
-            ws = wb["Summary"]
-            ws.delete_rows(1, ws.max_row)
-        else:
-            ws = wb.create_sheet("Summary")
-        
-        # Calculate statistics
-        area_counts = {}
-        sector_counts = {}
-        province_counts = {}
-        year_counts = {}
-        
-        for article in articles:
-            area = article.get("area", "Unknown")
-            sector = article.get("sector", "Unknown")
-            province = article.get("province", "Unknown")
-            year = article.get("published", "")[:4]
-            
-            area_counts[area] = area_counts.get(area, 0) + 1
-            sector_counts[sector] = sector_counts.get(sector, 0) + 1
-            province_counts[province] = province_counts.get(province, 0) + 1
-            year_counts[year] = year_counts.get(year, 0) + 1
-        
-        # Write summary
-        ws.cell(row=1, column=1, value="Vietnam Infra News - Summary").font = Font(bold=True, size=14)
-        ws.cell(row=2, column=1, value=f"Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-        ws.cell(row=3, column=1, value=f"Total Articles: {len(articles)}")
-        
-        row = 5
-        ws.cell(row=row, column=1, value="=== By Year ===").font = Font(bold=True)
-        row += 1
-        for year, count in sorted(year_counts.items(), reverse=True):
-            ws.cell(row=row, column=1, value=year)
-            ws.cell(row=row, column=2, value=count)
-            row += 1
-        
-        row += 1
-        ws.cell(row=row, column=1, value="=== By Area ===").font = Font(bold=True)
-        row += 1
-        for area, count in sorted(area_counts.items(), key=lambda x: -x[1]):
-            ws.cell(row=row, column=1, value=area)
-            ws.cell(row=row, column=2, value=count)
-            row += 1
-        
-        row += 1
-        ws.cell(row=row, column=1, value="=== By Sector ===").font = Font(bold=True)
-        row += 1
-        for sector, count in sorted(sector_counts.items(), key=lambda x: -x[1]):
-            ws.cell(row=row, column=1, value=sector)
-            ws.cell(row=row, column=2, value=count)
-            row += 1
-        
-        row += 1
-        ws.cell(row=row, column=1, value="=== Top Provinces ===").font = Font(bold=True)
-        row += 1
-        for province, count in sorted(province_counts.items(), key=lambda x: -x[1])[:15]:
-            ws.cell(row=row, column=1, value=province)
-            ws.cell(row=row, column=2, value=count)
-            row += 1
+        self.output_path.parent.mkdir(parents=True, exist_ok=True)
+        wb.save(self.output_path)
+        logger.info(f"Excel updated: {self.output_path}")
+        return str(self.output_path)
 
 
 class OutputGenerator:
-    """Generates all output files"""
-    
     def __init__(self):
-        self.dashboard_updater = DashboardUpdater()
-        self.excel_updater = ExcelUpdater()
+        self.dashboard = DashboardUpdater()
+        self.excel = ExcelUpdater()
     
     def generate_all(self, articles: List[Dict]) -> Dict[str, str]:
-        """Generate all output files"""
         outputs = {}
         
-        # Generate dashboard HTML
         try:
-            outputs["dashboard"] = self.dashboard_updater.update(articles)
+            outputs["dashboard"] = self.dashboard.update(articles)
         except Exception as e:
-            logger.error(f"Dashboard generation error: {e}")
+            logger.error(f"Dashboard error: {e}")
             outputs["dashboard"] = ""
         
-        # Generate Excel
         try:
-            outputs["excel"] = self.excel_updater.update(articles)
+            outputs["excel"] = self.excel.update(articles)
         except Exception as e:
-            logger.error(f"Excel generation error: {e}")
+            logger.error(f"Excel error: {e}")
             outputs["excel"] = ""
         
-        # Generate JSON
         try:
             json_path = OUTPUT_DIR / f"news_data_{datetime.now().strftime('%Y%m%d')}.json"
             json_path.parent.mkdir(parents=True, exist_ok=True)
             with open(json_path, 'w', encoding='utf-8') as f:
-                json.dump({
-                    "generated_at": datetime.now().isoformat(),
-                    "total_count": len(articles),
-                    "articles": articles
-                }, f, ensure_ascii=False, indent=2)
+                json.dump({"generated_at": datetime.now().isoformat(), "total": len(articles), "articles": articles}, f, ensure_ascii=False, indent=2)
             outputs["json"] = str(json_path)
         except Exception as e:
-            logger.error(f"JSON generation error: {e}")
+            logger.error(f"JSON error: {e}")
             outputs["json"] = ""
         
-        logger.info(f"Generated outputs: {list(outputs.keys())}")
         return outputs
 
 
 def load_articles() -> List[Dict]:
-    """Load latest articles from data directory"""
-    # Try processed files first
     processed_files = sorted(DATA_DIR.glob("processed_*.json"), reverse=True)
-    
-    if processed_files:
-        filepath = processed_files[0]
-    else:
-        # Try news files
+    if not processed_files:
         news_files = sorted(DATA_DIR.glob("news_*.json"), reverse=True)
         if not news_files:
             return []
-        filepath = news_files[0]
+        processed_files = news_files
     
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(processed_files[0], 'r', encoding='utf-8') as f:
             data = json.load(f)
             return data.get("articles", [])
-    except Exception as e:
-        logger.error(f"Error loading articles: {e}")
+    except:
         return []
 
 
 def main():
-    """Main function to generate outputs"""
-    # Load articles
     articles = load_articles()
-    
     if not articles:
-        print("No articles found. Run news_collector.py first.")
+        print("No articles found")
         return
     
-    print(f"Loaded {len(articles)} articles")
-    
-    # Generate outputs
     generator = OutputGenerator()
     outputs = generator.generate_all(articles)
     
-    print(f"\n{'='*50}")
-    print("Output Generation Complete")
-    print(f"{'='*50}")
-    
-    for output_type, path in outputs.items():
-        status = "✅ Generated" if path else "❌ Failed"
-        print(f"{output_type.capitalize()}: {status}")
-        if path:
-            print(f"   → {path}")
+    print(f"Generated {len(outputs)} outputs with {len(articles)} articles")
 
 
 if __name__ == "__main__":
