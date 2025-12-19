@@ -9,8 +9,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 env:
   ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -43,18 +41,23 @@ jobs:
       - name: Run Pipeline
         run: python scripts/main.py --full
       
-      - name: Create index.html for GitHub Pages
+      - name: Prepare GitHub Pages
         run: |
+          mkdir -p gh-pages-deploy
           if [ -f outputs/vietnam_dashboard.html ]; then
-            cp outputs/vietnam_dashboard.html outputs/index.html
+            cp outputs/vietnam_dashboard.html gh-pages-deploy/index.html
+            cp outputs/*.html gh-pages-deploy/ 2>/dev/null || true
+            cp outputs/*.json gh-pages-deploy/ 2>/dev/null || true
           fi
+          echo "Files to deploy:"
+          ls -la gh-pages-deploy/
       
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./outputs
-          publish_branch: gh-pages
+          publish_dir: ./gh-pages-deploy
+          force_orphan: true
       
       - name: Upload outputs
         uses: actions/upload-artifact@v4
