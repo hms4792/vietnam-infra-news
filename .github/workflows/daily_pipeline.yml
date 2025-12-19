@@ -7,6 +7,11 @@ on:
     - cron: '0 11 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 env:
   ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
   EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
@@ -37,6 +42,19 @@ jobs:
       
       - name: Run Pipeline
         run: python scripts/main.py --full
+      
+      - name: Create index.html for GitHub Pages
+        run: |
+          if [ -f outputs/vietnam_dashboard.html ]; then
+            cp outputs/vietnam_dashboard.html outputs/index.html
+          fi
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./outputs
+          publish_branch: gh-pages
       
       - name: Upload outputs
         uses: actions/upload-artifact@v4
