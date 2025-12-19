@@ -1,6 +1,6 @@
 """
 Vietnam Infrastructure News Dashboard Updater
-Uses the original v6 template and injects real collected data
+Injects real collected data into v6 template
 """
 import json
 import logging
@@ -36,17 +36,39 @@ class DashboardUpdater:
         
         js_data = self._generate_js_data(articles)
         
-        if self.template_path.exists():
-            with open(self.template_path, 'r', encoding='utf-8') as f:
-                template = f.read()
-            
-            # Replace placeholder with real data
-            html = template.replace('/*__BACKEND_DATA__*/[]', js_data)
-            html = html.replace('{{LAST_UPDATED}}', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-            
-        else:
-            logger.warning("Template not found")
+        if not self.template_path.exists():
+            logger.error("Template not found")
             return ""
+        
+        with open(self.template_path, 'r', encoding='utf-8') as f:
+            template = f.read()
+        
+        # Method 1: Replace placeholder
+        if '/*__BACKEND_DATA__*/[]' in template:
+            html = template.replace('/*__BACKEND_DATA__*/[]', js_data)
+        # Method 2: Replace generateFullDataset() call
+        elif 'const BACKEND_DATA = generateFullDataset();' in template:
+            html = template.replace(
+                'const BACKEND_DATA = generateFullDataset();',
+                f'const BACKEND_DATA = {js_data};'
+            )
+        # Method 3: Inject data before </script>
+        else:
+            # Find the main script and inject data at the beginning
+            inject_script = f'''<script>
+// Injected real data from pipeline
+window.INJECTED_DATA = {js_data};
+</script>
+'''
+            html = template.replace('<body', inject_script + '<body')
+            # Also need to make the dashboard use INJECTED_DATA
+            html = html.replace(
+                'const BACKEND_DATA = generateFullDataset();',
+                'const BACKEND_DATA = window.INJECTED_DATA || generateFullDataset();'
+            )
+        
+        # Update timestamp
+        html = html.replace('{{LAST_UPDATED}}', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(self.output_path, 'w', encoding='utf-8') as f:
@@ -60,14 +82,28 @@ class DashboardUpdater:
         js_articles = []
         
         for i, article in enumerate(articles, 1):
-            title_en = article.get("title", "No title")
-            title_ko = article.get("summary_ko", title_en)[:150] if article.get("summary_ko") else title_en
-            title_vi = article.get("summary_vi", title_en)[:150] if article.get("summary_vi") else title_en
+            # Titles for each language
+            original_title = article.get("title", "No title")
             
+            # Korean: use summary_ko or original
+            title_ko = article.get("summary_ko", "")
+            if not title_ko or len(title_ko) < 10:
+                title_ko = original_title
+            
+            # English: use original title (usually in English)
+            title_en = original_title
+            
+            # Vietnamese: use summary_vi or original
+            title_vi = article.get("summary_vi", "")
+            if not title_vi or len(title_vi) < 10:
+                title_vi = original_title
+            
+            # Summaries
             summary_en = article.get("summary_en", article.get("summary", ""))
             summary_ko = article.get("summary_ko", summary_en)
             summary_vi = article.get("summary_vi", summary_en)
             
+            # URL
             url = article.get("url", "")
             if not url:
                 url = self._generate_search_url(article)
@@ -80,14 +116,14 @@ class DashboardUpdater:
                 "province": article.get("province", "Vietnam"),
                 "source": article.get("source", "Unknown"),
                 "title": {
-                    "ko": title_ko,
-                    "en": title_en,
-                    "vi": title_vi
+                    "ko": title_ko[:200],
+                    "en": title_en[:200],
+                    "vi": title_vi[:200]
                 },
                 "summary": {
-                    "ko": summary_ko,
-                    "en": summary_en,
-                    "vi": summary_vi
+                    "ko": summary_ko[:500] if summary_ko else "",
+                    "en": summary_en[:500] if summary_en else "",
+                    "vi": summary_vi[:500] if summary_vi else ""
                 },
                 "url": url
             }
@@ -114,8 +150,6 @@ class DashboardUpdater:
 
 
 class ExcelUpdater:
-    """Updates Excel database"""
-    
     def __init__(self):
         self.output_path = OUTPUT_DIR / "vietnam_infra_news_database.xlsx"
     
@@ -199,8 +233,7 @@ def load_articles() -> List[Dict]:
     
     try:
         with open(processed_files[0], 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            return data.get("articles", [])
+            return json.load(f).get("articles", [])
     except:
         return []
 
