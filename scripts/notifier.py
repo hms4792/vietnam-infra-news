@@ -382,8 +382,8 @@ class NotificationManager:
         ])
         
         return {
-            "date": datetime.now().strftime("%Y-%m-%d"),
-            "total": len(articles),
+    "date": datetime.now().strftime("%Y-%m-%d"),
+    "total_articles": len(articles),
             "env_count": area_counts["Environment"],
             "energy_count": area_counts["Energy Develop."],
             "urban_count": area_counts["Urban Develop."],
@@ -420,7 +420,7 @@ class NotificationManager:
         kakao_message = f"""🇻🇳 베트남 인프라 뉴스
 📅 {briefing_data['date']}
 
-📊 총 {briefing_data['total']}건
+📊 총 {briefing_data['total_articles']}건
 • 환경: {briefing_data['env_count']}건
 • 에너지: {briefing_data['energy_count']}건
 • 도시: {briefing_data['urban_count']}건
