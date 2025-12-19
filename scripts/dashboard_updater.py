@@ -14,7 +14,6 @@ sys.path.append(str(Path(__file__).parent.parent))
 try:
     import openpyxl
     from openpyxl.styles import Font, PatternFill, Alignment
-    from openpyxl.utils.dataframe import dataframe_to_rows
     OPENPYXL_AVAILABLE = True
 except ImportError:
     OPENPYXL_AVAILABLE = False
@@ -30,12 +29,9 @@ from config.settings import DATA_DIR, OUTPUT_DIR, TEMPLATE_DIR
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Path to existing database
 EXISTING_DB_PATH = Path(__file__).parent.parent / "data" / "Vietnam_Infra_News_Database_Final.xlsx"
 
-# Sector mapping from keywords to standard Business Sector names
 SECTOR_MAPPING = {
-    # Environment
     "wastewater": "Waste Water",
     "waste water": "Waste Water",
     "sewage": "Waste Water",
@@ -49,7 +45,6 @@ SECTOR_MAPPING = {
     "drainage": "Water Supply/Drainage",
     "clean water": "Water Supply/Drainage",
     "drinking water": "Water Supply/Drainage",
-    # Energy
     "power": "Power",
     "electricity": "Power",
     "solar": "Power",
@@ -61,7 +56,6 @@ SECTOR_MAPPING = {
     "oil": "Oil & Gas",
     "gas": "Oil & Gas",
     "petroleum": "Oil & Gas",
-    # Urban
     "smart city": "Smart City",
     "digital": "Smart City",
     "iot": "Smart City",
@@ -71,7 +65,6 @@ SECTOR_MAPPING = {
     "fdi": "Industrial Parks",
 }
 
-# Area mapping
 AREA_MAPPING = {
     "Waste Water": "Environment",
     "Solid Waste": "Environment",
@@ -84,27 +77,19 @@ AREA_MAPPING = {
 
 
 def classify_sector(title: str, summary: str = "") -> tuple:
-    """Classify article into Business Sector and Area based on content"""
     text = (title + " " + summary).lower()
-    
     for keyword, sector in SECTOR_MAPPING.items():
         if keyword in text:
             return sector, AREA_MAPPING.get(sector, "Environment")
-    
-    # Default
     return "Waste Water", "Environment"
 
 
 class DashboardUpdater:
-    """Updates HTML dashboard with all data (existing + new)"""
-    
     def __init__(self):
         self.template_path = TEMPLATE_DIR / "dashboard_template.html"
         self.output_path = OUTPUT_DIR / "vietnam_dashboard.html"
     
     def update(self, all_articles: List[Dict]) -> str:
-        """Update dashboard HTML with all articles"""
-        
         js_data = self._generate_js_data(all_articles)
         
         if not self.template_path.exists():
@@ -130,14 +115,12 @@ class DashboardUpdater:
         return str(self.output_path)
     
     def _generate_js_data(self, articles: List[Dict]) -> str:
-        """Generate JavaScript array from all articles"""
         js_articles = []
         
         for i, article in enumerate(articles, 1):
             title = article.get("title", article.get("News Tittle", "No title"))
             summary = article.get("summary", article.get("Short summary", ""))
             
-            # Handle multilingual titles/summaries
             if isinstance(title, dict):
                 title_ko = title.get("ko", "")
                 title_en = title.get("en", "")
@@ -156,7 +139,6 @@ class DashboardUpdater:
                 summary_en = article.get("summary_en", str(summary))
                 summary_vi = str(summary)
             
-            # Get date
             date_str = article.get("date", article.get("Date", article.get("published", "")))
             if hasattr(date_str, 'strftime'):
                 date_str = date_str.strftime("%Y-%m-%d")
@@ -165,7 +147,6 @@ class DashboardUpdater:
             else:
                 date_str = datetime.now().strftime("%Y-%m-%d")
             
-            # Get sector and area
             sector = article.get("sector", article.get("Business Sector", "Waste Water"))
             area = article.get("area", article.get("Area", "Environment"))
             
@@ -194,14 +175,11 @@ class DashboardUpdater:
 
 
 class ExcelUpdater:
-    """Updates Excel database - maintains existing data and appends new articles"""
-    
     def __init__(self):
         self.existing_db_path = EXISTING_DB_PATH
         self.output_path = OUTPUT_DIR / "vietnam_infra_news_database.xlsx"
     
     def load_existing_data(self) -> List[Dict]:
-        """Load existing database"""
         if not PANDAS_AVAILABLE:
             logger.warning("pandas not available")
             return []
@@ -232,8 +210,6 @@ class ExcelUpdater:
             return []
     
     def merge_articles(self, existing: List[Dict], new_articles: List[Dict]) -> List[Dict]:
-        """Merge existing and new articles, avoiding duplicates"""
-        # Create set of existing URLs/titles for deduplication
         existing_keys = set()
         for article in existing:
             url = article.get("Link", "")
@@ -243,13 +219,11 @@ class ExcelUpdater:
             if title:
                 existing_keys.add(title.lower().strip()[:100])
         
-        # Convert new articles to existing format and check for duplicates
         new_count = 0
         for article in new_articles:
             url = article.get("url", article.get("Link", ""))
             title = article.get("title", article.get("News Tittle", ""))
             
-            # Check if duplicate
             is_duplicate = False
             if url and url.lower().strip() in existing_keys:
                 is_duplicate = True
@@ -257,11 +231,9 @@ class ExcelUpdater:
                 is_duplicate = True
             
             if not is_duplicate:
-                # Classify sector based on content
                 summary = article.get("summary_en", article.get("summary", article.get("Short summary", "")))
                 sector, area = classify_sector(str(title), str(summary))
                 
-                # Use classified values or keep original if already set properly
                 orig_sector = article.get("sector", article.get("Business Sector", ""))
                 orig_area = article.get("area", article.get("Area", ""))
                 
@@ -269,7 +241,6 @@ class ExcelUpdater:
                     sector = orig_sector
                     area = AREA_MAPPING[orig_sector]
                 
-                # Get date
                 date_val = article.get("published", article.get("Date", datetime.now().strftime("%Y-%m-%d")))
                 if isinstance(date_val, str) and 'T' in date_val:
                     date_val = date_val.split('T')[0]
@@ -293,47 +264,34 @@ class ExcelUpdater:
         return existing
     
     def update(self, new_articles: List[Dict]) -> str:
-        """Update Excel with existing + new articles"""
         if not OPENPYXL_AVAILABLE or not PANDAS_AVAILABLE:
             logger.warning("Required libraries not available")
             return ""
         
-        # Load existing data
         existing = self.load_existing_data()
-        
-        # Merge with new articles
         all_articles = self.merge_articles(existing, new_articles)
-        
-        # Sort by date descending
         all_articles.sort(key=lambda x: str(x.get("Date", ""))[:10], reverse=True)
         
-        # Create DataFrame
         df = pd.DataFrame(all_articles)
-        
-        # Ensure column order
         columns = ["Area", "Business Sector", "Province", "News Tittle", "Date", "Source", "Link", "Short summary"]
         for col in columns:
             if col not in df.columns:
                 df[col] = ""
         df = df[columns]
         
-        # Create workbook
         wb = openpyxl.Workbook()
         ws = wb.active
         ws.title = "Data set (Database)"
         
-        # Header style
         header_font = Font(bold=True, color="FFFFFF")
         header_fill = PatternFill(start_color="0D9488", fill_type="solid")
         
-        # Write headers
         for col, header in enumerate(columns, 1):
             cell = ws.cell(row=1, column=col, value=header)
             cell.font = header_font
             cell.fill = header_fill
             cell.alignment = Alignment(horizontal="center")
         
-        # Write data
         yellow_fill = PatternFill(start_color="FFFF00", fill_type="solid")
         current_year = datetime.now().year
         
@@ -347,8 +305,7 @@ class ExcelUpdater:
                 else:
                     cell.value = str(value)[:500] if col_idx == 8 else str(value)[:200]
                 
-                # Highlight current year data
-                date_val = row_data[4]  # Date column
+                date_val = row_data[4]
                 if date_val:
                     try:
                         year = int(str(date_val)[:4])
@@ -357,32 +314,20 @@ class ExcelUpdater:
                     except:
                         pass
         
-        # Auto-adjust column widths
         col_widths = [15, 20, 15, 60, 12, 20, 50, 80]
         for i, width in enumerate(col_widths, 1):
             ws.column_dimensions[openpyxl.utils.get_column_letter(i)].width = width
         
-        # Save
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
         wb.save(self.output_path)
-        
-        # Also update the source database
-        try:
-            source_output = Path(__file__).parent.parent / "data" / "Vietnam_Infra_News_Database_Final.xlsx"
-            wb.save(source_output)
-            logger.info(f"Source database also updated: {source_output}")
-        except Exception as e:
-            logger.warning(f"Could not update source database: {e}")
         
         logger.info(f"Excel updated: {self.output_path} ({len(all_articles)} total articles)")
         return str(self.output_path)
     
     def get_all_articles_for_dashboard(self, new_articles: List[Dict]) -> List[Dict]:
-        """Get all articles (existing + new) formatted for dashboard"""
         existing = self.load_existing_data()
         all_articles = self.merge_articles(existing.copy(), new_articles)
         
-        # Convert to dashboard format
         dashboard_articles = []
         for article in all_articles:
             dashboard_articles.append({
@@ -410,7 +355,6 @@ class OutputGenerator:
     def generate_all(self, new_articles: List[Dict]) -> Dict[str, str]:
         outputs = {}
         
-        # Get all articles (existing + new) for dashboard
         all_articles = self.excel.get_all_articles_for_dashboard(new_articles)
         
         try:
@@ -467,25 +411,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
-
-**Commit changes** 클릭
-
----
-
-## 2️⃣ `requirements.txt` 수정
-
-GitHub → `requirements.txt` → **연필 아이콘**
-
-**pandas 추가:**
-```
-aiohttp>=3.8.0
-feedparser>=6.0.0
-beautifulsoup4>=4.12.0
-lxml>=4.9.0
-anthropic>=0.18.0
-openpyxl>=3.1.0
-pandas>=2.0.0
-python-dotenv>=1.0.0
-pytz>=2024.1
-requests>=2.31.0
