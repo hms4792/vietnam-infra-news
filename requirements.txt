@@ -1,0 +1,28 @@
+# Vietnam Infrastructure News Pipeline - Dependencies
+
+# Core
+aiohttp>=3.9.0
+feedparser>=6.0.10
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# AI
+anthropic>=0.18.0
+
+# Data Processing
+openpyxl>=3.1.0
+pandas>=2.0.0
+
+# Utilities
+python-dotenv>=1.0.0
+pytz>=2024.1
+
+# Optional: For enhanced scraping
+requests>=2.31.0
+html5lib>=1.1
+
+# Development
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.0.0
+flake8>=6.1.0
