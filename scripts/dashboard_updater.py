@@ -4,10 +4,10 @@ Uses the original v6 template and injects real collected data
 """
 import json
 import logging
-import re
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
+from urllib.parse import quote
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -34,29 +34,20 @@ class DashboardUpdater:
     def update(self, articles: List[Dict]) -> str:
         """Update dashboard HTML with real collected data"""
         
-        # Generate JavaScript data array
         js_data = self._generate_js_data(articles)
         
-        # Read template
         if self.template_path.exists():
             with open(self.template_path, 'r', encoding='utf-8') as f:
                 template = f.read()
             
-            # Replace BACKEND_DATA with real data
-            # Find and replace the BACKEND_DATA array
-            pattern = r'const BACKEND_DATA = \[[\s\S]*?\];'
-            replacement = f'const BACKEND_DATA = {js_data};'
-            html = re.sub(pattern, replacement, template)
-            
-            # Update last updated timestamp
+            # Replace placeholder with real data
+            html = template.replace('/*__BACKEND_DATA__*/[]', js_data)
             html = html.replace('{{LAST_UPDATED}}', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             
         else:
-            # Fallback: generate basic dashboard if template not found
-            logger.warning("Template not found, generating basic dashboard")
-            html = self._generate_fallback_html(articles, js_data)
+            logger.warning("Template not found")
+            return ""
         
-        # Save
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(self.output_path, 'w', encoding='utf-8') as f:
             f.write(html)
@@ -69,17 +60,14 @@ class DashboardUpdater:
         js_articles = []
         
         for i, article in enumerate(articles, 1):
-            # Get title - use original title for English
             title_en = article.get("title", "No title")
             title_ko = article.get("summary_ko", title_en)[:150] if article.get("summary_ko") else title_en
             title_vi = article.get("summary_vi", title_en)[:150] if article.get("summary_vi") else title_en
             
-            # Get summary
             summary_en = article.get("summary_en", article.get("summary", ""))
             summary_ko = article.get("summary_ko", summary_en)
             summary_vi = article.get("summary_vi", summary_en)
             
-            # Generate search URL for the article
             url = article.get("url", "")
             if not url:
                 url = self._generate_search_url(article)
@@ -121,60 +109,8 @@ class DashboardUpdater:
         }
         
         base_url = source_urls.get(source, "https://www.google.com/search?q=")
-        
-        from urllib.parse import quote
         query = quote(title[:100])
-        
         return base_url + query
-    
-    def _generate_fallback_html(self, articles: List[Dict], js_data: str) -> str:
-        """Generate fallback HTML if template not found"""
-        
-        # Calculate stats
-        area_counts = {"Environment": 0, "Energy Develop.": 0, "Urban Develop.": 0}
-        for article in articles:
-            area = article.get("area", "")
-            if area in area_counts:
-                area_counts[area] += 1
-        
-        return f'''<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vietnam Infrastructure News Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50">
-    <header class="bg-gradient-to-r from-teal-600 to-emerald-600 text-white py-6 px-4">
-        <div class="max-w-7xl mx-auto">
-            <h1 class="text-2xl font-bold">🇻🇳 Vietnam Infrastructure News</h1>
-            <p class="text-sm text-teal-200">Last Updated: {datetime.now().strftime("%Y-%m-%d %H:%M")}</p>
-        </div>
-    </header>
-    <main class="max-w-7xl mx-auto p-4">
-        <div class="grid grid-cols-4 gap-4 mb-6">
-            <div class="bg-white rounded-xl p-4 shadow"><div class="text-3xl font-bold text-teal-600">{len(articles)}</div><div class="text-sm text-gray-500">Total</div></div>
-            <div class="bg-white rounded-xl p-4 shadow"><div class="text-3xl font-bold text-green-600">{area_counts["Environment"]}</div><div class="text-sm text-gray-500">Environment</div></div>
-            <div class="bg-white rounded-xl p-4 shadow"><div class="text-3xl font-bold text-amber-600">{area_counts["Energy Develop."]}</div><div class="text-sm text-gray-500">Energy</div></div>
-            <div class="bg-white rounded-xl p-4 shadow"><div class="text-3xl font-bold text-purple-600">{area_counts["Urban Develop."]}</div><div class="text-sm text-gray-500">Urban</div></div>
-        </div>
-        <div id="newsList" class="space-y-3"></div>
-    </main>
-    <script>
-        const BACKEND_DATA = {js_data};
-        document.getElementById('newsList').innerHTML = BACKEND_DATA.slice(0,30).map(n => `
-            <div class="bg-white p-4 rounded-lg shadow">
-                <span class="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">${{n.sector}}</span>
-                <span class="text-xs text-gray-500 ml-2">${{n.province}}</span>
-                <h3 class="font-semibold mt-2">${{n.title.en}}</h3>
-                <p class="text-sm text-gray-600 mt-1">${{n.summary.en?.substring(0,150) || ''}}...</p>
-                <p class="text-xs text-gray-400 mt-2">${{n.date}} | ${{n.source}}</p>
-            </div>
-        `).join('');
-    </script>
-</body>
-</html>'''
 
 
 class ExcelUpdater:
