@@ -89,7 +89,6 @@ class DashboardUpdater:
             # Normalize date to YYYY-MM-DD format
             date_str = article.get("published", "")
             if date_str:
-                # Try to parse and normalize date
                 try:
                     if 'T' in date_str:
                         date_str = date_str.split('T')[0]
@@ -257,18 +256,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
-
-**Commit changes** 클릭
-
----
-
-## 실행 후 로그 확인 요청
-
-Actions → **Run workflow** 실행 후
-
-**Run Pipeline** 단계의 로그에서 수집된 기사의 **date** 값이 어떻게 나오는지 확인해주세요.
-
-예를 들어:
-```
-Articles Collected: 26
