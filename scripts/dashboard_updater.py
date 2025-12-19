@@ -1,12 +1,13 @@
 """
 Vietnam Infrastructure News Dashboard Updater
 Maintains existing database and appends new articles only
+Uses Keywords sheet Category for Business Sector classification
 """
 import json
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Tuple
 from urllib.parse import quote
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
@@ -31,56 +32,55 @@ logger = logging.getLogger(__name__)
 
 EXISTING_DB_PATH = Path(__file__).parent.parent / "data" / "Vietnam_Infra_News_Database_Final.xlsx"
 
-SECTOR_MAPPING = {
-    "wastewater": "Waste Water",
-    "waste water": "Waste Water",
-    "sewage": "Waste Water",
-    "water treatment": "Waste Water",
-    "solid waste": "Solid Waste",
-    "garbage": "Solid Waste",
-    "landfill": "Solid Waste",
-    "recycling": "Solid Waste",
-    "waste management": "Solid Waste",
-    "water supply": "Water Supply/Drainage",
-    "drainage": "Water Supply/Drainage",
-    "clean water": "Water Supply/Drainage",
-    "drinking water": "Water Supply/Drainage",
-    "power": "Power",
-    "electricity": "Power",
-    "solar": "Power",
-    "wind": "Power",
-    "renewable": "Power",
-    "lng": "Power",
-    "thermal": "Power",
-    "hydropower": "Power",
-    "oil": "Oil & Gas",
-    "gas": "Oil & Gas",
-    "petroleum": "Oil & Gas",
-    "smart city": "Smart City",
-    "digital": "Smart City",
-    "iot": "Smart City",
-    "industrial park": "Industrial Parks",
-    "industrial zone": "Industrial Parks",
-    "economic zone": "Industrial Parks",
-    "fdi": "Industrial Parks",
+KEYWORDS_BY_SECTOR = {
+    "Solid Waste": ["waste-to-energy", "solid waste", "landfill", "incineration", "recycling", 
+                   "circular economy", "wte", "garbage", "rubbish", "trash", "municipal waste"],
+    "Waste Water": ["wastewater", "waste water", "wwtp", "sewage", "water treatment plant", 
+                   "sewerage", "effluent", "sludge", "drainage"],
+    "Water Supply/Drainage": ["clean water", "water supply", "water scarcity", "reservoir", 
+                             "potable water", "tap water", "water infrastructure", "drinking water"],
+    "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", 
+             "natural gas", "ccgt", "combined cycle", "solar", "wind", "renewable", 
+             "biomass", "offshore wind", "onshore wind", "pdp8", "feed-in tariff", "hydropower"],
+    "Oil & Gas": ["oil exploration", "gas field", "upstream", "midstream", "petroleum", 
+                 "offshore drilling", "oil and gas", "lng terminal", "refinery"],
+    "Industrial Parks": ["industrial park", "industrial zone", "fdi", "foreign investment", 
+                        "manufacturing zone", "eco-industrial", "economic zone"],
+    "Smart City": ["smart city", "urban area", "zoning", "new urban", "tod", 
+                  "digital transformation", "urban development", "city planning"],
 }
 
-AREA_MAPPING = {
-    "Waste Water": "Environment",
+AREA_BY_SECTOR = {
     "Solid Waste": "Environment",
+    "Waste Water": "Environment",
     "Water Supply/Drainage": "Environment",
     "Power": "Energy Develop.",
     "Oil & Gas": "Energy Develop.",
-    "Smart City": "Urban Develop.",
     "Industrial Parks": "Urban Develop.",
+    "Smart City": "Urban Develop.",
 }
 
+SECTOR_PRIORITY = [
+    "Waste Water",
+    "Solid Waste", 
+    "Water Supply/Drainage",
+    "Power",
+    "Oil & Gas",
+    "Smart City",
+    "Industrial Parks",
+]
 
-def classify_sector(title: str, summary: str = "") -> tuple:
-    text = (title + " " + summary).lower()
-    for keyword, sector in SECTOR_MAPPING.items():
-        if keyword in text:
-            return sector, AREA_MAPPING.get(sector, "Environment")
+
+def classify_by_keywords(title: str, summary: str = "") -> Tuple[str, str]:
+    text = (str(title) + " " + str(summary)).lower()
+    
+    for sector in SECTOR_PRIORITY:
+        keywords = KEYWORDS_BY_SECTOR.get(sector, [])
+        for keyword in keywords:
+            if keyword.lower() in text:
+                area = AREA_BY_SECTOR.get(sector, "Environment")
+                return sector, area
+    
     return "Waste Water", "Environment"
 
 
@@ -111,7 +111,7 @@ class DashboardUpdater:
         with open(self.output_path, 'w', encoding='utf-8') as f:
             f.write(html)
         
-        logger.info(f"Dashboard updated with {len(all_articles)} articles: {self.output_path}")
+        logger.info(f"Dashboard updated with {len(all_articles)} articles")
         return str(self.output_path)
     
     def _generate_js_data(self, articles: List[Dict]) -> str:
@@ -126,18 +126,20 @@ class DashboardUpdater:
                 title_en = title.get("en", "")
                 title_vi = title.get("vi", "")
             else:
-                title_ko = article.get("summary_ko", str(title))[:150]
-                title_en = article.get("summary_en", str(title))[:150]
-                title_vi = str(title)
+                title_str = str(title)
+                title_ko = article.get("summary_ko", title_str)[:150]
+                title_en = article.get("summary_en", title_str)[:150]
+                title_vi = title_str
             
             if isinstance(summary, dict):
                 summary_ko = summary.get("ko", "")
                 summary_en = summary.get("en", "")
                 summary_vi = summary.get("vi", "")
             else:
-                summary_ko = article.get("summary_ko", str(summary))
-                summary_en = article.get("summary_en", str(summary))
-                summary_vi = str(summary)
+                summary_str = str(summary)
+                summary_ko = article.get("summary_ko", summary_str)
+                summary_en = article.get("summary_en", summary_str)
+                summary_vi = summary_str
             
             date_str = article.get("date", article.get("Date", article.get("published", "")))
             if hasattr(date_str, 'strftime'):
@@ -147,8 +149,13 @@ class DashboardUpdater:
             else:
                 date_str = datetime.now().strftime("%Y-%m-%d")
             
-            sector = article.get("sector", article.get("Business Sector", "Waste Water"))
-            area = article.get("area", article.get("Area", "Environment"))
+            sector = article.get("sector", article.get("Business Sector", ""))
+            area = article.get("area", article.get("Area", ""))
+            
+            if not sector or sector not in AREA_BY_SECTOR:
+                sector, area = classify_by_keywords(title, summary)
+            elif not area:
+                area = AREA_BY_SECTOR.get(sector, "Environment")
             
             js_article = {
                 "id": i,
@@ -158,14 +165,14 @@ class DashboardUpdater:
                 "province": article.get("province", article.get("Province", "Vietnam")),
                 "source": article.get("source", article.get("Source", "Unknown")),
                 "title": {
-                    "ko": title_ko[:200] if title_ko else title_vi[:200],
-                    "en": title_en[:200] if title_en else title_vi[:200],
-                    "vi": title_vi[:200] if title_vi else str(title)[:200]
+                    "ko": (title_ko or title_vi)[:200],
+                    "en": (title_en or title_vi)[:200],
+                    "vi": (title_vi or str(title))[:200]
                 },
                 "summary": {
-                    "ko": summary_ko[:500] if summary_ko else summary_vi[:500],
-                    "en": summary_en[:500] if summary_en else summary_vi[:500],
-                    "vi": summary_vi[:500] if summary_vi else str(summary)[:500]
+                    "ko": (summary_ko or summary_vi)[:500],
+                    "en": (summary_en or summary_vi)[:500],
+                    "vi": (summary_vi or str(summary))[:500]
                 },
                 "url": article.get("url", article.get("Link", ""))
             }
@@ -189,20 +196,38 @@ class ExcelUpdater:
             return []
         
         try:
-            df = pd.read_excel(self.existing_db_path, sheet_name="Data set (Database)")
-            logger.info(f"Loaded {len(df)} existing articles from database")
+            xl = pd.ExcelFile(self.existing_db_path)
+            sheet_name = None
+            for name in xl.sheet_names:
+                if "Data" in name or "Database" in name:
+                    sheet_name = name
+                    break
+            
+            if not sheet_name:
+                sheet_name = xl.sheet_names[0]
+            
+            df = pd.read_excel(self.existing_db_path, sheet_name=sheet_name)
+            logger.info(f"Loaded {len(df)} existing articles from '{sheet_name}'")
             
             articles = []
             for _, row in df.iterrows():
+                date_val = row.get("Date", "")
+                if hasattr(date_val, 'strftime'):
+                    date_val = date_val.strftime("%Y-%m-%d")
+                elif pd.notna(date_val):
+                    date_val = str(date_val)[:10]
+                else:
+                    date_val = ""
+                
                 articles.append({
-                    "Area": row.get("Area", ""),
-                    "Business Sector": row.get("Business Sector", ""),
-                    "Province": row.get("Province", ""),
-                    "News Tittle": row.get("News Tittle", ""),
-                    "Date": row.get("Date"),
-                    "Source": row.get("Source", ""),
-                    "Link": row.get("Link", ""),
-                    "Short summary": row.get("Short summary", ""),
+                    "Area": str(row.get("Area", "")) if pd.notna(row.get("Area")) else "",
+                    "Business Sector": str(row.get("Business Sector", "")) if pd.notna(row.get("Business Sector")) else "",
+                    "Province": str(row.get("Province", "")) if pd.notna(row.get("Province")) else "",
+                    "News Tittle": str(row.get("News Tittle", "")) if pd.notna(row.get("News Tittle")) else "",
+                    "Date": date_val,
+                    "Source": str(row.get("Source", "")) if pd.notna(row.get("Source")) else "",
+                    "Link": str(row.get("Link", "")) if pd.notna(row.get("Link")) else "",
+                    "Short summary": str(row.get("Short summary", "")) if pd.notna(row.get("Short summary")) else "",
                 })
             return articles
         except Exception as e:
@@ -212,52 +237,52 @@ class ExcelUpdater:
     def merge_articles(self, existing: List[Dict], new_articles: List[Dict]) -> List[Dict]:
         existing_keys = set()
         for article in existing:
-            url = article.get("Link", "")
-            title = article.get("News Tittle", "")
-            if url:
-                existing_keys.add(url.lower().strip())
-            if title:
-                existing_keys.add(title.lower().strip()[:100])
+            url = str(article.get("Link", "")).lower().strip()
+            title = str(article.get("News Tittle", "")).lower().strip()[:80]
+            if url and url != "nan":
+                existing_keys.add(url)
+            if title and title != "nan":
+                existing_keys.add(title)
         
         new_count = 0
         for article in new_articles:
-            url = article.get("url", article.get("Link", ""))
-            title = article.get("title", article.get("News Tittle", ""))
+            url = str(article.get("url", article.get("Link", ""))).lower().strip()
+            title = str(article.get("title", article.get("News Tittle", ""))).lower().strip()[:80]
             
             is_duplicate = False
-            if url and url.lower().strip() in existing_keys:
+            if url and url != "nan" and url in existing_keys:
                 is_duplicate = True
-            if title and title.lower().strip()[:100] in existing_keys:
+            if title and title != "nan" and title in existing_keys:
                 is_duplicate = True
             
             if not is_duplicate:
+                original_title = article.get("title", article.get("News Tittle", ""))
                 summary = article.get("summary_en", article.get("summary", article.get("Short summary", "")))
-                sector, area = classify_sector(str(title), str(summary))
                 
-                orig_sector = article.get("sector", article.get("Business Sector", ""))
-                orig_area = article.get("area", article.get("Area", ""))
+                sector, area = classify_by_keywords(str(original_title), str(summary))
                 
-                if orig_sector in AREA_MAPPING:
-                    sector = orig_sector
-                    area = AREA_MAPPING[orig_sector]
-                
-                date_val = article.get("published", article.get("Date", datetime.now().strftime("%Y-%m-%d")))
+                date_val = article.get("published", article.get("Date", ""))
                 if isinstance(date_val, str) and 'T' in date_val:
                     date_val = date_val.split('T')[0]
+                elif not date_val:
+                    date_val = datetime.now().strftime("%Y-%m-%d")
                 
                 new_article = {
                     "Area": area,
                     "Business Sector": sector,
                     "Province": article.get("province", article.get("Province", "Vietnam")),
-                    "News Tittle": str(title)[:200],
-                    "Date": date_val,
+                    "News Tittle": str(original_title)[:200],
+                    "Date": str(date_val)[:10],
                     "Source": article.get("source", article.get("Source", "Unknown")),
-                    "Link": url,
-                    "Short summary": article.get("summary_en", article.get("summary", article.get("Short summary", "")))[:500],
+                    "Link": article.get("url", article.get("Link", "")),
+                    "Short summary": str(summary)[:500],
                 }
                 existing.append(new_article)
-                existing_keys.add(url.lower().strip() if url else "")
-                existing_keys.add(title.lower().strip()[:100] if title else "")
+                
+                if url and url != "nan":
+                    existing_keys.add(url)
+                if title and title != "nan":
+                    existing_keys.add(title)
                 new_count += 1
         
         logger.info(f"Added {new_count} new articles (total: {len(existing)})")
@@ -270,18 +295,14 @@ class ExcelUpdater:
         
         existing = self.load_existing_data()
         all_articles = self.merge_articles(existing, new_articles)
-        all_articles.sort(key=lambda x: str(x.get("Date", ""))[:10], reverse=True)
         
-        df = pd.DataFrame(all_articles)
-        columns = ["Area", "Business Sector", "Province", "News Tittle", "Date", "Source", "Link", "Short summary"]
-        for col in columns:
-            if col not in df.columns:
-                df[col] = ""
-        df = df[columns]
+        all_articles.sort(key=lambda x: str(x.get("Date", ""))[:10], reverse=True)
         
         wb = openpyxl.Workbook()
         ws = wb.active
         ws.title = "Data set (Database)"
+        
+        columns = ["Area", "Business Sector", "Province", "News Tittle", "Date", "Source", "Link", "Short summary"]
         
         header_font = Font(bold=True, color="FFFFFF")
         header_fill = PatternFill(start_color="0D9488", fill_type="solid")
@@ -295,17 +316,12 @@ class ExcelUpdater:
         yellow_fill = PatternFill(start_color="FFFF00", fill_type="solid")
         current_year = datetime.now().year
         
-        for row_idx, row_data in enumerate(df.values, 2):
-            for col_idx, value in enumerate(row_data, 1):
-                cell = ws.cell(row=row_idx, column=col_idx)
-                if hasattr(value, 'strftime'):
-                    cell.value = value.strftime("%Y-%m-%d")
-                elif pd.isna(value):
-                    cell.value = ""
-                else:
-                    cell.value = str(value)[:500] if col_idx == 8 else str(value)[:200]
+        for row_idx, article in enumerate(all_articles, 2):
+            for col_idx, col_name in enumerate(columns, 1):
+                value = article.get(col_name, "")
+                cell = ws.cell(row=row_idx, column=col_idx, value=str(value)[:500] if col_idx == 8 else str(value)[:200])
                 
-                date_val = row_data[4]
+                date_val = article.get("Date", "")
                 if date_val:
                     try:
                         year = int(str(date_val)[:4])
@@ -314,14 +330,14 @@ class ExcelUpdater:
                     except:
                         pass
         
-        col_widths = [15, 20, 15, 60, 12, 20, 50, 80]
+        col_widths = [15, 22, 18, 70, 12, 22, 60, 100]
         for i, width in enumerate(col_widths, 1):
             ws.column_dimensions[openpyxl.utils.get_column_letter(i)].width = width
         
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
         wb.save(self.output_path)
         
-        logger.info(f"Excel updated: {self.output_path} ({len(all_articles)} total articles)")
+        logger.info(f"Excel updated: {self.output_path} ({len(all_articles)} total)")
         return str(self.output_path)
     
     def get_all_articles_for_dashboard(self, new_articles: List[Dict]) -> List[Dict]:
@@ -330,18 +346,29 @@ class ExcelUpdater:
         
         dashboard_articles = []
         for article in all_articles:
+            title = article.get("News Tittle", "")
+            summary = article.get("Short summary", "")
+            
+            sector = article.get("Business Sector", "")
+            area = article.get("Area", "")
+            
+            if not sector or sector not in AREA_BY_SECTOR:
+                sector, area = classify_by_keywords(title, summary)
+            elif not area:
+                area = AREA_BY_SECTOR.get(sector, "Environment")
+            
             dashboard_articles.append({
-                "area": article.get("Area", "Environment"),
-                "sector": article.get("Business Sector", "Waste Water"),
+                "area": area,
+                "sector": sector,
                 "province": article.get("Province", "Vietnam"),
-                "title": article.get("News Tittle", ""),
+                "title": title,
                 "date": str(article.get("Date", ""))[:10],
                 "source": article.get("Source", ""),
                 "url": article.get("Link", ""),
-                "summary": article.get("Short summary", ""),
-                "summary_en": article.get("Short summary", ""),
-                "summary_ko": article.get("Short summary", ""),
-                "summary_vi": article.get("Short summary", ""),
+                "summary": summary,
+                "summary_en": summary,
+                "summary_ko": summary,
+                "summary_vi": summary,
             })
         
         return dashboard_articles
