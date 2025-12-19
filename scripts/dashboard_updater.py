@@ -43,29 +43,12 @@ class DashboardUpdater:
         with open(self.template_path, 'r', encoding='utf-8') as f:
             template = f.read()
         
-        # Method 1: Replace placeholder
+        # Replace placeholder with real data
         if '/*__BACKEND_DATA__*/[]' in template:
             html = template.replace('/*__BACKEND_DATA__*/[]', js_data)
-        # Method 2: Replace generateFullDataset() call
-        elif 'const BACKEND_DATA = generateFullDataset();' in template:
-            html = template.replace(
-                'const BACKEND_DATA = generateFullDataset();',
-                f'const BACKEND_DATA = {js_data};'
-            )
-        # Method 3: Inject data before </script>
         else:
-            # Find the main script and inject data at the beginning
-            inject_script = f'''<script>
-// Injected real data from pipeline
-window.INJECTED_DATA = {js_data};
-</script>
-'''
-            html = template.replace('<body', inject_script + '<body')
-            # Also need to make the dashboard use INJECTED_DATA
-            html = html.replace(
-                'const BACKEND_DATA = generateFullDataset();',
-                'const BACKEND_DATA = window.INJECTED_DATA || generateFullDataset();'
-            )
+            logger.error("Placeholder not found in template")
+            return ""
         
         # Update timestamp
         html = html.replace('{{LAST_UPDATED}}', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
@@ -82,48 +65,71 @@ window.INJECTED_DATA = {js_data};
         js_articles = []
         
         for i, article in enumerate(articles, 1):
-            # Titles for each language
+            # Original title (usually Vietnamese)
             original_title = article.get("title", "No title")
             
-            # Korean: use summary_ko or original
-            title_ko = article.get("summary_ko", "")
-            if not title_ko or len(title_ko) < 10:
-                title_ko = original_title
+            # Get AI-generated summaries
+            summary_en = article.get("summary_en", "")
+            summary_ko = article.get("summary_ko", "")
+            summary_vi = article.get("summary_vi", "")
             
-            # English: use original title (usually in English)
-            title_en = original_title
+            # Title for each language:
+            # - Korean: Use Korean summary as title (or original if none)
+            # - English: Use English summary as title (or original if none)
+            # - Vietnamese: Use original title (Vietnamese)
+            title_ko = summary_ko[:150] if summary_ko and len(summary_ko) > 10 else original_title
+            title_en = summary_en[:150] if summary_en and len(summary_en) > 10 else original_title
+            title_vi = original_title
             
-            # Vietnamese: use summary_vi or original
-            title_vi = article.get("summary_vi", "")
-            if not title_vi or len(title_vi) < 10:
-                title_vi = original_title
+            # Full summaries
+            full_summary_ko = summary_ko if summary_ko else original_title
+            full_summary_en = summary_en if summary_en else original_title
+            full_summary_vi = summary_vi if summary_vi else original_title
             
-            # Summaries
-            summary_en = article.get("summary_en", article.get("summary", ""))
-            summary_ko = article.get("summary_ko", summary_en)
-            summary_vi = article.get("summary_vi", summary_en)
+            # Normalize date to YYYY-MM-DD format
+            date_str = article.get("published", "")
+            if date_str:
+                # Try to parse and normalize date
+                try:
+                    if 'T' in date_str:
+                        date_str = date_str.split('T')[0]
+                    elif len(date_str) > 10:
+                        date_str = date_str[:10]
+                except:
+                    date_str = datetime.now().strftime("%Y-%m-%d")
+            else:
+                date_str = datetime.now().strftime("%Y-%m-%d")
             
             # URL
             url = article.get("url", "")
             if not url:
                 url = self._generate_search_url(article)
             
+            # Map area to standard names
+            area = article.get("area", "Environment")
+            if "Environ" in area:
+                area = "Environment"
+            elif "Energy" in area:
+                area = "Energy Develop."
+            elif "Urban" in area:
+                area = "Urban Develop."
+            
             js_article = {
                 "id": i,
-                "date": article.get("published", datetime.now().strftime("%Y-%m-%d")),
-                "area": article.get("area", "Environment"),
+                "date": date_str,
+                "area": area,
                 "sector": article.get("sector", "Waste Water"),
                 "province": article.get("province", "Vietnam"),
                 "source": article.get("source", "Unknown"),
                 "title": {
-                    "ko": title_ko[:200],
-                    "en": title_en[:200],
-                    "vi": title_vi[:200]
+                    "ko": title_ko,
+                    "en": title_en,
+                    "vi": title_vi
                 },
                 "summary": {
-                    "ko": summary_ko[:500] if summary_ko else "",
-                    "en": summary_en[:500] if summary_en else "",
-                    "vi": summary_vi[:500] if summary_vi else ""
+                    "ko": full_summary_ko[:500] if full_summary_ko else "",
+                    "en": full_summary_en[:500] if full_summary_en else "",
+                    "vi": full_summary_vi[:500] if full_summary_vi else ""
                 },
                 "url": url
             }
@@ -170,7 +176,7 @@ class ExcelUpdater:
         
         for i, article in enumerate(articles, 2):
             ws.cell(row=i, column=1, value=i-1)
-            ws.cell(row=i, column=2, value=article.get("published", ""))
+            ws.cell(row=i, column=2, value=article.get("published", "")[:10] if article.get("published") else "")
             ws.cell(row=i, column=3, value=article.get("area", ""))
             ws.cell(row=i, column=4, value=article.get("sector", ""))
             ws.cell(row=i, column=5, value=article.get("province", ""))
@@ -251,3 +257,18 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
+
+**Commit changes** 클릭
+
+---
+
+## 실행 후 로그 확인 요청
+
+Actions → **Run workflow** 실행 후
+
+**Run Pipeline** 단계의 로그에서 수집된 기사의 **date** 값이 어떻게 나오는지 확인해주세요.
+
+예를 들어:
+```
+Articles Collected: 26
