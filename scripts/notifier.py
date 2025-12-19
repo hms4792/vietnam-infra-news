@@ -179,90 +179,92 @@ class EmailNotifier:
             return False
     
     def create_html_briefing(self, data: Dict) -> str:
+        # Build Area/Sector breakdown
+        area_sector_rows = ""
+        for area_name, area_data in data.get("area_sector_breakdown", {}).items():
+            sector_list = ", ".join([f"{s}: {c}" for s, c in area_data["sectors"].items()])
+            area_sector_rows += f'''<tr>
+                <td style="padding:8px;border-bottom:1px solid #e5e7eb;">{area_name}</td>
+                <td style="padding:8px;border-bottom:1px solid #e5e7eb;text-align:center;font-weight:bold;">{area_data["total"]}</td>
+                <td style="padding:8px;border-bottom:1px solid #e5e7eb;font-size:12px;color:#666;">{sector_list}</td>
+            </tr>'''
+        
+        # Top 3 provinces (excluding Vietnam)
+        province_rows = ""
+        for province, count in data.get("top_provinces", []):
+            province_rows += f'''<tr>
+                <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;">{province}</td>
+                <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:center;font-weight:bold;">{count}</td>
+            </tr>'''
+        
+        # Vietnam (common) count
+        vietnam_count = data.get("vietnam_count", 0)
+        
         # Top news with [Province] prefix
         top_news_html = ""
         for article in data.get("top_articles", [])[:5]:
             province = article.get("province", "Vietnam")
-            title = article.get("summary_en", article.get("title", ""))[:80]
+            title = article.get("summary_en", article.get("title", ""))[:100]
             source = article.get("source", "")
-            date = article.get("published", "")
-            top_news_html += f'''<div style="background:#f8fafc;padding:12px;margin:8px 0;border-radius:6px;border-left:4px solid #0d9488;">
+            top_news_html += f'''<div style="background:#f8fafc;padding:10px 12px;margin:6px 0;border-radius:6px;border-left:4px solid #0d9488;font-size:13px;">
                 <strong>[{province}]</strong> {title}<br>
-                <small style="color:#666;">{source} | {date}</small>
+                <small style="color:#888;">{source}</small>
             </div>'''
-        
-        # Sector stats
-        sector_html = ""
-        for sector, count in data.get("sector_counts", {}).items():
-            if count > 0:
-                sector_html += f'<div style="display:inline-block;background:#f0fdfa;padding:8px 12px;margin:4px;border-radius:6px;"><strong>{count}</strong> <span style="color:#666;font-size:12px;">{sector}</span></div>'
-        
-        # Province stats (top 5)
-        province_html = ""
-        for province, count in list(data.get("province_counts", {}).items())[:5]:
-            if count > 0:
-                province_html += f'<div style="display:inline-block;background:#ede9fe;padding:8px 12px;margin:4px;border-radius:6px;"><strong>{count}</strong> <span style="color:#666;font-size:12px;">{province}</span></div>'
         
         return f'''<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"></head>
 <body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5;">
-    <div style="max-width: 650px; margin: 0 auto;">
-        <div style="background: linear-gradient(135deg, #0d9488, #10b981); color: white; padding: 25px; border-radius: 12px 12px 0 0;">
-            <h1 style="margin:0; font-size: 24px;">🇻🇳 Vietnam Infrastructure News</h1>
-            <p style="margin:8px 0 0; opacity: 0.9;">Daily Briefing Report - {data.get('date', '')}</p>
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #0d9488, #10b981); color: white; padding: 20px; border-radius: 12px 12px 0 0;">
+            <h1 style="margin:0; font-size: 22px;">🇻🇳 Vietnam Infrastructure News</h1>
+            <p style="margin:5px 0 0; opacity: 0.9; font-size:14px;">Daily Briefing - {data.get('date', '')}</p>
         </div>
         
-        <div style="background: white; padding: 25px; border-radius: 0 0 12px 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="background: white; padding: 20px; border-radius: 0 0 12px 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             
-            <!-- Summary Section -->
-            <h2 style="color: #333; margin-top: 0; border-bottom: 2px solid #0d9488; padding-bottom: 10px;">📊 Summary</h2>
-            
-            <!-- Total -->
-            <div style="text-align:center; margin: 20px 0;">
-                <div style="display:inline-block; background:linear-gradient(135deg, #0d9488, #10b981); color:white; padding:20px 40px; border-radius:12px;">
-                    <div style="font-size:48px; font-weight:bold;">{data.get('total', 0)}</div>
-                    <div style="font-size:14px; opacity:0.9;">Total Articles Collected</div>
-                </div>
+            <!-- KPI Summary Box -->
+            <div style="background:#f0fdfa; border:1px solid #99f6e4; border-radius:10px; padding:15px; margin-bottom:20px;">
+                <h2 style="margin:0 0 15px 0; font-size:16px; color:#0d9488;">📊 Daily Summary</h2>
+                
+                <!-- Total -->
+                <table style="width:100%; margin-bottom:15px;">
+                    <tr>
+                        <td style="font-size:14px; color:#333;">Total Articles</td>
+                        <td style="text-align:right; font-size:28px; font-weight:bold; color:#0d9488;">{data.get('total', 0)}</td>
+                    </tr>
+                </table>
+                
+                <!-- By Area/Sector -->
+                <div style="font-size:13px; font-weight:bold; color:#555; margin:10px 0 5px;">📁 By Area / Sector</div>
+                <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                    <tr style="background:#e6fffa;">
+                        <th style="padding:8px;text-align:left;border-bottom:2px solid #0d9488;">Area</th>
+                        <th style="padding:8px;text-align:center;border-bottom:2px solid #0d9488;">Count</th>
+                        <th style="padding:8px;text-align:left;border-bottom:2px solid #0d9488;">Sectors</th>
+                    </tr>
+                    {area_sector_rows}
+                </table>
+                
+                <!-- By Province -->
+                <div style="font-size:13px; font-weight:bold; color:#555; margin:15px 0 5px;">📍 Top Provinces</div>
+                <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                    {province_rows}
+                    <tr style="background:#f5f5f5;">
+                        <td style="padding:6px 8px;color:#888;">Vietnam (Common)</td>
+                        <td style="padding:6px 8px;text-align:center;color:#888;">{vietnam_count}</td>
+                    </tr>
+                </table>
             </div>
-            
-            <!-- By Area -->
-            <h3 style="color: #555; margin-top: 25px;">📁 By Area</h3>
-            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 15px 0;">
-                <div style="flex:1; min-width:120px; background:#ecfdf5; padding:15px; border-radius:8px; text-align:center;">
-                    <div style="font-size:28px; font-weight:bold; color:#059669;">{data.get('env_count', 0)}</div>
-                    <div style="font-size:12px; color:#666;">Environment</div>
-                </div>
-                <div style="flex:1; min-width:120px; background:#fef3c7; padding:15px; border-radius:8px; text-align:center;">
-                    <div style="font-size:28px; font-weight:bold; color:#d97706;">{data.get('energy_count', 0)}</div>
-                    <div style="font-size:12px; color:#666;">Energy</div>
-                </div>
-                <div style="flex:1; min-width:120px; background:#ede9fe; padding:15px; border-radius:8px; text-align:center;">
-                    <div style="font-size:28px; font-weight:bold; color:#7c3aed;">{data.get('urban_count', 0)}</div>
-                    <div style="font-size:12px; color:#666;">Urban Dev</div>
-                </div>
-            </div>
-            
-            <!-- By Sector -->
-            <h3 style="color: #555; margin-top: 25px;">🏭 By Sector</h3>
-            <div style="margin: 10px 0;">{sector_html if sector_html else '<span style="color:#999;">No data</span>'}</div>
-            
-            <!-- By Province -->
-            <h3 style="color: #555; margin-top: 25px;">📍 Top Provinces</h3>
-            <div style="margin: 10px 0;">{province_html if province_html else '<span style="color:#999;">No data</span>'}</div>
             
             <!-- Top News -->
-            <h2 style="color: #333; margin-top: 30px; border-bottom: 2px solid #0d9488; padding-bottom: 10px;">🔥 Top News</h2>
-            {top_news_html if top_news_html else '<p style="color:#666;">No articles collected today.</p>'}
+            <h3 style="color:#333; margin:20px 0 10px; font-size:15px;">🔥 Top News</h3>
+            {top_news_html if top_news_html else '<p style="color:#666;font-size:13px;">No articles collected.</p>'}
             
             <!-- Dashboard Button -->
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="{DASHBOARD_URL}" style="display:inline-block; background:#0d9488; color:white; padding:14px 28px; text-decoration:none; border-radius:8px; font-weight:bold;">📊 View Full Dashboard</a>
+            <div style="text-align: center; margin-top: 25px;">
+                <a href="{DASHBOARD_URL}" style="display:inline-block; background:#0d9488; color:white; padding:12px 24px; text-decoration:none; border-radius:8px; font-weight:bold; font-size:14px;">📊 View Dashboard</a>
             </div>
-            
-            <p style="text-align:center; margin-top:20px; font-size:12px; color:#999;">
-                Automated report from Vietnam Infrastructure News Pipeline
-            </p>
         </div>
     </div>
 </body>
@@ -277,35 +279,49 @@ class NotificationManager:
         self.kakao = KakaoNotifier()
     
     def prepare_briefing_data(self, articles: List[Dict]) -> Dict:
-        # Area counts
-        area_counts = {"Environment": 0, "Energy Develop.": 0, "Urban Develop.": 0}
-        sector_counts = Counter()
+        # Area/Sector breakdown
+        area_sector = {
+            "Environment": {"total": 0, "sectors": Counter()},
+            "Energy Develop.": {"total": 0, "sectors": Counter()},
+            "Urban Develop.": {"total": 0, "sectors": Counter()}
+        }
+        
         province_counts = Counter()
+        vietnam_count = 0
         
         for article in articles:
             area = article.get("area", "")
-            if area in area_counts:
-                area_counts[area] += 1
-            
             sector = article.get("sector", "Unknown")
-            sector_counts[sector] += 1
+            province = article.get("province", "Vietnam")
             
-            province = article.get("province", "Unknown")
-            province_counts[province] += 1
+            if area in area_sector:
+                area_sector[area]["total"] += 1
+                area_sector[area]["sectors"][sector] += 1
+            
+            if province == "Vietnam":
+                vietnam_count += 1
+            else:
+                province_counts[province] += 1
         
-        # Sort by count descending
-        sector_counts = dict(sector_counts.most_common(10))
-        province_counts = dict(province_counts.most_common(10))
+        # Top 3 provinces (excluding Vietnam)
+        top_provinces = province_counts.most_common(3)
+        
+        # Convert sector counters to dicts
+        area_sector_breakdown = {}
+        for area, data in area_sector.items():
+            if data["total"] > 0:
+                area_sector_breakdown[area] = {
+                    "total": data["total"],
+                    "sectors": dict(data["sectors"].most_common(5))
+                }
         
         return {
             "date": datetime.now().strftime("%Y-%m-%d"),
             "total": len(articles),
             "total_articles": len(articles),
-            "env_count": area_counts["Environment"],
-            "energy_count": area_counts["Energy Develop."],
-            "urban_count": area_counts["Urban Develop."],
-            "sector_counts": sector_counts,
-            "province_counts": province_counts,
+            "area_sector_breakdown": area_sector_breakdown,
+            "top_provinces": top_provinces,
+            "vietnam_count": vietnam_count,
             "top_articles": articles[:5],
             "dashboard_url": DASHBOARD_URL
         }
@@ -314,22 +330,16 @@ class NotificationManager:
         results = {}
         data = self.prepare_briefing_data(articles)
         
-        # Plain text message
         message = f"""🇻🇳 Vietnam Infrastructure News
 📅 {data['date']}
 
-📊 Summary:
-- Total: {data['total']} articles
-- Environment: {data['env_count']}
-- Energy: {data['energy_count']}
-- Urban: {data['urban_count']}
+📊 Total: {data['total']} articles
 
 🔗 Dashboard: {DASHBOARD_URL}"""
         
         results["telegram"] = await self.telegram.send_message(message)
         results["slack"] = await self.slack.send_message(message)
         
-        # Email
         html_body = self.email.create_html_briefing(data)
         results["email"] = self.email.send_email(
             subject=f"🇻🇳 Vietnam Infra News - {data['date']} ({data['total']} articles)",
