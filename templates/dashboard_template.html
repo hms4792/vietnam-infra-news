@@ -656,7 +656,7 @@ function generateFullDataset() {
     return data.sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
-const BACKEND_DATA = generateFullDataset();
+const BACKEND_DATA = /*__BACKEND_DATA__*/[];
 console.log('Total:', BACKEND_DATA.length, '| 2024:', BACKEND_DATA.filter(d => d.date.startsWith('2024')).length, '| 2025:', BACKEND_DATA.filter(d => d.date.startsWith('2025')).length);
 
 // ============================================
