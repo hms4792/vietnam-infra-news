@@ -1,17 +1,13 @@
 """
 Vietnam Infrastructure News Dashboard Updater
-Maintains existing database structure with all sheets:
-- Data set (Database): All articles with new ones appended
-- Source: All sources with new ones marked
-- Keywords: Category keywords for search
-- Summary: Statistics by Area/Sector
+Maintains existing database structure with all sheets
 """
 import json
 import logging
+import os
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Tuple
-from urllib.parse import quote
 from collections import Counter
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
@@ -35,7 +31,33 @@ from config.settings import DATA_DIR, OUTPUT_DIR, TEMPLATE_DIR
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-EXISTING_DB_PATH = Path(__file__).parent.parent / "data" / "Vietnam_Infra_News_Database_Final.xlsx"
+PROJECT_ROOT = Path(__file__).parent.parent
+EXISTING_DB_FILENAME = "Vietnam_Infra_News_Database_Final.xlsx"
+
+def find_existing_database() -> Path:
+    possible_paths = [
+        PROJECT_ROOT / "data" / EXISTING_DB_FILENAME,
+        Path("/home/runner/work/vietnam-infra-news/vietnam-infra-news/data") / EXISTING_DB_FILENAME,
+        DATA_DIR / EXISTING_DB_FILENAME,
+        Path(os.getcwd()) / "data" / EXISTING_DB_FILENAME,
+    ]
+    
+    logger.info(f"Searching for existing database: {EXISTING_DB_FILENAME}")
+    logger.info(f"PROJECT_ROOT: {PROJECT_ROOT}")
+    logger.info(f"Current working directory: {os.getcwd()}")
+    
+    for path in possible_paths:
+        logger.info(f"Checking path: {path} - Exists: {path.exists()}")
+        if path.exists():
+            logger.info(f"Found existing database at: {path}")
+            return path
+    
+    data_dir = PROJECT_ROOT / "data"
+    if data_dir.exists():
+        logger.info(f"Contents of data directory: {list(data_dir.iterdir())}")
+    
+    logger.warning(f"Existing database not found in any location")
+    return PROJECT_ROOT / "data" / EXISTING_DB_FILENAME
 
 KEYWORDS_DATA = [
     {"Category": "Solid Waste", "Keywords": "waste-to-energy, solid waste, landfill, incineration, recycling, circular economy, WtE, garbage, rubbish, trash", "Search Query Example": "Vietnam waste-to-energy solid waste 2025"},
@@ -159,17 +181,22 @@ class DashboardUpdater:
 
 class ExcelDatabaseUpdater:
     def __init__(self):
-        self.existing_db_path = EXISTING_DB_PATH
+        self.existing_db_path = find_existing_database()
         self.output_path = OUTPUT_DIR / "vietnam_infra_news_database.xlsx"
     
     def load_existing_excel(self) -> Dict:
-        if not PANDAS_AVAILABLE or not self.existing_db_path.exists():
-            logger.warning(f"Cannot load existing database")
+        if not PANDAS_AVAILABLE:
+            logger.warning("pandas not available")
+            return {"articles": [], "sources": [], "keywords": KEYWORDS_DATA}
+        
+        if not self.existing_db_path.exists():
+            logger.error(f"CRITICAL: Existing database NOT FOUND at: {self.existing_db_path}")
             return {"articles": [], "sources": [], "keywords": KEYWORDS_DATA}
         
         try:
+            logger.info(f"Loading existing database from: {self.existing_db_path}")
             xl = pd.ExcelFile(self.existing_db_path)
-            logger.info(f"Found sheets: {xl.sheet_names}")
+            logger.info(f"Available sheets: {xl.sheet_names}")
             
             articles = []
             data_sheet = None
@@ -180,6 +207,8 @@ class ExcelDatabaseUpdater:
             
             if data_sheet:
                 df = pd.read_excel(self.existing_db_path, sheet_name=data_sheet)
+                logger.info(f"Loading articles from sheet '{data_sheet}': {len(df)} rows")
+                
                 for _, row in df.iterrows():
                     date_val = row.get("Date", "")
                     if hasattr(date_val, 'strftime'):
@@ -199,11 +228,12 @@ class ExcelDatabaseUpdater:
                         "Link": str(row.get("Link", "")) if pd.notna(row.get("Link")) else "",
                         "Short summary": str(row.get("Short summary", "")) if pd.notna(row.get("Short summary")) else "",
                     })
-                logger.info(f"Loaded {len(articles)} existing articles")
+                logger.info(f"Successfully loaded {len(articles)} existing articles")
             
             sources = []
             if "Source" in xl.sheet_names:
                 df_src = pd.read_excel(self.existing_db_path, sheet_name="Source")
+                logger.info(f"Loading sources from 'Source' sheet: {len(df_src)} rows")
                 for _, row in df_src.iterrows():
                     sources.append({
                         "Domain": str(row.get("Domain", "")) if pd.notna(row.get("Domain")) else "",
@@ -212,7 +242,7 @@ class ExcelDatabaseUpdater:
                         "Status": str(row.get("Status", "")) if pd.notna(row.get("Status")) else "",
                         "Note": str(row.get("Note", "")) if pd.notna(row.get("Note")) else "",
                     })
-                logger.info(f"Loaded {len(sources)} existing sources")
+                logger.info(f"Successfully loaded {len(sources)} existing sources")
             
             keywords = KEYWORDS_DATA
             if "Keywords" in xl.sheet_names:
@@ -230,6 +260,8 @@ class ExcelDatabaseUpdater:
         
         except Exception as e:
             logger.error(f"Error loading existing database: {e}")
+            import traceback
+            traceback.print_exc()
             return {"articles": [], "sources": [], "keywords": KEYWORDS_DATA}
     
     def merge_new_articles(self, existing: List[Dict], new_articles: List[Dict]) -> Tuple[List[Dict], int]:
@@ -241,6 +273,8 @@ class ExcelDatabaseUpdater:
                 existing_keys.add(url)
             if title and title != "nan" and len(title) > 10:
                 existing_keys.add(title)
+        
+        logger.info(f"Existing articles: {len(existing)}, Existing keys: {len(existing_keys)}")
         
         new_count = 0
         for article in new_articles:
@@ -283,12 +317,14 @@ class ExcelDatabaseUpdater:
                     existing_keys.add(title)
                 new_count += 1
         
-        logger.info(f"Added {new_count} new articles (total: {len(existing)})")
+        logger.info(f"Added {new_count} new articles. Total: {len(existing)}")
         return existing, new_count
     
     def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dict]) -> List[Dict]:
-        existing_domains = set(s.get("Domain", "").lower() for s in existing_sources)
+        existing_domains = set(s.get("Domain", "").lower() for s in existing_sources if s.get("Domain"))
+        logger.info(f"Existing sources: {len(existing_sources)}, domains: {len(existing_domains)}")
         
+        new_source_count = 0
         for article in new_articles:
             source = article.get("source", article.get("Source", ""))
             url = article.get("url", article.get("Link", ""))
@@ -302,7 +338,7 @@ class ExcelDatabaseUpdater:
             else:
                 domain = source
             
-            if domain and domain.lower() not in existing_domains:
+            if domain and domain.lower() not in existing_domains and len(domain) > 3:
                 existing_sources.append({
                     "Domain": domain,
                     "URL": url[:100] if url else "",
@@ -311,7 +347,9 @@ class ExcelDatabaseUpdater:
                     "Note": f"NEW {datetime.now().year}",
                 })
                 existing_domains.add(domain.lower())
+                new_source_count += 1
         
+        logger.info(f"Added {new_source_count} new sources. Total: {len(existing_sources)}")
         return existing_sources
     
     def generate_summary(self, articles: List[Dict]) -> List[List]:
@@ -509,6 +547,11 @@ class ExcelDatabaseUpdater:
         sources = existing_data["sources"]
         keywords = existing_data["keywords"]
         
+        logger.info(f"Loaded from existing DB - Articles: {len(articles)}, Sources: {len(sources)}")
+        
+        if len(articles) == 0:
+            logger.error("WARNING: No existing articles loaded! Check database file path.")
+        
         articles, new_count = self.merge_new_articles(articles, new_articles)
         sources = self.merge_new_sources(sources, new_articles)
         
@@ -544,8 +587,9 @@ class OutputGenerator:
         try:
             excel_path, all_articles = self.excel_db.update(new_articles)
             outputs["excel"] = excel_path
-            
             outputs["dashboard"] = self.dashboard.update(all_articles)
+            outputs["total_articles"] = len(all_articles)
+            outputs["new_articles"] = len(new_articles)
         except Exception as e:
             logger.error(f"Error generating outputs: {e}")
             import traceback
@@ -559,13 +603,12 @@ class OutputGenerator:
             with open(json_path, 'w', encoding='utf-8') as f:
                 json.dump({
                     "generated_at": datetime.now().isoformat(),
-                    "total": len(all_articles) if 'all_articles' in locals() else 0,
-                    "new_articles": len(new_articles),
+                    "total": outputs.get("total_articles", 0),
+                    "new_articles": outputs.get("new_articles", 0),
                 }, f, ensure_ascii=False, indent=2)
             outputs["json"] = str(json_path)
         except Exception as e:
             logger.error(f"JSON error: {e}")
-            outputs["json"] = ""
         
         return outputs
 
