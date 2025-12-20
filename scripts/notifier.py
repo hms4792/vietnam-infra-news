@@ -50,14 +50,12 @@ class KakaoNotifier:
     
     def send_message(self, message: str) -> bool:
         if not self.rest_api_key:
-            logger.warning("Kakao API key not configured")
             return False
         if not self.access_token:
             self._load_tokens()
         if not self.access_token:
             self.access_token = self.refresh_access_token()
         if not self.access_token or not REQUESTS_AVAILABLE:
-            logger.warning("Cannot get Kakao access token")
             return False
         
         url = "https://kapi.kakao.com/v2/api/talk/memo/default/send"
@@ -67,14 +65,12 @@ class KakaoNotifier:
         try:
             response = requests.post(url, headers=headers, data={"template_object": json.dumps(template)})
             if response.status_code == 200:
-                logger.info("KakaoTalk message sent")
                 return True
-            return False
-        except Exception as e:
-            logger.error(f"Kakao error: {e}")
-            return False
+        except:
+            pass
+        return False
     
-    def refresh_access_token(self) -> Optional[str]:
+    def refresh_access_token(self):
         if not self.refresh_token:
             self._load_tokens()
         if not self.refresh_token or not REQUESTS_AVAILABLE:
@@ -94,12 +90,13 @@ class KakaoNotifier:
             pass
         return None
     
-    def _save_tokens(self, tokens: Dict):
+    def _save_tokens(self, tokens):
         try:
             self.token_file.parent.mkdir(parents=True, exist_ok=True)
             with open(self.token_file, 'w') as f:
                 json.dump({"access_token": tokens.get("access_token"), "refresh_token": tokens.get("refresh_token", self.refresh_token)}, f)
-        except: pass
+        except:
+            pass
     
     def _load_tokens(self):
         try:
@@ -108,7 +105,8 @@ class KakaoNotifier:
                     data = json.load(f)
                     self.access_token = data.get("access_token")
                     self.refresh_token = data.get("refresh_token")
-        except: pass
+        except:
+            pass
 
 
 class TelegramNotifier:
@@ -118,7 +116,6 @@ class TelegramNotifier:
     
     async def send_message(self, message: str) -> bool:
         if not self.bot_token or not self.chat_id or not AIOHTTP_AVAILABLE:
-            logger.warning("Telegram not configured")
             return False
         try:
             async with aiohttp.ClientSession() as session:
@@ -135,7 +132,6 @@ class SlackNotifier:
     
     async def send_message(self, message: str) -> bool:
         if not self.webhook_url or not AIOHTTP_AVAILABLE:
-            logger.warning("Slack not configured")
             return False
         try:
             async with aiohttp.ClientSession() as session:
@@ -155,7 +151,6 @@ class EmailNotifier:
     
     def send_email(self, subject: str, body: str, html_body: str = None) -> bool:
         if not self.username or not self.password or not self.recipients:
-            logger.warning("Email not configured")
             return False
         
         try:
@@ -179,7 +174,8 @@ class EmailNotifier:
             return False
     
     def create_html_briefing(self, data: Dict) -> str:
-        # Build Area/Sector breakdown
+        today_str = data.get("today_str", datetime.now().strftime("%Y-%m-%d"))
+        
         area_sector_rows = ""
         for area_name, area_data in data.get("area_sector_breakdown", {}).items():
             sector_list = ", ".join([f"{s}: {c}" for s, c in area_data["sectors"].items()])
@@ -189,7 +185,6 @@ class EmailNotifier:
                 <td style="padding:8px;border-bottom:1px solid #e5e7eb;font-size:12px;color:#666;">{sector_list}</td>
             </tr>'''
         
-        # Top 3 provinces (excluding Vietnam)
         province_rows = ""
         for province, count in data.get("top_provinces", []):
             province_rows += f'''<tr>
@@ -197,19 +192,21 @@ class EmailNotifier:
                 <td style="padding:6px 8px;border-bottom:1px solid #e5e7eb;text-align:center;font-weight:bold;">{count}</td>
             </tr>'''
         
-        # Vietnam (common) count
         vietnam_count = data.get("vietnam_count", 0)
         
-        # Top news with [Province] prefix
         top_news_html = ""
-        for article in data.get("top_articles", [])[:5]:
+        for article in data.get("today_articles", [])[:5]:
             province = article.get("province", "Vietnam")
-            title = article.get("summary_en", article.get("title", ""))[:100]
+            title = article.get("summary_en", article.get("title", ""))[:80]
             source = article.get("source", "")
+            date = str(article.get("published", article.get("date", "")))[:10]
             top_news_html += f'''<div style="background:#f8fafc;padding:10px 12px;margin:6px 0;border-radius:6px;border-left:4px solid #0d9488;font-size:13px;">
-                <strong>[{province}]</strong> {title}<br>
-                <small style="color:#888;">{source}</small>
+                <strong style="color:#0d9488;">[{province}]</strong> {title}<br>
+                <small style="color:#888;">{date} | {source}</small>
             </div>'''
+        
+        if not top_news_html:
+            top_news_html = '<p style="color:#666;font-size:13px;">No articles collected today.</p>'
         
         return f'''<!DOCTYPE html>
 <html>
@@ -223,33 +220,33 @@ class EmailNotifier:
         
         <div style="background: white; padding: 20px; border-radius: 0 0 12px 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
             
-            <!-- KPI Summary Box -->
             <div style="background:#f0fdfa; border:1px solid #99f6e4; border-radius:10px; padding:15px; margin-bottom:20px;">
-                <h2 style="margin:0 0 15px 0; font-size:16px; color:#0d9488;">📊 Daily Summary</h2>
+                <h2 style="margin:0 0 15px 0; font-size:16px; color:#0d9488;">📊 Daily Summary ({today_str})</h2>
                 
-                <!-- Total -->
                 <table style="width:100%; margin-bottom:15px;">
                     <tr>
-                        <td style="font-size:14px; color:#333;">Total Articles</td>
-                        <td style="text-align:right; font-size:28px; font-weight:bold; color:#0d9488;">{data.get('total', 0)}</td>
+                        <td style="font-size:14px; color:#333;">Today's Articles</td>
+                        <td style="text-align:right; font-size:28px; font-weight:bold; color:#0d9488;">{data.get('today_count', 0)}</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:12px; color:#888;">Total Database</td>
+                        <td style="text-align:right; font-size:14px; color:#888;">{data.get('total', 0)}</td>
                     </tr>
                 </table>
                 
-                <!-- By Area/Sector -->
-                <div style="font-size:13px; font-weight:bold; color:#555; margin:10px 0 5px;">📁 By Area / Sector</div>
+                <div style="font-size:13px; font-weight:bold; color:#555; margin:10px 0 5px;">📁 By Area / Sector (Today)</div>
                 <table style="width:100%; border-collapse:collapse; font-size:13px;">
                     <tr style="background:#e6fffa;">
                         <th style="padding:8px;text-align:left;border-bottom:2px solid #0d9488;">Area</th>
                         <th style="padding:8px;text-align:center;border-bottom:2px solid #0d9488;">Count</th>
                         <th style="padding:8px;text-align:left;border-bottom:2px solid #0d9488;">Sectors</th>
                     </tr>
-                    {area_sector_rows}
+                    {area_sector_rows if area_sector_rows else '<tr><td colspan="3" style="padding:8px;color:#999;">No data</td></tr>'}
                 </table>
                 
-                <!-- By Province -->
-                <div style="font-size:13px; font-weight:bold; color:#555; margin:15px 0 5px;">📍 Top Provinces</div>
+                <div style="font-size:13px; font-weight:bold; color:#555; margin:15px 0 5px;">📍 Top Provinces (Today)</div>
                 <table style="width:100%; border-collapse:collapse; font-size:13px;">
-                    {province_rows}
+                    {province_rows if province_rows else '<tr><td colspan="2" style="padding:6px 8px;color:#999;">No specific province</td></tr>'}
                     <tr style="background:#f5f5f5;">
                         <td style="padding:6px 8px;color:#888;">Vietnam (Common)</td>
                         <td style="padding:6px 8px;text-align:center;color:#888;">{vietnam_count}</td>
@@ -257,11 +254,9 @@ class EmailNotifier:
                 </table>
             </div>
             
-            <!-- Top News -->
-            <h3 style="color:#333; margin:20px 0 10px; font-size:15px;">🔥 Top News</h3>
-            {top_news_html if top_news_html else '<p style="color:#666;font-size:13px;">No articles collected.</p>'}
+            <h3 style="color:#333; margin:20px 0 10px; font-size:15px;">🔥 Today's Top News</h3>
+            {top_news_html}
             
-            <!-- Dashboard Button -->
             <div style="text-align: center; margin-top: 25px;">
                 <a href="{DASHBOARD_URL}" style="display:inline-block; background:#0d9488; color:white; padding:12px 24px; text-decoration:none; border-radius:8px; font-weight:bold; font-size:14px;">📊 View Dashboard</a>
             </div>
@@ -279,7 +274,14 @@ class NotificationManager:
         self.kakao = KakaoNotifier()
     
     def prepare_briefing_data(self, articles: List[Dict]) -> Dict:
-        # Area/Sector breakdown
+        today_str = datetime.now().strftime("%Y-%m-%d")
+        
+        today_articles = []
+        for article in articles:
+            article_date = str(article.get("published", article.get("date", article.get("Date", ""))))[:10]
+            if article_date == today_str:
+                today_articles.append(article)
+        
         area_sector = {
             "Environment": {"total": 0, "sectors": Counter()},
             "Energy Develop.": {"total": 0, "sectors": Counter()},
@@ -289,10 +291,10 @@ class NotificationManager:
         province_counts = Counter()
         vietnam_count = 0
         
-        for article in articles:
-            area = article.get("area", "")
-            sector = article.get("sector", "Unknown")
-            province = article.get("province", "Vietnam")
+        for article in today_articles:
+            area = article.get("area", article.get("Area", ""))
+            sector = article.get("sector", article.get("Business Sector", "Unknown"))
+            province = article.get("province", article.get("Province", "Vietnam"))
             
             if area in area_sector:
                 area_sector[area]["total"] += 1
@@ -303,10 +305,8 @@ class NotificationManager:
             else:
                 province_counts[province] += 1
         
-        # Top 3 provinces (excluding Vietnam)
         top_provinces = province_counts.most_common(3)
         
-        # Convert sector counters to dicts
         area_sector_breakdown = {}
         for area, data in area_sector.items():
             if data["total"] > 0:
@@ -317,12 +317,13 @@ class NotificationManager:
         
         return {
             "date": datetime.now().strftime("%Y-%m-%d"),
+            "today_str": today_str,
             "total": len(articles),
-            "total_articles": len(articles),
+            "today_count": len(today_articles),
+            "today_articles": today_articles,
             "area_sector_breakdown": area_sector_breakdown,
             "top_provinces": top_provinces,
             "vietnam_count": vietnam_count,
-            "top_articles": articles[:5],
             "dashboard_url": DASHBOARD_URL
         }
     
@@ -330,19 +331,20 @@ class NotificationManager:
         results = {}
         data = self.prepare_briefing_data(articles)
         
-        message = f"""🇻🇳 Vietnam Infrastructure News
-📅 {data['date']}
+        message = f"""Vietnam Infrastructure News
+{data['date']}
 
-📊 Total: {data['total']} articles
+Today: {data['today_count']} articles
+Total: {data['total']} articles
 
-🔗 Dashboard: {DASHBOARD_URL}"""
+Dashboard: {DASHBOARD_URL}"""
         
         results["telegram"] = await self.telegram.send_message(message)
         results["slack"] = await self.slack.send_message(message)
         
         html_body = self.email.create_html_briefing(data)
         results["email"] = self.email.send_email(
-            subject=f"🇻🇳 Vietnam Infra News - {data['date']} ({data['total']} articles)",
+            subject=f"Vietnam Infra News - {data['date']} ({data['today_count']} new articles)",
             body=message,
             html_body=html_body
         )
@@ -379,7 +381,7 @@ async def main():
     
     print(f"\nResults:")
     for channel, success in results.items():
-        print(f"  {channel}: {'✅' if success else '❌'}")
+        print(f"  {channel}: {'OK' if success else 'FAIL'}")
 
 
 if __name__ == "__main__":
