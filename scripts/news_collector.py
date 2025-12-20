@@ -88,7 +88,7 @@ DEFAULT_RSS_FEEDS = {
 }
 
 
-def find_existing_database() -> Optional[Path]:
+def find_existing_database():
     possible_paths = [
         PROJECT_ROOT / "data" / EXISTING_DB_FILENAME,
         Path("/home/runner/work/vietnam-infra-news/vietnam-infra-news/data") / EXISTING_DB_FILENAME,
@@ -105,7 +105,7 @@ def find_existing_database() -> Optional[Path]:
     return None
 
 
-def load_sources_from_excel() -> List[Dict]:
+def load_sources_from_excel():
     if not PANDAS_AVAILABLE:
         logger.warning("pandas not available, using default sources")
         return []
@@ -164,7 +164,7 @@ class NewsCollector:
         if self.session:
             await self.session.close()
     
-    async def fetch_url(self, url: str) -> Optional[str]:
+    async def fetch_url(self, url):
         try:
             async with self.session.get(url, ssl=False) as response:
                 if response.status == 200:
@@ -173,7 +173,7 @@ class NewsCollector:
             logger.debug(f"Error fetching {url}: {e}")
         return None
     
-    async def collect_from_rss(self, source_name: str, feed_url: str) -> List[Dict]:
+    async def collect_from_rss(self, source_name, feed_url):
         articles = []
         
         try:
@@ -210,7 +210,7 @@ class NewsCollector:
         
         return articles
     
-    async def search_source_domain(self, source: Dict, keywords: List[str]) -> List[Dict]:
+    async def search_source_domain(self, source, keywords):
         articles = []
         domain = source.get("domain", "")
         
@@ -267,7 +267,7 @@ class NewsCollector:
         
         return articles
     
-    async def collect_all(self) -> List[Dict]:
+    async def collect_all(self):
         all_articles = []
         seen_urls = set()
         seen_titles = set()
@@ -344,7 +344,7 @@ class NewsCollector:
         
         return all_articles
     
-    def _parse_date(self, date_str: str) -> str:
+    def _parse_date(self, date_str):
         if not date_str:
             return datetime.now().strftime("%Y-%m-%d")
         
@@ -367,13 +367,13 @@ class NewsCollector:
         
         return datetime.now().strftime("%Y-%m-%d")
     
-    def _clean_html(self, text: str) -> str:
+    def _clean_html(self, text):
         if not text:
             return ""
         soup = BeautifulSoup(text, 'html.parser')
         return soup.get_text(strip=True)[:500]
     
-    def _is_valid_article(self, href: str, title: str, domain: str) -> bool:
+    def _is_valid_article(self, href, title, domain):
         if not title or len(title) < 20:
             return False
         if not href:
@@ -386,7 +386,7 @@ class NewsCollector:
         
         return True
     
-    def _is_infrastructure_related(self, article: Dict) -> bool:
+    def _is_infrastructure_related(self, article):
         text = (article.get("title", "") + " " + article.get("summary", "")).lower()
         
         infra_keywords = [
@@ -400,7 +400,7 @@ class NewsCollector:
         
         return any(kw in text for kw in infra_keywords)
     
-    def _classify_article(self, article: Dict) -> Tuple[str, str]:
+    def _classify_article(self, article):
         text = (article.get("title", "") + " " + article.get("summary", "")).lower()
         
         sector_priority = ["Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Oil & Gas", "Smart City", "Industrial Parks"]
@@ -413,7 +413,7 @@ class NewsCollector:
         
         return "Waste Water", "Environment"
     
-    def _extract_province(self, article: Dict) -> str:
+    def _extract_province(self, article):
         text = (article.get("title", "") + " " + article.get("summary", "")).lower()
         
         for province in PROVINCES:
@@ -423,13 +423,13 @@ class NewsCollector:
         return "Vietnam"
 
 
-async def collect_news() -> List[Dict]:
+async def collect_news():
     async with NewsCollector() as collector:
         articles = await collector.collect_all()
         return articles
 
 
-def save_collected_news(articles: List[Dict], filename: str = None) -> str:
+def save_collected_news(articles, filename=None):
     if filename is None:
         filename = f"news_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     
@@ -473,37 +473,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
-
-**Commit changes** 클릭
-
----
-
-## 2️⃣ 다시 Run workflow
-
-Actions → **Run workflow** 클릭
-
----
-
-## 변경사항 요약
-
-### ✅ 기존 데이터베이스 보존
-- `find_existing_database()`: 여러 경로에서 기존 DB 파일 검색
-- 로그에서 파일 로드 상태 확인 가능
-- 기존 2,073건 데이터 유지 + 신규만 추가
-
-### ✅ 기존 310개 소스 검색
-- `load_sources_from_excel()`: Source 시트에서 소스 목록 로드
-- 우선순위 도메인 (VnExpress, TuoiTre 등) 먼저 검색
-- 나머지 DB 소스들도 순차적으로 검색
-
-### ✅ Keywords 시트 기준 분류
-- 섹터 우선순위: Waste Water → Solid Waste → Water Supply → Power → Oil & Gas → Smart City → Industrial Parks
-
----
-
-실행 후 로그에서 다음을 확인해주세요:
-```
-Found existing database at: ...
-Loaded 310 sources from database
-Loaded 2073 existing articles
