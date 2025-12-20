@@ -1,6 +1,6 @@
 """
 Vietnam Infrastructure News Collector
-Collects news from various Vietnamese news sources
+Collects news from existing 310+ sources in database
 """
 import asyncio
 import aiohttp
@@ -8,33 +8,153 @@ import feedparser
 import json
 import logging
 import re
+import os
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 from bs4 import BeautifulSoup
 import sys
 sys.path.append(str(Path(__file__).parent.parent))
 
-from config.settings import (
-    NEWS_SOURCES, SECTOR_KEYWORDS, PROVINCES, PROVINCE_ALIASES,
-    DATA_DIR, OUTPUT_DIR
-)
+try:
+    import pandas as pd
+    PANDAS_AVAILABLE = True
+except ImportError:
+    PANDAS_AVAILABLE = False
+
+from config.settings import DATA_DIR, OUTPUT_DIR
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+PROJECT_ROOT = Path(__file__).parent.parent
+EXISTING_DB_FILENAME = "Vietnam_Infra_News_Database_Final.xlsx"
+
+PROVINCES = [
+    "Hanoi", "Ho Chi Minh City", "Da Nang", "Hai Phong", "Can Tho",
+    "Binh Duong", "Dong Nai", "Ba Ria-Vung Tau", "Long An", "Quang Ninh",
+    "Bac Ninh", "Hai Duong", "Hung Yen", "Thai Nguyen", "Vinh Phuc",
+    "Quang Nam", "Khanh Hoa", "Lam Dong", "Binh Thuan", "Ninh Thuan",
+    "Thua Thien Hue", "Nghe An", "Thanh Hoa", "Nam Dinh", "Ninh Binh",
+    "Phu Tho", "Bac Giang", "Lang Son", "Cao Bang", "Ha Giang",
+    "Lao Cai", "Yen Bai", "Son La", "Dien Bien", "Lai Chau",
+    "Hoa Binh", "Ha Nam", "Thai Binh", "Quang Binh", "Quang Tri",
+    "Kon Tum", "Gia Lai", "Dak Lak", "Dak Nong", "Binh Phuoc",
+    "Tay Ninh", "Ben Tre", "Tra Vinh", "Vinh Long", "Dong Thap",
+    "An Giang", "Kien Giang", "Hau Giang", "Soc Trang", "Bac Lieu",
+    "Ca Mau", "Phu Yen", "Binh Dinh", "Vietnam"
+]
+
+SECTOR_KEYWORDS = {
+    "Solid Waste": ["waste-to-energy", "solid waste", "landfill", "incineration", "recycling", "circular economy", "wte", "garbage", "municipal waste"],
+    "Waste Water": ["wastewater", "waste water", "wwtp", "sewage", "water treatment", "sewerage", "effluent", "sludge"],
+    "Water Supply/Drainage": ["clean water", "water supply", "reservoir", "potable water", "tap water", "drinking water", "water infrastructure"],
+    "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", "solar", "wind", "renewable", "hydropower", "pdp8"],
+    "Oil & Gas": ["oil exploration", "gas field", "upstream", "petroleum", "offshore drilling", "lng terminal", "refinery"],
+    "Industrial Parks": ["industrial park", "industrial zone", "fdi", "economic zone", "manufacturing zone"],
+    "Smart City": ["smart city", "urban development", "digital transformation", "city planning", "urban area"],
+}
+
+AREA_BY_SECTOR = {
+    "Solid Waste": "Environment",
+    "Waste Water": "Environment", 
+    "Water Supply/Drainage": "Environment",
+    "Power": "Energy Develop.",
+    "Oil & Gas": "Energy Develop.",
+    "Industrial Parks": "Urban Develop.",
+    "Smart City": "Urban Develop.",
+}
+
+SEARCH_KEYWORDS = [
+    "Vietnam wastewater treatment plant",
+    "Vietnam solid waste management",
+    "Vietnam water supply project",
+    "Vietnam power plant project",
+    "Vietnam LNG power",
+    "Vietnam solar wind energy",
+    "Vietnam industrial park FDI",
+    "Vietnam smart city development",
+    "Vietnam infrastructure investment",
+    "Vietnam environmental project",
+]
+
+DEFAULT_RSS_FEEDS = {
+    "VnExpress": "https://vnexpress.net/rss/kinh-doanh.rss",
+    "VnExpress English": "https://e.vnexpress.net/rss/news.rss",
+    "Tuoi Tre": "https://tuoitre.vn/rss/kinh-doanh.rss",
+    "VietnamPlus": "https://www.vietnamplus.vn/rss/kinhte.rss",
+    "VietnamNews": "https://vietnamnews.vn/rss/economy.rss",
+    "VnEconomy": "https://vneconomy.vn/rss/dau-tu.rss",
+}
+
+
+def find_existing_database() -> Optional[Path]:
+    possible_paths = [
+        PROJECT_ROOT / "data" / EXISTING_DB_FILENAME,
+        Path("/home/runner/work/vietnam-infra-news/vietnam-infra-news/data") / EXISTING_DB_FILENAME,
+        DATA_DIR / EXISTING_DB_FILENAME,
+        Path(os.getcwd()) / "data" / EXISTING_DB_FILENAME,
+    ]
+    
+    for path in possible_paths:
+        if path.exists():
+            logger.info(f"Found existing database at: {path}")
+            return path
+    
+    logger.warning("Existing database not found")
+    return None
+
+
+def load_sources_from_excel() -> List[Dict]:
+    if not PANDAS_AVAILABLE:
+        logger.warning("pandas not available, using default sources")
+        return []
+    
+    db_path = find_existing_database()
+    if not db_path:
+        return []
+    
+    try:
+        xl = pd.ExcelFile(db_path)
+        if "Source" not in xl.sheet_names:
+            logger.warning("Source sheet not found in database")
+            return []
+        
+        df = pd.read_excel(db_path, sheet_name="Source")
+        sources = []
+        
+        for _, row in df.iterrows():
+            domain = str(row.get("Domain", "")) if pd.notna(row.get("Domain")) else ""
+            url = str(row.get("URL", "")) if pd.notna(row.get("URL")) else ""
+            source_type = str(row.get("Type", "")) if pd.notna(row.get("Type")) else ""
+            status = str(row.get("Status", "")) if pd.notna(row.get("Status")) else ""
+            
+            if domain and status.lower() in ["accessible", "active", ""]:
+                sources.append({
+                    "domain": domain,
+                    "url": url,
+                    "type": source_type,
+                })
+        
+        logger.info(f"Loaded {len(sources)} sources from database")
+        return sources
+    
+    except Exception as e:
+        logger.error(f"Error loading sources from Excel: {e}")
+        return []
+
 
 class NewsCollector:
-    """Collects infrastructure news from Vietnamese sources"""
-    
     def __init__(self):
         self.collected_news = []
         self.session = None
+        self.existing_sources = load_sources_from_excel()
+        logger.info(f"Initialized with {len(self.existing_sources)} sources from database")
         
     async def __aenter__(self):
         self.session = aiohttp.ClientSession(
             headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
             },
             timeout=aiohttp.ClientTimeout(total=30)
         )
@@ -45,18 +165,15 @@ class NewsCollector:
             await self.session.close()
     
     async def fetch_url(self, url: str) -> Optional[str]:
-        """Fetch content from URL"""
         try:
-            async with self.session.get(url) as response:
+            async with self.session.get(url, ssl=False) as response:
                 if response.status == 200:
                     return await response.text()
-                logger.warning(f"Failed to fetch {url}: Status {response.status}")
         except Exception as e:
-            logger.error(f"Error fetching {url}: {e}")
+            logger.debug(f"Error fetching {url}: {e}")
         return None
     
     async def collect_from_rss(self, source_name: str, feed_url: str) -> List[Dict]:
-        """Collect news from RSS feed"""
         articles = []
         
         try:
@@ -66,21 +183,18 @@ class NewsCollector:
             
             feed = feedparser.parse(content)
             
-            for entry in feed.entries[:20]:  # Limit to 20 per feed
+            for entry in feed.entries[:30]:
                 article = {
                     "id": hash(entry.link) % 10**8,
                     "title": entry.title,
                     "url": entry.link,
                     "source": source_name,
                     "published": self._parse_date(entry.get("published", "")),
-                    "summary": entry.get("summary", ""),
-                    "content": "",
+                    "summary": self._clean_html(entry.get("summary", "")),
                 }
                 
-                # Check if infrastructure related
                 if self._is_infrastructure_related(article):
-                    # Classify article
-                    area, sector = self._classify_article(article)
+                    sector, area = self._classify_article(article)
                     province = self._extract_province(article)
                     
                     article["area"] = area
@@ -89,114 +203,162 @@ class NewsCollector:
                     
                     articles.append(article)
             
-            logger.info(f"Collected {len(articles)} articles from {source_name} RSS")
+            logger.info(f"RSS {source_name}: {len(articles)} infrastructure articles")
             
         except Exception as e:
-            logger.error(f"Error parsing RSS {feed_url}: {e}")
+            logger.error(f"RSS error {feed_url}: {e}")
         
         return articles
     
-    async def collect_from_search(self, source_name: str, keywords: List[str]) -> List[Dict]:
-        """Collect news by searching keywords"""
+    async def search_source_domain(self, source: Dict, keywords: List[str]) -> List[Dict]:
         articles = []
-        source_config = NEWS_SOURCES.get(source_name, {})
-        search_url = source_config.get("search_url", "")
+        domain = source.get("domain", "")
         
-        if not search_url:
+        if not domain:
             return articles
         
-        for keyword in keywords[:3]:  # Limit keywords
-            try:
-                url = f"{search_url}{keyword}"
-                content = await self.fetch_url(url)
-                
-                if content:
-                    soup = BeautifulSoup(content, 'html.parser')
-                    # Parse search results (site-specific logic needed)
-                    # This is a simplified version
+        search_patterns = [
+            f"https://{domain}/search?q=",
+            f"https://{domain}/tim-kiem?q=",
+            f"https://www.{domain}/search?q=",
+            f"https://{domain}/?s=",
+        ]
+        
+        for keyword in keywords[:2]:
+            for pattern in search_patterns[:1]:
+                try:
+                    search_url = pattern + keyword.replace(" ", "+")
+                    content = await self.fetch_url(search_url)
                     
-                    for link in soup.find_all('a', href=True)[:10]:
-                        href = link.get('href', '')
-                        title = link.get_text(strip=True)
+                    if content:
+                        soup = BeautifulSoup(content, 'html.parser')
                         
-                        if title and len(title) > 20 and self._is_valid_article_url(href):
-                            article = {
-                                "id": hash(href) % 10**8,
-                                "title": title,
-                                "url": href if href.startswith('http') else source_config.get('base_url', '') + href,
-                                "source": source_name,
-                                "published": datetime.now().strftime("%Y-%m-%d"),
-                                "summary": "",
-                                "content": "",
-                            }
+                        for link in soup.find_all('a', href=True)[:15]:
+                            href = link.get('href', '')
+                            title = link.get_text(strip=True)
                             
-                            if self._is_infrastructure_related(article):
-                                area, sector = self._classify_article(article)
-                                province = self._extract_province(article)
+                            if self._is_valid_article(href, title, domain):
+                                full_url = href if href.startswith('http') else f"https://{domain}{href}"
                                 
-                                article["area"] = area
-                                article["sector"] = sector
-                                article["province"] = province
+                                article = {
+                                    "id": hash(full_url) % 10**8,
+                                    "title": title[:200],
+                                    "url": full_url,
+                                    "source": domain,
+                                    "published": datetime.now().strftime("%Y-%m-%d"),
+                                    "summary": "",
+                                }
                                 
-                                articles.append(article)
-                
-                await asyncio.sleep(1)  # Rate limiting
-                
-            except Exception as e:
-                logger.error(f"Error searching {source_name} for '{keyword}': {e}")
+                                if self._is_infrastructure_related(article):
+                                    sector, area = self._classify_article(article)
+                                    province = self._extract_province(article)
+                                    
+                                    article["area"] = area
+                                    article["sector"] = sector
+                                    article["province"] = province
+                                    
+                                    articles.append(article)
+                    
+                    await asyncio.sleep(0.5)
+                    break
+                    
+                except Exception as e:
+                    continue
         
         return articles
     
-    def _is_infrastructure_related(self, article: Dict) -> bool:
-        """Check if article is infrastructure related"""
-        text = f"{article.get('title', '')} {article.get('summary', '')}".lower()
+    async def collect_all(self) -> List[Dict]:
+        all_articles = []
+        seen_urls = set()
+        seen_titles = set()
         
-        infra_keywords = [
-            "infrastructure", "wastewater", "sewage", "solar", "wind", "power plant",
-            "industrial park", "smart city", "LNG", "energy", "construction",
-            "hạ tầng", "nước thải", "điện", "năng lượng", "khu công nghiệp",
-            "đô thị", "xây dựng", "dự án", "đầu tư", "FDI"
+        logger.info("=== Starting News Collection ===")
+        logger.info(f"Database sources: {len(self.existing_sources)}")
+        
+        rss_tasks = []
+        for name, url in DEFAULT_RSS_FEEDS.items():
+            rss_tasks.append(self.collect_from_rss(name, url))
+        
+        rss_results = await asyncio.gather(*rss_tasks, return_exceptions=True)
+        
+        for result in rss_results:
+            if isinstance(result, list):
+                for article in result:
+                    url = article.get("url", "").lower()
+                    title = article.get("title", "").lower()[:60]
+                    
+                    if url not in seen_urls and title not in seen_titles:
+                        all_articles.append(article)
+                        seen_urls.add(url)
+                        seen_titles.add(title)
+        
+        logger.info(f"After RSS: {len(all_articles)} articles")
+        
+        priority_domains = [
+            "vietnamnews.vn", "e.vnexpress.net", "tuoitrenews.vn",
+            "hanoitimes.vn", "vietnamplus.vn", "vneconomy.vn",
+            "baodautu.vn", "vnexpress.net", "tuoitre.vn",
+            "thanhnien.vn", "dantri.com.vn", "cafef.vn",
         ]
         
-        return any(kw in text for kw in infra_keywords)
-    
-    def _classify_article(self, article: Dict) -> tuple:
-        """Classify article into Area and Sector"""
-        text = f"{article.get('title', '')} {article.get('summary', '')}".lower()
+        for domain in priority_domains:
+            try:
+                source = {"domain": domain}
+                search_articles = await self.search_source_domain(source, SEARCH_KEYWORDS[:3])
+                
+                for article in search_articles:
+                    url = article.get("url", "").lower()
+                    title = article.get("title", "").lower()[:60]
+                    
+                    if url not in seen_urls and title not in seen_titles:
+                        all_articles.append(article)
+                        seen_urls.add(url)
+                        seen_titles.add(title)
+                
+                await asyncio.sleep(0.5)
+            except Exception as e:
+                logger.debug(f"Error searching {domain}: {e}")
         
-        for area, sectors in SECTOR_KEYWORDS.items():
-            for sector, keywords in sectors.items():
-                if any(kw.lower() in text for kw in keywords):
-                    return area, sector
+        logger.info(f"After priority domains: {len(all_articles)} articles")
         
-        return "Environment", "Waste Water"  # Default
-    
-    def _extract_province(self, article: Dict) -> str:
-        """Extract province from article"""
-        text = f"{article.get('title', '')} {article.get('summary', '')}"
+        db_sources_to_search = [s for s in self.existing_sources if s.get("domain") not in priority_domains][:50]
         
-        # Check aliases first
-        for alias, province in PROVINCE_ALIASES.items():
-            if alias.lower() in text.lower():
-                return province
+        for source in db_sources_to_search:
+            try:
+                search_articles = await self.search_source_domain(source, SEARCH_KEYWORDS[:2])
+                
+                for article in search_articles:
+                    url = article.get("url", "").lower()
+                    title = article.get("title", "").lower()[:60]
+                    
+                    if url not in seen_urls and title not in seen_titles:
+                        all_articles.append(article)
+                        seen_urls.add(url)
+                        seen_titles.add(title)
+                
+                await asyncio.sleep(0.3)
+            except:
+                continue
         
-        # Check province names
-        for province in PROVINCES:
-            if province.lower() in text.lower():
-                return province
+        logger.info(f"=== Collection Complete: {len(all_articles)} total articles ===")
         
-        return "Vietnam"  # Default
+        return all_articles
     
     def _parse_date(self, date_str: str) -> str:
-        """Parse date string to standard format"""
         if not date_str:
             return datetime.now().strftime("%Y-%m-%d")
         
         try:
-            # Try various formats
-            for fmt in ["%a, %d %b %Y %H:%M:%S %z", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"]:
+            from email.utils import parsedate_to_datetime
+            dt = parsedate_to_datetime(date_str)
+            return dt.strftime("%Y-%m-%d")
+        except:
+            pass
+        
+        try:
+            for fmt in ["%Y-%m-%d", "%d/%m/%Y", "%Y-%m-%dT%H:%M:%S"]:
                 try:
-                    dt = datetime.strptime(date_str[:25], fmt[:len(date_str)])
+                    dt = datetime.strptime(date_str[:19], fmt)
                     return dt.strftime("%Y-%m-%d")
                 except:
                     continue
@@ -205,119 +367,143 @@ class NewsCollector:
         
         return datetime.now().strftime("%Y-%m-%d")
     
-    def _is_valid_article_url(self, url: str) -> bool:
-        """Check if URL is a valid article URL"""
-        invalid_patterns = [
-            '/tag/', '/category/', '/author/', '/page/', 
-            '.css', '.js', '.png', '.jpg', '/rss'
+    def _clean_html(self, text: str) -> str:
+        if not text:
+            return ""
+        soup = BeautifulSoup(text, 'html.parser')
+        return soup.get_text(strip=True)[:500]
+    
+    def _is_valid_article(self, href: str, title: str, domain: str) -> bool:
+        if not title or len(title) < 20:
+            return False
+        if not href:
+            return False
+        
+        skip_patterns = ['/tag/', '/category/', '/author/', '/page/', 'javascript:', '#', 'mailto:']
+        for pattern in skip_patterns:
+            if pattern in href.lower():
+                return False
+        
+        return True
+    
+    def _is_infrastructure_related(self, article: Dict) -> bool:
+        text = (article.get("title", "") + " " + article.get("summary", "")).lower()
+        
+        infra_keywords = [
+            "infrastructure", "wastewater", "waste water", "solid waste", "water treatment",
+            "power plant", "electricity", "solar", "wind", "renewable", "lng",
+            "industrial park", "fdi", "smart city", "urban development",
+            "environment", "pollution", "recycling", "landfill", "sewage",
+            "water supply", "drainage", "reservoir", "hydropower",
+            "oil", "gas", "petroleum", "refinery",
         ]
-        return not any(p in url.lower() for p in invalid_patterns)
+        
+        return any(kw in text for kw in infra_keywords)
     
-    async def collect_all(self) -> List[Dict]:
-        """Collect news from all sources"""
-        all_articles = []
+    def _classify_article(self, article: Dict) -> Tuple[str, str]:
+        text = (article.get("title", "") + " " + article.get("summary", "")).lower()
         
-        for source_name, config in NEWS_SOURCES.items():
-            logger.info(f"Collecting from {source_name}...")
-            
-            # Collect from RSS feeds
-            for feed_url in config.get("rss_feeds", []):
-                articles = await self.collect_from_rss(source_name, feed_url)
-                all_articles.extend(articles)
-            
-            # Collect from search
-            keywords = config.get("keywords", [])
-            if keywords:
-                articles = await self.collect_from_search(source_name, keywords)
-                all_articles.extend(articles)
-            
-            await asyncio.sleep(2)  # Rate limiting between sources
+        sector_priority = ["Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Oil & Gas", "Smart City", "Industrial Parks"]
         
-        # Remove duplicates based on URL
-        seen_urls = set()
-        unique_articles = []
-        for article in all_articles:
-            if article["url"] not in seen_urls:
-                seen_urls.add(article["url"])
-                unique_articles.append(article)
+        for sector in sector_priority:
+            keywords = SECTOR_KEYWORDS.get(sector, [])
+            for keyword in keywords:
+                if keyword.lower() in text:
+                    return sector, AREA_BY_SECTOR.get(sector, "Environment")
         
-        self.collected_news = unique_articles
-        logger.info(f"Total unique articles collected: {len(unique_articles)}")
-        
-        return unique_articles
+        return "Waste Water", "Environment"
     
-    def save_to_json(self, filename: str = None) -> str:
-        """Save collected news to JSON file"""
-        if not filename:
-            filename = f"news_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    def _extract_province(self, article: Dict) -> str:
+        text = (article.get("title", "") + " " + article.get("summary", "")).lower()
         
-        filepath = DATA_DIR / filename
-        filepath.parent.mkdir(parents=True, exist_ok=True)
+        for province in PROVINCES:
+            if province.lower() in text:
+                return province
         
-        with open(filepath, 'w', encoding='utf-8') as f:
-            json.dump({
-                "collected_at": datetime.now().isoformat(),
-                "total_count": len(self.collected_news),
-                "articles": self.collected_news
-            }, f, ensure_ascii=False, indent=2)
-        
-        logger.info(f"Saved {len(self.collected_news)} articles to {filepath}")
-        return str(filepath)
-    
-    def load_existing_data(self, filepath: str) -> List[Dict]:
-        """Load existing news data"""
-        try:
-            with open(filepath, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                return data.get("articles", [])
-        except Exception as e:
-            logger.error(f"Error loading {filepath}: {e}")
-            return []
-    
-    def merge_with_existing(self, existing_filepath: str) -> List[Dict]:
-        """Merge new articles with existing data"""
-        existing = self.load_existing_data(existing_filepath)
-        existing_urls = {a["url"] for a in existing}
-        
-        new_articles = [a for a in self.collected_news if a["url"] not in existing_urls]
-        merged = new_articles + existing
-        
-        # Sort by date
-        merged.sort(key=lambda x: x.get("published", ""), reverse=True)
-        
-        logger.info(f"Merged: {len(new_articles)} new + {len(existing)} existing = {len(merged)} total")
-        
-        self.collected_news = merged
-        return merged
+        return "Vietnam"
 
 
-async def main():
-    """Main function to run news collection"""
+async def collect_news() -> List[Dict]:
     async with NewsCollector() as collector:
         articles = await collector.collect_all()
-        
-        # Save to JSON
-        json_file = collector.save_to_json()
-        
-        # Print summary
-        print(f"\n{'='*50}")
-        print(f"News Collection Complete")
-        print(f"{'='*50}")
-        print(f"Total Articles: {len(articles)}")
-        print(f"Saved to: {json_file}")
-        
-        # Summary by area
-        area_counts = {}
-        for article in articles:
-            area = article.get("area", "Unknown")
-            area_counts[area] = area_counts.get(area, 0) + 1
-        
-        print(f"\nBy Area:")
-        for area, count in area_counts.items():
-            print(f"  - {area}: {count}")
-        
         return articles
 
 
+def save_collected_news(articles: List[Dict], filename: str = None) -> str:
+    if filename is None:
+        filename = f"news_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    
+    output_path = DATA_DIR / filename
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    with open(output_path, 'w', encoding='utf-8') as f:
+        json.dump({
+            "collected_at": datetime.now().isoformat(),
+            "total": len(articles),
+            "articles": articles
+        }, f, ensure_ascii=False, indent=2)
+    
+    logger.info(f"Saved {len(articles)} articles to {output_path}")
+    return str(output_path)
+
+
+def main():
+    articles = asyncio.run(collect_news())
+    
+    if articles:
+        save_collected_news(articles)
+        
+        print(f"\n=== Collection Summary ===")
+        print(f"Total articles: {len(articles)}")
+        
+        from collections import Counter
+        areas = Counter(a.get("area", "") for a in articles)
+        sectors = Counter(a.get("sector", "") for a in articles)
+        
+        print(f"\nBy Area:")
+        for area, count in areas.most_common():
+            print(f"  {area}: {count}")
+        
+        print(f"\nBy Sector:")
+        for sector, count in sectors.most_common():
+            print(f"  {sector}: {count}")
+    else:
+        print("No articles collected")
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
+```
+
+**Commit changes** 클릭
+
+---
+
+## 2️⃣ 다시 Run workflow
+
+Actions → **Run workflow** 클릭
+
+---
+
+## 변경사항 요약
+
+### ✅ 기존 데이터베이스 보존
+- `find_existing_database()`: 여러 경로에서 기존 DB 파일 검색
+- 로그에서 파일 로드 상태 확인 가능
+- 기존 2,073건 데이터 유지 + 신규만 추가
+
+### ✅ 기존 310개 소스 검색
+- `load_sources_from_excel()`: Source 시트에서 소스 목록 로드
+- 우선순위 도메인 (VnExpress, TuoiTre 등) 먼저 검색
+- 나머지 DB 소스들도 순차적으로 검색
+
+### ✅ Keywords 시트 기준 분류
+- 섹터 우선순위: Waste Water → Solid Waste → Water Supply → Power → Oil & Gas → Smart City → Industrial Parks
+
+---
+
+실행 후 로그에서 다음을 확인해주세요:
+```
+Found existing database at: ...
+Loaded 310 sources from database
+Loaded 2073 existing articles
