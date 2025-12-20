@@ -91,9 +91,12 @@ DEFAULT_RSS_FEEDS = {
 def find_existing_database():
     possible_paths = [
         PROJECT_ROOT / "data" / EXISTING_DB_FILENAME,
+        PROJECT_ROOT / EXISTING_DB_FILENAME,
         Path("/home/runner/work/vietnam-infra-news/vietnam-infra-news/data") / EXISTING_DB_FILENAME,
+        Path("/home/runner/work/vietnam-infra-news/vietnam-infra-news") / EXISTING_DB_FILENAME,
         DATA_DIR / EXISTING_DB_FILENAME,
         Path(os.getcwd()) / "data" / EXISTING_DB_FILENAME,
+        Path(os.getcwd()) / EXISTING_DB_FILENAME,
     ]
     
     for path in possible_paths:
@@ -342,6 +345,7 @@ class NewsCollector:
         
         logger.info(f"=== Collection Complete: {len(all_articles)} total articles ===")
         
+        self.collected_news = all_articles
         return all_articles
     
     def _parse_date(self, date_str):
@@ -421,6 +425,23 @@ class NewsCollector:
                 return province
         
         return "Vietnam"
+    
+    def save_to_json(self, filename=None):
+        if filename is None:
+            filename = f"news_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        
+        output_path = DATA_DIR / filename
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump({
+                "collected_at": datetime.now().isoformat(),
+                "total": len(self.collected_news),
+                "articles": self.collected_news
+            }, f, ensure_ascii=False, indent=2)
+        
+        logger.info(f"Saved {len(self.collected_news)} articles to {output_path}")
+        return str(output_path)
 
 
 async def collect_news():
