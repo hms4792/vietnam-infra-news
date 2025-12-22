@@ -116,33 +116,33 @@ AI_MODEL = "claude-sonnet-4-20250514"
 AI_MAX_TOKENS = 1024
 AI_TEMPERATURE = 0.3
 
-SUMMARY_PROMPT_TEMPLATE = """
-You are an expert analyst for Vietnam infrastructure news. 
-Analyze the following news article and provide:
-1. A concise summary in Korean (2-3 sentences)
-2. A concise summary in English (2-3 sentences)
-3. A concise summary in Vietnamese (2-3 sentences)
-4. Key entities mentioned (companies, government bodies)
-5. Estimated project value if mentioned
-6. Classification: Area (Environment/Energy Develop./Urban Develop.) and Sector
+SUMMARY_PROMPT_TEMPLATE = """Analyze this Vietnam infrastructure news article and provide a structured summary.
 
-Article Title: {title}
-Article Content: {content}
+Title: {title}
+Content: {content}
 Source: {source}
 Date: {date}
 
-Respond in JSON format:
+Please respond in JSON format with:
 {{
-    "summary_ko": "...",
-    "summary_en": "...",
-    "summary_vi": "...",
-    "entities": ["..."],
-    "project_value": "...",
-    "area": "...",
-    "sector": "..."
+    "title_ko": "Korean translation of the title",
+    "title_en": "English translation/original of the title", 
+    "title_vi": "Vietnamese translation of the title",
+    "summary_ko": "2-3 sentence summary in Korean",
+    "summary_en": "2-3 sentence summary in English",
+    "summary_vi": "2-3 sentence summary in Vietnamese",
+    "area": "Environment or Energy Develop. or Urban Develop.",
+    "sector": "Waste Water or Solid Waste or Water Supply/Drainage or Power or Oil & Gas or Industrial Parks or Smart City",
+    "entities": ["list of key organizations, companies, government bodies mentioned"],
+    "project_value": "investment amount if mentioned, otherwise empty string"
 }}
-"""
 
+Important classification rules:
+- If article mentions oil, gas, petroleum, refinery, LNG terminal -> sector: "Oil & Gas", area: "Energy Develop."
+- If article mentions wastewater, sewage, water treatment -> sector: "Waste Water", area: "Environment"
+- If article mentions solid waste, landfill, recycling -> sector: "Solid Waste", area: "Environment"
+- If article mentions power plant, solar, wind, electricity -> sector: "Power", area: "Energy Develop."
+"""
 # ============================================
 # NOTIFICATION SETTINGS
 # ============================================
