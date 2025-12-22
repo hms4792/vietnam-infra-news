@@ -46,21 +46,21 @@ PROVINCES = [
 ]
 
 SECTOR_KEYWORDS = {
+    "Oil & Gas": ["oil exploration", "gas field", "upstream", "petroleum", "offshore drilling", "lng terminal", "refinery", "oil and gas", "natural gas", "gas pipeline", "oil price", "crude oil", "petrochemical"],
     "Solid Waste": ["waste-to-energy", "solid waste", "landfill", "incineration", "recycling", "circular economy", "wte", "garbage", "municipal waste"],
-    "Waste Water": ["wastewater", "waste water", "wwtp", "sewage", "water treatment", "sewerage", "effluent", "sludge"],
+    "Waste Water": ["wastewater", "waste water", "wwtp", "sewage", "water treatment plant", "sewerage", "effluent", "sludge"],
     "Water Supply/Drainage": ["clean water", "water supply", "reservoir", "potable water", "tap water", "drinking water", "water infrastructure"],
     "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", "solar", "wind", "renewable", "hydropower", "pdp8"],
-    "Oil & Gas": ["oil exploration", "gas field", "upstream", "petroleum", "offshore drilling", "lng terminal", "refinery"],
     "Industrial Parks": ["industrial park", "industrial zone", "fdi", "economic zone", "manufacturing zone"],
     "Smart City": ["smart city", "urban development", "digital transformation", "city planning", "urban area"],
 }
 
 AREA_BY_SECTOR = {
+    "Oil & Gas": "Energy Develop.",
     "Solid Waste": "Environment",
     "Waste Water": "Environment", 
     "Water Supply/Drainage": "Environment",
     "Power": "Energy Develop.",
-    "Oil & Gas": "Energy Develop.",
     "Industrial Parks": "Urban Develop.",
     "Smart City": "Urban Develop.",
 }
@@ -404,10 +404,11 @@ class NewsCollector:
         
         return any(kw in text for kw in infra_keywords)
     
-    def _classify_article(self, article):
+   def _classify_article(self, article):
         text = (article.get("title", "") + " " + article.get("summary", "")).lower()
         
-        sector_priority = ["Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Oil & Gas", "Smart City", "Industrial Parks"]
+        # Oil & Gas를 먼저 체크 (gas, oil 키워드가 다른 섹터와 겹치지 않도록)
+        sector_priority = ["Oil & Gas", "Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Smart City", "Industrial Parks"]
         
         for sector in sector_priority:
             keywords = SECTOR_KEYWORDS.get(sector, [])
