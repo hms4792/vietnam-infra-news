@@ -592,3 +592,73 @@ class ExcelDatabaseUpdater:
                     dash_art["title_ko"] = new_art.get("title_ko", "")
                     dash_art["title_en"] = new_art.get("title_en", "")
                     dash_art["title_vi"] = new_art.get("title_vi", "")
+                    dash_art["summary_ko"] = new_art.get("summary_ko", "")
+                    dash_art["summary_en"] = new_art.get("summary_en", "")
+                    dash_art["summary_vi"] = new_art.get("summary_vi", "")
+                    break
+        
+        return excel_path, dashboard_articles
+
+
+class OutputGenerator:
+    def __init__(self):
+        self.dashboard = DashboardUpdater()
+        self.excel_db = ExcelDatabaseUpdater()
+    
+    def generate_all(self, new_articles: List[Dict]) -> Dict[str, str]:
+        outputs = {}
+        
+        try:
+            excel_path, all_articles = self.excel_db.update(new_articles)
+            outputs["excel"] = excel_path
+            outputs["dashboard"] = self.dashboard.update(all_articles)
+            outputs["total_articles"] = len(all_articles)
+            outputs["new_articles"] = len(new_articles)
+        except Exception as e:
+            logger.error(f"Error generating outputs: {e}")
+            import traceback
+            traceback.print_exc()
+            outputs["excel"] = ""
+            outputs["dashboard"] = ""
+        
+        try:
+            json_path = OUTPUT_DIR / f"news_data_{datetime.now().strftime('%Y%m%d')}.json"
+            json_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(json_path, 'w', encoding='utf-8') as f:
+                json.dump({
+                    "generated_at": datetime.now().isoformat(),
+                    "total": outputs.get("total_articles", 0),
+                    "new_articles": outputs.get("new_articles", 0),
+                }, f, ensure_ascii=False, indent=2)
+            outputs["json"] = str(json_path)
+            logger.info(f"Generated json: {json_path}")
+        except Exception as e:
+            logger.error(f"JSON error: {e}")
+        
+        return outputs
+
+
+def load_articles() -> List[Dict]:
+    processed_files = sorted(DATA_DIR.glob("processed_*.json"), reverse=True)
+    if not processed_files:
+        news_files = sorted(DATA_DIR.glob("news_*.json"), reverse=True)
+        if not news_files:
+            return []
+        processed_files = news_files
+    
+    try:
+        with open(processed_files[0], 'r', encoding='utf-8') as f:
+            return json.load(f).get("articles", [])
+    except:
+        return []
+
+
+def main():
+    articles = load_articles()
+    generator = OutputGenerator()
+    outputs = generator.generate_all(articles)
+    print(f"Generated outputs: {outputs}")
+
+
+if __name__ == "__main__":
+    main()
