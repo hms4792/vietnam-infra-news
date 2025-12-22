@@ -1,6 +1,7 @@
 """
 Vietnam Infrastructure News Collector
 Collects news from existing 310+ sources in database
+Collection period: Yesterday 6PM to Today 6PM (Vietnam time)
 """
 import asyncio
 import aiohttp
@@ -21,6 +22,14 @@ try:
     PANDAS_AVAILABLE = True
 except ImportError:
     PANDAS_AVAILABLE = False
+
+try:
+    import pytz
+    PYTZ_AVAILABLE = True
+    VIETNAM_TZ = pytz.timezone('Asia/Ho_Chi_Minh')
+except ImportError:
+    PYTZ_AVAILABLE = False
+    VIETNAM_TZ = None
 
 from config.settings import DATA_DIR, OUTPUT_DIR
 
@@ -88,6 +97,21 @@ DEFAULT_RSS_FEEDS = {
 }
 
 
+def get_collection_time_range():
+    """Get collection time range: Yesterday 6PM to Today 6PM (Vietnam time)"""
+    if PYTZ_AVAILABLE and VIETNAM_TZ:
+        now = datetime.now(VIETNAM_TZ)
+    else:
+        now = datetime.utcnow() + timedelta(hours=7)
+    
+    today_6pm = now.replace(hour=18, minute=0, second=0, microsecond=0)
+    yesterday_6pm = today_6pm - timedelta(days=1)
+    
+    logger.info(f"Collection period: {yesterday_6pm.strftime('%Y-%m-%d %H:%M')} to {today_6pm.strftime('%Y-%m-%d %H:%M')} (Vietnam time)")
+    
+    return yesterday_6pm, today_6pm
+
+
 def find_existing_database():
     possible_paths = [
         PROJECT_ROOT / "data" / EXISTING_DB_FILENAME,
@@ -152,6 +176,7 @@ class NewsCollector:
         self.collected_news = []
         self.session = None
         self.existing_sources = load_sources_from_excel()
+        self.start_time, self.end_time = get_collection_time_range()
         logger.info(f"Initialized with {len(self.existing_sources)} sources from database")
         
     async def __aenter__(self):
@@ -176,6 +201,61 @@ class NewsCollector:
             logger.debug(f"Error fetching {url}: {e}")
         return None
     
+    def _is_within_time_range(self, pub_date_str):
+        """Check if article is within collection time range"""
+        if not pub_date_str:
+            return True
+        
+        try:
+            pub_date = self._parse_date_to_datetime(pub_date_str)
+            if pub_date is None:
+                return True
+            
+            if PYTZ_AVAILABLE and VIETNAM_TZ:
+                if pub_date.tzinfo is None:
+                    pub_date = VIETNAM_TZ.localize(pub_date)
+                start_aware = self.start_time
+                end_aware = self.end_time
+            else:
+                start_aware = self.start_time
+                end_aware = self.end_time
+                if hasattr(pub_date, 'replace'):
+                    pub_date = pub_date.replace(tzinfo=None)
+                    start_aware = start_aware.replace(tzinfo=None) if hasattr(start_aware, 'replace') else start_aware
+                    end_aware = end_aware.replace(tzinfo=None) if hasattr(end_aware, 'replace') else end_aware
+            
+            return start_aware <= pub_date <= end_aware
+        except:
+            return True
+    
+    def _parse_date_to_datetime(self, date_str):
+        """Parse date string to datetime object"""
+        if not date_str:
+            return None
+        
+        try:
+            from email.utils import parsedate_to_datetime
+            return parsedate_to_datetime(date_str)
+        except:
+            pass
+        
+        formats = [
+            "%Y-%m-%d %H:%M:%S",
+            "%Y-%m-%dT%H:%M:%S",
+            "%Y-%m-%dT%H:%M:%SZ",
+            "%Y-%m-%d",
+            "%d/%m/%Y %H:%M:%S",
+            "%d/%m/%Y",
+        ]
+        
+        for fmt in formats:
+            try:
+                return datetime.strptime(str(date_str)[:19], fmt)
+            except:
+                continue
+        
+        return None
+    
     async def collect_from_rss(self, source_name, feed_url):
         articles = []
         
@@ -187,12 +267,17 @@ class NewsCollector:
             feed = feedparser.parse(content)
             
             for entry in feed.entries[:30]:
+                pub_date = entry.get("published", "")
+                
+                if not self._is_within_time_range(pub_date):
+                    continue
+                
                 article = {
                     "id": hash(entry.link) % 10**8,
                     "title": entry.title,
                     "url": entry.link,
                     "source": source_name,
-                    "published": self._parse_date(entry.get("published", "")),
+                    "published": self._parse_date(pub_date),
                     "summary": self._clean_html(entry.get("summary", "")),
                 }
                 
@@ -206,7 +291,7 @@ class NewsCollector:
                     
                     articles.append(article)
             
-            logger.info(f"RSS {source_name}: {len(articles)} infrastructure articles")
+            logger.info(f"RSS {source_name}: {len(articles)} infrastructure articles (in time range)")
             
         except Exception as e:
             logger.error(f"RSS error {feed_url}: {e}")
@@ -277,6 +362,7 @@ class NewsCollector:
         
         logger.info("=== Starting News Collection ===")
         logger.info(f"Database sources: {len(self.existing_sources)}")
+        logger.info(f"Time range: {self.start_time.strftime('%Y-%m-%d %H:%M')} to {self.end_time.strftime('%Y-%m-%d %H:%M')}")
         
         rss_tasks = []
         for name, url in DEFAULT_RSS_FEEDS.items():
@@ -436,6 +522,10 @@ class NewsCollector:
         with open(output_path, 'w', encoding='utf-8') as f:
             json.dump({
                 "collected_at": datetime.now().isoformat(),
+                "collection_period": {
+                    "start": self.start_time.strftime("%Y-%m-%d %H:%M"),
+                    "end": self.end_time.strftime("%Y-%m-%d %H:%M")
+                },
                 "total": len(self.collected_news),
                 "articles": self.collected_news
             }, f, ensure_ascii=False, indent=2)
