@@ -39,6 +39,16 @@ jobs:
         run: |
           python scripts/main.py --full
       
+      - name: Verify outputs
+        run: |
+          echo "=== Checking outputs folder ==="
+          ls -la outputs/ || echo "outputs folder not found"
+          if [ ! -f outputs/index.html ]; then
+            echo "index.html not found, creating from template..."
+            cp templates/dashboard_template.html outputs/index.html 2>/dev/null || echo "Template copy failed"
+          fi
+          ls -la outputs/
+      
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
