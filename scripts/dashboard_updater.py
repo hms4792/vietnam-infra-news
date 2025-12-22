@@ -34,12 +34,15 @@ logger = logging.getLogger(__name__)
 PROJECT_ROOT = Path(__file__).parent.parent
 EXISTING_DB_FILENAME = "Vietnam_Infra_News_Database_Final.xlsx"
 
-def find_existing_database() -> Path:
+def find_existing_database():
     possible_paths = [
         PROJECT_ROOT / "data" / EXISTING_DB_FILENAME,
+        PROJECT_ROOT / EXISTING_DB_FILENAME,
         Path("/home/runner/work/vietnam-infra-news/vietnam-infra-news/data") / EXISTING_DB_FILENAME,
+        Path("/home/runner/work/vietnam-infra-news/vietnam-infra-news") / EXISTING_DB_FILENAME,
         DATA_DIR / EXISTING_DB_FILENAME,
         Path(os.getcwd()) / "data" / EXISTING_DB_FILENAME,
+        Path(os.getcwd()) / EXISTING_DB_FILENAME,
     ]
     
     logger.info(f"Searching for existing database: {EXISTING_DB_FILENAME}")
@@ -81,16 +84,18 @@ SECTOR_KEYWORDS = {
 }
 
 AREA_BY_SECTOR = {
+    "Oil & Gas": "Energy Develop.",
     "Solid Waste": "Environment",
     "Waste Water": "Environment",
     "Water Supply/Drainage": "Environment",
     "Power": "Energy Develop.",
-    "Oil & Gas": "Energy Develop.",
     "Industrial Parks": "Urban Develop.",
     "Smart City": "Urban Develop.",
 }
 
 SECTOR_PRIORITY = ["Oil & Gas", "Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Smart City", "Industrial Parks"]
+
+
 def classify_article(title: str, summary: str = "") -> Tuple[str, str]:
     text = (str(title) + " " + str(summary)).lower()
     for sector in SECTOR_PRIORITY:
@@ -110,7 +115,7 @@ class DashboardUpdater:
         js_data = self._generate_js_data(all_articles)
         
         if not self.template_path.exists():
-            logger.error("Template not found")
+            logger.error(f"Template not found: {self.template_path}")
             return ""
         
         with open(self.template_path, 'r', encoding='utf-8') as f:
@@ -125,13 +130,18 @@ class DashboardUpdater:
         html = html.replace('{{LAST_UPDATED}}', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
+        
         with open(self.output_path, 'w', encoding='utf-8') as f:
+            f.write(html)
+        
+        index_path = OUTPUT_DIR / "index.html"
+        with open(index_path, 'w', encoding='utf-8') as f:
             f.write(html)
         
         logger.info(f"Dashboard updated with {len(all_articles)} articles")
         return str(self.output_path)
     
-def _generate_js_data(self, articles: List[Dict]) -> str:
+    def _generate_js_data(self, articles: List[Dict]) -> str:
         js_articles = []
         for i, article in enumerate(articles, 1):
             title = article.get("title", article.get("News Tittle", "No title"))
@@ -140,12 +150,10 @@ def _generate_js_data(self, articles: List[Dict]) -> str:
             title_str = str(title) if not isinstance(title, dict) else title.get("vi", str(title))
             summary_str = str(summary) if not isinstance(summary, dict) else summary.get("vi", str(summary))
             
-            # 다국어 제목 - AI 번역된 제목 사용
             title_ko = article.get("title_ko", article.get("summary_ko", title_str))[:150]
             title_en = article.get("title_en", article.get("summary_en", title_str))[:150]
             title_vi = article.get("title_vi", title_str)[:150]
             
-            # 다국어 요약
             summary_ko = article.get("summary_ko", summary_str)[:500]
             summary_en = article.get("summary_en", summary_str)[:500]
             summary_vi = article.get("summary_vi", summary_str)[:500]
@@ -291,7 +299,12 @@ class ExcelDatabaseUpdater:
                 original_title = str(article.get("title", article.get("News Tittle", "")))
                 summary = str(article.get("summary_en", article.get("summary", article.get("Short summary", ""))))
                 
-                sector, area = classify_article(original_title, summary)
+                sector = article.get("sector", "")
+                area = article.get("area", "")
+                if not sector or sector not in AREA_BY_SECTOR:
+                    sector, area = classify_article(original_title, summary)
+                elif not area:
+                    area = AREA_BY_SECTOR.get(sector, "Environment")
                 
                 date_val = article.get("published", article.get("Date", ""))
                 if isinstance(date_val, str) and 'T' in date_val:
@@ -573,67 +586,9 @@ class ExcelDatabaseUpdater:
                 "summary_vi": article.get("Short summary", ""),
             })
         
-        return excel_path, dashboard_articles
-
-
-class OutputGenerator:
-    def __init__(self):
-        self.dashboard = DashboardUpdater()
-        self.excel_db = ExcelDatabaseUpdater()
-    
-    def generate_all(self, new_articles: List[Dict]) -> Dict[str, str]:
-        outputs = {}
-        
-        try:
-            excel_path, all_articles = self.excel_db.update(new_articles)
-            outputs["excel"] = excel_path
-            outputs["dashboard"] = self.dashboard.update(all_articles)
-            outputs["total_articles"] = len(all_articles)
-            outputs["new_articles"] = len(new_articles)
-        except Exception as e:
-            logger.error(f"Error generating outputs: {e}")
-            import traceback
-            traceback.print_exc()
-            outputs["excel"] = ""
-            outputs["dashboard"] = ""
-        
-        try:
-            json_path = OUTPUT_DIR / f"news_data_{datetime.now().strftime('%Y%m%d')}.json"
-            json_path.parent.mkdir(parents=True, exist_ok=True)
-            with open(json_path, 'w', encoding='utf-8') as f:
-                json.dump({
-                    "generated_at": datetime.now().isoformat(),
-                    "total": outputs.get("total_articles", 0),
-                    "new_articles": outputs.get("new_articles", 0),
-                }, f, ensure_ascii=False, indent=2)
-            outputs["json"] = str(json_path)
-        except Exception as e:
-            logger.error(f"JSON error: {e}")
-        
-        return outputs
-
-
-def load_articles() -> List[Dict]:
-    processed_files = sorted(DATA_DIR.glob("processed_*.json"), reverse=True)
-    if not processed_files:
-        news_files = sorted(DATA_DIR.glob("news_*.json"), reverse=True)
-        if not news_files:
-            return []
-        processed_files = news_files
-    
-    try:
-        with open(processed_files[0], 'r', encoding='utf-8') as f:
-            return json.load(f).get("articles", [])
-    except:
-        return []
-
-
-def main():
-    articles = load_articles()
-    generator = OutputGenerator()
-    outputs = generator.generate_all(articles)
-    print(f"Generated outputs: {outputs}")
-
-
-if __name__ == "__main__":
-    main()
+        for new_art in new_articles:
+            for dash_art in dashboard_articles:
+                if dash_art.get("url") == new_art.get("url"):
+                    dash_art["title_ko"] = new_art.get("title_ko", "")
+                    dash_art["title_en"] = new_art.get("title_en", "")
+                    dash_art["title_vi"] = new_art.get("title_vi", "")
