@@ -91,7 +91,6 @@ AREA_BY_SECTOR = {
 }
 
 SECTOR_PRIORITY = ["Oil & Gas", "Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Smart City", "Industrial Parks"]
-
 def classify_article(title: str, summary: str = "") -> Tuple[str, str]:
     text = (str(title) + " " + str(summary)).lower()
     for sector in SECTOR_PRIORITY:
@@ -132,7 +131,7 @@ class DashboardUpdater:
         logger.info(f"Dashboard updated with {len(all_articles)} articles")
         return str(self.output_path)
     
-    def _generate_js_data(self, articles: List[Dict]) -> str:
+def _generate_js_data(self, articles: List[Dict]) -> str:
         js_articles = []
         for i, article in enumerate(articles, 1):
             title = article.get("title", article.get("News Tittle", "No title"))
@@ -141,13 +140,15 @@ class DashboardUpdater:
             title_str = str(title) if not isinstance(title, dict) else title.get("vi", str(title))
             summary_str = str(summary) if not isinstance(summary, dict) else summary.get("vi", str(summary))
             
-            title_ko = article.get("summary_ko", title_str)[:150]
-            title_en = article.get("summary_en", title_str)[:150]
-            title_vi = title_str[:150]
+            # 다국어 제목 - AI 번역된 제목 사용
+            title_ko = article.get("title_ko", article.get("summary_ko", title_str))[:150]
+            title_en = article.get("title_en", article.get("summary_en", title_str))[:150]
+            title_vi = article.get("title_vi", title_str)[:150]
             
+            # 다국어 요약
             summary_ko = article.get("summary_ko", summary_str)[:500]
             summary_en = article.get("summary_en", summary_str)[:500]
-            summary_vi = summary_str[:500]
+            summary_vi = article.get("summary_vi", summary_str)[:500]
             
             date_str = article.get("date", article.get("Date", article.get("published", "")))
             if hasattr(date_str, 'strftime'):
@@ -171,8 +172,8 @@ class DashboardUpdater:
                 "sector": sector,
                 "province": article.get("province", article.get("Province", "Vietnam")),
                 "source": article.get("source", article.get("Source", "Unknown")),
-                "title": {"ko": title_ko or title_vi, "en": title_en or title_vi, "vi": title_vi},
-                "summary": {"ko": summary_ko or summary_vi, "en": summary_en or summary_vi, "vi": summary_vi},
+                "title": {"ko": title_ko, "en": title_en, "vi": title_vi},
+                "summary": {"ko": summary_ko, "en": summary_en, "vi": summary_vi},
                 "url": article.get("url", article.get("Link", ""))
             })
         return json.dumps(js_articles, ensure_ascii=False, indent=2)
