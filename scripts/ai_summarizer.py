@@ -26,10 +26,42 @@ from config.settings import (
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+SECTOR_KEYWORDS = {
+    "Oil & Gas": ["oil exploration", "gas field", "upstream", "petroleum", "offshore drilling", "lng terminal", "refinery", "oil and gas", "natural gas", "gas pipeline", "oil price", "crude oil", "petrochemical"],
+    "Solid Waste": ["waste-to-energy", "solid waste", "landfill", "incineration", "recycling", "circular economy", "wte", "garbage", "municipal waste"],
+    "Waste Water": ["wastewater", "waste water", "wwtp", "sewage", "water treatment plant", "sewerage", "effluent", "sludge"],
+    "Water Supply/Drainage": ["clean water", "water supply", "reservoir", "potable water", "tap water", "drinking water", "water infrastructure"],
+    "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", "solar", "wind", "renewable", "hydropower", "pdp8"],
+    "Industrial Parks": ["industrial park", "industrial zone", "fdi", "economic zone", "manufacturing zone"],
+    "Smart City": ["smart city", "urban development", "digital transformation", "city planning", "urban area"],
+}
+
+AREA_BY_SECTOR = {
+    "Oil & Gas": "Energy Develop.",
+    "Solid Waste": "Environment",
+    "Waste Water": "Environment",
+    "Water Supply/Drainage": "Environment",
+    "Power": "Energy Develop.",
+    "Industrial Parks": "Urban Develop.",
+    "Smart City": "Urban Develop.",
+}
+
+SECTOR_PRIORITY = ["Oil & Gas", "Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Smart City", "Industrial Parks"]
+
+
+def classify_article_by_keywords(title: str, content: str = "") -> tuple:
+    text = (str(title) + " " + str(content)).lower()
+    
+    for sector in SECTOR_PRIORITY:
+        keywords = SECTOR_KEYWORDS.get(sector, [])
+        for keyword in keywords:
+            if keyword.lower() in text:
+                return sector, AREA_BY_SECTOR.get(sector, "Environment")
+    
+    return "Waste Water", "Environment"
+
 
 class AISummarizer:
-    """AI-powered news summarizer using Claude API"""
-    
     def __init__(self, api_key: str = None):
         self.api_key = api_key or ANTHROPIC_API_KEY
         self.client = None
@@ -41,14 +73,12 @@ class AISummarizer:
             logger.warning("Anthropic client not available. Using fallback summarization.")
     
     def summarize_article(self, article: Dict) -> Dict:
-        """Generate AI summary for a single article"""
         if self.client:
             return self._summarize_with_claude(article)
         else:
             return self._fallback_summarize(article)
     
     def _summarize_with_claude(self, article: Dict) -> Dict:
-        """Use Claude API for summarization"""
         try:
             prompt = SUMMARY_PROMPT_TEMPLATE.format(
                 title=article.get("title", ""),
@@ -68,26 +98,31 @@ class AISummarizer:
             
             response_text = message.content[0].text
             
-            # Parse JSON response
             try:
-                # Find JSON in response
                 json_start = response_text.find('{')
                 json_end = response_text.rfind('}') + 1
                 if json_start >= 0 and json_end > json_start:
                     result = json.loads(response_text[json_start:json_end])
                     
-                    # Update article with AI-generated content
+                    article["title_ko"] = result.get("title_ko", article.get("title", ""))
+                    article["title_en"] = result.get("title_en", article.get("title", ""))
+                    article["title_vi"] = result.get("title_vi", article.get("title", ""))
                     article["summary_ko"] = result.get("summary_ko", "")
                     article["summary_en"] = result.get("summary_en", "")
                     article["summary_vi"] = result.get("summary_vi", "")
                     article["entities"] = result.get("entities", [])
                     article["project_value"] = result.get("project_value", "")
                     
-                    # Update classification if provided
-                    if result.get("area"):
-                        article["area"] = result["area"]
-                    if result.get("sector"):
+                    if result.get("sector") and result.get("sector") in AREA_BY_SECTOR:
                         article["sector"] = result["sector"]
+                        article["area"] = AREA_BY_SECTOR.get(result["sector"], result.get("area", ""))
+                    else:
+                        sector, area = classify_article_by_keywords(
+                            article.get("title", ""), 
+                            article.get("summary", "")
+                        )
+                        article["sector"] = sector
+                        article["area"] = area
                     
                     article["ai_processed"] = True
                     logger.info(f"AI summarized: {article['title'][:50]}...")
@@ -103,16 +138,22 @@ class AISummarizer:
         return article
     
     def _fallback_summarize(self, article: Dict) -> Dict:
-        """Fallback summarization without AI"""
         title = article.get("title", "")
         summary = article.get("summary", "")
+        province = article.get("province", "Vietnam")
         
-        # Create basic summaries
+        sector, area = classify_article_by_keywords(title, summary)
+        article["sector"] = sector
+        article["area"] = area
+        
         base_summary = summary[:200] if summary else title
         
-        article["summary_ko"] = f"{article.get('province', 'Vietnam')} 지역 {article.get('sector', '인프라')} 관련 프로젝트. {base_summary}"
-        article["summary_en"] = f"{article.get('sector', 'Infrastructure')} project in {article.get('province', 'Vietnam')}. {base_summary}"
-        article["summary_vi"] = f"Dự án {article.get('sector', 'hạ tầng')} tại {article.get('province', 'Việt Nam')}. {base_summary}"
+        article["title_ko"] = title
+        article["title_en"] = title
+        article["title_vi"] = title
+        article["summary_ko"] = f"{province} 지역 {sector} 관련 프로젝트. {base_summary}"
+        article["summary_en"] = f"{sector} project in {province}. {base_summary}"
+        article["summary_vi"] = f"Dự án {sector} tại {province}. {base_summary}"
         article["entities"] = []
         article["project_value"] = ""
         article["ai_processed"] = False
@@ -120,14 +161,12 @@ class AISummarizer:
         return article
     
     async def summarize_batch(self, articles: List[Dict], batch_size: int = 5) -> List[Dict]:
-        """Summarize articles in batches"""
         summarized = []
         
         for i in range(0, len(articles), batch_size):
             batch = articles[i:i + batch_size]
             
             for article in batch:
-                # Skip if already processed
                 if article.get("ai_processed"):
                     summarized.append(article)
                     continue
@@ -135,7 +174,6 @@ class AISummarizer:
                 result = self.summarize_article(article)
                 summarized.append(result)
                 
-                # Rate limiting
                 await asyncio.sleep(0.5)
             
             logger.info(f"Processed batch {i//batch_size + 1}/{(len(articles)-1)//batch_size + 1}")
@@ -143,11 +181,9 @@ class AISummarizer:
         return summarized
     
     def generate_daily_briefing(self, articles: List[Dict], lang: str = "ko") -> str:
-        """Generate AI daily briefing from articles"""
         if not articles:
             return "오늘 수집된 뉴스가 없습니다." if lang == "ko" else "No news collected today."
         
-        # Calculate statistics
         total = len(articles)
         area_counts = {}
         sector_counts = {}
@@ -160,12 +196,12 @@ class AISummarizer:
             
             area_counts[area] = area_counts.get(area, 0) + 1
             sector_counts[sector] = sector_counts.get(sector, 0) + 1
-            province_counts[province] = province_counts.get(province, 0) + 1
+            if province != "Vietnam":
+                province_counts[province] = province_counts.get(province, 0) + 1
         
         top_sector = max(sector_counts.items(), key=lambda x: x[1]) if sector_counts else ("Unknown", 0)
         top_province = max(province_counts.items(), key=lambda x: x[1]) if province_counts else ("Unknown", 0)
         
-        # Generate briefing based on language
         if lang == "ko":
             briefing = f"""오늘 총 {total}건의 베트남 인프라 뉴스가 수집되었습니다.
 
@@ -180,7 +216,8 @@ class AISummarizer:
 주요 기사:
 """
             for article in articles[:5]:
-                briefing += f"• {article.get('title', '')[:60]}... ({article.get('source', '')})\n"
+                title = article.get('title_ko', article.get('title', ''))[:60]
+                briefing += f"• {title}... ({article.get('source', '')})\n"
                 
         elif lang == "en":
             briefing = f"""Total {total} Vietnam infrastructure news collected today.
@@ -196,9 +233,10 @@ Area Summary:
 Top Articles:
 """
             for article in articles[:5]:
-                briefing += f"• {article.get('title', '')[:60]}... ({article.get('source', '')})\n"
+                title = article.get('title_en', article.get('title', ''))[:60]
+                briefing += f"• {title}... ({article.get('source', '')})\n"
         
-        else:  # Vietnamese
+        else:
             briefing = f"""Tổng cộng {total} tin tức hạ tầng Việt Nam được thu thập hôm nay.
 
 Theo ngành, {top_sector[0]} dẫn đầu với {top_sector[1]} bài.
@@ -212,13 +250,13 @@ Tóm tắt theo lĩnh vực:
 Tin nổi bật:
 """
             for article in articles[:5]:
-                briefing += f"• {article.get('title', '')[:60]}... ({article.get('source', '')})\n"
+                title = article.get('title_vi', article.get('title', ''))[:60]
+                briefing += f"• {title}... ({article.get('source', '')})\n"
         
         return briefing
 
 
 def load_articles(filepath: str) -> List[Dict]:
-    """Load articles from JSON file"""
     try:
         with open(filepath, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -229,7 +267,6 @@ def load_articles(filepath: str) -> List[Dict]:
 
 
 def save_articles(articles: List[Dict], filepath: str):
-    """Save articles to JSON file"""
     try:
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump({
@@ -243,8 +280,6 @@ def save_articles(articles: List[Dict], filepath: str):
 
 
 async def main():
-    """Main function to run AI summarization"""
-    # Find latest news file
     data_files = sorted(DATA_DIR.glob("news_*.json"), reverse=True)
     
     if not data_files:
@@ -254,24 +289,16 @@ async def main():
     latest_file = data_files[0]
     print(f"Processing: {latest_file}")
     
-    # Load articles
     articles = load_articles(str(latest_file))
     print(f"Loaded {len(articles)} articles")
     
-    # Initialize summarizer
     summarizer = AISummarizer()
-    
-    # Process articles
     processed = await summarizer.summarize_batch(articles)
     
-    # Save processed articles
     output_file = DATA_DIR / f"processed_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     save_articles(processed, str(output_file))
     
-    # Generate briefing
     briefing_ko = summarizer.generate_daily_briefing(processed, "ko")
-    briefing_en = summarizer.generate_daily_briefing(processed, "en")
-    
     print(f"\n{'='*50}")
     print("AI Summarization Complete")
     print(f"{'='*50}")
