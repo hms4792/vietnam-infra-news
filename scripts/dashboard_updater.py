@@ -71,13 +71,13 @@ KEYWORDS_DATA = [
 ]
 
 SECTOR_KEYWORDS = {
-    "Solid Waste": ["waste-to-energy", "solid waste", "landfill", "incineration", "recycling", "circular economy", "wte", "garbage", "rubbish", "trash", "municipal waste"],
+    "Oil & Gas": ["oil exploration", "gas field", "upstream", "petroleum", "offshore drilling", "lng terminal", "refinery", "oil and gas", "natural gas", "gas pipeline", "oil price", "crude oil", "petrochemical"],
+    "Solid Waste": ["waste-to-energy", "solid waste", "landfill", "incineration", "recycling", "circular economy", "wte", "garbage", "municipal waste"],
     "Waste Water": ["wastewater", "waste water", "wwtp", "sewage", "water treatment plant", "sewerage", "effluent", "sludge"],
-    "Water Supply/Drainage": ["clean water", "water supply", "water scarcity", "reservoir", "potable water", "tap water", "water infrastructure", "drinking water"],
-    "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", "natural gas", "ccgt", "combined cycle", "solar", "wind", "renewable", "biomass", "offshore wind", "onshore wind", "pdp8", "hydropower"],
-    "Oil & Gas": ["oil exploration", "gas field", "upstream", "midstream", "petroleum", "offshore drilling", "oil and gas", "lng terminal", "refinery"],
-    "Industrial Parks": ["industrial park", "industrial zone", "fdi", "foreign investment", "manufacturing zone", "eco-industrial", "economic zone"],
-    "Smart City": ["smart city", "urban area", "zoning", "new urban", "tod", "digital transformation", "urban development", "city planning"],
+    "Water Supply/Drainage": ["clean water", "water supply", "reservoir", "potable water", "tap water", "drinking water", "water infrastructure"],
+    "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", "solar", "wind", "renewable", "hydropower", "pdp8"],
+    "Industrial Parks": ["industrial park", "industrial zone", "fdi", "economic zone", "manufacturing zone"],
+    "Smart City": ["smart city", "urban development", "digital transformation", "city planning", "urban area"],
 }
 
 AREA_BY_SECTOR = {
@@ -90,8 +90,7 @@ AREA_BY_SECTOR = {
     "Smart City": "Urban Develop.",
 }
 
-SECTOR_PRIORITY = ["Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Oil & Gas", "Smart City", "Industrial Parks"]
-
+SECTOR_PRIORITY = ["Oil & Gas", "Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Smart City", "Industrial Parks"]
 
 def classify_article(title: str, summary: str = "") -> Tuple[str, str]:
     text = (str(title) + " " + str(summary)).lower()
