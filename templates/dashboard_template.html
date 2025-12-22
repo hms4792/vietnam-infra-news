@@ -821,7 +821,7 @@ function updateKPI(news) {
     document.getElementById('kpi-total-label').textContent = `전체 ${news.length}건`;
     
     const sectorCnt = {}, regionCnt = {};
-    news.forEach(n => { sectorCnt[n.sector] = (sectorCnt[n.sector] || 0) + 1; regionCnt[n.province] = (regionCnt[n.province] || 0) + 1; });
+    news.forEach(n => { sectorCnt[n.sector] = (sectorCnt[n.sector] || 0) + 1; if (n.province !== 'Vietnam') { regionCnt[n.province] = (regionCnt[n.province] || 0) + 1; } });
     
     const topSectors = Object.entries(sectorCnt).sort((a, b) => b[1] - a[1]).slice(0, 3);
     const topRegions = Object.entries(regionCnt).sort((a, b) => b[1] - a[1]).slice(0, 3);
@@ -964,7 +964,7 @@ function initCharts() {
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } } } }
     });
     
-    const regionCnt = {}; allData.forEach(d => { regionCnt[d.province] = (regionCnt[d.province] || 0) + 1; });
+    const regionCnt = {}; allData.forEach(d => { if (d.province !== 'Vietnam') { regionCnt[d.province] = (regionCnt[d.province] || 0) + 1; } });
     const topR = Object.entries(regionCnt).sort((a, b) => b[1] - a[1]).slice(0, 8);
     const regionColors = ['#0EA5E9', '#8B5CF6', '#F59E0B', '#10B981', '#EF4444', '#EC4899', '#6366F1', '#14B8A6'];
     
@@ -1004,7 +1004,7 @@ function quickFilter(type) {
         case 'month': start = `${TODAY.getFullYear()}-${String(TODAY.getMonth() + 1).padStart(2, '0')}-01`; break;
         case '2025': start = '2025-01-01'; end = '2025-12-31'; break;
         case '2024': start = '2024-01-01'; end = '2024-12-31'; break;
-        case 'all': start = '2024-01-01'; end = TODAY_STR; break;
+        case 'all': start = '2019-01-01'; end = TODAY_STR; break;
     }
     document.getElementById('db-start').value = start;
     document.getElementById('db-end').value = end;
@@ -1033,7 +1033,7 @@ function searchDB() {
 
 function resetDB() {
     document.getElementById('db-keyword').value = '';
-    document.getElementById('db-start').value = '2024-01-01';
+    document.getElementById('db-start').value = '2019-01-01';
     document.getElementById('db-end').value = TODAY_STR;
     document.getElementById('db-area').value = 'all';
     document.getElementById('db-province').value = 'all';
