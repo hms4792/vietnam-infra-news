@@ -404,10 +404,9 @@ class NewsCollector:
         
         return any(kw in text for kw in infra_keywords)
     
-   def _classify_article(self, article):
+    def _classify_article(self, article):
         text = (article.get("title", "") + " " + article.get("summary", "")).lower()
         
-        # Oil & Gas를 먼저 체크 (gas, oil 키워드가 다른 섹터와 겹치지 않도록)
         sector_priority = ["Oil & Gas", "Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Smart City", "Industrial Parks"]
         
         for sector in sector_priority:
