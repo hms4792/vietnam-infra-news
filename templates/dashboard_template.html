@@ -706,79 +706,304 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================
-// TTS
+// TTS (Text-to-Speech) - 다국어 지원 개선
 // ============================================
 function initTTS() {
     if ('speechSynthesis' in window) {
         const loadVoices = () => {
             voices = speechSynthesis.getVoices();
-            const sel = document.getElementById('voice-select');
-            sel.innerHTML = '<option value="auto">🎯 자동 (최적 음성)</option>';
-            
-            const grouped = { ko: [], en: [], vi: [], other: [] };
-            voices.forEach((v, i) => {
-                if (v.lang.startsWith('ko')) grouped.ko.push({ v, i });
-                else if (v.lang.startsWith('en')) grouped.en.push({ v, i });
-                else if (v.lang.startsWith('vi')) grouped.vi.push({ v, i });
-            });
-            
-            if (grouped.ko.length) { sel.innerHTML += '<optgroup label="🇰🇷 한국어">'; grouped.ko.forEach(({ v, i }) => sel.innerHTML += `<option value="${i}">${v.name}</option>`); sel.innerHTML += '</optgroup>'; }
-            if (grouped.en.length) { sel.innerHTML += '<optgroup label="🇺🇸 영어">'; grouped.en.forEach(({ v, i }) => sel.innerHTML += `<option value="${i}">${v.name}</option>`); sel.innerHTML += '</optgroup>'; }
-            if (grouped.vi.length) { sel.innerHTML += '<optgroup label="🇻🇳 베트남어">'; grouped.vi.forEach(({ v, i }) => sel.innerHTML += `<option value="${i}">${v.name}</option>`); sel.innerHTML += '</optgroup>'; }
-            
+            populateVoiceList();
             updateVoiceInfo();
         };
+        
+        // 즉시 로드 시도
         loadVoices();
+        
+        // 음성 변경 이벤트
         speechSynthesis.onvoiceschanged = loadVoices;
-        document.getElementById('voice-rate').oninput = e => document.getElementById('rate-val').textContent = e.target.value;
+        
+        // 모바일 대응: 지연 로드
+        setTimeout(loadVoices, 500);
+        setTimeout(loadVoices, 1000);
+        setTimeout(loadVoices, 2000);
+        
+        document.getElementById('voice-rate').oninput = e => {
+            document.getElementById('rate-val').textContent = e.target.value;
+        };
+    }
+}
+
+function populateVoiceList() {
+    const sel = document.getElementById('voice-select');
+    sel.innerHTML = '<option value="auto">🎯 자동 (최적 음성)</option>';
+    
+    const grouped = { ko: [], en: [], vi: [], other: [] };
+    voices.forEach((v, i) => {
+        const langLower = v.lang.toLowerCase();
+        if (langLower.startsWith('ko')) grouped.ko.push({ v, i });
+        else if (langLower.startsWith('en')) grouped.en.push({ v, i });
+        else if (langLower.startsWith('vi')) grouped.vi.push({ v, i });
+    });
+    
+    if (grouped.ko.length) {
+        sel.innerHTML += '<optgroup label="🇰🇷 한국어">';
+        grouped.ko.forEach(({ v, i }) => sel.innerHTML += `<option value="${i}">${v.name}</option>`);
+        sel.innerHTML += '</optgroup>';
+    }
+    if (grouped.en.length) {
+        sel.innerHTML += '<optgroup label="🇺🇸 영어">';
+        grouped.en.forEach(({ v, i }) => sel.innerHTML += `<option value="${i}">${v.name}</option>`);
+        sel.innerHTML += '</optgroup>';
+    }
+    if (grouped.vi.length) {
+        sel.innerHTML += '<optgroup label="🇻🇳 베트남어">';
+        grouped.vi.forEach(({ v, i }) => sel.innerHTML += `<option value="${i}">${v.name}</option>`);
+        sel.innerHTML += '</optgroup>';
     }
 }
 
 function getBestVoice(targetLang) {
-    if (!voices.length) return null;
-    const codes = { ko: ['ko-KR', 'ko'], en: ['en-US', 'en-GB', 'en'], vi: ['vi-VN', 'vi'] }[targetLang] || ['en-US'];
-    const priority = ['Google', 'Wavenet', 'Neural', 'Microsoft', 'Azure', 'Online', 'Siri', 'Premium', 'Natural', 'Enhanced'];
+    // 음성이 없으면 다시 로드 시도
+    if (!voices || voices.length === 0) {
+        voices = speechSynthesis.getVoices();
+    }
     
-    for (const kw of priority) {
+    if (!voices || voices.length === 0) {
+        console.warn('No voices available');
+        return null;
+    }
+    
+    // 언어 코드 매핑 (정확한 매칭 우선)
+    const langCodes = {
+        'ko': ['ko-KR', 'ko_KR', 'ko'],
+        'en': ['en-US', 'en-GB', 'en_US', 'en_GB', 'en-AU', 'en'],
+        'vi': ['vi-VN', 'vi_VN', 'vi']
+    };
+    
+    const codes = langCodes[targetLang] || langCodes['en'];
+    
+    // 고품질 음성 키워드 (우선순위 순)
+    const qualityKeywords = [
+        'Google',      // Google 음성 (최고 품질)
+        'Wavenet',     // Google Wavenet
+        'Neural',      // Neural TTS
+        'Microsoft',   // Microsoft 음성
+        'Azure',       // Azure TTS
+        'Siri',        // Apple Siri
+        'Samantha',    // macOS 기본
+        'Premium',     // Premium 음성
+        'Natural',     // Natural 음성
+        'Enhanced',    // Enhanced 음성
+        'Online'       // Online 음성
+    ];
+    
+    // 1단계: 정확한 언어 코드 + 고품질 음성
+    for (const keyword of qualityKeywords) {
         for (const code of codes) {
-            const v = voices.find(v => v.lang.startsWith(code.split('-')[0]) && v.name.toLowerCase().includes(kw.toLowerCase()));
-            if (v) return v;
+            const voice = voices.find(v => {
+                const voiceLang = v.lang.replace('_', '-').toLowerCase();
+                const targetCode = code.replace('_', '-').toLowerCase();
+                return voiceLang === targetCode && 
+                       v.name.toLowerCase().includes(keyword.toLowerCase());
+            });
+            if (voice) {
+                console.log(`Found quality voice for ${targetLang}: ${voice.name} (${voice.lang})`);
+                return voice;
+            }
         }
     }
-    for (const code of codes) { const v = voices.find(v => v.lang.startsWith(code.split('-')[0]) && !v.localService); if (v) return v; }
-    for (const code of codes) { const v = voices.find(v => v.lang.startsWith(code.split('-')[0])); if (v) return v; }
-    return voices.find(v => v.lang.startsWith('en')) || voices[0];
+    
+    // 2단계: 언어 코드 prefix 매칭 + 고품질 음성
+    for (const keyword of qualityKeywords) {
+        const voice = voices.find(v => {
+            const voiceLang = v.lang.replace('_', '-').toLowerCase();
+            return voiceLang.startsWith(targetLang) && 
+                   v.name.toLowerCase().includes(keyword.toLowerCase());
+        });
+        if (voice) {
+            console.log(`Found quality voice (prefix) for ${targetLang}: ${voice.name} (${voice.lang})`);
+            return voice;
+        }
+    }
+    
+    // 3단계: 정확한 언어 코드 + 원격 음성 (localService = false)
+    for (const code of codes) {
+        const voice = voices.find(v => {
+            const voiceLang = v.lang.replace('_', '-').toLowerCase();
+            const targetCode = code.replace('_', '-').toLowerCase();
+            return voiceLang === targetCode && !v.localService;
+        });
+        if (voice) {
+            console.log(`Found remote voice for ${targetLang}: ${voice.name} (${voice.lang})`);
+            return voice;
+        }
+    }
+    
+    // 4단계: 언어 prefix 매칭 + 아무 음성
+    for (const code of codes) {
+        const voice = voices.find(v => {
+            const voiceLang = v.lang.replace('_', '-').toLowerCase();
+            const targetCode = code.replace('_', '-').toLowerCase().split('-')[0];
+            return voiceLang.startsWith(targetCode);
+        });
+        if (voice) {
+            console.log(`Found any voice for ${targetLang}: ${voice.name} (${voice.lang})`);
+            return voice;
+        }
+    }
+    
+    // 5단계: 해당 언어 음성이 전혀 없는 경우 - 영어 fallback
+    if (targetLang !== 'en') {
+        console.warn(`No ${targetLang} voice found, falling back to English`);
+        return getBestVoice('en');
+    }
+    
+    // 최후의 수단: 기본 음성
+    const defaultVoice = voices.find(v => v.default) || voices[0];
+    console.log(`Using default voice: ${defaultVoice?.name}`);
+    return defaultVoice;
 }
 
 function updateVoiceInfo() {
-    const best = getBestVoice('ko');
-    if (best) document.getElementById('voice-info').textContent = `현재: ${best.name.substring(0, 25)}...`;
+    const infoEl = document.getElementById('voice-info');
+    if (!infoEl) return;
+    
+    const koVoice = getBestVoice('ko');
+    const enVoice = getBestVoice('en');
+    const viVoice = getBestVoice('vi');
+    
+    const info = [];
+    if (koVoice) info.push(`🇰🇷 ${koVoice.name.substring(0, 15)}`);
+    if (enVoice) info.push(`🇺🇸 ${enVoice.name.substring(0, 15)}`);
+    if (viVoice) info.push(`🇻🇳 ${viVoice.name.substring(0, 15)}`);
+    
+    infoEl.textContent = info.length ? info[0] + '...' : '음성 로딩중...';
 }
 
 function speak(text, targetLang, onEnd) {
-    if (!window.speechSynthesis) { if (onEnd) onEnd(); return; }
+    if (!window.speechSynthesis) {
+        console.warn('SpeechSynthesis not supported');
+        if (onEnd) onEnd();
+        return;
+    }
+    
+    // 기존 음성 중지
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    const sel = document.getElementById('voice-select');
-    u.voice = sel.value === 'auto' ? getBestVoice(targetLang) : voices[parseInt(sel.value)];
-    u.rate = parseFloat(document.getElementById('voice-rate').value);
-    u.onstart = () => { ttsPlaying = true; };
-    u.onend = () => { ttsPlaying = false; if (onEnd) onEnd(); };
-    u.onerror = () => { ttsPlaying = false; if (onEnd) onEnd(); };
-    speechSynthesis.speak(u);
+    
+    // 음성이 없으면 로드 대기
+    if (!voices || voices.length === 0) {
+        voices = speechSynthesis.getVoices();
+    }
+    
+    // 텍스트 정리
+    const cleanText = text.replace(/\s+/g, ' ').trim();
+    if (!cleanText) {
+        if (onEnd) onEnd();
+        return;
+    }
+    
+    // 긴 텍스트 분할 (모바일 호환성)
+    const maxLength = 150;
+    const chunks = [];
+    let remaining = cleanText;
+    
+    while (remaining.length > 0) {
+        if (remaining.length <= maxLength) {
+            chunks.push(remaining);
+            break;
+        }
+        
+        // 문장 단위로 분할
+        let splitIndex = remaining.lastIndexOf('. ', maxLength);
+        if (splitIndex === -1 || splitIndex < 50) {
+            splitIndex = remaining.lastIndexOf(' ', maxLength);
+        }
+        if (splitIndex === -1 || splitIndex < 50) {
+            splitIndex = maxLength;
+        }
+        
+        chunks.push(remaining.substring(0, splitIndex + 1).trim());
+        remaining = remaining.substring(splitIndex + 1).trim();
+    }
+    
+    // 최적 음성 선택
+    const selectedVoice = document.getElementById('voice-select')?.value;
+    let voice;
+    
+    if (selectedVoice && selectedVoice !== 'auto') {
+        voice = voices[parseInt(selectedVoice)];
+        // 선택된 음성의 언어가 다르면 자동 선택으로 변경
+        const voiceLang = voice?.lang?.toLowerCase() || '';
+        if (!voiceLang.startsWith(targetLang)) {
+            console.log(`Selected voice ${voice?.name} doesn't match ${targetLang}, using auto`);
+            voice = getBestVoice(targetLang);
+        }
+    } else {
+        voice = getBestVoice(targetLang);
+    }
+    
+    console.log(`Speaking in ${targetLang} with voice:`, voice?.name, voice?.lang);
+    
+    // 순차 재생
+    let chunkIndex = 0;
+    
+    function speakNextChunk() {
+        if (chunkIndex >= chunks.length) {
+            ttsPlaying = false;
+            if (onEnd) onEnd();
+            return;
+        }
+        
+        const utterance = new SpeechSynthesisUtterance(chunks[chunkIndex]);
+        
+        if (voice) {
+            utterance.voice = voice;
+            utterance.lang = voice.lang;
+        } else {
+            // 폴백: 언어 코드 직접 설정
+            const langMap = { 'ko': 'ko-KR', 'en': 'en-US', 'vi': 'vi-VN' };
+            utterance.lang = langMap[targetLang] || 'en-US';
+        }
+        
+        // 음성 설정
+        const rate = parseFloat(document.getElementById('voice-rate')?.value || 1);
+        utterance.rate = rate;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        utterance.onstart = () => {
+            ttsPlaying = true;
+        };
+        
+        utterance.onend = () => {
+            chunkIndex++;
+            // 다음 청크로
+            if (chunkIndex < chunks.length) {
+                setTimeout(speakNextChunk, 100);
+            } else {
+                ttsPlaying = false;
+                if (onEnd) onEnd();
+            }
+        };
+        
+        utterance.onerror = (e) => {
+            console.error('TTS error:', e);
+            ttsPlaying = false;
+            if (onEnd) onEnd();
+        };
+        
+        speechSynthesis.speak(utterance);
+    }
+    
+    speakNextChunk();
 }
 
-function stopTTS() { speechSynthesis.cancel(); ttsPlaying = false; briefingPlaying = false; }
-
-// ============================================
-// LANGUAGE & TAB
-// ============================================
-function setLang(l) {
-    lang = l;
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
-    updateDashboard();
-    renderDBList();
-    setTimeout(initCharts, 50);
+function stopTTS() {
+    if (window.speechSynthesis) {
+        speechSynthesis.cancel();
+    }
+    ttsPlaying = false;
+    briefingPlaying = false;
 }
 
 function setTab(t) {
