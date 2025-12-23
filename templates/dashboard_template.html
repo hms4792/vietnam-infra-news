@@ -488,6 +488,7 @@ function initTTS() {
             voices = speechSynthesis.getVoices();
             populateVoiceList();
             updateVoiceInfo();
+            checkVietnameseVoice();
         };
         
         loadVoices();
@@ -502,6 +503,19 @@ function initTTS() {
     }
 }
 
+function checkVietnameseVoice() {
+    const viVoice = voices.find(v => {
+        const langLower = v.lang.toLowerCase().replace('_', '-');
+        return langLower.startsWith('vi');
+    });
+    
+    if (!viVoice) {
+        console.warn('Vietnamese TTS voice not available on this device');
+    } else {
+        console.log('Vietnamese voice found:', viVoice.name, viVoice.lang);
+    }
+}
+
 function populateVoiceList() {
     const sel = document.getElementById('voice-select');
     if (!sel) return;
@@ -509,7 +523,7 @@ function populateVoiceList() {
     
     const grouped = { ko: [], en: [], vi: [] };
     voices.forEach((v, i) => {
-        const langLower = v.lang.toLowerCase();
+        const langLower = v.lang.toLowerCase().replace('_', '-');
         if (langLower.startsWith('ko')) grouped.ko.push({ v, i });
         else if (langLower.startsWith('en')) grouped.en.push({ v, i });
         else if (langLower.startsWith('vi')) grouped.vi.push({ v, i });
@@ -538,64 +552,105 @@ function getBestVoice(targetLang) {
     }
     if (!voices || voices.length === 0) return null;
     
-    const langCodes = {
-        'ko': ['ko-KR', 'ko_KR', 'ko'],
-        'en': ['en-US', 'en-GB', 'en_US', 'en_GB', 'en-AU', 'en'],
-        'vi': ['vi-VN', 'vi_VN', 'vi']
+    // 언어별 정확한 코드 매핑
+    const langConfig = {
+        'ko': {
+            codes: ['ko-KR', 'ko_KR', 'ko'],
+            keywords: ['Google', 'Wavenet', 'Neural', 'Microsoft', 'Heami', 'Seoyeon', 'Yuna', 'Siri', 'Premium', 'Natural']
+        },
+        'en': {
+            codes: ['en-US', 'en-GB', 'en_US', 'en_GB', 'en-AU', 'en'],
+            keywords: ['Google', 'Wavenet', 'Neural', 'Microsoft', 'Samantha', 'Alex', 'Siri', 'Premium', 'Natural', 'Zira', 'David']
+        },
+        'vi': {
+            codes: ['vi-VN', 'vi_VN', 'vi'],
+            keywords: ['Google', 'Wavenet', 'Neural', 'Microsoft', 'Chi', 'Linh', 'An', 'Premium', 'Natural', 'Vietnamese']
+        }
     };
     
-    const codes = langCodes[targetLang] || langCodes['en'];
-    const qualityKeywords = ['Google', 'Wavenet', 'Neural', 'Microsoft', 'Azure', 'Siri', 'Samantha', 'Premium', 'Natural', 'Enhanced', 'Online'];
+    const config = langConfig[targetLang] || langConfig['en'];
+    const codes = config.codes;
+    const keywords = config.keywords;
     
-    // 1. 고품질 음성 찾기
-    for (const keyword of qualityKeywords) {
+    // 1단계: 정확한 언어 코드 + 고품질 키워드
+    for (const keyword of keywords) {
         for (const code of codes) {
             const voice = voices.find(v => {
                 const voiceLang = v.lang.replace('_', '-').toLowerCase();
                 const targetCode = code.replace('_', '-').toLowerCase();
-                return voiceLang === targetCode && v.name.toLowerCase().includes(keyword.toLowerCase());
+                return voiceLang === targetCode && 
+                       v.name.toLowerCase().includes(keyword.toLowerCase());
             });
-            if (voice) return voice;
+            if (voice) {
+                console.log(`✓ Found quality ${targetLang} voice:`, voice.name);
+                return voice;
+            }
         }
     }
     
-    // 2. 언어 prefix 매칭
-    for (const keyword of qualityKeywords) {
+    // 2단계: 언어 prefix만 매칭 + 고품질 키워드
+    for (const keyword of keywords) {
         const voice = voices.find(v => {
             const voiceLang = v.lang.replace('_', '-').toLowerCase();
-            return voiceLang.startsWith(targetLang) && v.name.toLowerCase().includes(keyword.toLowerCase());
+            return voiceLang.startsWith(targetLang) && 
+                   v.name.toLowerCase().includes(keyword.toLowerCase());
         });
-        if (voice) return voice;
+        if (voice) {
+            console.log(`✓ Found ${targetLang} voice (prefix):`, voice.name);
+            return voice;
+        }
     }
     
-    // 3. 원격 음성
+    // 3단계: 정확한 언어 코드 + 원격 음성 (localService = false)
     for (const code of codes) {
         const voice = voices.find(v => {
             const voiceLang = v.lang.replace('_', '-').toLowerCase();
             const targetCode = code.replace('_', '-').toLowerCase();
             return voiceLang === targetCode && !v.localService;
         });
-        if (voice) return voice;
+        if (voice) {
+            console.log(`✓ Found remote ${targetLang} voice:`, voice.name);
+            return voice;
+        }
     }
     
-    // 4. 아무 음성
+    // 4단계: 언어 prefix만 매칭 + 아무 음성
     for (const code of codes) {
         const voice = voices.find(v => {
             const voiceLang = v.lang.replace('_', '-').toLowerCase();
-            return voiceLang.startsWith(targetLang.split('-')[0]);
+            return voiceLang.startsWith(targetLang);
         });
-        if (voice) return voice;
+        if (voice) {
+            console.log(`✓ Found any ${targetLang} voice:`, voice.name);
+            return voice;
+        }
     }
     
-    // 5. 기본 음성
+    // 베트남어인데 음성이 없는 경우 - null 반환 (fallback 하지 않음)
+    if (targetLang === 'vi') {
+        console.warn('✗ No Vietnamese voice available');
+        return null;
+    }
+    
+    // 다른 언어는 기본 음성 반환
     return voices.find(v => v.default) || voices[0];
 }
 
 function updateVoiceInfo() {
     const infoEl = document.getElementById('voice-info');
     if (!infoEl) return;
-    const best = getBestVoice(lang);
-    infoEl.textContent = best ? `현재: ${best.name.substring(0, 20)}...` : '음성 로딩중...';
+    
+    const koVoice = getBestVoice('ko');
+    const enVoice = getBestVoice('en');
+    const viVoice = getBestVoice('vi');
+    
+    let info = [];
+    if (koVoice) info.push(`🇰🇷 ${koVoice.name.substring(0, 12)}`);
+    if (enVoice) info.push(`🇺🇸 ${enVoice.name.substring(0, 12)}`);
+    if (viVoice) info.push(`🇻🇳 ${viVoice.name.substring(0, 12)}`);
+    else info.push('🇻🇳 없음');
+    
+    infoEl.textContent = info.join(' | ');
 }
 
 function speak(text, targetLang, onEnd) {
@@ -610,7 +665,39 @@ function speak(text, targetLang, onEnd) {
     const cleanText = text.replace(/\s+/g, ' ').trim();
     if (!cleanText) { if (onEnd) onEnd(); return; }
     
-    // 텍스트 분할
+    // 음성 선택
+    const selectedVoice = document.getElementById('voice-select')?.value;
+    let voice;
+    
+    if (selectedVoice && selectedVoice !== 'auto') {
+        voice = voices[parseInt(selectedVoice)];
+        // 선택된 음성의 언어가 맞는지 확인
+        const voiceLang = voice?.lang?.toLowerCase().replace('_', '-') || '';
+        if (!voiceLang.startsWith(targetLang)) {
+            voice = getBestVoice(targetLang);
+        }
+    } else {
+        voice = getBestVoice(targetLang);
+    }
+    
+    // 베트남어 음성이 없는 경우 경고
+    if (targetLang === 'vi' && !voice) {
+        showToast('⚠️ 베트남어 음성이 이 기기에서 지원되지 않습니다');
+        console.warn('Vietnamese TTS not available. Please use Chrome on desktop or install Vietnamese language pack.');
+        if (onEnd) onEnd();
+        return;
+    }
+    
+    // 음성이 없으면 중단
+    if (!voice) {
+        console.warn(`No voice found for ${targetLang}`);
+        if (onEnd) onEnd();
+        return;
+    }
+    
+    console.log(`🔊 Speaking in ${targetLang} with: ${voice.name} (${voice.lang})`);
+    
+    // 텍스트 분할 (모바일 호환)
     const maxLength = 150;
     const chunks = [];
     let remaining = cleanText;
@@ -627,22 +714,6 @@ function speak(text, targetLang, onEnd) {
         remaining = remaining.substring(splitIndex + 1).trim();
     }
     
-    // 음성 선택
-    const selectedVoice = document.getElementById('voice-select')?.value;
-    let voice;
-    
-    if (selectedVoice && selectedVoice !== 'auto') {
-        voice = voices[parseInt(selectedVoice)];
-        const voiceLang = voice?.lang?.toLowerCase() || '';
-        if (!voiceLang.startsWith(targetLang)) {
-            voice = getBestVoice(targetLang);
-        }
-    } else {
-        voice = getBestVoice(targetLang);
-    }
-    
-    console.log(`Speaking in ${targetLang} with voice:`, voice?.name);
-    
     let chunkIndex = 0;
     
     function speakNextChunk() {
@@ -653,16 +724,12 @@ function speak(text, targetLang, onEnd) {
         }
         
         const utterance = new SpeechSynthesisUtterance(chunks[chunkIndex]);
+        utterance.voice = voice;
+        utterance.lang = voice.lang;
         
-        if (voice) {
-            utterance.voice = voice;
-            utterance.lang = voice.lang;
-        } else {
-            const langMap = { 'ko': 'ko-KR', 'en': 'en-US', 'vi': 'vi-VN' };
-            utterance.lang = langMap[targetLang] || 'en-US';
-        }
-        
-        utterance.rate = parseFloat(document.getElementById('voice-rate')?.value || 1);
+        // 언어별 속도 조절
+        const baseRate = parseFloat(document.getElementById('voice-rate')?.value || 1);
+        utterance.rate = targetLang === 'vi' ? baseRate * 0.9 : baseRate; // 베트남어는 약간 느리게
         utterance.pitch = 1.0;
         utterance.volume = 1.0;
         
@@ -676,7 +743,11 @@ function speak(text, targetLang, onEnd) {
                 if (onEnd) onEnd();
             }
         };
-        utterance.onerror = () => { ttsPlaying = false; if (onEnd) onEnd(); };
+        utterance.onerror = (e) => { 
+            console.error('TTS Error:', e);
+            ttsPlaying = false; 
+            if (onEnd) onEnd(); 
+        };
         
         speechSynthesis.speak(utterance);
     }
