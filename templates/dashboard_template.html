@@ -392,127 +392,34 @@
 </div>
 
 <script>
-// ============================================
+    // ============================================
 // 뉴스 소스별 실제 URL 매핑
 // ============================================
 const SOURCE_URLS = {
-    'VnExpress': {
-        base: 'https://vnexpress.net',
-        search: 'https://timkiem.vnexpress.net/?q=',
-        sections: {
-            'Environment': '/kinh-doanh/bat-dong-san',
-            'Energy Develop.': '/kinh-doanh/nang-luong',
-            'Urban Develop.': '/kinh-doanh/bat-dong-san'
-        }
-    },
-    'Tuoi Tre': {
-        base: 'https://tuoitre.vn',
-        search: 'https://tuoitre.vn/tim-kiem.htm?keywords=',
-        sections: {
-            'Environment': '/kinh-doanh',
-            'Energy Develop.': '/kinh-doanh',
-            'Urban Develop.': '/kinh-doanh'
-        }
-    },
-    'Thanh Nien': {
-        base: 'https://thanhnien.vn',
-        search: 'https://thanhnien.vn/tim-kiem/?q=',
-        sections: {
-            'Environment': '/kinh-te',
-            'Energy Develop.': '/kinh-te',
-            'Urban Develop.': '/kinh-te'
-        }
-    },
-    'VietnamNews': {
-        base: 'https://vietnamnews.vn',
-        search: 'https://vietnamnews.vn/search?q=',
-        sections: {
-            'Environment': '/environment',
-            'Energy Develop.': '/economy',
-            'Urban Develop.': '/economy'
-        }
-    },
-    'Dau Tu': {
-        base: 'https://baodautu.vn',
-        search: 'https://baodautu.vn/tim-kiem/?q=',
-        sections: {
-            'Environment': '/bat-dong-san',
-            'Energy Develop.': '/nang-luong',
-            'Urban Develop.': '/bat-dong-san'
-        }
-    },
-    'VnEconomy': {
-        base: 'https://vneconomy.vn',
-        search: 'https://vneconomy.vn/tim-kiem?q=',
-        sections: {
-            'Environment': '/bat-dong-san.htm',
-            'Energy Develop.': '/nang-luong.htm',
-            'Urban Develop.': '/bat-dong-san.htm'
-        }
-    },
-    'VietnamPlus': {
-        base: 'https://www.vietnamplus.vn',
-        search: 'https://www.vietnamplus.vn/search.vnp?keyword=',
-        sections: {
-            'Environment': '/business',
-            'Energy Develop.': '/business',
-            'Urban Develop.': '/business'
-        }
-    },
-    'PetroTimes': {
-        base: 'https://petrotimes.vn',
-        search: 'https://petrotimes.vn/tim-kiem.html?key=',
-        sections: {
-            'Environment': '/moi-truong',
-            'Energy Develop.': '/nang-luong',
-            'Urban Develop.': '/kinh-te'
-        }
-    },
-    'Kinh Te': {
-        base: 'https://kinhtedothi.vn',
-        search: 'https://kinhtedothi.vn/tim-kiem?q=',
-        sections: {
-            'Environment': '/bat-dong-san',
-            'Energy Develop.': '/doanh-nghiep',
-            'Urban Develop.': '/ha-tang'
-        }
-    },
-    'Nhan Dan': {
-        base: 'https://nhandan.vn',
-        search: 'https://nhandan.vn/tim-kiem?q=',
-        sections: {
-            'Environment': '/moi-truong',
-            'Energy Develop.': '/kinh-te',
-            'Urban Develop.': '/kinh-te'
-        }
-    }
+    'VnExpress': { base: 'https://vnexpress.net', search: 'https://timkiem.vnexpress.net/?q=' },
+    'Tuoi Tre': { base: 'https://tuoitre.vn', search: 'https://tuoitre.vn/tim-kiem.htm?keywords=' },
+    'Thanh Nien': { base: 'https://thanhnien.vn', search: 'https://thanhnien.vn/tim-kiem/?q=' },
+    'VietnamNews': { base: 'https://vietnamnews.vn', search: 'https://vietnamnews.vn/search?q=' },
+    'Dau Tu': { base: 'https://baodautu.vn', search: 'https://baodautu.vn/tim-kiem/?q=' },
+    'VnEconomy': { base: 'https://vneconomy.vn', search: 'https://vneconomy.vn/tim-kiem?q=' },
+    'VietnamPlus': { base: 'https://www.vietnamplus.vn', search: 'https://www.vietnamplus.vn/search.vnp?keyword=' },
+    'PetroTimes': { base: 'https://petrotimes.vn', search: 'https://petrotimes.vn/tim-kiem.html?key=' },
+    'Kinh Te': { base: 'https://kinhtedothi.vn', search: 'https://kinhtedothi.vn/tim-kiem?q=' },
+    'Nhan Dan': { base: 'https://nhandan.vn', search: 'https://nhandan.vn/tim-kiem?q=' }
 };
 
-// 실제 검색 가능한 URL 생성 함수
 function generateArticleUrl(article) {
     const sourceConfig = SOURCE_URLS[article.source];
     if (!sourceConfig) {
-        // Google 검색으로 fallback
-        const query = encodeURIComponent(`${article.title.en} ${article.source} Vietnam infrastructure`);
+        const query = encodeURIComponent(`${article.title.en || article.title} ${article.source} Vietnam infrastructure`);
         return `https://www.google.com/search?q=${query}`;
     }
-    
-    // 기사 제목으로 해당 소스 사이트 검색
-    const searchQuery = encodeURIComponent(article.title.en);
+    const searchQuery = encodeURIComponent(article.title.en || article.title);
     return sourceConfig.search + searchQuery;
 }
 
-// 섹션 URL 생성 (대안)
-function generateSectionUrl(article) {
-    const sourceConfig = SOURCE_URLS[article.source];
-    if (!sourceConfig) {
-        return 'https://vnexpress.net/kinh-doanh';
-    }
-    return sourceConfig.base + (sourceConfig.sections[article.area] || '/kinh-doanh');
-}
-
 // ============================================
-// BACKEND DATA
+// BACKEND DATA & CONFIG
 // ============================================
 const PROVINCES = ['Hanoi', 'Ho Chi Minh City', 'Da Nang', 'Hai Phong', 'Can Tho', 'Binh Duong', 'Dong Nai', 'Hai Duong', 'Binh Dinh', 'Ba Ria-Vung Tau', 'Quang Ninh', 'Nghe An', 'Long An', 'Ninh Thuan', 'Bac Ninh', 'Thai Nguyen', 'Thanh Hoa', 'Khanh Hoa', 'Lam Dong', 'Tay Ninh'];
 const SOURCES = ['VnExpress', 'Tuoi Tre', 'Thanh Nien', 'VietnamNews', 'Dau Tu', 'VnEconomy', 'VietnamPlus', 'PetroTimes', 'Kinh Te', 'Nhan Dan'];
@@ -523,141 +430,8 @@ const SECTOR_CONFIG = {
     'Urban Develop.': { sectors: ['Smart City', 'Industrial Parks'], color: 'sector-urban' }
 };
 
-const TITLE_TEMPLATES = {
-    'Waste Water': { 
-        ko: ['폐수처리시설 확장', '하수처리장 현대화', '폐수처리 프로젝트 착공', '하수도 시설 개선'], 
-        en: ['Wastewater Treatment Expansion', 'Sewage Plant Modernization', 'Wastewater Project Launch', 'Sewage System Upgrade'],
-        vi: ['Mở rộng xử lý nước thải', 'Hiện đại hóa nhà máy xử lý', 'Khởi công dự án nước thải', 'Nâng cấp hệ thống thoát nước']
-    },
-    'Solid Waste': { 
-        ko: ['폐기물 처리시설 건설', '쓰레기 매립지 확장', '폐기물 에너지화 시설', '재활용 센터 건립'],
-        en: ['Waste Treatment Facility Construction', 'Landfill Expansion Project', 'Waste-to-Energy Plant', 'Recycling Center Development'],
-        vi: ['Xây dựng nhà máy xử lý rác', 'Mở rộng bãi chôn lấp', 'Nhà máy điện rác', 'Phát triển trung tâm tái chế']
-    },
-    'Water Supply/Drainage': { 
-        ko: ['상수도 확장 사업', '용수공급 시스템 개선', '배수시스템 현대화', '정수장 건설'],
-        en: ['Water Supply Expansion', 'Water System Improvement', 'Drainage Modernization', 'Water Plant Construction'],
-        vi: ['Mở rộng cấp nước', 'Cải thiện hệ thống nước', 'Hiện đại hóa thoát nước', 'Xây dựng nhà máy nước']
-    },
-    'Power': { 
-        ko: ['태양광 발전소 건설', '풍력발전 단지 확장', 'LNG 발전소 착공', '전력망 현대화'],
-        en: ['Solar Power Plant Construction', 'Wind Farm Expansion', 'LNG Power Plant Launch', 'Power Grid Modernization'],
-        vi: ['Xây dựng nhà máy điện mặt trời', 'Mở rộng trang trại điện gió', 'Khởi công nhà máy điện LNG', 'Hiện đại hóa lưới điện']
-    },
-    'Oil & Gas': { 
-        ko: ['LNG 터미널 확장', '가스관 건설 프로젝트', '석유저장시설 확충', 'LNG 수입터미널 착공'],
-        en: ['LNG Terminal Expansion', 'Gas Pipeline Construction', 'Oil Storage Facility Expansion', 'LNG Import Terminal Launch'],
-        vi: ['Mở rộng cảng LNG', 'Xây dựng đường ống dẫn khí', 'Mở rộng kho dầu', 'Khởi công cảng nhập khẩu LNG']
-    },
-    'Smart City': { 
-        ko: ['스마트시티 마스터플랜 발표', '디지털 도시 인프라 구축', 'AI 교통관제 시스템 도입', 'IoT 도시 플랫폼 구축'],
-        en: ['Smart City Master Plan Announced', 'Digital Urban Infrastructure', 'AI Traffic Control System', 'IoT City Platform Development'],
-        vi: ['Công bố quy hoạch thành phố thông minh', 'Hạ tầng đô thị số', 'Hệ thống điều khiển giao thông AI', 'Phát triển nền tảng IoT đô thị']
-    },
-    'Industrial Parks': { 
-        ko: ['산업단지 투자유치', '친환경 공단 조성', '산업클러스터 개발', 'ESG 산업단지 확장'],
-        en: ['Industrial Park FDI Attraction', 'Eco-Industrial Park Development', 'Industrial Cluster Development', 'ESG Industrial Park Expansion'],
-        vi: ['Thu hút FDI khu công nghiệp', 'Phát triển khu công nghiệp sinh thái', 'Phát triển cụm công nghiệp', 'Mở rộng khu công nghiệp ESG']
-    }
-};
-
-function generateFullDataset() {
-    const data = [];
-    let id = 1;
-    
-    // 2024년 데이터
-    for (let month = 1; month <= 12; month++) {
-        const daysInMonth = new Date(2024, month, 0).getDate();
-        const newsPerDay = month >= 6 ? 6 : 4;
-        
-        for (let day = 1; day <= daysInMonth; day += 2) {
-            const dateStr = `2024-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            
-            for (let i = 0; i < newsPerDay; i++) {
-                const areas = Object.keys(SECTOR_CONFIG);
-                const area = areas[Math.floor(Math.random() * areas.length)];
-                const sectorList = SECTOR_CONFIG[area].sectors;
-                const sector = sectorList[Math.floor(Math.random() * sectorList.length)];
-                const province = PROVINCES[Math.floor(Math.random() * PROVINCES.length)];
-                const source = SOURCES[Math.floor(Math.random() * SOURCES.length)];
-                const templates = TITLE_TEMPLATES[sector];
-                const titleIdx = Math.floor(Math.random() * templates.ko.length);
-                
-                const article = {
-                    id: id++,
-                    date: dateStr,
-                    area: area,
-                    sector: sector,
-                    province: province,
-                    source: source,
-                    title: {
-                        ko: `${province} ${templates.ko[titleIdx]}`,
-                        en: `${province} ${templates.en[titleIdx]}`,
-                        vi: `${templates.vi[titleIdx]} ${province}`
-                    },
-                    summary: {
-                        ko: `${province} 지역에서 ${sector} 관련 인프라 프로젝트가 추진됩니다. 이 사업은 지역 발전과 환경 개선에 기여할 것입니다.`,
-                        en: `${sector} infrastructure project progresses in ${province}. This project will contribute to regional development.`,
-                        vi: `Dự án hạ tầng ${sector} đang được triển khai tại ${province}. Dự án sẽ góp phần phát triển khu vực.`
-                    }
-                };
-                article.url = generateArticleUrl(article);
-                data.push(article);
-            }
-        }
-    }
-    
-    // 2025년 데이터
-    const today = new Date();
-    const currentMonth = today.getMonth() + 1;
-    const currentDay = today.getDate();
-    
-    for (let month = 1; month <= currentMonth; month++) {
-        const maxDay = month === currentMonth ? currentDay : new Date(2025, month, 0).getDate();
-        
-        for (let day = 1; day <= maxDay; day++) {
-            const dateStr = `2025-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const newsCount = (day === currentDay && month === currentMonth) ? 8 : 3;
-            
-            for (let i = 0; i < newsCount; i++) {
-                const areas = Object.keys(SECTOR_CONFIG);
-                const area = areas[Math.floor(Math.random() * areas.length)];
-                const sectorList = SECTOR_CONFIG[area].sectors;
-                const sector = sectorList[Math.floor(Math.random() * sectorList.length)];
-                const province = PROVINCES[Math.floor(Math.random() * PROVINCES.length)];
-                const source = SOURCES[Math.floor(Math.random() * SOURCES.length)];
-                const templates = TITLE_TEMPLATES[sector];
-                const titleIdx = Math.floor(Math.random() * templates.ko.length);
-                
-                const article = {
-                    id: id++,
-                    date: dateStr,
-                    area: area,
-                    sector: sector,
-                    province: province,
-                    source: source,
-                    title: {
-                        ko: `${province} ${templates.ko[titleIdx]}`,
-                        en: `${province} ${templates.en[titleIdx]}`,
-                        vi: `${templates.vi[titleIdx]} ${province}`
-                    },
-                    summary: {
-                        ko: `${province} 지역에서 ${sector} 관련 인프라 프로젝트가 추진됩니다. 한국, 일본 기업과 협력합니다.`,
-                        en: `${sector} infrastructure project progresses in ${province} with Korean and Japanese cooperation.`,
-                        vi: `Dự án hạ tầng ${sector} tại ${province} với sự hợp tác của Hàn Quốc và Nhật Bản.`
-                    }
-                };
-                article.url = generateArticleUrl(article);
-                data.push(article);
-            }
-        }
-    }
-    
-    return data.sort((a, b) => new Date(b.date) - new Date(a.date));
-}
-
 const BACKEND_DATA = /*__BACKEND_DATA__*/[];
-console.log('Total:', BACKEND_DATA.length, '| 2024:', BACKEND_DATA.filter(d => d.date.startsWith('2024')).length, '| 2025:', BACKEND_DATA.filter(d => d.date.startsWith('2025')).length);
+console.log('Total:', BACKEND_DATA.length);
 
 // ============================================
 // STATE
@@ -692,7 +466,7 @@ let sectorPieChart = null, regionPieChart = null, sectorTrendChart = null, regio
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
     document.getElementById('header-date').textContent = `${TODAY.getFullYear()}년 ${TODAY.getMonth()+1}월 ${TODAY.getDate()}일`;
-    document.getElementById('db-start').value = '2024-01-01';
+    document.getElementById('db-start').value = '2019-01-01';
     document.getElementById('db-end').value = TODAY_STR;
     
     const provinces = [...new Set(BACKEND_DATA.map(d => d.province))].sort();
@@ -706,7 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================
-// TTS (Text-to-Speech) - 다국어 지원 개선
+// TTS (Text-to-Speech) - 다국어 지원
 // ============================================
 function initTTS() {
     if ('speechSynthesis' in window) {
@@ -716,13 +490,8 @@ function initTTS() {
             updateVoiceInfo();
         };
         
-        // 즉시 로드 시도
         loadVoices();
-        
-        // 음성 변경 이벤트
         speechSynthesis.onvoiceschanged = loadVoices;
-        
-        // 모바일 대응: 지연 로드
         setTimeout(loadVoices, 500);
         setTimeout(loadVoices, 1000);
         setTimeout(loadVoices, 2000);
@@ -735,9 +504,10 @@ function initTTS() {
 
 function populateVoiceList() {
     const sel = document.getElementById('voice-select');
+    if (!sel) return;
     sel.innerHTML = '<option value="auto">🎯 자동 (최적 음성)</option>';
     
-    const grouped = { ko: [], en: [], vi: [], other: [] };
+    const grouped = { ko: [], en: [], vi: [] };
     voices.forEach((v, i) => {
         const langLower = v.lang.toLowerCase();
         if (langLower.startsWith('ko')) grouped.ko.push({ v, i });
@@ -763,17 +533,11 @@ function populateVoiceList() {
 }
 
 function getBestVoice(targetLang) {
-    // 음성이 없으면 다시 로드 시도
     if (!voices || voices.length === 0) {
         voices = speechSynthesis.getVoices();
     }
+    if (!voices || voices.length === 0) return null;
     
-    if (!voices || voices.length === 0) {
-        console.warn('No voices available');
-        return null;
-    }
-    
-    // 언어 코드 매핑 (정확한 매칭 우선)
     const langCodes = {
         'ko': ['ko-KR', 'ko_KR', 'ko'],
         'en': ['en-US', 'en-GB', 'en_US', 'en_GB', 'en-AU', 'en'],
@@ -781,128 +545,72 @@ function getBestVoice(targetLang) {
     };
     
     const codes = langCodes[targetLang] || langCodes['en'];
+    const qualityKeywords = ['Google', 'Wavenet', 'Neural', 'Microsoft', 'Azure', 'Siri', 'Samantha', 'Premium', 'Natural', 'Enhanced', 'Online'];
     
-    // 고품질 음성 키워드 (우선순위 순)
-    const qualityKeywords = [
-        'Google',      // Google 음성 (최고 품질)
-        'Wavenet',     // Google Wavenet
-        'Neural',      // Neural TTS
-        'Microsoft',   // Microsoft 음성
-        'Azure',       // Azure TTS
-        'Siri',        // Apple Siri
-        'Samantha',    // macOS 기본
-        'Premium',     // Premium 음성
-        'Natural',     // Natural 음성
-        'Enhanced',    // Enhanced 음성
-        'Online'       // Online 음성
-    ];
-    
-    // 1단계: 정확한 언어 코드 + 고품질 음성
+    // 1. 고품질 음성 찾기
     for (const keyword of qualityKeywords) {
         for (const code of codes) {
             const voice = voices.find(v => {
                 const voiceLang = v.lang.replace('_', '-').toLowerCase();
                 const targetCode = code.replace('_', '-').toLowerCase();
-                return voiceLang === targetCode && 
-                       v.name.toLowerCase().includes(keyword.toLowerCase());
+                return voiceLang === targetCode && v.name.toLowerCase().includes(keyword.toLowerCase());
             });
-            if (voice) {
-                console.log(`Found quality voice for ${targetLang}: ${voice.name} (${voice.lang})`);
-                return voice;
-            }
+            if (voice) return voice;
         }
     }
     
-    // 2단계: 언어 코드 prefix 매칭 + 고품질 음성
+    // 2. 언어 prefix 매칭
     for (const keyword of qualityKeywords) {
         const voice = voices.find(v => {
             const voiceLang = v.lang.replace('_', '-').toLowerCase();
-            return voiceLang.startsWith(targetLang) && 
-                   v.name.toLowerCase().includes(keyword.toLowerCase());
+            return voiceLang.startsWith(targetLang) && v.name.toLowerCase().includes(keyword.toLowerCase());
         });
-        if (voice) {
-            console.log(`Found quality voice (prefix) for ${targetLang}: ${voice.name} (${voice.lang})`);
-            return voice;
-        }
+        if (voice) return voice;
     }
     
-    // 3단계: 정확한 언어 코드 + 원격 음성 (localService = false)
+    // 3. 원격 음성
     for (const code of codes) {
         const voice = voices.find(v => {
             const voiceLang = v.lang.replace('_', '-').toLowerCase();
             const targetCode = code.replace('_', '-').toLowerCase();
             return voiceLang === targetCode && !v.localService;
         });
-        if (voice) {
-            console.log(`Found remote voice for ${targetLang}: ${voice.name} (${voice.lang})`);
-            return voice;
-        }
+        if (voice) return voice;
     }
     
-    // 4단계: 언어 prefix 매칭 + 아무 음성
+    // 4. 아무 음성
     for (const code of codes) {
         const voice = voices.find(v => {
             const voiceLang = v.lang.replace('_', '-').toLowerCase();
-            const targetCode = code.replace('_', '-').toLowerCase().split('-')[0];
-            return voiceLang.startsWith(targetCode);
+            return voiceLang.startsWith(targetLang.split('-')[0]);
         });
-        if (voice) {
-            console.log(`Found any voice for ${targetLang}: ${voice.name} (${voice.lang})`);
-            return voice;
-        }
+        if (voice) return voice;
     }
     
-    // 5단계: 해당 언어 음성이 전혀 없는 경우 - 영어 fallback
-    if (targetLang !== 'en') {
-        console.warn(`No ${targetLang} voice found, falling back to English`);
-        return getBestVoice('en');
-    }
-    
-    // 최후의 수단: 기본 음성
-    const defaultVoice = voices.find(v => v.default) || voices[0];
-    console.log(`Using default voice: ${defaultVoice?.name}`);
-    return defaultVoice;
+    // 5. 기본 음성
+    return voices.find(v => v.default) || voices[0];
 }
 
 function updateVoiceInfo() {
     const infoEl = document.getElementById('voice-info');
     if (!infoEl) return;
-    
-    const koVoice = getBestVoice('ko');
-    const enVoice = getBestVoice('en');
-    const viVoice = getBestVoice('vi');
-    
-    const info = [];
-    if (koVoice) info.push(`🇰🇷 ${koVoice.name.substring(0, 15)}`);
-    if (enVoice) info.push(`🇺🇸 ${enVoice.name.substring(0, 15)}`);
-    if (viVoice) info.push(`🇻🇳 ${viVoice.name.substring(0, 15)}`);
-    
-    infoEl.textContent = info.length ? info[0] + '...' : '음성 로딩중...';
+    const best = getBestVoice(lang);
+    infoEl.textContent = best ? `현재: ${best.name.substring(0, 20)}...` : '음성 로딩중...';
 }
 
 function speak(text, targetLang, onEnd) {
-    if (!window.speechSynthesis) {
-        console.warn('SpeechSynthesis not supported');
-        if (onEnd) onEnd();
-        return;
-    }
+    if (!window.speechSynthesis) { if (onEnd) onEnd(); return; }
     
-    // 기존 음성 중지
     speechSynthesis.cancel();
     
-    // 음성이 없으면 로드 대기
     if (!voices || voices.length === 0) {
         voices = speechSynthesis.getVoices();
     }
     
-    // 텍스트 정리
     const cleanText = text.replace(/\s+/g, ' ').trim();
-    if (!cleanText) {
-        if (onEnd) onEnd();
-        return;
-    }
+    if (!cleanText) { if (onEnd) onEnd(); return; }
     
-    // 긴 텍스트 분할 (모바일 호환성)
+    // 텍스트 분할
     const maxLength = 150;
     const chunks = [];
     let remaining = cleanText;
@@ -912,39 +620,29 @@ function speak(text, targetLang, onEnd) {
             chunks.push(remaining);
             break;
         }
-        
-        // 문장 단위로 분할
         let splitIndex = remaining.lastIndexOf('. ', maxLength);
-        if (splitIndex === -1 || splitIndex < 50) {
-            splitIndex = remaining.lastIndexOf(' ', maxLength);
-        }
-        if (splitIndex === -1 || splitIndex < 50) {
-            splitIndex = maxLength;
-        }
-        
+        if (splitIndex === -1 || splitIndex < 50) splitIndex = remaining.lastIndexOf(' ', maxLength);
+        if (splitIndex === -1 || splitIndex < 50) splitIndex = maxLength;
         chunks.push(remaining.substring(0, splitIndex + 1).trim());
         remaining = remaining.substring(splitIndex + 1).trim();
     }
     
-    // 최적 음성 선택
+    // 음성 선택
     const selectedVoice = document.getElementById('voice-select')?.value;
     let voice;
     
     if (selectedVoice && selectedVoice !== 'auto') {
         voice = voices[parseInt(selectedVoice)];
-        // 선택된 음성의 언어가 다르면 자동 선택으로 변경
         const voiceLang = voice?.lang?.toLowerCase() || '';
         if (!voiceLang.startsWith(targetLang)) {
-            console.log(`Selected voice ${voice?.name} doesn't match ${targetLang}, using auto`);
             voice = getBestVoice(targetLang);
         }
     } else {
         voice = getBestVoice(targetLang);
     }
     
-    console.log(`Speaking in ${targetLang} with voice:`, voice?.name, voice?.lang);
+    console.log(`Speaking in ${targetLang} with voice:`, voice?.name);
     
-    // 순차 재생
     let chunkIndex = 0;
     
     function speakNextChunk() {
@@ -960,24 +658,17 @@ function speak(text, targetLang, onEnd) {
             utterance.voice = voice;
             utterance.lang = voice.lang;
         } else {
-            // 폴백: 언어 코드 직접 설정
             const langMap = { 'ko': 'ko-KR', 'en': 'en-US', 'vi': 'vi-VN' };
             utterance.lang = langMap[targetLang] || 'en-US';
         }
         
-        // 음성 설정
-        const rate = parseFloat(document.getElementById('voice-rate')?.value || 1);
-        utterance.rate = rate;
+        utterance.rate = parseFloat(document.getElementById('voice-rate')?.value || 1);
         utterance.pitch = 1.0;
         utterance.volume = 1.0;
         
-        utterance.onstart = () => {
-            ttsPlaying = true;
-        };
-        
+        utterance.onstart = () => { ttsPlaying = true; };
         utterance.onend = () => {
             chunkIndex++;
-            // 다음 청크로
             if (chunkIndex < chunks.length) {
                 setTimeout(speakNextChunk, 100);
             } else {
@@ -985,12 +676,7 @@ function speak(text, targetLang, onEnd) {
                 if (onEnd) onEnd();
             }
         };
-        
-        utterance.onerror = (e) => {
-            console.error('TTS error:', e);
-            ttsPlaying = false;
-            if (onEnd) onEnd();
-        };
+        utterance.onerror = () => { ttsPlaying = false; if (onEnd) onEnd(); };
         
         speechSynthesis.speak(utterance);
     }
@@ -999,11 +685,21 @@ function speak(text, targetLang, onEnd) {
 }
 
 function stopTTS() {
-    if (window.speechSynthesis) {
-        speechSynthesis.cancel();
-    }
+    if (window.speechSynthesis) speechSynthesis.cancel();
     ttsPlaying = false;
     briefingPlaying = false;
+}
+
+// ============================================
+// LANGUAGE & TAB
+// ============================================
+function setLang(l) {
+    lang = l;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
+    updateDashboard();
+    renderDBList();
+    updateVoiceInfo();
+    setTimeout(initCharts, 50);
 }
 
 function setTab(t) {
@@ -1046,7 +742,12 @@ function updateKPI(news) {
     document.getElementById('kpi-total-label').textContent = `전체 ${news.length}건`;
     
     const sectorCnt = {}, regionCnt = {};
-    news.forEach(n => { sectorCnt[n.sector] = (sectorCnt[n.sector] || 0) + 1; if (n.province !== 'Vietnam') { regionCnt[n.province] = (regionCnt[n.province] || 0) + 1; } });
+    news.forEach(n => { 
+        sectorCnt[n.sector] = (sectorCnt[n.sector] || 0) + 1; 
+        if (n.province !== 'Vietnam') { 
+            regionCnt[n.province] = (regionCnt[n.province] || 0) + 1; 
+        } 
+    });
     
     const topSectors = Object.entries(sectorCnt).sort((a, b) => b[1] - a[1]).slice(0, 3);
     const topRegions = Object.entries(regionCnt).sort((a, b) => b[1] - a[1]).slice(0, 3);
@@ -1068,30 +769,31 @@ function renderNewsList(news) {
         return;
     }
     
-    container.innerHTML = page.map(n => `
+    container.innerHTML = page.map(n => {
+        const title = typeof n.title === 'object' ? (n.title[lang] || n.title.en || n.title.ko || '') : n.title;
+        return `
         <div class="news-row grid grid-cols-12 gap-1 px-3 py-2 items-center text-sm animate-fade border-b border-slate-50">
             <div class="col-span-2"><span class="inline-block px-1.5 py-0.5 rounded text-xs font-semibold text-white ${SECTOR_CONFIG[n.area]?.color}">${n.sector}</span></div>
             <div class="col-span-2 text-xs text-slate-600 truncate">${n.province}</div>
             <div class="col-span-1 text-xs text-slate-400">${n.date.slice(5)}</div>
-            <div class="col-span-4 text-xs font-medium text-slate-800 truncate">${n.title[lang]}</div>
+            <div class="col-span-4 text-xs font-medium text-slate-800 truncate">${title}</div>
             <div class="col-span-1 text-xs text-slate-400 truncate">${n.source}</div>
             <div class="col-span-2 flex justify-center gap-1">
                 <button onclick="openModal(${n.id})" class="action-btn w-7 h-7 bg-teal-100 hover:bg-teal-200 rounded flex items-center justify-center" title="요약"><i data-lucide="file-text" class="w-3.5 h-3.5 text-teal-700"></i></button>
                 <button onclick="quickSpeak(${n.id})" class="action-btn w-7 h-7 bg-violet-100 hover:bg-violet-200 rounded flex items-center justify-center" title="음성"><i data-lucide="volume-2" class="w-3.5 h-3.5 text-violet-700"></i></button>
-                <button onclick="openArticleUrl(${n.id})" class="action-btn w-7 h-7 bg-blue-100 hover:bg-blue-200 rounded flex items-center justify-center" title="원문 검색"><i data-lucide="external-link" class="w-3.5 h-3.5 text-blue-700"></i></button>
+                <button onclick="openArticleUrl(${n.id})" class="action-btn w-7 h-7 bg-blue-100 hover:bg-blue-200 rounded flex items-center justify-center" title="원문"><i data-lucide="external-link" class="w-3.5 h-3.5 text-blue-700"></i></button>
             </div>
         </div>
-    `).join('');
+    `}).join('');
     
     document.getElementById('news-showing').textContent = `${start + 1}-${end} / ${news.length}건`;
     renderPages('news-pages', dashPage, Math.ceil(news.length / perPage), p => { dashPage = p; renderNewsList(getCurrentNews()); });
     lucide.createIcons();
 }
 
-// 원문 검색 URL로 새 창 열기
 function openArticleUrl(id) {
     const article = BACKEND_DATA.find(d => d.id === id);
-    if (article) {
+    if (article && article.url) {
         window.open(article.url, '_blank');
         showToast(`${article.source}에서 기사 검색 중...`);
     }
@@ -1099,7 +801,12 @@ function openArticleUrl(id) {
 
 function quickSpeak(id) {
     const n = BACKEND_DATA.find(d => d.id === id);
-    if (n) { speak(n.title[lang] + '. ' + n.summary[lang], lang); showToast('음성 재생 시작'); }
+    if (n) {
+        const title = typeof n.title === 'object' ? (n.title[lang] || n.title.en || '') : n.title;
+        const summary = typeof n.summary === 'object' ? (n.summary[lang] || n.summary.en || '') : n.summary;
+        speak(title + '. ' + summary, lang);
+        showToast('음성 재생 시작');
+    }
 }
 
 // ============================================
@@ -1244,7 +951,8 @@ function searchDB() {
     const province = document.getElementById('db-province').value;
     
     dbResults = BACKEND_DATA.filter(d => {
-        if (keyword && !d.title.ko.toLowerCase().includes(keyword) && !d.title.en.toLowerCase().includes(keyword) && !d.province.toLowerCase().includes(keyword) && !d.sector.toLowerCase().includes(keyword)) return false;
+        const titleStr = typeof d.title === 'object' ? (d.title.ko + ' ' + d.title.en) : d.title;
+        if (keyword && !titleStr.toLowerCase().includes(keyword) && !d.province.toLowerCase().includes(keyword) && !d.sector.toLowerCase().includes(keyword)) return false;
         if (startDate && d.date < startDate) return false;
         if (endDate && d.date > endDate) return false;
         if (area !== 'all' && d.area !== area) return false;
@@ -1263,7 +971,7 @@ function resetDB() {
     document.getElementById('db-area').value = 'all';
     document.getElementById('db-province').value = 'all';
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector('.filter-btn:last-child').classList.add('active');
+    document.querySelector('.filter-btn:last-child')?.classList.add('active');
     dbResults = [...BACKEND_DATA];
     dbPage = 1; renderDBList();
     showToast('초기화 완료');
@@ -1289,20 +997,22 @@ function renderDBList() {
         return;
     }
     
-    container.innerHTML = page.map(n => `
+    container.innerHTML = page.map(n => {
+        const title = typeof n.title === 'object' ? (n.title[lang] || n.title.en || n.title.ko || '') : n.title;
+        return `
         <div class="news-row grid grid-cols-12 gap-1 px-3 py-2 items-center text-sm border-b border-slate-50">
             <div class="col-span-2"><span class="inline-block px-1.5 py-0.5 rounded text-xs font-semibold text-white ${SECTOR_CONFIG[n.area]?.color}">${n.sector}</span></div>
             <div class="col-span-2 text-xs text-slate-600 truncate">${n.province}</div>
             <div class="col-span-1 text-xs text-slate-400">${n.date}</div>
-            <div class="col-span-4 text-xs font-medium text-slate-800 truncate">${n.title[lang]}</div>
+            <div class="col-span-4 text-xs font-medium text-slate-800 truncate">${title}</div>
             <div class="col-span-1 text-xs text-slate-400 truncate">${n.source}</div>
             <div class="col-span-2 flex justify-center gap-1">
                 <button onclick="openModal(${n.id})" class="action-btn w-7 h-7 bg-teal-100 hover:bg-teal-200 rounded flex items-center justify-center" title="요약"><i data-lucide="file-text" class="w-3.5 h-3.5 text-teal-700"></i></button>
                 <button onclick="quickSpeak(${n.id})" class="action-btn w-7 h-7 bg-violet-100 hover:bg-violet-200 rounded flex items-center justify-center" title="음성"><i data-lucide="volume-2" class="w-3.5 h-3.5 text-violet-700"></i></button>
-                <button onclick="openArticleUrl(${n.id})" class="action-btn w-7 h-7 bg-blue-100 hover:bg-blue-200 rounded flex items-center justify-center" title="원문 검색"><i data-lucide="external-link" class="w-3.5 h-3.5 text-blue-700"></i></button>
+                <button onclick="openArticleUrl(${n.id})" class="action-btn w-7 h-7 bg-blue-100 hover:bg-blue-200 rounded flex items-center justify-center" title="원문"><i data-lucide="external-link" class="w-3.5 h-3.5 text-blue-700"></i></button>
             </div>
         </div>
-    `).join('');
+    `}).join('');
     
     document.getElementById('db-showing').textContent = `${start + 1}-${end} / ${dbResults.length}건`;
     renderPages('db-pages', dbPage, Math.ceil(dbResults.length / perPage), p => { dbPage = p; renderDBList(); });
@@ -1311,7 +1021,12 @@ function renderDBList() {
 
 function exportExcel() {
     if (!dbResults.length) { showToast('데이터 없음'); return; }
-    const data = dbResults.map(d => ({ '날짜': d.date, '분야': d.area, '섹터': d.sector, '지역': d.province, '제목(한국어)': d.title.ko, '제목(English)': d.title.en, '요약': d.summary.ko, '출처': d.source, 'URL': d.url }));
+    const data = dbResults.map(d => {
+        const titleKo = typeof d.title === 'object' ? d.title.ko : d.title;
+        const titleEn = typeof d.title === 'object' ? d.title.en : d.title;
+        const summaryKo = typeof d.summary === 'object' ? d.summary.ko : d.summary;
+        return { '날짜': d.date, '분야': d.area, '섹터': d.sector, '지역': d.province, '제목(한국어)': titleKo, '제목(English)': titleEn, '요약': summaryKo, '출처': d.source, 'URL': d.url };
+    });
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'News');
@@ -1348,10 +1063,14 @@ function openModal(id) {
     document.getElementById('m-badge').className = `inline-block px-2 py-0.5 rounded text-xs font-semibold text-white ${SECTOR_CONFIG[n.area]?.color}`;
     document.getElementById('m-badge').textContent = n.sector;
     document.getElementById('m-province').textContent = n.province;
-    document.getElementById('m-title').textContent = n.title[modalLang];
+    
+    const title = typeof n.title === 'object' ? (n.title[modalLang] || n.title.en || '') : n.title;
+    const summary = typeof n.summary === 'object' ? (n.summary[modalLang] || n.summary.en || '') : n.summary;
+    
+    document.getElementById('m-title').textContent = title;
     document.getElementById('m-meta').textContent = `${n.date} | ${n.source}`;
-    document.getElementById('m-summary').textContent = n.summary[modalLang];
-    document.getElementById('m-link').href = n.url;
+    document.getElementById('m-summary').textContent = summary;
+    document.getElementById('m-link').href = n.url || '#';
     
     updateModalLangBtns();
     stopTTS();
@@ -1364,11 +1083,21 @@ function openModal(id) {
     lucide.createIcons();
 }
 
-function closeModal() { document.getElementById('modal').classList.add('hidden'); document.body.style.overflow = ''; stopTTS(); }
+function closeModal() { 
+    document.getElementById('modal').classList.add('hidden'); 
+    document.body.style.overflow = ''; 
+    stopTTS(); 
+}
 
 function setModalLang(l) {
-    modalLang = l; updateModalLangBtns();
-    if (currentArticle) { document.getElementById('m-title').textContent = currentArticle.title[l]; document.getElementById('m-summary').textContent = currentArticle.summary[l]; }
+    modalLang = l; 
+    updateModalLangBtns();
+    if (currentArticle) { 
+        const title = typeof currentArticle.title === 'object' ? (currentArticle.title[l] || currentArticle.title.en || '') : currentArticle.title;
+        const summary = typeof currentArticle.summary === 'object' ? (currentArticle.summary[l] || currentArticle.summary.en || '') : currentArticle.summary;
+        document.getElementById('m-title').textContent = title; 
+        document.getElementById('m-summary').textContent = summary; 
+    }
 }
 
 function updateModalLangBtns() {
@@ -1390,7 +1119,10 @@ function mTTSToggle() {
         document.getElementById('m-tts-status').textContent = '재생중';
         document.getElementById('m-tts-btn').classList.add('tts-active');
         
-        const text = currentArticle.title[modalLang] + '. ' + currentArticle.summary[modalLang];
+        const title = typeof currentArticle.title === 'object' ? (currentArticle.title[modalLang] || currentArticle.title.en || '') : currentArticle.title;
+        const summary = typeof currentArticle.summary === 'object' ? (currentArticle.summary[modalLang] || currentArticle.summary.en || '') : currentArticle.summary;
+        const text = title + '. ' + summary;
+        
         let prog = 0;
         const interval = setInterval(() => { if (!ttsPlaying) { clearInterval(interval); return; } prog += 2; document.getElementById('m-tts-bar').style.width = Math.min(prog, 95) + '%'; }, 100);
         
