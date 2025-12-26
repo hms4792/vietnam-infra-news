@@ -257,17 +257,9 @@ class ExcelDatabaseUpdater:
                     })
                 logger.info(f"Successfully loaded {len(sources)} existing sources")
             
+            # Always use updated KEYWORDS_DATA (not from existing DB)
             keywords = KEYWORDS_DATA
-            if "Keywords" in xl.sheet_names:
-                df_kw = pd.read_excel(self.existing_db_path, sheet_name="Keywords")
-                keywords = []
-                for _, row in df_kw.iterrows():
-                    keywords.append({
-                        "Category": str(row.get("Category", "")) if pd.notna(row.get("Category")) else "",
-                        "Keywords": str(row.get("Keywords", "")) if pd.notna(row.get("Keywords")) else "",
-                        "Search Query Example": str(row.get("Search Query Example", "")) if pd.notna(row.get("Search Query Example")) else "",
-                    })
-                logger.info(f"Loaded {len(keywords)} keyword categories")
+            logger.info(f"Using updated KEYWORDS_DATA with {len(keywords)} categories")
             
             return {"articles": articles, "sources": sources, "keywords": keywords}
         
@@ -528,26 +520,35 @@ class ExcelDatabaseUpdater:
         for i, width in enumerate(source_widths, 1):
             ws2.column_dimensions[get_column_letter(i)].width = width
         
+# Keywords Sheet - with new columns Area and Status
         ws3 = wb.create_sheet("Keywords")
         kw_cols = ["Category", "Keywords", "Search Query Example", "Area", "Status"]
         kw_widths = [22, 100, 55, 18, 15]
         
+        # Header row
         for col, header in enumerate(kw_cols, 1):
             cell = ws3.cell(row=1, column=col, value=header)
             cell.font = header_font
             cell.fill = header_fill
             cell.border = thin_border
+            cell.alignment = Alignment(horizontal="center")
         
-        new_fill = PatternFill(start_color="90EE90", fill_type="solid")  # 연두색
+        # Green fill for NEW items
+        new_fill = PatternFill(start_color="90EE90", fill_type="solid")
         
-        for row_idx, kw in enumerate(keywords, 2):
+        # Data rows - use KEYWORDS_DATA directly (not from existing DB)
+        for row_idx, kw in enumerate(KEYWORDS_DATA, 2):
             is_new = "NEW" in str(kw.get("Status", ""))
             for col_idx, col_name in enumerate(kw_cols, 1):
-                cell = ws3.cell(row=row_idx, column=col_idx, value=str(kw.get(col_name, "")))
+                value = str(kw.get(col_name, ""))
+                cell = ws3.cell(row=row_idx, column=col_idx, value=value)
                 cell.border = thin_border
                 if is_new:
                     cell.fill = new_fill
+                if col_idx == 2:  # Keywords column - wrap text
+                    cell.alignment = Alignment(wrap_text=True, vertical="top")
         
+        # Set column widths
         for i, width in enumerate(kw_widths, 1):
             ws3.column_dimensions[get_column_letter(i)].width = width
         
