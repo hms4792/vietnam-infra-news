@@ -59,9 +59,11 @@ SECTOR_KEYWORDS = {
     "Solid Waste": ["waste-to-energy", "solid waste", "landfill", "incineration", "recycling", "circular economy", "wte", "garbage", "municipal waste"],
     "Waste Water": ["wastewater", "waste water", "wwtp", "sewage", "water treatment plant", "sewerage", "effluent", "sludge"],
     "Water Supply/Drainage": ["clean water", "water supply", "reservoir", "potable water", "tap water", "drinking water", "water infrastructure"],
-    "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", "solar", "wind", "renewable", "hydropower", "pdp8"],
-    "Industrial Parks": ["industrial park", "industrial zone", "fdi", "economic zone", "manufacturing zone"],
+    "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", "solar", "wind", "renewable", "hydropower", "pdp8", "wind farm", "solar farm"],
+    "Industrial Parks": ["industrial park", "industrial zone", "fdi", "economic zone", "manufacturing zone", "factory", "manufacturing"],
     "Smart City": ["smart city", "urban development", "digital transformation", "city planning", "urban area"],
+    "Transport": ["railway", "high-speed rail", "metro", "subway", "airport", "seaport", "port", "highway", "expressway", "bridge", "tunnel", "logistics", "transportation"],
+    "Construction": ["construction", "real estate", "property", "housing", "steel", "cement", "building"],
 }
 
 AREA_BY_SECTOR = {
@@ -72,8 +74,9 @@ AREA_BY_SECTOR = {
     "Power": "Energy Develop.",
     "Industrial Parks": "Urban Develop.",
     "Smart City": "Urban Develop.",
+    "Transport": "Urban Develop.",
+    "Construction": "Urban Develop.",
 }
-
 SEARCH_KEYWORDS = [
     "Vietnam wastewater treatment plant",
     "Vietnam solid waste management",
@@ -266,7 +269,7 @@ class NewsCollector:
             
             feed = feedparser.parse(content)
             
-            for entry in feed.entries[:30]:
+                for entry in feed.entries[:50]:  # 30 → 50으로 증가
                 pub_date = entry.get("published", "")
                 
                 if not self._is_within_time_range(pub_date):
@@ -476,24 +479,48 @@ class NewsCollector:
         
         return True
     
-    def _is_infrastructure_related(self, article):
+def _is_infrastructure_related(self, article):
         text = (article.get("title", "") + " " + article.get("summary", "")).lower()
         
         infra_keywords = [
+            # 환경
             "infrastructure", "wastewater", "waste water", "solid waste", "water treatment",
-            "power plant", "electricity", "solar", "wind", "renewable", "lng",
-            "industrial park", "fdi", "smart city", "urban development",
             "environment", "pollution", "recycling", "landfill", "sewage",
-            "water supply", "drainage", "reservoir", "hydropower",
-            "oil", "gas", "petroleum", "refinery",
+            "water supply", "drainage", "reservoir",
+            # 에너지
+            "power plant", "electricity", "solar", "wind", "renewable", "lng",
+            "hydropower", "oil", "gas", "petroleum", "refinery", "energy",
+            "thermal power", "wind farm", "solar farm",
+            # 도시개발
+            "industrial park", "fdi", "smart city", "urban development",
+            "real estate", "property", "construction", "housing",
+            # 교통
+            "railway", "rail", "train", "metro", "subway", "high-speed",
+            "airport", "seaport", "port", "harbor", "terminal",
+            "highway", "expressway", "road", "bridge", "tunnel",
+            "transportation", "transport", "logistics",
+            # 제조/건설
+            "steel", "cement", "factory", "manufacturing", "plant",
+            # 일반
+            "project", "investment", "development", "billion", "million usd",
         ]
         
         return any(kw in text for kw in infra_keywords)
     
-    def _classify_article(self, article):
+def _classify_article(self, article):
         text = (article.get("title", "") + " " + article.get("summary", "")).lower()
         
-        sector_priority = ["Oil & Gas", "Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Smart City", "Industrial Parks"]
+        sector_priority = [
+            "Oil & Gas",           # 1순위
+            "Transport",           # 2순위 (새로 추가)
+            "Waste Water",         # 3순위
+            "Solid Waste",         # 4순위
+            "Water Supply/Drainage", # 5순위
+            "Power",               # 6순위
+            "Construction",        # 7순위 (새로 추가)
+            "Smart City",          # 8순위
+            "Industrial Parks"     # 9순위
+        ]
         
         for sector in sector_priority:
             keywords = SECTOR_KEYWORDS.get(sector, [])
