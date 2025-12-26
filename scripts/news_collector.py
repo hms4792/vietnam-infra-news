@@ -56,27 +56,28 @@ PROVINCES = [
 
 SECTOR_KEYWORDS = {
     "Oil & Gas": ["oil exploration", "gas field", "upstream", "petroleum", "offshore drilling", "lng terminal", "refinery", "oil and gas", "natural gas", "gas pipeline", "oil price", "crude oil", "petrochemical"],
+    "Transport": ["railway", "high-speed rail", "metro", "subway", "airport", "seaport", "port", "harbor", "terminal", "highway", "expressway", "road", "bridge", "tunnel", "logistics", "transportation", "train"],
     "Solid Waste": ["waste-to-energy", "solid waste", "landfill", "incineration", "recycling", "circular economy", "wte", "garbage", "municipal waste"],
     "Waste Water": ["wastewater", "waste water", "wwtp", "sewage", "water treatment plant", "sewerage", "effluent", "sludge"],
     "Water Supply/Drainage": ["clean water", "water supply", "reservoir", "potable water", "tap water", "drinking water", "water infrastructure"],
     "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", "solar", "wind", "renewable", "hydropower", "pdp8", "wind farm", "solar farm"],
+    "Construction": ["construction", "real estate", "property", "housing", "steel", "cement", "building", "infrastructure project"],
     "Industrial Parks": ["industrial park", "industrial zone", "fdi", "economic zone", "manufacturing zone", "factory", "manufacturing"],
     "Smart City": ["smart city", "urban development", "digital transformation", "city planning", "urban area"],
-    "Transport": ["railway", "high-speed rail", "metro", "subway", "airport", "seaport", "port", "highway", "expressway", "bridge", "tunnel", "logistics", "transportation"],
-    "Construction": ["construction", "real estate", "property", "housing", "steel", "cement", "building"],
 }
 
 AREA_BY_SECTOR = {
     "Oil & Gas": "Energy Develop.",
+    "Transport": "Urban Develop.",
     "Solid Waste": "Environment",
-    "Waste Water": "Environment", 
+    "Waste Water": "Environment",
     "Water Supply/Drainage": "Environment",
     "Power": "Energy Develop.",
+    "Construction": "Urban Develop.",
     "Industrial Parks": "Urban Develop.",
     "Smart City": "Urban Develop.",
-    "Transport": "Urban Develop.",
-    "Construction": "Urban Develop.",
 }
+
 SEARCH_KEYWORDS = [
     "Vietnam wastewater treatment plant",
     "Vietnam solid waste management",
@@ -88,6 +89,10 @@ SEARCH_KEYWORDS = [
     "Vietnam smart city development",
     "Vietnam infrastructure investment",
     "Vietnam environmental project",
+    "Vietnam railway high-speed",
+    "Vietnam airport seaport",
+    "Vietnam highway expressway",
+    "Vietnam construction real estate",
 ]
 
 DEFAULT_RSS_FEEDS = {
@@ -101,7 +106,6 @@ DEFAULT_RSS_FEEDS = {
 
 
 def get_collection_time_range():
-    """Get collection time range: Yesterday 6PM to Today 6PM (Vietnam time)"""
     if PYTZ_AVAILABLE and VIETNAM_TZ:
         now = datetime.now(VIETNAM_TZ)
     else:
@@ -181,7 +185,7 @@ class NewsCollector:
         self.existing_sources = load_sources_from_excel()
         self.start_time, self.end_time = get_collection_time_range()
         logger.info(f"Initialized with {len(self.existing_sources)} sources from database")
-        
+
     async def __aenter__(self):
         self.session = aiohttp.ClientSession(
             headers={
@@ -190,11 +194,11 @@ class NewsCollector:
             timeout=aiohttp.ClientTimeout(total=30)
         )
         return self
-    
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         if self.session:
             await self.session.close()
-    
+
     async def fetch_url(self, url):
         try:
             async with self.session.get(url, ssl=False) as response:
@@ -203,9 +207,8 @@ class NewsCollector:
         except Exception as e:
             logger.debug(f"Error fetching {url}: {e}")
         return None
-    
+
     def _is_within_time_range(self, pub_date_str):
-        """Check if article is within collection time range"""
         if not pub_date_str:
             return True
         
@@ -230,9 +233,8 @@ class NewsCollector:
             return start_aware <= pub_date <= end_aware
         except:
             return True
-    
+
     def _parse_date_to_datetime(self, date_str):
-        """Parse date string to datetime object"""
         if not date_str:
             return None
         
@@ -258,8 +260,8 @@ class NewsCollector:
                 continue
         
         return None
-    
-async def collect_from_rss(self, source_name, feed_url):
+
+    async def collect_from_rss(self, source_name, feed_url):
         articles = []
         
         try:
@@ -300,7 +302,7 @@ async def collect_from_rss(self, source_name, feed_url):
             logger.error(f"RSS error {feed_url}: {e}")
         
         return articles
-    
+
     async def search_source_domain(self, source, keywords):
         articles = []
         domain = source.get("domain", "")
@@ -357,7 +359,7 @@ async def collect_from_rss(self, source_name, feed_url):
                     continue
         
         return articles
-    
+
     async def collect_all(self):
         all_articles = []
         seen_urls = set()
@@ -436,7 +438,7 @@ async def collect_from_rss(self, source_name, feed_url):
         
         self.collected_news = all_articles
         return all_articles
-    
+
     def _parse_date(self, date_str):
         if not date_str:
             return datetime.now().strftime("%Y-%m-%d")
@@ -459,13 +461,13 @@ async def collect_from_rss(self, source_name, feed_url):
             pass
         
         return datetime.now().strftime("%Y-%m-%d")
-    
+
     def _clean_html(self, text):
         if not text:
             return ""
         soup = BeautifulSoup(text, 'html.parser')
         return soup.get_text(strip=True)[:500]
-    
+
     def _is_valid_article(self, href, title, domain):
         if not title or len(title) < 20:
             return False
@@ -478,48 +480,42 @@ async def collect_from_rss(self, source_name, feed_url):
                 return False
         
         return True
-    
-def _is_infrastructure_related(self, article):
+
+    def _is_infrastructure_related(self, article):
         text = (article.get("title", "") + " " + article.get("summary", "")).lower()
         
         infra_keywords = [
-            # 환경
             "infrastructure", "wastewater", "waste water", "solid waste", "water treatment",
             "environment", "pollution", "recycling", "landfill", "sewage",
             "water supply", "drainage", "reservoir",
-            # 에너지
             "power plant", "electricity", "solar", "wind", "renewable", "lng",
             "hydropower", "oil", "gas", "petroleum", "refinery", "energy",
             "thermal power", "wind farm", "solar farm",
-            # 도시개발
             "industrial park", "fdi", "smart city", "urban development",
             "real estate", "property", "construction", "housing",
-            # 교통
             "railway", "rail", "train", "metro", "subway", "high-speed",
             "airport", "seaport", "port", "harbor", "terminal",
             "highway", "expressway", "road", "bridge", "tunnel",
             "transportation", "transport", "logistics",
-            # 제조/건설
             "steel", "cement", "factory", "manufacturing", "plant",
-            # 일반
             "project", "investment", "development", "billion", "million usd",
         ]
         
         return any(kw in text for kw in infra_keywords)
-    
-def _classify_article(self, article):
+
+    def _classify_article(self, article):
         text = (article.get("title", "") + " " + article.get("summary", "")).lower()
         
         sector_priority = [
-            "Oil & Gas",           # 1순위
-            "Transport",           # 2순위 (새로 추가)
-            "Waste Water",         # 3순위
-            "Solid Waste",         # 4순위
-            "Water Supply/Drainage", # 5순위
-            "Power",               # 6순위
-            "Construction",        # 7순위 (새로 추가)
-            "Smart City",          # 8순위
-            "Industrial Parks"     # 9순위
+            "Oil & Gas",
+            "Transport",
+            "Waste Water",
+            "Solid Waste",
+            "Water Supply/Drainage",
+            "Power",
+            "Construction",
+            "Smart City",
+            "Industrial Parks"
         ]
         
         for sector in sector_priority:
@@ -529,7 +525,7 @@ def _classify_article(self, article):
                     return sector, AREA_BY_SECTOR.get(sector, "Environment")
         
         return "Waste Water", "Environment"
-    
+
     def _extract_province(self, article):
         text = (article.get("title", "") + " " + article.get("summary", "")).lower()
         
@@ -538,7 +534,7 @@ def _classify_article(self, article):
                 return province
         
         return "Vietnam"
-    
+
     def save_to_json(self, filename=None):
         if filename is None:
             filename = f"news_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
