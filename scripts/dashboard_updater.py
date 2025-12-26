@@ -273,6 +273,9 @@ class ExcelDatabaseUpdater:
             return {"articles": [], "sources": [], "keywords": KEYWORDS_DATA}
     
     def merge_new_articles(self, existing: List[Dict], new_articles: List[Dict]) -> Tuple[List[Dict], int]:
+        """Merge new articles into existing database - PRESERVES ALL EXISTING DATA"""
+        
+        # 기존 기사 URL/제목 키 생성
         existing_keys = set()
         for article in existing:
             url = str(article.get("Link", "")).lower().strip()
@@ -282,13 +285,17 @@ class ExcelDatabaseUpdater:
             if title and title != "nan" and len(title) > 10:
                 existing_keys.add(title)
         
-        logger.info(f"Existing articles: {len(existing)}, Existing keys: {len(existing_keys)}")
+        logger.info(f"=== MERGE OPERATION ===")
+        logger.info(f"Existing articles BEFORE merge: {len(existing)}")
+        logger.info(f"Existing unique keys: {len(existing_keys)}")
+        logger.info(f"New articles to process: {len(new_articles)}")
         
         new_count = 0
         for article in new_articles:
             url = str(article.get("url", article.get("Link", ""))).lower().strip()
             title = str(article.get("title", article.get("News Tittle", ""))).lower().strip()[:80]
             
+            # 중복 체크
             is_duplicate = False
             if url and url != "nan" and len(url) > 10 and url in existing_keys:
                 is_duplicate = True
@@ -296,6 +303,7 @@ class ExcelDatabaseUpdater:
                 is_duplicate = True
             
             if not is_duplicate:
+                # 새 기사 추가
                 original_title = str(article.get("title", article.get("News Tittle", "")))
                 summary = str(article.get("summary_en", article.get("summary", article.get("Short summary", ""))))
                 
@@ -324,13 +332,18 @@ class ExcelDatabaseUpdater:
                 }
                 existing.append(new_article)
                 
+                # 키 추가
                 if url and url != "nan" and len(url) > 10:
                     existing_keys.add(url)
                 if title and title != "nan" and len(title) > 10:
                     existing_keys.add(title)
                 new_count += 1
+                logger.info(f"  + Added: {original_title[:50]}...")
         
-        logger.info(f"Added {new_count} new articles. Total: {len(existing)}")
+        logger.info(f"=== MERGE COMPLETE ===")
+        logger.info(f"New articles added: {new_count}")
+        logger.info(f"Total articles AFTER merge: {len(existing)}")
+        
         return existing, new_count
     
     def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dict]) -> List[Dict]:
