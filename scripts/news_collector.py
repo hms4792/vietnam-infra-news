@@ -259,7 +259,7 @@ class NewsCollector:
         
         return None
     
-    async def collect_from_rss(self, source_name, feed_url):
+async def collect_from_rss(self, source_name, feed_url):
         articles = []
         
         try:
@@ -269,7 +269,7 @@ class NewsCollector:
             
             feed = feedparser.parse(content)
             
-                for entry in feed.entries[:50]:  # 30 → 50으로 증가
+            for entry in feed.entries[:50]:
                 pub_date = entry.get("published", "")
                 
                 if not self._is_within_time_range(pub_date):
