@@ -63,14 +63,16 @@ def find_existing_database():
     return PROJECT_ROOT / "data" / EXISTING_DB_FILENAME
 
 KEYWORDS_DATA = [
-    {"Category": "Solid Waste", "Keywords": "waste-to-energy, solid waste, landfill, incineration, recycling, circular economy, WtE, garbage, rubbish, trash", "Search Query Example": "Vietnam waste-to-energy solid waste 2025"},
-    {"Category": "Waste Water", "Keywords": "wastewater treatment, WWTP, sewage, drainage, water treatment plant, sewerage, effluent", "Search Query Example": "Vietnam wastewater treatment plant WWTP 2025"},
-    {"Category": "Water Supply/Drainage", "Keywords": "clean water plant, water supply, water scarcity, reservoir, potable water, tap water, water infrastructure", "Search Query Example": "Vietnam clean water supply plant project 2025"},
-    {"Category": "Power", "Keywords": "LNG power plant, gas-to-power, thermal power, natural gas, CCGT, combined cycle, renewable, solar, wind, biomass, offshore wind, PDP8", "Search Query Example": "Vietnam LNG power plant renewable energy 2025"},
-    {"Category": "Oil & Gas", "Keywords": "oil exploration, gas field, upstream, midstream, petroleum, offshore drilling", "Search Query Example": "Vietnam oil gas exploration upstream 2025"},
-    {"Category": "Industrial Parks", "Keywords": "industrial park, IP, FDI, foreign investment, manufacturing zone, eco-industrial", "Search Query Example": "Vietnam industrial park FDI investment 2025"},
-    {"Category": "Smart City", "Keywords": "smart city, urban area, zoning, new urban, TOD, digital transformation, urban development", "Search Query Example": "Vietnam smart city urban development 2025"},
-    {"Category": "Climate/Environment", "Keywords": "climate change, carbon neutral, net zero, emission, environmental protection, green growth", "Search Query Example": "Vietnam climate change carbon neutral 2025"},
+    {"Category": "Solid Waste", "Keywords": "waste-to-energy, solid waste, landfill, incineration, recycling, circular economy, WtE, garbage, rubbish, trash, municipal waste", "Search Query Example": "Vietnam waste-to-energy solid waste 2025", "Area": "Environment", "Status": "Original"},
+    {"Category": "Waste Water", "Keywords": "wastewater treatment, WWTP, sewage, drainage, water treatment plant, sewerage, effluent, sludge", "Search Query Example": "Vietnam wastewater treatment plant WWTP 2025", "Area": "Environment", "Status": "Original"},
+    {"Category": "Water Supply/Drainage", "Keywords": "clean water plant, water supply, water scarcity, reservoir, potable water, tap water, water infrastructure, drinking water", "Search Query Example": "Vietnam clean water supply plant project 2025", "Area": "Environment", "Status": "Original"},
+    {"Category": "Power", "Keywords": "LNG power plant, gas-to-power, thermal power, natural gas, CCGT, combined cycle, renewable, solar, wind, biomass, offshore wind, PDP8, wind farm, solar farm, hydropower, electricity", "Search Query Example": "Vietnam LNG power plant renewable energy 2025", "Area": "Energy Develop.", "Status": "Original"},
+    {"Category": "Oil & Gas", "Keywords": "oil exploration, gas field, upstream, midstream, petroleum, offshore drilling, LNG terminal, refinery, natural gas, gas pipeline, crude oil, petrochemical", "Search Query Example": "Vietnam oil gas exploration upstream 2025", "Area": "Energy Develop.", "Status": "Original"},
+    {"Category": "Industrial Parks", "Keywords": "industrial park, IP, FDI, foreign investment, manufacturing zone, eco-industrial, economic zone, factory, manufacturing", "Search Query Example": "Vietnam industrial park FDI investment 2025", "Area": "Urban Develop.", "Status": "Original"},
+    {"Category": "Smart City", "Keywords": "smart city, urban area, zoning, new urban, TOD, digital transformation, urban development, city planning", "Search Query Example": "Vietnam smart city urban development 2025", "Area": "Urban Develop.", "Status": "Original"},
+    {"Category": "Climate/Environment", "Keywords": "climate change, carbon neutral, net zero, emission, environmental protection, green growth, pollution", "Search Query Example": "Vietnam climate change carbon neutral 2025", "Area": "Environment", "Status": "Original"},
+    {"Category": "Transport", "Keywords": "railway, high-speed rail, metro, subway, train, airport, seaport, port, harbor, terminal, highway, expressway, road, bridge, tunnel, logistics, transportation", "Search Query Example": "Vietnam high-speed railway metro airport 2025", "Area": "Urban Develop.", "Status": "NEW 2025"},
+    {"Category": "Construction", "Keywords": "construction, real estate, property, housing, steel, cement, building, infrastructure project, billion USD, investment", "Search Query Example": "Vietnam construction real estate steel cement 2025", "Area": "Urban Develop.", "Status": "NEW 2025"},
 ]
 
 SECTOR_KEYWORDS = {
@@ -78,9 +80,11 @@ SECTOR_KEYWORDS = {
     "Solid Waste": ["waste-to-energy", "solid waste", "landfill", "incineration", "recycling", "circular economy", "wte", "garbage", "municipal waste"],
     "Waste Water": ["wastewater", "waste water", "wwtp", "sewage", "water treatment plant", "sewerage", "effluent", "sludge"],
     "Water Supply/Drainage": ["clean water", "water supply", "reservoir", "potable water", "tap water", "drinking water", "water infrastructure"],
-    "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", "solar", "wind", "renewable", "hydropower", "pdp8"],
-    "Industrial Parks": ["industrial park", "industrial zone", "fdi", "economic zone", "manufacturing zone"],
+    "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", "solar", "wind", "renewable", "hydropower", "pdp8", "wind farm", "solar farm"],
+    "Industrial Parks": ["industrial park", "industrial zone", "fdi", "economic zone", "manufacturing zone", "factory", "manufacturing"],
     "Smart City": ["smart city", "urban development", "digital transformation", "city planning", "urban area"],
+    "Transport": ["railway", "high-speed rail", "metro", "subway", "airport", "seaport", "port", "harbor", "terminal", "highway", "expressway", "road", "bridge", "tunnel", "logistics", "transportation", "train"],
+    "Construction": ["construction", "real estate", "property", "housing", "steel", "cement", "building", "infrastructure project"],
 }
 
 AREA_BY_SECTOR = {
@@ -91,10 +95,11 @@ AREA_BY_SECTOR = {
     "Power": "Energy Develop.",
     "Industrial Parks": "Urban Develop.",
     "Smart City": "Urban Develop.",
+    "Transport": "Urban Develop.",
+    "Construction": "Urban Develop.",
 }
 
-SECTOR_PRIORITY = ["Oil & Gas", "Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Smart City", "Industrial Parks"]
-
+SECTOR_PRIORITY = ["Oil & Gas", "Transport", "Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Construction", "Smart City", "Industrial Parks"]
 
 def classify_article(title: str, summary: str = "") -> Tuple[str, str]:
     text = (str(title) + " " + str(summary)).lower()
@@ -524,8 +529,8 @@ class ExcelDatabaseUpdater:
             ws2.column_dimensions[get_column_letter(i)].width = width
         
         ws3 = wb.create_sheet("Keywords")
-        kw_cols = ["Category", "Keywords", "Search Query Example"]
-        kw_widths = [20, 80, 50]
+        kw_cols = ["Category", "Keywords", "Search Query Example", "Area", "Status"]
+        kw_widths = [22, 100, 55, 18, 15]
         
         for col, header in enumerate(kw_cols, 1):
             cell = ws3.cell(row=1, column=col, value=header)
@@ -533,10 +538,15 @@ class ExcelDatabaseUpdater:
             cell.fill = header_fill
             cell.border = thin_border
         
+        new_fill = PatternFill(start_color="90EE90", fill_type="solid")  # 연두색
+        
         for row_idx, kw in enumerate(keywords, 2):
+            is_new = "NEW" in str(kw.get("Status", ""))
             for col_idx, col_name in enumerate(kw_cols, 1):
                 cell = ws3.cell(row=row_idx, column=col_idx, value=str(kw.get(col_name, "")))
                 cell.border = thin_border
+                if is_new:
+                    cell.fill = new_fill
         
         for i, width in enumerate(kw_widths, 1):
             ws3.column_dimensions[get_column_letter(i)].width = width
