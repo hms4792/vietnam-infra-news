@@ -63,16 +63,16 @@ def find_existing_database():
     return PROJECT_ROOT / "data" / EXISTING_DB_FILENAME
 
 KEYWORDS_DATA = [
-    {"Category": "Solid Waste", "Keywords": "waste-to-energy, solid waste, landfill, incineration, recycling, circular economy, WtE, garbage, rubbish, trash, municipal waste", "Search Query Example": "Vietnam waste-to-energy solid waste 2025", "Area": "Environment", "Status": "Original"},
-    {"Category": "Waste Water", "Keywords": "wastewater treatment, WWTP, sewage, drainage, water treatment plant, sewerage, effluent, sludge", "Search Query Example": "Vietnam wastewater treatment plant WWTP 2025", "Area": "Environment", "Status": "Original"},
-    {"Category": "Water Supply/Drainage", "Keywords": "clean water plant, water supply, water scarcity, reservoir, potable water, tap water, water infrastructure, drinking water", "Search Query Example": "Vietnam clean water supply plant project 2025", "Area": "Environment", "Status": "Original"},
-    {"Category": "Power", "Keywords": "LNG power plant, gas-to-power, thermal power, natural gas, CCGT, combined cycle, renewable, solar, wind, biomass, offshore wind, PDP8, wind farm, solar farm, hydropower, electricity", "Search Query Example": "Vietnam LNG power plant renewable energy 2025", "Area": "Energy Develop.", "Status": "Original"},
-    {"Category": "Oil & Gas", "Keywords": "oil exploration, gas field, upstream, midstream, petroleum, offshore drilling, LNG terminal, refinery, natural gas, gas pipeline, crude oil, petrochemical", "Search Query Example": "Vietnam oil gas exploration upstream 2025", "Area": "Energy Develop.", "Status": "Original"},
-    {"Category": "Industrial Parks", "Keywords": "industrial park, IP, FDI, foreign investment, manufacturing zone, eco-industrial, economic zone, factory, manufacturing", "Search Query Example": "Vietnam industrial park FDI investment 2025", "Area": "Urban Develop.", "Status": "Original"},
-    {"Category": "Smart City", "Keywords": "smart city, urban area, zoning, new urban, TOD, digital transformation, urban development, city planning", "Search Query Example": "Vietnam smart city urban development 2025", "Area": "Urban Develop.", "Status": "Original"},
-    {"Category": "Climate/Environment", "Keywords": "climate change, carbon neutral, net zero, emission, environmental protection, green growth, pollution", "Search Query Example": "Vietnam climate change carbon neutral 2025", "Area": "Environment", "Status": "Original"},
-    {"Category": "Transport", "Keywords": "railway, high-speed rail, metro, subway, train, airport, seaport, port, harbor, terminal, highway, expressway, road, bridge, tunnel, logistics, transportation", "Search Query Example": "Vietnam high-speed railway metro airport 2025", "Area": "Urban Develop.", "Status": "NEW 2025"},
-    {"Category": "Construction", "Keywords": "construction, real estate, property, housing, steel, cement, building, infrastructure project, billion USD, investment", "Search Query Example": "Vietnam construction real estate steel cement 2025", "Area": "Urban Develop.", "Status": "NEW 2025"},
+    {"Category": "Solid Waste", "Keywords": "waste-to-energy, solid waste, landfill, incineration, recycling, circular economy, WtE, garbage, municipal waste, waste treatment, waste management", "Search Query Example": "Vietnam waste-to-energy solid waste 2025", "Area": "Environment", "Status": "Original"},
+    {"Category": "Waste Water", "Keywords": "wastewater treatment, wastewater plant, WWTP, sewage treatment, water treatment plant, sewerage system, effluent treatment, sludge treatment, drainage system", "Search Query Example": "Vietnam wastewater treatment plant WWTP 2025", "Area": "Environment", "Status": "Updated"},
+    {"Category": "Water Supply/Drainage", "Keywords": "clean water, water supply, reservoir, potable water, tap water, drinking water, water infrastructure, water plant, water distribution", "Search Query Example": "Vietnam clean water supply plant project 2025", "Area": "Environment", "Status": "Original"},
+    {"Category": "Power", "Keywords": "power plant, electricity generation, LNG power, gas-to-power, thermal power, solar power, solar farm, wind power, wind farm, renewable energy, hydropower, PDP8, biomass power", "Search Query Example": "Vietnam LNG power plant renewable energy 2025", "Area": "Energy Develop.", "Status": "Updated"},
+    {"Category": "Oil & Gas", "Keywords": "oil exploration, gas field, upstream, petroleum, offshore drilling, LNG terminal, refinery, natural gas, gas pipeline, crude oil, petrochemical, PetroVietnam", "Search Query Example": "Vietnam oil gas exploration upstream 2025", "Area": "Energy Develop.", "Status": "Updated"},
+    {"Category": "Industrial Parks", "Keywords": "industrial park, industrial zone, FDI investment, economic zone, manufacturing zone, factory construction, export processing zone, hi-tech park", "Search Query Example": "Vietnam industrial park FDI investment 2025", "Area": "Urban Develop.", "Status": "Updated"},
+    {"Category": "Smart City", "Keywords": "smart city, urban development project, digital transformation, city planning, urban area development, new urban area, smart infrastructure", "Search Query Example": "Vietnam smart city urban development 2025", "Area": "Urban Develop.", "Status": "Original"},
+    {"Category": "Climate/Environment", "Keywords": "climate change, carbon neutral, net zero, emission, environmental protection, green growth, pollution control", "Search Query Example": "Vietnam climate change carbon neutral 2025", "Area": "Environment", "Status": "Original"},
+    {"Category": "Transport", "Keywords": "railway, high-speed rail, metro, subway, airport, seaport, port, highway, expressway, bridge, tunnel, logistics, transportation, Long Thanh airport", "Search Query Example": "Vietnam high-speed railway metro airport 2025", "Area": "Urban Develop.", "Status": "NEW 2025"},
+    {"Category": "Construction", "Keywords": "construction project, real estate development, property, housing project, steel production, cement, building construction, mega project, billion USD", "Search Query Example": "Vietnam construction real estate steel cement 2025", "Area": "Urban Develop.", "Status": "NEW 2025"},
 ]
 
 SECTOR_KEYWORDS = {
@@ -460,7 +460,83 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
                     summary.append([f"  {sector}", count])
         
         return summary
-    
+
+    def generate_keyword_history(self, articles: List[Dict]) -> Dict:
+        """Generate keyword-based search history statistics"""
+        from collections import Counter
+        
+        keyword_categories = {
+            "Solid Waste": ["waste-to-energy", "solid waste", "landfill", "incineration", "recycling", "circular economy", "garbage", "municipal waste"],
+            "Waste Water": ["wastewater treatment", "wastewater plant", "wwtp", "sewage treatment", "sewerage", "effluent", "sludge"],
+            "Water Supply/Drainage": ["clean water", "water supply", "reservoir", "potable water", "tap water", "drinking water", "water infrastructure"],
+            "Power": ["power plant", "solar power", "wind power", "thermal power", "lng power", "hydropower", "renewable energy", "electricity"],
+            "Oil & Gas": ["oil exploration", "gas field", "petroleum", "lng terminal", "refinery", "natural gas", "crude oil", "petrochemical"],
+            "Industrial Parks": ["industrial park", "industrial zone", "fdi investment", "economic zone", "manufacturing zone", "factory"],
+            "Smart City": ["smart city", "urban development", "digital transformation", "city planning", "urban area"],
+            "Transport": ["railway", "high-speed rail", "metro", "airport", "seaport", "highway", "expressway", "bridge", "tunnel"],
+            "Construction": ["construction project", "real estate", "property", "housing", "steel", "cement", "building"],
+        }
+        
+        keyword_stats = {}
+        
+        for category, keywords in keyword_categories.items():
+            category_stats = []
+            
+            for keyword in keywords:
+                kw_lower = keyword.lower()
+                matched_articles = []
+                
+                for article in articles:
+                    title = str(article.get("News Tittle", article.get("title", ""))).lower()
+                    summary = str(article.get("Short summary", article.get("summary", ""))).lower()
+                    
+                    if kw_lower in title or kw_lower in summary:
+                        matched_articles.append(article)
+                
+                if matched_articles:
+                    # Count by year
+                    count_2024 = sum(1 for a in matched_articles if str(a.get("Date", "")).startswith("2024"))
+                    count_2025 = sum(1 for a in matched_articles if str(a.get("Date", "")).startswith("2025"))
+                    
+                    # Get last article date
+                    dates = [str(a.get("Date", ""))[:10] for a in matched_articles if a.get("Date")]
+                    last_date = max(dates) if dates else ""
+                    
+                    # Get top province
+                    provinces = [a.get("Province", "Vietnam") for a in matched_articles]
+                    province_counts = Counter(provinces)
+                    top_province = province_counts.most_common(1)[0][0] if province_counts else "Vietnam"
+                    
+                    # Get sample title
+                    sample_title = matched_articles[0].get("News Tittle", matched_articles[0].get("title", ""))
+                    
+                    category_stats.append({
+                        "keyword": keyword,
+                        "total": len(matched_articles),
+                        "count_2024": count_2024,
+                        "count_2025": count_2025,
+                        "last_date": last_date,
+                        "top_province": top_province,
+                        "sample_title": sample_title
+                    })
+                else:
+                    category_stats.append({
+                        "keyword": keyword,
+                        "total": 0,
+                        "count_2024": 0,
+                        "count_2025": 0,
+                        "last_date": "",
+                        "top_province": "",
+                        "sample_title": "No articles found"
+                    })
+            
+            # Sort by total count descending
+            category_stats.sort(key=lambda x: x["total"], reverse=True)
+            keyword_stats[category] = category_stats
+        
+        return keyword_stats
+
+
     def create_excel(self, articles: List[Dict], sources: List[Dict], keywords: List[Dict], new_count: int) -> str:
         if not OPENPYXL_AVAILABLE:
             logger.warning("openpyxl not available")
