@@ -72,21 +72,78 @@ NEWS_SOURCES = {
 # ============================================
 # SECTOR CLASSIFICATION
 # ============================================
+<details>
+<summary>👉 클릭하여 코드 보기 (길어서 접음)</summary>
+```python
 SECTOR_KEYWORDS = {
-    "Environment": {
-        "Waste Water": ["wastewater", "sewage", "water treatment", "nước thải", "xử lý nước"],
-        "Solid Waste": ["solid waste", "landfill", "waste-to-energy", "rác thải", "chất thải rắn"],
-        "Water Supply/Drainage": ["water supply", "drainage", "cấp nước", "thoát nước", "reservoir"]
+    "Waste Water": {
+        "primary": [
+            "wastewater treatment plant", "sewage treatment plant",
+            "wwtp", "wastewater treatment system", "sewerage system",
+            "wastewater collection", "effluent treatment"
+        ],
+        "secondary": ["wastewater", "sewage", "effluent"]
     },
-    "Energy Develop.": {
-        "Power": ["solar", "wind", "power plant", "điện mặt trời", "điện gió", "nhà máy điện", "renewable"],
-        "Oil & Gas": ["LNG", "gas pipeline", "oil", "petroleum", "dầu khí", "khí đốt"]
+    "Water Supply": {
+        "primary": [
+            "water supply project", "water supply system",
+            "clean water plant", "water treatment plant",
+            "drinking water", "water supply infrastructure"
+        ],
+        "secondary": ["water supply", "clean water", "potable water"]
     },
-    "Urban Develop.": {
-        "Smart City": ["smart city", "digital", "IoT", "thành phố thông minh", "đô thị số"],
-        "Industrial Parks": ["industrial park", "FDI", "khu công nghiệp", "đầu tư", "manufacturing"]
+    "Solid Waste": {
+        "primary": [
+            "waste-to-energy plant", "solid waste treatment",
+            "landfill", "incineration plant", "recycling facility",
+            "waste management"
+        ],
+        "secondary": ["solid waste", "waste treatment", "recycling"]
+    },
+    "Power": {
+        "primary": [
+            "power plant", "solar farm", "wind farm",
+            "lng power", "thermal power", "hydropower plant"
+        ],
+        "secondary": ["electricity", "power generation"]
+    },
+    "Oil & Gas": {
+        "primary": [
+            "oil exploration", "gas field", "lng terminal",
+            "refinery", "offshore drilling", "petroleum"
+        ],
+        "secondary": ["oil", "gas", "petroleum"]
+    },
+    "Industrial Parks": {
+        "primary": [
+            "industrial park", "industrial zone", "economic zone",
+            "export processing zone"
+        ],
+        "secondary": ["fdi", "factory"]
+    },
+    "Smart City": {
+        "primary": [
+            "smart city project", "urban development",
+            "digital transformation"
+        ],
+        "secondary": ["urban area"]
+    },
+    "Transport": {
+        "primary": [
+            "railway project", "metro construction", "airport",
+            "highway", "expressway", "port development"
+        ],
+        "secondary": ["transport"]
+    },
+    "Construction": {
+        "primary": [
+            "construction project", "real estate", "housing project"
+        ],
+        "secondary": ["construction", "building"]
     }
 }
+```
+</details>
 
 # ============================================
 # PROVINCES LIST
@@ -201,3 +258,30 @@ REPORT_TIME = "08:00"  # Daily report time
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 LOG_FILE = BASE_DIR / "logs" / "pipeline.log"
+
+# URL 블랙리스트 패턴
+URL_BLACKLIST_PATTERNS = [
+    # 카테고리/태그 페이지
+    r'/category/', r'/tag/', r'/tags/', r'/categories/',
+    r'/cooperation-investment$', r'/investment$', r'/business$',
+    
+    # 정적 페이지
+    r'/about', r'/contact', r'/policy', r'/law', r'/regulation',
+    r'/investment-policy', r'/investment-incentive',
+    r'/investment-climate', r'/doing-business',
+    r'/investment-attraction',
+    
+    # 기타
+    r'/search', r'/archive', r'/page/', r'/expertise/',
+]
+
+# 뉴스 기사 패턴
+URL_NEWS_PATTERNS = [
+    r'/\d{4}/\d{1,2}/',  # /2025/01/
+    r'/news/', r'/article/', r'/post/', r'/story/',
+    r'/tin-tuc/', r'/bai-viet/',
+    r'-post\d+\.html?$',  # -post112164.html
+    r'-\d{7,}\.html?$',   # article-1234567.html
+    r'/\d{6,}\.html?$',   # /123456.html
+    r'\.vnp$',            # .vnp
+]
