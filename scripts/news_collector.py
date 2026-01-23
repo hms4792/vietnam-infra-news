@@ -2,6 +2,7 @@
 Vietnam Infrastructure News Collector
 Collects news from existing 310+ sources in database
 Collection period: Yesterday 6PM to Today 6PM (Vietnam time)
+Tracks source check status for verification
 """
 import asyncio
 import aiohttp
@@ -168,6 +169,7 @@ def load_sources_from_excel():
                     "domain": domain,
                     "url": url,
                     "type": source_type,
+                    "status": status,
                 })
         
         logger.info(f"Loaded {len(sources)} sources from database")
@@ -184,6 +186,10 @@ class NewsCollector:
         self.session = None
         self.existing_sources = load_sources_from_excel()
         self.start_time, self.end_time = get_collection_time_range()
+        
+        # Source check tracking
+        self.source_check_results = {}  # domain -> {checked, success, articles_found, last_checked, error}
+        
         logger.info(f"Initialized with {len(self.existing_sources)} sources from database")
 
     async def __aenter__(self):
@@ -199,14 +205,26 @@ class NewsCollector:
         if self.session:
             await self.session.close()
 
+    def _record_source_check(self, domain, success, articles_found=0, error=None):
+        """Record the result of checking a source"""
+        self.source_check_results[domain] = {
+            "checked": True,
+            "success": success,
+            "articles_found": articles_found,
+            "last_checked": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "error": error
+        }
+
     async def fetch_url(self, url):
         try:
             async with self.session.get(url, ssl=False) as response:
                 if response.status == 200:
                     return await response.text()
+                else:
+                    return None
         except Exception as e:
             logger.debug(f"Error fetching {url}: {e}")
-        return None
+            return None
 
     def _is_within_time_range(self, pub_date_str):
         if not pub_date_str:
@@ -263,10 +281,12 @@ class NewsCollector:
 
     async def collect_from_rss(self, source_name, feed_url):
         articles = []
+        domain = feed_url.split('/')[2].replace('www.', '')
         
         try:
             content = await self.fetch_url(feed_url)
             if not content:
+                self._record_source_check(domain, success=False, error="No response")
                 return articles
             
             feed = feedparser.parse(content)
@@ -296,9 +316,11 @@ class NewsCollector:
                     
                     articles.append(article)
             
+            self._record_source_check(domain, success=True, articles_found=len(articles))
             logger.info(f"RSS {source_name}: {len(articles)} infrastructure articles (in time range)")
             
         except Exception as e:
+            self._record_source_check(domain, success=False, error=str(e)[:50])
             logger.error(f"RSS error {feed_url}: {e}")
         
         return articles
@@ -317,6 +339,9 @@ class NewsCollector:
             f"https://{domain}/?s=",
         ]
         
+        found_any = False
+        error_msg = None
+        
         for keyword in keywords[:2]:
             for pattern in search_patterns[:1]:
                 try:
@@ -324,6 +349,7 @@ class NewsCollector:
                     content = await self.fetch_url(search_url)
                     
                     if content:
+                        found_any = True
                         soup = BeautifulSoup(content, 'html.parser')
                         
                         for link in soup.find_all('a', href=True)[:15]:
@@ -351,12 +377,23 @@ class NewsCollector:
                                     article["province"] = province
                                     
                                     articles.append(article)
+                    else:
+                        error_msg = "No response"
                     
                     await asyncio.sleep(0.5)
                     break
                     
                 except Exception as e:
+                    error_msg = str(e)[:50]
                     continue
+        
+        # Record check result
+        self._record_source_check(
+            domain, 
+            success=found_any, 
+            articles_found=len(articles),
+            error=error_msg if not found_any else None
+        )
         
         return articles
 
@@ -369,6 +406,7 @@ class NewsCollector:
         logger.info(f"Database sources: {len(self.existing_sources)}")
         logger.info(f"Time range: {self.start_time.strftime('%Y-%m-%d %H:%M')} to {self.end_time.strftime('%Y-%m-%d %H:%M')}")
         
+        # 1. RSS Feeds
         rss_tasks = []
         for name, url in DEFAULT_RSS_FEEDS.items():
             rss_tasks.append(self.collect_from_rss(name, url))
@@ -388,6 +426,7 @@ class NewsCollector:
         
         logger.info(f"After RSS: {len(all_articles)} articles")
         
+        # 2. Priority domains
         priority_domains = [
             "vietnamnews.vn", "e.vnexpress.net", "tuoitrenews.vn",
             "hanoitimes.vn", "vietnamplus.vn", "vneconomy.vn",
@@ -415,9 +454,13 @@ class NewsCollector:
         
         logger.info(f"After priority domains: {len(all_articles)} articles")
         
-        db_sources_to_search = [s for s in self.existing_sources if s.get("domain") not in priority_domains][:50]
+        # 3. Database sources (ALL sources, not just 50)
+        checked_domains = set(priority_domains)
+        db_sources_to_search = [s for s in self.existing_sources if s.get("domain") not in checked_domains]
         
-        for source in db_sources_to_search:
+        logger.info(f"Checking {len(db_sources_to_search)} additional database sources...")
+        
+        for i, source in enumerate(db_sources_to_search):
             try:
                 search_articles = await self.search_source_domain(source, SEARCH_KEYWORDS[:2])
                 
@@ -430,14 +473,32 @@ class NewsCollector:
                         seen_urls.add(url)
                         seen_titles.add(title)
                 
+                # Progress log every 50 sources
+                if (i + 1) % 50 == 0:
+                    logger.info(f"  Checked {i + 1}/{len(db_sources_to_search)} sources, {len(all_articles)} articles so far")
+                
                 await asyncio.sleep(0.3)
             except:
                 continue
         
         logger.info(f"=== Collection Complete: {len(all_articles)} total articles ===")
+        logger.info(f"=== Sources checked: {len(self.source_check_results)} ===")
+        
+        # Log source check summary
+        successful = sum(1 for r in self.source_check_results.values() if r['success'])
+        failed = sum(1 for r in self.source_check_results.values() if not r['success'])
+        with_articles = sum(1 for r in self.source_check_results.values() if r['articles_found'] > 0)
+        
+        logger.info(f"  - Successful: {successful}")
+        logger.info(f"  - Failed: {failed}")
+        logger.info(f"  - With articles: {with_articles}")
         
         self.collected_news = all_articles
         return all_articles
+
+    def get_source_check_results(self):
+        """Return source check results for updating Source sheet"""
+        return self.source_check_results
 
     def _parse_date(self, date_str):
         if not date_str:
@@ -550,7 +611,8 @@ class NewsCollector:
                     "end": self.end_time.strftime("%Y-%m-%d %H:%M")
                 },
                 "total": len(self.collected_news),
-                "articles": self.collected_news
+                "articles": self.collected_news,
+                "source_check_results": self.source_check_results
             }, f, ensure_ascii=False, indent=2)
         
         logger.info(f"Saved {len(self.collected_news)} articles to {output_path}")
@@ -560,10 +622,10 @@ class NewsCollector:
 async def collect_news():
     async with NewsCollector() as collector:
         articles = await collector.collect_all()
-        return articles
+        return articles, collector.get_source_check_results()
 
 
-def save_collected_news(articles, filename=None):
+def save_collected_news(articles, source_results=None, filename=None):
     if filename is None:
         filename = f"news_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     
@@ -574,7 +636,8 @@ def save_collected_news(articles, filename=None):
         json.dump({
             "collected_at": datetime.now().isoformat(),
             "total": len(articles),
-            "articles": articles
+            "articles": articles,
+            "source_check_results": source_results or {}
         }, f, ensure_ascii=False, indent=2)
     
     logger.info(f"Saved {len(articles)} articles to {output_path}")
@@ -582,13 +645,22 @@ def save_collected_news(articles, filename=None):
 
 
 def main():
-    articles = asyncio.run(collect_news())
+    import asyncio
+    
+    async def run():
+        async with NewsCollector() as collector:
+            articles = await collector.collect_all()
+            source_results = collector.get_source_check_results()
+            return articles, source_results
+    
+    articles, source_results = asyncio.run(run())
     
     if articles:
-        save_collected_news(articles)
+        save_collected_news(articles, source_results)
         
         print(f"\n=== Collection Summary ===")
         print(f"Total articles: {len(articles)}")
+        print(f"Sources checked: {len(source_results)}")
         
         from collections import Counter
         areas = Counter(a.get("area", "") for a in articles)
