@@ -605,7 +605,7 @@ class NewsCollector:
         return any(kw in text for kw in infra_keywords)
 
     def _classify_article(self, article):
-    """Classify article by sector with improved accuracy"""
+        """Classify article by sector with improved accuracy"""
         title = article.get("title", "").lower()
         summary = article.get("summary", "").lower()
         text = title + " " + summary
