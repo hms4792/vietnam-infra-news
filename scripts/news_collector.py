@@ -56,15 +56,55 @@ PROVINCES = [
 ]
 
 SECTOR_KEYWORDS = {
-    "Oil & Gas": ["oil exploration", "gas field", "upstream", "petroleum", "offshore drilling", "lng terminal", "refinery", "oil and gas", "natural gas", "gas pipeline", "oil price", "crude oil", "petrochemical"],
-    "Transport": ["railway", "high-speed rail", "metro", "subway", "airport", "seaport", "port", "harbor", "terminal", "highway", "expressway", "road", "bridge", "tunnel", "logistics", "transportation", "train"],
-    "Solid Waste": ["waste-to-energy", "solid waste", "landfill", "incineration", "recycling", "circular economy", "wte", "garbage", "municipal waste"],
-    "Waste Water": ["wastewater", "waste water", "wwtp", "sewage", "water treatment plant", "sewerage", "effluent", "sludge"],
-    "Water Supply/Drainage": ["clean water", "water supply", "reservoir", "potable water", "tap water", "drinking water", "water infrastructure"],
-    "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", "solar", "wind", "renewable", "hydropower", "pdp8", "wind farm", "solar farm"],
-    "Construction": ["construction", "real estate", "property", "housing", "steel", "cement", "building", "infrastructure project"],
-    "Industrial Parks": ["industrial park", "industrial zone", "fdi", "economic zone", "manufacturing zone", "factory", "manufacturing"],
-    "Smart City": ["smart city", "urban development", "digital transformation", "city planning", "urban area"],
+    "Oil & Gas": [
+        "oil exploration", "gas field", "upstream", "petroleum", "offshore drilling", 
+        "lng terminal", "refinery", "oil and gas", "natural gas", "gas pipeline", 
+        "oil price", "crude oil", "petrochemical", "oil production", "gas production",
+        "petrovietnam", "pvn", "binh son refinery", "nghi son refinery"
+    ],
+    "Transport": [
+        "railway", "high-speed rail", "metro", "subway", "airport", "seaport", 
+        "port", "harbor", "terminal", "highway", "expressway", "road construction",
+        "bridge", "tunnel", "logistics", "transportation", "train", "rail line",
+        "north-south railway", "long thanh airport", "cat lai port", "lach huyen port"
+    ],
+    "Solid Waste": [
+        "waste-to-energy", "solid waste", "landfill", "incineration", "recycling", 
+        "circular economy", "wte", "garbage", "municipal waste", "waste treatment",
+        "waste management", "rubbish", "trash disposal"
+    ],
+    "Waste Water": [
+        "wastewater treatment", "wastewater plant", "wwtp", "sewage treatment", 
+        "water treatment plant", "sewerage system", "effluent treatment", "sludge treatment",
+        "drainage system", "sewage plant", "waste water facility"
+    ],
+    "Water Supply/Drainage": [
+        "clean water", "water supply", "reservoir", "potable water", "tap water", 
+        "drinking water", "water infrastructure", "water plant", "water project",
+        "water distribution", "water network"
+    ],
+    "Power": [
+        "power plant", "electricity generation", "lng power", "gas-to-power", 
+        "thermal power", "solar power", "solar farm", "wind power", "wind farm",
+        "renewable energy", "hydropower", "pdp8", "power project", "electricity project",
+        "solar panel", "wind turbine", "biomass power"
+    ],
+    "Construction": [
+        "construction project", "real estate development", "property development", 
+        "housing project", "steel production", "cement production", "building construction",
+        "infrastructure project", "mega project", "billion usd investment",
+        "vingroup", "novaland", "sun group"
+    ],
+    "Industrial Parks": [
+        "industrial park", "industrial zone", "fdi investment", "economic zone", 
+        "manufacturing zone", "factory construction", "manufacturing facility",
+        "export processing zone", "hi-tech park", "industrial cluster"
+    ],
+    "Smart City": [
+        "smart city", "urban development project", "digital transformation", 
+        "city planning", "urban area development", "new urban area",
+        "urban infrastructure", "smart infrastructure"
+    ],
 }
 
 AREA_BY_SECTOR = {
@@ -77,8 +117,8 @@ AREA_BY_SECTOR = {
     "Construction": "Urban Develop.",
     "Industrial Parks": "Urban Develop.",
     "Smart City": "Urban Develop.",
+    "Unclassified": "Other",
 }
-
 SEARCH_KEYWORDS = [
     "Vietnam wastewater treatment plant",
     "Vietnam solid waste management",
@@ -565,27 +605,66 @@ class NewsCollector:
         return any(kw in text for kw in infra_keywords)
 
     def _classify_article(self, article):
-        text = (article.get("title", "") + " " + article.get("summary", "")).lower()
+    """Classify article by sector with improved accuracy"""
+        title = article.get("title", "").lower()
+        summary = article.get("summary", "").lower()
+        text = title + " " + summary
         
-        sector_priority = [
-            "Oil & Gas",
-            "Transport",
-            "Waste Water",
-            "Solid Waste",
-            "Water Supply/Drainage",
-            "Power",
-            "Construction",
-            "Smart City",
-            "Industrial Parks"
-        ]
+        # Score-based classification for better accuracy
+        sector_scores = {}
         
-        for sector in sector_priority:
-            keywords = SECTOR_KEYWORDS.get(sector, [])
+        for sector, keywords in SECTOR_KEYWORDS.items():
+            score = 0
+            matched_keywords = []
             for keyword in keywords:
-                if keyword.lower() in text:
-                    return sector, AREA_BY_SECTOR.get(sector, "Environment")
+                kw_lower = keyword.lower()
+                # Title match = 3 points, Summary match = 1 point
+                if kw_lower in title:
+                    score += 3
+                    matched_keywords.append(keyword)
+                elif kw_lower in summary:
+                    score += 1
+                    matched_keywords.append(keyword)
+            
+            if score > 0:
+                sector_scores[sector] = {
+                    "score": score,
+                    "keywords": matched_keywords
+                }
         
-        return "Waste Water", "Environment"
+        # If no matches, check for general infrastructure keywords
+        if not sector_scores:
+            # Default classification based on general context
+            general_keywords = {
+                "environment": ["Environment", "Waste Water"],
+                "energy": ["Energy Develop.", "Power"],
+                "urban": ["Urban Develop.", "Smart City"],
+                "transport": ["Urban Develop.", "Transport"],
+                "construction": ["Urban Develop.", "Construction"],
+            }
+            
+            for key, (area, sector) in [
+                ("environment", ("Environment", "Waste Water")),
+                ("energy", ("Energy Develop.", "Power")),
+                ("urban", ("Urban Develop.", "Smart City")),
+                ("transport", ("Urban Develop.", "Transport")),
+                ("construct", ("Urban Develop.", "Construction")),
+            ]:
+                if key in text:
+                    return sector, area
+            
+            # Ultimate fallback - mark as "Unclassified" instead of wrong category
+            return "Unclassified", "Other"
+        
+        # Get highest scoring sector
+        best_sector = max(sector_scores.items(), key=lambda x: x[1]["score"])
+        sector_name = best_sector[0]
+        area = AREA_BY_SECTOR.get(sector_name, "Other")
+        
+        # Log classification for debugging
+        logger.debug(f"Classified '{title[:50]}...' as {sector_name} (score: {best_sector[1]['score']}, keywords: {best_sector[1]['keywords'][:3]})")
+        
+        return sector_name, area
 
     def _extract_province(self, article):
         text = (article.get("title", "") + " " + article.get("summary", "")).lower()
