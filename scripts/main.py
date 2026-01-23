@@ -50,20 +50,19 @@ class Pipeline:
         logger.info("STEP 1: News Collection")
         logger.info("=" * 50)
         
-        # In the news collection step
-    async with NewsCollector() as collector:
-        articles = await collector.collect_all()
-        source_check_results = collector.get_source_check_results()
-
-       # Pass to dashboard updater
-    excel_path, all_articles = self.excel_db.update(processed_articles, source_check_results)
-            
-            # Save raw collection
-            collector.save_to_json(f"news_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
-        
-        logger.info(f"Collected {len(self.articles)} articles")
-        return len(self.articles)
+# In the news collection step
+async with NewsCollector() as collector:
+    articles = await collector.collect_all()
+    source_check_results = collector.get_source_check_results()
     
+    # Save raw collection
+    collector.save_to_json(f"news_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
+
+# Pass to dashboard updater
+excel_path, all_articles = self.excel_db.update(processed_articles, source_check_results)
+
+logger.info(f"Collected {len(self.articles)} articles")
+return len(self.articles)
     async def run_summarization(self) -> int:
         """Step 2: AI summarization"""
         logger.info("=" * 50)
