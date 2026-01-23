@@ -63,7 +63,8 @@ excel_path, all_articles = self.excel_db.update(processed_articles, source_check
 
 logger.info(f"Collected {len(self.articles)} articles")
 return len(self.articles)
-    async def run_summarization(self) -> int:
+
+async def run_summarization(self) -> int:
         """Step 2: AI summarization"""
         logger.info("=" * 50)
         logger.info("STEP 2: AI Summarization")
