@@ -257,7 +257,6 @@ class ExcelDatabaseUpdater:
                     })
                 logger.info(f"Successfully loaded {len(sources)} existing sources")
             
-            # Always use updated KEYWORDS_DATA (not from existing DB)
             keywords = KEYWORDS_DATA
             logger.info(f"Using updated KEYWORDS_DATA with {len(keywords)} categories")
             
@@ -272,7 +271,6 @@ class ExcelDatabaseUpdater:
     def merge_new_articles(self, existing: List[Dict], new_articles: List[Dict]) -> Tuple[List[Dict], int]:
         """Merge new articles into existing database - PRESERVES ALL EXISTING DATA"""
         
-        # 기존 기사 URL/제목 키 생성
         existing_keys = set()
         for article in existing:
             url = str(article.get("Link", "")).lower().strip()
@@ -292,7 +290,6 @@ class ExcelDatabaseUpdater:
             url = str(article.get("url", article.get("Link", ""))).lower().strip()
             title = str(article.get("title", article.get("News Tittle", ""))).lower().strip()[:80]
             
-            # 중복 체크
             is_duplicate = False
             if url and url != "nan" and len(url) > 10 and url in existing_keys:
                 is_duplicate = True
@@ -300,7 +297,6 @@ class ExcelDatabaseUpdater:
                 is_duplicate = True
             
             if not is_duplicate:
-                # 새 기사 추가
                 original_title = str(article.get("title", article.get("News Tittle", "")))
                 summary = str(article.get("summary_en", article.get("summary", article.get("Short summary", ""))))
                 
@@ -329,7 +325,6 @@ class ExcelDatabaseUpdater:
                 }
                 existing.append(new_article)
                 
-                # 키 추가
                 if url and url != "nan" and len(url) > 10:
                     existing_keys.add(url)
                 if title and title != "nan" and len(title) > 10:
@@ -343,12 +338,11 @@ class ExcelDatabaseUpdater:
         
         return existing, new_count
     
-def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dict], source_check_results: Dict = None) -> List[Dict]:
+    def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dict], source_check_results: Dict = None) -> List[Dict]:
         """Merge new sources and update check status"""
         existing_domains = set(s.get("Domain", "").lower() for s in existing_sources if s.get("Domain"))
         logger.info(f"Existing sources: {len(existing_sources)}, domains: {len(existing_domains)}")
         
-        # Update existing sources with check results
         if source_check_results:
             for source in existing_sources:
                 domain = source.get("Domain", "").lower()
@@ -360,7 +354,6 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
                     if result.get("error"):
                         source["Note"] = f"Error: {result['error'][:30]}"
         
-        # Add new sources from articles
         new_source_count = 0
         for article in new_articles:
             source = article.get("source", article.get("Source", ""))
@@ -494,20 +487,16 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
                         matched_articles.append(article)
                 
                 if matched_articles:
-                    # Count by year
                     count_2024 = sum(1 for a in matched_articles if str(a.get("Date", "")).startswith("2024"))
                     count_2025 = sum(1 for a in matched_articles if str(a.get("Date", "")).startswith("2025"))
                     
-                    # Get last article date
                     dates = [str(a.get("Date", ""))[:10] for a in matched_articles if a.get("Date")]
                     last_date = max(dates) if dates else ""
                     
-                    # Get top province
                     provinces = [a.get("Province", "Vietnam") for a in matched_articles]
                     province_counts = Counter(provinces)
                     top_province = province_counts.most_common(1)[0][0] if province_counts else "Vietnam"
                     
-                    # Get sample title
                     sample_title = matched_articles[0].get("News Tittle", matched_articles[0].get("title", ""))
                     
                     category_stats.append({
@@ -530,12 +519,10 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
                         "sample_title": "No articles found"
                     })
             
-            # Sort by total count descending
             category_stats.sort(key=lambda x: x["total"], reverse=True)
             keyword_stats[category] = category_stats
         
         return keyword_stats
-
 
     def create_excel(self, articles: List[Dict], sources: List[Dict], keywords: List[Dict], new_count: int) -> str:
         if not OPENPYXL_AVAILABLE:
@@ -592,12 +579,11 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
         
         for i, width in enumerate(col_widths, 1):
             ws1.column_dimensions[get_column_letter(i)].width = width
-        # Source Sheet - with check status columns
+        
         ws2 = wb.create_sheet("Source")
         source_cols = ["Domain", "URL", "Type", "Status", "Last Checked", "Check Result", "Articles Found", "Note"]
         source_widths = [30, 50, 15, 12, 18, 12, 14, 25]
         
-        # Header row
         for col, header in enumerate(source_cols, 1):
             cell = ws2.cell(row=1, column=col, value=header)
             cell.font = header_font
@@ -605,10 +591,9 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
             cell.border = thin_border
             cell.alignment = Alignment(horizontal="center")
         
-        # Conditional fills
-        ok_fill = PatternFill(start_color="90EE90", fill_type="solid")  # Green for OK
-        fail_fill = PatternFill(start_color="FFB6C1", fill_type="solid")  # Light red for FAIL
-        new_fill = PatternFill(start_color="87CEEB", fill_type="solid")  # Light blue for NEW
+        ok_fill = PatternFill(start_color="90EE90", fill_type="solid")
+        fail_fill = PatternFill(start_color="FFB6C1", fill_type="solid")
+        new_fill = PatternFill(start_color="87CEEB", fill_type="solid")
         
         for row_idx, source in enumerate(sources, 2):
             is_new = "NEW" in str(source.get("Note", ""))
@@ -624,7 +609,6 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
                 cell = ws2.cell(row=row_idx, column=col_idx, value=value if value else "")
                 cell.border = thin_border
                 
-                # Apply conditional formatting
                 if is_new:
                     cell.fill = new_fill
                 elif col_name == "Check Result":
@@ -636,12 +620,10 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
         for i, width in enumerate(source_widths, 1):
             ws2.column_dimensions[get_column_letter(i)].width = width
         
-# Keywords Sheet - with new columns Area and Status
         ws3 = wb.create_sheet("Keywords")
         kw_cols = ["Category", "Keywords", "Search Query Example", "Area", "Status"]
         kw_widths = [22, 100, 55, 18, 15]
         
-        # Header row
         for col, header in enumerate(kw_cols, 1):
             cell = ws3.cell(row=1, column=col, value=header)
             cell.font = header_font
@@ -649,10 +631,8 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
             cell.border = thin_border
             cell.alignment = Alignment(horizontal="center")
         
-        # Green fill for NEW items
         new_fill = PatternFill(start_color="90EE90", fill_type="solid")
         
-        # Data rows - use KEYWORDS_DATA directly (not from existing DB)
         for row_idx, kw in enumerate(KEYWORDS_DATA, 2):
             is_new = "NEW" in str(kw.get("Status", ""))
             for col_idx, col_name in enumerate(kw_cols, 1):
@@ -661,10 +641,9 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
                 cell.border = thin_border
                 if is_new:
                     cell.fill = new_fill
-                if col_idx == 2:  # Keywords column - wrap text
+                if col_idx == 2:
                     cell.alignment = Alignment(wrap_text=True, vertical="top")
         
-        # Set column widths
         for i, width in enumerate(kw_widths, 1):
             ws3.column_dimensions[get_column_letter(i)].width = width
         
@@ -682,26 +661,13 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
         ws4.column_dimensions['A'].width = 40
         ws4.column_dimensions['B'].width = 20
         
-        self.output_path.parent.mkdir(parents=True, exist_ok=True)
-        wb.save(self.output_path)
-        
-        logger.info(f"Excel saved: {self.output_path}")
-        logger.info(f"  - Data set: {len(articles)} articles")
-        logger.info(f"  - Sources: {len(sources)}")
-        logger.info(f"  - Keywords: {len(keywords)} categories")
-        logger.info(f"  - New articles added: {new_count}")
-        
-        return str(self.output_path)
-        # Keyword Search History Sheet
         ws5 = wb.create_sheet("Keyword History")
         
-        # Generate keyword-based statistics
         keyword_stats = self.generate_keyword_history(articles)
         
         kh_cols = ["Category", "Keyword", "Total Articles", "2024 Count", "2025 Count", "Last Article Date", "Top Province", "Sample Title"]
         kh_widths = [18, 25, 14, 12, 12, 15, 18, 60]
         
-        # Header row
         for col, header in enumerate(kh_cols, 1):
             cell = ws5.cell(row=1, column=col, value=header)
             cell.font = header_font
@@ -709,7 +675,6 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
             cell.border = thin_border
             cell.alignment = Alignment(horizontal="center")
         
-        # Data rows
         row_idx = 2
         for category, keywords_data in keyword_stats.items():
             for kw_data in keywords_data:
@@ -728,7 +693,6 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
                     cell = ws5.cell(row=row_idx, column=col_idx, value=value)
                     cell.border = thin_border
                     
-                    # Highlight keywords with articles
                     if col_idx == 3 and value > 0:
                         cell.fill = PatternFill(start_color="90EE90", fill_type="solid")
                     elif col_idx == 3 and value == 0:
@@ -738,8 +702,19 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
         
         for i, width in enumerate(kh_widths, 1):
             ws5.column_dimensions[get_column_letter(i)].width = width
-            
-def update(self, new_articles: List[Dict], source_check_results: Dict = None) -> Tuple[str, List[Dict]]:
+        
+        self.output_path.parent.mkdir(parents=True, exist_ok=True)
+        wb.save(self.output_path)
+        
+        logger.info(f"Excel saved: {self.output_path}")
+        logger.info(f"  - Data set: {len(articles)} articles")
+        logger.info(f"  - Sources: {len(sources)}")
+        logger.info(f"  - Keywords: {len(keywords)} categories")
+        logger.info(f"  - New articles added: {new_count}")
+        
+        return str(self.output_path)
+    
+    def update(self, new_articles: List[Dict], source_check_results: Dict = None) -> Tuple[str, List[Dict]]:
         """Update database with new articles and source check results"""
         existing_data = self.load_existing_excel()
         
@@ -756,8 +731,6 @@ def update(self, new_articles: List[Dict], source_check_results: Dict = None) ->
         sources = self.merge_new_sources(sources, new_articles, source_check_results)
         
         excel_path = self.create_excel(articles, sources, keywords, new_count)
-        
-        # ... rest of the method stays the same
         
         dashboard_articles = []
         for article in articles:
