@@ -800,19 +800,46 @@ class OutputGenerator:
         return outputs
 
 
-def load_articles() -> List[Dict]:
-    processed_files = sorted(DATA_DIR.glob("processed_*.json"), reverse=True)
-    if not processed_files:
-        news_files = sorted(DATA_DIR.glob("news_*.json"), reverse=True)
-        if not news_files:
-            return []
-        processed_files = news_files
+def _load_articles_from_db(self):
+    """데이터베이스에서 기사 로드"""
+    conn = sqlite3.connect(self.db_path)
+    cursor = conn.cursor()
     
-    try:
-        with open(processed_files[0], 'r', encoding='utf-8') as f:
-            return json.load(f).get("articles", [])
-    except:
-        return []
+    cursor.execute("""
+        SELECT 
+            id, title, title_ko, title_en, title_vi,
+            source_url, source_name, sector, area, province,
+            article_date, collection_date,
+            summary_ko, summary_en, summary_vi
+        FROM news_articles
+        WHERE validated = 1 OR validated = 0
+        ORDER BY article_date DESC
+    """)
+    
+    articles = []
+    for row in cursor.fetchall():
+        article = {
+            'id': row[0],
+            'title': row[2] or row[1],  # title_ko 우선, 없으면 title
+            'title_ko': row[2] or row[1],
+            'title_en': row[3] or row[1],
+            'title_vi': row[4] or row[1],
+            'source_url': row[5],
+            'source_name': row[6],
+            'sector': row[7],
+            'area': row[8],
+            'province': row[9],
+            'article_date': row[10],
+            'collection_date': row[11],
+            'summary_ko': row[12],
+            'summary_en': row[13],
+            'summary_vi': row[14]
+        }
+        articles.append(article)
+    
+    conn.close()
+    logger.info(f"Loaded {len(articles)} articles from database")
+    return articles
 
 
 def main():
