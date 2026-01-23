@@ -116,11 +116,91 @@ class AISummarizer:
         else:
             logger.warning("Anthropic client not available. Using fallback summarization.")
     
-    def summarize_article(self, article: Dict) -> Dict:
-        if self.client:
-            return self._summarize_with_claude(article)
-        else:
-            return self._fallback_summarize(article)
+    def summarize_articles(self, limit=None):
+    """기사 요약 및 번역 (베트남어 제목 영어 번역 추가)"""
+    conn = sqlite3.connect(self.db_path)
+    cursor = conn.cursor()
+    
+    # 요약되지 않은 기사 가져오기
+    query = """
+        SELECT id, title, content, sector, source_url
+        FROM news_articles
+        WHERE (summary_ko IS NULL OR summary_en IS NULL OR summary_vi IS NULL
+               OR title_en IS NULL)
+        ORDER BY collection_date DESC
+    """
+    
+    if limit:
+        query += f" LIMIT {limit}"
+    
+    cursor.execute(query)
+    articles = cursor.fetchall()
+    
+    logger.info(f"Found {len(articles)} articles to process")
+    
+    for idx, (article_id, title, content, sector, url) in enumerate(articles, 1):
+        logger.info(f"\nProcessing {idx}/{len(articles)}: {title[:50]}...")
+        
+        try:
+            # 1. 베트남어 제목 감지 및 영어 번역
+            has_vietnamese = any(ord(c) > 127 for c in title)
+            
+            if has_vietnamese:
+                logger.info("Translating Vietnamese title to English...")
+                title_en = self._translate_title_to_english(title)
+            else:
+                title_en = title
+            
+            # 2. 요약 생성 (3개 국어)
+            summary_ko = self._generate_summary(title_en, content, sector, "Korean")
+            summary_en = self._generate_summary(title_en, content, sector, "English")
+            summary_vi = self._generate_summary(title_en, content, sector, "Vietnamese")
+            
+            # 3. DB 업데이트
+            cursor.execute("""
+                UPDATE news_articles
+                SET title_en = ?, title_ko = ?, title_vi = ?,
+                    summary_ko = ?, summary_en = ?, summary_vi = ?
+                WHERE id = ?
+            """, (title_en, title_en, title, summary_ko, summary_en, summary_vi, article_id))
+            
+            conn.commit()
+            logger.info(f"✓ Updated article {article_id}")
+            
+            time.sleep(1)  # Rate limiting
+            
+        except Exception as e:
+            logger.error(f"Error processing article {article_id}: {e}")
+    
+    conn.close()
+    logger.info(f"\n✓ Summarization complete: {len(articles)} articles processed")
+
+
+def _translate_title_to_english(self, vietnamese_title):
+    """베트남어 제목을 영어로 번역"""
+    
+    try:
+        message = self.client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=200,
+            messages=[{
+                "role": "user",
+                "content": f"""Translate this Vietnamese news headline to English.
+Keep it concise and professional. Return ONLY the English translation.
+
+Vietnamese: {vietnamese_title}
+
+English:"""
+            }]
+        )
+        
+        translation = message.content[0].text.strip()
+        logger.info(f"Translated: {translation}")
+        return translation
+        
+    except Exception as e:
+        logger.error(f"Translation error: {e}")
+        return vietnamese_title  # 실패시 원문 반환
     
     def _summarize_with_claude(self, article: Dict) -> Dict:
         try:
