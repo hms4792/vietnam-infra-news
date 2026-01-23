@@ -616,7 +616,53 @@ def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dic
         logger.info(f"  - New articles added: {new_count}")
         
         return str(self.output_path)
-    
+        # Keyword Search History Sheet
+        ws5 = wb.create_sheet("Keyword History")
+        
+        # Generate keyword-based statistics
+        keyword_stats = self.generate_keyword_history(articles)
+        
+        kh_cols = ["Category", "Keyword", "Total Articles", "2024 Count", "2025 Count", "Last Article Date", "Top Province", "Sample Title"]
+        kh_widths = [18, 25, 14, 12, 12, 15, 18, 60]
+        
+        # Header row
+        for col, header in enumerate(kh_cols, 1):
+            cell = ws5.cell(row=1, column=col, value=header)
+            cell.font = header_font
+            cell.fill = header_fill
+            cell.border = thin_border
+            cell.alignment = Alignment(horizontal="center")
+        
+        # Data rows
+        row_idx = 2
+        for category, keywords_data in keyword_stats.items():
+            for kw_data in keywords_data:
+                values = [
+                    category,
+                    kw_data.get("keyword", ""),
+                    kw_data.get("total", 0),
+                    kw_data.get("count_2024", 0),
+                    kw_data.get("count_2025", 0),
+                    kw_data.get("last_date", ""),
+                    kw_data.get("top_province", ""),
+                    kw_data.get("sample_title", "")[:80]
+                ]
+                
+                for col_idx, value in enumerate(values, 1):
+                    cell = ws5.cell(row=row_idx, column=col_idx, value=value)
+                    cell.border = thin_border
+                    
+                    # Highlight keywords with articles
+                    if col_idx == 3 and value > 0:
+                        cell.fill = PatternFill(start_color="90EE90", fill_type="solid")
+                    elif col_idx == 3 and value == 0:
+                        cell.fill = PatternFill(start_color="FFB6C1", fill_type="solid")
+                
+                row_idx += 1
+        
+        for i, width in enumerate(kh_widths, 1):
+            ws5.column_dimensions[get_column_letter(i)].width = width
+            
 def update(self, new_articles: List[Dict], source_check_results: Dict = None) -> Tuple[str, List[Dict]]:
         """Update database with new articles and source check results"""
         existing_data = self.load_existing_excel()
