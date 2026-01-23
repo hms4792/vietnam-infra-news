@@ -768,7 +768,7 @@ function setLang(l) {
     lang = l;
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === l));
     updateDashboard();
-    renderDBList();
+    renderDBList();  // 이 줄이 있는지 확인
     updateVoiceInfo();
     setTimeout(initCharts, 50);
 }
@@ -1069,14 +1069,29 @@ function renderDBList() {
     }
     
     container.innerHTML = page.map(n => {
-        const title = typeof n.title === 'object' ? (n.title[lang] || n.title.en || n.title.ko || '') : n.title;
+        // 다국어 제목 처리
+        let title = '';
+        if (typeof n.title === 'object') {
+            title = n.title[lang] || n.title.en || n.title.ko || n.title.vi || '';
+        } else {
+            title = n.title || '';
+        }
+        
+        // 다국어 요약 처리
+        let summary = '';
+        if (typeof n.summary === 'object') {
+            summary = n.summary[lang] || n.summary.en || n.summary.ko || n.summary.vi || '';
+        } else {
+            summary = n.summary || '';
+        }
+        
         return `
         <div class="news-row grid grid-cols-12 gap-1 px-3 py-2 items-center text-sm border-b border-slate-50">
-            <div class="col-span-2"><span class="inline-block px-1.5 py-0.5 rounded text-xs font-semibold text-white ${SECTOR_CONFIG[n.area]?.color}">${n.sector}</span></div>
-            <div class="col-span-2 text-xs text-slate-600 truncate">${n.province}</div>
-            <div class="col-span-1 text-xs text-slate-400">${n.date}</div>
-            <div class="col-span-4 text-xs font-medium text-slate-800 truncate">${title}</div>
-            <div class="col-span-1 text-xs text-slate-400 truncate">${n.source}</div>
+            <div class="col-span-2"><span class="inline-block px-1.5 py-0.5 rounded text-xs font-semibold text-white ${SECTOR_CONFIG[n.area]?.color || 'bg-slate-500'}">${n.sector || 'Unknown'}</span></div>
+            <div class="col-span-2 text-xs text-slate-600 truncate">${n.province || 'Vietnam'}</div>
+            <div class="col-span-1 text-xs text-slate-400">${(n.date || '').substring(0, 10)}</div>
+            <div class="col-span-4 text-xs font-medium text-slate-800 truncate" title="${title}">${title}</div>
+            <div class="col-span-1 text-xs text-slate-400 truncate">${n.source || ''}</div>
             <div class="col-span-2 flex justify-center gap-1">
                 <button onclick="openModal(${n.id})" class="action-btn w-7 h-7 bg-teal-100 hover:bg-teal-200 rounded flex items-center justify-center" title="요약"><i data-lucide="file-text" class="w-3.5 h-3.5 text-teal-700"></i></button>
                 <button onclick="quickSpeak(${n.id})" class="action-btn w-7 h-7 bg-violet-100 hover:bg-violet-200 rounded flex items-center justify-center" title="음성"><i data-lucide="volume-2" class="w-3.5 h-3.5 text-violet-700"></i></button>
