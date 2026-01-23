@@ -12,6 +12,7 @@ PROJECT_ROOT = Path(__file__).parent.parent
 DATA_DIR = PROJECT_ROOT / "data"
 OUTPUT_DIR = PROJECT_ROOT / "outputs"
 LOG_DIR = PROJECT_ROOT / "logs"
+TEMPLATE_DIR = PROJECT_ROOT / "templates"
 
 # Database
 DATABASE_PATH = DATA_DIR / "vietnam_infrastructure_news.db"
