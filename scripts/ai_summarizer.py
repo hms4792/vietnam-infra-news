@@ -27,26 +27,70 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 SECTOR_KEYWORDS = {
-    "Oil & Gas": ["oil exploration", "gas field", "upstream", "petroleum", "offshore drilling", "lng terminal", "refinery", "oil and gas", "natural gas", "gas pipeline", "oil price", "crude oil", "petrochemical"],
-    "Solid Waste": ["waste-to-energy", "solid waste", "landfill", "incineration", "recycling", "circular economy", "wte", "garbage", "municipal waste"],
-    "Waste Water": ["wastewater", "waste water", "wwtp", "sewage", "water treatment plant", "sewerage", "effluent", "sludge"],
-    "Water Supply/Drainage": ["clean water", "water supply", "reservoir", "potable water", "tap water", "drinking water", "water infrastructure"],
-    "Power": ["power plant", "electricity", "lng power", "gas-to-power", "thermal power", "solar", "wind", "renewable", "hydropower", "pdp8"],
-    "Industrial Parks": ["industrial park", "industrial zone", "fdi", "economic zone", "manufacturing zone"],
-    "Smart City": ["smart city", "urban development", "digital transformation", "city planning", "urban area"],
+    "Oil & Gas": [
+        "oil exploration", "gas field", "upstream", "petroleum", "offshore drilling", 
+        "lng terminal", "refinery", "oil and gas", "natural gas", "gas pipeline", 
+        "oil price", "crude oil", "petrochemical", "oil production", "gas production",
+        "petrovietnam", "pvn", "binh son refinery", "nghi son refinery"
+    ],
+    "Transport": [
+        "railway", "high-speed rail", "metro", "subway", "airport", "seaport", 
+        "port", "harbor", "terminal", "highway", "expressway", "road construction",
+        "bridge", "tunnel", "logistics", "transportation", "train", "rail line",
+        "north-south railway", "long thanh airport", "cat lai port"
+    ],
+    "Solid Waste": [
+        "waste-to-energy", "solid waste", "landfill", "incineration", "recycling", 
+        "circular economy", "wte", "garbage", "municipal waste", "waste treatment",
+        "waste management", "rubbish", "trash disposal"
+    ],
+    "Waste Water": [
+        "wastewater treatment", "wastewater plant", "wwtp", "sewage treatment", 
+        "water treatment plant", "sewerage system", "effluent treatment", "sludge treatment",
+        "drainage system", "sewage plant", "waste water facility"
+    ],
+    "Water Supply/Drainage": [
+        "clean water", "water supply", "reservoir", "potable water", "tap water", 
+        "drinking water", "water infrastructure", "water plant", "water project",
+        "water distribution", "water network"
+    ],
+    "Power": [
+        "power plant", "electricity generation", "lng power", "gas-to-power", 
+        "thermal power", "solar power", "solar farm", "wind power", "wind farm",
+        "renewable energy", "hydropower", "pdp8", "power project",
+        "solar panel", "wind turbine", "biomass power"
+    ],
+    "Construction": [
+        "construction project", "real estate development", "property development", 
+        "housing project", "steel production", "cement production", "building construction",
+        "infrastructure project", "mega project", "billion usd investment"
+    ],
+    "Industrial Parks": [
+        "industrial park", "industrial zone", "fdi investment", "economic zone", 
+        "manufacturing zone", "factory construction", "manufacturing facility",
+        "export processing zone", "hi-tech park", "industrial cluster"
+    ],
+    "Smart City": [
+        "smart city", "urban development project", "digital transformation", 
+        "city planning", "urban area development", "new urban area",
+        "urban infrastructure", "smart infrastructure"
+    ],
 }
 
 AREA_BY_SECTOR = {
     "Oil & Gas": "Energy Develop.",
+    "Transport": "Urban Develop.",
     "Solid Waste": "Environment",
     "Waste Water": "Environment",
     "Water Supply/Drainage": "Environment",
     "Power": "Energy Develop.",
+    "Construction": "Urban Develop.",
     "Industrial Parks": "Urban Develop.",
     "Smart City": "Urban Develop.",
+    "Unclassified": "Other",
 }
 
-SECTOR_PRIORITY = ["Oil & Gas", "Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Smart City", "Industrial Parks"]
+SECTOR_PRIORITY = ["Oil & Gas", "Transport", "Waste Water", "Solid Waste", "Water Supply/Drainage", "Power", "Construction", "Smart City", "Industrial Parks"]
 
 
 def classify_article_by_keywords(title: str, content: str = "") -> tuple:
