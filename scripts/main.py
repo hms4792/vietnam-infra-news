@@ -50,8 +50,13 @@ class Pipeline:
         logger.info("STEP 1: News Collection")
         logger.info("=" * 50)
         
-        async with NewsCollector() as collector:
-            self.articles = await collector.collect_all()
+        # In the news collection step
+    async with NewsCollector() as collector:
+        articles = await collector.collect_all()
+        source_check_results = collector.get_source_check_results()
+
+       # Pass to dashboard updater
+    excel_path, all_articles = self.excel_db.update(processed_articles, source_check_results)
             
             # Save raw collection
             collector.save_to_json(f"news_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
