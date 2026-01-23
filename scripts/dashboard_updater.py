@@ -343,10 +343,24 @@ class ExcelDatabaseUpdater:
         
         return existing, new_count
     
-    def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dict]) -> List[Dict]:
+def merge_new_sources(self, existing_sources: List[Dict], new_articles: List[Dict], source_check_results: Dict = None) -> List[Dict]:
+        """Merge new sources and update check status"""
         existing_domains = set(s.get("Domain", "").lower() for s in existing_sources if s.get("Domain"))
         logger.info(f"Existing sources: {len(existing_sources)}, domains: {len(existing_domains)}")
         
+        # Update existing sources with check results
+        if source_check_results:
+            for source in existing_sources:
+                domain = source.get("Domain", "").lower()
+                if domain in source_check_results:
+                    result = source_check_results[domain]
+                    source["Last Checked"] = result.get("last_checked", "")
+                    source["Check Result"] = "OK" if result.get("success") else "FAIL"
+                    source["Articles Found"] = result.get("articles_found", 0)
+                    if result.get("error"):
+                        source["Note"] = f"Error: {result['error'][:30]}"
+        
+        # Add new sources from articles
         new_source_count = 0
         for article in new_articles:
             source = article.get("source", article.get("Source", ""))
@@ -362,13 +376,17 @@ class ExcelDatabaseUpdater:
                 domain = source
             
             if domain and domain.lower() not in existing_domains and len(domain) > 3:
-                existing_sources.append({
+                new_source = {
                     "Domain": domain,
                     "URL": url[:100] if url else "",
                     "Type": "News",
                     "Status": "Accessible",
                     "Note": f"NEW {datetime.now().year}",
-                })
+                    "Last Checked": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                    "Check Result": "OK",
+                    "Articles Found": 1,
+                }
+                existing_sources.append(new_source)
                 existing_domains.add(domain.lower())
                 new_source_count += 1
         
@@ -498,24 +516,46 @@ class ExcelDatabaseUpdater:
         
         for i, width in enumerate(col_widths, 1):
             ws1.column_dimensions[get_column_letter(i)].width = width
-        
+        # Source Sheet - with check status columns
         ws2 = wb.create_sheet("Source")
-        source_cols = ["Domain", "URL", "Type", "Status", "Note"]
-        source_widths = [30, 50, 15, 12, 15]
+        source_cols = ["Domain", "URL", "Type", "Status", "Last Checked", "Check Result", "Articles Found", "Note"]
+        source_widths = [30, 50, 15, 12, 18, 12, 14, 25]
         
+        # Header row
         for col, header in enumerate(source_cols, 1):
             cell = ws2.cell(row=1, column=col, value=header)
             cell.font = header_font
             cell.fill = header_fill
             cell.border = thin_border
+            cell.alignment = Alignment(horizontal="center")
+        
+        # Conditional fills
+        ok_fill = PatternFill(start_color="90EE90", fill_type="solid")  # Green for OK
+        fail_fill = PatternFill(start_color="FFB6C1", fill_type="solid")  # Light red for FAIL
+        new_fill = PatternFill(start_color="87CEEB", fill_type="solid")  # Light blue for NEW
         
         for row_idx, source in enumerate(sources, 2):
             is_new = "NEW" in str(source.get("Note", ""))
+            check_result = str(source.get("Check Result", ""))
+            
             for col_idx, col_name in enumerate(source_cols, 1):
-                cell = ws2.cell(row=row_idx, column=col_idx, value=str(source.get(col_name, "")))
+                value = source.get(col_name, "")
+                if col_name == "Articles Found" and value:
+                    try:
+                        value = int(value)
+                    except:
+                        value = 0
+                cell = ws2.cell(row=row_idx, column=col_idx, value=value if value else "")
                 cell.border = thin_border
+                
+                # Apply conditional formatting
                 if is_new:
-                    cell.fill = green_fill
+                    cell.fill = new_fill
+                elif col_name == "Check Result":
+                    if check_result == "OK":
+                        cell.fill = ok_fill
+                    elif check_result == "FAIL":
+                        cell.fill = fail_fill
         
         for i, width in enumerate(source_widths, 1):
             ws2.column_dimensions[get_column_letter(i)].width = width
@@ -577,7 +617,8 @@ class ExcelDatabaseUpdater:
         
         return str(self.output_path)
     
-    def update(self, new_articles: List[Dict]) -> Tuple[str, List[Dict]]:
+def update(self, new_articles: List[Dict], source_check_results: Dict = None) -> Tuple[str, List[Dict]]:
+        """Update database with new articles and source check results"""
         existing_data = self.load_existing_excel()
         
         articles = existing_data["articles"]
@@ -590,9 +631,11 @@ class ExcelDatabaseUpdater:
             logger.error("WARNING: No existing articles loaded! Check database file path.")
         
         articles, new_count = self.merge_new_articles(articles, new_articles)
-        sources = self.merge_new_sources(sources, new_articles)
+        sources = self.merge_new_sources(sources, new_articles, source_check_results)
         
         excel_path = self.create_excel(articles, sources, keywords, new_count)
+        
+        # ... rest of the method stays the same
         
         dashboard_articles = []
         for article in articles:
