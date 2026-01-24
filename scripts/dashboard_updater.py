@@ -497,25 +497,91 @@ class ExcelUpdater:
 
 
 def main():
-    """Test dashboard update"""
-    # Load test data
-    test_articles = [
-        {
-            "title": "Test Article",
-            "title_en": "Test Article EN",
-            "summary_en": "This is a test summary",
-            "sector": "Waste Water",
-            "area": "Environment",
-            "province": "Ho Chi Minh City",
-            "source": "Test Source",
-            "url": "https://example.com",
-            "date": datetime.now().strftime("%Y-%m-%d")
-        }
-    ]
+    """Standalone dashboard update - loads from Excel database"""
+    import sys
+    sys.path.insert(0, str(Path(__file__).parent.parent))
     
-    dashboard = DashboardUpdater()
-    result = dashboard.update(test_articles)
-    print(f"Dashboard created: {result}")
+    # Try to load from Excel database
+    try:
+        import openpyxl
+        
+        # Find Excel file
+        possible_paths = [
+            DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx",
+            DATA_DIR / "Vietnam_Infra_News_Database_Final.xlsx",
+            Path("data/database/Vietnam_Infra_News_Database_Final.xlsx"),
+        ]
+        
+        excel_path = None
+        for path in possible_paths:
+            if path.exists():
+                excel_path = path
+                break
+        
+        if not excel_path:
+            print("Excel database not found!")
+            return
+        
+        print(f"Loading from: {excel_path}")
+        wb = openpyxl.load_workbook(excel_path, read_only=True, data_only=True)
+        ws = wb.active
+        
+        articles = []
+        headers = []
+        
+        for row_idx, row in enumerate(ws.iter_rows(values_only=True), 1):
+            if row_idx == 1:
+                headers = [str(cell).strip() if cell else f"col_{i}" for i, cell in enumerate(row)]
+                continue
+            
+            if not any(row):
+                continue
+            
+            raw = {}
+            for i, value in enumerate(row):
+                if i < len(headers):
+                    raw[headers[i]] = value
+            
+            date_val = raw.get("Date", "")
+            if date_val and hasattr(date_val, 'strftime'):
+                date_str = date_val.strftime("%Y-%m-%d")
+            else:
+                date_str = str(date_val)[:10] if date_val else ""
+            
+            article = {
+                "title": raw.get("News Tittle", raw.get("Title", "")),
+                "title_en": raw.get("Summary (EN)", ""),
+                "title_ko": raw.get("Summary (KO)", ""),
+                "summary_en": raw.get("Summary (EN)", ""),
+                "summary_ko": raw.get("Summary (KO)", ""),
+                "sector": raw.get("Business Sector", "Waste Water"),
+                "area": raw.get("Area", "Environment"),
+                "province": raw.get("Province", "Vietnam"),
+                "source": raw.get("Source Name", ""),
+                "url": raw.get("Source URL", ""),
+                "date": date_str
+            }
+            
+            if article.get("title") or article.get("url"):
+                articles.append(article)
+        
+        wb.close()
+        print(f"Loaded {len(articles)} articles")
+        
+        if articles:
+            dashboard = DashboardUpdater()
+            result = dashboard.update(articles)
+            print(f"Dashboard created: {result}")
+            
+            excel = ExcelUpdater()
+            excel.update(articles)
+        else:
+            print("No articles found in Excel!")
+            
+    except Exception as e:
+        print(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
 
 
 if __name__ == "__main__":
