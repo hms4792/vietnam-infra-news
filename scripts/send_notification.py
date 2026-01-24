@@ -272,7 +272,7 @@ class EmailNotifier:
         # Footer
         html += """
     <div class="footer">
-        <a href="https://github.com/yourusername/vietnam-infra-news" class="dashboard-button">
+        <a href="https://hms4792.github.io/vietnam-infra-news/" class="dashboard-button">
             📊 View Full Dashboard
         </a>
         <p>Vietnam Infrastructure News Pipeline</p>
