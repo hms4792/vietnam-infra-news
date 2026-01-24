@@ -1,253 +1,324 @@
+#!/usr/bin/env python3
 """
 Vietnam Infrastructure News Pipeline - Main Entry Point
-Orchestrates the entire pipeline: collect -> summarize -> update -> notify
+Collects news, processes with AI, updates dashboard, sends notifications
 """
 import argparse
 import asyncio
 import json
 import logging
+import os
 import sys
 from datetime import datetime
 from pathlib import Path
 
-# Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from config.settings import DATA_DIR, OUTPUT_DIR, LOG_FILE
+from config.settings import DATA_DIR, OUTPUT_DIR, DATABASE_PATH
 from scripts.news_collector import NewsCollector
-from scripts.ai_summarizer import AISummarizer, load_articles, save_articles
-from scripts.dashboard_updater import OutputGenerator, load_articles as load_for_dashboard
-from scripts.notifier import NotificationManager, load_latest_articles
+from scripts.ai_summarizer import AISummarizer
+from scripts.dashboard_updater import DashboardUpdater, ExcelUpdater
+from scripts.notifier import NotificationManager
 
-# Setup logging
-LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler(LOG_FILE, encoding='utf-8'),
-        logging.StreamHandler()
+        logging.StreamHandler(),
+        logging.FileHandler('logs/pipeline.log', encoding='utf-8')
     ]
 )
 logger = logging.getLogger(__name__)
 
 
-class Pipeline:
-    """Main pipeline orchestrator"""
+def load_existing_articles_from_db() -> list:
+    """Load ALL existing articles from SQLite database"""
+    import sqlite3
     
-    def __init__(self):
-        self.collector = None
-        self.summarizer = AISummarizer()
-        self.output_generator = OutputGenerator()
-        self.notification_manager = NotificationManager()
-        
-        self.articles = []
-        self.outputs = {}
+    if not DATABASE_PATH.exists():
+        logger.warning(f"Database not found: {DATABASE_PATH}")
+        return []
     
-    async def run_collection(self) -> int:
-        """Step 1: Collect news from sources"""
-        logger.info("=" * 50)
-        logger.info("STEP 1: News Collection")
-        logger.info("=" * 50)
+    try:
+        conn = sqlite3.connect(DATABASE_PATH)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
         
-        # In the news collection step
-        async with NewsCollector() as collector:
-            articles = await collector.collect_all()
-            source_check_results = collector.get_source_check_results()
-            
-            # Save raw collection
-            collector.save_to_json(f"news_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
-            
-            self.articles = articles
+        cursor.execute("""
+            SELECT 
+                id, title, title_en, title_ko,
+                summary_vi, summary_en, summary_ko,
+                sector, area, province,
+                source_name, source_url,
+                article_date, collection_date
+            FROM news_articles
+            ORDER BY article_date DESC
+        """)
         
-        logger.info(f"Collected {len(self.articles)} articles")
-        return len(self.articles)
+        articles = []
+        for row in cursor.fetchall():
+            article = {
+                "id": row["id"],
+                "title": row["title"] or "",
+                "title_en": row["title_en"] or row["title"] or "",
+                "title_ko": row["title_ko"] or "",
+                "summary_vi": row["summary_vi"] or "",
+                "summary_en": row["summary_en"] or "",
+                "summary_ko": row["summary_ko"] or "",
+                "sector": row["sector"] or "Waste Water",
+                "area": row["area"] or "Environment",
+                "province": row["province"] or "Vietnam",
+                "source": row["source_name"] or "",
+                "url": row["source_url"] or "",
+                "date": row["article_date"] or row["collection_date"] or "",
+                "published": row["article_date"] or row["collection_date"] or ""
+            }
+            articles.append(article)
+        
+        conn.close()
+        logger.info(f"Loaded {len(articles)} articles from database")
+        return articles
+        
+    except Exception as e:
+        logger.error(f"Error loading from database: {e}")
+        return []
+
+
+def load_existing_articles_from_json() -> list:
+    """Load existing articles from JSON files as fallback"""
+    all_articles = []
     
-    async def run_summarization(self) -> int:
-        """Step 2: AI summarization"""
-        logger.info("=" * 50)
-        logger.info("STEP 2: AI Summarization")
-        logger.info("=" * 50)
-        
-        if not self.articles:
-            # Load from file
-            data_files = sorted(DATA_DIR.glob("news_*.json"), reverse=True)
-            if data_files:
-                self.articles = load_articles(str(data_files[0]))
-        
-        if not self.articles:
-            logger.warning("No articles to summarize")
-            return 0
-        
-        # Process with AI
-        self.articles = await self.summarizer.summarize_batch(self.articles)
-        
-        # Save processed
-        save_articles(
-            self.articles, 
-            str(DATA_DIR / f"processed_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json")
-        )
-        
-        processed_count = sum(1 for a in self.articles if a.get("ai_processed"))
-        logger.info(f"AI processed {processed_count}/{len(self.articles)} articles")
-        return processed_count
+    # Check for processed files
+    json_files = sorted(DATA_DIR.glob("processed_*.json"), reverse=True)
+    if not json_files:
+        json_files = sorted(DATA_DIR.glob("news_*.json"), reverse=True)
     
-    def run_output_generation(self) -> dict:
-        """Step 3: Generate outputs (HTML, Excel, JSON)"""
-        logger.info("=" * 50)
-        logger.info("STEP 3: Output Generation")
-        logger.info("=" * 50)
-        
-        if not self.articles:
-            self.articles = load_for_dashboard()
-        
-        if not self.articles:
-            logger.warning("No articles for output generation")
-            return {}
-        
-        self.outputs = self.output_generator.generate_all(self.articles)
-        
-        for output_type, path in self.outputs.items():
-            if path:
-                logger.info(f"Generated {output_type}: {path}")
-        
-        return self.outputs
-    
-    async def run_notifications(self, dashboard_url: str = "") -> dict:
-        """Step 4: Send notifications"""
-        logger.info("=" * 50)
-        logger.info("STEP 4: Notifications")
-        logger.info("=" * 50)
-        
-        if not self.articles:
-            self.articles = load_latest_articles()
-        
-        if not self.articles:
-            logger.warning("No articles for notifications")
-            return {}
-        
-        results = await self.notification_manager.send_all(
-            self.articles, 
-            dashboard_url, 
-            "ko"
-        )
-        
-        for channel, success in results.items():
-            status = "sent" if success else "failed/not configured"
-            logger.info(f"{channel}: {status}")
-        
-        return results
-    
-    async def run_full_pipeline(self, dashboard_url: str = "") -> dict:
-        """Run complete pipeline"""
-        start_time = datetime.now()
-        logger.info("=" * 60)
-        logger.info("VIETNAM INFRASTRUCTURE NEWS PIPELINE - STARTING")
-        logger.info(f"Start Time: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
-        logger.info("=" * 60)
-        
-        results = {
-            "start_time": start_time.isoformat(),
-            "collection": {"count": 0, "status": "pending"},
-            "summarization": {"count": 0, "status": "pending"},
-            "outputs": {"files": [], "status": "pending"},
-            "notifications": {"results": {}, "status": "pending"},
-        }
-        
+    for json_file in json_files[:5]:  # Load from recent files
         try:
-            # Step 1: Collection
-            count = await self.run_collection()
-            results["collection"] = {"count": count, "status": "success"}
-            
-            # Step 2: Summarization
-            processed = await self.run_summarization()
-            results["summarization"] = {"count": processed, "status": "success"}
-            
-            # Step 3: Output Generation
-            outputs = self.run_output_generation()
-            results["outputs"] = {
-                "files": list(outputs.keys()),
-                "paths": outputs,
-                "status": "success"
-            }
-            
-            # Step 4: Notifications
-            notif_results = await self.run_notifications(dashboard_url)
-            results["notifications"] = {
-                "results": notif_results,
-                "status": "success"
-            }
-            
+            with open(json_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                articles = data.get("articles", data if isinstance(data, list) else [])
+                all_articles.extend(articles)
         except Exception as e:
-            logger.error(f"Pipeline error: {e}")
-            results["error"] = str(e)
-        
-        # Summary
-        end_time = datetime.now()
-        duration = (end_time - start_time).total_seconds()
-        
-        results["end_time"] = end_time.isoformat()
-        results["duration_seconds"] = duration
-        
-        logger.info("=" * 60)
-        logger.info("PIPELINE COMPLETE")
-        logger.info(f"Duration: {duration:.1f} seconds")
-        logger.info(f"Articles Collected: {results['collection']['count']}")
-        logger.info(f"Articles Processed: {results['summarization']['count']}")
-        logger.info(f"Outputs Generated: {len(results['outputs'].get('files', []))}")
-        logger.info("=" * 60)
-        
-        # Save run results
-        results_file = DATA_DIR / f"run_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-        with open(results_file, 'w', encoding='utf-8') as f:
-            json.dump(results, f, ensure_ascii=False, indent=2)
-        
-        return results
-
-
-async def main():
-    """Main entry point with CLI arguments"""
-    parser = argparse.ArgumentParser(
-        description="Vietnam Infrastructure News Pipeline",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  python main.py --full                    # Run complete pipeline
-  python main.py --collect                 # Only collect news
-  python main.py --summarize               # Only run AI summarization
-  python main.py --output                  # Only generate outputs
-  python main.py --notify                  # Only send notifications
-  python main.py --full --dashboard-url https://example.com/dashboard
-        """
-    )
+            logger.error(f"Error loading {json_file}: {e}")
     
+    # Deduplicate by URL
+    seen_urls = set()
+    unique_articles = []
+    for article in all_articles:
+        url = article.get("url", article.get("source_url", ""))
+        if url and url not in seen_urls:
+            seen_urls.add(url)
+            unique_articles.append(article)
+    
+    logger.info(f"Loaded {len(unique_articles)} unique articles from JSON files")
+    return unique_articles
+
+
+def save_articles_to_db(articles: list):
+    """Save new articles to SQLite database"""
+    import sqlite3
+    
+    DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    
+    conn = sqlite3.connect(DATABASE_PATH)
+    cursor = conn.cursor()
+    
+    # Create table if not exists
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS news_articles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT,
+            title_en TEXT,
+            title_ko TEXT,
+            summary_vi TEXT,
+            summary_en TEXT,
+            summary_ko TEXT,
+            sector TEXT,
+            area TEXT,
+            province TEXT,
+            source_name TEXT,
+            source_url TEXT UNIQUE,
+            article_date TEXT,
+            collection_date TEXT
+        )
+    """)
+    
+    inserted = 0
+    for article in articles:
+        try:
+            cursor.execute("""
+                INSERT OR IGNORE INTO news_articles 
+                (title, title_en, title_ko, summary_vi, summary_en, summary_ko,
+                 sector, area, province, source_name, source_url, article_date, collection_date)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                article.get("title", ""),
+                article.get("title_en", article.get("summary_en", "")),
+                article.get("title_ko", article.get("summary_ko", "")),
+                article.get("summary_vi", article.get("title", "")),
+                article.get("summary_en", ""),
+                article.get("summary_ko", ""),
+                article.get("sector", "Waste Water"),
+                article.get("area", "Environment"),
+                article.get("province", "Vietnam"),
+                article.get("source", article.get("source_name", "")),
+                article.get("url", article.get("source_url", "")),
+                article.get("date", article.get("published", "")),
+                datetime.now().strftime("%Y-%m-%d")
+            ))
+            if cursor.rowcount > 0:
+                inserted += 1
+        except Exception as e:
+            logger.debug(f"Insert error (likely duplicate): {e}")
+    
+    conn.commit()
+    conn.close()
+    logger.info(f"Saved {inserted} new articles to database")
+    return inserted
+
+
+async def run_full_pipeline():
+    """Run the complete news pipeline"""
+    logger.info("="*60)
+    logger.info("Starting Vietnam Infrastructure News Pipeline")
+    logger.info("="*60)
+    
+    # Ensure directories exist
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    Path("logs").mkdir(exist_ok=True)
+    
+    # Step 1: Collect news
+    logger.info("Step 1: Collecting news...")
+    collector = NewsCollector()
+    new_articles = await collector.collect_all()
+    logger.info(f"Collected {len(new_articles)} new articles")
+    
+    # Step 2: AI Summarization (if articles collected)
+    if new_articles:
+        logger.info("Step 2: AI Summarization...")
+        try:
+            summarizer = AISummarizer()
+            new_articles = await summarizer.process_articles(new_articles)
+            logger.info(f"Summarized {len(new_articles)} articles")
+        except Exception as e:
+            logger.error(f"Summarization error: {e}")
+    
+    # Step 3: Save new articles to database
+    if new_articles:
+        logger.info("Step 3: Saving to database...")
+        save_articles_to_db(new_articles)
+    
+    # Step 4: Load ALL articles from database for dashboard
+    logger.info("Step 4: Loading all articles for dashboard...")
+    all_articles = load_existing_articles_from_db()
+    
+    if not all_articles:
+        # Fallback to JSON files
+        all_articles = load_existing_articles_from_json()
+    
+    logger.info(f"Total articles for dashboard: {len(all_articles)}")
+    
+    # Step 5: Update Dashboard with ALL articles
+    logger.info("Step 5: Updating dashboard...")
+    try:
+        dashboard = DashboardUpdater()
+        dashboard_path = dashboard.update(all_articles)
+        logger.info(f"Dashboard updated: {dashboard_path}")
+    except Exception as e:
+        logger.error(f"Dashboard update error: {e}")
+    
+    # Step 6: Update Excel
+    logger.info("Step 6: Updating Excel...")
+    try:
+        excel = ExcelUpdater()
+        excel_path = excel.update(all_articles)
+        logger.info(f"Excel updated: {excel_path}")
+    except Exception as e:
+        logger.error(f"Excel update error: {e}")
+    
+    # Step 7: Send notifications (use all articles for context, new for email)
+    logger.info("Step 7: Sending notifications...")
+    try:
+        notifier = NotificationManager()
+        # Pass all articles so email shows correct totals
+        results = await notifier.send_all(all_articles)
+        logger.info(f"Notification results: {results}")
+    except Exception as e:
+        logger.error(f"Notification error: {e}")
+    
+    # Summary
+    logger.info("="*60)
+    logger.info("Pipeline Complete!")
+    logger.info(f"  New articles collected: {len(new_articles)}")
+    logger.info(f"  Total articles in database: {len(all_articles)}")
+    logger.info("="*60)
+    
+    return {
+        "new_articles": len(new_articles),
+        "total_articles": len(all_articles)
+    }
+
+
+async def run_notify_only():
+    """Send notifications without collecting"""
+    logger.info("Running notification only...")
+    
+    all_articles = load_existing_articles_from_db()
+    if not all_articles:
+        all_articles = load_existing_articles_from_json()
+    
+    if not all_articles:
+        logger.error("No articles found to notify about")
+        return
+    
+    notifier = NotificationManager()
+    results = await notifier.send_all(all_articles)
+    logger.info(f"Notification results: {results}")
+
+
+async def run_dashboard_only():
+    """Update dashboard without collecting"""
+    logger.info("Updating dashboard only...")
+    
+    all_articles = load_existing_articles_from_db()
+    if not all_articles:
+        all_articles = load_existing_articles_from_json()
+    
+    if not all_articles:
+        logger.warning("No articles found for dashboard")
+        return
+    
+    logger.info(f"Updating dashboard with {len(all_articles)} articles")
+    
+    dashboard = DashboardUpdater()
+    dashboard_path = dashboard.update(all_articles)
+    logger.info(f"Dashboard updated: {dashboard_path}")
+    
+    excel = ExcelUpdater()
+    excel_path = excel.update(all_articles)
+    logger.info(f"Excel updated: {excel_path}")
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Vietnam Infrastructure News Pipeline')
     parser.add_argument('--full', action='store_true', help='Run full pipeline')
-    parser.add_argument('--collect', action='store_true', help='Run news collection only')
-    parser.add_argument('--summarize', action='store_true', help='Run AI summarization only')
-    parser.add_argument('--output', action='store_true', help='Generate outputs only')
+    parser.add_argument('--collect', action='store_true', help='Collect news only')
     parser.add_argument('--notify', action='store_true', help='Send notifications only')
-    parser.add_argument('--dashboard-url', type=str, default='', help='Dashboard URL for notifications')
+    parser.add_argument('--dashboard', action='store_true', help='Update dashboard only')
     
     args = parser.parse_args()
     
-    pipeline = Pipeline()
-    
-    if args.full or not any([args.collect, args.summarize, args.output, args.notify]):
-        # Run full pipeline by default
-        await pipeline.run_full_pipeline(args.dashboard_url)
-    else:
-        if args.collect:
-            await pipeline.run_collection()
-        
-        if args.summarize:
-            await pipeline.run_summarization()
-        
-        if args.output:
-            pipeline.run_output_generation()
-        
-        if args.notify:
-            await pipeline.run_notifications(args.dashboard_url)
+    if args.full or not any([args.collect, args.notify, args.dashboard]):
+        asyncio.run(run_full_pipeline())
+    elif args.notify:
+        asyncio.run(run_notify_only())
+    elif args.dashboard:
+        asyncio.run(run_dashboard_only())
+    elif args.collect:
+        asyncio.run(run_full_pipeline())
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
