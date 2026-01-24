@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Vietnam Infrastructure News Pipeline - Main Entry Point
-Collects news, processes with AI, updates dashboard, sends notifications
+Loads existing data from Excel database, collects new news, updates dashboard
 """
 import argparse
 import asyncio
@@ -14,11 +14,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from config.settings import DATA_DIR, OUTPUT_DIR, DATABASE_PATH
-from scripts.news_collector import NewsCollector
-from scripts.ai_summarizer import AISummarizer
-from scripts.dashboard_updater import DashboardUpdater, ExcelUpdater
-from scripts.notifier import NotificationManager
+from config.settings import DATA_DIR, OUTPUT_DIR
 
 logging.basicConfig(
     level=logging.INFO,
@@ -30,70 +26,116 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Excel database path - adjust this to match your actual file
+EXCEL_DB_FILENAME = "Vietnam_Infra_News_Database_Final.xlsx"
 
-def load_existing_articles_from_db() -> list:
-    """Load ALL existing articles from SQLite database"""
-    import sqlite3
+
+def find_excel_database() -> Path:
+    """Find the Excel database file"""
+    possible_paths = [
+        DATA_DIR / "database" / EXCEL_DB_FILENAME,
+        DATA_DIR / EXCEL_DB_FILENAME,
+        Path("data/database") / EXCEL_DB_FILENAME,
+        Path("data") / EXCEL_DB_FILENAME,
+    ]
     
-    if not DATABASE_PATH.exists():
-        logger.warning(f"Database not found: {DATABASE_PATH}")
+    for path in possible_paths:
+        if path.exists():
+            logger.info(f"Found Excel database: {path}")
+            return path
+    
+    logger.warning(f"Excel database not found. Searched: {possible_paths}")
+    return None
+
+
+def load_existing_articles_from_excel() -> list:
+    """Load ALL existing articles from Excel database"""
+    try:
+        import openpyxl
+    except ImportError:
+        logger.error("openpyxl not installed - run: pip install openpyxl")
         return []
     
+    excel_path = find_excel_database()
+    if not excel_path:
+        return []
+    
+    logger.info(f"Loading articles from Excel: {excel_path}")
+    
     try:
-        conn = sqlite3.connect(DATABASE_PATH)
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
-        
-        cursor.execute("""
-            SELECT 
-                id, title, title_en, title_ko,
-                summary_vi, summary_en, summary_ko,
-                sector, area, province,
-                source_name, source_url,
-                article_date, collection_date
-            FROM news_articles
-            ORDER BY article_date DESC
-        """)
+        wb = openpyxl.load_workbook(excel_path, read_only=True, data_only=True)
+        ws = wb.active
         
         articles = []
-        for row in cursor.fetchall():
-            article = {
-                "id": row["id"],
-                "title": row["title"] or "",
-                "title_en": row["title_en"] or row["title"] or "",
-                "title_ko": row["title_ko"] or "",
-                "summary_vi": row["summary_vi"] or "",
-                "summary_en": row["summary_en"] or "",
-                "summary_ko": row["summary_ko"] or "",
-                "sector": row["sector"] or "Waste Water",
-                "area": row["area"] or "Environment",
-                "province": row["province"] or "Vietnam",
-                "source": row["source_name"] or "",
-                "url": row["source_url"] or "",
-                "date": row["article_date"] or row["collection_date"] or "",
-                "published": row["article_date"] or row["collection_date"] or ""
-            }
-            articles.append(article)
+        headers = []
         
-        conn.close()
-        logger.info(f"Loaded {len(articles)} articles from database")
+        for row_idx, row in enumerate(ws.iter_rows(values_only=True), 1):
+            if row_idx == 1:
+                # Header row
+                headers = [str(cell).strip() if cell else f"col_{i}" for i, cell in enumerate(row)]
+                logger.info(f"Excel columns found: {headers}")
+                continue
+            
+            if not any(row):
+                continue
+            
+            # Create raw article dict
+            raw = {}
+            for i, value in enumerate(row):
+                if i < len(headers):
+                    raw[headers[i]] = value
+            
+            # Map to standard format - handle various possible column names
+            date_val = raw.get("Date", raw.get("date", raw.get("Published", "")))
+            if date_val:
+                if hasattr(date_val, 'strftime'):
+                    date_str = date_val.strftime("%Y-%m-%d")
+                else:
+                    date_str = str(date_val)[:10]
+            else:
+                date_str = ""
+            
+            article = {
+                "id": row_idx,
+                "title": raw.get("News Tittle", raw.get("Title", raw.get("News Title", raw.get("title", "")))),
+                "title_en": raw.get("Title (EN)", raw.get("title_en", raw.get("Summary (EN)", ""))),
+                "title_ko": raw.get("Title (KO)", raw.get("title_ko", raw.get("Summary (KO)", ""))),
+                "summary_vi": raw.get("Short summary", raw.get("Summary", raw.get("summary", ""))),
+                "summary_en": raw.get("Summary (EN)", raw.get("summary_en", "")),
+                "summary_ko": raw.get("Summary (KO)", raw.get("summary_ko", "")),
+                "sector": raw.get("Business Sector", raw.get("Sector", raw.get("sector", "Waste Water"))),
+                "area": raw.get("Area", raw.get("area", "Environment")),
+                "province": raw.get("Province", raw.get("province", "Vietnam")),
+                "source": raw.get("Source Name", raw.get("Source", raw.get("source", ""))),
+                "url": raw.get("Source URL", raw.get("URL", raw.get("url", raw.get("Link", "")))),
+                "date": date_str,
+                "published": date_str
+            }
+            
+            # Only add if has meaningful content
+            if article.get("title") or article.get("url"):
+                articles.append(article)
+        
+        wb.close()
+        logger.info(f"Successfully loaded {len(articles)} articles from Excel")
         return articles
         
     except Exception as e:
-        logger.error(f"Error loading from database: {e}")
+        logger.error(f"Error loading Excel: {e}")
+        import traceback
+        traceback.print_exc()
         return []
 
 
-def load_existing_articles_from_json() -> list:
-    """Load existing articles from JSON files as fallback"""
+def load_articles_from_json() -> list:
+    """Load articles from JSON files as fallback"""
     all_articles = []
     
-    # Check for processed files
     json_files = sorted(DATA_DIR.glob("processed_*.json"), reverse=True)
     if not json_files:
         json_files = sorted(DATA_DIR.glob("news_*.json"), reverse=True)
     
-    for json_file in json_files[:5]:  # Load from recent files
+    for json_file in json_files[:5]:
         try:
             with open(json_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
@@ -102,203 +144,196 @@ def load_existing_articles_from_json() -> list:
         except Exception as e:
             logger.error(f"Error loading {json_file}: {e}")
     
-    # Deduplicate by URL
-    seen_urls = set()
-    unique_articles = []
-    for article in all_articles:
-        url = article.get("url", article.get("source_url", ""))
-        if url and url not in seen_urls:
-            seen_urls.add(url)
-            unique_articles.append(article)
+    # Deduplicate
+    seen = set()
+    unique = []
+    for a in all_articles:
+        url = a.get("url", a.get("source_url", ""))
+        if url and url not in seen:
+            seen.add(url)
+            unique.append(a)
     
-    logger.info(f"Loaded {len(unique_articles)} unique articles from JSON files")
-    return unique_articles
+    return unique
 
 
-def save_articles_to_db(articles: list):
-    """Save new articles to SQLite database"""
-    import sqlite3
+def save_new_articles_to_excel(new_articles: list, existing_urls: set):
+    """Append new articles to Excel database"""
+    try:
+        import openpyxl
+    except ImportError:
+        return
     
-    DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    excel_path = find_excel_database()
+    if not excel_path:
+        return
     
-    conn = sqlite3.connect(DATABASE_PATH)
-    cursor = conn.cursor()
+    # Filter truly new articles
+    truly_new = [a for a in new_articles if a.get("url", "") not in existing_urls]
     
-    # Create table if not exists
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS news_articles (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT,
-            title_en TEXT,
-            title_ko TEXT,
-            summary_vi TEXT,
-            summary_en TEXT,
-            summary_ko TEXT,
-            sector TEXT,
-            area TEXT,
-            province TEXT,
-            source_name TEXT,
-            source_url TEXT UNIQUE,
-            article_date TEXT,
-            collection_date TEXT
-        )
-    """)
+    if not truly_new:
+        logger.info("No new articles to add to Excel")
+        return
     
-    inserted = 0
-    for article in articles:
-        try:
-            cursor.execute("""
-                INSERT OR IGNORE INTO news_articles 
-                (title, title_en, title_ko, summary_vi, summary_en, summary_ko,
-                 sector, area, province, source_name, source_url, article_date, collection_date)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                article.get("title", ""),
-                article.get("title_en", article.get("summary_en", "")),
-                article.get("title_ko", article.get("summary_ko", "")),
-                article.get("summary_vi", article.get("title", "")),
-                article.get("summary_en", ""),
-                article.get("summary_ko", ""),
-                article.get("sector", "Waste Water"),
-                article.get("area", "Environment"),
-                article.get("province", "Vietnam"),
-                article.get("source", article.get("source_name", "")),
-                article.get("url", article.get("source_url", "")),
-                article.get("date", article.get("published", "")),
-                datetime.now().strftime("%Y-%m-%d")
-            ))
-            if cursor.rowcount > 0:
-                inserted += 1
-        except Exception as e:
-            logger.debug(f"Insert error (likely duplicate): {e}")
-    
-    conn.commit()
-    conn.close()
-    logger.info(f"Saved {inserted} new articles to database")
-    return inserted
+    try:
+        wb = openpyxl.load_workbook(excel_path)
+        ws = wb.active
+        start_row = ws.max_row + 1
+        
+        for i, article in enumerate(truly_new):
+            row = start_row + i
+            ws.cell(row=row, column=1, value=row - 1)
+            ws.cell(row=row, column=2, value=article.get("date", ""))
+            ws.cell(row=row, column=3, value=article.get("area", "Environment"))
+            ws.cell(row=row, column=4, value=article.get("sector", "Waste Water"))
+            ws.cell(row=row, column=5, value=article.get("province", "Vietnam"))
+            ws.cell(row=row, column=6, value=article.get("title", ""))
+            ws.cell(row=row, column=7, value=article.get("summary_en", ""))
+            ws.cell(row=row, column=8, value=article.get("summary_ko", ""))
+            ws.cell(row=row, column=9, value=article.get("source", ""))
+            ws.cell(row=row, column=10, value=article.get("url", ""))
+        
+        wb.save(excel_path)
+        logger.info(f"Added {len(truly_new)} new articles to Excel")
+        
+    except Exception as e:
+        logger.error(f"Error saving to Excel: {e}")
 
 
 async def run_full_pipeline():
     """Run the complete news pipeline"""
-    logger.info("="*60)
+    logger.info("=" * 60)
     logger.info("Starting Vietnam Infrastructure News Pipeline")
-    logger.info("="*60)
+    logger.info("=" * 60)
     
-    # Ensure directories exist
+    # Ensure directories
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     Path("logs").mkdir(exist_ok=True)
     
-    # Step 1: Collect news
-    logger.info("Step 1: Collecting news...")
-    collector = NewsCollector()
-    new_articles = await collector.collect_all()
-    logger.info(f"Collected {len(new_articles)} new articles")
+    # Step 1: Load existing articles from Excel database
+    logger.info("Step 1: Loading existing articles from Excel database...")
+    existing_articles = load_existing_articles_from_excel()
     
-    # Step 2: AI Summarization (if articles collected)
+    if not existing_articles:
+        logger.warning("No articles in Excel, trying JSON files...")
+        existing_articles = load_articles_from_json()
+    
+    existing_urls = set(a.get("url", "") for a in existing_articles if a.get("url"))
+    logger.info(f"Loaded {len(existing_articles)} existing articles")
+    
+    # Step 2: Collect new news
+    logger.info("Step 2: Collecting new news...")
+    new_articles = []
+    try:
+        from scripts.news_collector import NewsCollector
+        collector = NewsCollector()
+        new_articles = await collector.collect_all()
+        logger.info(f"Collected {len(new_articles)} new articles")
+    except Exception as e:
+        logger.error(f"News collection error: {e}")
+    
+    # Step 3: AI Summarization
     if new_articles:
-        logger.info("Step 2: AI Summarization...")
+        logger.info("Step 3: AI Summarization...")
         try:
+            from scripts.ai_summarizer import AISummarizer
             summarizer = AISummarizer()
             new_articles = await summarizer.process_articles(new_articles)
-            logger.info(f"Summarized {len(new_articles)} articles")
         except Exception as e:
             logger.error(f"Summarization error: {e}")
     
-    # Step 3: Save new articles to database
+    # Step 4: Save new articles to Excel
     if new_articles:
-        logger.info("Step 3: Saving to database...")
-        save_articles_to_db(new_articles)
+        logger.info("Step 4: Saving new articles to Excel...")
+        save_new_articles_to_excel(new_articles, existing_urls)
     
-    # Step 4: Load ALL articles from database for dashboard
-    logger.info("Step 4: Loading all articles for dashboard...")
-    all_articles = load_existing_articles_from_db()
-    
-    if not all_articles:
-        # Fallback to JSON files
-        all_articles = load_existing_articles_from_json()
+    # Step 5: Combine all articles
+    all_articles = existing_articles.copy()
+    for article in new_articles:
+        if article.get("url", "") not in existing_urls:
+            all_articles.append(article)
     
     logger.info(f"Total articles for dashboard: {len(all_articles)}")
     
-    # Step 5: Update Dashboard with ALL articles
+    # Step 6: Update Dashboard with ALL articles
     logger.info("Step 5: Updating dashboard...")
     try:
+        from scripts.dashboard_updater import DashboardUpdater
         dashboard = DashboardUpdater()
         dashboard_path = dashboard.update(all_articles)
         logger.info(f"Dashboard updated: {dashboard_path}")
     except Exception as e:
-        logger.error(f"Dashboard update error: {e}")
+        logger.error(f"Dashboard error: {e}")
+        import traceback
+        traceback.print_exc()
     
-    # Step 6: Update Excel
-    logger.info("Step 6: Updating Excel...")
+    # Step 7: Update Excel export
+    logger.info("Step 6: Updating Excel export...")
     try:
+        from scripts.dashboard_updater import ExcelUpdater
         excel = ExcelUpdater()
         excel_path = excel.update(all_articles)
-        logger.info(f"Excel updated: {excel_path}")
+        logger.info(f"Excel export: {excel_path}")
     except Exception as e:
-        logger.error(f"Excel update error: {e}")
+        logger.error(f"Excel error: {e}")
     
-    # Step 7: Send notifications (use all articles for context, new for email)
+    # Step 8: Send notifications
     logger.info("Step 7: Sending notifications...")
     try:
+        from scripts.notifier import NotificationManager
         notifier = NotificationManager()
-        # Pass all articles so email shows correct totals
         results = await notifier.send_all(all_articles)
-        logger.info(f"Notification results: {results}")
+        logger.info(f"Notifications: {results}")
     except Exception as e:
         logger.error(f"Notification error: {e}")
     
     # Summary
-    logger.info("="*60)
+    logger.info("=" * 60)
     logger.info("Pipeline Complete!")
-    logger.info(f"  New articles collected: {len(new_articles)}")
-    logger.info(f"  Total articles in database: {len(all_articles)}")
-    logger.info("="*60)
-    
-    return {
-        "new_articles": len(new_articles),
-        "total_articles": len(all_articles)
-    }
-
-
-async def run_notify_only():
-    """Send notifications without collecting"""
-    logger.info("Running notification only...")
-    
-    all_articles = load_existing_articles_from_db()
-    if not all_articles:
-        all_articles = load_existing_articles_from_json()
-    
-    if not all_articles:
-        logger.error("No articles found to notify about")
-        return
-    
-    notifier = NotificationManager()
-    results = await notifier.send_all(all_articles)
-    logger.info(f"Notification results: {results}")
+    logger.info(f"  Existing articles: {len(existing_articles)}")
+    logger.info(f"  New articles: {len(new_articles)}")
+    logger.info(f"  Total in dashboard: {len(all_articles)}")
+    logger.info("=" * 60)
 
 
 async def run_dashboard_only():
-    """Update dashboard without collecting"""
+    """Update dashboard without collecting new articles"""
     logger.info("Updating dashboard only...")
     
-    all_articles = load_existing_articles_from_db()
+    all_articles = load_existing_articles_from_excel()
     if not all_articles:
-        all_articles = load_existing_articles_from_json()
+        all_articles = load_articles_from_json()
     
     if not all_articles:
-        logger.warning("No articles found for dashboard")
+        logger.error("No articles found!")
         return
     
     logger.info(f"Updating dashboard with {len(all_articles)} articles")
     
+    from scripts.dashboard_updater import DashboardUpdater, ExcelUpdater
+    
     dashboard = DashboardUpdater()
-    dashboard_path = dashboard.update(all_articles)
-    logger.info(f"Dashboard updated: {dashboard_path}")
+    dashboard.update(all_articles)
     
     excel = ExcelUpdater()
-    excel_path = excel.update(all_articles)
-    logger.info(f"Excel updated: {excel_path}")
+    excel.update(all_articles)
+
+
+async def run_notify_only():
+    """Send notifications only"""
+    logger.info("Sending notifications only...")
+    
+    all_articles = load_existing_articles_from_excel()
+    if not all_articles:
+        all_articles = load_articles_from_json()
+    
+    if not all_articles:
+        logger.error("No articles found!")
+        return
+    
+    from scripts.notifier import NotificationManager
+    notifier = NotificationManager()
+    await notifier.send_all(all_articles)
 
 
 def main():
@@ -310,13 +345,11 @@ def main():
     
     args = parser.parse_args()
     
-    if args.full or not any([args.collect, args.notify, args.dashboard]):
-        asyncio.run(run_full_pipeline())
-    elif args.notify:
+    if args.notify:
         asyncio.run(run_notify_only())
     elif args.dashboard:
         asyncio.run(run_dashboard_only())
-    elif args.collect:
+    else:
         asyncio.run(run_full_pipeline())
 
 
