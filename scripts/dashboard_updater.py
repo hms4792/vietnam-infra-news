@@ -1,13 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News Dashboard Updater
-Injects ALL articles data into dashboard template
+Full multilingual support and complete data display (2019-present)
 """
+
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List, Tuple
-from urllib.parse import quote
+from typing import Dict, List
 import sys
 
 sys.path.append(str(Path(__file__).parent.parent))
@@ -21,52 +23,12 @@ except ImportError:
 
 from config.settings import DATA_DIR, OUTPUT_DIR, TEMPLATE_DIR
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-# Sector classification
-SECTOR_KEYWORDS = {
-    "Waste Water": ["wastewater", "waste water", "sewage", "xử lý nước thải", "nước thải", "drainage"],
-    "Solid Waste": ["solid waste", "garbage", "landfill", "rác thải", "chất thải rắn", "waste-to-energy", "incineration"],
-    "Water Supply/Drainage": ["water supply", "clean water", "cấp nước", "nước sạch", "water treatment"],
-    "Power": ["power plant", "electricity", "điện", "nhiệt điện", "lng", "thermal power"],
-    "Oil & Gas": ["oil", "gas", "petroleum", "dầu khí", "lng terminal"],
-    "Smart City": ["smart city", "thành phố thông minh", "digital city"],
-    "Industrial Parks": ["industrial park", "khu công nghiệp", "industrial zone"],
-}
-
-AREA_BY_SECTOR = {
-    "Waste Water": "Environment",
-    "Solid Waste": "Environment",
-    "Water Supply/Drainage": "Environment",
-    "Power": "Energy Develop.",
-    "Oil & Gas": "Energy Develop.",
-    "Smart City": "Urban Develop.",
-    "Industrial Parks": "Urban Develop.",
-}
-
-SECTOR_PRIORITY = [
-    "Waste Water", "Solid Waste", "Water Supply/Drainage",
-    "Power", "Oil & Gas", "Smart City", "Industrial Parks"
-]
-
-
-def classify_article(title: str, summary: str = "") -> Tuple[str, str]:
-    """Classify article into sector and area based on keywords"""
-    text = (str(title) + " " + str(summary)).lower()
-    
-    for sector in SECTOR_PRIORITY:
-        keywords = SECTOR_KEYWORDS.get(sector, [])
-        for keyword in keywords:
-            if keyword.lower() in text:
-                return sector, AREA_BY_SECTOR.get(sector, "Environment")
-    
-    return "Waste Water", "Environment"
-
-
 class DashboardUpdater:
-    """Updates HTML dashboard with all articles data"""
+    """Updates HTML dashboard with ALL articles data"""
     
     def __init__(self):
         self.template_path = TEMPLATE_DIR / "dashboard_template.html"
@@ -77,131 +39,81 @@ class DashboardUpdater:
         
         logger.info(f"Generating dashboard with {len(all_articles)} articles")
         
-        # Generate JavaScript data array
-        js_data = self._generate_js_data(all_articles)
+        # Always create standalone dashboard (template may not exist)
+        html = self._create_standalone_dashboard(all_articles)
         
-        # Check template exists
-        if not self.template_path.exists():
-            logger.error(f"Template not found: {self.template_path}")
-            # Create a basic dashboard if no template
-            html = self._create_standalone_dashboard(all_articles)
-        else:
-            # Load template
-            with open(self.template_path, 'r', encoding='utf-8') as f:
-                template = f.read()
-            
-            # Replace placeholder with actual data
-            if '/*__BACKEND_DATA__*/[]' in template:
-                html = template.replace('/*__BACKEND_DATA__*/[]', js_data)
-                logger.info("Replaced /*__BACKEND_DATA__*/[] placeholder")
-            elif 'const ALL_DATA = []' in template:
-                html = template.replace('const ALL_DATA = []', f'const ALL_DATA = {js_data}')
-                logger.info("Replaced const ALL_DATA = [] placeholder")
-            elif 'let ALL_DATA = []' in template:
-                html = template.replace('let ALL_DATA = []', f'let ALL_DATA = {js_data}')
-                logger.info("Replaced let ALL_DATA = [] placeholder")
-            else:
-                logger.warning("No data placeholder found in template, creating standalone dashboard")
-                html = self._create_standalone_dashboard(all_articles)
-        
-        # Replace last updated timestamp
-        html = html.replace('{{LAST_UPDATED}}', datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-        
-        # Ensure output directory exists
+        # Save
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
         
-        # Save main dashboard
         with open(self.output_path, 'w', encoding='utf-8') as f:
             f.write(html)
         
-        # Also save as index.html for GitHub Pages
+        # Also save as index.html
         index_path = OUTPUT_DIR / "index.html"
         with open(index_path, 'w', encoding='utf-8') as f:
             f.write(html)
         
         logger.info(f"Dashboard saved: {self.output_path}")
-        logger.info(f"Index saved: {index_path}")
-        
         return str(self.output_path)
     
     def _generate_js_data(self, articles: List[Dict]) -> str:
-        """Generate JavaScript array from all articles"""
+        """Generate JavaScript array with multilingual support"""
         js_articles = []
         
         for i, article in enumerate(articles, 1):
-            # Extract title (handle various field names)
-            title = article.get("title", article.get("News Tittle", "No title"))
+            # Title handling
+            title = article.get("title", article.get("News Tittle", ""))
+            title_vi = str(title) if title else ""
+            title_en = article.get("title_en", "") or title_vi
+            title_ko = article.get("title_ko", "") or title_en
             
-            # Handle multilingual titles
-            if isinstance(title, dict):
-                title_vi = title.get("vi", "")
-                title_en = title.get("en", "")
-                title_ko = title.get("ko", "")
-            else:
-                title_vi = str(title)
-                title_en = article.get("title_en", article.get("summary_en", str(title)))
-                title_ko = article.get("title_ko", article.get("summary_ko", ""))
+            # Summary handling
+            summary = article.get("summary_vi", article.get("Short summary", ""))
+            summary_vi = str(summary) if summary else ""
+            summary_en = article.get("summary_en", "") or summary_vi
+            summary_ko = article.get("summary_ko", "") or summary_en
             
-            # Extract summary
-            summary = article.get("summary", article.get("Short summary", ""))
-            if isinstance(summary, dict):
-                summary_vi = summary.get("vi", "")
-                summary_en = summary.get("en", "")
-                summary_ko = summary.get("ko", "")
-            else:
-                summary_vi = article.get("summary_vi", str(summary))
-                summary_en = article.get("summary_en", str(summary))
-                summary_ko = article.get("summary_ko", "")
-            
-            # Get sector and area
+            # Other fields
             sector = article.get("sector", article.get("Business Sector", ""))
-            area = article.get("area", article.get("Area", ""))
-            
-            # Classify if not set
-            if not sector or sector == "Unknown":
-                sector, area = classify_article(title_vi, summary_vi)
-            if not area:
-                area = AREA_BY_SECTOR.get(sector, "Environment")
-            
-            # Get other fields
+            area = article.get("area", article.get("Area", "Environment"))
             province = article.get("province", article.get("Province", "Vietnam"))
-            source = article.get("source", article.get("source_name", article.get("Source Name", "")))
-            url = article.get("url", article.get("source_url", article.get("Source URL", "")))
+            source = article.get("source", article.get("Source", ""))
+            url = article.get("url", article.get("Link", ""))
             
-            # Handle date
-            date_str = article.get("date", article.get("published", article.get("article_date", article.get("Date", ""))))
+            # Date
+            date_str = article.get("date", article.get("Date", ""))
             if date_str:
-                date_str = str(date_str)[:10]  # Keep only YYYY-MM-DD
-            else:
-                date_str = datetime.now().strftime("%Y-%m-%d")
+                if hasattr(date_str, 'strftime'):
+                    date_str = date_str.strftime("%Y-%m-%d")
+                else:
+                    date_str = str(date_str)[:10]
             
-            # Build JavaScript object
             js_obj = {
                 "id": i,
                 "title": {
                     "vi": self._escape_js(title_vi),
-                    "en": self._escape_js(title_en) if title_en else self._escape_js(title_vi),
-                    "ko": self._escape_js(title_ko) if title_ko else self._escape_js(title_en or title_vi)
+                    "en": self._escape_js(title_en),
+                    "ko": self._escape_js(title_ko)
                 },
                 "summary": {
                     "vi": self._escape_js(summary_vi),
-                    "en": self._escape_js(summary_en) if summary_en else self._escape_js(summary_vi),
-                    "ko": self._escape_js(summary_ko) if summary_ko else self._escape_js(summary_en or summary_vi)
+                    "en": self._escape_js(summary_en),
+                    "ko": self._escape_js(summary_ko)
                 },
-                "sector": sector,
-                "area": area,
-                "province": province,
-                "source": source,
-                "url": url,
-                "date": date_str
+                "sector": sector or "Unknown",
+                "area": area or "Environment",
+                "province": province or "Vietnam",
+                "source": source or "Unknown",
+                "url": url or "",
+                "date": date_str or ""
             }
             
             js_articles.append(js_obj)
         
-        return json.dumps(js_articles, ensure_ascii=False, indent=2)
+        return json.dumps(js_articles, ensure_ascii=False)
     
     def _escape_js(self, text: str) -> str:
-        """Escape text for JavaScript string"""
+        """Escape text for JavaScript"""
         if not text:
             return ""
         text = str(text)
@@ -210,17 +122,38 @@ class DashboardUpdater:
         text = text.replace("'", "\\'")
         text = text.replace("\n", " ")
         text = text.replace("\r", "")
-        text = text.replace("\t", " ")
-        return text[:500]  # Limit length
+        return text[:500]
     
     def _create_standalone_dashboard(self, articles: List[Dict]) -> str:
-        """Create a complete standalone dashboard HTML"""
-        js_data = self._generate_js_data(articles)
+        """Create complete dashboard HTML"""
         
-        # Count statistics
+        js_data = self._generate_js_data(articles)
         today = datetime.now().strftime("%Y-%m-%d")
+        
+        # Calculate stats
         today_count = sum(1 for a in articles if str(a.get("date", ""))[:10] == today)
         total_count = len(articles)
+        
+        # Count by year
+        year_counts = {}
+        for a in articles:
+            year = str(a.get("date", ""))[:4]
+            if year and year.isdigit():
+                year_counts[year] = year_counts.get(year, 0) + 1
+        
+        # Count by sector
+        sector_counts = {}
+        for a in articles:
+            s = a.get("sector", a.get("Business Sector", "Unknown"))
+            if s:
+                sector_counts[s] = sector_counts.get(s, 0) + 1
+        
+        # Count by source
+        source_counts = {}
+        for a in articles:
+            src = a.get("source", a.get("Source", "Unknown"))
+            if src:
+                source_counts[src] = source_counts.get(src, 0) + 1
         
         html = f'''<!DOCTYPE html>
 <html lang="ko">
@@ -234,73 +167,115 @@ class DashboardUpdater:
         .news-card {{ transition: all 0.3s ease; }}
         .news-card:hover {{ transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }}
         .filter-btn {{ transition: all 0.2s ease; }}
-        .filter-btn.active {{ background: #0d9488; color: white; }}
+        .filter-btn.active {{ background: #0d9488 !important; color: white !important; }}
+        .lang-btn.active {{ background: #0d9488 !important; }}
+        .sector-badge {{ font-size: 11px; padding: 2px 8px; border-radius: 4px; }}
+        .source-badge {{ font-size: 10px; color: #64748b; }}
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
 
 <header class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white sticky top-0 z-50 shadow-xl">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            <span class="text-4xl">🇻🇳</span>
-            <div>
-                <h1 class="font-bold text-xl">Vietnam Infrastructure News</h1>
-                <p class="text-sm text-slate-300">Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}</p>
+    <div class="max-w-7xl mx-auto px-4 py-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <span class="text-4xl">🇻🇳</span>
+                <div>
+                    <h1 class="font-bold text-xl">Vietnam Infrastructure News</h1>
+                    <p class="text-sm text-slate-300">Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}</p>
+                </div>
             </div>
-        </div>
-        <div class="flex gap-2">
-            <button onclick="setLang('ko')" id="lang-ko" class="lang-btn px-3 py-1 rounded bg-slate-700 hover:bg-slate-600">한국어</button>
-            <button onclick="setLang('en')" id="lang-en" class="lang-btn px-3 py-1 rounded bg-teal-600 hover:bg-teal-500">English</button>
-            <button onclick="setLang('vi')" id="lang-vi" class="lang-btn px-3 py-1 rounded bg-slate-700 hover:bg-slate-600">Tiếng Việt</button>
+            <div class="flex gap-2">
+                <button onclick="setLang('ko')" id="lang-ko" class="lang-btn px-3 py-1.5 rounded text-sm bg-slate-700 hover:bg-slate-600">한국어</button>
+                <button onclick="setLang('en')" id="lang-en" class="lang-btn px-3 py-1.5 rounded text-sm bg-teal-600 active">English</button>
+                <button onclick="setLang('vi')" id="lang-vi" class="lang-btn px-3 py-1.5 rounded text-sm bg-slate-700 hover:bg-slate-600">Tiếng Việt</button>
+            </div>
         </div>
     </div>
 </header>
 
 <main class="max-w-7xl mx-auto px-4 py-6">
     <!-- KPI Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-xl p-4 shadow-md">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+        <div class="bg-white rounded-xl p-4 shadow-md border-l-4 border-yellow-500">
             <div class="text-sm text-slate-500">Today</div>
-            <div class="text-3xl font-bold text-teal-600" id="kpi-today">{today_count}</div>
+            <div class="text-2xl font-bold text-yellow-600" id="kpi-today">{today_count}</div>
         </div>
-        <div class="bg-white rounded-xl p-4 shadow-md">
+        <div class="bg-white rounded-xl p-4 shadow-md border-l-4 border-blue-500">
             <div class="text-sm text-slate-500">This Week</div>
-            <div class="text-3xl font-bold text-blue-600" id="kpi-week">0</div>
+            <div class="text-2xl font-bold text-blue-600" id="kpi-week">0</div>
         </div>
-        <div class="bg-white rounded-xl p-4 shadow-md">
+        <div class="bg-white rounded-xl p-4 shadow-md border-l-4 border-purple-500">
             <div class="text-sm text-slate-500">This Month</div>
-            <div class="text-3xl font-bold text-purple-600" id="kpi-month">0</div>
+            <div class="text-2xl font-bold text-purple-600" id="kpi-month">0</div>
         </div>
-        <div class="bg-white rounded-xl p-4 shadow-md">
+        <div class="bg-white rounded-xl p-4 shadow-md border-l-4 border-teal-500">
+            <div class="text-sm text-slate-500">2026</div>
+            <div class="text-2xl font-bold text-teal-600" id="kpi-2026">{year_counts.get('2026', 0)}</div>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-md border-l-4 border-slate-500">
             <div class="text-sm text-slate-500">Total Database</div>
-            <div class="text-3xl font-bold text-slate-700" id="kpi-total">{total_count}</div>
+            <div class="text-2xl font-bold text-slate-700" id="kpi-total">{total_count:,}</div>
         </div>
     </div>
     
-    <!-- Filter Buttons -->
-    <div class="flex flex-wrap gap-2 mb-4">
-        <button onclick="filterByPeriod('today')" class="filter-btn px-4 py-2 rounded-lg bg-white shadow">Today</button>
-        <button onclick="filterByPeriod('week')" class="filter-btn px-4 py-2 rounded-lg bg-white shadow">This Week</button>
-        <button onclick="filterByPeriod('month')" class="filter-btn px-4 py-2 rounded-lg bg-white shadow">This Month</button>
-        <button onclick="filterByPeriod('2025')" class="filter-btn px-4 py-2 rounded-lg bg-white shadow">2025</button>
-        <button onclick="filterByPeriod('2024')" class="filter-btn px-4 py-2 rounded-lg bg-white shadow">2024</button>
-        <button onclick="filterByPeriod('all')" class="filter-btn px-4 py-2 rounded-lg bg-white shadow active">All</button>
+    <!-- Year Filter -->
+    <div class="bg-white rounded-xl p-4 shadow-md mb-4">
+        <h3 class="text-sm font-semibold text-slate-600 mb-2">📅 Filter by Year</h3>
+        <div class="flex flex-wrap gap-2">
+            <button onclick="filterByYear('all')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm active">All Years</button>
+            <button onclick="filterByYear('2026')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2026 ({year_counts.get('2026', 0)})</button>
+            <button onclick="filterByYear('2025')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2025 ({year_counts.get('2025', 0)})</button>
+            <button onclick="filterByYear('2024')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2024 ({year_counts.get('2024', 0)})</button>
+            <button onclick="filterByYear('2023')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2023 ({year_counts.get('2023', 0)})</button>
+            <button onclick="filterByYear('2022')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2022 ({year_counts.get('2022', 0)})</button>
+            <button onclick="filterByYear('2021')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2021 ({year_counts.get('2021', 0)})</button>
+            <button onclick="filterByYear('2020')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2020 ({year_counts.get('2020', 0)})</button>
+            <button onclick="filterByYear('2019')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2019 ({year_counts.get('2019', 0)})</button>
+        </div>
     </div>
     
     <!-- Sector Filter -->
-    <div class="flex flex-wrap gap-2 mb-6">
-        <button onclick="filterBySector('all')" class="filter-btn px-3 py-1 rounded bg-white shadow text-sm">All Sectors</button>
-        <button onclick="filterBySector('Waste Water')" class="filter-btn px-3 py-1 rounded bg-white shadow text-sm">Waste Water</button>
-        <button onclick="filterBySector('Solid Waste')" class="filter-btn px-3 py-1 rounded bg-white shadow text-sm">Solid Waste</button>
-        <button onclick="filterBySector('Water Supply/Drainage')" class="filter-btn px-3 py-1 rounded bg-white shadow text-sm">Water Supply</button>
-        <button onclick="filterBySector('Power')" class="filter-btn px-3 py-1 rounded bg-white shadow text-sm">Power</button>
-        <button onclick="filterBySector('Oil & Gas')" class="filter-btn px-3 py-1 rounded bg-white shadow text-sm">Oil & Gas</button>
+    <div class="bg-white rounded-xl p-4 shadow-md mb-4">
+        <h3 class="text-sm font-semibold text-slate-600 mb-2">🏭 Filter by Sector</h3>
+        <div class="flex flex-wrap gap-2">
+            <button onclick="filterBySector('all')" class="sector-btn filter-btn px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-sm active">All Sectors</button>
+'''
+        
+        # Add sector buttons
+        for sector, count in sorted(sector_counts.items(), key=lambda x: -x[1])[:10]:
+            html += f'''            <button onclick="filterBySector('{sector}')" class="sector-btn filter-btn px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-sm">{sector} ({count})</button>\n'''
+        
+        html += '''        </div>
+    </div>
+    
+    <!-- Source Filter -->
+    <div class="bg-white rounded-xl p-4 shadow-md mb-6">
+        <h3 class="text-sm font-semibold text-slate-600 mb-2">📰 Filter by Source</h3>
+        <div class="flex flex-wrap gap-2">
+            <button onclick="filterBySource('all')" class="source-btn filter-btn px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-sm active">All Sources</button>
+'''
+        
+        # Add source buttons (top 15)
+        for source, count in sorted(source_counts.items(), key=lambda x: -x[1])[:15]:
+            safe_source = source.replace("'", "\\'")
+            html += f'''            <button onclick="filterBySource('{safe_source}')" class="source-btn filter-btn px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-xs">{source} ({count})</button>\n'''
+        
+        html += f'''        </div>
     </div>
     
     <!-- News List -->
     <div class="bg-white rounded-xl shadow-lg p-4">
-        <h2 class="text-lg font-bold mb-4">📰 News Articles (<span id="filtered-count">{total_count}</span>)</h2>
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold">📰 <span id="list-title">News Articles</span> (<span id="filtered-count">{total_count}</span>)</h2>
+            <div class="text-sm text-slate-500">
+                Showing <span id="showing-count">100</span> of <span id="total-filtered">0</span>
+            </div>
+        </div>
         <div id="news-list" class="space-y-3"></div>
+        <div id="load-more-container" class="text-center mt-4 hidden">
+            <button onclick="loadMore()" class="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700">Load More</button>
+        </div>
     </div>
 </main>
 
@@ -308,81 +283,73 @@ class DashboardUpdater:
 const ALL_DATA = {js_data};
 
 let currentLang = 'en';
-let currentPeriod = 'all';
+let currentYear = 'all';
 let currentSector = 'all';
+let currentSource = 'all';
+let displayCount = 100;
 
+// Language switching
 function setLang(lang) {{
     currentLang = lang;
-    // Update button states
-    document.querySelectorAll('.lang-btn').forEach(b => {{
-        b.classList.remove('bg-teal-600', 'hover:bg-teal-500');
-        b.classList.add('bg-slate-700', 'hover:bg-slate-600');
+    
+    // Update button styles
+    document.querySelectorAll('.lang-btn').forEach(btn => {{
+        btn.classList.remove('active', 'bg-teal-600');
+        btn.classList.add('bg-slate-700');
     }});
-    const activeBtn = document.getElementById('lang-' + lang);
-    if (activeBtn) {{
-        activeBtn.classList.remove('bg-slate-700', 'hover:bg-slate-600');
-        activeBtn.classList.add('bg-teal-600', 'hover:bg-teal-500');
-    }}
+    document.getElementById('lang-' + lang).classList.add('active', 'bg-teal-600');
+    document.getElementById('lang-' + lang).classList.remove('bg-slate-700');
+    
     renderNews();
 }}
 
-function getLocalizedText(textObj, lang) {{
-    // Handle multilingual text object
+// Get localized text
+function getText(textObj, lang) {{
     if (!textObj) return '';
     if (typeof textObj === 'string') return textObj;
     
-    // Try requested language first
+    // Try requested language
     if (textObj[lang] && textObj[lang].trim()) return textObj[lang];
     
-    // Fallback order: en -> vi -> ko -> any available
+    // Fallback: en -> vi -> ko -> any
     if (textObj.en && textObj.en.trim()) return textObj.en;
     if (textObj.vi && textObj.vi.trim()) return textObj.vi;
     if (textObj.ko && textObj.ko.trim()) return textObj.ko;
     
-    // Return any non-empty value
-    for (const key in textObj) {{
-        if (textObj[key] && textObj[key].trim()) return textObj[key];
-    }}
-    return '';
+    return Object.values(textObj).find(v => v && v.trim()) || '';
 }}
 
-function filterByPeriod(period) {{
-    currentPeriod = period;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+// Filtering
+function filterByYear(year) {{
+    currentYear = year;
+    displayCount = 100;
+    document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
     renderNews();
 }}
 
 function filterBySector(sector) {{
     currentSector = sector;
+    displayCount = 100;
+    document.querySelectorAll('.sector-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    renderNews();
+}}
+
+function filterBySource(source) {{
+    currentSource = source;
+    displayCount = 100;
+    document.querySelectorAll('.source-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
     renderNews();
 }}
 
 function getFilteredData() {{
-    const today = new Date();
-    const todayStr = today.toISOString().slice(0, 10);
-    
-    const weekAgo = new Date(today);
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    const weekStr = weekAgo.toISOString().slice(0, 10);
-    
-    const monthAgo = new Date(today);
-    monthAgo.setMonth(monthAgo.getMonth() - 1);
-    const monthStr = monthAgo.toISOString().slice(0, 10);
-    
     let filtered = ALL_DATA;
     
-    // Period filter
-    if (currentPeriod === 'today') {{
-        filtered = filtered.filter(d => d.date === todayStr);
-    }} else if (currentPeriod === 'week') {{
-        filtered = filtered.filter(d => d.date >= weekStr);
-    }} else if (currentPeriod === 'month') {{
-        filtered = filtered.filter(d => d.date >= monthStr);
-    }} else if (currentPeriod === '2025') {{
-        filtered = filtered.filter(d => d.date && d.date.startsWith('2025'));
-    }} else if (currentPeriod === '2024') {{
-        filtered = filtered.filter(d => d.date && d.date.startsWith('2024'));
+    // Year filter
+    if (currentYear !== 'all') {{
+        filtered = filtered.filter(d => d.date && d.date.startsWith(currentYear));
     }}
     
     // Sector filter
@@ -390,44 +357,101 @@ function getFilteredData() {{
         filtered = filtered.filter(d => d.sector === currentSector);
     }}
     
+    // Source filter
+    if (currentSource !== 'all') {{
+        filtered = filtered.filter(d => d.source === currentSource);
+    }}
+    
+    // Sort by date descending
+    filtered.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    
     return filtered;
+}}
+
+function loadMore() {{
+    displayCount += 100;
+    renderNews();
+}}
+
+function getSectorColor(sector) {{
+    const colors = {{
+        'Waste Water': 'bg-blue-100 text-blue-700',
+        'Solid Waste': 'bg-red-100 text-red-700',
+        'Water Supply/Drainage': 'bg-cyan-100 text-cyan-700',
+        'Power': 'bg-yellow-100 text-yellow-700',
+        'Oil & Gas': 'bg-purple-100 text-purple-700',
+        'Industrial Parks': 'bg-green-100 text-green-700',
+        'Smart City': 'bg-indigo-100 text-indigo-700',
+        'Transport': 'bg-orange-100 text-orange-700'
+    }};
+    return colors[sector] || 'bg-slate-100 text-slate-700';
 }}
 
 function renderNews() {{
     const data = getFilteredData();
     const container = document.getElementById('news-list');
-    document.getElementById('filtered-count').textContent = data.length;
+    const toShow = data.slice(0, displayCount);
+    
+    document.getElementById('filtered-count').textContent = data.length.toLocaleString();
+    document.getElementById('total-filtered').textContent = data.length.toLocaleString();
+    document.getElementById('showing-count').textContent = Math.min(displayCount, data.length);
+    
+    // Show/hide load more
+    const loadMoreBtn = document.getElementById('load-more-container');
+    if (data.length > displayCount) {{
+        loadMoreBtn.classList.remove('hidden');
+    }} else {{
+        loadMoreBtn.classList.add('hidden');
+    }}
     
     if (data.length === 0) {{
         container.innerHTML = '<p class="text-slate-500 text-center py-8">No articles found for this filter.</p>';
         return;
     }}
     
-    container.innerHTML = data.slice(0, 100).map(article => `
-        <div class="news-card bg-slate-50 rounded-lg p-4 border-l-4 border-teal-500">
-            <div class="flex justify-between items-start mb-2">
-                <span class="text-xs px-2 py-1 bg-teal-100 text-teal-700 rounded">${{article.sector}}</span>
+    const today = new Date().toISOString().slice(0, 10);
+    
+    container.innerHTML = toShow.map(article => {{
+        const title = getText(article.title, currentLang);
+        const summary = getText(article.summary, currentLang);
+        const isToday = article.date === today;
+        const sectorColor = getSectorColor(article.sector);
+        
+        return `
+        <div class="news-card ${{isToday ? 'bg-yellow-50 border-l-4 border-yellow-400' : 'bg-slate-50 border-l-4 border-teal-500'}} rounded-lg p-4">
+            <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
+                <div class="flex flex-wrap gap-2">
+                    <span class="sector-badge ${{sectorColor}}">${{article.sector || 'Unknown'}}</span>
+                    ${{isToday ? '<span class="sector-badge bg-yellow-200 text-yellow-800">NEW</span>' : ''}}
+                </div>
                 <span class="text-xs text-slate-500">${{article.date}}</span>
             </div>
-            <h3 class="font-semibold text-slate-800 mb-2">
-                ${{getLocalizedText(article.title, currentLang)}}
+            <h3 class="font-semibold text-slate-800 mb-2 text-sm md:text-base">
+                ${{title || 'No title'}}
             </h3>
-            <p class="text-sm text-slate-600 mb-2">
-                ${{getLocalizedText(article.summary, currentLang).slice(0, 200)}}${{getLocalizedText(article.summary, currentLang).length > 200 ? '...' : ''}}
+            <p class="text-sm text-slate-600 mb-2 line-clamp-2">
+                ${{summary ? summary.slice(0, 200) + (summary.length > 200 ? '...' : '') : ''}}
             </p>
-            <div class="flex justify-between items-center text-xs text-slate-500">
-                <span>📍 ${{article.province}} | ${{article.source}}</span>
-                <a href="${{article.url}}" target="_blank" class="text-teal-600 hover:underline">Read more →</a>
+            <div class="flex flex-wrap justify-between items-center text-xs text-slate-500 gap-2">
+                <div>
+                    <span>📍 ${{article.province}}</span>
+                    <span class="mx-2">|</span>
+                    <span class="source-badge font-medium">${{article.source}}</span>
+                </div>
+                ${{article.url ? `<a href="${{article.url}}" target="_blank" class="text-teal-600 hover:underline font-medium">Read more →</a>` : ''}}
             </div>
         </div>
-    `).join('');
+        `;
+    }}).join('');
 }}
 
 function updateKPIs() {{
     const today = new Date().toISOString().slice(0, 10);
+    
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
     const weekStr = weekAgo.toISOString().slice(0, 10);
+    
     const monthAgo = new Date();
     monthAgo.setMonth(monthAgo.getMonth() - 1);
     const monthStr = monthAgo.toISOString().slice(0, 10);
@@ -435,7 +459,8 @@ function updateKPIs() {{
     document.getElementById('kpi-today').textContent = ALL_DATA.filter(d => d.date === today).length;
     document.getElementById('kpi-week').textContent = ALL_DATA.filter(d => d.date >= weekStr).length;
     document.getElementById('kpi-month').textContent = ALL_DATA.filter(d => d.date >= monthStr).length;
-    document.getElementById('kpi-total').textContent = ALL_DATA.length;
+    document.getElementById('kpi-2026').textContent = ALL_DATA.filter(d => d.date && d.date.startsWith('2026')).length;
+    document.getElementById('kpi-total').textContent = ALL_DATA.length.toLocaleString();
 }}
 
 // Initialize
@@ -450,485 +475,238 @@ renderNews();
 
 
 class ExcelUpdater:
-    """Updates Excel file with all articles + Hierarchical Timeline sheet"""
+    """Updates Excel output file with Project Timeline"""
     
     def __init__(self):
         self.output_path = OUTPUT_DIR / f"vietnam_news_{datetime.now().strftime('%Y%m%d')}.xlsx"
         self.today = datetime.now().strftime("%Y-%m-%d")
-        
-        # Styles
-        self.header_font = None
-        self.header_fill = None
-        self.highlight_fill = None
-        self.border = None
-        self._init_styles()
-    
-    def _init_styles(self):
-        """Initialize Excel styles"""
-        if not OPENPYXL_AVAILABLE:
-            return
-        
-        from openpyxl.styles import Font, PatternFill, Border, Side
-        
-        self.header_font = Font(bold=True, color="FFFFFF", size=11)
-        self.header_fill = PatternFill(start_color="0D9488", end_color="0D9488", fill_type="solid")
-        self.highlight_fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")  # Yellow for new
-        self.border = Border(
-            left=Side(style='thin', color='CCCCCC'),
-            right=Side(style='thin', color='CCCCCC'),
-            top=Side(style='thin', color='CCCCCC'),
-            bottom=Side(style='thin', color='CCCCCC')
-        )
     
     def update(self, articles: List[Dict]) -> str:
-        """Update Excel file with all articles and timeline sheet"""
+        """Create Excel with News Database + Project Timeline"""
         
         if not OPENPYXL_AVAILABLE:
-            logger.warning("openpyxl not available, skipping Excel update")
+            logger.warning("openpyxl not available")
             return ""
         
         wb = openpyxl.Workbook()
         
-        # Sheet 1: News Database (main data)
+        # Sheet 1: News Database
         self._create_database_sheet(wb, articles)
         
-        # Sheet 2: Project Timeline (Keywords > Province hierarchy)
-        self._create_project_timeline_sheet(wb, articles)
+        # Sheet 2: Project Timeline (Sector > Province)
+        self._create_timeline_sheet(wb, articles)
         
-        # Sheet 3: Summary Statistics
+        # Sheet 3: Summary
         self._create_summary_sheet(wb, articles)
         
         # Save
         self.output_path.parent.mkdir(parents=True, exist_ok=True)
         wb.save(self.output_path)
         
-        logger.info(f"Excel saved with {len(articles)} articles: {self.output_path}")
+        logger.info(f"Excel saved: {self.output_path}")
         return str(self.output_path)
     
-    def _create_database_sheet(self, wb, articles: List[Dict]):
-        """Create main database sheet"""
-        from openpyxl.styles import Alignment
-        
+    def _create_database_sheet(self, wb, articles):
+        """Main database sheet"""
         ws = wb.active
         ws.title = "News Database"
         
+        # Styles
+        header_font = Font(bold=True, color="FFFFFF")
+        header_fill = PatternFill(start_color="0D9488", end_color="0D9488", fill_type="solid")
+        highlight_fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
+        
         # Headers
-        headers = ["No", "Date", "Area", "Sector", "Province", "Title (EN)", "Title (VI)", "Summary (EN)", "Source", "URL"]
-        for col, header in enumerate(headers, 1):
-            cell = ws.cell(row=1, column=col, value=header)
-            cell.font = self.header_font
-            cell.fill = self.header_fill
-            cell.alignment = Alignment(horizontal="center", vertical="center")
-            cell.border = self.border
+        headers = ["No", "Date", "Area", "Sector", "Province", "Title", "Summary", "Source", "URL"]
+        for col, h in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col, value=h)
+            cell.font = header_font
+            cell.fill = header_fill
         
-        # Data rows (sorted by date descending)
-        sorted_articles = sorted(articles, key=lambda x: x.get("date", ""), reverse=True)
+        # Sort by date descending
+        sorted_articles = sorted(articles, key=lambda x: str(x.get("date", ""))[:10], reverse=True)
         
+        # Data
         for i, article in enumerate(sorted_articles, 1):
             row = i + 1
+            date_str = str(article.get("date", article.get("Date", "")))[:10]
             
-            title = article.get("title", "")
-            if isinstance(title, dict):
-                title_en = title.get("en", title.get("vi", ""))
-                title_vi = title.get("vi", "")
-            else:
-                title_en = article.get("title_en", article.get("summary_en", str(title)))
-                title_vi = str(title)
+            ws.cell(row=row, column=1, value=i)
+            ws.cell(row=row, column=2, value=date_str)
+            ws.cell(row=row, column=3, value=article.get("area", article.get("Area", "")))
+            ws.cell(row=row, column=4, value=article.get("sector", article.get("Business Sector", "")))
+            ws.cell(row=row, column=5, value=article.get("province", article.get("Province", "")))
+            ws.cell(row=row, column=6, value=str(article.get("title", article.get("News Tittle", "")))[:200])
+            ws.cell(row=row, column=7, value=str(article.get("summary_vi", article.get("Short summary", "")))[:300])
+            ws.cell(row=row, column=8, value=article.get("source", article.get("Source", "")))
+            ws.cell(row=row, column=9, value=article.get("url", article.get("Link", "")))
             
-            summary = article.get("summary", "")
-            if isinstance(summary, dict):
-                summary_en = summary.get("en", summary.get("vi", ""))
-            else:
-                summary_en = article.get("summary_en", str(summary))
-            
-            article_date = str(article.get("date", ""))[:10]
-            
-            row_data = [
-                i,
-                article_date,
-                article.get("area", "Environment"),
-                article.get("sector", "Waste Water"),
-                article.get("province", "Vietnam"),
-                title_en[:200] if title_en else "",
-                title_vi[:200] if title_vi else "",
-                summary_en[:500] if summary_en else "",
-                article.get("source", ""),
-                article.get("url", "")
-            ]
-            
-            for col, value in enumerate(row_data, 1):
-                cell = ws.cell(row=row, column=col, value=value)
-                cell.border = self.border
-                
-                # Highlight today's articles in yellow
-                if article_date == self.today:
-                    cell.fill = self.highlight_fill
+            # Highlight today
+            if date_str == self.today:
+                for col in range(1, 10):
+                    ws.cell(row=row, column=col).fill = highlight_fill
         
         # Column widths
-        col_widths = [6, 12, 15, 20, 15, 50, 50, 60, 20, 40]
-        for i, width in enumerate(col_widths, 1):
-            ws.column_dimensions[chr(64 + i)].width = width
+        widths = [6, 12, 12, 20, 15, 50, 40, 20, 40]
+        for i, w in enumerate(widths, 1):
+            ws.column_dimensions[chr(64+i)].width = w
         
         ws.freeze_panes = 'A2'
     
-    def _create_project_timeline_sheet(self, wb, articles: List[Dict]):
-        """Create Project Timeline sheet with Keywords > Province hierarchy"""
-        from openpyxl.styles import Alignment, Font, PatternFill
+    def _create_timeline_sheet(self, wb, articles):
+        """Project Timeline: Sector > Province hierarchy"""
         from collections import defaultdict
         
         ws = wb.create_sheet("Project Timeline")
         
-        # Sector colors for visual grouping
-        sector_colors = {
-            "Waste Water": ("1E3A5F", "E6F0FA"),       # Dark blue header, light blue bg
-            "Solid Waste": ("5D1E1E", "FAE6E6"),       # Dark red header, light red bg
-            "Water Supply/Drainage": ("1E5F3A", "E6FAF0"),  # Dark green header, light green bg
-            "Power": ("5F4B1E", "FAF3E6"),             # Dark orange header, light orange bg
-            "Oil & Gas": ("3A1E5F", "F0E6FA"),         # Dark purple header, light purple bg
-            "Smart City": ("5F5F1E", "FAFAE6"),        # Dark yellow header, light yellow bg
-            "Industrial Parks": ("1E5F5F", "E6FAFA"), # Dark cyan header, light cyan bg
-            "Infrastructure": ("4A4A4A", "F0F0F0"),   # Gray
-            "Transport": ("2E4A1E", "EAF5E6"),        # Dark green
-            "Construction": ("4A3A2E", "F5EFE6"),     # Brown
-        }
-        
-        # Group articles: Sector > Province > Articles (sorted by date)
-        sector_province_articles = defaultdict(lambda: defaultdict(list))
-        
+        # Group by sector > province
+        sector_province = defaultdict(lambda: defaultdict(list))
         for article in articles:
-            sector = article.get("sector", "Unknown")
-            province = article.get("province", "Vietnam")
-            if sector and sector != "Unknown":
-                sector_province_articles[sector][province].append(article)
+            sector = article.get("sector", article.get("Business Sector", "Unknown"))
+            province = article.get("province", article.get("Province", "Vietnam"))
+            if sector:
+                sector_province[sector][province].append(article)
         
-        # Sort articles within each group by date (newest first)
-        for sector in sector_province_articles:
-            for province in sector_province_articles[sector]:
-                sector_province_articles[sector][province] = sorted(
-                    sector_province_articles[sector][province],
-                    key=lambda x: x.get("date", ""),
-                    reverse=True
+        # Sort articles by date
+        for sector in sector_province:
+            for province in sector_province[sector]:
+                sector_province[sector][province].sort(
+                    key=lambda x: str(x.get("date", ""))[:10], reverse=True
                 )
         
-        # Sort sectors by total article count
-        sector_totals = {
-            sector: sum(len(articles) for articles in provinces.values())
-            for sector, provinces in sector_province_articles.items()
-        }
-        sorted_sectors = sorted(sector_totals.keys(), key=lambda x: sector_totals[x], reverse=True)
+        # Styles
+        header_font = Font(bold=True, color="FFFFFF")
+        header_fill = PatternFill(start_color="0D9488", end_color="0D9488", fill_type="solid")
+        sector_fill = PatternFill(start_color="1E3A5F", end_color="1E3A5F", fill_type="solid")
+        province_fill = PatternFill(start_color="E8F4FD", end_color="E8F4FD", fill_type="solid")
+        highlight_fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
         
         # Headers
         headers = ["Sector", "Province", "Date", "Title", "Source", "URL", "New"]
-        for col, header in enumerate(headers, 1):
-            cell = ws.cell(row=1, column=col, value=header)
-            cell.font = self.header_font
-            cell.fill = self.header_fill
-            cell.alignment = Alignment(horizontal="center", vertical="center")
-            cell.border = self.border
+        for col, h in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col, value=h)
+            cell.font = header_font
+            cell.fill = header_fill
         
-        # Build timeline
         row = 2
         
+        # Sort sectors by article count
+        sector_totals = {s: sum(len(p) for p in provinces.values()) 
+                        for s, provinces in sector_province.items()}
+        sorted_sectors = sorted(sector_totals.keys(), key=lambda x: sector_totals[x], reverse=True)
+        
         for sector in sorted_sectors:
-            provinces_data = sector_province_articles[sector]
-            sector_total = sector_totals[sector]
+            provinces = sector_province[sector]
+            total = sector_totals[sector]
             
-            # Get sector colors
-            header_color, bg_color = sector_colors.get(sector, ("4A4A4A", "F0F0F0"))
-            
-            # === SECTOR HEADER ROW ===
-            sector_header_fill = PatternFill(start_color=header_color, end_color=header_color, fill_type="solid")
-            sector_header_font = Font(bold=True, color="FFFFFF", size=12)
-            
-            cell = ws.cell(row=row, column=1, value=f"▼ {sector} ({sector_total} articles)")
-            cell.font = sector_header_font
-            cell.fill = sector_header_fill
-            ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=7)
+            # Sector header
+            cell = ws.cell(row=row, column=1, value=f"▼ {sector} ({total} articles)")
+            cell.font = Font(bold=True, color="FFFFFF")
+            cell.fill = sector_fill
+            ws.merge_cells(start_row=row, end_row=row, start_column=1, end_column=7)
             row += 1
             
-            # Sort provinces: specific provinces first (by count), then "Vietnam" last
-            province_counts = {p: len(articles) for p, articles in provinces_data.items()}
-            specific_provinces = [p for p in province_counts.keys() if p != "Vietnam"]
-            specific_provinces = sorted(specific_provinces, key=lambda x: province_counts[x], reverse=True)
+            # Sort provinces
+            sorted_provinces = sorted(provinces.keys(), 
+                                     key=lambda x: len(provinces[x]), reverse=True)
             
-            # Add "Vietnam" at the end if exists
-            if "Vietnam" in province_counts:
-                province_order = specific_provinces + ["Vietnam"]
-            else:
-                province_order = specific_provinces
-            
-            province_bg_fill = PatternFill(start_color=bg_color, end_color=bg_color, fill_type="solid")
-            
-            for province in province_order:
-                province_articles = provinces_data[province]
-                province_count = len(province_articles)
+            for province in sorted_provinces:
+                articles_list = provinces[province]
                 
-                # === PROVINCE HEADER ROW ===
-                province_label = f"  ├─ {province}" if province != "Vietnam" else f"  └─ {province} (Common)"
-                cell = ws.cell(row=row, column=2, value=f"{province_label} ({province_count})")
-                cell.font = Font(bold=True, size=10)
-                cell.fill = province_bg_fill
-                ws.merge_cells(start_row=row, start_column=2, end_row=row, end_column=7)
+                # Province header
+                ws.cell(row=row, column=2, value=f"├─ {province} ({len(articles_list)})")
+                ws.cell(row=row, column=2).font = Font(bold=True)
+                ws.cell(row=row, column=2).fill = province_fill
                 row += 1
                 
-                # === ARTICLE ROWS (max 20 per province) ===
-                for article in province_articles[:20]:
-                    title = article.get("title", "")
-                    if isinstance(title, dict):
-                        title = title.get("en", title.get("vi", ""))
-                    title_en = article.get("title_en", article.get("summary_en", str(title)))
+                # Articles (max 15 per province)
+                for article in articles_list[:15]:
+                    date_str = str(article.get("date", ""))[:10]
+                    is_new = date_str == self.today
                     
-                    article_date = str(article.get("date", ""))[:10]
-                    is_new = article_date == self.today
+                    ws.cell(row=row, column=3, value=date_str)
+                    ws.cell(row=row, column=4, value=str(article.get("title", article.get("News Tittle", "")))[:60])
+                    ws.cell(row=row, column=5, value=article.get("source", article.get("Source", "")))
+                    ws.cell(row=row, column=6, value=article.get("url", article.get("Link", "")))
+                    ws.cell(row=row, column=7, value="● NEW" if is_new else "")
                     
-                    row_data = [
-                        "",  # Sector (empty)
-                        "",  # Province (empty)
-                        article_date,
-                        title_en[:70] if title_en else "",
-                        article.get("source", ""),
-                        article.get("url", ""),
-                        "● NEW" if is_new else ""
-                    ]
-                    
-                    for col, value in enumerate(row_data, 1):
-                        cell = ws.cell(row=row, column=col, value=value)
-                        cell.border = self.border
-                        
-                        # Highlight new articles in yellow
-                        if is_new:
-                            cell.fill = self.highlight_fill
+                    if is_new:
+                        for col in range(3, 8):
+                            ws.cell(row=row, column=col).fill = highlight_fill
                     
                     row += 1
                 
-                # Show "...and X more" if truncated
-                if len(province_articles) > 20:
-                    remaining = len(province_articles) - 20
-                    cell = ws.cell(row=row, column=4, value=f"... and {remaining} more articles")
-                    cell.font = Font(italic=True, color="888888")
+                if len(articles_list) > 15:
+                    ws.cell(row=row, column=4, value=f"... and {len(articles_list)-15} more")
+                    ws.cell(row=row, column=4).font = Font(italic=True, color="888888")
                     row += 1
             
-            row += 1  # Empty row between sectors
+            row += 1  # Gap between sectors
         
         # Column widths
-        col_widths = [5, 25, 12, 55, 18, 35, 8]
-        for i, width in enumerate(col_widths, 1):
-            ws.column_dimensions[chr(64 + i)].width = width
+        widths = [5, 25, 12, 50, 18, 35, 8]
+        for i, w in enumerate(widths, 1):
+            ws.column_dimensions[chr(64+i)].width = w
         
         ws.freeze_panes = 'A2'
-        
-        # Add legend at the bottom
-        row += 2
-        ws.cell(row=row, column=1, value="Legend:")
-        ws.cell(row=row, column=1).font = Font(bold=True)
-        row += 1
-        
-        legend_cell = ws.cell(row=row, column=1, value="● NEW")
-        legend_cell.fill = self.highlight_fill
-        ws.cell(row=row, column=2, value="= Article updated today")
-        row += 1
-        
-        ws.cell(row=row, column=1, value="├─ Province")
-        ws.cell(row=row, column=2, value="= Specific location project")
-        row += 1
-        
-        ws.cell(row=row, column=1, value="└─ Vietnam (Common)")
-        ws.cell(row=row, column=2, value="= Nationwide/general news")
     
-    def _create_summary_sheet(self, wb, articles: List[Dict]):
-        """Create Summary Statistics sheet"""
-        from openpyxl.styles import Font, Alignment
+    def _create_summary_sheet(self, wb, articles):
+        """Summary statistics"""
         from collections import Counter
-        from datetime import timedelta
         
         ws = wb.create_sheet("Summary")
         
-        # Title
-        ws.cell(row=1, column=1, value="Vietnam Infrastructure News - Summary Statistics")
+        ws.cell(row=1, column=1, value="Vietnam Infrastructure News - Summary")
         ws.cell(row=1, column=1).font = Font(bold=True, size=14)
-        ws.merge_cells('A1:D1')
+        ws.cell(row=2, column=1, value=f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
         
-        ws.cell(row=2, column=1, value=f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        ws.cell(row=2, column=1).font = Font(italic=True, color="666666")
-        
-        # Count statistics
+        # Counts
         today_count = sum(1 for a in articles if str(a.get("date", ""))[:10] == self.today)
         
-        week_ago = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
-        week_count = sum(1 for a in articles if str(a.get("date", ""))[:10] >= week_ago)
-        
-        month_start = datetime.now().strftime("%Y-%m-01")
-        month_count = sum(1 for a in articles if str(a.get("date", ""))[:10] >= month_start)
-        
-        count_2025 = sum(1 for a in articles if str(a.get("date", "")).startswith("2025"))
-        count_2026 = sum(1 for a in articles if str(a.get("date", "")).startswith("2026"))
-        
-        # Overview
         row = 4
-        ws.cell(row=row, column=1, value="📊 Overview")
-        ws.cell(row=row, column=1).font = Font(bold=True, size=12)
+        ws.cell(row=row, column=1, value="Overview").font = Font(bold=True)
         row += 1
         
-        overview_data = [
-            ("Total Articles", len(articles)),
-            ("Today's Articles", today_count),
-            ("This Week", week_count),
-            ("This Month", month_count),
-            ("2026 Articles", count_2026),
-            ("2025 Articles", count_2025),
-        ]
-        
-        for label, value in overview_data:
-            ws.cell(row=row, column=1, value=label)
-            cell = ws.cell(row=row, column=2, value=value)
-            if label == "Today's Articles" and value > 0:
-                cell.fill = self.highlight_fill
-            row += 1
-        
-        # Sector breakdown
-        row += 1
-        ws.cell(row=row, column=1, value="📁 By Sector (Keywords)")
-        ws.cell(row=row, column=1).font = Font(bold=True, size=12)
+        ws.cell(row=row, column=1, value="Total Articles")
+        ws.cell(row=row, column=2, value=len(articles))
         row += 1
         
-        sector_counts = Counter(a.get("sector", "Unknown") for a in articles)
-        for sector, count in sector_counts.most_common(15):
+        ws.cell(row=row, column=1, value="Today's Articles")
+        ws.cell(row=row, column=2, value=today_count)
+        if today_count > 0:
+            ws.cell(row=row, column=2).fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
+        row += 2
+        
+        # By year
+        ws.cell(row=row, column=1, value="By Year").font = Font(bold=True)
+        row += 1
+        
+        year_counts = Counter(str(a.get("date", ""))[:4] for a in articles if a.get("date"))
+        for year, count in sorted(year_counts.items(), reverse=True):
+            if year.isdigit():
+                ws.cell(row=row, column=1, value=year)
+                ws.cell(row=row, column=2, value=count)
+                row += 1
+        
+        row += 1
+        
+        # By sector
+        ws.cell(row=row, column=1, value="By Sector").font = Font(bold=True)
+        row += 1
+        
+        sector_counts = Counter(a.get("sector", a.get("Business Sector", "Unknown")) for a in articles)
+        for sector, count in sector_counts.most_common():
             ws.cell(row=row, column=1, value=sector)
             ws.cell(row=row, column=2, value=count)
-            
-            # Today's count for this sector
-            today_sector = sum(1 for a in articles 
-                             if a.get("sector") == sector and str(a.get("date", ""))[:10] == self.today)
-            if today_sector > 0:
-                cell = ws.cell(row=row, column=3, value=f"+{today_sector} today")
-                cell.fill = self.highlight_fill
             row += 1
         
-        # Province breakdown (excluding Vietnam)
-        row += 1
-        ws.cell(row=row, column=1, value="📍 By Province (Top 15, excl. Vietnam)")
-        ws.cell(row=row, column=1).font = Font(bold=True, size=12)
-        row += 1
-        
-        province_counts = Counter(
-            a.get("province", "Vietnam") for a in articles 
-            if a.get("province", "Vietnam") != "Vietnam"
-        )
-        for province, count in province_counts.most_common(15):
-            ws.cell(row=row, column=1, value=province)
-            ws.cell(row=row, column=2, value=count)
-            
-            today_province = sum(1 for a in articles 
-                                if a.get("province") == province and str(a.get("date", ""))[:10] == self.today)
-            if today_province > 0:
-                cell = ws.cell(row=row, column=3, value=f"+{today_province} today")
-                cell.fill = self.highlight_fill
-            row += 1
-        
-        # Source breakdown
-        row += 1
-        ws.cell(row=row, column=1, value="📰 By Source (Top 10)")
-        ws.cell(row=row, column=1).font = Font(bold=True, size=12)
-        row += 1
-        
-        source_counts = Counter(a.get("source", "Unknown") for a in articles)
-        for source, count in source_counts.most_common(10):
-            ws.cell(row=row, column=1, value=source)
-            ws.cell(row=row, column=2, value=count)
-            row += 1
-        
-        # Column widths
-        ws.column_dimensions['A'].width = 35
+        ws.column_dimensions['A'].width = 30
         ws.column_dimensions['B'].width = 15
-        ws.column_dimensions['C'].width = 15
 
 
 def main():
-    """Standalone dashboard update - loads from Excel database"""
-    import sys
-    sys.path.insert(0, str(Path(__file__).parent.parent))
-    
-    # Try to load from Excel database
-    try:
-        import openpyxl
-        
-        # Find Excel file
-        possible_paths = [
-            DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx",
-            DATA_DIR / "Vietnam_Infra_News_Database_Final.xlsx",
-            Path("data/database/Vietnam_Infra_News_Database_Final.xlsx"),
-        ]
-        
-        excel_path = None
-        for path in possible_paths:
-            if path.exists():
-                excel_path = path
-                break
-        
-        if not excel_path:
-            print("Excel database not found!")
-            return
-        
-        print(f"Loading from: {excel_path}")
-        wb = openpyxl.load_workbook(excel_path, read_only=True, data_only=True)
-        ws = wb.active
-        
-        articles = []
-        headers = []
-        
-        for row_idx, row in enumerate(ws.iter_rows(values_only=True), 1):
-            if row_idx == 1:
-                headers = [str(cell).strip() if cell else f"col_{i}" for i, cell in enumerate(row)]
-                continue
-            
-            if not any(row):
-                continue
-            
-            raw = {}
-            for i, value in enumerate(row):
-                if i < len(headers):
-                    raw[headers[i]] = value
-            
-            date_val = raw.get("Date", "")
-            if date_val and hasattr(date_val, 'strftime'):
-                date_str = date_val.strftime("%Y-%m-%d")
-            else:
-                date_str = str(date_val)[:10] if date_val else ""
-            
-            article = {
-                "title": raw.get("News Tittle", raw.get("Title", "")),
-                "title_en": raw.get("Summary (EN)", ""),
-                "title_ko": raw.get("Summary (KO)", ""),
-                "summary_en": raw.get("Summary (EN)", ""),
-                "summary_ko": raw.get("Summary (KO)", ""),
-                "sector": raw.get("Business Sector", "Waste Water"),
-                "area": raw.get("Area", "Environment"),
-                "province": raw.get("Province", "Vietnam"),
-                "source": raw.get("Source Name", ""),
-                "url": raw.get("Source URL", ""),
-                "date": date_str
-            }
-            
-            if article.get("title") or article.get("url"):
-                articles.append(article)
-        
-        wb.close()
-        print(f"Loaded {len(articles)} articles")
-        
-        if articles:
-            dashboard = DashboardUpdater()
-            result = dashboard.update(articles)
-            print(f"Dashboard created: {result}")
-            
-            excel = ExcelUpdater()
-            excel.update(articles)
-        else:
-            print("No articles found in Excel!")
-            
-    except Exception as e:
-        print(f"Error: {e}")
-        import traceback
-        traceback.print_exc()
+    """Test dashboard generation"""
+    logger.info("Dashboard updater ready")
 
 
 if __name__ == "__main__":
