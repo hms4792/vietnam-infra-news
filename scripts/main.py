@@ -22,6 +22,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+PROJECT_ROOT = Path(__file__).parent.parent
 EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
 
 
@@ -144,22 +145,62 @@ async def main():
     all_articles = existing_articles + new_articles
     logger.info(f"\nStep 4: Total articles for dashboard: {len(all_articles)}")
     
+    # If no articles, still create empty dashboard
+    if not all_articles:
+        logger.warning("No articles found! Creating empty dashboard...")
+        all_articles = []
+    
     # Step 5: Update dashboard
     logger.info("\nStep 5: Updating dashboard...")
+    
+    # Ensure output directory exists
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    logger.info(f"Output directory: {OUTPUT_DIR}")
+    
     try:
         from scripts.dashboard_updater import DashboardUpdater, ExcelUpdater
         
+        logger.info("Creating DashboardUpdater...")
         dashboard = DashboardUpdater()
-        dashboard.update(all_articles)
+        dashboard_path = dashboard.update(all_articles)
+        logger.info(f"Dashboard created: {dashboard_path}")
         
+        logger.info("Creating ExcelUpdater...")
         excel = ExcelUpdater()
-        excel.update(all_articles)
+        excel_path = excel.update(all_articles)
+        logger.info(f"Excel created: {excel_path}")
         
-        logger.info("Dashboard and Excel output updated")
+    except ImportError as e:
+        logger.error(f"Import error: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        # Try direct import
+        try:
+            logger.info("Attempting direct import...")
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("dashboard_updater", 
+                PROJECT_ROOT / "scripts" / "dashboard_updater.py")
+            dashboard_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(dashboard_module)
+            
+            dashboard = dashboard_module.DashboardUpdater()
+            dashboard.update(all_articles)
+            logger.info("Dashboard created via direct import")
+        except Exception as e2:
+            logger.error(f"Direct import also failed: {e2}")
+            traceback.print_exc()
     except Exception as e:
         logger.error(f"Dashboard update error: {e}")
         import traceback
         traceback.print_exc()
+    
+    # Verify dashboard exists
+    dashboard_file = OUTPUT_DIR / "index.html"
+    if dashboard_file.exists():
+        logger.info(f"✓ Dashboard verified: {dashboard_file}")
+    else:
+        logger.error(f"✗ Dashboard NOT found at {dashboard_file}")
     
     # Step 6: Send notifications
     logger.info("\nStep 6: Sending notifications...")
