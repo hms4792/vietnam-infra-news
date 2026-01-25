@@ -249,9 +249,9 @@ class DashboardUpdater:
             </div>
         </div>
         <div class="flex gap-2">
-            <button onclick="setLang('ko')" class="lang-btn px-3 py-1 rounded bg-slate-700 hover:bg-slate-600">한국어</button>
-            <button onclick="setLang('en')" class="lang-btn px-3 py-1 rounded bg-slate-700 hover:bg-slate-600">English</button>
-            <button onclick="setLang('vi')" class="lang-btn px-3 py-1 rounded bg-slate-700 hover:bg-slate-600">Tiếng Việt</button>
+            <button onclick="setLang('ko')" id="lang-ko" class="lang-btn px-3 py-1 rounded bg-slate-700 hover:bg-slate-600">한국어</button>
+            <button onclick="setLang('en')" id="lang-en" class="lang-btn px-3 py-1 rounded bg-teal-600 hover:bg-teal-500">English</button>
+            <button onclick="setLang('vi')" id="lang-vi" class="lang-btn px-3 py-1 rounded bg-slate-700 hover:bg-slate-600">Tiếng Việt</button>
         </div>
     </div>
 </header>
@@ -313,7 +313,37 @@ let currentSector = 'all';
 
 function setLang(lang) {{
     currentLang = lang;
+    // Update button states
+    document.querySelectorAll('.lang-btn').forEach(b => {{
+        b.classList.remove('bg-teal-600', 'hover:bg-teal-500');
+        b.classList.add('bg-slate-700', 'hover:bg-slate-600');
+    }});
+    const activeBtn = document.getElementById('lang-' + lang);
+    if (activeBtn) {{
+        activeBtn.classList.remove('bg-slate-700', 'hover:bg-slate-600');
+        activeBtn.classList.add('bg-teal-600', 'hover:bg-teal-500');
+    }}
     renderNews();
+}}
+
+function getLocalizedText(textObj, lang) {{
+    // Handle multilingual text object
+    if (!textObj) return '';
+    if (typeof textObj === 'string') return textObj;
+    
+    // Try requested language first
+    if (textObj[lang] && textObj[lang].trim()) return textObj[lang];
+    
+    // Fallback order: en -> vi -> ko -> any available
+    if (textObj.en && textObj.en.trim()) return textObj.en;
+    if (textObj.vi && textObj.vi.trim()) return textObj.vi;
+    if (textObj.ko && textObj.ko.trim()) return textObj.ko;
+    
+    // Return any non-empty value
+    for (const key in textObj) {{
+        if (textObj[key] && textObj[key].trim()) return textObj[key];
+    }}
+    return '';
 }}
 
 function filterByPeriod(period) {{
@@ -380,10 +410,10 @@ function renderNews() {{
                 <span class="text-xs text-slate-500">${{article.date}}</span>
             </div>
             <h3 class="font-semibold text-slate-800 mb-2">
-                ${{article.title[currentLang] || article.title.vi}}
+                ${{getLocalizedText(article.title, currentLang)}}
             </h3>
             <p class="text-sm text-slate-600 mb-2">
-                ${{(article.summary[currentLang] || article.summary.vi || '').slice(0, 200)}}...
+                ${{getLocalizedText(article.summary, currentLang).slice(0, 200)}}${{getLocalizedText(article.summary, currentLang).length > 200 ? '...' : ''}}
             </p>
             <div class="flex justify-between items-center text-xs text-slate-500">
                 <span>📍 ${{article.province}} | ${{article.source}}</span>
