@@ -2,7 +2,6 @@
 """
 Vietnam Infrastructure News Pipeline - Settings
 Configuration for news collection, AI processing, and notifications
-Updated with all news sources from database analysis
 """
 
 import os
@@ -44,9 +43,8 @@ EMAIL_SMTP_PORT = 587
 # NEWS SOURCES - Based on Database Analysis (232 domains, 2000+ articles)
 # ============================================================
 
-# Primary RSS Feeds (English sources - highest priority)
 RSS_FEEDS = {
-    # === TIER 1: Major English News Sources (Most articles in DB) ===
+    # === TIER 1: Major English News Sources ===
     "Vietnam News": "https://vietnamnews.vn/rss/home.rss",
     "VnExpress English": "https://e.vnexpress.net/rss/news.rss",
     "VietnamPlus English": "https://en.vietnamplus.vn/rss/news.rss",
@@ -62,195 +60,182 @@ RSS_FEEDS = {
     "VietnamNet English": "https://vietnamnet.vn/en/rss/home.rss",
     "Saigon GP News": "https://en.sggp.org.vn/rss/home.rss",
     
-    # === TIER 4: Energy & Environment Focus ===
+    # === TIER 4: Energy Focus ===
     "Vietnam Energy": "https://vietnamenergy.vn/rss/home.rss",
 }
 
-# Alternative/Backup RSS URLs (if primary fails)
-RSS_FEEDS_BACKUP = {
-    "Vietnam News Alt": "https://vietnamnews.vn/rss/economy.rss",
-    "VnExpress Business": "https://e.vnexpress.net/rss/business.rss",
-    "VietnamPlus Business": "https://en.vietnamplus.vn/rss/business.rss",
-}
-
-# Direct scraping sources (no RSS, need HTML scraping)
-SCRAPE_SOURCES = {
-    "Da Nang News": {
-        "base_url": "https://baodanang.vn",
-        "news_path": "/english/",
-        "articles_in_db": 104
-    },
-    "Bao Dau Tu": {
-        "base_url": "https://baodautu.vn", 
-        "news_path": "/",
-        "articles_in_db": 42
-    },
-    "VEN Cong Thuong": {
-        "base_url": "https://ven.congthuong.vn",
-        "news_path": "/",
-        "articles_in_db": 31
-    },
-    "Bao Tai Nguyen Moi Truong": {
-        "base_url": "https://baotainguyenmoitruong.vn",
-        "news_path": "/",
-        "articles_in_db": 26
-    },
-    "Dong Nai News": {
-        "base_url": "https://baodongnai.com.vn",
-        "news_path": "/",
-        "articles_in_db": 29
-    },
-    "Binh Duong News": {
-        "base_url": "https://baobinhduong.vn",
-        "news_path": "/",
-        "articles_in_db": 21
-    },
-}
-
 # ============================================================
-# SOURCE STATUS LOG (for reference)
+# SECTOR KEYWORDS - STRICT INFRASTRUCTURE ONLY
 # ============================================================
-# This documents the status of each source for troubleshooting
-
-NEWS_SOURCES_STATUS = """
-=== NEWS SOURCES STATUS LOG ===
-Last Updated: 2026-01-24
-
-TIER 1 - Primary English Sources (RSS Available):
-✓ vietnamnews.vn (291 articles) - RSS: /rss/home.rss
-✓ e.vnexpress.net (142 articles) - RSS: /rss/news.rss
-✓ en.vietnamplus.vn (132 articles) - RSS: /rss/news.rss
-✓ tuoitrenews.vn (59 articles) - RSS: /rss/home.rss
-
-TIER 2 - Investment Focus (RSS May Vary):
-○ theinvestor.vn (171 articles) - RSS: /rss/home.rss (check availability)
-○ vir.com.vn (95 articles) - RSS: /rss/home.rss (check availability)
-○ hanoitimes.vn (62 articles) - RSS: /rss/home.rss (check availability)
-○ english.thesaigontimes.vn (26 articles) - RSS: /rss/home.rss (check availability)
-
-TIER 3 - Regional Sources (May need scraping):
-○ baodanang.vn (104 articles) - No RSS confirmed, scrape needed
-○ vietnamenergy.vn (69 articles) - Check RSS availability
-○ vietnamnet.vn (50 articles) - RSS: /en/rss/home.rss
-○ en.sggp.org.vn (48 articles) - Check RSS availability
-
-TIER 4 - Vietnamese Language Sources:
-○ baodautu.vn (42 articles) - Vietnamese, scrape needed
-○ ven.congthuong.vn (31 articles) - Vietnamese, scrape needed
-○ baotainguyenmoitruong.vn (26 articles) - Vietnamese, scrape needed
-
-GOVERNMENT/OFFICIAL:
-○ www9.monre.gov.vn (38 articles) - Ministry site, manual check
-○ moitruongvadothi.vn (37 articles) - Environment & Urban
-
-INTERNATIONAL:
-○ offshore-energy.biz (19 articles) - International energy news
-
-=== TOTAL FROM DATABASE ===
-- 232 unique domains
-- 2000+ total articles
-- Top 15 sources account for ~70% of articles
-"""
-
-# ============================================================
-# SECTOR KEYWORDS
-# ============================================================
+# Each sector has:
+# - required: At least one must match (prevents irrelevant articles)
+# - boost: Additional keywords that increase confidence
+# - exclude: Keywords that disqualify the article
 
 SECTOR_KEYWORDS = {
     "Waste Water": {
-        "primary": [
-            "wastewater treatment plant", "sewage treatment plant",
-            "wwtp", "wastewater treatment system", "sewerage system",
-            "wastewater collection", "effluent treatment",
-            "xử lý nước thải", "nhà máy xử lý nước thải"
+        "required": [
+            "wastewater treatment", "sewage treatment", "wwtp",
+            "wastewater plant", "sewage plant", "sewerage",
+            "xử lý nước thải", "nhà máy xử lý nước thải",
+            "nước thải sinh hoạt", "nước thải công nghiệp"
         ],
-        "secondary": ["wastewater", "sewage", "effluent", "nước thải"]
-    },
-    "Water Supply/Drainage": {
-        "primary": [
-            "water supply project", "water supply system",
-            "clean water plant", "water treatment plant",
-            "drinking water", "water supply infrastructure",
-            "cấp nước", "nhà máy nước sạch"
+        "boost": [
+            "effluent", "drainage system", "sludge", "biological treatment",
+            "thoát nước", "bùn thải"
         ],
-        "secondary": ["water supply", "clean water", "potable water", "nước sạch"]
+        "exclude": [],
+        "area": "Environment"
     },
     "Solid Waste": {
-        "primary": [
-            "waste-to-energy plant", "solid waste treatment",
-            "landfill", "incineration plant", "recycling facility",
-            "waste management", "rác thải", "chất thải rắn"
+        "required": [
+            "waste-to-energy", "solid waste treatment", "landfill",
+            "waste management plant", "incineration plant", "recycling facility",
+            "garbage treatment", "municipal waste", "hazardous waste treatment",
+            "xử lý rác thải", "đốt rác", "bãi rác", "chất thải rắn",
+            "nhà máy xử lý chất thải"
         ],
-        "secondary": ["solid waste", "waste treatment", "recycling", "garbage"]
+        "boost": [
+            "recycling", "composting", "waste collection",
+            "tái chế", "phân loại rác"
+        ],
+        "exclude": [],
+        "area": "Environment"
+    },
+    "Water Supply/Drainage": {
+        "required": [
+            "water supply plant", "water treatment plant", "clean water project",
+            "drinking water", "water supply system", "water infrastructure",
+            "nhà máy nước", "cấp nước sạch", "hệ thống cấp nước",
+            "nước sinh hoạt", "nhà máy nước sạch"
+        ],
+        "boost": [
+            "potable water", "water distribution", "reservoir",
+            "hồ chứa nước"
+        ],
+        "exclude": [],
+        "area": "Environment"
     },
     "Power": {
-        "primary": [
-            "power plant", "solar farm", "wind farm",
-            "lng power", "thermal power", "hydropower plant",
-            "nhà máy điện", "điện mặt trời", "điện gió"
+        "required": [
+            "power plant", "solar farm", "wind farm", "solar power project",
+            "wind power project", "thermal power plant", "hydropower plant",
+            "lng power plant", "gas turbine", "power generation",
+            "nhà máy điện", "điện mặt trời", "điện gió", "thủy điện",
+            "nhiệt điện", "năng lượng tái tạo"
         ],
-        "secondary": ["electricity", "power generation", "điện"]
+        "boost": [
+            "megawatt", "MW", "electricity generation", "grid connection",
+            "công suất"
+        ],
+        "exclude": ["power outage", "power cut", "blackout"],
+        "area": "Energy Develop."
     },
     "Oil & Gas": {
-        "primary": [
-            "oil exploration", "gas field", "lng terminal",
-            "refinery", "offshore drilling", "petroleum",
-            "dầu khí", "nhà máy lọc dầu"
+        "required": [
+            "oil exploration", "gas field development", "lng terminal",
+            "oil refinery", "petroleum project", "offshore drilling",
+            "gas pipeline", "petrochemical plant",
+            "dầu khí", "mỏ dầu", "mỏ khí", "nhà máy lọc dầu",
+            "khai thác dầu"
         ],
-        "secondary": ["oil", "gas", "petroleum", "lng"]
+        "boost": [
+            "crude oil", "natural gas", "petroleum",
+            "đường ống dẫn khí"
+        ],
+        "exclude": ["gas price", "oil price", "fuel price"],
+        "area": "Energy Develop."
     },
     "Industrial Parks": {
-        "primary": [
-            "industrial park", "industrial zone", "economic zone",
-            "export processing zone", "khu công nghiệp"
+        "required": [
+            "industrial park development", "industrial zone construction",
+            "economic zone project", "export processing zone",
+            "industrial park infrastructure", "industrial estate",
+            "khu công nghiệp", "khu chế xuất", "khu kinh tế"
         ],
-        "secondary": ["fdi", "factory", "manufacturing"]
+        "boost": [
+            "fdi", "foreign investment", "manufacturing hub",
+            "đầu tư nước ngoài"
+        ],
+        "exclude": [],
+        "area": "Urban Develop."
     },
     "Smart City": {
-        "primary": [
-            "smart city project", "urban development",
-            "digital transformation", "thành phố thông minh"
+        "required": [
+            "smart city project", "smart city development",
+            "digital city", "smart urban",
+            "thành phố thông minh", "đô thị thông minh"
         ],
-        "secondary": ["urban area", "city development"]
+        "boost": [
+            "iot infrastructure", "digital transformation",
+            "urban technology"
+        ],
+        "exclude": [],
+        "area": "Urban Develop."
     },
     "Transport": {
-        "primary": [
-            "railway project", "metro construction", "airport",
-            "highway", "expressway", "port development",
-            "đường sắt", "sân bay", "cảng biển"
+        "required": [
+            "railway construction", "metro project", "airport construction",
+            "highway construction", "expressway project", "port development",
+            "bridge construction", "tunnel project",
+            "xây dựng đường sắt", "dự án metro", "xây dựng sân bay",
+            "đường cao tốc", "cảng biển"
         ],
-        "secondary": ["transport", "logistics"]
-    },
-    "Construction": {
-        "primary": [
-            "construction project", "real estate", "housing project",
-            "xây dựng", "bất động sản"
+        "boost": [
+            "logistics hub", "transport infrastructure",
+            "giao thông"
         ],
-        "secondary": ["construction", "building"]
+        "exclude": ["traffic accident", "traffic jam", "flight delay"],
+        "area": "Urban Develop."
     }
 }
 
-# URL Blacklist Patterns (skip these URLs)
-URL_BLACKLIST_PATTERNS = [
-    r'/category/', r'/tag/', r'/tags/', r'/categories/',
-    r'/cooperation-investment$', r'/investment$', r'/business$',
-    r'/about', r'/contact', r'/policy', r'/law', r'/regulation',
-    r'/investment-policy', r'/investment-incentive',
-    r'/investment-climate', r'/doing-business',
-    r'/search', r'/archive', r'/page/', r'/expertise/',
-    r'/rss', r'/feed', r'/sitemap',
+# ============================================================
+# ARTICLE EXCLUSION KEYWORDS
+# Skip articles containing these (case-insensitive)
+# ============================================================
+
+EXCLUSION_KEYWORDS = [
+    # Sports
+    "football", "soccer", "basketball", "volleyball", "tennis",
+    "olympic", "sea games", "world cup", "championship", "tournament",
+    "match result", "score", "goal", "player", "coach", "team won",
+    "u23", "u21", "u19", "national team", "đội tuyển",
+    "bóng đá", "cầu thủ", "huấn luyện viên",
+    
+    # Entertainment
+    "celebrity", "movie", "film", "actress", "actor", "singer",
+    "concert", "festival", "entertainment", "showbiz",
+    "ca sĩ", "diễn viên", "phim",
+    
+    # Weather/Disasters (unless infrastructure related)
+    "weather forecast", "typhoon warning", "storm warning",
+    "earthquake", "flood warning", "hurricane",
+    "dự báo thời tiết", "bão",
+    
+    # Crime/Politics
+    "murder", "robbery", "arrest", "corruption scandal",
+    "election result", "political party",
+    
+    # General news
+    "covid", "pandemic", "vaccine", "quarantine",
+    "stock market", "exchange rate", "inflation rate",
+    "tourist arrival", "hotel booking",
+    
+    # Irrelevant
+    "recipe", "cooking", "fashion", "beauty",
+    "dating", "marriage", "divorce"
 ]
 
-# News Article URL Patterns (valid article URLs)
-URL_NEWS_PATTERNS = [
-    r'/\d{4}/\d{1,2}/',      # /2025/01/
-    r'/news/', r'/article/', r'/post/', r'/story/',
-    r'/tin-tuc/', r'/bai-viet/',
-    r'-post\d+\.html?$',      # -post112164.html
-    r'-\d{7,}\.html?$',       # article-1234567.html
-    r'/\d{6,}\.html?$',       # /123456.html
-    r'\.vnp$',                # .vnp
-    r'-d\d+\.html$',          # -d12345.html
+# ============================================================
+# URL PATTERNS
+# ============================================================
+
+URL_BLACKLIST_PATTERNS = [
+    r'/category/', r'/tag/', r'/tags/', r'/categories/',
+    r'/about', r'/contact', r'/policy',
+    r'/search', r'/archive', r'/page/',
+    r'/rss', r'/feed', r'/sitemap',
 ]
 
 # AI Prompts
@@ -288,9 +273,9 @@ DASHBOARD_TITLE = "Vietnam Infrastructure News Database"
 DASHBOARD_SUBTITLE = "Real-time Infrastructure Project Tracking"
 
 # Collection Settings
-COLLECTION_HOURS_BACK = 48  # Collect articles from last 48 hours
-MAX_ARTICLES_PER_SOURCE = 30  # Max articles to fetch per RSS source
-REQUEST_DELAY = 2  # Seconds between requests
+COLLECTION_HOURS_BACK = 48
+MAX_ARTICLES_PER_SOURCE = 30
+REQUEST_DELAY = 2
 
 # Logging
 LOG_LEVEL = "INFO"
