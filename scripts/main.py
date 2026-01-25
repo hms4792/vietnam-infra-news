@@ -245,7 +245,14 @@ async def run_full_pipeline():
     # Step 4: Save new articles to Excel
     if new_articles:
         logger.info("Step 4: Saving new articles to Excel...")
-        save_new_articles_to_excel(new_articles, existing_urls)
+        try:
+            # Use collector's save method if available
+            if hasattr(collector, 'save_to_excel'):
+                collector.save_to_excel()
+            else:
+                save_new_articles_to_excel(new_articles, existing_urls)
+        except Exception as e:
+            logger.error(f"Error saving to Excel: {e}")
     
     # Step 5: Combine all articles
     all_articles = existing_articles.copy()
