@@ -525,10 +525,18 @@ def main():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('--days-back', type=int, default=30)
+    parser.add_argument('--hours-back', type=int, default=None,
+                       help='Hours to look back (overrides days-back)')
     args = parser.parse_args()
     
+    # hours-back takes priority if specified
+    if args.hours_back:
+        hours = args.hours_back
+    else:
+        hours = args.days_back * 24
+    
     collector = NewsCollector()
-    articles = collector.collect_from_rss(hours_back=args.days_back * 24)
+    articles = collector.collect_from_rss(hours_back=hours)
     
     if articles:
         collector.save_to_excel()
