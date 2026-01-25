@@ -3,22 +3,27 @@
 """
 Vietnam Infrastructure News - AI Summarizer
 Generates summaries and translations using Claude API
+Works with article lists (not SQLite database)
 """
 
-import sqlite3
 import logging
 import time
 import os
 import sys
 from datetime import datetime
+from typing import List, Dict
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from anthropic import Anthropic
+try:
+    from anthropic import Anthropic
+    ANTHROPIC_AVAILABLE = True
+except ImportError:
+    ANTHROPIC_AVAILABLE = False
+
 from config.settings import (
     ANTHROPIC_API_KEY,
-    DATABASE_PATH,
     SUMMARIZATION_PROMPT_TEMPLATE,
     TRANSLATION_PROMPT_TEMPLATE
 )
@@ -30,24 +35,36 @@ logger = logging.getLogger(__name__)
 class AISummarizer:
     """AI-powered article summarizer and translator"""
     
-    def __init__(self, db_path=DATABASE_PATH, api_key=None):
-        self.db_path = db_path
+    def __init__(self, api_key=None):
         self.api_key = api_key or ANTHROPIC_API_KEY
+        self.client = None
+        
+        if not ANTHROPIC_AVAILABLE:
+            logger.warning("Anthropic library not installed. AI summarization disabled.")
+            return
         
         if not self.api_key:
-            raise ValueError("ANTHROPIC_API_KEY not found in environment variables")
+            logger.warning("ANTHROPIC_API_KEY not found. AI summarization disabled.")
+            return
         
-        self.client = Anthropic(api_key=self.api_key)
-        logger.info("AI Summarizer initialized")
+        try:
+            self.client = Anthropic(api_key=self.api_key)
+            logger.info("AI Summarizer initialized")
+        except Exception as e:
+            logger.error(f"Failed to initialize Anthropic client: {e}")
+            self.client = None
     
-    def _generate_summary(self, title, content, sector, language):
+    def _generate_summary(self, title: str, content: str, sector: str, language: str) -> str:
         """Generate summary in specified language"""
+        
+        if not self.client:
+            return self._fallback_summary(title, sector, language)
         
         try:
             prompt = SUMMARIZATION_PROMPT_TEMPLATE.format(
                 title=title,
                 sector=sector,
-                content=content[:2000],  # First 2000 chars
+                content=content[:2000] if content else title,
                 language=language
             )
             
@@ -61,18 +78,36 @@ class AISummarizer:
             )
             
             summary = message.content[0].text.strip()
-            logger.info(f"Generated {language} summary: {summary[:50]}...")
+            logger.debug(f"Generated {language} summary: {summary[:50]}...")
             return summary
             
         except Exception as e:
             logger.error(f"Error generating {language} summary: {e}")
-            return f"{sector} infrastructure project in Vietnam. {title}"
+            return self._fallback_summary(title, sector, language)
     
-    def _translate_title_to_english(self, vietnamese_title):
-        """Translate Vietnamese title to English"""
+    def _fallback_summary(self, title: str, sector: str, language: str) -> str:
+        """Fallback summary when API is unavailable"""
+        if language == "Korean":
+            return f"{sector} 분야 베트남 인프라 프로젝트. {title[:100]}"
+        elif language == "Vietnamese":
+            return f"Dự án cơ sở hạ tầng Việt Nam trong lĩnh vực {sector}. {title[:100]}"
+        else:
+            return f"{sector} infrastructure project in Vietnam. {title[:100]}"
+    
+    def _translate_title(self, title: str, target_language: str = "English") -> str:
+        """Translate title to target language"""
+        
+        if not self.client:
+            return title
         
         try:
-            prompt = TRANSLATION_PROMPT_TEMPLATE.format(title=vietnamese_title)
+            prompt = f"""Translate this Vietnamese news headline to {target_language}.
+Keep it concise and professional.
+Return ONLY the translation, nothing else.
+
+Vietnamese: {title}
+
+{target_language}:"""
             
             message = self.client.messages.create(
                 model="claude-sonnet-4-20250514",
@@ -84,137 +119,184 @@ class AISummarizer:
             )
             
             translation = message.content[0].text.strip()
-            logger.info(f"Translated: {translation}")
+            logger.debug(f"Translated to {target_language}: {translation[:50]}...")
             return translation
             
         except Exception as e:
             logger.error(f"Translation error: {e}")
-            return vietnamese_title
+            return title
     
-    def summarize_articles(self, limit=None):
-        """Summarize and translate articles (including Vietnamese title translation)"""
+    async def process_articles(self, articles: List[Dict], max_articles: int = 20) -> List[Dict]:
+        """Process articles: translate titles and generate summaries
         
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+        Args:
+            articles: List of article dictionaries
+            max_articles: Maximum number of articles to process with AI (to control API costs)
         
-        query = """
-            SELECT id, title, content, sector, source_url
-            FROM news_articles
-            WHERE (summary_ko IS NULL OR summary_en IS NULL OR summary_vi IS NULL
-                   OR title_en IS NULL)
-            ORDER BY collection_date DESC
+        Returns:
+            List of processed articles with summaries
         """
         
-        if limit:
-            query += f" LIMIT {limit}"
+        if not articles:
+            logger.info("No articles to process")
+            return articles
         
-        cursor.execute(query)
-        articles = cursor.fetchall()
+        # Only process articles that don't have summaries yet
+        articles_to_process = []
+        for article in articles:
+            # Check if already has summaries
+            has_summary = (
+                article.get("summary_en") and 
+                article.get("summary_ko") and
+                len(str(article.get("summary_en", ""))) > 50
+            )
+            if not has_summary:
+                articles_to_process.append(article)
         
-        logger.info(f"Found {len(articles)} articles to process")
+        # Limit to max_articles for API cost control
+        articles_to_process = articles_to_process[:max_articles]
         
-        for idx, (article_id, title, content, sector, url) in enumerate(articles, 1):
-            logger.info(f"\nProcessing {idx}/{len(articles)}: {title[:50]}...")
+        if not articles_to_process:
+            logger.info("All articles already have summaries")
+            return articles
+        
+        logger.info(f"Processing {len(articles_to_process)} articles with AI...")
+        
+        if not self.client:
+            logger.warning("AI client not available. Using fallback summaries.")
+            for article in articles_to_process:
+                self._add_fallback_summaries(article)
+            return articles
+        
+        for idx, article in enumerate(articles_to_process, 1):
+            title = article.get("title", "")
+            content = article.get("content", article.get("summary_vi", title))
+            sector = article.get("sector", "Infrastructure")
+            
+            logger.info(f"Processing {idx}/{len(articles_to_process)}: {str(title)[:50]}...")
             
             try:
-                # 1. Detect Vietnamese and translate title to English
-                has_vietnamese = any(ord(c) > 127 for c in title)
+                # Check if title is Vietnamese (contains non-ASCII)
+                is_vietnamese = any(ord(c) > 127 for c in str(title))
                 
-                if has_vietnamese:
-                    logger.info("Translating Vietnamese title to English...")
-                    title_en = self._translate_title_to_english(title)
+                if is_vietnamese:
+                    # Translate title to English
+                    title_en = self._translate_title(title, "English")
+                    title_ko = self._translate_title(title, "Korean")
+                    time.sleep(0.5)
                 else:
                     title_en = title
+                    title_ko = title
                 
-                # 2. Generate summaries in 3 languages
-                summary_ko = self._generate_summary(title_en, content, sector, "Korean")
-                time.sleep(1)
-                
+                # Generate summaries
                 summary_en = self._generate_summary(title_en, content, sector, "English")
-                time.sleep(1)
+                time.sleep(0.5)
+                
+                summary_ko = self._generate_summary(title_en, content, sector, "Korean")
+                time.sleep(0.5)
                 
                 summary_vi = self._generate_summary(title_en, content, sector, "Vietnamese")
-                time.sleep(1)
+                time.sleep(0.5)
                 
-                # 3. Update database
-                cursor.execute("""
-                    UPDATE news_articles
-                    SET title_en = ?, title_ko = ?, title_vi = ?,
-                        summary_ko = ?, summary_en = ?, summary_vi = ?
-                    WHERE id = ?
-                """, (title_en, title_en, title, summary_ko, summary_en, summary_vi, article_id))
+                # Update article
+                article["title_en"] = title_en
+                article["title_ko"] = title_ko
+                article["summary_en"] = summary_en
+                article["summary_ko"] = summary_ko
+                article["summary_vi"] = summary_vi
                 
-                conn.commit()
-                logger.info(f"✓ Updated article {article_id}")
+                logger.info(f"✓ Processed article {idx}")
                 
             except Exception as e:
-                logger.error(f"Error processing article {article_id}: {e}")
+                logger.error(f"Error processing article: {e}")
+                self._add_fallback_summaries(article)
         
-        conn.close()
-        logger.info(f"\n✓ Summarization complete: {len(articles)} articles processed")
-        return len(articles)
+        logger.info(f"✓ AI processing complete: {len(articles_to_process)} articles")
+        return articles
     
-    def get_statistics(self):
-        """Get summarization statistics"""
+    def _add_fallback_summaries(self, article: Dict):
+        """Add fallback summaries to article"""
+        title = str(article.get("title", ""))[:100]
+        sector = article.get("sector", "Infrastructure")
         
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+        if not article.get("title_en"):
+            article["title_en"] = title
+        if not article.get("title_ko"):
+            article["title_ko"] = title
+        if not article.get("summary_en"):
+            article["summary_en"] = f"{sector} infrastructure project in Vietnam. {title}"
+        if not article.get("summary_ko"):
+            article["summary_ko"] = f"{sector} 분야 베트남 인프라 프로젝트. {title}"
+        if not article.get("summary_vi"):
+            article["summary_vi"] = f"Dự án cơ sở hạ tầng Việt Nam trong lĩnh vực {sector}. {title}"
+    
+    def summarize_single(self, article: Dict) -> Dict:
+        """Summarize a single article (synchronous)"""
         
-        cursor.execute("SELECT COUNT(*) FROM news_articles")
-        total = cursor.fetchone()[0]
+        title = article.get("title", "")
+        content = article.get("content", article.get("summary_vi", title))
+        sector = article.get("sector", "Infrastructure")
         
-        cursor.execute("""
-            SELECT COUNT(*) FROM news_articles 
-            WHERE summary_ko IS NOT NULL AND summary_en IS NOT NULL
-        """)
-        summarized = cursor.fetchone()[0]
+        try:
+            is_vietnamese = any(ord(c) > 127 for c in str(title))
+            
+            if is_vietnamese and self.client:
+                title_en = self._translate_title(title, "English")
+                title_ko = self._translate_title(title, "Korean")
+            else:
+                title_en = title
+                title_ko = title
+            
+            article["title_en"] = title_en
+            article["title_ko"] = title_ko
+            article["summary_en"] = self._generate_summary(title_en, content, sector, "English")
+            article["summary_ko"] = self._generate_summary(title_en, content, sector, "Korean")
+            article["summary_vi"] = self._generate_summary(title_en, content, sector, "Vietnamese")
+            
+        except Exception as e:
+            logger.error(f"Error in summarize_single: {e}")
+            self._add_fallback_summaries(article)
         
-        cursor.execute("""
-            SELECT COUNT(*) FROM news_articles 
-            WHERE title_en IS NOT NULL
-        """)
-        translated = cursor.fetchone()[0]
-        
-        conn.close()
-        
-        stats = {
-            'total_articles': total,
-            'summarized': summarized,
-            'translated': translated,
-            'pending': total - summarized
-        }
-        
-        logger.info(f"Statistics: {stats}")
-        return stats
+        return article
 
 
 def main():
-    """Main execution"""
+    """Main execution for testing"""
     
     import argparse
     
     parser = argparse.ArgumentParser(description='AI Summarizer for Vietnam Infrastructure News')
-    parser.add_argument('--limit', type=int, help='Limit number of articles to process')
-    parser.add_argument('--stats', action='store_true', help='Show statistics only')
+    parser.add_argument('--test', action='store_true', help='Run test summarization')
     
     args = parser.parse_args()
     
     try:
         summarizer = AISummarizer()
         
-        if args.stats:
-            stats = summarizer.get_statistics()
-            print("\nSummarization Statistics:")
-            print(f"  Total articles: {stats['total_articles']}")
-            print(f"  Summarized: {stats['summarized']}")
-            print(f"  Translated: {stats['translated']}")
-            print(f"  Pending: {stats['pending']}")
+        if args.test:
+            # Test with sample article
+            test_article = {
+                "title": "Dự án xử lý nước thải tại TP.HCM được phê duyệt",
+                "content": "Dự án nhà máy xử lý nước thải công suất 200.000 m3/ngày tại TP.HCM đã được phê duyệt với tổng vốn đầu tư 500 triệu USD.",
+                "sector": "Waste Water",
+                "province": "Ho Chi Minh City"
+            }
+            
+            result = summarizer.summarize_single(test_article)
+            
+            print("\nTest Result:")
+            print(f"  Title (EN): {result.get('title_en')}")
+            print(f"  Title (KO): {result.get('title_ko')}")
+            print(f"  Summary (EN): {result.get('summary_en')}")
+            print(f"  Summary (KO): {result.get('summary_ko')}")
+            print(f"  Summary (VI): {result.get('summary_vi')}")
         else:
-            processed = summarizer.summarize_articles(limit=args.limit)
-            print(f"\n✓ Successfully processed {processed} articles")
+            print("AI Summarizer ready. Use --test to run a test.")
             
     except Exception as e:
         logger.error(f"Error in main: {e}")
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
 
 
