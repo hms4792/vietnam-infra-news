@@ -420,19 +420,65 @@ renderNews();
 
 
 class ExcelUpdater:
-    """Updates Excel file with all articles"""
+    """Updates Excel file with all articles + Hierarchical Timeline sheet"""
     
     def __init__(self):
         self.output_path = OUTPUT_DIR / f"vietnam_news_{datetime.now().strftime('%Y%m%d')}.xlsx"
+        self.today = datetime.now().strftime("%Y-%m-%d")
+        
+        # Styles
+        self.header_font = None
+        self.header_fill = None
+        self.highlight_fill = None
+        self.border = None
+        self._init_styles()
+    
+    def _init_styles(self):
+        """Initialize Excel styles"""
+        if not OPENPYXL_AVAILABLE:
+            return
+        
+        from openpyxl.styles import Font, PatternFill, Border, Side
+        
+        self.header_font = Font(bold=True, color="FFFFFF", size=11)
+        self.header_fill = PatternFill(start_color="0D9488", end_color="0D9488", fill_type="solid")
+        self.highlight_fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")  # Yellow for new
+        self.border = Border(
+            left=Side(style='thin', color='CCCCCC'),
+            right=Side(style='thin', color='CCCCCC'),
+            top=Side(style='thin', color='CCCCCC'),
+            bottom=Side(style='thin', color='CCCCCC')
+        )
     
     def update(self, articles: List[Dict]) -> str:
-        """Update Excel file with all articles"""
+        """Update Excel file with all articles and timeline sheet"""
         
         if not OPENPYXL_AVAILABLE:
             logger.warning("openpyxl not available, skipping Excel update")
             return ""
         
         wb = openpyxl.Workbook()
+        
+        # Sheet 1: News Database (main data)
+        self._create_database_sheet(wb, articles)
+        
+        # Sheet 2: Project Timeline (Keywords > Province hierarchy)
+        self._create_project_timeline_sheet(wb, articles)
+        
+        # Sheet 3: Summary Statistics
+        self._create_summary_sheet(wb, articles)
+        
+        # Save
+        self.output_path.parent.mkdir(parents=True, exist_ok=True)
+        wb.save(self.output_path)
+        
+        logger.info(f"Excel saved with {len(articles)} articles: {self.output_path}")
+        return str(self.output_path)
+    
+    def _create_database_sheet(self, wb, articles: List[Dict]):
+        """Create main database sheet"""
+        from openpyxl.styles import Alignment
+        
         ws = wb.active
         ws.title = "News Database"
         
@@ -440,12 +486,17 @@ class ExcelUpdater:
         headers = ["No", "Date", "Area", "Sector", "Province", "Title (EN)", "Title (VI)", "Summary (EN)", "Source", "URL"]
         for col, header in enumerate(headers, 1):
             cell = ws.cell(row=1, column=col, value=header)
-            cell.font = Font(bold=True, color="FFFFFF")
-            cell.fill = PatternFill(start_color="0D9488", end_color="0D9488", fill_type="solid")
-            cell.alignment = Alignment(horizontal="center")
+            cell.font = self.header_font
+            cell.fill = self.header_fill
+            cell.alignment = Alignment(horizontal="center", vertical="center")
+            cell.border = self.border
         
-        # Data rows
-        for i, article in enumerate(articles, 1):
+        # Data rows (sorted by date descending)
+        sorted_articles = sorted(articles, key=lambda x: x.get("date", ""), reverse=True)
+        
+        for i, article in enumerate(sorted_articles, 1):
+            row = i + 1
+            
             title = article.get("title", "")
             if isinstance(title, dict):
                 title_en = title.get("en", title.get("vi", ""))
@@ -460,9 +511,11 @@ class ExcelUpdater:
             else:
                 summary_en = article.get("summary_en", str(summary))
             
+            article_date = str(article.get("date", ""))[:10]
+            
             row_data = [
                 i,
-                str(article.get("date", ""))[:10],
+                article_date,
                 article.get("area", "Environment"),
                 article.get("sector", "Waste Water"),
                 article.get("province", "Vietnam"),
@@ -474,26 +527,290 @@ class ExcelUpdater:
             ]
             
             for col, value in enumerate(row_data, 1):
-                ws.cell(row=i+1, column=col, value=value)
+                cell = ws.cell(row=row, column=col, value=value)
+                cell.border = self.border
+                
+                # Highlight today's articles in yellow
+                if article_date == self.today:
+                    cell.fill = self.highlight_fill
         
-        # Adjust column widths
-        ws.column_dimensions['A'].width = 6
-        ws.column_dimensions['B'].width = 12
+        # Column widths
+        col_widths = [6, 12, 15, 20, 15, 50, 50, 60, 20, 40]
+        for i, width in enumerate(col_widths, 1):
+            ws.column_dimensions[chr(64 + i)].width = width
+        
+        ws.freeze_panes = 'A2'
+    
+    def _create_project_timeline_sheet(self, wb, articles: List[Dict]):
+        """Create Project Timeline sheet with Keywords > Province hierarchy"""
+        from openpyxl.styles import Alignment, Font, PatternFill
+        from collections import defaultdict
+        
+        ws = wb.create_sheet("Project Timeline")
+        
+        # Sector colors for visual grouping
+        sector_colors = {
+            "Waste Water": ("1E3A5F", "E6F0FA"),       # Dark blue header, light blue bg
+            "Solid Waste": ("5D1E1E", "FAE6E6"),       # Dark red header, light red bg
+            "Water Supply/Drainage": ("1E5F3A", "E6FAF0"),  # Dark green header, light green bg
+            "Power": ("5F4B1E", "FAF3E6"),             # Dark orange header, light orange bg
+            "Oil & Gas": ("3A1E5F", "F0E6FA"),         # Dark purple header, light purple bg
+            "Smart City": ("5F5F1E", "FAFAE6"),        # Dark yellow header, light yellow bg
+            "Industrial Parks": ("1E5F5F", "E6FAFA"), # Dark cyan header, light cyan bg
+            "Infrastructure": ("4A4A4A", "F0F0F0"),   # Gray
+            "Transport": ("2E4A1E", "EAF5E6"),        # Dark green
+            "Construction": ("4A3A2E", "F5EFE6"),     # Brown
+        }
+        
+        # Group articles: Sector > Province > Articles (sorted by date)
+        sector_province_articles = defaultdict(lambda: defaultdict(list))
+        
+        for article in articles:
+            sector = article.get("sector", "Unknown")
+            province = article.get("province", "Vietnam")
+            if sector and sector != "Unknown":
+                sector_province_articles[sector][province].append(article)
+        
+        # Sort articles within each group by date (newest first)
+        for sector in sector_province_articles:
+            for province in sector_province_articles[sector]:
+                sector_province_articles[sector][province] = sorted(
+                    sector_province_articles[sector][province],
+                    key=lambda x: x.get("date", ""),
+                    reverse=True
+                )
+        
+        # Sort sectors by total article count
+        sector_totals = {
+            sector: sum(len(articles) for articles in provinces.values())
+            for sector, provinces in sector_province_articles.items()
+        }
+        sorted_sectors = sorted(sector_totals.keys(), key=lambda x: sector_totals[x], reverse=True)
+        
+        # Headers
+        headers = ["Sector", "Province", "Date", "Title", "Source", "URL", "New"]
+        for col, header in enumerate(headers, 1):
+            cell = ws.cell(row=1, column=col, value=header)
+            cell.font = self.header_font
+            cell.fill = self.header_fill
+            cell.alignment = Alignment(horizontal="center", vertical="center")
+            cell.border = self.border
+        
+        # Build timeline
+        row = 2
+        
+        for sector in sorted_sectors:
+            provinces_data = sector_province_articles[sector]
+            sector_total = sector_totals[sector]
+            
+            # Get sector colors
+            header_color, bg_color = sector_colors.get(sector, ("4A4A4A", "F0F0F0"))
+            
+            # === SECTOR HEADER ROW ===
+            sector_header_fill = PatternFill(start_color=header_color, end_color=header_color, fill_type="solid")
+            sector_header_font = Font(bold=True, color="FFFFFF", size=12)
+            
+            cell = ws.cell(row=row, column=1, value=f"▼ {sector} ({sector_total} articles)")
+            cell.font = sector_header_font
+            cell.fill = sector_header_fill
+            ws.merge_cells(start_row=row, start_column=1, end_row=row, end_column=7)
+            row += 1
+            
+            # Sort provinces: specific provinces first (by count), then "Vietnam" last
+            province_counts = {p: len(articles) for p, articles in provinces_data.items()}
+            specific_provinces = [p for p in province_counts.keys() if p != "Vietnam"]
+            specific_provinces = sorted(specific_provinces, key=lambda x: province_counts[x], reverse=True)
+            
+            # Add "Vietnam" at the end if exists
+            if "Vietnam" in province_counts:
+                province_order = specific_provinces + ["Vietnam"]
+            else:
+                province_order = specific_provinces
+            
+            province_bg_fill = PatternFill(start_color=bg_color, end_color=bg_color, fill_type="solid")
+            
+            for province in province_order:
+                province_articles = provinces_data[province]
+                province_count = len(province_articles)
+                
+                # === PROVINCE HEADER ROW ===
+                province_label = f"  ├─ {province}" if province != "Vietnam" else f"  └─ {province} (Common)"
+                cell = ws.cell(row=row, column=2, value=f"{province_label} ({province_count})")
+                cell.font = Font(bold=True, size=10)
+                cell.fill = province_bg_fill
+                ws.merge_cells(start_row=row, start_column=2, end_row=row, end_column=7)
+                row += 1
+                
+                # === ARTICLE ROWS (max 20 per province) ===
+                for article in province_articles[:20]:
+                    title = article.get("title", "")
+                    if isinstance(title, dict):
+                        title = title.get("en", title.get("vi", ""))
+                    title_en = article.get("title_en", article.get("summary_en", str(title)))
+                    
+                    article_date = str(article.get("date", ""))[:10]
+                    is_new = article_date == self.today
+                    
+                    row_data = [
+                        "",  # Sector (empty)
+                        "",  # Province (empty)
+                        article_date,
+                        title_en[:70] if title_en else "",
+                        article.get("source", ""),
+                        article.get("url", ""),
+                        "● NEW" if is_new else ""
+                    ]
+                    
+                    for col, value in enumerate(row_data, 1):
+                        cell = ws.cell(row=row, column=col, value=value)
+                        cell.border = self.border
+                        
+                        # Highlight new articles in yellow
+                        if is_new:
+                            cell.fill = self.highlight_fill
+                    
+                    row += 1
+                
+                # Show "...and X more" if truncated
+                if len(province_articles) > 20:
+                    remaining = len(province_articles) - 20
+                    cell = ws.cell(row=row, column=4, value=f"... and {remaining} more articles")
+                    cell.font = Font(italic=True, color="888888")
+                    row += 1
+            
+            row += 1  # Empty row between sectors
+        
+        # Column widths
+        col_widths = [5, 25, 12, 55, 18, 35, 8]
+        for i, width in enumerate(col_widths, 1):
+            ws.column_dimensions[chr(64 + i)].width = width
+        
+        ws.freeze_panes = 'A2'
+        
+        # Add legend at the bottom
+        row += 2
+        ws.cell(row=row, column=1, value="Legend:")
+        ws.cell(row=row, column=1).font = Font(bold=True)
+        row += 1
+        
+        legend_cell = ws.cell(row=row, column=1, value="● NEW")
+        legend_cell.fill = self.highlight_fill
+        ws.cell(row=row, column=2, value="= Article updated today")
+        row += 1
+        
+        ws.cell(row=row, column=1, value="├─ Province")
+        ws.cell(row=row, column=2, value="= Specific location project")
+        row += 1
+        
+        ws.cell(row=row, column=1, value="└─ Vietnam (Common)")
+        ws.cell(row=row, column=2, value="= Nationwide/general news")
+    
+    def _create_summary_sheet(self, wb, articles: List[Dict]):
+        """Create Summary Statistics sheet"""
+        from openpyxl.styles import Font, Alignment
+        from collections import Counter
+        from datetime import timedelta
+        
+        ws = wb.create_sheet("Summary")
+        
+        # Title
+        ws.cell(row=1, column=1, value="Vietnam Infrastructure News - Summary Statistics")
+        ws.cell(row=1, column=1).font = Font(bold=True, size=14)
+        ws.merge_cells('A1:D1')
+        
+        ws.cell(row=2, column=1, value=f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        ws.cell(row=2, column=1).font = Font(italic=True, color="666666")
+        
+        # Count statistics
+        today_count = sum(1 for a in articles if str(a.get("date", ""))[:10] == self.today)
+        
+        week_ago = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
+        week_count = sum(1 for a in articles if str(a.get("date", ""))[:10] >= week_ago)
+        
+        month_start = datetime.now().strftime("%Y-%m-01")
+        month_count = sum(1 for a in articles if str(a.get("date", ""))[:10] >= month_start)
+        
+        count_2025 = sum(1 for a in articles if str(a.get("date", "")).startswith("2025"))
+        count_2026 = sum(1 for a in articles if str(a.get("date", "")).startswith("2026"))
+        
+        # Overview
+        row = 4
+        ws.cell(row=row, column=1, value="📊 Overview")
+        ws.cell(row=row, column=1).font = Font(bold=True, size=12)
+        row += 1
+        
+        overview_data = [
+            ("Total Articles", len(articles)),
+            ("Today's Articles", today_count),
+            ("This Week", week_count),
+            ("This Month", month_count),
+            ("2026 Articles", count_2026),
+            ("2025 Articles", count_2025),
+        ]
+        
+        for label, value in overview_data:
+            ws.cell(row=row, column=1, value=label)
+            cell = ws.cell(row=row, column=2, value=value)
+            if label == "Today's Articles" and value > 0:
+                cell.fill = self.highlight_fill
+            row += 1
+        
+        # Sector breakdown
+        row += 1
+        ws.cell(row=row, column=1, value="📁 By Sector (Keywords)")
+        ws.cell(row=row, column=1).font = Font(bold=True, size=12)
+        row += 1
+        
+        sector_counts = Counter(a.get("sector", "Unknown") for a in articles)
+        for sector, count in sector_counts.most_common(15):
+            ws.cell(row=row, column=1, value=sector)
+            ws.cell(row=row, column=2, value=count)
+            
+            # Today's count for this sector
+            today_sector = sum(1 for a in articles 
+                             if a.get("sector") == sector and str(a.get("date", ""))[:10] == self.today)
+            if today_sector > 0:
+                cell = ws.cell(row=row, column=3, value=f"+{today_sector} today")
+                cell.fill = self.highlight_fill
+            row += 1
+        
+        # Province breakdown (excluding Vietnam)
+        row += 1
+        ws.cell(row=row, column=1, value="📍 By Province (Top 15, excl. Vietnam)")
+        ws.cell(row=row, column=1).font = Font(bold=True, size=12)
+        row += 1
+        
+        province_counts = Counter(
+            a.get("province", "Vietnam") for a in articles 
+            if a.get("province", "Vietnam") != "Vietnam"
+        )
+        for province, count in province_counts.most_common(15):
+            ws.cell(row=row, column=1, value=province)
+            ws.cell(row=row, column=2, value=count)
+            
+            today_province = sum(1 for a in articles 
+                                if a.get("province") == province and str(a.get("date", ""))[:10] == self.today)
+            if today_province > 0:
+                cell = ws.cell(row=row, column=3, value=f"+{today_province} today")
+                cell.fill = self.highlight_fill
+            row += 1
+        
+        # Source breakdown
+        row += 1
+        ws.cell(row=row, column=1, value="📰 By Source (Top 10)")
+        ws.cell(row=row, column=1).font = Font(bold=True, size=12)
+        row += 1
+        
+        source_counts = Counter(a.get("source", "Unknown") for a in articles)
+        for source, count in source_counts.most_common(10):
+            ws.cell(row=row, column=1, value=source)
+            ws.cell(row=row, column=2, value=count)
+            row += 1
+        
+        # Column widths
+        ws.column_dimensions['A'].width = 35
+        ws.column_dimensions['B'].width = 15
         ws.column_dimensions['C'].width = 15
-        ws.column_dimensions['D'].width = 20
-        ws.column_dimensions['E'].width = 15
-        ws.column_dimensions['F'].width = 50
-        ws.column_dimensions['G'].width = 50
-        ws.column_dimensions['H'].width = 60
-        ws.column_dimensions['I'].width = 20
-        ws.column_dimensions['J'].width = 40
-        
-        # Save
-        self.output_path.parent.mkdir(parents=True, exist_ok=True)
-        wb.save(self.output_path)
-        
-        logger.info(f"Excel saved with {len(articles)} articles: {self.output_path}")
-        return str(self.output_path)
 
 
 def main():
