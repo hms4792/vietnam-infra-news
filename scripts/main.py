@@ -2,18 +2,20 @@
 # -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News - Main Pipeline
-Preserves existing Excel data (2019-2025) and adds new articles
 """
 
-import asyncio
 import logging
 import sys
 import os
 from datetime import datetime
 from pathlib import Path
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Setup paths FIRST
+SCRIPT_DIR = Path(__file__).parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+sys.path.insert(0, str(PROJECT_ROOT))
 
+# Now import settings
 from config.settings import DATA_DIR, OUTPUT_DIR
 
 logging.basicConfig(
@@ -22,13 +24,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-PROJECT_ROOT = Path(__file__).parent.parent
 EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
 
 
 def load_all_articles_from_excel():
-    """Load ALL articles from Excel database (2019-present)"""
-    
+    """Load ALL articles from Excel database"""
     try:
         import openpyxl
     except ImportError:
@@ -36,37 +36,26 @@ def load_all_articles_from_excel():
         return []
     
     if not EXCEL_DB_PATH.exists():
-        logger.warning(f"Excel database not found: {EXCEL_DB_PATH}")
+        logger.warning(f"Excel not found: {EXCEL_DB_PATH}")
         return []
     
-    logger.info(f"Loading articles from: {EXCEL_DB_PATH}")
+    logger.info(f"Loading from: {EXCEL_DB_PATH}")
     
     try:
         wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
         ws = wb.active
         
         headers = [cell.value for cell in ws[1]]
-        logger.info(f"Excel headers: {headers}")
-        
-        # Column mapping
-        col_map = {}
-        for i, h in enumerate(headers):
-            if h:
-                col_map[str(h).strip()] = i
+        col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
         
         articles = []
-        
         for row in ws.iter_rows(min_row=2, values_only=True):
             if not any(row):
                 continue
             
-            # Parse date
             date_val = row[col_map.get("Date", 4)] if "Date" in col_map else None
             if date_val:
-                if hasattr(date_val, 'strftime'):
-                    date_str = date_val.strftime("%Y-%m-%d")
-                else:
-                    date_str = str(date_val)[:10]
+                date_str = date_val.strftime("%Y-%m-%d") if hasattr(date_val, 'strftime') else str(date_val)[:10]
             else:
                 date_str = ""
             
@@ -86,137 +75,147 @@ def load_all_articles_from_excel():
         
         wb.close()
         
-        # Count by year
         year_counts = {}
         for a in articles:
             year = a.get("date", "")[:4]
             if year:
                 year_counts[year] = year_counts.get(year, 0) + 1
         
-        logger.info(f"Loaded {len(articles)} total articles from Excel")
+        logger.info(f"Loaded {len(articles)} articles")
         logger.info(f"By year: {dict(sorted(year_counts.items()))}")
-        
         return articles
         
     except Exception as e:
-        logger.error(f"Error loading Excel: {e}")
+        logger.error(f"Excel load error: {e}")
         import traceback
         traceback.print_exc()
         return []
 
 
-async def main():
-    """Main pipeline execution"""
+def main():
+    """Main pipeline - synchronous version"""
     
-    logger.info("=" * 70)
-    logger.info("VIETNAM INFRASTRUCTURE NEWS PIPELINE")
-    logger.info(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    logger.info("=" * 70)
+    print("=" * 70)
+    print("VIETNAM INFRASTRUCTURE NEWS PIPELINE")
+    print(f"Started: {datetime.now()}")
+    print("=" * 70)
     
-    # Step 1: Load existing articles from Excel (ALL years)
-    logger.info("\nStep 1: Loading existing articles from Excel...")
+    # Ensure output directory
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    print(f"Output directory: {OUTPUT_DIR}")
+    
+    # Step 1: Load existing articles
+    print("\n[Step 1] Loading existing articles...")
     existing_articles = load_all_articles_from_excel()
-    logger.info(f"Found {len(existing_articles)} existing articles (2019-present)")
+    print(f"Loaded {len(existing_articles)} existing articles")
     
     # Step 2: Collect new articles
-    logger.info("\nStep 2: Collecting new infrastructure news...")
+    print("\n[Step 2] Collecting new articles...")
     new_articles = []
     collector = None
     
     try:
-        from scripts.news_collector import NewsCollector
-        collector = NewsCollector()
+        # Direct import from file
+        import importlib.util
+        collector_path = SCRIPT_DIR / "news_collector.py"
+        print(f"Loading collector from: {collector_path}")
+        
+        spec = importlib.util.spec_from_file_location("news_collector", collector_path)
+        collector_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(collector_module)
+        
+        collector = collector_module.NewsCollector()
         new_articles = collector.collect_from_rss(hours_back=48)
-        logger.info(f"Collected {len(new_articles)} new articles")
+        print(f"Collected {len(new_articles)} new articles")
+        
     except Exception as e:
-        logger.error(f"News collection error: {e}")
+        print(f"Collection error: {e}")
         import traceback
         traceback.print_exc()
     
-    # Step 3: Save new articles to Excel
+    # Step 3: Save new articles
     if new_articles and collector:
-        logger.info("\nStep 3: Saving new articles to Excel...")
+        print("\n[Step 3] Saving new articles...")
         try:
             collector.save_to_excel()
         except Exception as e:
-            logger.error(f"Error saving to Excel: {e}")
+            print(f"Save error: {e}")
     
-    # Step 4: Combine all articles for dashboard
+    # Step 4: Combine articles
     all_articles = existing_articles + new_articles
-    logger.info(f"\nStep 4: Total articles for dashboard: {len(all_articles)}")
+    print(f"\n[Step 4] Total articles: {len(all_articles)}")
     
-    # If no articles, still create empty dashboard
-    if not all_articles:
-        logger.warning("No articles found! Creating empty dashboard...")
-        all_articles = []
-    
-    # Step 5: Update dashboard
-    logger.info("\nStep 5: Updating dashboard...")
-    
-    # Ensure output directory exists
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    logger.info(f"Output directory: {OUTPUT_DIR}")
-    
+    # Step 5: Create dashboard
+    print("\n[Step 5] Creating dashboard...")
     try:
-        from scripts.dashboard_updater import DashboardUpdater, ExcelUpdater
+        import importlib.util
+        # Direct import
+        dashboard_path = SCRIPT_DIR / "dashboard_updater.py"
+        print(f"Loading dashboard from: {dashboard_path}")
         
-        logger.info("Creating DashboardUpdater...")
-        dashboard = DashboardUpdater()
-        dashboard_path = dashboard.update(all_articles)
-        logger.info(f"Dashboard created: {dashboard_path}")
+        spec = importlib.util.spec_from_file_location("dashboard_updater", dashboard_path)
+        dashboard_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(dashboard_module)
         
-        logger.info("Creating ExcelUpdater...")
-        excel = ExcelUpdater()
-        excel_path = excel.update(all_articles)
-        logger.info(f"Excel created: {excel_path}")
+        print("Creating DashboardUpdater instance...")
+        dashboard = dashboard_module.DashboardUpdater()
         
-    except ImportError as e:
-        logger.error(f"Import error: {e}")
-        import traceback
-        traceback.print_exc()
+        print(f"Updating dashboard with {len(all_articles)} articles...")
+        result = dashboard.update(all_articles)
+        print(f"Dashboard result: {result}")
         
-        # Try direct import
-        try:
-            logger.info("Attempting direct import...")
-            import importlib.util
-            spec = importlib.util.spec_from_file_location("dashboard_updater", 
-                PROJECT_ROOT / "scripts" / "dashboard_updater.py")
-            dashboard_module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(dashboard_module)
-            
-            dashboard = dashboard_module.DashboardUpdater()
-            dashboard.update(all_articles)
-            logger.info("Dashboard created via direct import")
-        except Exception as e2:
-            logger.error(f"Direct import also failed: {e2}")
-            traceback.print_exc()
+        print("Creating ExcelUpdater instance...")
+        excel = dashboard_module.ExcelUpdater()
+        excel_result = excel.update(all_articles)
+        print(f"Excel result: {excel_result}")
+        
     except Exception as e:
-        logger.error(f"Dashboard update error: {e}")
+        print(f"Dashboard error: {e}")
         import traceback
         traceback.print_exc()
     
-    # Verify dashboard exists
-    dashboard_file = OUTPUT_DIR / "index.html"
-    if dashboard_file.exists():
-        logger.info(f"✓ Dashboard verified: {dashboard_file}")
+    # Verify outputs
+    print("\n[Step 6] Verifying outputs...")
+    index_file = OUTPUT_DIR / "index.html"
+    dashboard_file = OUTPUT_DIR / "vietnam_dashboard.html"
+    
+    if index_file.exists():
+        print(f"✓ index.html exists ({index_file.stat().st_size} bytes)")
     else:
-        logger.error(f"✗ Dashboard NOT found at {dashboard_file}")
+        print(f"✗ index.html NOT found at {index_file}")
     
-    # Step 6: Send notifications
-    logger.info("\nStep 6: Sending notifications...")
+    if dashboard_file.exists():
+        print(f"✓ vietnam_dashboard.html exists ({dashboard_file.stat().st_size} bytes)")
+    else:
+        print(f"✗ vietnam_dashboard.html NOT found")
+    
+    # List output files
+    print("\nOutput directory contents:")
+    for f in OUTPUT_DIR.iterdir():
+        print(f"  {f.name} ({f.stat().st_size} bytes)")
+    
+    # Step 7: Send notification (skip if no email config)
+    print("\n[Step 7] Notifications...")
     try:
-        from scripts.send_notification import EmailNotifier
-        notifier = EmailNotifier()
-        notifier.run()
+        from config.settings import EMAIL_USERNAME, EMAIL_PASSWORD
+        if EMAIL_USERNAME and EMAIL_PASSWORD:
+            notifier_path = SCRIPT_DIR / "send_notification.py"
+            spec = importlib.util.spec_from_file_location("send_notification", notifier_path)
+            notifier_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(notifier_module)
+            
+            notifier = notifier_module.EmailNotifier()
+            notifier.run()
+        else:
+            print("Email credentials not set, skipping notification")
     except Exception as e:
-        logger.error(f"Notification error: {e}")
+        print(f"Notification error: {e}")
     
-    logger.info("\n" + "=" * 70)
-    logger.info("PIPELINE COMPLETE")
-    logger.info(f"Total articles in database: {len(all_articles)}")
-    logger.info(f"New articles collected: {len(new_articles)}")
-    logger.info("=" * 70)
+    print("\n" + "=" * 70)
+    print("PIPELINE COMPLETE")
+    print(f"Total: {len(all_articles)} | New: {len(new_articles)}")
+    print("=" * 70)
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
