@@ -1,348 +1,371 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Vietnam Infrastructure News Dashboard Updater
-Standalone version - no external config imports
+Vietnam Infrastructure News - Dashboard Updater
+Can be run directly: python dashboard_updater.py
+Loads ALL data from Excel and generates complete dashboard
 """
 
 import json
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, List
+from collections import Counter
+import sys
 
-# Setup paths directly
+# Setup paths
 SCRIPT_DIR = Path(__file__).parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 DATA_DIR = PROJECT_ROOT / "data"
 OUTPUT_DIR = PROJECT_ROOT / "outputs"
-TEMPLATE_DIR = PROJECT_ROOT / "templates"
+
+sys.path.insert(0, str(PROJECT_ROOT))
 
 try:
     import openpyxl
-    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from openpyxl.styles import Font, PatternFill, Alignment
     OPENPYXL_AVAILABLE = True
 except ImportError:
     OPENPYXL_AVAILABLE = False
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
 
-class DashboardUpdater:
-    """Updates HTML dashboard with ALL articles data"""
+
+def load_all_articles():
+    """Load ALL articles from Excel database"""
+    if not OPENPYXL_AVAILABLE:
+        logger.error("openpyxl not installed")
+        return []
     
-    def __init__(self):
-        self.template_path = TEMPLATE_DIR / "dashboard_template.html"
-        self.output_path = OUTPUT_DIR / "vietnam_dashboard.html"
-        # Ensure output directory exists
-        OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    if not EXCEL_DB_PATH.exists():
+        logger.warning(f"Excel not found: {EXCEL_DB_PATH}")
+        return []
     
-    def update(self, all_articles: List[Dict]) -> str:
-        """Update dashboard HTML with all articles"""
-        
-        logger.info(f"Generating dashboard with {len(all_articles)} articles")
-        
-        # Create standalone dashboard
-        html = self._create_standalone_dashboard(all_articles)
-        
-        # Save dashboard
-        with open(self.output_path, 'w', encoding='utf-8') as f:
-            f.write(html)
-        
-        # Also save as index.html
-        index_path = OUTPUT_DIR / "index.html"
-        with open(index_path, 'w', encoding='utf-8') as f:
-            f.write(html)
-        
-        logger.info(f"Dashboard saved: {self.output_path}")
-        logger.info(f"Index saved: {index_path}")
-        
-        return str(self.output_path)
+    logger.info(f"Loading from: {EXCEL_DB_PATH}")
     
-    def _generate_js_data(self, articles: List[Dict]) -> str:
-        """Generate JavaScript array with multilingual support"""
-        js_articles = []
+    try:
+        wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
+        ws = wb.active
         
-        for i, article in enumerate(articles, 1):
-            title = article.get("title", article.get("News Tittle", ""))
-            title_vi = str(title) if title else ""
-            title_en = article.get("title_en", "") or title_vi
-            title_ko = article.get("title_ko", "") or title_en
+        headers = [cell.value for cell in ws[1]]
+        col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
+        
+        articles = []
+        for row in ws.iter_rows(min_row=2, values_only=True):
+            if not any(row):
+                continue
             
-            summary = article.get("summary_vi", article.get("Short summary", ""))
-            summary_vi = str(summary) if summary else ""
-            summary_en = article.get("summary_en", "") or summary_vi
-            summary_ko = article.get("summary_ko", "") or summary_en
-            
-            sector = article.get("sector", article.get("Business Sector", ""))
-            area = article.get("area", article.get("Area", "Environment"))
-            province = article.get("province", article.get("Province", "Vietnam"))
-            source = article.get("source", article.get("Source", ""))
-            url = article.get("url", article.get("Link", ""))
-            
-            date_str = article.get("date", article.get("Date", ""))
-            if date_str:
-                if hasattr(date_str, 'strftime'):
-                    date_str = date_str.strftime("%Y-%m-%d")
+            # Parse date
+            date_val = row[col_map.get("Date", 4)] if "Date" in col_map else None
+            if date_val:
+                if hasattr(date_val, 'strftime'):
+                    date_str = date_val.strftime("%Y-%m-%d")
                 else:
-                    date_str = str(date_str)[:10]
+                    date_str = str(date_val)[:10]
+            else:
+                date_str = ""
             
-            js_obj = {
-                "id": i,
-                "title": {
-                    "vi": self._escape_js(title_vi),
-                    "en": self._escape_js(title_en),
-                    "ko": self._escape_js(title_ko)
-                },
-                "summary": {
-                    "vi": self._escape_js(summary_vi),
-                    "en": self._escape_js(summary_en),
-                    "ko": self._escape_js(summary_ko)
-                },
-                "sector": sector or "Unknown",
-                "area": area or "Environment",
-                "province": province or "Vietnam",
-                "source": source or "Unknown",
-                "url": url or "",
-                "date": date_str or ""
+            article = {
+                "area": row[col_map.get("Area", 0)] or "Environment",
+                "sector": row[col_map.get("Business Sector", 1)] or "Unknown",
+                "province": row[col_map.get("Province", 2)] or "Vietnam",
+                "title": row[col_map.get("News Tittle", 3)] or "",
+                "date": date_str,
+                "source": row[col_map.get("Source", 5)] or "",
+                "url": row[col_map.get("Link", 6)] or "",
+                "summary": row[col_map.get("Short summary", 7)] or "",
             }
             
-            js_articles.append(js_obj)
+            if article["title"] or article["url"]:
+                articles.append(article)
         
-        return json.dumps(js_articles, ensure_ascii=False)
+        wb.close()
+        
+        # Statistics
+        year_counts = Counter(a["date"][:4] for a in articles if a["date"])
+        sector_counts = Counter(a["sector"] for a in articles)
+        
+        logger.info(f"Loaded {len(articles)} articles")
+        logger.info(f"Years: {dict(sorted(year_counts.items()))}")
+        logger.info(f"Sectors: {dict(sector_counts.most_common(5))}")
+        
+        return articles
+        
+    except Exception as e:
+        logger.error(f"Load error: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
+
+
+def generate_dashboard_html(articles):
+    """Generate complete dashboard HTML"""
     
-    def _escape_js(self, text: str) -> str:
-        """Escape text for JavaScript"""
-        if not text:
-            return ""
-        text = str(text)
-        text = text.replace("\\", "\\\\")
-        text = text.replace('"', '\\"')
-        text = text.replace("'", "\\'")
-        text = text.replace("\n", " ")
-        text = text.replace("\r", "")
-        return text[:500]
+    today = datetime.now().strftime("%Y-%m-%d")
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
     
-    def _create_standalone_dashboard(self, articles: List[Dict]) -> str:
-        """Create complete dashboard HTML"""
+    # Calculate statistics
+    total = len(articles)
+    today_count = sum(1 for a in articles if a.get("date") == today)
+    
+    week_ago = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
+    week_count = sum(1 for a in articles if a.get("date", "") >= week_ago)
+    
+    month_ago = (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d")
+    month_count = sum(1 for a in articles if a.get("date", "") >= month_ago)
+    
+    # Count by year, sector, source
+    year_counts = Counter(a["date"][:4] for a in articles if a.get("date"))
+    sector_counts = Counter(a["sector"] for a in articles if a.get("sector"))
+    source_counts = Counter(a["source"] for a in articles if a.get("source"))
+    
+    # Prepare JS data
+    js_articles = []
+    for i, a in enumerate(articles, 1):
+        title = str(a.get("title", ""))[:300]
+        summary = str(a.get("summary", ""))[:300]
         
-        js_data = self._generate_js_data(articles)
-        today = datetime.now().strftime("%Y-%m-%d")
+        # Escape for JS
+        title = title.replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ")
+        summary = summary.replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ")
         
-        today_count = sum(1 for a in articles if str(a.get("date", ""))[:10] == today)
-        total_count = len(articles)
-        
-        # Count by year
-        year_counts = {}
-        for a in articles:
-            year = str(a.get("date", ""))[:4]
-            if year and year.isdigit():
-                year_counts[year] = year_counts.get(year, 0) + 1
-        
-        # Count by sector
-        sector_counts = {}
-        for a in articles:
-            s = a.get("sector", a.get("Business Sector", "Unknown"))
-            if s:
-                sector_counts[s] = sector_counts.get(s, 0) + 1
-        
-        # Count by source
-        source_counts = {}
-        for a in articles:
-            src = a.get("source", a.get("Source", "Unknown"))
-            if src:
-                source_counts[src] = source_counts.get(src, 0) + 1
-        
-        html = f'''<!DOCTYPE html>
-<html lang="ko">
+        js_articles.append({
+            "id": i,
+            "title": {"vi": title, "en": title, "ko": title},
+            "summary": {"vi": summary, "en": summary, "ko": summary},
+            "sector": a.get("sector", "Unknown"),
+            "area": a.get("area", ""),
+            "province": a.get("province", "Vietnam"),
+            "source": a.get("source", ""),
+            "url": a.get("url", ""),
+            "date": a.get("date", "")
+        })
+    
+    js_data = json.dumps(js_articles, ensure_ascii=False)
+    
+    # Generate year filter buttons
+    year_buttons = '<button onclick="filterYear(\'all\')" class="year-btn filter-btn active">All Years</button>\n'
+    for year in sorted(year_counts.keys(), reverse=True):
+        count = year_counts[year]
+        year_buttons += f'            <button onclick="filterYear(\'{year}\')" class="year-btn filter-btn">{year} ({count})</button>\n'
+    
+    # Generate sector filter buttons
+    sector_buttons = '<button onclick="filterSector(\'all\')" class="sector-btn filter-btn active">All Sectors</button>\n'
+    for sector, count in sector_counts.most_common(10):
+        safe_sector = sector.replace("'", "\\'")
+        sector_buttons += f'            <button onclick="filterSector(\'{safe_sector}\')" class="sector-btn filter-btn">{sector} ({count})</button>\n'
+    
+    # Generate source filter buttons
+    source_buttons = '<button onclick="filterSource(\'all\')" class="source-btn filter-btn active">All Sources</button>\n'
+    for source, count in source_counts.most_common(12):
+        safe_source = source.replace("'", "\\'")
+        source_buttons += f'            <button onclick="filterSource(\'{safe_source}\')" class="source-btn filter-btn">{source} ({count})</button>\n'
+    
+    html = f'''<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vietnam Infrastructure News Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .news-card {{ transition: all 0.3s ease; }}
-        .news-card:hover {{ transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }}
-        .filter-btn {{ transition: all 0.2s ease; }}
+        body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }}
+        .news-card {{ transition: all 0.2s ease; }}
+        .news-card:hover {{ transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }}
+        .filter-btn {{ 
+            padding: 6px 12px; 
+            border-radius: 6px; 
+            font-size: 13px;
+            background: #e2e8f0;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }}
+        .filter-btn:hover {{ background: #cbd5e1; }}
         .filter-btn.active {{ background: #0d9488 !important; color: white !important; }}
+        .lang-btn {{ padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }}
         .lang-btn.active {{ background: #0d9488 !important; }}
-        .sector-badge {{ font-size: 11px; padding: 2px 8px; border-radius: 4px; }}
+        .sector-badge {{ display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }}
+        .kpi-card {{ text-align: center; }}
+        .kpi-value {{ font-size: 1.8rem; font-weight: bold; }}
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
 
-<header class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white sticky top-0 z-50 shadow-xl">
+<!-- Header -->
+<header class="bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 text-white sticky top-0 z-50 shadow-lg">
     <div class="max-w-7xl mx-auto px-4 py-4">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div class="flex items-center gap-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="flex items-center gap-3">
                 <span class="text-4xl">🇻🇳</span>
                 <div>
-                    <h1 class="font-bold text-xl">Vietnam Infrastructure News</h1>
-                    <p class="text-sm text-slate-300">Last Updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}</p>
+                    <h1 class="text-xl font-bold">Vietnam Infrastructure News</h1>
+                    <p class="text-sm text-slate-300">Updated: {now_str}</p>
                 </div>
             </div>
             <div class="flex gap-2">
-                <button onclick="setLang('ko')" id="lang-ko" class="lang-btn px-3 py-1.5 rounded text-sm bg-slate-700 hover:bg-slate-600">한국어</button>
-                <button onclick="setLang('en')" id="lang-en" class="lang-btn px-3 py-1.5 rounded text-sm bg-teal-600 active">English</button>
-                <button onclick="setLang('vi')" id="lang-vi" class="lang-btn px-3 py-1.5 rounded text-sm bg-slate-700 hover:bg-slate-600">Tiếng Việt</button>
+                <button onclick="setLang('ko')" id="lang-ko" class="lang-btn bg-slate-600 text-white">한국어</button>
+                <button onclick="setLang('en')" id="lang-en" class="lang-btn bg-teal-600 text-white active">English</button>
+                <button onclick="setLang('vi')" id="lang-vi" class="lang-btn bg-slate-600 text-white">Tiếng Việt</button>
             </div>
         </div>
     </div>
 </header>
 
 <main class="max-w-7xl mx-auto px-4 py-6">
+    
+    <!-- KPI Cards -->
     <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-        <div class="bg-white rounded-xl p-4 shadow-md border-l-4 border-yellow-500">
+        <div class="bg-white rounded-xl p-4 shadow-md kpi-card border-l-4 border-yellow-500">
+            <div class="kpi-value text-yellow-600" id="kpi-today">{today_count}</div>
             <div class="text-sm text-slate-500">Today</div>
-            <div class="text-2xl font-bold text-yellow-600" id="kpi-today">{today_count}</div>
         </div>
-        <div class="bg-white rounded-xl p-4 shadow-md border-l-4 border-blue-500">
+        <div class="bg-white rounded-xl p-4 shadow-md kpi-card border-l-4 border-blue-500">
+            <div class="kpi-value text-blue-600" id="kpi-week">{week_count}</div>
             <div class="text-sm text-slate-500">This Week</div>
-            <div class="text-2xl font-bold text-blue-600" id="kpi-week">0</div>
         </div>
-        <div class="bg-white rounded-xl p-4 shadow-md border-l-4 border-purple-500">
+        <div class="bg-white rounded-xl p-4 shadow-md kpi-card border-l-4 border-purple-500">
+            <div class="kpi-value text-purple-600" id="kpi-month">{month_count}</div>
             <div class="text-sm text-slate-500">This Month</div>
-            <div class="text-2xl font-bold text-purple-600" id="kpi-month">0</div>
         </div>
-        <div class="bg-white rounded-xl p-4 shadow-md border-l-4 border-teal-500">
+        <div class="bg-white rounded-xl p-4 shadow-md kpi-card border-l-4 border-teal-500">
+            <div class="kpi-value text-teal-600">{year_counts.get('2026', 0)}</div>
             <div class="text-sm text-slate-500">2026</div>
-            <div class="text-2xl font-bold text-teal-600" id="kpi-2026">{year_counts.get('2026', 0)}</div>
         </div>
-        <div class="bg-white rounded-xl p-4 shadow-md border-l-4 border-slate-500">
-            <div class="text-sm text-slate-500">Total</div>
-            <div class="text-2xl font-bold text-slate-700" id="kpi-total">{total_count:,}</div>
+        <div class="bg-white rounded-xl p-4 shadow-md kpi-card border-l-4 border-slate-500">
+            <div class="kpi-value text-slate-700">{total:,}</div>
+            <div class="text-sm text-slate-500">Total Database</div>
         </div>
     </div>
     
+    <!-- Year Filter -->
     <div class="bg-white rounded-xl p-4 shadow-md mb-4">
-        <h3 class="text-sm font-semibold text-slate-600 mb-2">📅 Filter by Year</h3>
+        <h3 class="text-sm font-semibold text-slate-600 mb-3">📅 Filter by Year</h3>
         <div class="flex flex-wrap gap-2">
-            <button onclick="filterByYear('all')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm active">All Years</button>
-            <button onclick="filterByYear('2026')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2026 ({year_counts.get('2026', 0)})</button>
-            <button onclick="filterByYear('2025')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2025 ({year_counts.get('2025', 0)})</button>
-            <button onclick="filterByYear('2024')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2024 ({year_counts.get('2024', 0)})</button>
-            <button onclick="filterByYear('2023')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2023 ({year_counts.get('2023', 0)})</button>
-            <button onclick="filterByYear('2022')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2022 ({year_counts.get('2022', 0)})</button>
-            <button onclick="filterByYear('2021')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2021 ({year_counts.get('2021', 0)})</button>
-            <button onclick="filterByYear('2020')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2020 ({year_counts.get('2020', 0)})</button>
-            <button onclick="filterByYear('2019')" class="year-btn filter-btn px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-sm">2019 ({year_counts.get('2019', 0)})</button>
+            {year_buttons}
         </div>
     </div>
     
+    <!-- Sector Filter -->
     <div class="bg-white rounded-xl p-4 shadow-md mb-4">
-        <h3 class="text-sm font-semibold text-slate-600 mb-2">🏭 Filter by Sector</h3>
+        <h3 class="text-sm font-semibold text-slate-600 mb-3">🏭 Filter by Sector</h3>
         <div class="flex flex-wrap gap-2">
-            <button onclick="filterBySector('all')" class="sector-btn filter-btn px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-sm active">All Sectors</button>
-'''
-        
-        for sector, count in sorted(sector_counts.items(), key=lambda x: -x[1])[:10]:
-            html += f'''            <button onclick="filterBySector('{sector}')" class="sector-btn filter-btn px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-sm">{sector} ({count})</button>\n'''
-        
-        html += '''        </div>
+            {sector_buttons}
+        </div>
     </div>
     
-    <div class="bg-white rounded-xl p-4 shadow-md mb-6">
-        <h3 class="text-sm font-semibold text-slate-600 mb-2">📰 Filter by Source</h3>
+    <!-- Source Filter -->
+    <div class="bg-white rounded-xl p-4 shadow-md mb-4">
+        <h3 class="text-sm font-semibold text-slate-600 mb-3">📰 Filter by Source</h3>
         <div class="flex flex-wrap gap-2">
-            <button onclick="filterBySource('all')" class="source-btn filter-btn px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-sm active">All Sources</button>
-'''
-        
-        for source, count in sorted(source_counts.items(), key=lambda x: -x[1])[:15]:
-            safe_source = source.replace("'", "\\'")
-            html += f'''            <button onclick="filterBySource('{safe_source}')" class="source-btn filter-btn px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-xs">{source} ({count})</button>\n'''
-        
-        html += f'''        </div>
+            {source_buttons}
+        </div>
     </div>
     
+    <!-- News List -->
     <div class="bg-white rounded-xl shadow-lg p-4">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-bold">📰 News Articles (<span id="filtered-count">{total_count}</span>)</h2>
-            <div class="text-sm text-slate-500">
-                Showing <span id="showing-count">100</span> of <span id="total-filtered">0</span>
-            </div>
+            <h2 class="text-lg font-bold text-slate-800">📰 Articles (<span id="filtered-count">{total}</span>)</h2>
+            <div class="text-sm text-slate-500">Showing <span id="showing-count">100</span> of <span id="total-count">{total}</span></div>
         </div>
         <div id="news-list" class="space-y-3"></div>
-        <div id="load-more-container" class="text-center mt-4 hidden">
-            <button onclick="loadMore()" class="px-6 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700">Load More</button>
+        <div id="load-more-container" class="text-center mt-6 hidden">
+            <button onclick="loadMore()" class="px-8 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-medium">Load More Articles</button>
         </div>
     </div>
+    
 </main>
 
+<footer class="bg-slate-800 text-white py-6 mt-10">
+    <div class="max-w-7xl mx-auto px-4 text-center">
+        <p class="text-slate-400">Vietnam Infrastructure News Dashboard</p>
+        <p class="text-sm text-slate-500 mt-1">Data: {total:,} articles from 2019-2026</p>
+    </div>
+</footer>
+
 <script>
+// Data
 const ALL_DATA = {js_data};
 
+// State
 let currentLang = 'en';
 let currentYear = 'all';
 let currentSector = 'all';
 let currentSource = 'all';
-let displayCount = 100;
+let displayLimit = 100;
 
+// Language switching
 function setLang(lang) {{
     currentLang = lang;
     document.querySelectorAll('.lang-btn').forEach(btn => {{
         btn.classList.remove('active', 'bg-teal-600');
-        btn.classList.add('bg-slate-700');
+        btn.classList.add('bg-slate-600');
     }});
-    document.getElementById('lang-' + lang).classList.add('active', 'bg-teal-600');
-    document.getElementById('lang-' + lang).classList.remove('bg-slate-700');
+    const activeBtn = document.getElementById('lang-' + lang);
+    activeBtn.classList.add('active', 'bg-teal-600');
+    activeBtn.classList.remove('bg-slate-600');
     renderNews();
 }}
 
-function getText(textObj, lang) {{
-    if (!textObj) return '';
-    if (typeof textObj === 'string') return textObj;
-    if (textObj[lang] && textObj[lang].trim()) return textObj[lang];
-    if (textObj.en && textObj.en.trim()) return textObj.en;
-    if (textObj.vi && textObj.vi.trim()) return textObj.vi;
-    if (textObj.ko && textObj.ko.trim()) return textObj.ko;
-    return Object.values(textObj).find(v => v && v.trim()) || '';
+// Text extraction with fallback
+function getText(obj, lang) {{
+    if (!obj) return '';
+    if (typeof obj === 'string') return obj;
+    return obj[lang] || obj.en || obj.vi || obj.ko || '';
 }}
 
-function filterByYear(year) {{
+// Filters
+function filterYear(year) {{
     currentYear = year;
-    displayCount = 100;
+    displayLimit = 100;
     document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
     renderNews();
 }}
 
-function filterBySector(sector) {{
+function filterSector(sector) {{
     currentSector = sector;
-    displayCount = 100;
+    displayLimit = 100;
     document.querySelectorAll('.sector-btn').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
     renderNews();
 }}
 
-function filterBySource(source) {{
+function filterSource(source) {{
     currentSource = source;
-    displayCount = 100;
+    displayLimit = 100;
     document.querySelectorAll('.source-btn').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
     renderNews();
 }}
 
-function getFilteredData() {{
-    let filtered = ALL_DATA;
-    if (currentYear !== 'all') {{
-        filtered = filtered.filter(d => d.date && d.date.startsWith(currentYear));
-    }}
-    if (currentSector !== 'all') {{
-        filtered = filtered.filter(d => d.sector === currentSector);
-    }}
-    if (currentSource !== 'all') {{
-        filtered = filtered.filter(d => d.source === currentSource);
-    }}
-    filtered.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-    return filtered;
-}}
-
 function loadMore() {{
-    displayCount += 100;
+    displayLimit += 100;
     renderNews();
 }}
 
+// Get filtered data
+function getFilteredData() {{
+    let data = ALL_DATA;
+    
+    if (currentYear !== 'all') {{
+        data = data.filter(d => d.date && d.date.startsWith(currentYear));
+    }}
+    if (currentSector !== 'all') {{
+        data = data.filter(d => d.sector === currentSector);
+    }}
+    if (currentSource !== 'all') {{
+        data = data.filter(d => d.source === currentSource);
+    }}
+    
+    // Sort by date descending
+    return data.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+}}
+
+// Sector colors
 function getSectorColor(sector) {{
     const colors = {{
         'Waste Water': 'bg-blue-100 text-blue-700',
@@ -350,6 +373,7 @@ function getSectorColor(sector) {{
         'Water Supply/Drainage': 'bg-cyan-100 text-cyan-700',
         'Power': 'bg-yellow-100 text-yellow-700',
         'Oil & Gas': 'bg-purple-100 text-purple-700',
+        'Oil & Gas ': 'bg-purple-100 text-purple-700',
         'Industrial Parks': 'bg-green-100 text-green-700',
         'Smart City': 'bg-indigo-100 text-indigo-700',
         'Transport': 'bg-orange-100 text-orange-700'
@@ -357,24 +381,22 @@ function getSectorColor(sector) {{
     return colors[sector] || 'bg-slate-100 text-slate-700';
 }}
 
+// Render news
 function renderNews() {{
-    const data = getFilteredData();
+    const filtered = getFilteredData();
+    const toShow = filtered.slice(0, displayLimit);
     const container = document.getElementById('news-list');
-    const toShow = data.slice(0, displayCount);
     
-    document.getElementById('filtered-count').textContent = data.length.toLocaleString();
-    document.getElementById('total-filtered').textContent = data.length.toLocaleString();
-    document.getElementById('showing-count').textContent = Math.min(displayCount, data.length);
+    document.getElementById('filtered-count').textContent = filtered.length.toLocaleString();
+    document.getElementById('showing-count').textContent = Math.min(displayLimit, filtered.length);
+    document.getElementById('total-count').textContent = filtered.length.toLocaleString();
     
+    // Show/hide load more button
     const loadMoreBtn = document.getElementById('load-more-container');
-    if (data.length > displayCount) {{
-        loadMoreBtn.classList.remove('hidden');
-    }} else {{
-        loadMoreBtn.classList.add('hidden');
-    }}
+    loadMoreBtn.classList.toggle('hidden', filtered.length <= displayLimit);
     
-    if (data.length === 0) {{
-        container.innerHTML = '<p class="text-slate-500 text-center py-8">No articles found.</p>';
+    if (filtered.length === 0) {{
+        container.innerHTML = '<div class="text-center py-10 text-slate-500">No articles found matching your filters.</div>';
         return;
     }}
     
@@ -387,163 +409,36 @@ function renderNews() {{
         const sectorColor = getSectorColor(article.sector);
         
         return `
-        <div class="news-card ${{isToday ? 'bg-yellow-50 border-l-4 border-yellow-400' : 'bg-slate-50 border-l-4 border-teal-500'}} rounded-lg p-4">
+        <div class="news-card ${{isToday ? 'bg-yellow-50 border-l-4 border-yellow-500' : 'bg-slate-50 border-l-4 border-teal-500'}} rounded-lg p-4">
             <div class="flex flex-wrap justify-between items-start gap-2 mb-2">
-                <div class="flex flex-wrap gap-2">
-                    <span class="sector-badge ${{sectorColor}}">${{article.sector || 'Unknown'}}</span>
-                    ${{isToday ? '<span class="sector-badge bg-yellow-200 text-yellow-800">NEW</span>' : ''}}
+                <div class="flex flex-wrap gap-2 items-center">
+                    <span class="sector-badge ${{sectorColor}}">${{article.sector}}</span>
+                    <span class="text-xs text-slate-500 font-medium">${{article.source}}</span>
+                    ${{isToday ? '<span class="sector-badge bg-yellow-200 text-yellow-800">🆕 NEW</span>' : ''}}
                 </div>
-                <span class="text-xs text-slate-500">${{article.date}}</span>
+                <span class="text-xs text-slate-400">${{article.date}}</span>
             </div>
-            <h3 class="font-semibold text-slate-800 mb-2 text-sm md:text-base">${{title || 'No title'}}</h3>
-            <p class="text-sm text-slate-600 mb-2 line-clamp-2">${{summary ? summary.slice(0, 200) + (summary.length > 200 ? '...' : '') : ''}}</p>
-            <div class="flex flex-wrap justify-between items-center text-xs text-slate-500 gap-2">
-                <div>
-                    <span>📍 ${{article.province}}</span>
-                    <span class="mx-2">|</span>
-                    <span class="font-medium">${{article.source}}</span>
-                </div>
-                ${{article.url ? `<a href="${{article.url}}" target="_blank" class="text-teal-600 hover:underline font-medium">Read more →</a>` : ''}}
+            <h3 class="font-semibold text-slate-800 mb-2">${{title}}</h3>
+            <p class="text-sm text-slate-600 mb-3 line-clamp-2">${{summary.slice(0, 200)}}${{summary.length > 200 ? '...' : ''}}</p>
+            <div class="flex justify-between items-center text-xs text-slate-500">
+                <span>📍 ${{article.province}}</span>
+                ${{article.url ? `<a href="${{article.url}}" target="_blank" rel="noopener" class="text-teal-600 hover:text-teal-700 font-medium">Read article →</a>` : ''}}
             </div>
         </div>`;
     }}).join('');
 }}
 
-function updateKPIs() {{
-    const today = new Date().toISOString().slice(0, 10);
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    const weekStr = weekAgo.toISOString().slice(0, 10);
-    const monthAgo = new Date();
-    monthAgo.setMonth(monthAgo.getMonth() - 1);
-    const monthStr = monthAgo.toISOString().slice(0, 10);
-    
-    document.getElementById('kpi-today').textContent = ALL_DATA.filter(d => d.date === today).length;
-    document.getElementById('kpi-week').textContent = ALL_DATA.filter(d => d.date >= weekStr).length;
-    document.getElementById('kpi-month').textContent = ALL_DATA.filter(d => d.date >= monthStr).length;
-    document.getElementById('kpi-2026').textContent = ALL_DATA.filter(d => d.date && d.date.startsWith('2026')).length;
-    document.getElementById('kpi-total').textContent = ALL_DATA.length.toLocaleString();
-}}
-
-updateKPIs();
+// Initialize
 renderNews();
 </script>
 </body>
 </html>'''
-        
-        return html
-
-
-class ExcelUpdater:
-    """Updates Excel output file"""
     
-    def __init__(self):
-        self.output_path = OUTPUT_DIR / f"vietnam_news_{datetime.now().strftime('%Y%m%d')}.xlsx"
-        self.today = datetime.now().strftime("%Y-%m-%d")
-    
-    def update(self, articles: List[Dict]) -> str:
-        if not OPENPYXL_AVAILABLE:
-            logger.warning("openpyxl not available")
-            return ""
-        
-        wb = openpyxl.Workbook()
-        self._create_database_sheet(wb, articles)
-        self._create_summary_sheet(wb, articles)
-        
-        OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-        wb.save(self.output_path)
-        logger.info(f"Excel saved: {self.output_path}")
-        return str(self.output_path)
-    
-    def _create_database_sheet(self, wb, articles):
-        ws = wb.active
-        ws.title = "News Database"
-        
-        header_font = Font(bold=True, color="FFFFFF")
-        header_fill = PatternFill(start_color="0D9488", end_color="0D9488", fill_type="solid")
-        highlight_fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
-        
-        headers = ["No", "Date", "Area", "Sector", "Province", "Title", "Summary", "Source", "URL"]
-        for col, h in enumerate(headers, 1):
-            cell = ws.cell(row=1, column=col, value=h)
-            cell.font = header_font
-            cell.fill = header_fill
-        
-        sorted_articles = sorted(articles, key=lambda x: str(x.get("date", ""))[:10], reverse=True)
-        
-        for i, article in enumerate(sorted_articles, 1):
-            row = i + 1
-            date_str = str(article.get("date", article.get("Date", "")))[:10]
-            
-            ws.cell(row=row, column=1, value=i)
-            ws.cell(row=row, column=2, value=date_str)
-            ws.cell(row=row, column=3, value=article.get("area", article.get("Area", "")))
-            ws.cell(row=row, column=4, value=article.get("sector", article.get("Business Sector", "")))
-            ws.cell(row=row, column=5, value=article.get("province", article.get("Province", "")))
-            ws.cell(row=row, column=6, value=str(article.get("title", article.get("News Tittle", "")))[:200])
-            ws.cell(row=row, column=7, value=str(article.get("summary_vi", article.get("Short summary", "")))[:300])
-            ws.cell(row=row, column=8, value=article.get("source", article.get("Source", "")))
-            ws.cell(row=row, column=9, value=article.get("url", article.get("Link", "")))
-            
-            if date_str == self.today:
-                for col in range(1, 10):
-                    ws.cell(row=row, column=col).fill = highlight_fill
-        
-        widths = [6, 12, 12, 20, 15, 50, 40, 20, 40]
-        for i, w in enumerate(widths, 1):
-            ws.column_dimensions[chr(64+i)].width = w
-        
-        ws.freeze_panes = 'A2'
-    
-    def _create_summary_sheet(self, wb, articles):
-        from collections import Counter
-        
-        ws = wb.create_sheet("Summary")
-        
-        ws.cell(row=1, column=1, value="Vietnam Infrastructure News - Summary")
-        ws.cell(row=1, column=1).font = Font(bold=True, size=14)
-        ws.cell(row=2, column=1, value=f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
-        
-        today_count = sum(1 for a in articles if str(a.get("date", ""))[:10] == self.today)
-        
-        row = 4
-        ws.cell(row=row, column=1, value="Overview").font = Font(bold=True)
-        row += 1
-        ws.cell(row=row, column=1, value="Total Articles")
-        ws.cell(row=row, column=2, value=len(articles))
-        row += 1
-        ws.cell(row=row, column=1, value="Today's Articles")
-        ws.cell(row=row, column=2, value=today_count)
-        row += 2
-        
-        ws.cell(row=row, column=1, value="By Year").font = Font(bold=True)
-        row += 1
-        
-        year_counts = Counter(str(a.get("date", ""))[:4] for a in articles if a.get("date"))
-        for year, count in sorted(year_counts.items(), reverse=True):
-            if year.isdigit():
-                ws.cell(row=row, column=1, value=year)
-                ws.cell(row=row, column=2, value=count)
-                row += 1
-        
-        row += 1
-        ws.cell(row=row, column=1, value="By Sector").font = Font(bold=True)
-        row += 1
-        
-        sector_counts = Counter(a.get("sector", a.get("Business Sector", "Unknown")) for a in articles)
-        for sector, count in sector_counts.most_common():
-            ws.cell(row=row, column=1, value=sector)
-            ws.cell(row=row, column=2, value=count)
-            row += 1
-        
-        ws.column_dimensions['A'].width = 30
-        ws.column_dimensions['B'].width = 15
+    return html
 
 
 def main():
-    """Generate dashboard from Excel database"""
-    import openpyxl
-    
+    """Main function - generates dashboard from Excel"""
     print("=" * 60)
     print("DASHBOARD GENERATOR")
     print("=" * 60)
@@ -551,70 +446,95 @@ def main():
     # Ensure output directory
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     
-    # Load articles from Excel
-    EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
+    # Load all articles from Excel
+    articles = load_all_articles()
     
-    articles = []
-    
-    if EXCEL_DB_PATH.exists():
-        print(f"Loading from: {EXCEL_DB_PATH}")
-        
-        wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
-        ws = wb.active
-        
-        headers = [cell.value for cell in ws[1]]
-        col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
-        
-        for row in ws.iter_rows(min_row=2, values_only=True):
-            if not any(row):
-                continue
-            
-            date_val = row[col_map.get("Date", 4)] if "Date" in col_map else None
-            date_str = date_val.strftime("%Y-%m-%d") if hasattr(date_val, 'strftime') else str(date_val)[:10] if date_val else ""
-            
-            articles.append({
-                "area": row[col_map.get("Area", 0)] or "Environment",
-                "sector": row[col_map.get("Business Sector", 1)] or "",
-                "province": row[col_map.get("Province", 2)] or "Vietnam",
-                "title": row[col_map.get("News Tittle", 3)] or "",
-                "date": date_str,
-                "source": row[col_map.get("Source", 5)] or "",
-                "url": row[col_map.get("Link", 6)] or "",
-                "summary_vi": row[col_map.get("Short summary", 7)] or "",
-            })
-        
-        wb.close()
-        print(f"Loaded {len(articles)} articles")
-        
-        # Count by year
-        year_counts = {}
-        for a in articles:
-            year = a.get("date", "")[:4]
-            if year and year.isdigit():
-                year_counts[year] = year_counts.get(year, 0) + 1
-        print(f"By year: {dict(sorted(year_counts.items()))}")
-    else:
-        print(f"Excel not found: {EXCEL_DB_PATH}")
+    if not articles:
+        print("WARNING: No articles loaded!")
     
     # Generate dashboard
     print(f"\nGenerating dashboard with {len(articles)} articles...")
+    html = generate_dashboard_html(articles)
     
-    dashboard = DashboardUpdater()
-    result = dashboard.update(articles)
-    print(f"Dashboard: {result}")
+    # Save files
+    index_path = OUTPUT_DIR / "index.html"
+    dashboard_path = OUTPUT_DIR / "vietnam_dashboard.html"
     
-    excel = ExcelUpdater()
-    excel_result = excel.update(articles)
-    print(f"Excel: {excel_result}")
+    with open(index_path, 'w', encoding='utf-8') as f:
+        f.write(html)
+    print(f"✓ Saved: {index_path} ({index_path.stat().st_size:,} bytes)")
     
-    # Verify
-    index_file = OUTPUT_DIR / "index.html"
-    if index_file.exists():
-        print(f"\n✓ index.html created ({index_file.stat().st_size} bytes)")
-    else:
-        print(f"\n✗ index.html NOT found!")
+    with open(dashboard_path, 'w', encoding='utf-8') as f:
+        f.write(html)
+    print(f"✓ Saved: {dashboard_path} ({dashboard_path.stat().st_size:,} bytes)")
+    
+    # Generate Excel output
+    if OPENPYXL_AVAILABLE and articles:
+        try:
+            generate_excel_output(articles)
+        except Exception as e:
+            print(f"Excel output error: {e}")
     
     print("\nDone!")
+
+
+def generate_excel_output(articles):
+    """Generate Excel output file"""
+    today = datetime.now().strftime("%Y%m%d")
+    excel_path = OUTPUT_DIR / f"vietnam_news_{today}.xlsx"
+    
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "News Database"
+    
+    # Headers
+    headers = ["No", "Date", "Area", "Sector", "Province", "Title", "Summary", "Source", "URL"]
+    header_fill = PatternFill(start_color="0D9488", end_color="0D9488", fill_type="solid")
+    header_font = Font(bold=True, color="FFFFFF")
+    
+    for col, h in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col, value=h)
+        cell.fill = header_fill
+        cell.font = header_font
+    
+    # Sort by date descending
+    sorted_articles = sorted(articles, key=lambda x: x.get("date", ""), reverse=True)
+    
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    highlight = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
+    
+    for i, a in enumerate(sorted_articles, 1):
+        row = i + 1
+        ws.cell(row=row, column=1, value=i)
+        ws.cell(row=row, column=2, value=a.get("date", ""))
+        ws.cell(row=row, column=3, value=a.get("area", ""))
+        ws.cell(row=row, column=4, value=a.get("sector", ""))
+        ws.cell(row=row, column=5, value=a.get("province", ""))
+        ws.cell(row=row, column=6, value=str(a.get("title", ""))[:200])
+        ws.cell(row=row, column=7, value=str(a.get("summary", ""))[:300])
+        ws.cell(row=row, column=8, value=a.get("source", ""))
+        ws.cell(row=row, column=9, value=a.get("url", ""))
+        
+        # Highlight today's articles
+        if a.get("date") == today_str:
+            for col in range(1, 10):
+                ws.cell(row=row, column=col).fill = highlight
+    
+    # Column widths
+    ws.column_dimensions['A'].width = 6
+    ws.column_dimensions['B'].width = 12
+    ws.column_dimensions['C'].width = 15
+    ws.column_dimensions['D'].width = 20
+    ws.column_dimensions['E'].width = 15
+    ws.column_dimensions['F'].width = 50
+    ws.column_dimensions['G'].width = 40
+    ws.column_dimensions['H'].width = 20
+    ws.column_dimensions['I'].width = 40
+    
+    ws.freeze_panes = 'A2'
+    
+    wb.save(excel_path)
+    print(f"✓ Saved: {excel_path}")
 
 
 if __name__ == "__main__":
