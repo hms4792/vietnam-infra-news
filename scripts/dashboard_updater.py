@@ -541,7 +541,80 @@ class ExcelUpdater:
 
 
 def main():
-    logger.info("Dashboard updater ready")
+    """Generate dashboard from Excel database"""
+    import openpyxl
+    
+    print("=" * 60)
+    print("DASHBOARD GENERATOR")
+    print("=" * 60)
+    
+    # Ensure output directory
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    
+    # Load articles from Excel
+    EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
+    
+    articles = []
+    
+    if EXCEL_DB_PATH.exists():
+        print(f"Loading from: {EXCEL_DB_PATH}")
+        
+        wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
+        ws = wb.active
+        
+        headers = [cell.value for cell in ws[1]]
+        col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
+        
+        for row in ws.iter_rows(min_row=2, values_only=True):
+            if not any(row):
+                continue
+            
+            date_val = row[col_map.get("Date", 4)] if "Date" in col_map else None
+            date_str = date_val.strftime("%Y-%m-%d") if hasattr(date_val, 'strftime') else str(date_val)[:10] if date_val else ""
+            
+            articles.append({
+                "area": row[col_map.get("Area", 0)] or "Environment",
+                "sector": row[col_map.get("Business Sector", 1)] or "",
+                "province": row[col_map.get("Province", 2)] or "Vietnam",
+                "title": row[col_map.get("News Tittle", 3)] or "",
+                "date": date_str,
+                "source": row[col_map.get("Source", 5)] or "",
+                "url": row[col_map.get("Link", 6)] or "",
+                "summary_vi": row[col_map.get("Short summary", 7)] or "",
+            })
+        
+        wb.close()
+        print(f"Loaded {len(articles)} articles")
+        
+        # Count by year
+        year_counts = {}
+        for a in articles:
+            year = a.get("date", "")[:4]
+            if year and year.isdigit():
+                year_counts[year] = year_counts.get(year, 0) + 1
+        print(f"By year: {dict(sorted(year_counts.items()))}")
+    else:
+        print(f"Excel not found: {EXCEL_DB_PATH}")
+    
+    # Generate dashboard
+    print(f"\nGenerating dashboard with {len(articles)} articles...")
+    
+    dashboard = DashboardUpdater()
+    result = dashboard.update(articles)
+    print(f"Dashboard: {result}")
+    
+    excel = ExcelUpdater()
+    excel_result = excel.update(articles)
+    print(f"Excel: {excel_result}")
+    
+    # Verify
+    index_file = OUTPUT_DIR / "index.html"
+    if index_file.exists():
+        print(f"\n✓ index.html created ({index_file.stat().st_size} bytes)")
+    else:
+        print(f"\n✗ index.html NOT found!")
+    
+    print("\nDone!")
 
 
 if __name__ == "__main__":
