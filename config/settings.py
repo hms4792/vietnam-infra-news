@@ -1,282 +1,181 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News Pipeline - Settings
-Configuration for news collection, AI processing, and notifications
 """
 
 import os
 from pathlib import Path
 
-# Project paths
-PROJECT_ROOT = Path(__file__).parent.parent
-DATA_DIR = PROJECT_ROOT / "data"
-OUTPUT_DIR = PROJECT_ROOT / "outputs"
-LOG_DIR = PROJECT_ROOT / "logs"
-TEMPLATE_DIR = PROJECT_ROOT / "templates"
+# === PATHS ===
+BASE_DIR = Path(__file__).parent.parent
+DATA_DIR = BASE_DIR / "data"
+OUTPUT_DIR = BASE_DIR / "outputs"
+TEMPLATE_DIR = BASE_DIR / "templates"
 
-# Database
-DATABASE_PATH = DATA_DIR / "vietnam_infrastructure_news.db"
-EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
+# === API KEYS ===
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 
-# API Keys (from environment variables)
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
-EMAIL_USERNAME = os.getenv("EMAIL_USERNAME")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
+# === EMAIL ===
+EMAIL_USERNAME = os.getenv("EMAIL_USERNAME", "")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "")
 EMAIL_RECIPIENTS = os.getenv("EMAIL_RECIPIENTS", "").split(",")
-
-# Telegram (optional)
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-
-# Slack (optional)
-SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL")
-
-# Kakao (optional)
-KAKAO_REST_API_KEY = os.getenv("KAKAO_REST_API_KEY")
-KAKAO_REFRESH_TOKEN = os.getenv("KAKAO_REFRESH_TOKEN")
-
-# Email SMTP Settings
+EMAIL_SUBJECT = "🇻🇳 Vietnam Infrastructure News Daily"
+EMAIL_FROM_NAME = "Vietnam Infra News"
 EMAIL_SMTP_SERVER = "smtp.gmail.com"
 EMAIL_SMTP_PORT = 587
 
-# ============================================================
-# NEWS SOURCES - Based on Database Analysis (232 domains, 2000+ articles)
-# ============================================================
+# === TELEGRAM ===
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
 
+# === SLACK ===
+SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL", "")
+
+# === KAKAO ===
+KAKAO_REST_API_KEY = os.getenv("KAKAO_REST_API_KEY", "")
+KAKAO_REFRESH_TOKEN = os.getenv("KAKAO_REFRESH_TOKEN", "")
+
+# === DASHBOARD ===
+DASHBOARD_URL = "https://hms4792.github.io/vietnam-infra-news/"
+
+# === RSS FEEDS (11 sources) ===
 RSS_FEEDS = {
-    # === TIER 1: Major English News Sources ===
     "Vietnam News": "https://vietnamnews.vn/rss/home.rss",
     "VnExpress English": "https://e.vnexpress.net/rss/news.rss",
-    "VietnamPlus English": "https://en.vietnamplus.vn/rss/news.rss",
-    "Tuoi Tre News": "https://tuoitrenews.vn/rss/home.rss",
-    
-    # === TIER 2: Investment & Business Focus ===
-    "The Investor": "https://theinvestor.vn/rss/home.rss",
-    "Vietnam Investment Review": "https://vir.com.vn/rss/home.rss",
-    "Hanoi Times": "https://hanoitimes.vn/rss/home.rss",
-    "The Saigon Times": "https://english.thesaigontimes.vn/rss/home.rss",
-    
-    # === TIER 3: Regional & Specialized ===
-    "VietnamNet English": "https://vietnamnet.vn/en/rss/home.rss",
-    "Saigon GP News": "https://en.sggp.org.vn/rss/home.rss",
-    
-    # === TIER 4: Energy Focus ===
-    "Vietnam Energy": "https://vietnamenergy.vn/rss/home.rss",
+    "VietnamPlus": "https://en.vietnamplus.vn/rss/news.rss",
+    "Tuoi Tre News": "https://tuoitrenews.vn/rss/news.rss",
+    "The Investor": "https://theinvestor.vn/rss/news.rss",
+    "Vietnam Investment Review": "https://vir.com.vn/rss/news.rss",
+    "Hanoi Times": "https://hanoitimes.vn/rss/news.rss",
+    "Saigon Times": "https://english.thesaigontimes.vn/rss/news.rss",
+    "VietnamNet": "https://vietnamnet.vn/en/rss/home.rss",
+    "Saigon GP Daily": "https://en.sggp.org.vn/rss/news.rss",
+    "Vietnam Energy": "https://nangluongvietnam.vn/rss/news.rss",
 }
 
-# ============================================================
-# SECTOR KEYWORDS - STRICT INFRASTRUCTURE ONLY
-# ============================================================
-# Each sector has:
-# - required: At least one must match (prevents irrelevant articles)
-# - boost: Additional keywords that increase confidence
-# - exclude: Keywords that disqualify the article
+# === SECTOR CLASSIFICATION (STRICT) ===
+# Each sector requires at least ONE keyword match
+# Priority: Environment > Energy > Urban (lower number = higher priority)
 
 SECTOR_KEYWORDS = {
+    # === ENVIRONMENT (Priority 1-3) ===
     "Waste Water": {
-        "required": [
-            "wastewater treatment", "sewage treatment", "wwtp",
-            "wastewater plant", "sewage plant", "sewerage",
-            "xử lý nước thải", "nhà máy xử lý nước thải",
-            "nước thải sinh hoạt", "nước thải công nghiệp"
+        "keywords": [
+            "wastewater", "waste water", "sewage", "sewerage", "effluent",
+            "wastewater treatment", "sewage treatment", "wwtp", "stp",
+            "nước thải", "xử lý nước thải", "nhà máy xử lý nước thải",
+            "drainage", "stormwater", "thoát nước"
         ],
-        "boost": [
-            "effluent", "drainage system", "sludge", "biological treatment",
-            "thoát nước", "bùn thải"
-        ],
-        "exclude": [],
-        "area": "Environment"
+        "area": "Environment",
+        "priority": 1
     },
     "Solid Waste": {
-        "required": [
-            "waste-to-energy", "solid waste treatment", "landfill",
-            "waste management plant", "incineration plant", "recycling facility",
-            "garbage treatment", "municipal waste", "hazardous waste treatment",
-            "xử lý rác thải", "đốt rác", "bãi rác", "chất thải rắn",
-            "nhà máy xử lý chất thải"
+        "keywords": [
+            "solid waste", "waste management", "garbage", "landfill", "incinerat",
+            "waste-to-energy", "wte", "recycling plant", "composting",
+            "rác thải", "chất thải rắn", "bãi rác", "đốt rác", "xử lý rác",
+            "hazardous waste", "medical waste", "e-waste"
         ],
-        "boost": [
-            "recycling", "composting", "waste collection",
-            "tái chế", "phân loại rác"
-        ],
-        "exclude": [],
-        "area": "Environment"
+        "area": "Environment",
+        "priority": 2
     },
     "Water Supply/Drainage": {
-        "required": [
-            "water supply plant", "water treatment plant", "clean water project",
-            "drinking water", "water supply system", "water infrastructure",
-            "nhà máy nước", "cấp nước sạch", "hệ thống cấp nước",
-            "nước sinh hoạt", "nhà máy nước sạch"
+        "keywords": [
+            "water supply", "water treatment", "drinking water", "potable water",
+            "water plant", "reservoir", "pipeline", "water distribution",
+            "cấp nước", "nhà máy nước", "nước sạch", "hồ chứa",
+            "desalination", "water network"
         ],
-        "boost": [
-            "potable water", "water distribution", "reservoir",
-            "hồ chứa nước"
-        ],
-        "exclude": [],
-        "area": "Environment"
+        "area": "Environment",
+        "priority": 3
     },
+    
+    # === ENERGY (Priority 4-5) ===
     "Power": {
-        "required": [
-            "power plant", "solar farm", "wind farm", "solar power project",
-            "wind power project", "thermal power plant", "hydropower plant",
-            "lng power plant", "gas turbine", "power generation",
+        "keywords": [
+            "power plant", "electricity", "solar", "wind farm", "hydropower",
+            "thermal power", "renewable energy", "photovoltaic", "pv",
             "nhà máy điện", "điện mặt trời", "điện gió", "thủy điện",
-            "nhiệt điện", "năng lượng tái tạo"
+            "grid", "transmission line", "substation", "megawatt", "mw",
+            "energy storage", "battery storage", "lng power"
         ],
-        "boost": [
-            "megawatt", "MW", "electricity generation", "grid connection",
-            "công suất"
-        ],
-        "exclude": ["power outage", "power cut", "blackout"],
-        "area": "Energy Develop."
+        "area": "Energy Develop.",
+        "priority": 4
     },
     "Oil & Gas": {
-        "required": [
-            "oil exploration", "gas field development", "lng terminal",
-            "oil refinery", "petroleum project", "offshore drilling",
-            "gas pipeline", "petrochemical plant",
-            "dầu khí", "mỏ dầu", "mỏ khí", "nhà máy lọc dầu",
-            "khai thác dầu"
+        "keywords": [
+            "oil", "gas", "petroleum", "lng", "refinery", "petrochemical",
+            "offshore", "drilling", "pipeline", "terminal",
+            "dầu khí", "khí đốt", "lọc dầu", "nhà máy lọc dầu",
+            "petrovietnam", "pvn", "binh son refining"
         ],
-        "boost": [
-            "crude oil", "natural gas", "petroleum",
-            "đường ống dẫn khí"
-        ],
-        "exclude": ["gas price", "oil price", "fuel price"],
-        "area": "Energy Develop."
+        "area": "Energy Develop.",
+        "priority": 5
     },
+    
+    # === URBAN DEVELOPMENT (Priority 6-8) ===
     "Industrial Parks": {
-        "required": [
-            "industrial park development", "industrial zone construction",
-            "economic zone project", "export processing zone",
-            "industrial park infrastructure", "industrial estate",
-            "khu công nghiệp", "khu chế xuất", "khu kinh tế"
+        "keywords": [
+            "industrial park", "industrial zone", "economic zone", "export processing",
+            "manufacturing zone", "factory", "industrial estate",
+            "khu công nghiệp", "kcn", "khu chế xuất", "khu kinh tế"
         ],
-        "boost": [
-            "fdi", "foreign investment", "manufacturing hub",
-            "đầu tư nước ngoài"
-        ],
-        "exclude": [],
-        "area": "Urban Develop."
+        "area": "Urban Develop.",
+        "priority": 6
     },
     "Smart City": {
-        "required": [
-            "smart city project", "smart city development",
-            "digital city", "smart urban",
-            "thành phố thông minh", "đô thị thông minh"
+        "keywords": [
+            "smart city", "urban development", "city planning", "smart infrastructure",
+            "đô thị thông minh", "quy hoạch đô thị", "phát triển đô thị"
         ],
-        "boost": [
-            "iot infrastructure", "digital transformation",
-            "urban technology"
-        ],
-        "exclude": [],
-        "area": "Urban Develop."
+        "area": "Urban Develop.",
+        "priority": 7
     },
     "Transport": {
-        "required": [
-            "railway construction", "metro project", "airport construction",
-            "highway construction", "expressway project", "port development",
-            "bridge construction", "tunnel project",
-            "xây dựng đường sắt", "dự án metro", "xây dựng sân bay",
-            "đường cao tốc", "cảng biển"
+        "keywords": [
+            "metro", "railway", "expressway", "highway", "airport expansion",
+            "seaport", "port development", "logistics hub",
+            "đường sắt", "cao tốc", "cảng biển", "sân bay"
         ],
-        "boost": [
-            "logistics hub", "transport infrastructure",
-            "giao thông"
-        ],
-        "exclude": ["traffic accident", "traffic jam", "flight delay"],
-        "area": "Urban Develop."
+        "area": "Urban Develop.",
+        "priority": 8
     }
 }
 
-# ============================================================
-# ARTICLE EXCLUSION KEYWORDS
-# Skip articles containing these (case-insensitive)
-# ============================================================
-
+# === EXCLUSION KEYWORDS (Skip these articles entirely) ===
 EXCLUSION_KEYWORDS = [
     # Sports
-    "football", "soccer", "basketball", "volleyball", "tennis",
-    "olympic", "sea games", "world cup", "championship", "tournament",
-    "match result", "score", "goal", "player", "coach", "team won",
-    "u23", "u21", "u19", "national team", "đội tuyển",
-    "bóng đá", "cầu thủ", "huấn luyện viên",
+    "football", "soccer", "basketball", "tennis", "golf tournament",
+    "u23", "u-23", "sea games", "olympic", "world cup", "championship",
+    "coach", "player", "match", "score", "goal", "victory", "defeat",
+    "bóng đá", "đội tuyển", "huấn luyện viên", "cầu thủ", "trận đấu",
     
     # Entertainment
-    "celebrity", "movie", "film", "actress", "actor", "singer",
-    "concert", "festival", "entertainment", "showbiz",
-    "ca sĩ", "diễn viên", "phim",
+    "celebrity", "singer", "actor", "actress", "movie", "film festival",
+    "concert", "album", "k-pop", "drama", "tv show",
+    "ca sĩ", "diễn viên", "phim", "nhạc",
     
-    # Weather/Disasters (unless infrastructure related)
-    "weather forecast", "typhoon warning", "storm warning",
-    "earthquake", "flood warning", "hurricane",
-    "dự báo thời tiết", "bão",
+    # Weather (unless infrastructure related)
+    "weather forecast", "temperature today", "rain expected",
+    "dự báo thời tiết", "nhiệt độ",
     
-    # Crime/Politics
-    "murder", "robbery", "arrest", "corruption scandal",
-    "election result", "political party",
-    
-    # General news
-    "covid", "pandemic", "vaccine", "quarantine",
-    "stock market", "exchange rate", "inflation rate",
-    "tourist arrival", "hotel booking",
-    
-    # Irrelevant
-    "recipe", "cooking", "fashion", "beauty",
-    "dating", "marriage", "divorce"
+    # General news not infrastructure
+    "stock market", "stock price", "shares",
+    "tourist arrivals", "tourism statistics",
+    "covid", "pandemic", "vaccine",
+    "election", "vote", "political party",
+    "murder", "arrest", "crime", "prison",
+    "recipe", "cooking", "restaurant review",
+    "fashion", "beauty", "cosmetic"
 ]
 
-# ============================================================
-# URL PATTERNS
-# ============================================================
-
-URL_BLACKLIST_PATTERNS = [
-    r'/category/', r'/tag/', r'/tags/', r'/categories/',
-    r'/about', r'/contact', r'/policy',
-    r'/search', r'/archive', r'/page/',
-    r'/rss', r'/feed', r'/sitemap',
+# === PROVINCE MAPPING ===
+PROVINCES = [
+    "Ho Chi Minh City", "Hanoi", "Da Nang", "Hai Phong", "Can Tho",
+    "Binh Duong", "Dong Nai", "Ba Ria-Vung Tau", "Long An", "Quang Ninh",
+    "Bac Ninh", "Hai Duong", "Thai Nguyen", "Thanh Hoa", "Nghe An",
+    "Hue", "Quang Nam", "Binh Dinh", "Khanh Hoa", "Lam Dong",
+    "Dak Lak", "Binh Thuan", "An Giang", "Kien Giang", "Ca Mau",
+    "Quang Ngai", "Quang Binh", "Ha Tinh", "Mekong Delta"
 ]
-
-# AI Prompts
-SUMMARIZATION_PROMPT_TEMPLATE = """
-Summarize this Vietnamese infrastructure news article in {language}.
-
-Article Title: {title}
-Sector: {sector}
-Content: {content}
-
-Provide a concise 2-3 sentence summary focusing on:
-- Project name and location
-- Key stakeholders and investment amount
-- Project status and timeline
-
-Summary in {language}:
-"""
-
-TRANSLATION_PROMPT_TEMPLATE = """
-Translate this Vietnamese news headline to English.
-Keep it concise and professional.
-Return ONLY the English translation, nothing else.
-
-Vietnamese: {title}
-
-English:
-"""
-
-# Email Settings
-EMAIL_SUBJECT = "Vietnam Infrastructure News - Daily Report"
-EMAIL_FROM_NAME = "Vietnam Infra News Bot"
-
-# Dashboard Settings
-DASHBOARD_TITLE = "Vietnam Infrastructure News Database"
-DASHBOARD_SUBTITLE = "Real-time Infrastructure Project Tracking"
-
-# Collection Settings
-COLLECTION_HOURS_BACK = 48
-MAX_ARTICLES_PER_SOURCE = 30
-REQUEST_DELAY = 2
-
-# Logging
-LOG_LEVEL = "INFO"
-LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
