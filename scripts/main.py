@@ -221,16 +221,27 @@ async def run_full_pipeline():
     existing_urls = set(a.get("url", "") for a in existing_articles if a.get("url"))
     logger.info(f"Loaded {len(existing_articles)} existing articles")
     
-    # Step 2: Collect new news
-    logger.info("Step 2: Collecting new news...")
+    # Step 2: Collect new news (last 30 days for full coverage)
+    logger.info("Step 2: Collecting new news (last 30 days)...")
     new_articles = []
+    collector = None
     try:
         from scripts.news_collector import NewsCollector
         collector = NewsCollector()
-        new_articles = await collector.collect_all()
+        new_articles = collector.collect_from_rss(hours_back=720)  # 30 days
         logger.info(f"Collected {len(new_articles)} new articles")
+        
+        # Log sector distribution
+        sector_counts = {}
+        for a in new_articles:
+            s = a.get("sector", "Unknown")
+            sector_counts[s] = sector_counts.get(s, 0) + 1
+        logger.info(f"Sector distribution: {sector_counts}")
+        
     except Exception as e:
         logger.error(f"News collection error: {e}")
+        import traceback
+        traceback.print_exc()
     
     # Step 3: AI Summarization
     if new_articles:
@@ -243,14 +254,11 @@ async def run_full_pipeline():
             logger.error(f"Summarization error: {e}")
     
     # Step 4: Save new articles to Excel
-    if new_articles:
+    if new_articles and collector:
         logger.info("Step 4: Saving new articles to Excel...")
         try:
-            # Use collector's save method if available
-            if hasattr(collector, 'save_to_excel'):
-                collector.save_to_excel()
-            else:
-                save_new_articles_to_excel(new_articles, existing_urls)
+            collector.save_to_excel()
+            logger.info(f"Saved {len(new_articles)} new articles to Excel database")
         except Exception as e:
             logger.error(f"Error saving to Excel: {e}")
     
