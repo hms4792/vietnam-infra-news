@@ -2,12 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News - Email Notification
-Reads from Excel database
+Can be run directly: python send_notification.py
 """
 
 import smtplib
 import logging
-import os
 import sys
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -15,111 +14,99 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from collections import Counter
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Setup paths
+SCRIPT_DIR = Path(__file__).parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+DATA_DIR = PROJECT_ROOT / "data"
+OUTPUT_DIR = PROJECT_ROOT / "outputs"
+
+sys.path.insert(0, str(PROJECT_ROOT))
 
 from config.settings import (
-    DATA_DIR,
-    EMAIL_USERNAME,
-    EMAIL_PASSWORD,
-    EMAIL_RECIPIENTS,
-    EMAIL_SUBJECT,
-    EMAIL_FROM_NAME
+    EMAIL_USERNAME, EMAIL_PASSWORD, EMAIL_RECIPIENTS,
+    EMAIL_SUBJECT, EMAIL_FROM_NAME, EMAIL_SMTP_SERVER, EMAIL_SMTP_PORT,
+    DASHBOARD_URL
 )
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
 
 
-class EmailNotifier:
-    def __init__(self):
-        self.email_username = EMAIL_USERNAME
-        self.email_password = EMAIL_PASSWORD
-        self.recipients = [r.strip() for r in EMAIL_RECIPIENTS if r.strip()]
-        self.articles = []
-        self.today = datetime.now().strftime("%Y-%m-%d")
-        
-        if not self.email_username or not self.email_password:
-            raise ValueError("Email credentials not set")
-        
-        self._load_articles()
-        logger.info("Email Notifier initialized")
+def load_articles():
+    """Load articles from Excel"""
+    try:
+        import openpyxl
+    except ImportError:
+        logger.error("openpyxl not installed")
+        return []
     
-    def _load_articles(self):
-        """Load articles from Excel"""
-        try:
-            import openpyxl
-            if not EXCEL_DB_PATH.exists():
-                logger.warning(f"Excel not found: {EXCEL_DB_PATH}")
-                return
-            
-            wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
-            ws = wb.active
-            headers = [cell.value for cell in ws[1]]
-            
-            col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
-            
-            for row in ws.iter_rows(min_row=2, values_only=True):
-                if not any(row):
-                    continue
-                
-                date_val = row[col_map.get("Date", 4)] if "Date" in col_map else ""
-                if date_val:
-                    date_str = date_val.strftime("%Y-%m-%d") if hasattr(date_val, 'strftime') else str(date_val)[:10]
-                else:
-                    date_str = ""
-                
-                self.articles.append({
-                    "title": row[col_map.get("News Tittle", 3)] or "",
-                    "sector": row[col_map.get("Business Sector", 1)] or "",
-                    "province": row[col_map.get("Province", 2)] or "Vietnam",
-                    "source": row[col_map.get("Source", 5)] or "",
-                    "url": row[col_map.get("Link", 6)] or "",
-                    "summary": row[col_map.get("Short summary", 7)] or "",
-                    "date": date_str
-                })
-            
-            wb.close()
-            logger.info(f"Loaded {len(self.articles)} articles")
-            
-        except Exception as e:
-            logger.error(f"Load error: {e}")
+    if not EXCEL_DB_PATH.exists():
+        logger.warning(f"Excel not found: {EXCEL_DB_PATH}")
+        return []
     
-    def get_today_articles(self):
-        return [a for a in self.articles if a.get("date") == self.today]
+    wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
+    ws = wb.active
     
-    def get_statistics(self):
-        week_ago = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
+    headers = [cell.value for cell in ws[1]]
+    col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
+    
+    articles = []
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        if not any(row):
+            continue
         
-        return {
-            'total': len(self.articles),
-            'today': len(self.get_today_articles()),
-            'week': sum(1 for a in self.articles if a.get("date", "") >= week_ago),
-            'sectors': Counter(a.get("sector", "Unknown") for a in self.articles).most_common(5),
-            'sources': Counter(a.get("source", "Unknown") for a in self.articles).most_common(10)
-        }
-    
-    def generate_html(self, articles, stats):
-        today_articles = self.get_today_articles()
+        date_val = row[col_map.get("Date", 4)] if "Date" in col_map else None
+        date_str = date_val.strftime("%Y-%m-%d") if hasattr(date_val, 'strftime') else str(date_val)[:10] if date_val else ""
         
-        html = f"""<!DOCTYPE html>
+        articles.append({
+            "title": row[col_map.get("News Tittle", 3)] or "",
+            "sector": row[col_map.get("Business Sector", 1)] or "",
+            "province": row[col_map.get("Province", 2)] or "Vietnam",
+            "source": row[col_map.get("Source", 5)] or "",
+            "url": row[col_map.get("Link", 6)] or "",
+            "summary": row[col_map.get("Short summary", 7)] or "",
+            "date": date_str
+        })
+    
+    wb.close()
+    return articles
+
+
+def generate_email_html(articles):
+    """Generate email HTML content"""
+    today = datetime.now().strftime("%Y-%m-%d")
+    week_ago = (datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d")
+    
+    today_articles = [a for a in articles if a.get("date") == today]
+    week_articles = [a for a in articles if a.get("date", "") >= week_ago]
+    
+    sector_counts = Counter(a.get("sector", "Unknown") for a in articles)
+    source_counts = Counter(a.get("source", "Unknown") for a in articles)
+    
+    html = f'''<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <style>
-        body {{ font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }}
-        .header {{ background: linear-gradient(135deg, #0d9488, #0f766e); color: white; padding: 30px; border-radius: 10px; text-align: center; }}
-        .kpi {{ display: flex; gap: 15px; margin: 20px 0; }}
-        .kpi-card {{ flex: 1; background: #f8fafc; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #0d9488; }}
+        body {{ font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 20px; background: #f8fafc; }}
+        .header {{ background: linear-gradient(135deg, #0d9488, #0f766e); color: white; padding: 25px; border-radius: 12px; text-align: center; }}
+        .header h1 {{ margin: 0; font-size: 24px; }}
+        .header p {{ margin: 5px 0 0 0; opacity: 0.9; }}
+        .kpi-row {{ display: flex; gap: 15px; margin: 20px 0; }}
+        .kpi {{ flex: 1; background: white; padding: 15px; border-radius: 10px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }}
         .kpi-value {{ font-size: 28px; font-weight: bold; color: #0d9488; }}
-        .kpi-label {{ font-size: 12px; color: #64748b; }}
-        .article {{ background: #f8fafc; border-radius: 8px; padding: 15px; margin: 10px 0; border-left: 4px solid #0d9488; }}
-        .article.new {{ background: #fef3c7; border-left-color: #f59e0b; }}
-        .sector-tag {{ background: #0d9488; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; }}
-        .source-tag {{ color: #64748b; font-size: 11px; }}
-        .footer {{ text-align: center; margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 8px; }}
-        .btn {{ display: inline-block; background: #0d9488; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; }}
+        .kpi-label {{ font-size: 12px; color: #64748b; margin-top: 5px; }}
+        .section {{ background: white; border-radius: 10px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }}
+        .section h3 {{ margin-top: 0; color: #334155; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }}
+        .article {{ padding: 12px; border-left: 3px solid #0d9488; margin: 10px 0; background: #f8fafc; border-radius: 0 6px 6px 0; }}
+        .article.new {{ border-left-color: #f59e0b; background: #fef3c7; }}
+        .article h4 {{ margin: 0 0 5px 0; font-size: 14px; }}
+        .article p {{ margin: 5px 0; font-size: 12px; color: #64748b; }}
+        .tag {{ display: inline-block; background: #e0f2f1; color: #0d9488; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-right: 5px; }}
+        .btn {{ display: inline-block; background: #0d9488; color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: 500; }}
+        .footer {{ text-align: center; margin-top: 30px; padding: 20px; color: #64748b; font-size: 12px; }}
     </style>
 </head>
 <body>
@@ -128,105 +115,125 @@ class EmailNotifier:
         <p>Daily Report - {datetime.now().strftime('%B %d, %Y')}</p>
     </div>
     
-    <div class="kpi">
-        <div class="kpi-card" style="border-left-color: #f59e0b;">
-            <div class="kpi-value">{stats['today']}</div>
+    <div class="kpi-row">
+        <div class="kpi">
+            <div class="kpi-value">{len(today_articles)}</div>
             <div class="kpi-label">Today</div>
         </div>
-        <div class="kpi-card">
-            <div class="kpi-value">{stats['week']}</div>
+        <div class="kpi">
+            <div class="kpi-value">{len(week_articles)}</div>
             <div class="kpi-label">This Week</div>
         </div>
-        <div class="kpi-card">
-            <div class="kpi-value">{stats['total']:,}</div>
+        <div class="kpi">
+            <div class="kpi-value">{len(articles):,}</div>
             <div class="kpi-label">Total Database</div>
         </div>
     </div>
     
-    <h3>📊 Top Sectors</h3>
-    <p>{"  |  ".join([f"{s}: {c}" for s, c in stats['sectors']])}</p>
-    
-    <h3>📰 Top Sources</h3>
-    <p style="font-size: 12px; color: #64748b;">{"  |  ".join([f"{s}: {c}" for s, c in stats['sources']])}</p>
-"""
-        
-        if today_articles:
-            html += f"<h3>🆕 Today's Articles ({len(today_articles)})</h3>"
-            for a in today_articles[:15]:
-                html += f"""
-    <div class="article new">
-        <span class="sector-tag">{a['sector']}</span>
-        <span class="source-tag" style="margin-left: 10px;">{a['source']}</span>
-        <h4 style="margin: 10px 0 5px 0;">{a['title'][:100]}</h4>
-        <p style="font-size: 13px; color: #475569; margin: 0;">{a['summary'][:150]}...</p>
-        <a href="{a['url']}" style="font-size: 12px; color: #0d9488;">Read more →</a>
+    <div class="section">
+        <h3>📊 Top Sectors</h3>
+        <p>{" | ".join([f"{s}: {c}" for s, c in sector_counts.most_common(5)])}</p>
     </div>
-"""
-        else:
-            html += "<p>No new articles collected today.</p>"
-        
-        html += """
+    
+    <div class="section">
+        <h3>📰 Top Sources</h3>
+        <p style="font-size: 12px;">{" | ".join([f"{s}: {c}" for s, c in source_counts.most_common(8)])}</p>
+    </div>
+'''
+    
+    if today_articles:
+        html += f'''
+    <div class="section">
+        <h3>🆕 Today's Articles ({len(today_articles)})</h3>
+'''
+        for a in today_articles[:10]:
+            html += f'''
+        <div class="article new">
+            <span class="tag">{a['sector']}</span>
+            <span class="tag" style="background: #fef3c7; color: #92400e;">{a['source']}</span>
+            <h4>{a['title'][:100]}{'...' if len(a['title']) > 100 else ''}</h4>
+            <p>{a['summary'][:150]}{'...' if len(a['summary']) > 150 else ''}</p>
+            <a href="{a['url']}" style="font-size: 11px; color: #0d9488;">Read more →</a>
+        </div>
+'''
+        html += '</div>'
+    else:
+        html += '''
+    <div class="section">
+        <h3>📰 Today's Articles</h3>
+        <p>No new infrastructure news collected today.</p>
+    </div>
+'''
+    
+    html += f'''
+    <div style="text-align: center; margin: 30px 0;">
+        <a href="{DASHBOARD_URL}" class="btn">📊 View Full Dashboard</a>
+    </div>
+    
     <div class="footer">
-        <a href="https://hms4792.github.io/vietnam-infra-news/" class="btn">📊 View Full Dashboard</a>
-        <p style="margin-top: 15px; font-size: 12px; color: #94a3b8;">Vietnam Infrastructure News Pipeline</p>
+        <p>Vietnam Infrastructure News Pipeline</p>
+        <p>This is an automated email. Do not reply.</p>
     </div>
 </body>
-</html>"""
+</html>'''
+    
+    return html
+
+
+def send_email(html_content):
+    """Send email notification"""
+    if not EMAIL_USERNAME or not EMAIL_PASSWORD:
+        logger.warning("Email credentials not configured")
+        return False
+    
+    recipients = [r.strip() for r in EMAIL_RECIPIENTS if r.strip()]
+    if not recipients:
+        logger.warning("No email recipients configured")
+        return False
+    
+    try:
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = f"{EMAIL_SUBJECT} - {datetime.now().strftime('%Y-%m-%d')}"
+        msg['From'] = f"{EMAIL_FROM_NAME} <{EMAIL_USERNAME}>"
+        msg['To'] = ', '.join(recipients)
         
-        return html
-    
-    def send_email(self, html):
-        try:
-            msg = MIMEMultipart('alternative')
-            msg['Subject'] = f"{EMAIL_SUBJECT} - {datetime.now().strftime('%Y-%m-%d')}"
-            msg['From'] = f"{EMAIL_FROM_NAME} <{self.email_username}>"
-            msg['To'] = ', '.join(self.recipients)
-            msg.attach(MIMEText(html, 'html'))
-            
-            server = smtplib.SMTP('smtp.gmail.com', 587)
-            server.starttls()
-            server.login(self.email_username, self.email_password)
-            server.send_message(msg)
-            server.quit()
-            
-            logger.info("Email sent successfully")
-            return True
-        except Exception as e:
-            logger.error(f"Email error: {e}")
-            return False
-    
-    def run(self):
-        try:
-            stats = self.get_statistics()
-            html = self.generate_html(self.articles, stats)
-            success = self.send_email(html)
-            
-            if success:
-                print(f"✓ Email sent to {len(self.recipients)} recipients")
-                print(f"  Today: {stats['today']} articles")
-                print(f"  Total: {stats['total']} articles")
-            return success
-        except Exception as e:
-            logger.error(f"Error: {e}")
-            return False
+        msg.attach(MIMEText(html_content, 'html', 'utf-8'))
+        
+        server = smtplib.SMTP(EMAIL_SMTP_SERVER, EMAIL_SMTP_PORT)
+        server.starttls()
+        server.login(EMAIL_USERNAME, EMAIL_PASSWORD)
+        server.send_message(msg)
+        server.quit()
+        
+        logger.info(f"Email sent to {len(recipients)} recipients")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Email send error: {e}")
+        return False
 
 
 def main():
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--test', action='store_true')
-    args = parser.parse_args()
+    """Main function"""
+    print("=" * 60)
+    print("EMAIL NOTIFICATION")
+    print("=" * 60)
     
-    try:
-        notifier = EmailNotifier()
-        if args.test:
-            stats = notifier.get_statistics()
-            print(f"Test mode - Total: {stats['total']}, Today: {stats['today']}")
-        else:
-            notifier.run()
-    except Exception as e:
-        logger.error(f"Error: {e}")
-        sys.exit(1)
+    # Load articles
+    articles = load_articles()
+    print(f"Loaded {len(articles)} articles")
+    
+    if not articles:
+        print("No articles to send")
+        return
+    
+    # Generate and send email
+    html = generate_email_html(articles)
+    
+    if send_email(html):
+        print("✓ Email sent successfully")
+    else:
+        print("✗ Email send failed or not configured")
 
 
 if __name__ == "__main__":
