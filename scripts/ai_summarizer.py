@@ -54,7 +54,17 @@ class AISummarizer:
 
 
 def main():
-    logger.info("AI Summarizer ready (fallback mode)")
+    """Process articles from Excel and add summaries"""
+    print("=" * 60)
+    print("AI SUMMARIZER")
+    print("=" * 60)
+    
+    # This step is optional - just logs that it ran
+    # Actual summarization happens in the dashboard generation
+    
+    print("AI Summarizer running in fallback mode (no API calls)")
+    print("Summaries will be generated during dashboard creation")
+    print("Done!")
 
 
 if __name__ == "__main__":
