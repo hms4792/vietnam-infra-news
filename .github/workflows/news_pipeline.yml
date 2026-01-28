@@ -1,0 +1,124 @@
+name: Vietnam Infrastructure News Pipeline
+
+on:
+  schedule:
+    # 평일 오후 6시 베트남 시간 (UTC 11:00) - 월요일~금요일
+    - cron: '0 11 * * 1-5'
+  
+  workflow_dispatch:
+    inputs:
+      hours_back:
+        description: '수집할 시간 범위 (hours)'
+        required: true
+        default: '24'
+        type: string
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Create directories
+        run: |
+          mkdir -p data/database outputs logs
+      
+      - name: Download previous Excel database (if exists)
+        uses: actions/download-artifact@v4
+        with:
+          name: news-excel-database
+          path: data/database/
+        continue-on-error: true
+      
+      - name: Check database status
+        run: |
+          echo "=== Database check ==="
+          if [ -f "data/database/Vietnam_Infra_News_Database_Final.xlsx" ]; then
+            echo "✓ Excel database found"
+            ls -lh data/database/
+          else
+            echo "✗ Excel database not found - will create new one"
+          fi
+      
+      - name: Run News Collection
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          HOURS_BACK="${{ github.event.inputs.hours_back || '24' }}"
+          echo "Collecting news from last $HOURS_BACK hours"
+          python scripts/news_collector.py --hours-back $HOURS_BACK
+      
+      - name: Run AI Summarization
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "Generating AI summaries and translations"
+          python scripts/ai_summarizer.py
+      
+      - name: Generate Dashboard
+        run: |
+          echo "Generating dashboard"
+          python scripts/dashboard_updater.py
+      
+      - name: Verify outputs
+        run: |
+          echo "=== Checking outputs folder ==="
+          ls -la outputs/ || echo "outputs folder not found"
+          
+          if [ -f "outputs/index.html" ]; then
+            echo "✓ Dashboard generated successfully"
+            echo "File size: $(ls -lh outputs/index.html | awk '{print $5}')"
+          else
+            echo "✗ Dashboard not found!"
+            exit 1
+          fi
+      
+      - name: Upload Excel database artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: news-excel-database
+          path: data/database/Vietnam_Infra_News_Database_Final.xlsx
+          retention-days: 90
+      
+      - name: Upload outputs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-outputs-${{ github.run_number }}
+          path: outputs/
+          retention-days: 30
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./outputs
+          publish_branch: gh-pages
+          force_orphan: true
+      
+      - name: Send Email Notification
+        if: success()
+        env:
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
+        run: |
+          python scripts/send_notification.py
