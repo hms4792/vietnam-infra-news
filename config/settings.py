@@ -19,7 +19,7 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 # === EMAIL ===
 EMAIL_USERNAME = os.getenv("EMAIL_USERNAME", "")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "")
-EMAIL_RECIPIENTS = os.getenv("EMAIL_RECIPIENTS", "").split(",")
+EMAIL_RECIPIENTS = os.getenv("EMAIL_RECIPIENTS", "")
 EMAIL_SUBJECT = "🇻🇳 Vietnam Infrastructure News Daily"
 EMAIL_FROM_NAME = "Vietnam Infra News"
 EMAIL_SMTP_SERVER = "smtp.gmail.com"
@@ -39,7 +39,7 @@ KAKAO_REFRESH_TOKEN = os.getenv("KAKAO_REFRESH_TOKEN", "")
 # === DASHBOARD ===
 DASHBOARD_URL = "https://hms4792.github.io/vietnam-infra-news/"
 
-# === RSS FEEDS (11 sources) ===
+# === RSS FEEDS ===
 RSS_FEEDS = {
     "Vietnam News": "https://vietnamnews.vn/rss/home.rss",
     "VnExpress English": "https://e.vnexpress.net/rss/news.rss",
@@ -54,18 +54,13 @@ RSS_FEEDS = {
     "Vietnam Energy": "https://nangluongvietnam.vn/rss/news.rss",
 }
 
-# === SECTOR CLASSIFICATION (STRICT) ===
-# Each sector requires at least ONE keyword match
-# Priority: Environment > Energy > Urban (lower number = higher priority)
-
+# === SECTOR CLASSIFICATION ===
 SECTOR_KEYWORDS = {
-    # === ENVIRONMENT (Priority 1-3) ===
     "Waste Water": {
         "keywords": [
             "wastewater", "waste water", "sewage", "sewerage", "effluent",
             "wastewater treatment", "sewage treatment", "wwtp", "stp",
-            "nước thải", "xử lý nước thải", "nhà máy xử lý nước thải",
-            "drainage", "stormwater", "thoát nước"
+            "nước thải", "xử lý nước thải", "drainage", "stormwater", "thoát nước"
         ],
         "area": "Environment",
         "priority": 1
@@ -90,8 +85,6 @@ SECTOR_KEYWORDS = {
         "area": "Environment",
         "priority": 3
     },
-    
-    # === ENERGY (Priority 4-5) ===
     "Power": {
         "keywords": [
             "power plant", "electricity", "solar", "wind farm", "hydropower",
@@ -106,15 +99,13 @@ SECTOR_KEYWORDS = {
     "Oil & Gas": {
         "keywords": [
             "oil", "gas", "petroleum", "lng", "refinery", "petrochemical",
-            "offshore", "drilling", "pipeline", "terminal",
+            "offshore", "drilling", "terminal",
             "dầu khí", "khí đốt", "lọc dầu", "nhà máy lọc dầu",
             "petrovietnam", "pvn", "binh son refining"
         ],
         "area": "Energy Develop.",
         "priority": 5
     },
-    
-    # === URBAN DEVELOPMENT (Priority 6-8) ===
     "Industrial Parks": {
         "keywords": [
             "industrial park", "industrial zone", "economic zone", "export processing",
@@ -131,19 +122,10 @@ SECTOR_KEYWORDS = {
         ],
         "area": "Urban Develop.",
         "priority": 7
-    },
-    "Transport": {
-        "keywords": [
-            "metro", "railway", "expressway", "highway", "airport expansion",
-            "seaport", "port development", "logistics hub",
-            "đường sắt", "cao tốc", "cảng biển", "sân bay"
-        ],
-        "area": "Urban Develop.",
-        "priority": 8
     }
 }
 
-# === EXCLUSION KEYWORDS (Skip these articles entirely) ===
+# === EXCLUSION KEYWORDS ===
 EXCLUSION_KEYWORDS = [
     # Sports
     "football", "soccer", "basketball", "tennis", "golf tournament",
@@ -154,28 +136,28 @@ EXCLUSION_KEYWORDS = [
     # Entertainment
     "celebrity", "singer", "actor", "actress", "movie", "film festival",
     "concert", "album", "k-pop", "drama", "tv show",
-    "ca sĩ", "diễn viên", "phim", "nhạc",
     
-    # Weather (unless infrastructure related)
+    # Weather (non-infrastructure)
     "weather forecast", "temperature today", "rain expected",
-    "dự báo thời tiết", "nhiệt độ",
+    "ice storm", "hurricane", "typhoon warning",
     
-    # General news not infrastructure
-    "stock market", "stock price", "shares",
-    "tourist arrivals", "tourism statistics",
+    # General news
+    "stock market", "stock price", "tourist arrivals",
     "covid", "pandemic", "vaccine",
     "election", "vote", "political party",
     "murder", "arrest", "crime", "prison",
-    "recipe", "cooking", "restaurant review",
-    "fashion", "beauty", "cosmetic"
+    "recipe", "cooking", "restaurant review"
 ]
 
-# === PROVINCE MAPPING ===
-PROVINCES = [
-    "Ho Chi Minh City", "Hanoi", "Da Nang", "Hai Phong", "Can Tho",
-    "Binh Duong", "Dong Nai", "Ba Ria-Vung Tau", "Long An", "Quang Ninh",
-    "Bac Ninh", "Hai Duong", "Thai Nguyen", "Thanh Hoa", "Nghe An",
-    "Hue", "Quang Nam", "Binh Dinh", "Khanh Hoa", "Lam Dong",
-    "Dak Lak", "Binh Thuan", "An Giang", "Kien Giang", "Ca Mau",
-    "Quang Ngai", "Quang Binh", "Ha Tinh", "Mekong Delta"
-]
+# === AI PROMPTS ===
+SUMMARIZATION_PROMPT_TEMPLATE = """Summarize this Vietnam infrastructure news in {language}:
+
+Title: {title}
+Sector: {sector}
+Content: {content}
+
+Write a 2-3 sentence summary focusing on the infrastructure project details."""
+
+TRANSLATION_PROMPT_TEMPLATE = """Translate to {language}. Return ONLY the translation:
+
+{text}"""
