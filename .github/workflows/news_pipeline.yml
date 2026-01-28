@@ -2,7 +2,6 @@ name: Vietnam Infrastructure News Pipeline
 
 on:
   schedule:
-    # 평일 오후 6시 베트남 시간 (UTC 11:00) - 월요일~금요일
     - cron: '0 11 * * 1-5'
   
   workflow_dispatch:
@@ -42,21 +41,20 @@ jobs:
         run: |
           mkdir -p data/database outputs logs
       
-      - name: Download previous Excel database (if exists)
-        uses: actions/download-artifact@v4
-        with:
-          name: news-excel-database
-          path: data/database/
-        continue-on-error: true
-      
       - name: Check database status
         run: |
           echo "=== Database check ==="
           if [ -f "data/database/Vietnam_Infra_News_Database_Final.xlsx" ]; then
-            echo "✓ Excel database found"
+            echo "✓ Excel database found in repository"
             ls -lh data/database/
+            FILE_SIZE=$(stat -c%s "data/database/Vietnam_Infra_News_Database_Final.xlsx")
+            echo "File size: $FILE_SIZE bytes"
+            if [ "$FILE_SIZE" -lt 100000 ]; then
+              echo "⚠️ WARNING: File seems too small (expected ~300KB)"
+            fi
           else
-            echo "✗ Excel database not found - will create new one"
+            echo "✗ Excel database not found!"
+            exit 1
           fi
       
       - name: Run News Collection
@@ -82,22 +80,18 @@ jobs:
       - name: Verify outputs
         run: |
           echo "=== Checking outputs folder ==="
-          ls -la outputs/ || echo "outputs folder not found"
+          ls -la outputs/
           
           if [ -f "outputs/index.html" ]; then
-            echo "✓ Dashboard generated successfully"
-            echo "File size: $(ls -lh outputs/index.html | awk '{print $5}')"
+            FILE_SIZE=$(stat -c%s "outputs/index.html")
+            echo "✓ Dashboard generated: $FILE_SIZE bytes"
+            if [ "$FILE_SIZE" -lt 500000 ]; then
+              echo "⚠️ WARNING: Dashboard too small! Expected ~2.3MB"
+            fi
           else
             echo "✗ Dashboard not found!"
             exit 1
           fi
-      
-      - name: Upload Excel database artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: news-excel-database
-          path: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          retention-days: 90
       
       - name: Upload outputs artifact
         uses: actions/upload-artifact@v4
