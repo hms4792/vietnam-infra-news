@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News Collector
-Strict classification - ONLY infrastructure news
+Strict classification - ONLY Vietnam infrastructure news
 Can be run directly: python news_collector.py --hours-back 48
 """
 
@@ -15,6 +15,7 @@ import os
 import time
 import json
 import argparse
+import re
 from pathlib import Path
 
 # Setup paths
@@ -32,6 +33,24 @@ logger = logging.getLogger(__name__)
 
 EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
 
+# 베트남 관련 키워드 (최소 1개 이상 포함되어야 함)
+VIETNAM_KEYWORDS = [
+    "vietnam", "việt nam", "viet nam", "vietnamese",
+    "hanoi", "hà nội", "ho chi minh", "hồ chí minh", "saigon", "sài gòn",
+    "da nang", "đà nẵng", "hai phong", "hải phòng", "can tho", "cần thơ",
+    "binh duong", "bình dương", "dong nai", "đồng nai", "long an",
+    "quang ninh", "quảng ninh", "thanh hoa", "thanh hoá", "nghe an", "nghệ an",
+    "mekong", "red river", "petrovietnam", "pvn", "evn", "vingroup", "vinhomes"
+]
+
+# 비베트남 국가 키워드 (제외)
+NON_VIETNAM_KEYWORDS = [
+    "indonesia", "thailand", "philippines", "malaysia", "singapore",
+    "cambodia", "laos", "myanmar", "china", "japan", "korea",
+    "india", "pakistan", "bangladesh", "sri lanka",
+    "united states", "america", "european", "australia"
+]
+
 
 class NewsCollector:
     """Collects infrastructure news with strict filtering"""
@@ -45,6 +64,37 @@ class NewsCollector:
         self.source_status = {}
         
         self._load_existing_urls()
+    
+    def _clean_html(self, text: str) -> str:
+        """Remove HTML tags and clean text"""
+        if not text:
+            return ""
+        # Remove HTML tags
+        clean = re.sub(r'<[^>]+>', '', text)
+        # Remove extra whitespace
+        clean = re.sub(r'\s+', ' ', clean).strip()
+        # Remove HTML entities
+        clean = re.sub(r'&[a-zA-Z]+;', ' ', clean)
+        clean = re.sub(r'&#\d+;', ' ', clean)
+        return clean
+    
+    def _is_vietnam_related(self, title: str, content: str) -> bool:
+        """Check if article is related to Vietnam"""
+        text = f"{title} {content}".lower()
+        
+        # Check for non-Vietnam country as main subject
+        for kw in NON_VIETNAM_KEYWORDS:
+            # If non-Vietnam country appears in title, likely not Vietnam news
+            if kw in title.lower():
+                return False
+        
+        # Check for Vietnam keywords
+        for kw in VIETNAM_KEYWORDS:
+            if kw in text:
+                return True
+        
+        # If from Vietnamese news source and no explicit non-Vietnam reference, assume Vietnam
+        return True
     
     def _load_existing_urls(self):
         """Load URLs from Excel to avoid duplicates"""
@@ -83,9 +133,18 @@ class NewsCollector:
     
     def _classify_sector(self, title: str, content: str = "") -> tuple:
         """Classify article into sector. Returns (sector, area) or (None, None)."""
-        text = f"{title} {content[:2000]}".lower()
+        # Clean HTML from content
+        clean_content = self._clean_html(content)
+        text = f"{title} {clean_content[:2000]}".lower()
         
+        # Check exclusions first
         if self._should_exclude(text):
+            logger.info(f"    ✗ Excluded (keyword): {title[:40]}...")
+            return None, None
+        
+        # Check Vietnam relevance
+        if not self._is_vietnam_related(title, clean_content):
+            logger.info(f"    ✗ Not Vietnam: {title[:40]}...")
             return None, None
         
         best_sector = None
@@ -152,23 +211,25 @@ class NewsCollector:
                     if pub_date < cutoff:
                         continue
                     
-                    content = entry.get('summary', '') or entry.get('description', '')
+                    # Get and CLEAN content (remove HTML tags)
+                    raw_content = entry.get('summary', '') or entry.get('description', '')
+                    clean_content = self._clean_html(raw_content)
                     
-                    sector, area = self._classify_sector(title, content)
+                    # Classify with clean content
+                    sector, area = self._classify_sector(title, clean_content)
                     
                     if sector is None:
-                        logger.info(f"  ✗ Not infra: {title[:50]}...")
                         continue
                     
                     article = {
-                        "title": title,
+                        "title": self._clean_html(title),
                         "url": url,
                         "date": pub_date.strftime("%Y-%m-%d"),
                         "source": source_name,
                         "sector": sector,
                         "area": area,
                         "province": "Vietnam",
-                        "summary": content[:500] if content else title,
+                        "summary": clean_content[:500] if clean_content else title,
                     }
                     
                     self.collected_articles.append(article)
