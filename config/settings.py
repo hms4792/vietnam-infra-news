@@ -130,23 +130,32 @@ EXCLUSION_KEYWORDS = [
     # Sports
     "football", "soccer", "basketball", "tennis", "golf tournament",
     "u23", "u-23", "sea games", "olympic", "world cup", "championship",
-    "coach", "player", "match", "score", "goal", "victory", "defeat",
+    "coach", "player", "match score", "victory", "defeat", "league",
     "bóng đá", "đội tuyển", "huấn luyện viên", "cầu thủ", "trận đấu",
     
     # Entertainment
     "celebrity", "singer", "actor", "actress", "movie", "film festival",
-    "concert", "album", "k-pop", "drama", "tv show",
+    "concert", "album", "k-pop", "drama", "tv show", "entertainment",
+    
+    # Natural disasters (not infrastructure)
+    "earthquake death", "landslide death", "flood death", "tsunami",
+    "typhoon death", "hurricane death", "tornado", "volcanic eruption",
+    "death toll", "missing persons", "rescue operation", "disaster relief",
     
     # Weather (non-infrastructure)
     "weather forecast", "temperature today", "rain expected",
-    "ice storm", "hurricane", "typhoon warning",
+    "ice storm", "hurricane warning", "typhoon warning", "cold front",
+    
+    # Stock/Finance (not infrastructure)
+    "stock market", "stock price", "share price", "trading volume",
+    "stock exchange", "market cap", "investor sentiment",
     
     # General news
-    "stock market", "stock price", "tourist arrivals",
-    "covid", "pandemic", "vaccine",
-    "election", "vote", "political party",
-    "murder", "arrest", "crime", "prison",
-    "recipe", "cooking", "restaurant review"
+    "tourist arrivals", "tourism revenue",
+    "covid", "pandemic", "vaccine", "infection rate",
+    "election", "vote", "political party", "parliament",
+    "murder", "arrest", "crime", "prison", "court ruling",
+    "recipe", "cooking", "restaurant review", "food festival"
 ]
 
 # === AI PROMPTS ===
