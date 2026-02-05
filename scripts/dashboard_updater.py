@@ -135,28 +135,78 @@ def convert_to_multilingual_format(articles):
     """
     result = []
     
+    # 섹터 한국어 번역
+    SECTOR_KO = {
+        "Waste Water": "폐수처리",
+        "Solid Waste": "고형폐기물",
+        "Water Supply/Drainage": "상수도/배수",
+        "Power": "발전/전력",
+        "Oil & Gas": "석유/가스",
+        "Industrial Parks": "산업단지",
+        "Smart City": "스마트시티",
+        "Transport": "교통인프라",
+        "Climate Change": "기후변화"
+    }
+    
+    # 섹터 베트남어 번역
+    SECTOR_VI = {
+        "Waste Water": "Xử lý nước thải",
+        "Solid Waste": "Chất thải rắn",
+        "Water Supply/Drainage": "Cấp thoát nước",
+        "Power": "Điện năng",
+        "Oil & Gas": "Dầu khí",
+        "Industrial Parks": "Khu công nghiệp",
+        "Smart City": "Thành phố thông minh",
+        "Transport": "Giao thông",
+        "Climate Change": "Biến đổi khí hậu"
+    }
+    
     for article in articles:
         title = article.get("title", "")
         summary = article.get("summary", "")
         sector = article.get("sector", "Infrastructure")
         province = article.get("province", "Vietnam")
         
-        # Generate multilingual content
+        sector_ko = SECTOR_KO.get(sector, sector)
+        sector_vi = SECTOR_VI.get(sector, sector)
+        
+        # 제목은 원본 유지 (번역 없음)
         title_ko = title
         title_en = title
         title_vi = title
         
-        # Generate summaries based on language detection
-        has_vietnamese = any(ord(c) > 127 for c in title)
+        # 기존 요약이 있는지 확인
+        has_existing_summary = summary and len(summary.strip()) > 20
         
-        if has_vietnamese:
-            summary_vi = summary if summary else title
-            summary_en = f"{sector} project in Vietnam. {title[:100]}"
-            summary_ko = f"{province} 지역 {sector} 관련 프로젝트. {title[:100]}"
+        # 언어 감지 (베트남어 문자 포함 여부)
+        has_vietnamese_chars = any(ord(c) > 127 for c in title)
+        
+        # 요약 생성
+        if has_existing_summary:
+            # 기존 요약이 있으면 활용
+            base_summary = summary[:300]
+            
+            # 기존 요약의 언어 감지
+            if "project in Vietnam" in summary or "Vietnam" in summary[:50]:
+                # 영어 요약
+                summary_en = base_summary
+                summary_ko = f"[{sector_ko}] {province} - {title[:80]}"
+                summary_vi = f"[{sector_vi}] {province} - {title[:80]}"
+            else:
+                # 베트남어 또는 기타 요약
+                summary_vi = base_summary
+                summary_en = f"[{sector}] {province} - {title[:80]}"
+                summary_ko = f"[{sector_ko}] {province} - {title[:80]}"
         else:
-            summary_en = summary if summary else f"{sector} project in Vietnam. {title[:100]}"
-            summary_vi = f"Dự án {sector} tại Vietnam. {title[:100]}"
-            summary_ko = f"{province} 지역 {sector} 관련 프로젝트. {title[:100]}"
+            # 기존 요약이 없으면 템플릿 생성
+            if has_vietnamese_chars:
+                summary_vi = f"[{sector_vi}] {province}: {title[:150]}"
+                summary_en = f"[{sector}] {province}: {title[:150]}"
+                summary_ko = f"[{sector_ko}] {province}: {title[:150]}"
+            else:
+                summary_en = f"[{sector}] {province}: {title[:150]}"
+                summary_ko = f"[{sector_ko}] {province}: {title[:150]}"
+                summary_vi = f"[{sector_vi}] {province}: {title[:150]}"
         
         result.append({
             "id": article.get("id", len(result) + 1),

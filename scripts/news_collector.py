@@ -139,25 +139,27 @@ class NewsCollector:
         
         # Check exclusions first
         if self._should_exclude(text):
-            logger.info(f"    ✗ Excluded (keyword): {title[:40]}...")
+            logger.info(f"    ✗ Excluded (keyword): {title[:50]}...")
             return None, None
         
         # Check Vietnam relevance
         if not self._is_vietnam_related(title, clean_content):
-            logger.info(f"    ✗ Not Vietnam: {title[:40]}...")
+            logger.info(f"    ✗ Not Vietnam: {title[:50]}...")
             return None, None
         
         best_sector = None
         best_area = None
         best_score = 0
         best_priority = 999
+        matched_keywords = []
         
         for sector_name, sector_info in SECTOR_KEYWORDS.items():
             keywords = sector_info["keywords"]
             area = sector_info["area"]
             priority = sector_info["priority"]
             
-            matches = sum(1 for kw in keywords if kw.lower() in text)
+            sector_matches = [kw for kw in keywords if kw.lower() in text]
+            matches = len(sector_matches)
             
             if matches == 0:
                 continue
@@ -169,10 +171,13 @@ class NewsCollector:
                 best_priority = priority
                 best_sector = sector_name
                 best_area = area
+                matched_keywords = sector_matches[:3]  # 상위 3개 키워드만
         
         if best_sector is None:
+            logger.info(f"    ✗ No sector match: {title[:50]}...")
             return None, None
         
+        logger.info(f"    ✓ [{best_sector}] matched: {matched_keywords}")
         return best_sector, best_area
     
     def collect_from_rss(self, hours_back: int = 48) -> list:
@@ -180,17 +185,31 @@ class NewsCollector:
         cutoff = datetime.now() - timedelta(hours=hours_back)
         
         logger.info(f"Collecting news from last {hours_back} hours")
+        logger.info(f"Cutoff time: {cutoff.strftime('%Y-%m-%d %H:%M')}")
+        
+        total_found = 0
+        total_recent = 0
+        total_collected = 0
+        total_excluded = 0
+        total_no_match = 0
         
         for source_name, feed_url in RSS_FEEDS.items():
-            status = {"name": source_name, "found": 0, "collected": 0, "skipped": 0}
+            status = {"name": source_name, "found": 0, "collected": 0, "skipped": 0, "excluded": 0, "no_match": 0}
             
             try:
-                logger.info(f"\n--- {source_name} ---")
+                logger.info(f"\n{'='*50}")
+                logger.info(f"📰 {source_name}")
+                logger.info(f"   URL: {feed_url}")
                 
                 import feedparser
                 feed = feedparser.parse(feed_url)
                 
+                if feed.bozo:
+                    logger.warning(f"   ⚠️ Feed parsing issue: {feed.bozo_exception}")
+                
                 status["found"] = len(feed.entries)
+                total_found += len(feed.entries)
+                logger.info(f"   Found {len(feed.entries)} entries")
                 
                 for entry in feed.entries:
                     url = entry.get('link', '')
@@ -211,14 +230,19 @@ class NewsCollector:
                     if pub_date < cutoff:
                         continue
                     
+                    total_recent += 1
+                    
                     # Get and CLEAN content (remove HTML tags)
                     raw_content = entry.get('summary', '') or entry.get('description', '')
                     clean_content = self._clean_html(raw_content)
                     
                     # Classify with clean content
+                    logger.info(f"   Checking: {title[:60]}...")
                     sector, area = self._classify_sector(title, clean_content)
                     
                     if sector is None:
+                        status["no_match"] += 1
+                        total_no_match += 1
                         continue
                     
                     article = {
@@ -235,15 +259,30 @@ class NewsCollector:
                     self.collected_articles.append(article)
                     self.existing_urls.add(url)
                     status["collected"] += 1
+                    total_collected += 1
                     
-                    logger.info(f"  ✓ [{sector}] {title[:50]}...")
+                    logger.info(f"   ✅ COLLECTED [{sector}] {title[:50]}...")
+                
+                logger.info(f"   Summary: found={status['found']}, collected={status['collected']}, skipped={status['skipped']}, no_match={status['no_match']}")
                 
             except Exception as e:
                 logger.error(f"Error with {source_name}: {e}")
+                import traceback
+                traceback.print_exc()
             
             finally:
                 self.source_status[source_name] = status
-                time.sleep(1)
+                time.sleep(0.5)  # Rate limiting
+        
+        # Final summary
+        logger.info(f"\n{'='*60}")
+        logger.info(f"COLLECTION SUMMARY")
+        logger.info(f"{'='*60}")
+        logger.info(f"Total RSS entries: {total_found}")
+        logger.info(f"Recent entries (within {hours_back}h): {total_recent}")
+        logger.info(f"Collected (infra): {total_collected}")
+        logger.info(f"No sector match: {total_no_match}")
+        logger.info(f"{'='*60}")
         
         self._save_status()
         return self.collected_articles

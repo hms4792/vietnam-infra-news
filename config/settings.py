@@ -40,85 +40,124 @@ KAKAO_REFRESH_TOKEN = os.getenv("KAKAO_REFRESH_TOKEN", "")
 DASHBOARD_URL = "https://hms4792.github.io/vietnam-infra-news/"
 
 # === RSS FEEDS ===
+# 일반 뉴스 (영어)
 RSS_FEEDS = {
-    "Vietnam News": "https://vietnamnews.vn/rss/home.rss",
+    # 주요 영어 뉴스
     "VnExpress English": "https://e.vnexpress.net/rss/news.rss",
+    "VnExpress Business": "https://e.vnexpress.net/rss/business.rss",
     "VietnamPlus": "https://en.vietnamplus.vn/rss/news.rss",
+    "VietnamPlus Business": "https://en.vietnamplus.vn/rss/business.rss",
+    "Vietnam News": "https://vietnamnews.vn/rss/home.rss",
     "Tuoi Tre News": "https://tuoitrenews.vn/rss/news.rss",
     "The Investor": "https://theinvestor.vn/rss/news.rss",
     "Vietnam Investment Review": "https://vir.com.vn/rss/news.rss",
     "Hanoi Times": "https://hanoitimes.vn/rss/news.rss",
-    "Saigon Times": "https://english.thesaigontimes.vn/rss/news.rss",
     "VietnamNet": "https://vietnamnet.vn/en/rss/home.rss",
     "Saigon GP Daily": "https://en.sggp.org.vn/rss/news.rss",
-    "Vietnam Energy": "https://nangluongvietnam.vn/rss/news.rss",
+    
+    # 베트남어 뉴스 (인프라 관련)
+    "VnExpress Kinh Doanh": "https://vnexpress.net/rss/kinh-doanh.rss",
+    "VnExpress Thoi Su": "https://vnexpress.net/rss/thoi-su.rss",
+    "Tuoi Tre": "https://tuoitre.vn/rss/tin-moi-nhat.rss",
+    "Dau Tu Online": "https://baodautu.vn/rss/home.rss",
+    "Nhan Dan": "https://nhandan.vn/rss/kinhte.rss",
 }
 
 # === SECTOR CLASSIFICATION ===
 SECTOR_KEYWORDS = {
     "Waste Water": {
         "keywords": [
+            # English
             "wastewater", "waste water", "sewage", "sewerage", "effluent",
             "wastewater treatment", "sewage treatment", "wwtp", "stp",
-            "nước thải", "xử lý nước thải", "drainage", "stormwater", "thoát nước"
+            "drainage system", "stormwater", "water pollution",
+            # Vietnamese
+            "nước thải", "xử lý nước thải", "thoát nước", "ô nhiễm nước"
         ],
         "area": "Environment",
         "priority": 1
     },
     "Solid Waste": {
         "keywords": [
+            # English
             "solid waste", "waste management", "garbage", "landfill", "incinerat",
-            "waste-to-energy", "wte", "recycling plant", "composting",
+            "waste-to-energy", "wte", "recycling", "composting",
+            "hazardous waste", "medical waste", "e-waste", "plastic waste",
+            "waste collection", "garbage collection", "municipal waste",
+            # Vietnamese
             "rác thải", "chất thải rắn", "bãi rác", "đốt rác", "xử lý rác",
-            "hazardous waste", "medical waste", "e-waste"
+            "tái chế", "chất thải nguy hại"
         ],
         "area": "Environment",
         "priority": 2
     },
     "Water Supply/Drainage": {
         "keywords": [
+            # English
             "water supply", "water treatment", "drinking water", "potable water",
-            "water plant", "reservoir", "pipeline", "water distribution",
-            "cấp nước", "nhà máy nước", "nước sạch", "hồ chứa",
-            "desalination", "water network"
+            "water plant", "reservoir", "water distribution", "water pipeline",
+            "desalination", "water network", "clean water", "tap water",
+            "water infrastructure", "water project",
+            # Vietnamese
+            "cấp nước", "nhà máy nước", "nước sạch", "hồ chứa", "đường ống nước"
         ],
         "area": "Environment",
         "priority": 3
     },
     "Power": {
         "keywords": [
-            "power plant", "electricity", "solar", "wind farm", "hydropower",
-            "thermal power", "renewable energy", "photovoltaic", "pv",
+            # English
+            "power plant", "electricity", "solar power", "solar energy", "solar farm",
+            "wind power", "wind farm", "wind energy", "offshore wind",
+            "hydropower", "hydro power", "thermal power", "coal power",
+            "renewable energy", "photovoltaic", "pv project",
+            "power grid", "transmission line", "substation", "megawatt",
+            "energy storage", "battery storage", "lng power", "gas turbine",
+            "energy project", "power project", "electricity generation",
+            # Vietnamese
             "nhà máy điện", "điện mặt trời", "điện gió", "thủy điện",
-            "grid", "transmission line", "substation", "megawatt", "mw",
-            "energy storage", "battery storage", "lng power"
+            "năng lượng tái tạo", "lưới điện", "trạm biến áp"
         ],
         "area": "Energy Develop.",
         "priority": 4
     },
     "Oil & Gas": {
         "keywords": [
-            "oil", "gas", "petroleum", "lng", "refinery", "petrochemical",
-            "offshore", "drilling", "terminal",
+            # English
+            "oil and gas", "oil & gas", "petroleum", "lng terminal", "lng project",
+            "refinery", "petrochemical", "offshore drilling", "gas pipeline",
+            "natural gas", "crude oil", "oil exploration", "gas field",
+            "oil project", "gas project",
+            # Vietnamese
             "dầu khí", "khí đốt", "lọc dầu", "nhà máy lọc dầu",
-            "petrovietnam", "pvn", "binh son refining"
+            "petrovietnam", "pvn", "binh son", "nghi son"
         ],
         "area": "Energy Develop.",
         "priority": 5
     },
     "Industrial Parks": {
         "keywords": [
-            "industrial park", "industrial zone", "economic zone", "export processing",
-            "manufacturing zone", "factory", "industrial estate",
-            "khu công nghiệp", "kcn", "khu chế xuất", "khu kinh tế"
+            # English
+            "industrial park", "industrial zone", "economic zone", "export processing zone",
+            "manufacturing zone", "industrial estate", "industrial complex",
+            "industrial cluster", "factory construction", "industrial land",
+            "fdi investment", "fdi project", "foreign investment",
+            # Vietnamese
+            "khu công nghiệp", "kcn", "khu chế xuất", "khu kinh tế",
+            "cụm công nghiệp", "nhà máy"
         ],
         "area": "Urban Develop.",
         "priority": 6
     },
     "Smart City": {
         "keywords": [
+            # English
             "smart city", "urban development", "city planning", "smart infrastructure",
-            "đô thị thông minh", "quy hoạch đô thị", "phát triển đô thị"
+            "urban infrastructure", "metro line", "subway", "urban rail",
+            "infrastructure project", "public transport", "transport infrastructure",
+            # Vietnamese
+            "đô thị thông minh", "quy hoạch đô thị", "phát triển đô thị",
+            "metro", "tàu điện ngầm"
         ],
         "area": "Urban Develop.",
         "priority": 7
