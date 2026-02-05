@@ -1,382 +1,564 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News Collector
-Strict classification - ONLY Vietnam infrastructure news
-Can be run directly: python news_collector.py --hours-back 48
+Fixed version with expanded sector keywords and robust RSS parsing
 """
 
-import requests
-from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
-import logging
-import sys
 import os
-import time
+import sys
 import json
-import argparse
 import re
+import sqlite3
+import hashlib
+import logging
+from datetime import datetime, timedelta
 from pathlib import Path
+from urllib.parse import urlparse
+import html
+import xml.etree.ElementTree as ET
 
-# Setup paths
-SCRIPT_DIR = Path(__file__).parent
-PROJECT_ROOT = SCRIPT_DIR.parent
-sys.path.insert(0, str(PROJECT_ROOT))
+import requests
+import feedparser
+from bs4 import BeautifulSoup
 
-from config.settings import (
-    RSS_FEEDS, DATA_DIR, OUTPUT_DIR,
-    SECTOR_KEYWORDS, EXCLUSION_KEYWORDS
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
 )
-
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
+# ============================================================
+# CONFIGURATION
+# ============================================================
 
-# 베트남 관련 키워드 (최소 1개 이상 포함되어야 함)
+# Database path
+DB_PATH = os.environ.get('DB_PATH', 'data/news_database.db')
+
+# Hours to look back for news
+HOURS_BACK = int(os.environ.get('HOURS_BACK', 24))
+
+# RSS Feeds - Vietnam English news sources
+RSS_FEEDS = {
+    "VnExpress English": "https://e.vnexpress.net/rss/news.rss",
+    "VnExpress Business": "https://e.vnexpress.net/rss/business.rss",
+    "VietnamPlus EN": "https://en.vietnamplus.vn/rss/news.rss",
+    "VietnamPlus Business": "https://en.vietnamplus.vn/rss/business.rss",
+    "Vietnam News": "https://vietnamnews.vn/rss/home.rss",
+    "Tuoi Tre English": "https://tuoitrenews.vn/rss/news.rss",
+    "The Investor": "https://theinvestor.vn/rss/news.rss",
+    "Vietnam Investment Review": "https://vir.com.vn/rss/news.rss",
+    "Hanoi Times": "https://hanoitimes.vn/rss/news.rss",
+    "VietnamNet EN": "https://vietnamnet.vn/en/rss/home.rss",
+    "Saigon GP Daily": "https://en.sggp.org.vn/rss/news.rss",
+}
+
+# ============================================================
+# EXPANDED SECTOR KEYWORDS - More inclusive matching
+# ============================================================
+
+SECTOR_KEYWORDS = {
+    "Waste Water": {
+        "primary": [
+            "wastewater", "waste water", "sewage", "water treatment",
+            "drainage", "water supply", "clean water", "tap water",
+            "water infrastructure", "water project", "water plant",
+            "water system", "water network", "sanitation"
+        ],
+        "secondary": [
+            "water", "treatment plant", "purification", "effluent",
+            "sludge", "pumping station", "reservoir"
+        ]
+    },
+    "Solid Waste": {
+        "primary": [
+            "solid waste", "garbage", "trash", "landfill", "waste management",
+            "recycling", "incineration", "waste-to-energy", "wte",
+            "municipal waste", "hazardous waste", "waste collection"
+        ],
+        "secondary": [
+            "waste", "disposal", "rubbish", "compost", "plastic waste"
+        ]
+    },
+    "Power": {
+        "primary": [
+            "power plant", "electricity", "power generation", "thermal power",
+            "coal power", "gas power", "hydropower", "hydro power",
+            "wind power", "wind farm", "solar power", "solar farm",
+            "renewable energy", "clean energy", "green energy",
+            "power grid", "transmission line", "substation",
+            "lng", "liquefied natural gas", "energy transition",
+            "offshore wind", "floating solar", "battery storage",
+            "power capacity", "megawatt", "gigawatt", "mw", "gw"
+        ],
+        "secondary": [
+            "energy", "power", "electric", "turbine", "generator",
+            "evn", "vietnam electricity", "petrovietnam"
+        ]
+    },
+    "Oil & Gas": {
+        "primary": [
+            "oil and gas", "oil & gas", "petroleum", "refinery",
+            "oil field", "gas field", "offshore oil", "pipeline",
+            "petrochemical", "natural gas", "crude oil", "exploration",
+            "drilling", "upstream", "downstream", "midstream"
+        ],
+        "secondary": [
+            "pvn", "petrovietnam", "binh son", "nghi son", "dung quat"
+        ]
+    },
+    "Industrial Parks": {
+        "primary": [
+            "industrial park", "industrial zone", "industrial complex",
+            "economic zone", "export processing", "free trade zone",
+            "manufacturing hub", "tech park", "hi-tech park",
+            "industrial estate", "industrial cluster", "special economic"
+        ],
+        "secondary": [
+            "industrial", "factory", "manufacturing", "warehouse",
+            "logistics park", "industrial land"
+        ]
+    },
+    "Smart City": {
+        "primary": [
+            "smart city", "smart urban", "digital city", "intelligent transport",
+            "smart traffic", "smart grid", "iot", "5g network",
+            "digital transformation", "e-government", "smart building",
+            "ai camera", "surveillance system", "traffic management"
+        ],
+        "secondary": [
+            "smart", "digital", "automated", "intelligent"
+        ]
+    },
+    "Urban Development": {
+        "primary": [
+            "urban development", "urban planning", "city planning",
+            "metro", "subway", "rail", "railway", "high-speed rail",
+            "expressway", "highway", "motorway", "freeway",
+            "bridge", "tunnel", "airport", "seaport", "port",
+            "infrastructure investment", "infrastructure project",
+            "public transport", "bus rapid transit", "brt",
+            "new urban area", "township", "satellite city"
+        ],
+        "secondary": [
+            "infrastructure", "construction", "road", "transport",
+            "transit", "development project", "investment project",
+            "billion", "trillion", "vnd", "usd"
+        ]
+    }
+}
+
+# Vietnam location keywords for relevance check
 VIETNAM_KEYWORDS = [
-    "vietnam", "việt nam", "viet nam", "vietnamese",
-    "hanoi", "hà nội", "ho chi minh", "hồ chí minh", "saigon", "sài gòn",
-    "da nang", "đà nẵng", "hai phong", "hải phòng", "can tho", "cần thơ",
-    "binh duong", "bình dương", "dong nai", "đồng nai", "long an",
-    "quang ninh", "quảng ninh", "thanh hoa", "thanh hoá", "nghe an", "nghệ an",
-    "mekong", "red river", "petrovietnam", "pvn", "evn", "vingroup", "vinhomes"
+    "vietnam", "vietnamese", "hanoi", "ho chi minh", "hcmc", "saigon",
+    "da nang", "danang", "hai phong", "haiphong", "can tho", "cantho",
+    "binh duong", "dong nai", "ba ria", "vung tau", "quang ninh",
+    "hai duong", "bac ninh", "vinh phuc", "hung yen", "long an",
+    "binh dinh", "khanh hoa", "lam dong", "phu quoc", "mekong",
+    "red river", "evn", "petrovietnam", "pvn", "vingroup", "vietjet"
 ]
 
-# 비베트남 국가 키워드 (제외)
-NON_VIETNAM_KEYWORDS = [
-    "indonesia", "thailand", "philippines", "malaysia", "singapore",
-    "cambodia", "laos", "myanmar", "china", "japan", "korea",
-    "india", "pakistan", "bangladesh", "sri lanka",
-    "united states", "america", "european", "australia"
+# Non-Vietnam countries to filter out
+NON_VIETNAM_COUNTRIES = [
+    "singapore", "malaysia", "thailand", "indonesia", "philippines",
+    "cambodia", "laos", "myanmar", "china", "japan", "korea", "india",
+    "taiwan", "hong kong", "australia", "russia", "uk ", "u.k.", "u.s.",
+    "usa", "america", "europe", "africa"
 ]
 
+# ============================================================
+# HELPER FUNCTIONS
+# ============================================================
 
-class NewsCollector:
-    """Collects infrastructure news with strict filtering"""
-    
-    def __init__(self):
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        }
-        self.collected_articles = []
-        self.existing_urls = set()
-        self.source_status = {}
-        
-        self._load_existing_urls()
-    
-    def _clean_html(self, text: str) -> str:
-        """Remove HTML tags and clean text"""
-        if not text:
-            return ""
-        # Remove HTML tags
-        clean = re.sub(r'<[^>]+>', '', text)
-        # Remove extra whitespace
-        clean = re.sub(r'\s+', ' ', clean).strip()
-        # Remove HTML entities
-        clean = re.sub(r'&[a-zA-Z]+;', ' ', clean)
-        clean = re.sub(r'&#\d+;', ' ', clean)
-        return clean
-    
-    def _is_vietnam_related(self, title: str, content: str) -> bool:
-        """Check if article is related to Vietnam"""
-        text = f"{title} {content}".lower()
-        
-        # Check for non-Vietnam country as main subject
-        for kw in NON_VIETNAM_KEYWORDS:
-            # If non-Vietnam country appears in title, likely not Vietnam news
-            if kw in title.lower():
-                return False
-        
-        # Check for Vietnam keywords
-        for kw in VIETNAM_KEYWORDS:
-            if kw in text:
-                return True
-        
-        # If from Vietnamese news source and no explicit non-Vietnam reference, assume Vietnam
-        return True
-    
-    def _load_existing_urls(self):
-        """Load URLs from Excel to avoid duplicates"""
-        if not EXCEL_DB_PATH.exists():
-            return
-        
-        try:
-            import openpyxl
-            wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
-            ws = wb.active
-            
-            headers = [cell.value for cell in ws[1]]
-            link_idx = None
-            for i, h in enumerate(headers):
-                if h and "Link" in str(h):
-                    link_idx = i
-                    break
-            
-            if link_idx is not None:
-                for row in ws.iter_rows(min_row=2, values_only=True):
-                    if row[link_idx]:
-                        self.existing_urls.add(str(row[link_idx]).strip())
-            
-            wb.close()
-            logger.info(f"Loaded {len(self.existing_urls)} existing URLs")
-        except Exception as e:
-            logger.error(f"Error loading URLs: {e}")
-    
-    def _should_exclude(self, text: str) -> bool:
-        """Check if article should be excluded"""
-        text_lower = text.lower()
-        for keyword in EXCLUSION_KEYWORDS:
-            if keyword.lower() in text_lower:
-                return True
+def clean_html(text):
+    """Remove HTML tags and decode entities"""
+    if not text:
+        return ""
+    soup = BeautifulSoup(text, 'html.parser')
+    return html.unescape(soup.get_text(separator=' ', strip=True))
+
+
+def generate_url_hash(url):
+    """Generate MD5 hash of URL for duplicate detection"""
+    return hashlib.md5(url.encode()).hexdigest()
+
+
+def is_english_title(title):
+    """Check if title is primarily English"""
+    if not title:
         return False
+    # Count ASCII letters vs non-ASCII
+    ascii_letters = sum(1 for c in title if c.isascii() and c.isalpha())
+    non_ascii = sum(1 for c in title if not c.isascii())
+    total_letters = ascii_letters + non_ascii
+    if total_letters == 0:
+        return False
+    return (ascii_letters / total_letters) > 0.7
+
+
+def is_vietnam_related(title, summary=""):
+    """Check if article is related to Vietnam"""
+    text = f"{title} {summary}".lower()
     
-    def _classify_sector(self, title: str, content: str = "") -> tuple:
-        """Classify article into sector. Returns (sector, area) or (None, None)."""
-        # Clean HTML from content
-        clean_content = self._clean_html(content)
-        text = f"{title} {clean_content[:2000]}".lower()
+    # Check for Vietnam keywords
+    has_vietnam = any(kw in text for kw in VIETNAM_KEYWORDS)
+    
+    # Check for non-Vietnam country focus
+    has_other_country = False
+    for country in NON_VIETNAM_COUNTRIES:
+        if country in text:
+            # Make sure Vietnam is also mentioned prominently
+            vietnam_count = text.count("vietnam")
+            country_count = text.count(country)
+            if country_count > vietnam_count:
+                has_other_country = True
+                break
+    
+    return has_vietnam and not has_other_country
+
+
+def classify_sector(title, summary=""):
+    """Classify article into infrastructure sector"""
+    text = f"{title} {summary}".lower()
+    
+    matches = []
+    
+    for sector, keywords in SECTOR_KEYWORDS.items():
+        score = 0
+        # Primary keywords - strong match
+        for kw in keywords["primary"]:
+            if kw in text:
+                score += 2
+        # Secondary keywords - weak match
+        for kw in keywords.get("secondary", []):
+            if kw in text:
+                score += 1
         
-        # Check exclusions first
-        if self._should_exclude(text):
-            logger.info(f"    ✗ Excluded (keyword): {title[:50]}...")
-            return None, None
+        if score > 0:
+            matches.append((sector, score))
+    
+    if matches:
+        # Return sector with highest score
+        matches.sort(key=lambda x: x[1], reverse=True)
+        return matches[0][0]
+    
+    return None
+
+
+def parse_date(date_str):
+    """Parse various date formats"""
+    if not date_str:
+        return None
+    
+    formats = [
+        "%a, %d %b %Y %H:%M:%S %z",
+        "%a, %d %b %Y %H:%M:%S %Z",
+        "%Y-%m-%dT%H:%M:%S%z",
+        "%Y-%m-%dT%H:%M:%SZ",
+        "%Y-%m-%d %H:%M:%S",
+        "%d/%m/%Y %H:%M",
+        "%Y-%m-%d",
+    ]
+    
+    for fmt in formats:
+        try:
+            return datetime.strptime(date_str, fmt)
+        except ValueError:
+            continue
+    
+    # Try feedparser's date parser
+    try:
+        from email.utils import parsedate_to_datetime
+        return parsedate_to_datetime(date_str)
+    except:
+        pass
+    
+    return None
+
+
+def fetch_rss_robust(url, timeout=30):
+    """Fetch RSS with robust error handling for malformed feeds"""
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'application/rss+xml, application/xml, text/xml, */*',
+    }
+    
+    try:
+        response = requests.get(url, headers=headers, timeout=timeout)
+        response.raise_for_status()
+        content = response.text
         
-        # Check Vietnam relevance
-        if not self._is_vietnam_related(title, clean_content):
-            logger.info(f"    ✗ Not Vietnam: {title[:50]}...")
-            return None, None
+        # Try standard feedparser first
+        feed = feedparser.parse(content)
+        if feed.entries:
+            return feed
         
-        best_sector = None
-        best_area = None
-        best_score = 0
-        best_priority = 999
-        matched_keywords = []
+        # If feedparser fails, try cleaning the XML
+        # Remove invalid characters
+        content = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', content)
         
-        for sector_name, sector_info in SECTOR_KEYWORDS.items():
-            keywords = sector_info["keywords"]
-            area = sector_info["area"]
-            priority = sector_info["priority"]
+        # Fix common XML issues
+        content = content.replace('&nbsp;', ' ')
+        content = content.replace('&amp;amp;', '&amp;')
+        
+        # Try parsing again
+        feed = feedparser.parse(content)
+        if feed.entries:
+            return feed
+        
+        # Last resort: extract items manually with regex
+        items = []
+        item_pattern = re.compile(r'<item>(.*?)</item>', re.DOTALL | re.IGNORECASE)
+        title_pattern = re.compile(r'<title[^>]*>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</title>', re.DOTALL | re.IGNORECASE)
+        link_pattern = re.compile(r'<link[^>]*>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</link>', re.DOTALL | re.IGNORECASE)
+        desc_pattern = re.compile(r'<description[^>]*>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</description>', re.DOTALL | re.IGNORECASE)
+        date_pattern = re.compile(r'<pubDate[^>]*>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</pubDate>', re.DOTALL | re.IGNORECASE)
+        
+        for item_match in item_pattern.finditer(content):
+            item_content = item_match.group(1)
             
-            sector_matches = [kw for kw in keywords if kw.lower() in text]
-            matches = len(sector_matches)
+            title_match = title_pattern.search(item_content)
+            link_match = link_pattern.search(item_content)
+            desc_match = desc_pattern.search(item_content)
+            date_match = date_pattern.search(item_content)
             
-            if matches == 0:
+            if title_match and link_match:
+                item = {
+                    'title': clean_html(title_match.group(1).strip()),
+                    'link': link_match.group(1).strip(),
+                    'summary': clean_html(desc_match.group(1).strip()) if desc_match else '',
+                    'published': date_match.group(1).strip() if date_match else '',
+                }
+                items.append(type('Entry', (), item)())
+        
+        if items:
+            return type('Feed', (), {'entries': items, 'bozo': False})()
+        
+        return feed
+        
+    except Exception as e:
+        logger.warning(f"   Error fetching {url}: {e}")
+        return type('Feed', (), {'entries': [], 'bozo': True, 'bozo_exception': str(e)})()
+
+
+# ============================================================
+# DATABASE FUNCTIONS
+# ============================================================
+
+def init_database(db_path):
+    """Initialize SQLite database"""
+    Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+    
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS articles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            url_hash TEXT UNIQUE,
+            url TEXT,
+            title TEXT,
+            title_vi TEXT,
+            title_ko TEXT,
+            summary TEXT,
+            summary_vi TEXT,
+            summary_ko TEXT,
+            source TEXT,
+            sector TEXT,
+            area TEXT,
+            province TEXT,
+            published_date TEXT,
+            collected_date TEXT,
+            processed INTEGER DEFAULT 0
+        )
+    ''')
+    
+    conn.commit()
+    return conn
+
+
+def get_existing_urls(conn):
+    """Get set of existing URL hashes"""
+    cursor = conn.cursor()
+    cursor.execute("SELECT url_hash FROM articles")
+    return {row[0] for row in cursor.fetchall()}
+
+
+def save_article(conn, article):
+    """Save article to database"""
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute('''
+            INSERT INTO articles (
+                url_hash, url, title, summary, source, sector, area,
+                province, published_date, collected_date
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            article['url_hash'],
+            article['url'],
+            article['title'],
+            article.get('summary', ''),
+            article['source'],
+            article['sector'],
+            article.get('area', 'Environment'),
+            article.get('province', 'Vietnam'),
+            article.get('published_date', ''),
+            datetime.now().isoformat()
+        ))
+        conn.commit()
+        return True
+    except sqlite3.IntegrityError:
+        return False
+
+
+# ============================================================
+# MAIN COLLECTION FUNCTION
+# ============================================================
+
+def collect_news(hours_back=24):
+    """Collect news from all RSS feeds"""
+    
+    # Initialize database
+    conn = init_database(DB_PATH)
+    existing_urls = get_existing_urls(conn)
+    logger.info(f"Loaded {len(existing_urls)} existing URLs")
+    
+    # Calculate cutoff time
+    cutoff_time = datetime.now() - timedelta(hours=hours_back)
+    logger.info(f"Collecting news from last {hours_back} hours")
+    logger.info(f"Cutoff time: {cutoff_time.strftime('%Y-%m-%d %H:%M')}")
+    
+    total_collected = 0
+    total_entries = 0
+    total_recent = 0
+    total_no_match = 0
+    
+    for source_name, feed_url in RSS_FEEDS.items():
+        logger.info(f"\n{'='*50}")
+        logger.info(f"📰 {source_name}")
+        logger.info(f"   URL: {feed_url}")
+        
+        # Fetch feed
+        feed = fetch_rss_robust(feed_url)
+        
+        if feed.bozo and not feed.entries:
+            if hasattr(feed, 'bozo_exception'):
+                logger.warning(f"   ⚠️ Feed parsing issue: {feed.bozo_exception}")
+            logger.info(f"   Found 0 entries")
+            logger.info(f"   Summary: found=0, collected=0, skipped=0, no_match=0")
+            continue
+        
+        entries = feed.entries
+        logger.info(f"   Found {len(entries)} entries")
+        total_entries += len(entries)
+        
+        source_collected = 0
+        source_skipped = 0
+        source_no_match = 0
+        
+        for entry in entries:
+            title = getattr(entry, 'title', '')
+            if not title:
                 continue
             
-            score = matches * 10 - priority
+            title = clean_html(title)
+            link = getattr(entry, 'link', '')
+            summary = clean_html(getattr(entry, 'summary', getattr(entry, 'description', '')))
+            published = getattr(entry, 'published', getattr(entry, 'pubDate', ''))
             
-            if score > best_score or (score == best_score and priority < best_priority):
-                best_score = score
-                best_priority = priority
-                best_sector = sector_name
-                best_area = area
-                matched_keywords = sector_matches[:3]  # 상위 3개 키워드만
+            # Skip non-English
+            if not is_english_title(title):
+                logger.info(f"   ✗ Non-English title skipped: {title[:60]}...")
+                continue
+            
+            logger.info(f"   Checking: {title[:70]}...")
+            
+            # Check if already collected
+            url_hash = generate_url_hash(link)
+            if url_hash in existing_urls:
+                source_skipped += 1
+                continue
+            
+            # Parse date and check recency
+            pub_date = parse_date(published)
+            if pub_date:
+                # Make timezone-naive for comparison
+                if pub_date.tzinfo:
+                    pub_date = pub_date.replace(tzinfo=None)
+                if pub_date < cutoff_time:
+                    continue
+                total_recent += 1
+            
+            # Check Vietnam relevance
+            if not is_vietnam_related(title, summary):
+                logger.info(f"    ✗ Not Vietnam: {title[:50]}...")
+                source_no_match += 1
+                total_no_match += 1
+                continue
+            
+            # Classify sector
+            sector = classify_sector(title, summary)
+            if not sector:
+                logger.info(f"    ✗ No sector match: {title[:50]}...")
+                source_no_match += 1
+                total_no_match += 1
+                continue
+            
+            # Determine area
+            area = "Environment" if sector in ["Waste Water", "Solid Waste"] else \
+                   "Energy" if sector in ["Power", "Oil & Gas"] else "Urban Development"
+            
+            # Save article
+            article = {
+                'url_hash': url_hash,
+                'url': link,
+                'title': title,
+                'summary': summary[:1000] if summary else '',
+                'source': source_name,
+                'sector': sector,
+                'area': area,
+                'published_date': pub_date.isoformat() if pub_date else ''
+            }
+            
+            if save_article(conn, article):
+                existing_urls.add(url_hash)
+                source_collected += 1
+                total_collected += 1
+                logger.info(f"    ✓ Saved [{sector}]: {title[:50]}...")
         
-        if best_sector is None:
-            logger.info(f"    ✗ No sector match: {title[:50]}...")
-            return None, None
-        
-        logger.info(f"    ✓ [{best_sector}] matched: {matched_keywords}")
-        return best_sector, best_area
+        logger.info(f"   Summary: found={len(entries)}, collected={source_collected}, skipped={source_skipped}, no_match={source_no_match}")
     
-    def collect_from_rss(self, hours_back: int = 48) -> list:
-        """Collect articles from RSS feeds"""
-        cutoff = datetime.now() - timedelta(hours=hours_back)
-        
-        logger.info(f"Collecting news from last {hours_back} hours")
-        logger.info(f"Cutoff time: {cutoff.strftime('%Y-%m-%d %H:%M')}")
-        
-        total_found = 0
-        total_recent = 0
-        total_collected = 0
-        total_excluded = 0
-        total_no_match = 0
-        
-        for source_name, feed_url in RSS_FEEDS.items():
-            status = {"name": source_name, "found": 0, "collected": 0, "skipped": 0, "excluded": 0, "no_match": 0}
-            
-            try:
-                logger.info(f"\n{'='*50}")
-                logger.info(f"📰 {source_name}")
-                logger.info(f"   URL: {feed_url}")
-                
-                import feedparser
-                feed = feedparser.parse(feed_url)
-                
-                if feed.bozo:
-                    logger.warning(f"   ⚠️ Feed parsing issue: {feed.bozo_exception}")
-                
-                status["found"] = len(feed.entries)
-                total_found += len(feed.entries)
-                logger.info(f"   Found {len(feed.entries)} entries")
-                
-                for entry in feed.entries:
-                    url = entry.get('link', '')
-                    title = entry.get('title', '')
-                    
-                    if not url or not title:
-                        continue
-                    
-                    if url in self.existing_urls:
-                        status["skipped"] += 1
-                        continue
-                    
-                    # 영어 제목만 수집 (베트남어 문자 포함된 제목 건너뛰기)
-                    has_non_ascii = any(ord(c) > 127 for c in title)
-                    if has_non_ascii:
-                        logger.info(f"   ✗ Non-English title skipped: {title[:40]}...")
-                        continue
-                    
-                    # Parse date
-                    pub_date = datetime.now()
-                    if hasattr(entry, 'published_parsed') and entry.published_parsed:
-                        pub_date = datetime(*entry.published_parsed[:6])
-                    
-                    if pub_date < cutoff:
-                        continue
-                    
-                    total_recent += 1
-                    
-                    # Get and CLEAN content (remove HTML tags)
-                    raw_content = entry.get('summary', '') or entry.get('description', '')
-                    clean_content = self._clean_html(raw_content)
-                    
-                    # Classify with clean content
-                    logger.info(f"   Checking: {title[:60]}...")
-                    sector, area = self._classify_sector(title, clean_content)
-                    
-                    if sector is None:
-                        status["no_match"] += 1
-                        total_no_match += 1
-                        continue
-                    
-                    article = {
-                        "title": self._clean_html(title),
-                        "url": url,
-                        "date": pub_date.strftime("%Y-%m-%d"),
-                        "source": source_name,
-                        "sector": sector,
-                        "area": area,
-                        "province": "Vietnam",
-                        "summary": clean_content[:500] if clean_content else title,
-                    }
-                    
-                    self.collected_articles.append(article)
-                    self.existing_urls.add(url)
-                    status["collected"] += 1
-                    total_collected += 1
-                    
-                    logger.info(f"   ✅ COLLECTED [{sector}] {title[:50]}...")
-                
-                logger.info(f"   Summary: found={status['found']}, collected={status['collected']}, skipped={status['skipped']}, no_match={status['no_match']}")
-                
-            except Exception as e:
-                logger.error(f"Error with {source_name}: {e}")
-                import traceback
-                traceback.print_exc()
-            
-            finally:
-                self.source_status[source_name] = status
-                time.sleep(0.5)  # Rate limiting
-        
-        # Final summary
-        logger.info(f"\n{'='*60}")
-        logger.info(f"COLLECTION SUMMARY")
-        logger.info(f"{'='*60}")
-        logger.info(f"Total RSS entries: {total_found}")
-        logger.info(f"Recent entries (within {hours_back}h): {total_recent}")
-        logger.info(f"Collected (infra): {total_collected}")
-        logger.info(f"No sector match: {total_no_match}")
-        logger.info(f"{'='*60}")
-        
-        self._save_status()
-        return self.collected_articles
+    conn.close()
     
-    def _save_status(self):
-        """Save collection status"""
-        OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-        
-        with open(OUTPUT_DIR / "news_sources_status.json", 'w') as f:
-            json.dump(self.source_status, f, indent=2)
-        
-        total = len(self.collected_articles)
-        print(f"\n{'='*50}")
-        print(f"TOTAL COLLECTED: {total}")
-        if total > 0:
-            from collections import Counter
-            sectors = Counter(a["sector"] for a in self.collected_articles)
-            for s, c in sectors.most_common():
-                print(f"  {s}: {c}")
+    # Print summary
+    logger.info(f"\n{'='*60}")
+    logger.info("COLLECTION SUMMARY")
+    logger.info(f"{'='*60}")
+    logger.info(f"Total RSS entries: {total_entries}")
+    logger.info(f"Recent entries (within {hours_back}h): {total_recent}")
+    logger.info(f"Collected (infra): {total_collected}")
+    logger.info(f"No sector match: {total_no_match}")
+    logger.info(f"{'='*60}")
     
-    def save_to_excel(self):
-        """Save new articles to Excel"""
-        if not self.collected_articles:
-            logger.info("No new articles to save")
-            return
-        
-        try:
-            import openpyxl
-            from openpyxl.styles import PatternFill
-            
-            EXCEL_DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-            
-            if EXCEL_DB_PATH.exists():
-                wb = openpyxl.load_workbook(EXCEL_DB_PATH)
-                ws = wb.active
-            else:
-                wb = openpyxl.Workbook()
-                ws = wb.active
-                headers = ["Area", "Business Sector", "Province", "News Tittle", 
-                          "Date", "Source", "Link", "Short summary"]
-                for col, h in enumerate(headers, 1):
-                    ws.cell(row=1, column=col, value=h)
-            
-            yellow = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
-            
-            for article in self.collected_articles:
-                row = ws.max_row + 1
-                ws.cell(row=row, column=1, value=article.get("area", "Environment"))
-                ws.cell(row=row, column=2, value=article.get("sector", ""))
-                ws.cell(row=row, column=3, value=article.get("province", "Vietnam"))
-                ws.cell(row=row, column=4, value=article.get("title", ""))
-                ws.cell(row=row, column=5, value=article.get("date", ""))
-                ws.cell(row=row, column=6, value=article.get("source", ""))
-                ws.cell(row=row, column=7, value=article.get("url", ""))
-                ws.cell(row=row, column=8, value=article.get("summary", ""))
-                
-                for col in range(1, 9):
-                    ws.cell(row=row, column=col).fill = yellow
-            
-            wb.save(EXCEL_DB_PATH)
-            logger.info(f"Saved {len(self.collected_articles)} articles to Excel")
-            
-        except Exception as e:
-            logger.error(f"Error saving: {e}")
+    return total_collected
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--hours-back', type=int, default=48)
-    parser.add_argument('--days-back', type=int, default=None)
-    args = parser.parse_args()
-    
-    hours = args.hours_back
-    if args.days_back:
-        hours = args.days_back * 24
-    
+# ============================================================
+# MAIN
+# ============================================================
+
+if __name__ == "__main__":
     print("=" * 60)
     print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR")
     print("=" * 60)
+    print()
     
-    collector = NewsCollector()
-    articles = collector.collect_from_rss(hours_back=hours)
+    collected = collect_news(HOURS_BACK)
     
-    if articles:
-        collector.save_to_excel()
-    
-    print(f"\nTotal: {len(articles)} articles collected")
-
-
-if __name__ == "__main__":
-    main()
+    print()
+    print("=" * 50)
+    print(f"TOTAL COLLECTED: {collected}")
+    print()
+    print(f"Total: {collected} articles collected")
