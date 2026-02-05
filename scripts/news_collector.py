@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 # ============================================================
 
 # Database path
-DB_PATH = os.environ.get('DB_PATH', 'data/news_database.db')
+DB_PATH = os.environ.get('DB_PATH', 'data/vietnam_infrastructure_news.db')
 
 # Hours to look back for news
 HOURS_BACK = int(os.environ.get('HOURS_BACK', 24))
