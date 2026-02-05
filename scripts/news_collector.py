@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Vietnam Infrastructure News Collector
-Fixed version with expanded sector keywords and robust RSS parsing
+Version 2.0 - Updated RSS feeds and improved sector classification
 """
 
 import os
@@ -15,7 +15,6 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import urlparse
 import html
-import xml.etree.ElementTree as ET
 
 import requests
 import feedparser
@@ -24,7 +23,7 @@ from bs4 import BeautifulSoup
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(message)s',
+    format='%(Y-%m-%d %H:%M:%S - %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 logger = logging.getLogger(__name__)
@@ -33,29 +32,41 @@ logger = logging.getLogger(__name__)
 # CONFIGURATION
 # ============================================================
 
-# Database path
+# Database path - matches workflow expectation
 DB_PATH = os.environ.get('DB_PATH', 'data/vietnam_infrastructure_news.db')
 
 # Hours to look back for news
 HOURS_BACK = int(os.environ.get('HOURS_BACK', 24))
 
-# RSS Feeds - Vietnam English news sources
+# ============================================================
+# UPDATED RSS FEEDS - Verified working URLs (Feb 2026)
+# ============================================================
+
 RSS_FEEDS = {
+    # VnExpress - Working
     "VnExpress English": "https://e.vnexpress.net/rss/news.rss",
     "VnExpress Business": "https://e.vnexpress.net/rss/business.rss",
-    "VietnamPlus EN": "https://en.vietnamplus.vn/rss/news.rss",
-    "VietnamPlus Business": "https://en.vietnamplus.vn/rss/business.rss",
-    "Vietnam News": "https://vietnamnews.vn/rss/home.rss",
-    "Tuoi Tre English": "https://tuoitrenews.vn/rss/news.rss",
-    "The Investor": "https://theinvestor.vn/rss/news.rss",
-    "Vietnam Investment Review": "https://vir.com.vn/rss/news.rss",
-    "Hanoi Times": "https://hanoitimes.vn/rss/news.rss",
-    "VietnamNet EN": "https://vietnamnet.vn/en/rss/home.rss",
-    "Saigon GP Daily": "https://en.sggp.org.vn/rss/news.rss",
+    
+    # Vietnam News (VNA) - Updated URLs
+    "Vietnam News Economy": "https://vietnamnews.vn/rss/economy.rss",
+    "Vietnam News Politics": "https://vietnamnews.vn/rss/politics-laws.rss",
+    "Vietnam News Society": "https://vietnamnews.vn/rss/society.rss",
+    "Vietnam News Environment": "https://vietnamnews.vn/rss/environment.rss",
+    "Vietnam News Industries": "https://vietnamnews.vn/rss/industries.rss",
+    
+    # DTiNews (Dan Tri International)
+    "DTiNews": "https://dtinews.vn/rss/home.rss",
+    
+    # VNA English
+    "VNA English": "https://en.vnanet.vn/rss/home.rss",
+    
+    # Bizhub (VNA Business)
+    "Bizhub VNA": "https://bnews.vn/rss/home.rss",
 }
 
 # ============================================================
-# EXPANDED SECTOR KEYWORDS - More inclusive matching
+# STRICT INFRASTRUCTURE SECTOR KEYWORDS
+# Only true infrastructure projects - no general news
 # ============================================================
 
 SECTOR_KEYWORDS = {
@@ -64,90 +75,126 @@ SECTOR_KEYWORDS = {
             "wastewater", "waste water", "sewage", "water treatment",
             "drainage", "water supply", "clean water", "tap water",
             "water infrastructure", "water project", "water plant",
-            "water system", "water network", "sanitation"
+            "water system", "sanitation", "water network"
         ],
         "secondary": [
-            "water", "treatment plant", "purification", "effluent",
-            "sludge", "pumping station", "reservoir"
+            "treatment plant", "purification", "effluent", "sludge",
+            "pumping station", "reservoir", "water utility"
         ]
     },
     "Solid Waste": {
         "primary": [
             "solid waste", "garbage", "trash", "landfill", "waste management",
             "recycling", "incineration", "waste-to-energy", "wte",
-            "municipal waste", "hazardous waste", "waste collection"
+            "municipal waste", "hazardous waste", "waste collection",
+            "waste treatment"
         ],
         "secondary": [
-            "waste", "disposal", "rubbish", "compost", "plastic waste"
+            "disposal", "rubbish", "compost", "plastic waste", "waste plant"
         ]
     },
     "Power": {
         "primary": [
-            "power plant", "electricity", "power generation", "thermal power",
-            "coal power", "gas power", "hydropower", "hydro power",
-            "wind power", "wind farm", "solar power", "solar farm",
+            "power plant", "power station", "electricity generation",
+            "thermal power", "coal power", "gas power", "gas turbine",
+            "hydropower", "hydro power", "hydroelectric",
+            "wind power", "wind farm", "wind energy", "offshore wind",
+            "solar power", "solar farm", "solar energy", "photovoltaic",
             "renewable energy", "clean energy", "green energy",
-            "power grid", "transmission line", "substation",
-            "lng", "liquefied natural gas", "energy transition",
-            "offshore wind", "floating solar", "battery storage",
-            "power capacity", "megawatt", "gigawatt", "mw", "gw"
+            "power grid", "transmission line", "substation", "transformer",
+            "lng terminal", "lng plant", "liquefied natural gas",
+            "battery storage", "energy storage",
+            "power capacity", "megawatt", "gigawatt"
         ],
         "secondary": [
-            "energy", "power", "electric", "turbine", "generator",
-            "evn", "vietnam electricity", "petrovietnam"
+            "evn", "vietnam electricity", "power project", "energy project"
         ]
     },
     "Oil & Gas": {
         "primary": [
             "oil and gas", "oil & gas", "petroleum", "refinery",
-            "oil field", "gas field", "offshore oil", "pipeline",
-            "petrochemical", "natural gas", "crude oil", "exploration",
-            "drilling", "upstream", "downstream", "midstream"
+            "oil field", "gas field", "offshore oil", "offshore gas",
+            "pipeline", "gas pipeline", "oil pipeline",
+            "petrochemical", "natural gas", "crude oil",
+            "exploration", "drilling", "upstream", "downstream"
         ],
         "secondary": [
-            "pvn", "petrovietnam", "binh son", "nghi son", "dung quat"
+            "petrovietnam", "pvn", "binh son refinery", "nghi son", "dung quat"
         ]
     },
     "Industrial Parks": {
         "primary": [
             "industrial park", "industrial zone", "industrial complex",
-            "economic zone", "export processing", "free trade zone",
-            "manufacturing hub", "tech park", "hi-tech park",
-            "industrial estate", "industrial cluster", "special economic"
+            "economic zone", "export processing zone", "free trade zone",
+            "manufacturing hub", "tech park", "hi-tech park", "high-tech park",
+            "industrial estate", "industrial cluster", "special economic zone"
         ],
         "secondary": [
-            "industrial", "factory", "manufacturing", "warehouse",
-            "logistics park", "industrial land"
+            "industrial land", "factory zone", "manufacturing zone"
         ]
     },
     "Smart City": {
         "primary": [
-            "smart city", "smart urban", "digital city", "intelligent transport",
-            "smart traffic", "smart grid", "iot", "5g network",
-            "digital transformation", "e-government", "smart building",
-            "ai camera", "surveillance system", "traffic management"
+            "smart city", "smart urban", "digital city",
+            "intelligent transport", "smart traffic", "traffic management system",
+            "smart grid", "smart meter",
+            "iot infrastructure", "5g infrastructure", "5g network",
+            "digital transformation infrastructure",
+            "smart building", "building automation",
+            "surveillance system", "cctv system", "ai camera"
         ],
         "secondary": [
-            "smart", "digital", "automated", "intelligent"
+            "smart infrastructure", "digital infrastructure"
         ]
     },
     "Urban Development": {
         "primary": [
-            "urban development", "urban planning", "city planning",
-            "metro", "subway", "rail", "railway", "high-speed rail",
+            # Rail/Metro
+            "metro line", "metro project", "subway", "urban rail",
+            "light rail", "railway project", "high-speed rail", "high speed rail",
+            "rail line", "train station",
+            # Roads
             "expressway", "highway", "motorway", "freeway",
-            "bridge", "tunnel", "airport", "seaport", "port",
-            "infrastructure investment", "infrastructure project",
-            "public transport", "bus rapid transit", "brt",
-            "new urban area", "township", "satellite city"
+            "ring road", "bypass", "overpass", "flyover", "interchange",
+            # Bridges/Tunnels
+            "bridge project", "bridge construction", "tunnel project",
+            # Airports/Ports
+            "airport project", "airport expansion", "airport terminal",
+            "seaport", "port project", "port expansion", "container terminal",
+            "long thanh airport",
+            # Urban projects
+            "urban development project", "city planning project",
+            "new urban area", "township project", "satellite city",
+            "public transport", "bus rapid transit", "brt"
         ],
         "secondary": [
-            "infrastructure", "construction", "road", "transport",
-            "transit", "development project", "investment project",
-            "billion", "trillion", "vnd", "usd"
+            "infrastructure investment", "infrastructure project",
+            "construction project", "development project"
         ]
     }
 }
+
+# Keywords that EXCLUDE articles (not infrastructure)
+EXCLUDE_KEYWORDS = [
+    # Crime/Legal
+    "arrest", "jail", "prison", "sentenced", "trafficking", "smuggling",
+    "fraud", "corruption", "bribery", "murder", "killed", "death",
+    "crime", "criminal", "police bust", "drug",
+    # Trade/Commerce (not infrastructure)
+    "export", "import", "trade", "tariff", "customs",
+    "agricultural", "seafood", "rice", "coffee", "fruit",
+    # Finance (not infrastructure)
+    "gold price", "stock", "forex", "exchange rate", "dollar",
+    "bonus", "salary", "wage",
+    # General news
+    "fire", "accident", "flood", "storm", "earthquake",
+    "covid", "pandemic", "virus", "disease",
+    "tourism", "tourist", "travel", "hotel", "resort",
+    "education", "university", "school", "student",
+    "sports", "football", "soccer", "tennis",
+    # Politics (general)
+    "party congress", "politburo", "party chief", "state visit"
+]
 
 # Vietnam location keywords for relevance check
 VIETNAM_KEYWORDS = [
@@ -156,7 +203,7 @@ VIETNAM_KEYWORDS = [
     "binh duong", "dong nai", "ba ria", "vung tau", "quang ninh",
     "hai duong", "bac ninh", "vinh phuc", "hung yen", "long an",
     "binh dinh", "khanh hoa", "lam dong", "phu quoc", "mekong",
-    "red river", "evn", "petrovietnam", "pvn", "vingroup", "vietjet"
+    "red river", "evn", "petrovietnam", "pvn", "vingroup"
 ]
 
 # Non-Vietnam countries to filter out
@@ -188,7 +235,6 @@ def is_english_title(title):
     """Check if title is primarily English"""
     if not title:
         return False
-    # Count ASCII letters vs non-ASCII
     ascii_letters = sum(1 for c in title if c.isascii() and c.isalpha())
     non_ascii = sum(1 for c in title if not c.isascii())
     total_letters = ascii_letters + non_ascii
@@ -208,7 +254,6 @@ def is_vietnam_related(title, summary=""):
     has_other_country = False
     for country in NON_VIETNAM_COUNTRIES:
         if country in text:
-            # Make sure Vietnam is also mentioned prominently
             vietnam_count = text.count("vietnam")
             country_count = text.count(country)
             if country_count > vietnam_count:
@@ -218,25 +263,47 @@ def is_vietnam_related(title, summary=""):
     return has_vietnam and not has_other_country
 
 
-def classify_sector(title, summary=""):
-    """Classify article into infrastructure sector"""
+def should_exclude(title, summary=""):
+    """Check if article should be excluded based on keywords"""
     text = f"{title} {summary}".lower()
+    
+    for keyword in EXCLUDE_KEYWORDS:
+        if keyword in text:
+            return True
+    
+    return False
+
+
+def classify_sector(title, summary=""):
+    """Classify article into infrastructure sector - STRICT matching"""
+    text = f"{title} {summary}".lower()
+    
+    # First check exclusions
+    if should_exclude(title, summary):
+        return None
     
     matches = []
     
     for sector, keywords in SECTOR_KEYWORDS.items():
         score = 0
-        # Primary keywords - strong match
+        matched_keywords = []
+        
+        # Primary keywords - strong match (must have at least one)
         for kw in keywords["primary"]:
             if kw in text:
-                score += 2
+                score += 3
+                matched_keywords.append(kw)
+        
         # Secondary keywords - weak match
         for kw in keywords.get("secondary", []):
             if kw in text:
                 score += 1
+                matched_keywords.append(kw)
         
-        if score > 0:
-            matches.append((sector, score))
+        # Only count if we have at least one PRIMARY keyword match
+        primary_match = any(kw in text for kw in keywords["primary"])
+        if primary_match and score > 0:
+            matches.append((sector, score, matched_keywords))
     
     if matches:
         # Return sector with highest score
@@ -267,7 +334,6 @@ def parse_date(date_str):
         except ValueError:
             continue
     
-    # Try feedparser's date parser
     try:
         from email.utils import parsedate_to_datetime
         return parsedate_to_datetime(date_str)
@@ -278,7 +344,7 @@ def parse_date(date_str):
 
 
 def fetch_rss_robust(url, timeout=30):
-    """Fetch RSS with robust error handling for malformed feeds"""
+    """Fetch RSS with robust error handling"""
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'application/rss+xml, application/xml, text/xml, */*',
@@ -289,52 +355,11 @@ def fetch_rss_robust(url, timeout=30):
         response.raise_for_status()
         content = response.text
         
-        # Try standard feedparser first
-        feed = feedparser.parse(content)
-        if feed.entries:
-            return feed
-        
-        # If feedparser fails, try cleaning the XML
-        # Remove invalid characters
+        # Clean content
         content = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', content)
-        
-        # Fix common XML issues
         content = content.replace('&nbsp;', ' ')
-        content = content.replace('&amp;amp;', '&amp;')
         
-        # Try parsing again
         feed = feedparser.parse(content)
-        if feed.entries:
-            return feed
-        
-        # Last resort: extract items manually with regex
-        items = []
-        item_pattern = re.compile(r'<item>(.*?)</item>', re.DOTALL | re.IGNORECASE)
-        title_pattern = re.compile(r'<title[^>]*>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</title>', re.DOTALL | re.IGNORECASE)
-        link_pattern = re.compile(r'<link[^>]*>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</link>', re.DOTALL | re.IGNORECASE)
-        desc_pattern = re.compile(r'<description[^>]*>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</description>', re.DOTALL | re.IGNORECASE)
-        date_pattern = re.compile(r'<pubDate[^>]*>(?:<!\[CDATA\[)?(.*?)(?:\]\]>)?</pubDate>', re.DOTALL | re.IGNORECASE)
-        
-        for item_match in item_pattern.finditer(content):
-            item_content = item_match.group(1)
-            
-            title_match = title_pattern.search(item_content)
-            link_match = link_pattern.search(item_content)
-            desc_match = desc_pattern.search(item_content)
-            date_match = date_pattern.search(item_content)
-            
-            if title_match and link_match:
-                item = {
-                    'title': clean_html(title_match.group(1).strip()),
-                    'link': link_match.group(1).strip(),
-                    'summary': clean_html(desc_match.group(1).strip()) if desc_match else '',
-                    'published': date_match.group(1).strip() if date_match else '',
-                }
-                items.append(type('Entry', (), item)())
-        
-        if items:
-            return type('Feed', (), {'entries': items, 'bozo': False})()
-        
         return feed
         
     except Exception as e:
@@ -434,20 +459,19 @@ def collect_news(hours_back=24):
     total_entries = 0
     total_recent = 0
     total_no_match = 0
+    total_excluded = 0
     
     for source_name, feed_url in RSS_FEEDS.items():
         logger.info(f"\n{'='*50}")
         logger.info(f"📰 {source_name}")
         logger.info(f"   URL: {feed_url}")
         
-        # Fetch feed
         feed = fetch_rss_robust(feed_url)
         
         if feed.bozo and not feed.entries:
             if hasattr(feed, 'bozo_exception'):
                 logger.warning(f"   ⚠️ Feed parsing issue: {feed.bozo_exception}")
             logger.info(f"   Found 0 entries")
-            logger.info(f"   Summary: found=0, collected=0, skipped=0, no_match=0")
             continue
         
         entries = feed.entries
@@ -457,6 +481,7 @@ def collect_news(hours_back=24):
         source_collected = 0
         source_skipped = 0
         source_no_match = 0
+        source_excluded = 0
         
         for entry in entries:
             title = getattr(entry, 'title', '')
@@ -470,7 +495,6 @@ def collect_news(hours_back=24):
             
             # Skip non-English
             if not is_english_title(title):
-                logger.info(f"   ✗ Non-English title skipped: {title[:60]}...")
                 continue
             
             logger.info(f"   Checking: {title[:70]}...")
@@ -484,7 +508,6 @@ def collect_news(hours_back=24):
             # Parse date and check recency
             pub_date = parse_date(published)
             if pub_date:
-                # Make timezone-naive for comparison
                 if pub_date.tzinfo:
                     pub_date = pub_date.replace(tzinfo=None)
                 if pub_date < cutoff_time:
@@ -496,6 +519,13 @@ def collect_news(hours_back=24):
                 logger.info(f"    ✗ Not Vietnam: {title[:50]}...")
                 source_no_match += 1
                 total_no_match += 1
+                continue
+            
+            # Check exclusions first
+            if should_exclude(title, summary):
+                logger.info(f"    ✗ Excluded (not infra): {title[:50]}...")
+                source_excluded += 1
+                total_excluded += 1
                 continue
             
             # Classify sector
@@ -528,7 +558,7 @@ def collect_news(hours_back=24):
                 total_collected += 1
                 logger.info(f"    ✓ Saved [{sector}]: {title[:50]}...")
         
-        logger.info(f"   Summary: found={len(entries)}, collected={source_collected}, skipped={source_skipped}, no_match={source_no_match}")
+        logger.info(f"   Summary: found={len(entries)}, collected={source_collected}, excluded={source_excluded}, no_match={source_no_match}")
     
     conn.close()
     
@@ -538,8 +568,9 @@ def collect_news(hours_back=24):
     logger.info(f"{'='*60}")
     logger.info(f"Total RSS entries: {total_entries}")
     logger.info(f"Recent entries (within {hours_back}h): {total_recent}")
-    logger.info(f"Collected (infra): {total_collected}")
+    logger.info(f"Excluded (not infra): {total_excluded}")
     logger.info(f"No sector match: {total_no_match}")
+    logger.info(f"Collected (infra): {total_collected}")
     logger.info(f"{'='*60}")
     
     return total_collected
