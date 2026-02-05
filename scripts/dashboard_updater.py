@@ -120,18 +120,8 @@ def load_articles_from_excel():
 def convert_to_multilingual_format(articles):
     """
     Convert articles to multilingual format for BACKEND_DATA.
-    Original format:
-    {
-        "id": 1,
-        "date": "2026-01-23",
-        "area": "Environment",
-        "sector": "Waste Water",
-        "province": "Vietnam",
-        "source": "VnExpress",
-        "title": {"ko": "...", "en": "...", "vi": "..."},
-        "summary": {"ko": "...", "en": "...", "vi": "..."},
-        "url": "https://..."
-    }
+    - Title: Original (usually English), with translations for ko/vi
+    - Summary: Different for each language
     """
     result = []
     
@@ -170,43 +160,44 @@ def convert_to_multilingual_format(articles):
         sector_ko = SECTOR_KO.get(sector, sector)
         sector_vi = SECTOR_VI.get(sector, sector)
         
-        # 제목은 원본 유지 (번역 없음)
-        title_ko = title
-        title_en = title
-        title_vi = title
+        # 제목 언어 감지 (베트남어 문자 포함 여부)
+        has_vietnamese_chars = any(ord(c) > 127 for c in title)
+        
+        # 제목 다국어 처리
+        if has_vietnamese_chars:
+            # 베트남어 제목인 경우
+            title_vi = title
+            title_en = title  # 원본 유지 (번역 없이)
+            title_ko = title  # 원본 유지 (번역 없이)
+        else:
+            # 영어 제목인 경우
+            title_en = title
+            title_ko = title  # 원본 유지
+            title_vi = title  # 원본 유지
         
         # 기존 요약이 있는지 확인
         has_existing_summary = summary and len(summary.strip()) > 20
         
-        # 언어 감지 (베트남어 문자 포함 여부)
-        has_vietnamese_chars = any(ord(c) > 127 for c in title)
-        
         # 요약 생성
         if has_existing_summary:
-            # 기존 요약이 있으면 활용
+            # 기존 요약 활용
             base_summary = summary[:300]
             
-            # 기존 요약의 언어 감지
-            if "project in Vietnam" in summary or "Vietnam" in summary[:50]:
+            if "project in Vietnam" in summary or not any(ord(c) > 127 for c in summary[:50]):
                 # 영어 요약
                 summary_en = base_summary
-                summary_ko = f"[{sector_ko}] {province} - {title[:80]}"
-                summary_vi = f"[{sector_vi}] {province} - {title[:80]}"
+                summary_ko = f"[{sector_ko}] {province}: {title[:100]}"
+                summary_vi = f"[{sector_vi}] {province}: {title[:100]}"
             else:
-                # 베트남어 또는 기타 요약
+                # 베트남어 요약
                 summary_vi = base_summary
-                summary_en = f"[{sector}] {province} - {title[:80]}"
-                summary_ko = f"[{sector_ko}] {province} - {title[:80]}"
+                summary_en = f"[{sector}] {province}: {title[:100]}"
+                summary_ko = f"[{sector_ko}] {province}: {title[:100]}"
         else:
-            # 기존 요약이 없으면 템플릿 생성
-            if has_vietnamese_chars:
-                summary_vi = f"[{sector_vi}] {province}: {title[:150]}"
-                summary_en = f"[{sector}] {province}: {title[:150]}"
-                summary_ko = f"[{sector_ko}] {province}: {title[:150]}"
-            else:
-                summary_en = f"[{sector}] {province}: {title[:150]}"
-                summary_ko = f"[{sector_ko}] {province}: {title[:150]}"
-                summary_vi = f"[{sector_vi}] {province}: {title[:150]}"
+            # 템플릿 기반 요약 생성
+            summary_en = f"[{sector}] {province}: {title[:150]}"
+            summary_ko = f"[{sector_ko}] {province}: {title[:150]}"
+            summary_vi = f"[{sector_vi}] {province}: {title[:150]}"
         
         result.append({
             "id": article.get("id", len(result) + 1),

@@ -40,27 +40,20 @@ KAKAO_REFRESH_TOKEN = os.getenv("KAKAO_REFRESH_TOKEN", "")
 DASHBOARD_URL = "https://hms4792.github.io/vietnam-infra-news/"
 
 # === RSS FEEDS ===
-# 일반 뉴스 (영어)
+# 영어 뉴스만 수집 (제목/요약이 영어로 저장됨)
 RSS_FEEDS = {
     # 주요 영어 뉴스
     "VnExpress English": "https://e.vnexpress.net/rss/news.rss",
     "VnExpress Business": "https://e.vnexpress.net/rss/business.rss",
-    "VietnamPlus": "https://en.vietnamplus.vn/rss/news.rss",
+    "VietnamPlus EN": "https://en.vietnamplus.vn/rss/news.rss",
     "VietnamPlus Business": "https://en.vietnamplus.vn/rss/business.rss",
     "Vietnam News": "https://vietnamnews.vn/rss/home.rss",
-    "Tuoi Tre News": "https://tuoitrenews.vn/rss/news.rss",
+    "Tuoi Tre English": "https://tuoitrenews.vn/rss/news.rss",
     "The Investor": "https://theinvestor.vn/rss/news.rss",
     "Vietnam Investment Review": "https://vir.com.vn/rss/news.rss",
     "Hanoi Times": "https://hanoitimes.vn/rss/news.rss",
-    "VietnamNet": "https://vietnamnet.vn/en/rss/home.rss",
+    "VietnamNet EN": "https://vietnamnet.vn/en/rss/home.rss",
     "Saigon GP Daily": "https://en.sggp.org.vn/rss/news.rss",
-    
-    # 베트남어 뉴스 (인프라 관련)
-    "VnExpress Kinh Doanh": "https://vnexpress.net/rss/kinh-doanh.rss",
-    "VnExpress Thoi Su": "https://vnexpress.net/rss/thoi-su.rss",
-    "Tuoi Tre": "https://tuoitre.vn/rss/tin-moi-nhat.rss",
-    "Dau Tu Online": "https://baodautu.vn/rss/home.rss",
-    "Nhan Dan": "https://nhandan.vn/rss/kinhte.rss",
 }
 
 # === SECTOR CLASSIFICATION ===

@@ -222,6 +222,12 @@ class NewsCollector:
                         status["skipped"] += 1
                         continue
                     
+                    # 영어 제목만 수집 (베트남어 문자 포함된 제목 건너뛰기)
+                    has_non_ascii = any(ord(c) > 127 for c in title)
+                    if has_non_ascii:
+                        logger.info(f"   ✗ Non-English title skipped: {title[:40]}...")
+                        continue
+                    
                     # Parse date
                     pub_date = datetime.now()
                     if hasattr(entry, 'published_parsed') and entry.published_parsed:
