@@ -442,6 +442,7 @@ def collect_news(hours_back=24):
     
     total_collected = 0
     total_entries = 0
+    collected_articles = []  # 수집된 기사 목록
     
     for source_name, feed_url in RSS_FEEDS.items():
         print("")
@@ -514,6 +515,7 @@ def collect_news(hours_back=24):
                 existing_urls.add(url_hash)
                 source_collected += 1
                 total_collected += 1
+                collected_articles.append(article)  # 리스트에 추가
                 log(f"  SAVED [{sector}] [{province}]: {title[:50]}...")
         
         log(f"Collected from {source_name}: {source_collected}")
@@ -528,7 +530,111 @@ def collect_news(hours_back=24):
     print(f"Total collected: {total_collected}")
     print("=" * 60)
     
-    return total_collected
+    return total_collected, collected_articles
+
+
+# ============================================================
+# EXCEL UPDATE FUNCTION
+# ============================================================
+
+def update_excel_database(articles):
+    """Add new articles to the Excel database"""
+    try:
+        import openpyxl
+        from openpyxl.utils import get_column_letter
+    except ImportError:
+        log("openpyxl not installed - skipping Excel update")
+        return False
+    
+    EXCEL_PATH = Path("data/database/Vietnam_Infra_News_Database_Final.xlsx")
+    
+    if not EXCEL_PATH.exists():
+        log(f"Excel file not found: {EXCEL_PATH}")
+        return False
+    
+    if not articles:
+        log("No new articles to add to Excel")
+        return True
+    
+    log(f"Adding {len(articles)} articles to Excel database...")
+    
+    try:
+        # Load workbook
+        wb = openpyxl.load_workbook(EXCEL_PATH)
+        ws = wb.active
+        
+        # Find the last row with data
+        last_row = ws.max_row
+        
+        # Get existing URLs to avoid duplicates
+        existing_urls = set()
+        url_col = None
+        
+        # Find URL column (usually "Link")
+        for col in range(1, ws.max_column + 1):
+            header = ws.cell(row=1, column=col).value
+            if header and "link" in str(header).lower():
+                url_col = col
+                break
+        
+        if url_col:
+            for row in range(2, last_row + 1):
+                url = ws.cell(row=row, column=url_col).value
+                if url:
+                    existing_urls.add(url)
+        
+        # Column mapping based on typical Excel structure
+        # Area, Business Sector, Province, News Tittle, Date, Source, Link, Short summary
+        col_map = {
+            'area': 1,
+            'sector': 2,
+            'province': 3,
+            'title': 4,
+            'date': 5,
+            'source': 6,
+            'url': 7,
+            'summary': 8
+        }
+        
+        added_count = 0
+        for article in articles:
+            # Skip if URL already exists
+            if article.get('url') in existing_urls:
+                continue
+            
+            # Add new row
+            new_row = last_row + 1 + added_count
+            
+            ws.cell(row=new_row, column=col_map['area'], value=article.get('area', 'Environment'))
+            ws.cell(row=new_row, column=col_map['sector'], value=article.get('sector', ''))
+            ws.cell(row=new_row, column=col_map['province'], value=article.get('province', 'Vietnam'))
+            ws.cell(row=new_row, column=col_map['title'], value=article.get('title', ''))
+            
+            # Format date
+            date_str = article.get('published_date', '')
+            if date_str:
+                date_str = date_str[:10]  # Get YYYY-MM-DD
+            ws.cell(row=new_row, column=col_map['date'], value=date_str)
+            
+            ws.cell(row=new_row, column=col_map['source'], value=article.get('source', ''))
+            ws.cell(row=new_row, column=col_map['url'], value=article.get('url', ''))
+            ws.cell(row=new_row, column=col_map['summary'], value=article.get('summary', '')[:500])
+            
+            added_count += 1
+            existing_urls.add(article.get('url'))
+        
+        # Save workbook
+        wb.save(EXCEL_PATH)
+        wb.close()
+        
+        log(f"✓ Added {added_count} new articles to Excel (Total: {last_row - 1 + added_count})")
+        return True
+        
+    except Exception as e:
+        log(f"Error updating Excel: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
 
 
 # ============================================================
@@ -536,15 +642,34 @@ def collect_news(hours_back=24):
 # ============================================================
 
 if __name__ == "__main__":
+    import argparse
+    
+    parser = argparse.ArgumentParser(description='Vietnam Infrastructure News Collector')
+    parser.add_argument('--hours-back', type=int, default=HOURS_BACK, 
+                        help='Hours to look back for news')
+    args = parser.parse_args()
+    
     print("=" * 60)
     print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR")
     print("=" * 60)
     print("")
     
-    collected = collect_news(HOURS_BACK)
+    # Collect news
+    collected_count, collected_articles = collect_news(args.hours_back)
+    
+    # Update Excel database
+    print("")
+    print("=" * 60)
+    print("UPDATING EXCEL DATABASE")
+    print("=" * 60)
+    
+    if collected_articles:
+        update_excel_database(collected_articles)
+    else:
+        print("No new articles to add to Excel")
     
     print("")
     print("=" * 50)
-    print(f"TOTAL COLLECTED: {collected}")
+    print(f"TOTAL COLLECTED: {collected_count}")
     print("")
-    print(f"Total: {collected} articles collected")
+    print(f"Total: {collected_count} articles collected")
