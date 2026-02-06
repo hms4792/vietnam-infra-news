@@ -102,7 +102,36 @@ def load_articles_from_excel():
     print(f"Loading from Excel: {EXCEL_DB_PATH}")
     
     wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
-    ws = wb.active
+    
+    # Find the News data sheet (not Summary or other sheets)
+    ws = None
+    for sheet_name in wb.sheetnames:
+        if sheet_name.lower() == 'news' or 'news' in sheet_name.lower():
+            ws = wb[sheet_name]
+            print(f"Using sheet: {sheet_name}")
+            break
+    
+    # If no News sheet found, look for sheet with expected headers
+    if ws is None:
+        for sheet_name in wb.sheetnames:
+            test_ws = wb[sheet_name]
+            first_row = [cell.value for cell in test_ws[1]]
+            if any(h and 'tittle' in str(h).lower() for h in first_row):
+                ws = test_ws
+                print(f"Using sheet with data headers: {sheet_name}")
+                break
+    
+    # Fallback: skip Summary sheet, use second sheet or first available
+    if ws is None:
+        for sheet_name in wb.sheetnames:
+            if 'summary' not in sheet_name.lower():
+                ws = wb[sheet_name]
+                print(f"Using fallback sheet: {sheet_name}")
+                break
+    
+    if ws is None:
+        ws = wb.active
+        print(f"Using active sheet as fallback")
     
     headers = [cell.value for cell in ws[1]]
     col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
