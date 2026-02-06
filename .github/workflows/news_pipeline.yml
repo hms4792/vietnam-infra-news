@@ -1,0 +1,123 @@
+name: Vietnam Infrastructure News Pipeline
+
+on:
+  schedule:
+    - cron: '0 11 * * 1-5'
+  
+  workflow_dispatch:
+    inputs:
+      hours_back:
+        description: '수집할 시간 범위 (hours)'
+        required: true
+        default: '720'
+        type: string
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Create directories
+        run: mkdir -p data/database outputs logs
+      
+      - name: Check database status Before
+        run: |
+          echo "=== Database check BEFORE collection ==="
+          ls -lh data/database/ || echo "Directory empty"
+      
+      - name: Run News Collection
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          HOURS_BACK="${{ github.event.inputs.hours_back || '720' }}"
+          echo "Collecting news from last $HOURS_BACK hours"
+          python scripts/news_collector.py --hours-back $HOURS_BACK
+      
+      - name: Run AI Summarization
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "Generating AI summaries"
+          python scripts/ai_summarizer.py
+
+      - name: Commit Excel to Git
+        run: |
+          echo "=== Committing Excel database ==="
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          echo "Adding Excel file..."
+          git add data/database/Vietnam_Infra_News_Database_Final.xlsx
+          
+          echo "Checking for changes..."
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            echo "Committing changes..."
+            git commit -m "Update news database $(date +%Y-%m-%d)"
+            echo "Pushing to remote..."
+            git push
+            echo "=== Excel committed successfully ==="
+          fi
+
+      - name: Generate Dashboard
+        run: |
+          echo "Generating dashboard"
+          python scripts/dashboard_updater.py
+
+      - name: Verify outputs
+        run: |
+          echo "=== Checking outputs ==="
+          ls -la outputs/
+          test -f outputs/index.html && echo "Dashboard OK" || exit 1
+
+      - name: Upload database artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: news-database
+          path: data/vietnam_infrastructure_news.db
+          retention-days: 7
+
+      - name: Upload outputs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-outputs-${{ github.run_number }}
+          path: outputs/
+          retention-days: 30
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./outputs
+          publish_branch: gh-pages
+          force_orphan: true
+
+      - name: Send Email Notification
+        if: success()
+        env:
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
+        run: python scripts/send_notification.py
