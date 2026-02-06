@@ -1,1079 +1,537 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-Vietnam Infrastructure News Collector
-Version 3.0 - Fixed logging issues and expanded keywords
+Vietnam Infrastructure News - Dashboard Updater
+Loads from BOTH Excel (historical) AND SQLite (new collected) databases.
 """
 
-import os
-import sys
 import json
-import re
+import logging
+import sys
+import os
 import sqlite3
-import hashlib
 from datetime import datetime, timedelta
 from pathlib import Path
-from urllib.parse import urlparse
-import html
 
-import requests
-import feedparser
-from bs4 import BeautifulSoup
+# Setup paths
+SCRIPT_DIR = Path(__file__).parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+DATA_DIR = PROJECT_ROOT / "data"
+OUTPUT_DIR = PROJECT_ROOT / "outputs"
+TEMPLATE_DIR = PROJECT_ROOT / "templates"
 
-# ============================================================
-# CONFIGURATION
-# ============================================================
+sys.path.insert(0, str(PROJECT_ROOT))
 
-DB_PATH = os.environ.get('DB_PATH', 'data/vietnam_infrastructure_news.db')
-HOURS_BACK = int(os.environ.get('HOURS_BACK', 24))
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-# ============================================================
-# VIETNAM PROVINCES - For location extraction
-# ============================================================
+# Database paths
+EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
+SQLITE_DB_PATH = DATA_DIR / "vietnam_infrastructure_news.db"
 
-PROVINCE_KEYWORDS = {
-    # Major cities
-    "Ho Chi Minh City": ["ho chi minh", "hcmc", "saigon", "sai gon", "hồ chí minh"],
-    "Hanoi": ["hanoi", "ha noi", "hà nội"],
-    "Da Nang": ["da nang", "đà nẵng", "danang"],
-    "Hai Phong": ["hai phong", "hải phòng", "haiphong"],
-    "Can Tho": ["can tho", "cần thơ", "cantho"],
+# Template paths
+TEMPLATE_HEADER = TEMPLATE_DIR / "dashboard_template_header.html"
+TEMPLATE_FOOTER = TEMPLATE_DIR / "dashboard_template_footer.html"
+
+
+def load_articles_from_sqlite():
+    """Load articles from SQLite database (newly collected)"""
+    if not SQLITE_DB_PATH.exists():
+        logger.info(f"SQLite DB not found: {SQLITE_DB_PATH}")
+        return []
     
-    # Southern provinces
-    "Binh Duong": ["binh duong", "bình dương"],
-    "Dong Nai": ["dong nai", "đồng nai"],
-    "Ba Ria - Vung Tau": ["ba ria", "vung tau", "vũng tàu", "bà rịa"],
-    "Long An": ["long an"],
-    "Tay Ninh": ["tay ninh", "tây ninh"],
-    "Binh Phuoc": ["binh phuoc", "bình phước"],
-    
-    # Northern provinces
-    "Quang Ninh": ["quang ninh", "quảng ninh", "ha long", "hạ long"],
-    "Bac Ninh": ["bac ninh", "bắc ninh"],
-    "Hai Duong": ["hai duong", "hải dương"],
-    "Hung Yen": ["hung yen", "hưng yên"],
-    "Vinh Phuc": ["vinh phuc", "vĩnh phúc"],
-    "Thai Nguyen": ["thai nguyen", "thái nguyên"],
-    "Bac Giang": ["bac giang", "bắc giang"],
-    
-    # Central provinces
-    "Thanh Hoa": ["thanh hoa", "thanh hoá"],
-    "Nghe An": ["nghe an", "nghệ an"],
-    "Ha Tinh": ["ha tinh", "hà tĩnh"],
-    "Quang Binh": ["quang binh", "quảng bình"],
-    "Quang Tri": ["quang tri", "quảng trị"],
-    "Thua Thien Hue": ["thua thien hue", "huế", "hue"],
-    "Quang Nam": ["quang nam", "quảng nam"],
-    "Quang Ngai": ["quang ngai", "quảng ngãi"],
-    "Binh Dinh": ["binh dinh", "bình định"],
-    "Phu Yen": ["phu yen", "phú yên"],
-    "Khanh Hoa": ["khanh hoa", "khánh hòa", "nha trang"],
-    "Ninh Thuan": ["ninh thuan", "ninh thuận"],
-    "Binh Thuan": ["binh thuan", "bình thuận", "phan thiet"],
-    
-    # Highland provinces
-    "Lam Dong": ["lam dong", "lâm đồng", "da lat", "đà lạt"],
-    "Dak Lak": ["dak lak", "đắk lắk", "buon ma thuot"],
-    "Gia Lai": ["gia lai"],
-    "Kon Tum": ["kon tum"],
-    
-    # Mekong Delta
-    "Tien Giang": ["tien giang", "tiền giang"],
-    "Ben Tre": ["ben tre", "bến tre"],
-    "Vinh Long": ["vinh long", "vĩnh long"],
-    "Tra Vinh": ["tra vinh", "trà vinh"],
-    "Dong Thap": ["dong thap", "đồng tháp"],
-    "An Giang": ["an giang"],
-    "Kien Giang": ["kien giang", "kiên giang", "phu quoc", "phú quốc"],
-    "Hau Giang": ["hau giang", "hậu giang"],
-    "Soc Trang": ["soc trang", "sóc trăng"],
-    "Bac Lieu": ["bac lieu", "bạc liêu"],
-    "Ca Mau": ["ca mau", "cà mau"],
-    
-    # Special projects
-    "Long Thanh": ["long thanh", "long thành"],  # Airport project
-}
-
-# ============================================================
-# RSS FEEDS - Verified working URLs
-# ============================================================
-
-RSS_FEEDS = {
-    "VnExpress English": "https://e.vnexpress.net/rss/news.rss",
-    "VnExpress Business": "https://e.vnexpress.net/rss/business.rss",
-    "Vietnam News Economy": "https://vietnamnews.vn/rss/economy.rss",
-    "Vietnam News Politics": "https://vietnamnews.vn/rss/politics-laws.rss",
-    "Vietnam News Society": "https://vietnamnews.vn/rss/society.rss",
-    "Vietnam News Environment": "https://vietnamnews.vn/rss/environment.rss",
-    "Vietnam News Industries": "https://vietnamnews.vn/rss/industries.rss",
-}
-
-# ============================================================
-# SECTOR KEYWORDS - Expanded for better matching
-# ============================================================
-
-SECTOR_KEYWORDS = {
-    "Waste Water": {
-        "primary": [
-            "wastewater", "waste water", "sewage", "water treatment",
-            "drainage", "water supply", "clean water", "tap water",
-            "water infrastructure", "water project", "water plant",
-            "water system", "sanitation", "water network",
-            "water utility", "drinking water", "groundwater"
-        ]
-    },
-    "Solid Waste": {
-        "primary": [
-            "solid waste", "garbage", "trash", "landfill", "waste management",
-            "recycling", "incineration", "waste-to-energy", "wte",
-            "municipal waste", "hazardous waste", "waste collection",
-            "waste treatment", "waste disposal"
-        ]
-    },
-    "Power": {
-        "primary": [
-            "power plant", "power station", "electricity", "power generation",
-            "thermal power", "coal power", "gas power", "gas turbine",
-            "hydropower", "hydro power", "hydroelectric",
-            "wind power", "wind farm", "wind energy", "offshore wind",
-            "solar power", "solar farm", "solar energy", "photovoltaic",
-            "renewable energy", "clean energy", "green energy",
-            "power grid", "transmission line", "substation", "transformer",
-            "lng terminal", "lng plant", "liquefied natural gas",
-            "battery storage", "energy storage", "energy transition",
-            "power capacity", "megawatt", "gigawatt", "mw capacity", "gw capacity",
-            "evn", "vietnam electricity", "power project"
-        ]
-    },
-    "Oil & Gas": {
-        "primary": [
-            "oil and gas", "oil & gas", "petroleum", "refinery",
-            "oil field", "gas field", "offshore oil", "offshore gas",
-            "pipeline", "gas pipeline", "oil pipeline",
-            "petrochemical", "natural gas", "crude oil",
-            "exploration", "drilling", "upstream", "downstream",
-            "petrovietnam", "pvn", "binh son", "nghi son", "dung quat"
-        ]
-    },
-    "Industrial Parks": {
-        "primary": [
-            "industrial park", "industrial zone", "industrial complex",
-            "economic zone", "export processing", "free trade zone",
-            "manufacturing hub", "tech park", "hi-tech park", "high-tech park",
-            "industrial estate", "industrial cluster", "special economic zone",
-            "industrial land", "factory zone", "industrial area"
-        ]
-    },
-    "Smart City": {
-        "primary": [
-            "smart city", "smart urban", "digital city",
-            "intelligent transport", "smart traffic", "traffic management",
-            "smart grid", "smart meter", "smart building",
-            "iot infrastructure", "5g infrastructure", "5g network",
-            "digital transformation", "e-government",
-            "surveillance system", "cctv", "ai camera"
-        ]
-    },
-    "Urban Development": {
-        "primary": [
-            # Rail/Metro
-            "metro", "metro line", "subway", "urban rail", "light rail",
-            "railway", "high-speed rail", "high speed rail", "rail project",
-            # Roads
-            "expressway", "highway", "motorway", "freeway",
-            "ring road", "bypass", "overpass", "flyover", "interchange",
-            "road project", "road construction",
-            # Bridges/Tunnels
-            "bridge", "tunnel", "viaduct",
-            # Airports/Ports
-            "airport", "terminal", "runway",
-            "seaport", "port", "container terminal", "logistics hub",
-            "long thanh",
-            # Urban projects
-            "urban development", "city planning", "urban planning",
-            "new urban area", "township", "satellite city",
-            "public transport", "bus rapid transit", "brt",
-            # Infrastructure general
-            "infrastructure investment", "infrastructure project",
-            "infrastructure development", "construction project",
-            "billion usd", "billion dollar", "trillion vnd"
-        ]
-    }
-}
-
-# Keywords that EXCLUDE articles
-EXCLUDE_KEYWORDS = [
-    "arrest", "jail", "prison", "sentenced", "trafficking", "smuggling",
-    "fraud", "corruption", "murder", "killed", "death", "crime", "drug",
-    "gold price", "gold prices", "stock market", "forex", "exchange rate",
-    "export jump", "export rise", "import", "seafood export", "agricultural export",
-    "fire kills", "accident", "tourist", "tourism", "hotel", "resort",
-    "education", "university", "school", "student", "scholarship",
-    "sports", "football", "soccer", "tennis", "basketball",
-    "party congress", "politburo", "state visit"
-]
-
-# Vietnam keywords
-VIETNAM_KEYWORDS = [
-    "vietnam", "vietnamese", "hanoi", "ho chi minh", "hcmc", "saigon",
-    "da nang", "hai phong", "can tho", "binh duong", "dong nai",
-    "ba ria", "vung tau", "quang ninh", "bac ninh", "long an",
-    "mekong", "evn", "petrovietnam", "vingroup", "vietjet"
-]
-
-NON_VIETNAM_COUNTRIES = [
-    "singapore", "malaysia", "thailand", "indonesia", "philippines",
-    "cambodia", "laos", "myanmar", "china", "japan", "korea", "india",
-    "taiwan", "hong kong", "australia", "russia", "uk ", "usa", "america"
-]
-
-
-# ============================================================
-# HELPER FUNCTIONS
-# ============================================================
-
-def log(message):
-    """Simple print-based logging to avoid format issues"""
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    print(f"{timestamp} - {message}")
-
-
-def clean_html(text):
-    if not text:
-        return ""
-    soup = BeautifulSoup(text, 'html.parser')
-    return html.unescape(soup.get_text(separator=' ', strip=True))
-
-
-def generate_url_hash(url):
-    return hashlib.md5(url.encode()).hexdigest()
-
-
-def extract_province(title, summary=""):
-    """Extract province/city from article title and summary"""
-    text = f"{title} {summary}".lower()
-    
-    # Check each province
-    for province, keywords in PROVINCE_KEYWORDS.items():
-        for keyword in keywords:
-            if keyword in text:
-                return province
-    
-    return "Vietnam"  # Default if no specific location found
-
-
-def is_english_title(title):
-    if not title:
-        return False
-    ascii_letters = sum(1 for c in title if c.isascii() and c.isalpha())
-    non_ascii = sum(1 for c in title if not c.isascii())
-    total = ascii_letters + non_ascii
-    if total == 0:
-        return False
-    return (ascii_letters / total) > 0.7
-
-
-def is_vietnam_related(title, summary=""):
-    text = f"{title} {summary}".lower()
-    has_vietnam = any(kw in text for kw in VIETNAM_KEYWORDS)
-    
-    for country in NON_VIETNAM_COUNTRIES:
-        if country in text:
-            if text.count("vietnam") < text.count(country):
-                return False
-    
-    return has_vietnam
-
-
-def should_exclude(title, summary=""):
-    text = f"{title} {summary}".lower()
-    for keyword in EXCLUDE_KEYWORDS:
-        if keyword in text:
-            return True
-    return False
-
-
-def classify_sector(title, summary=""):
-    text = f"{title} {summary}".lower()
-    
-    if should_exclude(title, summary):
-        return None
-    
-    best_match = None
-    best_score = 0
-    
-    for sector, keywords in SECTOR_KEYWORDS.items():
-        score = 0
-        for kw in keywords["primary"]:
-            if kw in text:
-                score += 1
-        
-        if score > best_score:
-            best_score = score
-            best_match = sector
-    
-    return best_match if best_score > 0 else None
-
-
-def parse_date(date_str):
-    if not date_str:
-        return None
-    
-    formats = [
-        "%a, %d %b %Y %H:%M:%S %z",
-        "%a, %d %b %Y %H:%M:%S %Z",
-        "%Y-%m-%dT%H:%M:%S%z",
-        "%Y-%m-%dT%H:%M:%SZ",
-        "%Y-%m-%d %H:%M:%S",
-        "%Y-%m-%d",
-    ]
-    
-    for fmt in formats:
-        try:
-            return datetime.strptime(date_str, fmt)
-        except ValueError:
-            continue
+    logger.info(f"Loading from SQLite: {SQLITE_DB_PATH}")
     
     try:
-        from email.utils import parsedate_to_datetime
-        return parsedate_to_datetime(date_str)
-    except:
-        pass
-    
-    return None
-
-
-def fetch_rss(url, timeout=30):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0',
-        'Accept': 'application/rss+xml, application/xml, text/xml, */*',
-    }
-    
-    try:
-        response = requests.get(url, headers=headers, timeout=timeout)
-        response.raise_for_status()
-        content = response.text
-        content = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', content)
-        return feedparser.parse(content)
-    except Exception as e:
-        log(f"   Error fetching {url}: {e}")
-        return type('Feed', (), {'entries': [], 'bozo': True})()
-
-
-# ============================================================
-# DATABASE FUNCTIONS
-# ============================================================
-
-def init_database(db_path):
-    Path(db_path).parent.mkdir(parents=True, exist_ok=True)
-    
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS articles (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            url_hash TEXT UNIQUE,
-            url TEXT,
-            title TEXT,
-            title_vi TEXT,
-            title_ko TEXT,
-            summary TEXT,
-            summary_vi TEXT,
-            summary_ko TEXT,
-            source TEXT,
-            sector TEXT,
-            area TEXT,
-            province TEXT,
-            published_date TEXT,
-            collected_date TEXT,
-            processed INTEGER DEFAULT 0
-        )
-    ''')
-    
-    conn.commit()
-    return conn
-
-
-def get_existing_urls(conn):
-    cursor = conn.cursor()
-    cursor.execute("SELECT url_hash FROM articles")
-    return {row[0] for row in cursor.fetchall()}
-
-
-def save_article(conn, article):
-    cursor = conn.cursor()
-    
-    try:
-        cursor.execute('''
-            INSERT INTO articles (
-                url_hash, url, title, summary, source, sector, area,
-                province, published_date, collected_date
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            article['url_hash'],
-            article['url'],
-            article['title'],
-            article.get('summary', ''),
-            article['source'],
-            article['sector'],
-            article.get('area', 'Environment'),
-            article.get('province', 'Vietnam'),
-            article.get('published_date', ''),
-            datetime.now().isoformat()
-        ))
-        conn.commit()
-        return True
-    except sqlite3.IntegrityError:
-        return False
-
-
-# ============================================================
-# MAIN COLLECTION FUNCTION
-# ============================================================
-
-def collect_news(hours_back=24):
-    conn = init_database(DB_PATH)
-    existing_urls = get_existing_urls(conn)
-    log(f"Loaded {len(existing_urls)} existing URLs")
-    
-    cutoff_time = datetime.now() - timedelta(hours=hours_back)
-    log(f"Collecting news from last {hours_back} hours")
-    log(f"Cutoff time: {cutoff_time.strftime('%Y-%m-%d %H:%M')}")
-    
-    total_collected = 0
-    total_entries = 0
-    collected_articles = []  # 수집된 기사 목록
-    collection_stats = {}    # RSS 소스별 통계
-    
-    for source_name, feed_url in RSS_FEEDS.items():
-        print("")
-        print("=" * 50)
-        log(f"Source: {source_name}")
-        log(f"URL: {feed_url}")
+        conn = sqlite3.connect(SQLITE_DB_PATH)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
         
-        # Initialize stats for this source
-        collection_stats[source_name] = {
-            'url': feed_url,
-            'status': 'Unknown',
-            'last_check': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'entries_found': 0,
-            'collected': 0,
-            'error': ''
-        }
+        cursor.execute("""
+            SELECT id, url, title, title_vi, title_ko, 
+                   summary, summary_vi, summary_ko,
+                   source, sector, area, province, 
+                   published_date, collected_date
+            FROM articles
+            ORDER BY published_date DESC
+        """)
         
-        feed = fetch_rss(feed_url)
-        
-        if feed.bozo and not feed.entries:
-            log("Feed error or empty")
-            collection_stats[source_name]['status'] = 'Failed'
-            collection_stats[source_name]['error'] = 'Feed error or empty response'
-            continue
-        
-        entries = feed.entries
-        log(f"Found {len(entries)} entries")
-        total_entries += len(entries)
-        
-        collection_stats[source_name]['entries_found'] = len(entries)
-        collection_stats[source_name]['status'] = 'Success'
-        
-        source_collected = 0
-        
-        for entry in entries:
-            title = getattr(entry, 'title', '')
-            if not title:
-                continue
-            
-            title = clean_html(title)
-            link = getattr(entry, 'link', '')
-            summary = clean_html(getattr(entry, 'summary', getattr(entry, 'description', '')))
-            published = getattr(entry, 'published', getattr(entry, 'pubDate', ''))
-            
-            if not is_english_title(title):
-                continue
-            
-            url_hash = generate_url_hash(link)
-            if url_hash in existing_urls:
-                continue
-            
-            pub_date = parse_date(published)
-            if pub_date:
-                if pub_date.tzinfo:
-                    pub_date = pub_date.replace(tzinfo=None)
-                if pub_date < cutoff_time:
-                    continue
-            
-            if not is_vietnam_related(title, summary):
-                continue
-            
-            sector = classify_sector(title, summary)
-            if not sector:
-                continue
-            
-            area = "Environment" if sector in ["Waste Water", "Solid Waste"] else \
-                   "Energy" if sector in ["Power", "Oil & Gas"] else "Urban Development"
-            
-            # Extract province from title/summary
-            province = extract_province(title, summary)
-            
-            article = {
-                'url_hash': url_hash,
-                'url': link,
-                'title': title,
-                'summary': summary[:1000] if summary else '',
-                'source': source_name,
-                'sector': sector,
-                'area': area,
-                'province': province,
-                'published_date': pub_date.isoformat() if pub_date else ''
-            }
-            
-            if save_article(conn, article):
-                existing_urls.add(url_hash)
-                source_collected += 1
-                total_collected += 1
-                collected_articles.append(article)  # 리스트에 추가
-                log(f"  SAVED [{sector}] [{province}]: {title[:50]}...")
-        
-        # Update stats for this source
-        collection_stats[source_name]['collected'] = source_collected
-        log(f"Collected from {source_name}: {source_collected}")
-    
-    conn.close()
-    
-    print("")
-    print("=" * 60)
-    print("COLLECTION SUMMARY")
-    print("=" * 60)
-    print(f"Total RSS entries: {total_entries}")
-    print(f"Total collected: {total_collected}")
-    print("=" * 60)
-    
-    return total_collected, collected_articles, collection_stats
-
-
-# ============================================================
-# EXCEL UPDATE FUNCTION
-# ============================================================
-
-def update_excel_database(articles, collection_stats=None):
-    """Add new articles to the Excel database and update reporting sheets"""
-    try:
-        import openpyxl
-        from openpyxl.utils import get_column_letter
-        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-        import shutil
-    except ImportError:
-        log("openpyxl not installed - skipping Excel update")
-        return False
-    
-    EXCEL_PATH = Path("data/database/Vietnam_Infra_News_Database_Final.xlsx")
-    
-    if not EXCEL_PATH.exists():
-        log(f"Excel file not found: {EXCEL_PATH}")
-        return False
-    
-    log(f"Updating Excel database...")
-    
-    # ============================================================
-    # SAFETY CHECK: Verify existing data before modification
-    # ============================================================
-    try:
-        wb_check = openpyxl.load_workbook(EXCEL_PATH, read_only=True)
-        ws_check = wb_check.active
-        existing_count = sum(1 for row in ws_check.iter_rows(min_row=2, values_only=True) if any(row))
-        wb_check.close()
-        log(f"✓ Safety check: {existing_count} existing articles found")
-        
-        if existing_count < 100:
-            log(f"⚠️ WARNING: Only {existing_count} articles found. Expected 2000+")
-            log(f"⚠️ Skipping update to prevent data loss")
-            return False
-    except Exception as e:
-        log(f"Safety check failed: {e}")
-        return False
-    
-    # ============================================================
-    # CREATE BACKUP before modification
-    # ============================================================
-    backup_path = EXCEL_PATH.with_suffix('.xlsx.backup')
-    try:
-        shutil.copy2(EXCEL_PATH, backup_path)
-        log(f"✓ Backup created: {backup_path}")
-    except Exception as e:
-        log(f"Backup failed: {e}")
-    
-    try:
-        # Load workbook
-        wb = openpyxl.load_workbook(EXCEL_PATH)
-        
-        # ============================================================
-        # 1. Update main articles sheet
-        # ============================================================
-        ws = wb.active
-        last_row = ws.max_row
-        
-        # Get existing URLs to avoid duplicates
-        existing_urls = set()
-        url_col = None
-        
-        for col in range(1, ws.max_column + 1):
-            header = ws.cell(row=1, column=col).value
-            if header and "link" in str(header).lower():
-                url_col = col
-                break
-        
-        if url_col:
-            for row in range(2, last_row + 1):
-                url = ws.cell(row=row, column=url_col).value
-                if url:
-                    existing_urls.add(url)
-        
-        col_map = {
-            'area': 1,
-            'sector': 2,
-            'province': 3,
-            'title': 4,
-            'date': 5,
-            'source': 6,
-            'url': 7,
-            'summary': 8
-        }
-        
-        added_count = 0
-        for article in articles:
-            if article.get('url') in existing_urls:
-                continue
-            
-            new_row = last_row + 1 + added_count
-            
-            ws.cell(row=new_row, column=col_map['area'], value=article.get('area', 'Environment'))
-            ws.cell(row=new_row, column=col_map['sector'], value=article.get('sector', ''))
-            ws.cell(row=new_row, column=col_map['province'], value=article.get('province', 'Vietnam'))
-            ws.cell(row=new_row, column=col_map['title'], value=article.get('title', ''))
-            
-            date_str = article.get('published_date', '')
+        articles = []
+        for row in cursor.fetchall():
+            # Parse date
+            date_str = row['published_date'] or row['collected_date'] or ''
             if date_str:
-                date_str = date_str[:10]
-            ws.cell(row=new_row, column=col_map['date'], value=date_str)
+                date_str = date_str[:10]  # Get YYYY-MM-DD part
             
-            ws.cell(row=new_row, column=col_map['source'], value=article.get('source', ''))
-            ws.cell(row=new_row, column=col_map['url'], value=article.get('url', ''))
-            ws.cell(row=new_row, column=col_map['summary'], value=article.get('summary', '')[:500])
-            
-            added_count += 1
-            existing_urls.add(article.get('url'))
+            articles.append({
+                "id": row['id'],
+                "date": date_str,
+                "area": row['area'] or "Environment",
+                "sector": row['sector'] or "Infrastructure",
+                "province": row['province'] or "Vietnam",
+                "source": row['source'] or "",
+                "title": row['title'] or "",
+                "title_ko": row['title_ko'] or "",
+                "title_vi": row['title_vi'] or "",
+                "summary": row['summary'] or "",
+                "summary_ko": row['summary_ko'] or "",
+                "summary_vi": row['summary_vi'] or "",
+                "url": row['url'] or "",
+                "from_sqlite": True  # Mark as newly collected
+            })
         
-        log(f"✓ Added {added_count} new articles to main sheet")
-        
-        # ============================================================
-        # 2. Update/Create RSS_Sources sheet
-        # ============================================================
-        if "RSS_Sources" in wb.sheetnames:
-            ws_rss = wb["RSS_Sources"]
-            wb.remove(ws_rss)
-        
-        ws_rss = wb.create_sheet("RSS_Sources")
-        
-        # Headers
-        rss_headers = ["Source Name", "URL", "Status", "Last Check", "Entries Found", "Articles Collected", "Error Message"]
-        header_fill = PatternFill(start_color="0F766E", end_color="0F766E", fill_type="solid")
-        header_font = Font(bold=True, color="FFFFFF")
-        
-        for col, header in enumerate(rss_headers, 1):
-            cell = ws_rss.cell(row=1, column=col, value=header)
-            cell.fill = header_fill
-            cell.font = header_font
-            cell.alignment = Alignment(horizontal="center")
-        
-        # Data from collection_stats
-        if collection_stats:
-            for row, (source, stats) in enumerate(collection_stats.items(), 2):
-                ws_rss.cell(row=row, column=1, value=source)
-                ws_rss.cell(row=row, column=2, value=stats.get('url', ''))
-                ws_rss.cell(row=row, column=3, value=stats.get('status', 'Unknown'))
-                ws_rss.cell(row=row, column=4, value=stats.get('last_check', ''))
-                ws_rss.cell(row=row, column=5, value=stats.get('entries_found', 0))
-                ws_rss.cell(row=row, column=6, value=stats.get('collected', 0))
-                ws_rss.cell(row=row, column=7, value=stats.get('error', ''))
-                
-                # Color coding
-                status = stats.get('status', '')
-                if status == 'Success':
-                    ws_rss.cell(row=row, column=3).fill = PatternFill(start_color="D1FAE5", end_color="D1FAE5", fill_type="solid")
-                elif status == 'Failed':
-                    ws_rss.cell(row=row, column=3).fill = PatternFill(start_color="FEE2E2", end_color="FEE2E2", fill_type="solid")
-        
-        # Adjust column widths
-        ws_rss.column_dimensions['A'].width = 25
-        ws_rss.column_dimensions['B'].width = 45
-        ws_rss.column_dimensions['C'].width = 12
-        ws_rss.column_dimensions['D'].width = 20
-        ws_rss.column_dimensions['E'].width = 15
-        ws_rss.column_dimensions['F'].width = 18
-        ws_rss.column_dimensions['G'].width = 40
-        
-        log("✓ Updated RSS_Sources sheet")
-        
-        # ============================================================
-        # 3. Update/Create Keywords sheet
-        # ============================================================
-        if "Keywords" in wb.sheetnames:
-            ws_kw = wb["Keywords"]
-            wb.remove(ws_kw)
-        
-        ws_kw = wb.create_sheet("Keywords")
-        
-        # Headers
-        kw_headers = ["Business Sector", "Area", "Keywords"]
-        for col, header in enumerate(kw_headers, 1):
-            cell = ws_kw.cell(row=1, column=col, value=header)
-            cell.fill = header_fill
-            cell.font = header_font
-            cell.alignment = Alignment(horizontal="center")
-        
-        # Sector to Area mapping
-        sector_area = {
-            "Waste Water": "Environment",
-            "Solid Waste": "Environment",
-            "Power": "Energy",
-            "Oil & Gas": "Energy",
-            "Industrial Parks": "Urban Development",
-            "Smart City": "Urban Development",
-            "Urban Development": "Urban Development"
-        }
-        
-        row = 2
-        for sector, keywords_dict in SECTOR_KEYWORDS.items():
-            keywords = keywords_dict.get("primary", [])
-            ws_kw.cell(row=row, column=1, value=sector)
-            ws_kw.cell(row=row, column=2, value=sector_area.get(sector, "Other"))
-            ws_kw.cell(row=row, column=3, value=", ".join(keywords))
-            row += 1
-        
-        ws_kw.column_dimensions['A'].width = 20
-        ws_kw.column_dimensions['B'].width = 18
-        ws_kw.column_dimensions['C'].width = 100
-        
-        log("✓ Updated Keywords sheet")
-        
-        # ============================================================
-        # 4. Update/Create Collection_Log sheet
-        # ============================================================
-        if "Collection_Log" not in wb.sheetnames:
-            ws_log = wb.create_sheet("Collection_Log")
-            log_headers = ["Date", "Time", "Hours Back", "RSS Entries", "Articles Collected", "New Added", "Total DB"]
-            for col, header in enumerate(log_headers, 1):
-                cell = ws_log.cell(row=1, column=col, value=header)
-                cell.fill = header_fill
-                cell.font = header_font
-        else:
-            ws_log = wb["Collection_Log"]
-        
-        # Add new log entry
-        log_row = ws_log.max_row + 1
-        now = datetime.now()
-        
-        total_entries = sum(s.get('entries_found', 0) for s in collection_stats.values()) if collection_stats else 0
-        total_collected = sum(s.get('collected', 0) for s in collection_stats.values()) if collection_stats else len(articles)
-        
-        ws_log.cell(row=log_row, column=1, value=now.strftime("%Y-%m-%d"))
-        ws_log.cell(row=log_row, column=2, value=now.strftime("%H:%M:%S"))
-        ws_log.cell(row=log_row, column=3, value=HOURS_BACK)
-        ws_log.cell(row=log_row, column=4, value=total_entries)
-        ws_log.cell(row=log_row, column=5, value=total_collected)
-        ws_log.cell(row=log_row, column=6, value=added_count)
-        ws_log.cell(row=log_row, column=7, value=last_row - 1 + added_count)
-        
-        ws_log.column_dimensions['A'].width = 12
-        ws_log.column_dimensions['B'].width = 10
-        ws_log.column_dimensions['C'].width = 12
-        ws_log.column_dimensions['D'].width = 12
-        ws_log.column_dimensions['E'].width = 18
-        ws_log.column_dimensions['F'].width = 12
-        ws_log.column_dimensions['G'].width = 12
-        
-        log("✓ Updated Collection_Log sheet")
-        
-        # ============================================================
-        # 5. Update/Create Keywords_History sheet
-        # ============================================================
-        if "Keywords_History" in wb.sheetnames:
-            ws_hist = wb["Keywords_History"]
-            wb.remove(ws_hist)
-        
-        ws_hist = wb.create_sheet("Keywords_History")
-        
-        # Headers
-        hist_headers = ["Area", "Business Sector", "Province", "Date", "Title", "Source", "Link"]
-        for col, header in enumerate(hist_headers, 1):
-            cell = ws_hist.cell(row=1, column=col, value=header)
-            cell.fill = header_fill
-            cell.font = header_font
-            cell.alignment = Alignment(horizontal="center")
-        
-        # Load ALL articles from main sheet for history
-        all_articles = []
-        ws_main = wb.active
-        
-        for row_idx in range(2, ws_main.max_row + 1):
-            area = ws_main.cell(row=row_idx, column=1).value or ""
-            sector = ws_main.cell(row=row_idx, column=2).value or ""
-            province = ws_main.cell(row=row_idx, column=3).value or "Vietnam"
-            title = ws_main.cell(row=row_idx, column=4).value or ""
-            date = ws_main.cell(row=row_idx, column=5).value or ""
-            source = ws_main.cell(row=row_idx, column=6).value or ""
-            link = ws_main.cell(row=row_idx, column=7).value or ""
-            
-            if title:  # Skip empty rows
-                # Convert date to string if needed
-                if hasattr(date, 'strftime'):
-                    date = date.strftime("%Y-%m-%d")
-                else:
-                    date = str(date)[:10] if date else ""
-                
-                all_articles.append({
-                    'area': area,
-                    'sector': sector,
-                    'province': province,
-                    'title': title,
-                    'date': date,
-                    'source': source,
-                    'link': link
-                })
-        
-        # Define sort order for Areas
-        area_order = {"Environment": 1, "Energy": 2, "Urban Development": 3}
-        
-        # Define sort order for Sectors within each Area
-        sector_order = {
-            # Environment
-            "Waste Water": 1, "Solid Waste": 2, "Water Supply/Drainage": 3,
-            # Energy
-            "Power": 4, "Oil & Gas": 5,
-            # Urban Development
-            "Industrial Parks": 6, "Smart City": 7, "Urban Development": 8, "Transport": 9
-        }
-        
-        # Secondary sort: within same grouping, newest date first
-        from itertools import groupby
-        
-        # Sort articles:
-        # 1. Area (Environment → Energy → Urban Development)
-        # 2. Sector
-        # 3. Province (specific provinces first, "Vietnam" last)
-        # 4. Date (newest first - 2026 → 2025 → ... → 2019)
-        
-        sorted_articles = []
-        
-        # First, group by area, sector, province
-        all_articles.sort(key=lambda x: (
-            area_order.get(x.get('area', ''), 99),
-            sector_order.get(x.get('sector', ''), 99),
-            1 if x.get('province') == "Vietnam" else 0,
-            x.get('province', '')
-        ))
-        
-        for key, group in groupby(all_articles, key=lambda x: (
-            x.get('area', ''),
-            x.get('sector', ''),
-            x.get('province', '')
-        )):
-            group_list = list(group)
-            # Sort by date DESCENDING (newest first: 2026 → 2025 → ... → 2019)
-            group_list.sort(key=lambda x: x.get('date', '') or "0000-00-00", reverse=True)
-            sorted_articles.extend(group_list)
-        
-        log(f"  - Total articles for history: {len(sorted_articles)}")
-        log(f"  - Date range: {min(a.get('date', '9999') for a in sorted_articles if a.get('date'))} ~ {max(a.get('date', '0000') for a in sorted_articles if a.get('date'))}")
-        
-        # Write to sheet
-        current_area = None
-        current_sector = None
-        current_province = None
-        row_idx = 2
-        
-        # Color fills for areas
-        area_fills = {
-            "Environment": PatternFill(start_color="D1FAE5", end_color="D1FAE5", fill_type="solid"),  # Green
-            "Energy": PatternFill(start_color="FEF3C7", end_color="FEF3C7", fill_type="solid"),       # Yellow
-            "Urban Development": PatternFill(start_color="E0E7FF", end_color="E0E7FF", fill_type="solid")  # Purple
-        }
-        
-        # Year highlight for recent articles (2026)
-        year_2026_fill = PatternFill(start_color="FEE2E2", end_color="FEE2E2", fill_type="solid")  # Light red
-        
-        for article in sorted_articles:
-            area = article.get('area', '')
-            sector = article.get('sector', '')
-            province = article.get('province', '')
-            date = article.get('date', '')
-            
-            # Add separator row when Area or Sector changes
-            if area != current_area or sector != current_sector:
-                if current_area is not None:  # Not first row
-                    row_idx += 1  # Empty row as separator
-                
-                current_area = area
-                current_sector = sector
-                current_province = None
-            
-            # Write article data
-            ws_hist.cell(row=row_idx, column=1, value=area)
-            ws_hist.cell(row=row_idx, column=2, value=sector)
-            ws_hist.cell(row=row_idx, column=3, value=province)
-            ws_hist.cell(row=row_idx, column=4, value=date)
-            ws_hist.cell(row=row_idx, column=5, value=article.get('title', ''))
-            ws_hist.cell(row=row_idx, column=6, value=article.get('source', ''))
-            ws_hist.cell(row=row_idx, column=7, value=article.get('link', ''))
-            
-            # Apply area color
-            area_fill = area_fills.get(area)
-            if area_fill:
-                ws_hist.cell(row=row_idx, column=1).fill = area_fill
-                ws_hist.cell(row=row_idx, column=2).fill = area_fill
-            
-            # Highlight 2026 articles (newest)
-            if date and date.startswith('2026'):
-                ws_hist.cell(row=row_idx, column=4).fill = year_2026_fill
-                ws_hist.cell(row=row_idx, column=4).font = Font(bold=True)
-            
-            row_idx += 1
-        
-        # Adjust column widths
-        ws_hist.column_dimensions['A'].width = 18
-        ws_hist.column_dimensions['B'].width = 20
-        ws_hist.column_dimensions['C'].width = 20
-        ws_hist.column_dimensions['D'].width = 12
-        ws_hist.column_dimensions['E'].width = 60
-        ws_hist.column_dimensions['F'].width = 20
-        ws_hist.column_dimensions['G'].width = 50
-        
-        # Freeze header row
-        ws_hist.freeze_panes = 'A2'
-        
-        # Count articles by year
-        year_counts = {}
-        for article in sorted_articles:
-            year = article.get('date', '')[:4] if article.get('date') else 'Unknown'
-            year_counts[year] = year_counts.get(year, 0) + 1
-        
-        log(f"✓ Updated Keywords_History sheet ({len(sorted_articles)} articles)")
-        log(f"  - Articles by year: {dict(sorted(year_counts.items(), reverse=True))}")
-        
-        # ============================================================
-        # 6. Update/Create Summary sheet (at the END, not beginning)
-        # ============================================================
-        if "Summary" in wb.sheetnames:
-            ws_sum = wb["Summary"]
-            wb.remove(ws_sum)
-        
-        ws_sum = wb.create_sheet("Summary")  # Create at end (no index = append)
-        
-        # Title
-        ws_sum.merge_cells('A1:D1')
-        title_cell = ws_sum.cell(row=1, column=1, value="Vietnam Infrastructure News Database - Summary Report")
-        title_cell.font = Font(bold=True, size=14, color="0F766E")
-        title_cell.alignment = Alignment(horizontal="center")
-        
-        # Last updated
-        ws_sum.cell(row=2, column=1, value=f"Last Updated: {now.strftime('%Y-%m-%d %H:%M:%S')}")
-        
-        # Statistics
-        ws_sum.cell(row=4, column=1, value="📊 Database Statistics")
-        ws_sum.cell(row=4, column=1).font = Font(bold=True, size=12)
-        
-        total_articles = last_row - 1 + added_count
-        ws_sum.cell(row=5, column=1, value="Total Articles:")
-        ws_sum.cell(row=5, column=2, value=total_articles)
-        
-        ws_sum.cell(row=6, column=1, value="New This Session:")
-        ws_sum.cell(row=6, column=2, value=added_count)
-        
-        # RSS Sources summary
-        ws_sum.cell(row=8, column=1, value="📡 RSS Sources")
-        ws_sum.cell(row=8, column=1).font = Font(bold=True, size=12)
-        
-        if collection_stats:
-            success_count = sum(1 for s in collection_stats.values() if s.get('status') == 'Success')
-            failed_count = sum(1 for s in collection_stats.values() if s.get('status') == 'Failed')
-            
-            ws_sum.cell(row=9, column=1, value="Active Sources:")
-            ws_sum.cell(row=9, column=2, value=success_count)
-            ws_sum.cell(row=10, column=1, value="Failed Sources:")
-            ws_sum.cell(row=10, column=2, value=failed_count)
-        
-        # Sector summary
-        ws_sum.cell(row=12, column=1, value="🏭 Sectors Monitored")
-        ws_sum.cell(row=12, column=1).font = Font(bold=True, size=12)
-        
-        row = 13
-        for sector in SECTOR_KEYWORDS.keys():
-            ws_sum.cell(row=row, column=1, value=f"  • {sector}")
-            row += 1
-        
-        ws_sum.column_dimensions['A'].width = 25
-        ws_sum.column_dimensions['B'].width = 15
-        
-        log("✓ Updated Summary sheet")
-        
-        # Save workbook
-        wb.save(EXCEL_PATH)
-        wb.close()
-        
-        log(f"✓ Excel database saved: {total_articles} total articles")
-        return True
+        conn.close()
+        logger.info(f"Loaded {len(articles)} articles from SQLite")
+        return articles
         
     except Exception as e:
-        log(f"Error updating Excel: {e}")
+        logger.error(f"Error loading SQLite: {e}")
         import traceback
         traceback.print_exc()
-        return False
+        return []
 
 
-# ============================================================
-# MAIN
-# ============================================================
+def load_articles_from_excel():
+    """Load ALL articles from Excel database (historical)"""
+    try:
+        import openpyxl
+    except ImportError:
+        logger.error("openpyxl not installed")
+        return []
+    
+    if not EXCEL_DB_PATH.exists():
+        logger.warning(f"Excel database not found: {EXCEL_DB_PATH}")
+        return []
+    
+    logger.info(f"Loading from Excel: {EXCEL_DB_PATH}")
+    
+    try:
+        wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
+        
+        logger.info(f"Available sheets: {wb.sheetnames}")
+        
+        # Find the News data sheet (not Summary or other sheets)
+        ws = None
+        
+        # Priority 1: Look for sheet named "News"
+        for sheet_name in wb.sheetnames:
+            if sheet_name.lower() == 'news':
+                ws = wb[sheet_name]
+                logger.info(f"Using sheet: {sheet_name}")
+                break
+        
+        # Priority 2: Look for sheet with "Area" header (main data sheet)
+        if ws is None:
+            for sheet_name in wb.sheetnames:
+                if 'summary' in sheet_name.lower() or 'rss' in sheet_name.lower() or 'keyword' in sheet_name.lower() or 'log' in sheet_name.lower():
+                    continue
+                test_ws = wb[sheet_name]
+                try:
+                    first_row = [cell.value for cell in test_ws[1]]
+                    # Check for expected headers: Area, Business Sector, Province, News Tittle, Date
+                    if any(h and str(h).strip() == 'Area' for h in first_row):
+                        ws = test_ws
+                        logger.info(f"Using sheet with Area header: {sheet_name}")
+                        break
+                except:
+                    continue
+        
+        # Priority 3: Use first sheet that's not Summary/RSS/Keywords/Log
+        if ws is None:
+            for sheet_name in wb.sheetnames:
+                if 'summary' not in sheet_name.lower() and 'rss' not in sheet_name.lower() and 'keyword' not in sheet_name.lower() and 'log' not in sheet_name.lower():
+                    ws = wb[sheet_name]
+                    logger.info(f"Using fallback sheet: {sheet_name}")
+                    break
+        
+        if ws is None:
+            ws = wb.active
+            logger.warning(f"Using active sheet as last fallback: {ws.title}")
+        
+        headers = [cell.value for cell in ws[1]]
+        col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
+        
+        logger.info(f"Excel headers: {list(col_map.keys())}")
+        
+        # Helper function to safely get column value
+        def safe_get(row, col_name, default_idx, default_val=""):
+            idx = col_map.get(col_name, default_idx)
+            if idx < len(row):
+                return row[idx] if row[idx] is not None else default_val
+            return default_val
+        
+        articles = []
+        for row_num, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
+            if not any(row):
+                continue
+            
+            # Safely get date
+            date_idx = col_map.get("Date", 4)
+            date_val = row[date_idx] if date_idx < len(row) else None
+            if date_val:
+                if hasattr(date_val, 'strftime'):
+                    date_str = date_val.strftime("%Y-%m-%d")
+                else:
+                    date_str = str(date_val)[:10]
+            else:
+                date_str = ""
+            
+            area = safe_get(row, "Area", 0, "Environment")
+            sector = safe_get(row, "Business Sector", 1, "Unknown")
+            province = safe_get(row, "Province", 2, "Vietnam")
+            title = str(safe_get(row, "News Tittle", 3, ""))
+            source = safe_get(row, "Source", 5, "")
+            url = safe_get(row, "Link", 6, "")
+            summary = str(safe_get(row, "Short summary", 7, ""))
+            
+            if not title and not url:
+                continue
+            
+            articles.append({
+                "id": len(articles) + 1,
+                "date": date_str,
+                "area": area,
+                "sector": sector,
+                "province": province,
+                "source": source,
+                "title": title,
+                "summary": summary,
+                "url": url,
+                "from_sqlite": False
+            })
+        
+        wb.close()
+        logger.info(f"Loaded {len(articles)} articles from Excel")
+        return articles
+        
+    except Exception as e:
+        logger.error(f"Error loading Excel: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
+
+
+def merge_articles(excel_articles, sqlite_articles):
+    """Merge articles from both sources, removing duplicates"""
+    
+    # Create URL set for deduplication
+    seen_urls = set()
+    merged = []
+    
+    # Add SQLite articles first (newer, higher priority)
+    for article in sqlite_articles:
+        url = article.get('url', '')
+        if url and url not in seen_urls:
+            seen_urls.add(url)
+            merged.append(article)
+    
+    # Add Excel articles (skip duplicates)
+    for article in excel_articles:
+        url = article.get('url', '')
+        if url and url not in seen_urls:
+            seen_urls.add(url)
+            merged.append(article)
+        elif not url:
+            # No URL, add by title check
+            title = article.get('title', '')
+            if title and title not in [a.get('title') for a in merged]:
+                merged.append(article)
+    
+    # Sort by date (newest first)
+    merged.sort(key=lambda x: x.get('date', ''), reverse=True)
+    
+    # Re-assign IDs
+    for i, article in enumerate(merged):
+        article['id'] = i + 1
+    
+    return merged
+
+
+def convert_to_multilingual_format(articles):
+    """Convert articles to multilingual format for BACKEND_DATA."""
+    result = []
+    
+    SECTOR_KO = {
+        "Waste Water": "폐수처리",
+        "Solid Waste": "고형폐기물",
+        "Water Supply/Drainage": "상수도/배수",
+        "Power": "발전/전력",
+        "Oil & Gas": "석유/가스",
+        "Industrial Parks": "산업단지",
+        "Smart City": "스마트시티",
+        "Urban Development": "도시개발",
+        "Transport": "교통인프라",
+        "Climate Change": "기후변화"
+    }
+    
+    SECTOR_VI = {
+        "Waste Water": "Xử lý nước thải",
+        "Solid Waste": "Chất thải rắn",
+        "Water Supply/Drainage": "Cấp thoát nước",
+        "Power": "Điện năng",
+        "Oil & Gas": "Dầu khí",
+        "Industrial Parks": "Khu công nghiệp",
+        "Smart City": "Thành phố thông minh",
+        "Urban Development": "Phát triển đô thị",
+        "Transport": "Giao thông",
+        "Climate Change": "Biến đổi khí hậu"
+    }
+    
+    for article in articles:
+        title = article.get("title", "")
+        summary = article.get("summary", "")
+        sector = article.get("sector", "Infrastructure")
+        province = article.get("province", "Vietnam")
+        
+        sector_ko = SECTOR_KO.get(sector, sector)
+        sector_vi = SECTOR_VI.get(sector, sector)
+        
+        # Check if article has translations from SQLite
+        title_ko = article.get("title_ko") or title
+        title_vi = article.get("title_vi") or title
+        title_en = title
+        
+        summary_ko = article.get("summary_ko") or f"[{sector_ko}] {province}: {title[:100]}"
+        summary_vi = article.get("summary_vi") or f"[{sector_vi}] {province}: {title[:100]}"
+        summary_en = summary if summary else f"[{sector}] {province}: {title[:100]}"
+        
+        result.append({
+            "id": article.get("id", len(result) + 1),
+            "date": article.get("date", ""),
+            "area": article.get("area", "Environment"),
+            "sector": sector,
+            "province": province,
+            "source": article.get("source", ""),
+            "title": {
+                "ko": title_ko,
+                "en": title_en,
+                "vi": title_vi
+            },
+            "summary": {
+                "ko": summary_ko,
+                "en": summary_en,
+                "vi": summary_vi
+            },
+            "url": article.get("url", ""),
+            "is_new": article.get("from_sqlite", False)
+        })
+    
+    return result
+
+
+def generate_dashboard(articles):
+    """Generate dashboard HTML"""
+    
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    
+    backend_data = convert_to_multilingual_format(articles)
+    backend_data.sort(key=lambda x: x.get("date", ""), reverse=True)
+    backend_json = json.dumps(backend_data, ensure_ascii=False, indent=2)
+    
+    if TEMPLATE_HEADER.exists() and TEMPLATE_FOOTER.exists():
+        logger.info("Using template files")
+        
+        with open(TEMPLATE_HEADER, 'r', encoding='utf-8') as f:
+            header = f.read()
+        
+        with open(TEMPLATE_FOOTER, 'r', encoding='utf-8') as f:
+            footer = f.read()
+        
+        html = header + f"\nconst BACKEND_DATA = {backend_json};\n" + footer
+    else:
+        logger.info("Template not found, generating minimal dashboard")
+        html = generate_minimal_dashboard(backend_data, backend_json)
+    
+    index_path = OUTPUT_DIR / "index.html"
+    dashboard_path = OUTPUT_DIR / "vietnam_dashboard.html"
+    
+    with open(index_path, 'w', encoding='utf-8') as f:
+        f.write(html)
+    logger.info(f"Saved: {index_path} ({index_path.stat().st_size:,} bytes)")
+    
+    with open(dashboard_path, 'w', encoding='utf-8') as f:
+        f.write(html)
+    logger.info(f"Saved: {dashboard_path}")
+    
+    # Count today's and recent articles
+    today = datetime.now().strftime("%Y-%m-%d")
+    yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+    
+    today_count = sum(1 for a in backend_data if a.get("date") == today)
+    yesterday_count = sum(1 for a in backend_data if a.get("date") == yesterday)
+    new_count = sum(1 for a in backend_data if a.get("is_new", False))
+    
+    json_path = OUTPUT_DIR / f"news_data_{datetime.now().strftime('%Y%m%d')}.json"
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump({
+            "generated_at": datetime.now().isoformat(),
+            "total": len(backend_data),
+            "today_articles": today_count,
+            "yesterday_articles": yesterday_count,
+            "new_from_collector": new_count
+        }, f, indent=2)
+    
+    logger.info(f"Today's articles: {today_count}")
+    logger.info(f"Yesterday's articles: {yesterday_count}")
+    logger.info(f"New from collector: {new_count}")
+    
+    return str(index_path)
+
+
+def generate_minimal_dashboard(articles, backend_json):
+    """Generate minimal dashboard when template is not available"""
+    
+    today = datetime.now().strftime("%Y-%m-%d")
+    total = len(articles)
+    today_count = sum(1 for a in articles if a.get("date") == today)
+    new_count = sum(1 for a in articles if a.get("is_new", False))
+    
+    html = f'''<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietnam Infrastructure News Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {{ font-family: 'Noto Sans KR', sans-serif; }}
+        .lang-btn.active {{ background: linear-gradient(135deg, #0F766E, #14B8A6); color: white; }}
+        .sector-env {{ background: linear-gradient(135deg, #059669, #10B981); }}
+        .sector-energy {{ background: linear-gradient(135deg, #D97706, #F59E0B); }}
+        .sector-urban {{ background: linear-gradient(135deg, #7C3AED, #8B5CF6); }}
+        .new-badge {{ background: #EF4444; color: white; animation: pulse 2s infinite; }}
+        @keyframes pulse {{ 0%, 100% {{ opacity: 1; }} 50% {{ opacity: 0.7; }} }}
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-teal-50/30 min-h-screen">
+
+<header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-teal-600 to-emerald-500 rounded-lg flex items-center justify-center text-white text-xl">🏗️</div>
+                <div>
+                    <h1 class="text-lg font-bold text-slate-800">Vietnam Infra News</h1>
+                    <p class="text-xs text-slate-500">Updated: {datetime.now().strftime("%Y-%m-%d %H:%M")}</p>
+                </div>
+            </div>
+            <div class="flex gap-1 bg-slate-100 rounded-lg p-0.5">
+                <button onclick="setLang('ko')" class="lang-btn active px-3 py-1.5 rounded text-sm font-medium" data-lang="ko">🇰🇷 한국어</button>
+                <button onclick="setLang('en')" class="lang-btn px-3 py-1.5 rounded text-sm font-medium text-slate-600" data-lang="en">🇺🇸 EN</button>
+                <button onclick="setLang('vi')" class="lang-btn px-3 py-1.5 rounded text-sm font-medium text-slate-600" data-lang="vi">🇻🇳 VI</button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 py-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-xl p-4 shadow-sm border">
+            <div class="text-2xl font-bold text-red-500">{new_count}</div>
+            <div class="text-sm text-slate-500">🆕 신규 수집</div>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border">
+            <div class="text-2xl font-bold text-teal-600">{today_count}</div>
+            <div class="text-sm text-slate-500">오늘</div>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border">
+            <div class="text-2xl font-bold text-blue-600">{total:,}</div>
+            <div class="text-sm text-slate-500">전체 DB</div>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="bg-gradient-to-r from-teal-700 to-emerald-600 px-4 py-3">
+            <span class="text-white font-bold">📰 뉴스 목록</span>
+            <span class="text-teal-100 text-sm ml-2" id="news-count">{total}건</span>
+        </div>
+        <div id="news-list" class="max-h-[600px] overflow-y-auto"></div>
+    </div>
+</main>
+
+<script>
+const BACKEND_DATA = {backend_json};
+
+let lang = 'ko';
+
+function setLang(l) {{
+    lang = l;
+    document.querySelectorAll('.lang-btn').forEach(btn => {{
+        btn.classList.toggle('active', btn.dataset.lang === l);
+    }});
+    renderNews();
+}}
+
+function getText(obj) {{
+    if (!obj) return '';
+    if (typeof obj === 'string') return obj;
+    return obj[lang] || obj.en || obj.ko || obj.vi || '';
+}}
+
+function getSectorColor(area) {{
+    if (area === 'Environment') return 'sector-env';
+    if (area === 'Energy Develop.' || area === 'Energy') return 'sector-energy';
+    return 'sector-urban';
+}}
+
+function renderNews() {{
+    const container = document.getElementById('news-list');
+    container.innerHTML = BACKEND_DATA.slice(0, 100).map(n => `
+        <div class="px-4 py-3 border-b hover:bg-slate-50">
+            <div class="flex items-center gap-2 mb-1">
+                ${{n.is_new ? '<span class="new-badge px-1.5 py-0.5 rounded text-xs font-bold">NEW</span>' : ''}}
+                <span class="px-2 py-0.5 rounded text-xs font-semibold text-white ${{getSectorColor(n.area)}}">${{n.sector}}</span>
+                <span class="text-xs text-slate-500">${{n.date}}</span>
+                <span class="text-xs text-slate-400">${{n.source}}</span>
+            </div>
+            <h3 class="font-medium text-slate-800">${{getText(n.title)}}</h3>
+            <p class="text-sm text-slate-600 mt-1">${{getText(n.summary).slice(0, 150)}}...</p>
+            <a href="${{n.url}}" target="_blank" class="text-xs text-teal-600 hover:underline mt-1 inline-block">원문보기 →</a>
+        </div>
+    `).join('');
+}}
+
+renderNews();
+</script>
+</body>
+</html>'''
+    
+    return html
+
+
+def main():
+    """Main function - loads from BOTH Excel and SQLite"""
+    print("=" * 60)
+    print("DASHBOARD GENERATOR (Merged Sources)")
+    print("=" * 60)
+    print(f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"Excel DB: {EXCEL_DB_PATH}")
+    print(f"SQLite DB: {SQLITE_DB_PATH}")
+    
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    
+    # Load from both sources
+    excel_articles = load_articles_from_excel()
+    sqlite_articles = load_articles_from_sqlite()
+    
+    print(f"\nExcel articles: {len(excel_articles)}")
+    print(f"SQLite articles (new): {len(sqlite_articles)}")
+    
+    # Merge articles
+    all_articles = merge_articles(excel_articles, sqlite_articles)
+    print(f"Total merged: {len(all_articles)}")
+    
+    # Generate dashboard
+    result = generate_dashboard(all_articles)
+    
+    index_path = OUTPUT_DIR / "index.html"
+    if index_path.exists():
+        print(f"\n✓ Dashboard created: {index_path}")
+        print(f"  Size: {index_path.stat().st_size:,} bytes")
+    
+    print("\nDone!")
+
 
 if __name__ == "__main__":
-    import argparse
-    
-    parser = argparse.ArgumentParser(description='Vietnam Infrastructure News Collector')
-    parser.add_argument('--hours-back', type=int, default=HOURS_BACK, 
-                        help='Hours to look back for news')
-    args = parser.parse_args()
-    
-    # Update global HOURS_BACK for Excel logging
-    HOURS_BACK = args.hours_back
-    
-    print("=" * 60)
-    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR")
-    print("=" * 60)
-    print("")
-    
-    # Collect news
-    collected_count, collected_articles, collection_stats = collect_news(args.hours_back)
-    
-    # Update Excel database with stats
-    print("")
-    print("=" * 60)
-    print("UPDATING EXCEL DATABASE")
-    print("=" * 60)
-    
-    update_excel_database(collected_articles, collection_stats)
-    
-    # Print RSS source summary
-    print("")
-    print("=" * 60)
-    print("RSS SOURCE STATUS")
-    print("=" * 60)
-    for source, stats in collection_stats.items():
-        status_icon = "✓" if stats['status'] == 'Success' else "✗"
-        print(f"  {status_icon} {source}: {stats['entries_found']} entries, {stats['collected']} collected")
-        if stats['error']:
-            print(f"      Error: {stats['error']}")
-    
-    print("")
-    print("=" * 50)
-    print(f"TOTAL COLLECTED: {collected_count}")
-    print("")
-    print(f"Total: {collected_count} articles collected")
+    main()
