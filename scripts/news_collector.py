@@ -961,13 +961,13 @@ def update_excel_database(articles, collection_stats=None):
         log(f"  - Articles by year: {dict(sorted(year_counts.items(), reverse=True))}")
         
         # ============================================================
-        # 6. Update/Create Summary sheet
+        # 6. Update/Create Summary sheet (at the END, not beginning)
         # ============================================================
         if "Summary" in wb.sheetnames:
             ws_sum = wb["Summary"]
             wb.remove(ws_sum)
         
-        ws_sum = wb.create_sheet("Summary", 0)  # Insert at beginning
+        ws_sum = wb.create_sheet("Summary")  # Create at end (no index = append)
         
         # Title
         ws_sum.merge_cells('A1:D1')
