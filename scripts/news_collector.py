@@ -561,6 +561,7 @@ def update_excel_database(articles, collection_stats=None):
         import openpyxl
         from openpyxl.utils import get_column_letter
         from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        import shutil
     except ImportError:
         log("openpyxl not installed - skipping Excel update")
         return False
@@ -572,6 +573,34 @@ def update_excel_database(articles, collection_stats=None):
         return False
     
     log(f"Updating Excel database...")
+    
+    # ============================================================
+    # SAFETY CHECK: Verify existing data before modification
+    # ============================================================
+    try:
+        wb_check = openpyxl.load_workbook(EXCEL_PATH, read_only=True)
+        ws_check = wb_check.active
+        existing_count = sum(1 for row in ws_check.iter_rows(min_row=2, values_only=True) if any(row))
+        wb_check.close()
+        log(f"✓ Safety check: {existing_count} existing articles found")
+        
+        if existing_count < 100:
+            log(f"⚠️ WARNING: Only {existing_count} articles found. Expected 2000+")
+            log(f"⚠️ Skipping update to prevent data loss")
+            return False
+    except Exception as e:
+        log(f"Safety check failed: {e}")
+        return False
+    
+    # ============================================================
+    # CREATE BACKUP before modification
+    # ============================================================
+    backup_path = EXCEL_PATH.with_suffix('.xlsx.backup')
+    try:
+        shutil.copy2(EXCEL_PATH, backup_path)
+        log(f"✓ Backup created: {backup_path}")
+    except Exception as e:
+        log(f"Backup failed: {e}")
     
     try:
         # Load workbook
