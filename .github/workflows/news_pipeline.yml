@@ -2,7 +2,6 @@ name: Vietnam Infrastructure News Pipeline
 
 on:
   schedule:
-    # 평일 오후 6시 베트남 시간 (UTC 11:00)
     - cron: '0 11 * * 1-5'
   
   workflow_dispatch:
@@ -40,25 +39,16 @@ jobs:
           pip install -r requirements.txt
       
       - name: Create directories
-        run: |
-          mkdir -p data/database outputs logs
+        run: mkdir -p data/database outputs logs
       
       - name: Check database status (Before)
         run: |
           echo "=== Database check (BEFORE collection) ==="
           if [ -f "data/database/Vietnam_Infra_News_Database_Final.xlsx" ]; then
-            echo "✓ Excel database found"
+            echo "Excel database found"
             ls -lh data/database/
-            python3 -c "
-import openpyxl
-wb = openpyxl.load_workbook('data/database/Vietnam_Infra_News_Database_Final.xlsx', read_only=True)
-ws = wb.active
-count = sum(1 for row in ws.iter_rows(min_row=2, values_only=True) if any(row))
-print(f'Current article count: {count}')
-wb.close()
-"
           else
-            echo "✗ Excel database not found!"
+            echo "Excel database not found!"
             exit 1
           fi
       
@@ -73,14 +63,6 @@ wb.close()
       - name: Check database status (After)
         run: |
           echo "=== Database check (AFTER collection) ==="
-          python3 -c "
-import openpyxl
-wb = openpyxl.load_workbook('data/database/Vietnam_Infra_News_Database_Final.xlsx', read_only=True)
-ws = wb.active
-count = sum(1 for row in ws.iter_rows(min_row=2, values_only=True) if any(row))
-print(f'Article count after collection: {count}')
-wb.close()
-"
           ls -lh data/database/
       
       - name: Run AI Summarization
@@ -90,45 +72,13 @@ wb.close()
           echo "Generating AI summaries and translations"
           python scripts/ai_summarizer.py
       
-      # ========================================
-      # 핵심: Excel 파일을 저장소에 커밋 (Dashboard 전에 실행!)
-      # ========================================
       - name: Commit updated Excel database
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          
-          # Excel 파일 변경사항 확인
-          if git diff --quiet data/database/Vietnam_Infra_News_Database_Final.xlsx 2>/dev/null; then
-            echo "No changes to Excel database"
-          else
-            echo "Committing updated Excel database..."
-            git add data/database/Vietnam_Infra_News_Database_Final.xlsx
-            
-            # News 시트에서 기사 수 확인 (Summary 시트 제외)
-            ARTICLE_COUNT=$(python3 -c "
-import openpyxl
-wb = openpyxl.load_workbook('data/database/Vietnam_Infra_News_Database_Final.xlsx', read_only=True)
-# Find News sheet, not Summary
-ws = None
-for name in wb.sheetnames:
-    if 'summary' not in name.lower() and 'rss' not in name.lower() and 'keyword' not in name.lower() and 'log' not in name.lower():
-        test_ws = wb[name]
-        headers = [c.value for c in test_ws[1]]
-        if any(h and 'Area' in str(h) for h in headers):
-            ws = test_ws
-            break
-if ws is None:
-    ws = wb.active
-count = sum(1 for row in ws.iter_rows(min_row=2, values_only=True) if any(row))
-print(count)
-wb.close()
-")
-            TODAY=$(date +%Y-%m-%d)
-            git commit -m "📰 Update news database: $ARTICLE_COUNT articles (${TODAY})"
-            git push
-            echo "✓ Excel database committed and pushed: $ARTICLE_COUNT articles"
-          fi
+          git add data/database/Vietnam_Infra_News_Database_Final.xlsx
+          git diff --staged --quiet || git commit -m "Update news database $(date +%Y-%m-%d)"
+          git push || echo "Nothing to push"
       
       - name: Generate Dashboard
         run: |
@@ -139,14 +89,19 @@ wb.close()
         run: |
           echo "=== Checking outputs folder ==="
           ls -la outputs/
-          
           if [ -f "outputs/index.html" ]; then
-            FILE_SIZE=$(stat -c%s "outputs/index.html")
-            echo "✓ Dashboard generated: $FILE_SIZE bytes"
+            echo "Dashboard generated successfully"
           else
-            echo "✗ Dashboard not found!"
+            echo "Dashboard not found!"
             exit 1
           fi
+      
+      - name: Upload database artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: news-database
+          path: data/vietnam_infrastructure_news.db
+          retention-days: 7
       
       - name: Upload outputs artifact
         uses: actions/upload-artifact@v4
@@ -169,5 +124,4 @@ wb.close()
           EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
-        run: |
-          python scripts/send_notification.py
+        run: python scripts/send_notification.py
