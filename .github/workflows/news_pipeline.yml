@@ -10,7 +10,7 @@ on:
       hours_back:
         description: '수집할 시간 범위 (hours)'
         required: true
-        default: '24'
+        default: '720'
         type: string
 
 permissions:
@@ -66,7 +66,7 @@ wb.close()
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          HOURS_BACK="${{ github.event.inputs.hours_back || '24' }}"
+          HOURS_BACK="${{ github.event.inputs.hours_back || '720' }}"
           echo "Collecting news from last $HOURS_BACK hours"
           python scripts/news_collector.py --hours-back $HOURS_BACK
       
