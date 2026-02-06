@@ -214,28 +214,71 @@ def load_articles_from_excel():
 def merge_articles(excel_articles, sqlite_articles):
     """Merge articles from both sources, removing duplicates"""
     
+    # Debug: Count 2026 articles before merge
+    excel_2026 = [a for a in excel_articles if a.get('date', '').startswith('2026')]
+    sqlite_2026 = [a for a in sqlite_articles if a.get('date', '').startswith('2026')]
+    logger.info(f"Before merge - Excel 2026 articles: {len(excel_2026)}, SQLite 2026: {len(sqlite_2026)}")
+    
     # Create URL set for deduplication
     seen_urls = set()
+    seen_titles = set()
     merged = []
     
     # Add SQLite articles first (newer, higher priority)
     for article in sqlite_articles:
         url = article.get('url', '')
+        title = article.get('title', '')
         if url and url not in seen_urls:
             seen_urls.add(url)
+            if title:
+                seen_titles.add(title)
+            merged.append(article)
+        elif not url and title and title not in seen_titles:
+            seen_titles.add(title)
             merged.append(article)
     
     # Add Excel articles (skip duplicates)
+    skipped_no_url = 0
+    skipped_dup_url = 0
+    skipped_dup_title = 0
+    skipped_2026 = []
+    
     for article in excel_articles:
         url = article.get('url', '')
-        if url and url not in seen_urls:
-            seen_urls.add(url)
-            merged.append(article)
-        elif not url:
-            # No URL, add by title check
-            title = article.get('title', '')
-            if title and title not in [a.get('title') for a in merged]:
+        title = article.get('title', '')
+        date = article.get('date', '')
+        
+        if url:
+            if url not in seen_urls:
+                seen_urls.add(url)
+                if title:
+                    seen_titles.add(title)
                 merged.append(article)
+            else:
+                skipped_dup_url += 1
+                if date.startswith('2026'):
+                    skipped_2026.append(f"URL dup: {title[:50]}")
+        else:
+            # No URL - check by title
+            if title and title not in seen_titles:
+                seen_titles.add(title)
+                merged.append(article)
+            elif title:
+                skipped_dup_title += 1
+                if date.startswith('2026'):
+                    skipped_2026.append(f"Title dup: {title[:50]}")
+            else:
+                skipped_no_url += 1
+                if date.startswith('2026'):
+                    skipped_2026.append(f"No URL/title: {date}")
+    
+    logger.info(f"Merge stats: skipped {skipped_dup_url} dup URLs, {skipped_dup_title} dup titles, {skipped_no_url} no URL/title")
+    
+    # Debug: Count 2026 articles after merge
+    merged_2026 = [a for a in merged if a.get('date', '').startswith('2026')]
+    logger.info(f"After merge - 2026 articles: {len(merged_2026)}")
+    if skipped_2026:
+        logger.info(f"Skipped 2026 articles: {skipped_2026[:5]}")  # Show first 5
     
     # Sort by date (newest first)
     merged.sort(key=lambda x: x.get('date', ''), reverse=True)
