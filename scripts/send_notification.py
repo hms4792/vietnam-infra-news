@@ -107,21 +107,30 @@ def load_articles_from_excel():
     headers = [cell.value for cell in ws[1]]
     col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
     
+    # Helper function to safely get column value
+    def safe_get(row, col_name, default_idx, default_val=""):
+        idx = col_map.get(col_name, default_idx)
+        if idx < len(row):
+            return row[idx] or default_val
+        return default_val
+    
     articles = []
     for row in ws.iter_rows(min_row=2, values_only=True):
         if not any(row):
             continue
         
-        date_val = row[col_map.get("Date", 4)] if "Date" in col_map else None
+        # Safely get date
+        date_idx = col_map.get("Date", 4)
+        date_val = row[date_idx] if date_idx < len(row) else None
         date_str = date_val.strftime("%Y-%m-%d") if hasattr(date_val, 'strftime') else str(date_val)[:10] if date_val else ""
         
         articles.append({
-            "title": row[col_map.get("News Tittle", 3)] or "",
-            "sector": row[col_map.get("Business Sector", 1)] or "",
-            "province": row[col_map.get("Province", 2)] or "Vietnam",
-            "source": row[col_map.get("Source", 5)] or "",
-            "url": row[col_map.get("Link", 6)] or "",
-            "summary": row[col_map.get("Short summary", 7)] or "",
+            "title": safe_get(row, "News Tittle", 3),
+            "sector": safe_get(row, "Business Sector", 1),
+            "province": safe_get(row, "Province", 2, "Vietnam"),
+            "source": safe_get(row, "Source", 5),
+            "url": safe_get(row, "Link", 6),
+            "summary": safe_get(row, "Short summary", 7),
             "date": date_str,
             "is_new": False
         })
