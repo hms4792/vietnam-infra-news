@@ -103,38 +103,50 @@ def load_articles_from_excel():
     
     wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
     
+    print(f"Available sheets: {wb.sheetnames}")
+    
     # Find the News data sheet (not Summary or other sheets)
     ws = None
+    
+    # Priority 1: Look for sheet named "News"
     for sheet_name in wb.sheetnames:
-        if sheet_name.lower() == 'news' or 'news' in sheet_name.lower():
+        if sheet_name.lower() == 'news':
             ws = wb[sheet_name]
             print(f"Using sheet: {sheet_name}")
             break
     
-    # If no News sheet found, look for sheet with expected headers
+    # Priority 2: Look for sheet with "Area" header (main data sheet)
     if ws is None:
         for sheet_name in wb.sheetnames:
+            if 'summary' in sheet_name.lower() or 'rss' in sheet_name.lower() or 'keyword' in sheet_name.lower() or 'log' in sheet_name.lower():
+                continue
             test_ws = wb[sheet_name]
-            first_row = [cell.value for cell in test_ws[1]]
-            if any(h and 'tittle' in str(h).lower() for h in first_row):
-                ws = test_ws
-                print(f"Using sheet with data headers: {sheet_name}")
-                break
+            try:
+                first_row = [cell.value for cell in test_ws[1]]
+                # Check for expected headers: Area, Business Sector, Province, News Tittle, Date
+                if any(h and str(h).strip() == 'Area' for h in first_row):
+                    ws = test_ws
+                    print(f"Using sheet with Area header: {sheet_name}")
+                    break
+            except:
+                continue
     
-    # Fallback: skip Summary sheet, use second sheet or first available
+    # Priority 3: Use first sheet that's not Summary/RSS/Keywords/Log
     if ws is None:
         for sheet_name in wb.sheetnames:
-            if 'summary' not in sheet_name.lower():
+            if 'summary' not in sheet_name.lower() and 'rss' not in sheet_name.lower() and 'keyword' not in sheet_name.lower() and 'log' not in sheet_name.lower():
                 ws = wb[sheet_name]
                 print(f"Using fallback sheet: {sheet_name}")
                 break
     
     if ws is None:
         ws = wb.active
-        print(f"Using active sheet as fallback")
+        print(f"Using active sheet as last fallback: {ws.title}")
     
     headers = [cell.value for cell in ws[1]]
     col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
+    
+    print(f"Excel headers: {list(col_map.keys())}")
     
     # Helper function to safely get column value
     def safe_get(row, col_name, default_idx, default_val=""):
