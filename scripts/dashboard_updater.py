@@ -2,16 +2,15 @@
 # -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News - Dashboard Updater
-Maintains original dashboard format while fixing data loading issues.
-
-Can be run directly: python dashboard_updater.py
+Loads from BOTH Excel (historical) AND SQLite (new collected) databases.
 """
 
 import json
 import logging
 import sys
 import os
-from datetime import datetime
+import sqlite3
+from datetime import datetime, timedelta
 from pathlib import Path
 
 # Setup paths
@@ -26,16 +25,74 @@ sys.path.insert(0, str(PROJECT_ROOT))
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Excel database path
+# Database paths
 EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
+SQLITE_DB_PATH = DATA_DIR / "vietnam_infrastructure_news.db"
 
 # Template paths
 TEMPLATE_HEADER = TEMPLATE_DIR / "dashboard_template_header.html"
 TEMPLATE_FOOTER = TEMPLATE_DIR / "dashboard_template_footer.html"
 
 
+def load_articles_from_sqlite():
+    """Load articles from SQLite database (newly collected)"""
+    if not SQLITE_DB_PATH.exists():
+        logger.info(f"SQLite DB not found: {SQLITE_DB_PATH}")
+        return []
+    
+    logger.info(f"Loading from SQLite: {SQLITE_DB_PATH}")
+    
+    try:
+        conn = sqlite3.connect(SQLITE_DB_PATH)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            SELECT id, url, title, title_vi, title_ko, 
+                   summary, summary_vi, summary_ko,
+                   source, sector, area, province, 
+                   published_date, collected_date
+            FROM articles
+            ORDER BY published_date DESC
+        """)
+        
+        articles = []
+        for row in cursor.fetchall():
+            # Parse date
+            date_str = row['published_date'] or row['collected_date'] or ''
+            if date_str:
+                date_str = date_str[:10]  # Get YYYY-MM-DD part
+            
+            articles.append({
+                "id": row['id'],
+                "date": date_str,
+                "area": row['area'] or "Environment",
+                "sector": row['sector'] or "Infrastructure",
+                "province": row['province'] or "Vietnam",
+                "source": row['source'] or "",
+                "title": row['title'] or "",
+                "title_ko": row['title_ko'] or "",
+                "title_vi": row['title_vi'] or "",
+                "summary": row['summary'] or "",
+                "summary_ko": row['summary_ko'] or "",
+                "summary_vi": row['summary_vi'] or "",
+                "url": row['url'] or "",
+                "from_sqlite": True  # Mark as newly collected
+            })
+        
+        conn.close()
+        logger.info(f"Loaded {len(articles)} articles from SQLite")
+        return articles
+        
+    except Exception as e:
+        logger.error(f"Error loading SQLite: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
+
+
 def load_articles_from_excel():
-    """Load ALL articles from Excel database"""
+    """Load ALL articles from Excel database (historical)"""
     try:
         import openpyxl
     except ImportError:
@@ -46,24 +103,22 @@ def load_articles_from_excel():
         logger.warning(f"Excel database not found: {EXCEL_DB_PATH}")
         return []
     
-    logger.info(f"Loading from: {EXCEL_DB_PATH}")
+    logger.info(f"Loading from Excel: {EXCEL_DB_PATH}")
     
     try:
         wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
         ws = wb.active
         
-        # Get headers
         headers = [cell.value for cell in ws[1]]
         col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
         
-        logger.info(f"Headers: {list(col_map.keys())}")
+        logger.info(f"Excel headers: {list(col_map.keys())}")
         
         articles = []
         for row_num, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
             if not any(row):
                 continue
             
-            # Parse date
             date_val = row[col_map.get("Date", 4)] if "Date" in col_map else None
             if date_val:
                 if hasattr(date_val, 'strftime'):
@@ -73,7 +128,6 @@ def load_articles_from_excel():
             else:
                 date_str = ""
             
-            # Get values
             area = row[col_map.get("Area", 0)] or "Environment"
             sector = row[col_map.get("Business Sector", 1)] or "Unknown"
             province = row[col_map.get("Province", 2)] or "Vietnam"
@@ -94,20 +148,12 @@ def load_articles_from_excel():
                 "source": source,
                 "title": title,
                 "summary": summary,
-                "url": url
+                "url": url,
+                "from_sqlite": False
             })
         
         wb.close()
-        
-        # Statistics
-        from collections import Counter
-        year_counts = Counter(a["date"][:4] for a in articles if a["date"])
-        sector_counts = Counter(a["sector"] for a in articles)
-        
-        logger.info(f"Loaded {len(articles)} articles")
-        logger.info(f"Years: {dict(sorted(year_counts.items()))}")
-        logger.info(f"Top sectors: {dict(sector_counts.most_common(5))}")
-        
+        logger.info(f"Loaded {len(articles)} articles from Excel")
         return articles
         
     except Exception as e:
@@ -117,15 +163,46 @@ def load_articles_from_excel():
         return []
 
 
+def merge_articles(excel_articles, sqlite_articles):
+    """Merge articles from both sources, removing duplicates"""
+    
+    # Create URL set for deduplication
+    seen_urls = set()
+    merged = []
+    
+    # Add SQLite articles first (newer, higher priority)
+    for article in sqlite_articles:
+        url = article.get('url', '')
+        if url and url not in seen_urls:
+            seen_urls.add(url)
+            merged.append(article)
+    
+    # Add Excel articles (skip duplicates)
+    for article in excel_articles:
+        url = article.get('url', '')
+        if url and url not in seen_urls:
+            seen_urls.add(url)
+            merged.append(article)
+        elif not url:
+            # No URL, add by title check
+            title = article.get('title', '')
+            if title and title not in [a.get('title') for a in merged]:
+                merged.append(article)
+    
+    # Sort by date (newest first)
+    merged.sort(key=lambda x: x.get('date', ''), reverse=True)
+    
+    # Re-assign IDs
+    for i, article in enumerate(merged):
+        article['id'] = i + 1
+    
+    return merged
+
+
 def convert_to_multilingual_format(articles):
-    """
-    Convert articles to multilingual format for BACKEND_DATA.
-    - Title: Original (usually English), with translations for ko/vi
-    - Summary: Different for each language
-    """
+    """Convert articles to multilingual format for BACKEND_DATA."""
     result = []
     
-    # 섹터 한국어 번역
     SECTOR_KO = {
         "Waste Water": "폐수처리",
         "Solid Waste": "고형폐기물",
@@ -134,11 +211,11 @@ def convert_to_multilingual_format(articles):
         "Oil & Gas": "석유/가스",
         "Industrial Parks": "산업단지",
         "Smart City": "스마트시티",
+        "Urban Development": "도시개발",
         "Transport": "교통인프라",
         "Climate Change": "기후변화"
     }
     
-    # 섹터 베트남어 번역
     SECTOR_VI = {
         "Waste Water": "Xử lý nước thải",
         "Solid Waste": "Chất thải rắn",
@@ -147,6 +224,7 @@ def convert_to_multilingual_format(articles):
         "Oil & Gas": "Dầu khí",
         "Industrial Parks": "Khu công nghiệp",
         "Smart City": "Thành phố thông minh",
+        "Urban Development": "Phát triển đô thị",
         "Transport": "Giao thông",
         "Climate Change": "Biến đổi khí hậu"
     }
@@ -160,44 +238,14 @@ def convert_to_multilingual_format(articles):
         sector_ko = SECTOR_KO.get(sector, sector)
         sector_vi = SECTOR_VI.get(sector, sector)
         
-        # 제목 언어 감지 (베트남어 문자 포함 여부)
-        has_vietnamese_chars = any(ord(c) > 127 for c in title)
+        # Check if article has translations from SQLite
+        title_ko = article.get("title_ko") or title
+        title_vi = article.get("title_vi") or title
+        title_en = title
         
-        # 제목 다국어 처리
-        if has_vietnamese_chars:
-            # 베트남어 제목인 경우
-            title_vi = title
-            title_en = title  # 원본 유지 (번역 없이)
-            title_ko = title  # 원본 유지 (번역 없이)
-        else:
-            # 영어 제목인 경우
-            title_en = title
-            title_ko = title  # 원본 유지
-            title_vi = title  # 원본 유지
-        
-        # 기존 요약이 있는지 확인
-        has_existing_summary = summary and len(summary.strip()) > 20
-        
-        # 요약 생성
-        if has_existing_summary:
-            # 기존 요약 활용
-            base_summary = summary[:300]
-            
-            if "project in Vietnam" in summary or not any(ord(c) > 127 for c in summary[:50]):
-                # 영어 요약
-                summary_en = base_summary
-                summary_ko = f"[{sector_ko}] {province}: {title[:100]}"
-                summary_vi = f"[{sector_vi}] {province}: {title[:100]}"
-            else:
-                # 베트남어 요약
-                summary_vi = base_summary
-                summary_en = f"[{sector}] {province}: {title[:100]}"
-                summary_ko = f"[{sector_ko}] {province}: {title[:100]}"
-        else:
-            # 템플릿 기반 요약 생성
-            summary_en = f"[{sector}] {province}: {title[:150]}"
-            summary_ko = f"[{sector_ko}] {province}: {title[:150]}"
-            summary_vi = f"[{sector_vi}] {province}: {title[:150]}"
+        summary_ko = article.get("summary_ko") or f"[{sector_ko}] {province}: {title[:100]}"
+        summary_vi = article.get("summary_vi") or f"[{sector_vi}] {province}: {title[:100]}"
+        summary_en = summary if summary else f"[{sector}] {province}: {title[:100]}"
         
         result.append({
             "id": article.get("id", len(result) + 1),
@@ -216,27 +264,22 @@ def convert_to_multilingual_format(articles):
                 "en": summary_en,
                 "vi": summary_vi
             },
-            "url": article.get("url", "")
+            "url": article.get("url", ""),
+            "is_new": article.get("from_sqlite", False)
         })
     
     return result
 
 
 def generate_dashboard(articles):
-    """Generate dashboard HTML using original template format"""
+    """Generate dashboard HTML"""
     
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     
-    # Convert to multilingual format
     backend_data = convert_to_multilingual_format(articles)
-    
-    # Sort by date (newest first)
     backend_data.sort(key=lambda x: x.get("date", ""), reverse=True)
-    
-    # Generate JSON for BACKEND_DATA
     backend_json = json.dumps(backend_data, ensure_ascii=False, indent=2)
     
-    # Check if template exists
     if TEMPLATE_HEADER.exists() and TEMPLATE_FOOTER.exists():
         logger.info("Using template files")
         
@@ -246,33 +289,43 @@ def generate_dashboard(articles):
         with open(TEMPLATE_FOOTER, 'r', encoding='utf-8') as f:
             footer = f.read()
         
-        # Combine: header + BACKEND_DATA + footer
         html = header + f"\nconst BACKEND_DATA = {backend_json};\n" + footer
-        
     else:
         logger.info("Template not found, generating minimal dashboard")
         html = generate_minimal_dashboard(backend_data, backend_json)
     
-    # Save files
     index_path = OUTPUT_DIR / "index.html"
     dashboard_path = OUTPUT_DIR / "vietnam_dashboard.html"
     
     with open(index_path, 'w', encoding='utf-8') as f:
         f.write(html)
-    logger.info(f"✓ Saved: {index_path} ({index_path.stat().st_size:,} bytes)")
+    logger.info(f"Saved: {index_path} ({index_path.stat().st_size:,} bytes)")
     
     with open(dashboard_path, 'w', encoding='utf-8') as f:
         f.write(html)
-    logger.info(f"✓ Saved: {dashboard_path}")
+    logger.info(f"Saved: {dashboard_path}")
     
-    # Also save JSON data
+    # Count today's and recent articles
+    today = datetime.now().strftime("%Y-%m-%d")
+    yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
+    
+    today_count = sum(1 for a in backend_data if a.get("date") == today)
+    yesterday_count = sum(1 for a in backend_data if a.get("date") == yesterday)
+    new_count = sum(1 for a in backend_data if a.get("is_new", False))
+    
     json_path = OUTPUT_DIR / f"news_data_{datetime.now().strftime('%Y%m%d')}.json"
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump({
             "generated_at": datetime.now().isoformat(),
             "total": len(backend_data),
-            "new_articles": sum(1 for a in backend_data if a.get("date") == datetime.now().strftime("%Y-%m-%d"))
+            "today_articles": today_count,
+            "yesterday_articles": yesterday_count,
+            "new_from_collector": new_count
         }, f, indent=2)
+    
+    logger.info(f"Today's articles: {today_count}")
+    logger.info(f"Yesterday's articles: {yesterday_count}")
+    logger.info(f"New from collector: {new_count}")
     
     return str(index_path)
 
@@ -283,6 +336,7 @@ def generate_minimal_dashboard(articles, backend_json):
     today = datetime.now().strftime("%Y-%m-%d")
     total = len(articles)
     today_count = sum(1 for a in articles if a.get("date") == today)
+    new_count = sum(1 for a in articles if a.get("is_new", False))
     
     html = f'''<!DOCTYPE html>
 <html lang="ko">
@@ -295,10 +349,11 @@ def generate_minimal_dashboard(articles, backend_json):
     <style>
         * {{ font-family: 'Noto Sans KR', sans-serif; }}
         .lang-btn.active {{ background: linear-gradient(135deg, #0F766E, #14B8A6); color: white; }}
-        .filter-btn.active {{ background: #0F766E; color: white; }}
         .sector-env {{ background: linear-gradient(135deg, #059669, #10B981); }}
         .sector-energy {{ background: linear-gradient(135deg, #D97706, #F59E0B); }}
         .sector-urban {{ background: linear-gradient(135deg, #7C3AED, #8B5CF6); }}
+        .new-badge {{ background: #EF4444; color: white; animation: pulse 2s infinite; }}
+        @keyframes pulse {{ 0%, 100% {{ opacity: 1; }} 50% {{ opacity: 0.7; }} }}
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 to-teal-50/30 min-h-screen">
@@ -323,8 +378,11 @@ def generate_minimal_dashboard(articles, backend_json):
 </header>
 
 <main class="max-w-7xl mx-auto px-4 py-6">
-    <!-- KPI Cards -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-white rounded-xl p-4 shadow-sm border">
+            <div class="text-2xl font-bold text-red-500">{new_count}</div>
+            <div class="text-sm text-slate-500">🆕 신규 수집</div>
+        </div>
         <div class="bg-white rounded-xl p-4 shadow-sm border">
             <div class="text-2xl font-bold text-teal-600">{today_count}</div>
             <div class="text-sm text-slate-500">오늘</div>
@@ -335,7 +393,6 @@ def generate_minimal_dashboard(articles, backend_json):
         </div>
     </div>
     
-    <!-- News List -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
         <div class="bg-gradient-to-r from-teal-700 to-emerald-600 px-4 py-3">
             <span class="text-white font-bold">📰 뉴스 목록</span>
@@ -366,7 +423,7 @@ function getText(obj) {{
 
 function getSectorColor(area) {{
     if (area === 'Environment') return 'sector-env';
-    if (area === 'Energy Develop.') return 'sector-energy';
+    if (area === 'Energy Develop.' || area === 'Energy') return 'sector-energy';
     return 'sector-urban';
 }}
 
@@ -375,6 +432,7 @@ function renderNews() {{
     container.innerHTML = BACKEND_DATA.slice(0, 100).map(n => `
         <div class="px-4 py-3 border-b hover:bg-slate-50">
             <div class="flex items-center gap-2 mb-1">
+                ${{n.is_new ? '<span class="new-badge px-1.5 py-0.5 rounded text-xs font-bold">NEW</span>' : ''}}
                 <span class="px-2 py-0.5 rounded text-xs font-semibold text-white ${{getSectorColor(n.area)}}">${{n.sector}}</span>
                 <span class="text-xs text-slate-500">${{n.date}}</span>
                 <span class="text-xs text-slate-400">${{n.source}}</span>
@@ -395,37 +453,34 @@ renderNews();
 
 
 def main():
-    """Main function - generates dashboard from Excel"""
+    """Main function - loads from BOTH Excel and SQLite"""
     print("=" * 60)
-    print("DASHBOARD GENERATOR (Original Format)")
+    print("DASHBOARD GENERATOR (Merged Sources)")
     print("=" * 60)
     print(f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Excel: {EXCEL_DB_PATH}")
-    print(f"Template header: {TEMPLATE_HEADER}")
-    print(f"Template footer: {TEMPLATE_FOOTER}")
+    print(f"Excel DB: {EXCEL_DB_PATH}")
+    print(f"SQLite DB: {SQLITE_DB_PATH}")
     
-    # Ensure directories
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     
-    # Load articles
-    articles = load_articles_from_excel()
+    # Load from both sources
+    excel_articles = load_articles_from_excel()
+    sqlite_articles = load_articles_from_sqlite()
     
-    if not articles:
-        print("WARNING: No articles loaded from Excel!")
-        print("Generating empty dashboard...")
+    print(f"\nExcel articles: {len(excel_articles)}")
+    print(f"SQLite articles (new): {len(sqlite_articles)}")
+    
+    # Merge articles
+    all_articles = merge_articles(excel_articles, sqlite_articles)
+    print(f"Total merged: {len(all_articles)}")
     
     # Generate dashboard
-    print(f"\nGenerating dashboard with {len(articles)} articles...")
-    result = generate_dashboard(articles)
+    result = generate_dashboard(all_articles)
     
-    # Verify
     index_path = OUTPUT_DIR / "index.html"
     if index_path.exists():
         print(f"\n✓ Dashboard created: {index_path}")
         print(f"  Size: {index_path.stat().st_size:,} bytes")
-    else:
-        print("\n✗ Dashboard generation failed!")
-        return
     
     print("\nDone!")
 
