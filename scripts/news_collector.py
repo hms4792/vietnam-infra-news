@@ -443,6 +443,7 @@ def collect_news(hours_back=24):
     total_collected = 0
     total_entries = 0
     collected_articles = []  # 수집된 기사 목록
+    collection_stats = {}    # RSS 소스별 통계
     
     for source_name, feed_url in RSS_FEEDS.items():
         print("")
@@ -450,15 +451,30 @@ def collect_news(hours_back=24):
         log(f"Source: {source_name}")
         log(f"URL: {feed_url}")
         
+        # Initialize stats for this source
+        collection_stats[source_name] = {
+            'url': feed_url,
+            'status': 'Unknown',
+            'last_check': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'entries_found': 0,
+            'collected': 0,
+            'error': ''
+        }
+        
         feed = fetch_rss(feed_url)
         
         if feed.bozo and not feed.entries:
             log("Feed error or empty")
+            collection_stats[source_name]['status'] = 'Failed'
+            collection_stats[source_name]['error'] = 'Feed error or empty response'
             continue
         
         entries = feed.entries
         log(f"Found {len(entries)} entries")
         total_entries += len(entries)
+        
+        collection_stats[source_name]['entries_found'] = len(entries)
+        collection_stats[source_name]['status'] = 'Success'
         
         source_collected = 0
         
@@ -518,6 +534,8 @@ def collect_news(hours_back=24):
                 collected_articles.append(article)  # 리스트에 추가
                 log(f"  SAVED [{sector}] [{province}]: {title[:50]}...")
         
+        # Update stats for this source
+        collection_stats[source_name]['collected'] = source_collected
         log(f"Collected from {source_name}: {source_collected}")
     
     conn.close()
@@ -530,18 +548,19 @@ def collect_news(hours_back=24):
     print(f"Total collected: {total_collected}")
     print("=" * 60)
     
-    return total_collected, collected_articles
+    return total_collected, collected_articles, collection_stats
 
 
 # ============================================================
 # EXCEL UPDATE FUNCTION
 # ============================================================
 
-def update_excel_database(articles):
-    """Add new articles to the Excel database"""
+def update_excel_database(articles, collection_stats=None):
+    """Add new articles to the Excel database and update reporting sheets"""
     try:
         import openpyxl
         from openpyxl.utils import get_column_letter
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
     except ImportError:
         log("openpyxl not installed - skipping Excel update")
         return False
@@ -552,25 +571,22 @@ def update_excel_database(articles):
         log(f"Excel file not found: {EXCEL_PATH}")
         return False
     
-    if not articles:
-        log("No new articles to add to Excel")
-        return True
-    
-    log(f"Adding {len(articles)} articles to Excel database...")
+    log(f"Updating Excel database...")
     
     try:
         # Load workbook
         wb = openpyxl.load_workbook(EXCEL_PATH)
-        ws = wb.active
         
-        # Find the last row with data
+        # ============================================================
+        # 1. Update main articles sheet
+        # ============================================================
+        ws = wb.active
         last_row = ws.max_row
         
         # Get existing URLs to avoid duplicates
         existing_urls = set()
         url_col = None
         
-        # Find URL column (usually "Link")
         for col in range(1, ws.max_column + 1):
             header = ws.cell(row=1, column=col).value
             if header and "link" in str(header).lower():
@@ -583,8 +599,6 @@ def update_excel_database(articles):
                 if url:
                     existing_urls.add(url)
         
-        # Column mapping based on typical Excel structure
-        # Area, Business Sector, Province, News Tittle, Date, Source, Link, Short summary
         col_map = {
             'area': 1,
             'sector': 2,
@@ -598,11 +612,9 @@ def update_excel_database(articles):
         
         added_count = 0
         for article in articles:
-            # Skip if URL already exists
             if article.get('url') in existing_urls:
                 continue
             
-            # Add new row
             new_row = last_row + 1 + added_count
             
             ws.cell(row=new_row, column=col_map['area'], value=article.get('area', 'Environment'))
@@ -610,10 +622,9 @@ def update_excel_database(articles):
             ws.cell(row=new_row, column=col_map['province'], value=article.get('province', 'Vietnam'))
             ws.cell(row=new_row, column=col_map['title'], value=article.get('title', ''))
             
-            # Format date
             date_str = article.get('published_date', '')
             if date_str:
-                date_str = date_str[:10]  # Get YYYY-MM-DD
+                date_str = date_str[:10]
             ws.cell(row=new_row, column=col_map['date'], value=date_str)
             
             ws.cell(row=new_row, column=col_map['source'], value=article.get('source', ''))
@@ -623,11 +634,364 @@ def update_excel_database(articles):
             added_count += 1
             existing_urls.add(article.get('url'))
         
+        log(f"✓ Added {added_count} new articles to main sheet")
+        
+        # ============================================================
+        # 2. Update/Create RSS_Sources sheet
+        # ============================================================
+        if "RSS_Sources" in wb.sheetnames:
+            ws_rss = wb["RSS_Sources"]
+            wb.remove(ws_rss)
+        
+        ws_rss = wb.create_sheet("RSS_Sources")
+        
+        # Headers
+        rss_headers = ["Source Name", "URL", "Status", "Last Check", "Entries Found", "Articles Collected", "Error Message"]
+        header_fill = PatternFill(start_color="0F766E", end_color="0F766E", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF")
+        
+        for col, header in enumerate(rss_headers, 1):
+            cell = ws_rss.cell(row=1, column=col, value=header)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.alignment = Alignment(horizontal="center")
+        
+        # Data from collection_stats
+        if collection_stats:
+            for row, (source, stats) in enumerate(collection_stats.items(), 2):
+                ws_rss.cell(row=row, column=1, value=source)
+                ws_rss.cell(row=row, column=2, value=stats.get('url', ''))
+                ws_rss.cell(row=row, column=3, value=stats.get('status', 'Unknown'))
+                ws_rss.cell(row=row, column=4, value=stats.get('last_check', ''))
+                ws_rss.cell(row=row, column=5, value=stats.get('entries_found', 0))
+                ws_rss.cell(row=row, column=6, value=stats.get('collected', 0))
+                ws_rss.cell(row=row, column=7, value=stats.get('error', ''))
+                
+                # Color coding
+                status = stats.get('status', '')
+                if status == 'Success':
+                    ws_rss.cell(row=row, column=3).fill = PatternFill(start_color="D1FAE5", end_color="D1FAE5", fill_type="solid")
+                elif status == 'Failed':
+                    ws_rss.cell(row=row, column=3).fill = PatternFill(start_color="FEE2E2", end_color="FEE2E2", fill_type="solid")
+        
+        # Adjust column widths
+        ws_rss.column_dimensions['A'].width = 25
+        ws_rss.column_dimensions['B'].width = 45
+        ws_rss.column_dimensions['C'].width = 12
+        ws_rss.column_dimensions['D'].width = 20
+        ws_rss.column_dimensions['E'].width = 15
+        ws_rss.column_dimensions['F'].width = 18
+        ws_rss.column_dimensions['G'].width = 40
+        
+        log("✓ Updated RSS_Sources sheet")
+        
+        # ============================================================
+        # 3. Update/Create Keywords sheet
+        # ============================================================
+        if "Keywords" in wb.sheetnames:
+            ws_kw = wb["Keywords"]
+            wb.remove(ws_kw)
+        
+        ws_kw = wb.create_sheet("Keywords")
+        
+        # Headers
+        kw_headers = ["Business Sector", "Area", "Keywords"]
+        for col, header in enumerate(kw_headers, 1):
+            cell = ws_kw.cell(row=1, column=col, value=header)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.alignment = Alignment(horizontal="center")
+        
+        # Sector to Area mapping
+        sector_area = {
+            "Waste Water": "Environment",
+            "Solid Waste": "Environment",
+            "Power": "Energy",
+            "Oil & Gas": "Energy",
+            "Industrial Parks": "Urban Development",
+            "Smart City": "Urban Development",
+            "Urban Development": "Urban Development"
+        }
+        
+        row = 2
+        for sector, keywords_dict in SECTOR_KEYWORDS.items():
+            keywords = keywords_dict.get("primary", [])
+            ws_kw.cell(row=row, column=1, value=sector)
+            ws_kw.cell(row=row, column=2, value=sector_area.get(sector, "Other"))
+            ws_kw.cell(row=row, column=3, value=", ".join(keywords))
+            row += 1
+        
+        ws_kw.column_dimensions['A'].width = 20
+        ws_kw.column_dimensions['B'].width = 18
+        ws_kw.column_dimensions['C'].width = 100
+        
+        log("✓ Updated Keywords sheet")
+        
+        # ============================================================
+        # 4. Update/Create Collection_Log sheet
+        # ============================================================
+        if "Collection_Log" not in wb.sheetnames:
+            ws_log = wb.create_sheet("Collection_Log")
+            log_headers = ["Date", "Time", "Hours Back", "RSS Entries", "Articles Collected", "New Added", "Total DB"]
+            for col, header in enumerate(log_headers, 1):
+                cell = ws_log.cell(row=1, column=col, value=header)
+                cell.fill = header_fill
+                cell.font = header_font
+        else:
+            ws_log = wb["Collection_Log"]
+        
+        # Add new log entry
+        log_row = ws_log.max_row + 1
+        now = datetime.now()
+        
+        total_entries = sum(s.get('entries_found', 0) for s in collection_stats.values()) if collection_stats else 0
+        total_collected = sum(s.get('collected', 0) for s in collection_stats.values()) if collection_stats else len(articles)
+        
+        ws_log.cell(row=log_row, column=1, value=now.strftime("%Y-%m-%d"))
+        ws_log.cell(row=log_row, column=2, value=now.strftime("%H:%M:%S"))
+        ws_log.cell(row=log_row, column=3, value=HOURS_BACK)
+        ws_log.cell(row=log_row, column=4, value=total_entries)
+        ws_log.cell(row=log_row, column=5, value=total_collected)
+        ws_log.cell(row=log_row, column=6, value=added_count)
+        ws_log.cell(row=log_row, column=7, value=last_row - 1 + added_count)
+        
+        ws_log.column_dimensions['A'].width = 12
+        ws_log.column_dimensions['B'].width = 10
+        ws_log.column_dimensions['C'].width = 12
+        ws_log.column_dimensions['D'].width = 12
+        ws_log.column_dimensions['E'].width = 18
+        ws_log.column_dimensions['F'].width = 12
+        ws_log.column_dimensions['G'].width = 12
+        
+        log("✓ Updated Collection_Log sheet")
+        
+        # ============================================================
+        # 5. Update/Create Keywords_History sheet
+        # ============================================================
+        if "Keywords_History" in wb.sheetnames:
+            ws_hist = wb["Keywords_History"]
+            wb.remove(ws_hist)
+        
+        ws_hist = wb.create_sheet("Keywords_History")
+        
+        # Headers
+        hist_headers = ["Area", "Business Sector", "Province", "Date", "Title", "Source", "Link"]
+        for col, header in enumerate(hist_headers, 1):
+            cell = ws_hist.cell(row=1, column=col, value=header)
+            cell.fill = header_fill
+            cell.font = header_font
+            cell.alignment = Alignment(horizontal="center")
+        
+        # Load ALL articles from main sheet for history
+        all_articles = []
+        ws_main = wb.active
+        
+        for row_idx in range(2, ws_main.max_row + 1):
+            area = ws_main.cell(row=row_idx, column=1).value or ""
+            sector = ws_main.cell(row=row_idx, column=2).value or ""
+            province = ws_main.cell(row=row_idx, column=3).value or "Vietnam"
+            title = ws_main.cell(row=row_idx, column=4).value or ""
+            date = ws_main.cell(row=row_idx, column=5).value or ""
+            source = ws_main.cell(row=row_idx, column=6).value or ""
+            link = ws_main.cell(row=row_idx, column=7).value or ""
+            
+            if title:  # Skip empty rows
+                # Convert date to string if needed
+                if hasattr(date, 'strftime'):
+                    date = date.strftime("%Y-%m-%d")
+                else:
+                    date = str(date)[:10] if date else ""
+                
+                all_articles.append({
+                    'area': area,
+                    'sector': sector,
+                    'province': province,
+                    'title': title,
+                    'date': date,
+                    'source': source,
+                    'link': link
+                })
+        
+        # Define sort order for Areas
+        area_order = {"Environment": 1, "Energy": 2, "Urban Development": 3}
+        
+        # Define sort order for Sectors within each Area
+        sector_order = {
+            # Environment
+            "Waste Water": 1, "Solid Waste": 2, "Water Supply/Drainage": 3,
+            # Energy
+            "Power": 4, "Oil & Gas": 5,
+            # Urban Development
+            "Industrial Parks": 6, "Smart City": 7, "Urban Development": 8, "Transport": 9
+        }
+        
+        # Secondary sort: within same grouping, newest date first
+        from itertools import groupby
+        
+        # Sort articles:
+        # 1. Area (Environment → Energy → Urban Development)
+        # 2. Sector
+        # 3. Province (specific provinces first, "Vietnam" last)
+        # 4. Date (newest first - 2026 → 2025 → ... → 2019)
+        
+        sorted_articles = []
+        
+        # First, group by area, sector, province
+        all_articles.sort(key=lambda x: (
+            area_order.get(x.get('area', ''), 99),
+            sector_order.get(x.get('sector', ''), 99),
+            1 if x.get('province') == "Vietnam" else 0,
+            x.get('province', '')
+        ))
+        
+        for key, group in groupby(all_articles, key=lambda x: (
+            x.get('area', ''),
+            x.get('sector', ''),
+            x.get('province', '')
+        )):
+            group_list = list(group)
+            # Sort by date DESCENDING (newest first: 2026 → 2025 → ... → 2019)
+            group_list.sort(key=lambda x: x.get('date', '') or "0000-00-00", reverse=True)
+            sorted_articles.extend(group_list)
+        
+        log(f"  - Total articles for history: {len(sorted_articles)}")
+        log(f"  - Date range: {min(a.get('date', '9999') for a in sorted_articles if a.get('date'))} ~ {max(a.get('date', '0000') for a in sorted_articles if a.get('date'))}")
+        
+        # Write to sheet
+        current_area = None
+        current_sector = None
+        current_province = None
+        row_idx = 2
+        
+        # Color fills for areas
+        area_fills = {
+            "Environment": PatternFill(start_color="D1FAE5", end_color="D1FAE5", fill_type="solid"),  # Green
+            "Energy": PatternFill(start_color="FEF3C7", end_color="FEF3C7", fill_type="solid"),       # Yellow
+            "Urban Development": PatternFill(start_color="E0E7FF", end_color="E0E7FF", fill_type="solid")  # Purple
+        }
+        
+        # Year highlight for recent articles (2026)
+        year_2026_fill = PatternFill(start_color="FEE2E2", end_color="FEE2E2", fill_type="solid")  # Light red
+        
+        for article in sorted_articles:
+            area = article.get('area', '')
+            sector = article.get('sector', '')
+            province = article.get('province', '')
+            date = article.get('date', '')
+            
+            # Add separator row when Area or Sector changes
+            if area != current_area or sector != current_sector:
+                if current_area is not None:  # Not first row
+                    row_idx += 1  # Empty row as separator
+                
+                current_area = area
+                current_sector = sector
+                current_province = None
+            
+            # Write article data
+            ws_hist.cell(row=row_idx, column=1, value=area)
+            ws_hist.cell(row=row_idx, column=2, value=sector)
+            ws_hist.cell(row=row_idx, column=3, value=province)
+            ws_hist.cell(row=row_idx, column=4, value=date)
+            ws_hist.cell(row=row_idx, column=5, value=article.get('title', ''))
+            ws_hist.cell(row=row_idx, column=6, value=article.get('source', ''))
+            ws_hist.cell(row=row_idx, column=7, value=article.get('link', ''))
+            
+            # Apply area color
+            area_fill = area_fills.get(area)
+            if area_fill:
+                ws_hist.cell(row=row_idx, column=1).fill = area_fill
+                ws_hist.cell(row=row_idx, column=2).fill = area_fill
+            
+            # Highlight 2026 articles (newest)
+            if date and date.startswith('2026'):
+                ws_hist.cell(row=row_idx, column=4).fill = year_2026_fill
+                ws_hist.cell(row=row_idx, column=4).font = Font(bold=True)
+            
+            row_idx += 1
+        
+        # Adjust column widths
+        ws_hist.column_dimensions['A'].width = 18
+        ws_hist.column_dimensions['B'].width = 20
+        ws_hist.column_dimensions['C'].width = 20
+        ws_hist.column_dimensions['D'].width = 12
+        ws_hist.column_dimensions['E'].width = 60
+        ws_hist.column_dimensions['F'].width = 20
+        ws_hist.column_dimensions['G'].width = 50
+        
+        # Freeze header row
+        ws_hist.freeze_panes = 'A2'
+        
+        # Count articles by year
+        year_counts = {}
+        for article in sorted_articles:
+            year = article.get('date', '')[:4] if article.get('date') else 'Unknown'
+            year_counts[year] = year_counts.get(year, 0) + 1
+        
+        log(f"✓ Updated Keywords_History sheet ({len(sorted_articles)} articles)")
+        log(f"  - Articles by year: {dict(sorted(year_counts.items(), reverse=True))}")
+        
+        # ============================================================
+        # 6. Update/Create Summary sheet
+        # ============================================================
+        if "Summary" in wb.sheetnames:
+            ws_sum = wb["Summary"]
+            wb.remove(ws_sum)
+        
+        ws_sum = wb.create_sheet("Summary", 0)  # Insert at beginning
+        
+        # Title
+        ws_sum.merge_cells('A1:D1')
+        title_cell = ws_sum.cell(row=1, column=1, value="Vietnam Infrastructure News Database - Summary Report")
+        title_cell.font = Font(bold=True, size=14, color="0F766E")
+        title_cell.alignment = Alignment(horizontal="center")
+        
+        # Last updated
+        ws_sum.cell(row=2, column=1, value=f"Last Updated: {now.strftime('%Y-%m-%d %H:%M:%S')}")
+        
+        # Statistics
+        ws_sum.cell(row=4, column=1, value="📊 Database Statistics")
+        ws_sum.cell(row=4, column=1).font = Font(bold=True, size=12)
+        
+        total_articles = last_row - 1 + added_count
+        ws_sum.cell(row=5, column=1, value="Total Articles:")
+        ws_sum.cell(row=5, column=2, value=total_articles)
+        
+        ws_sum.cell(row=6, column=1, value="New This Session:")
+        ws_sum.cell(row=6, column=2, value=added_count)
+        
+        # RSS Sources summary
+        ws_sum.cell(row=8, column=1, value="📡 RSS Sources")
+        ws_sum.cell(row=8, column=1).font = Font(bold=True, size=12)
+        
+        if collection_stats:
+            success_count = sum(1 for s in collection_stats.values() if s.get('status') == 'Success')
+            failed_count = sum(1 for s in collection_stats.values() if s.get('status') == 'Failed')
+            
+            ws_sum.cell(row=9, column=1, value="Active Sources:")
+            ws_sum.cell(row=9, column=2, value=success_count)
+            ws_sum.cell(row=10, column=1, value="Failed Sources:")
+            ws_sum.cell(row=10, column=2, value=failed_count)
+        
+        # Sector summary
+        ws_sum.cell(row=12, column=1, value="🏭 Sectors Monitored")
+        ws_sum.cell(row=12, column=1).font = Font(bold=True, size=12)
+        
+        row = 13
+        for sector in SECTOR_KEYWORDS.keys():
+            ws_sum.cell(row=row, column=1, value=f"  • {sector}")
+            row += 1
+        
+        ws_sum.column_dimensions['A'].width = 25
+        ws_sum.column_dimensions['B'].width = 15
+        
+        log("✓ Updated Summary sheet")
+        
         # Save workbook
         wb.save(EXCEL_PATH)
         wb.close()
         
-        log(f"✓ Added {added_count} new articles to Excel (Total: {last_row - 1 + added_count})")
+        log(f"✓ Excel database saved: {total_articles} total articles")
         return True
         
     except Exception as e:
@@ -649,24 +1013,35 @@ if __name__ == "__main__":
                         help='Hours to look back for news')
     args = parser.parse_args()
     
+    # Update global HOURS_BACK for Excel logging
+    HOURS_BACK = args.hours_back
+    
     print("=" * 60)
     print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR")
     print("=" * 60)
     print("")
     
     # Collect news
-    collected_count, collected_articles = collect_news(args.hours_back)
+    collected_count, collected_articles, collection_stats = collect_news(args.hours_back)
     
-    # Update Excel database
+    # Update Excel database with stats
     print("")
     print("=" * 60)
     print("UPDATING EXCEL DATABASE")
     print("=" * 60)
     
-    if collected_articles:
-        update_excel_database(collected_articles)
-    else:
-        print("No new articles to add to Excel")
+    update_excel_database(collected_articles, collection_stats)
+    
+    # Print RSS source summary
+    print("")
+    print("=" * 60)
+    print("RSS SOURCE STATUS")
+    print("=" * 60)
+    for source, stats in collection_stats.items():
+        status_icon = "✓" if stats['status'] == 'Success' else "✗"
+        print(f"  {status_icon} {source}: {stats['entries_found']} entries, {stats['collected']} collected")
+        if stats['error']:
+            print(f"      Error: {stats['error']}")
     
     print("")
     print("=" * 50)
