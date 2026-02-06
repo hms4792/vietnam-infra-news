@@ -27,6 +27,73 @@ DB_PATH = os.environ.get('DB_PATH', 'data/vietnam_infrastructure_news.db')
 HOURS_BACK = int(os.environ.get('HOURS_BACK', 24))
 
 # ============================================================
+# VIETNAM PROVINCES - For location extraction
+# ============================================================
+
+PROVINCE_KEYWORDS = {
+    # Major cities
+    "Ho Chi Minh City": ["ho chi minh", "hcmc", "saigon", "sai gon", "hồ chí minh"],
+    "Hanoi": ["hanoi", "ha noi", "hà nội"],
+    "Da Nang": ["da nang", "đà nẵng", "danang"],
+    "Hai Phong": ["hai phong", "hải phòng", "haiphong"],
+    "Can Tho": ["can tho", "cần thơ", "cantho"],
+    
+    # Southern provinces
+    "Binh Duong": ["binh duong", "bình dương"],
+    "Dong Nai": ["dong nai", "đồng nai"],
+    "Ba Ria - Vung Tau": ["ba ria", "vung tau", "vũng tàu", "bà rịa"],
+    "Long An": ["long an"],
+    "Tay Ninh": ["tay ninh", "tây ninh"],
+    "Binh Phuoc": ["binh phuoc", "bình phước"],
+    
+    # Northern provinces
+    "Quang Ninh": ["quang ninh", "quảng ninh", "ha long", "hạ long"],
+    "Bac Ninh": ["bac ninh", "bắc ninh"],
+    "Hai Duong": ["hai duong", "hải dương"],
+    "Hung Yen": ["hung yen", "hưng yên"],
+    "Vinh Phuc": ["vinh phuc", "vĩnh phúc"],
+    "Thai Nguyen": ["thai nguyen", "thái nguyên"],
+    "Bac Giang": ["bac giang", "bắc giang"],
+    
+    # Central provinces
+    "Thanh Hoa": ["thanh hoa", "thanh hoá"],
+    "Nghe An": ["nghe an", "nghệ an"],
+    "Ha Tinh": ["ha tinh", "hà tĩnh"],
+    "Quang Binh": ["quang binh", "quảng bình"],
+    "Quang Tri": ["quang tri", "quảng trị"],
+    "Thua Thien Hue": ["thua thien hue", "huế", "hue"],
+    "Quang Nam": ["quang nam", "quảng nam"],
+    "Quang Ngai": ["quang ngai", "quảng ngãi"],
+    "Binh Dinh": ["binh dinh", "bình định"],
+    "Phu Yen": ["phu yen", "phú yên"],
+    "Khanh Hoa": ["khanh hoa", "khánh hòa", "nha trang"],
+    "Ninh Thuan": ["ninh thuan", "ninh thuận"],
+    "Binh Thuan": ["binh thuan", "bình thuận", "phan thiet"],
+    
+    # Highland provinces
+    "Lam Dong": ["lam dong", "lâm đồng", "da lat", "đà lạt"],
+    "Dak Lak": ["dak lak", "đắk lắk", "buon ma thuot"],
+    "Gia Lai": ["gia lai"],
+    "Kon Tum": ["kon tum"],
+    
+    # Mekong Delta
+    "Tien Giang": ["tien giang", "tiền giang"],
+    "Ben Tre": ["ben tre", "bến tre"],
+    "Vinh Long": ["vinh long", "vĩnh long"],
+    "Tra Vinh": ["tra vinh", "trà vinh"],
+    "Dong Thap": ["dong thap", "đồng tháp"],
+    "An Giang": ["an giang"],
+    "Kien Giang": ["kien giang", "kiên giang", "phu quoc", "phú quốc"],
+    "Hau Giang": ["hau giang", "hậu giang"],
+    "Soc Trang": ["soc trang", "sóc trăng"],
+    "Bac Lieu": ["bac lieu", "bạc liêu"],
+    "Ca Mau": ["ca mau", "cà mau"],
+    
+    # Special projects
+    "Long Thanh": ["long thanh", "long thành"],  # Airport project
+}
+
+# ============================================================
 # RSS FEEDS - Verified working URLs
 # ============================================================
 
@@ -179,6 +246,19 @@ def clean_html(text):
 
 def generate_url_hash(url):
     return hashlib.md5(url.encode()).hexdigest()
+
+
+def extract_province(title, summary=""):
+    """Extract province/city from article title and summary"""
+    text = f"{title} {summary}".lower()
+    
+    # Check each province
+    for province, keywords in PROVINCE_KEYWORDS.items():
+        for keyword in keywords:
+            if keyword in text:
+                return province
+    
+    return "Vietnam"  # Default if no specific location found
 
 
 def is_english_title(title):
@@ -415,6 +495,9 @@ def collect_news(hours_back=24):
             area = "Environment" if sector in ["Waste Water", "Solid Waste"] else \
                    "Energy" if sector in ["Power", "Oil & Gas"] else "Urban Development"
             
+            # Extract province from title/summary
+            province = extract_province(title, summary)
+            
             article = {
                 'url_hash': url_hash,
                 'url': link,
@@ -423,6 +506,7 @@ def collect_news(hours_back=24):
                 'source': source_name,
                 'sector': sector,
                 'area': area,
+                'province': province,
                 'published_date': pub_date.isoformat() if pub_date else ''
             }
             
@@ -430,7 +514,7 @@ def collect_news(hours_back=24):
                 existing_urls.add(url_hash)
                 source_collected += 1
                 total_collected += 1
-                log(f"  SAVED [{sector}]: {title[:60]}...")
+                log(f"  SAVED [{sector}] [{province}]: {title[:50]}...")
         
         log(f"Collected from {source_name}: {source_collected}")
     
