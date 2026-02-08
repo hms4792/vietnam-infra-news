@@ -40,19 +40,6 @@ jobs:
       
       - name: Create directories
         run: mkdir -p data/database outputs logs
-
-      - name: Try download previous database
-        continue-on-error: true
-        uses: actions/download-artifact@v4
-        with:
-          name: news-database
-          path: data/
-      
-      - name: Check database status
-        run: |
-          echo "=== Database check ==="
-          ls -lh data/database/ || echo "No database directory"
-          ls -lh data/*.db 2>/dev/null || echo "No SQLite DB found (this is OK)"
       
       - name: Run News Collection
         env:
@@ -77,21 +64,20 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          echo "Step 1: Adding Excel file..."
+          echo "Adding Excel file..."
           git add data/database/Vietnam_Infra_News_Database_Final.xlsx
           
-          echo "Step 2: Checking for changes..."
+          echo "Checking for changes..."
           if git diff --staged --quiet; then
             echo "No changes detected"
           else
-            echo "Step 3: Committing..."
+            echo "Committing..."
             git commit -m "Update news database $(date +%Y-%m-%d)"
-            echo "Step 4: Pushing..."
+            echo "Pushing..."
             git push
-            echo "=========================================="
             echo "EXCEL COMMITTED SUCCESSFULLY"
-            echo "=========================================="
           fi
+          echo "=========================================="
 
       - name: Generate Dashboard
         run: |
@@ -103,14 +89,6 @@ jobs:
           echo "=== Checking outputs ==="
           ls -la outputs/
           test -f outputs/index.html && echo "Dashboard OK" || exit 1
-
-      - name: Upload database artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: news-database
-          path: data/vietnam_infrastructure_news.db
-          retention-days: 7
-          if-no-files-found: ignore
 
       - name: Upload outputs artifact
         uses: actions/upload-artifact@v4
