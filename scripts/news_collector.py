@@ -812,10 +812,14 @@ def update_excel_database(articles, collection_stats=None):
             cell.alignment = Alignment(horizontal="center")
         
         # Load ALL articles from main sheet for history
+        # Use 'ws' which is the main data sheet (not wb.active which might point to another sheet)
         all_articles = []
-        ws_main = wb.active
+        ws_main = ws  # Use the same worksheet reference from step 1
         
-        for row_idx in range(2, ws_main.max_row + 1):
+        # Re-calculate max_row to include newly added articles
+        current_max_row = last_row + added_count
+        
+        for row_idx in range(2, current_max_row + 1):
             area = ws_main.cell(row=row_idx, column=1).value or ""
             sector = ws_main.cell(row=row_idx, column=2).value or ""
             province = ws_main.cell(row=row_idx, column=3).value or "Vietnam"
