@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Vietnam Infrastructure News Collector
-Version 3.0 - Fixed logging issues and expanded keywords
+Version 4.0 - Expanded RSS sources with auto-discovery
 """
 
 import os
@@ -12,8 +12,10 @@ import sqlite3
 import hashlib
 from datetime import datetime, timedelta
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 import html
+import concurrent.futures
+import time
 
 import requests
 import feedparser
@@ -25,6 +27,18 @@ from bs4 import BeautifulSoup
 
 DB_PATH = os.environ.get('DB_PATH', 'data/vietnam_infrastructure_news.db')
 HOURS_BACK = int(os.environ.get('HOURS_BACK', 24))
+EXCEL_PATH = os.environ.get('EXCEL_PATH', 'data/database/Vietnam_Infra_News_Database_Final.xlsx')
+
+# RSS Discovery settings
+RSS_DISCOVERY_TIMEOUT = 5  # seconds per request
+RSS_DISCOVERY_MAX_WORKERS = 10  # parallel requests
+ENABLE_RSS_DISCOVERY = os.environ.get('ENABLE_RSS_DISCOVERY', 'false').lower() == 'true'
+
+# Language filter settings
+# 'english' = only English articles
+# 'vietnamese' = only Vietnamese articles  
+# 'all' = both English and Vietnamese
+LANGUAGE_FILTER = os.environ.get('LANGUAGE_FILTER', 'english').lower()
 
 # ============================================================
 # VIETNAM PROVINCES - For location extraction
@@ -98,14 +112,386 @@ PROVINCE_KEYWORDS = {
 # ============================================================
 
 RSS_FEEDS = {
-    "VnExpress English": "https://e.vnexpress.net/rss/news.rss",
-    "VnExpress Business": "https://e.vnexpress.net/rss/business.rss",
-    "Vietnam News Economy": "https://vietnamnews.vn/rss/economy.rss",
-    "Vietnam News Politics": "https://vietnamnews.vn/rss/politics-laws.rss",
-    "Vietnam News Society": "https://vietnamnews.vn/rss/society.rss",
-    "Vietnam News Environment": "https://vietnamnews.vn/rss/environment.rss",
-    "Vietnam News Industries": "https://vietnamnews.vn/rss/industries.rss",
+    # ============================================================
+    # ENGLISH NEWS SOURCES
+    # ============================================================
+    # VnExpress English
+    "VnExpress English - News": "https://e.vnexpress.net/rss/news.rss",
+    "VnExpress English - Business": "https://e.vnexpress.net/rss/business.rss",
+    
+    # Vietnam News
+    "Vietnam News - Economy": "https://vietnamnews.vn/rss/economy.rss",
+    "Vietnam News - Politics": "https://vietnamnews.vn/rss/politics-laws.rss",
+    "Vietnam News - Society": "https://vietnamnews.vn/rss/society.rss",
+    "Vietnam News - Environment": "https://vietnamnews.vn/rss/environment.rss",
+    
+    # VietnamPlus English
+    "VietnamPlus English": "https://en.vietnamplus.vn/rss/news.rss",
+    
+    # Hanoi Times
+    "Hanoi Times": "https://hanoitimes.vn/rss/news.rss",
+    
+    # VietnamNet English
+    "VietnamNet English": "https://vietnamnet.vn/en/rss/home.rss",
+    
+    # The Investor
+    "The Investor": "https://theinvestor.vn/rss.html",
+    
+    # VIR - Vietnam Investment Review
+    "VIR": "https://vir.com.vn/rss/all.rss",
+    
+    # Tuoi Tre News (English)
+    "Tuoi Tre News": "https://tuoitrenews.vn/rss/all.rss",
+    
+    # SGGP News English
+    "SGGP News English": "https://en.sggp.org.vn/rss/home.rss",
+    
+    # VOV World
+    "VOV World": "https://vovworld.vn/en-US/rss/all.rss",
+    
+    # ============================================================
+    # VIETNAMESE NEWS SOURCES (Major outlets)
+    # ============================================================
+    # VnExpress Vietnamese
+    "VnExpress - Tin mới": "https://vnexpress.net/rss/tin-moi-nhat.rss",
+    "VnExpress - Kinh doanh": "https://vnexpress.net/rss/kinh-doanh.rss",
+    "VnExpress - Thời sự": "https://vnexpress.net/rss/thoi-su.rss",
+    
+    # Tuoi Tre
+    "Tuoi Tre - Tin mới": "https://tuoitre.vn/rss/tin-moi-nhat.rss",
+    "Tuoi Tre - Kinh doanh": "https://tuoitre.vn/rss/kinh-doanh.rss",
+    
+    # Thanh Nien
+    "Thanh Nien - Home": "https://thanhnien.vn/rss/home.rss",
+    "Thanh Nien - Kinh te": "https://thanhnien.vn/rss/kinh-te.rss",
+    
+    # VietnamPlus Vietnamese
+    "VietnamPlus - Kinh te": "https://www.vietnamplus.vn/rss/kinhte.rss",
+    "VietnamPlus - Xa hoi": "https://www.vietnamplus.vn/rss/xahoi.rss",
+    
+    # VietnamNet Vietnamese
+    "VietnamNet - Kinh doanh": "https://vietnamnet.vn/rss/kinh-doanh.rss",
+    "VietnamNet - Thoi su": "https://vietnamnet.vn/rss/thoi-su.rss",
+    
+    # Dan Tri
+    "Dan Tri - Kinh doanh": "https://dantri.com.vn/rss/kinh-doanh.rss",
+    "Dan Tri - Xa hoi": "https://dantri.com.vn/rss/xa-hoi.rss",
+    
+    # CafeF (Finance/Business)
+    "CafeF - Home": "https://cafef.vn/rss/home.rss",
+    
+    # CafeBiz
+    "CafeBiz - Home": "https://cafebiz.vn/rss/home.rss",
+    
+    # VnEconomy
+    "VnEconomy - Home": "https://vneconomy.vn/rss/home.rss",
+    
+    # Bao Dau Tu (Investment)
+    "Bao Dau Tu": "https://baodautu.vn/rss/home.rss",
+    
+    # ============================================================
+    # SPECIALIZED SOURCES (Energy, Environment, Construction)
+    # ============================================================
+    # Nang Luong Vietnam (Energy)
+    "Nang Luong VN": "https://nangluongvietnam.vn/rss/home.rss",
+    
+    # Bao Xay Dung (Construction)
+    "Bao Xay Dung": "https://baoxaydung.com.vn/rss/home.rss",
+    
+    # Bao Tai Nguyen Moi Truong (Environment)
+    "Bao TN Moi Truong": "https://baotainguyenmoitruong.vn/rss/home.rss",
+    
+    # Kinh Te Moi Truong (Economic Environment)
+    "Kinh Te Moi Truong": "https://kinhtemoitruong.vn/rss/home.rss",
+    
+    # ============================================================
+    # REGIONAL SOURCES
+    # ============================================================
+    # Ho Chi Minh City
+    "SGGP": "https://www.sggp.org.vn/rss/home.rss",
+    
+    # Hanoi
+    "Hanoi Moi": "https://hanoimoi.vn/rss/home.rss",
+    
+    # Da Nang
+    "Bao Da Nang": "https://baodanang.vn/rss/home.rss",
+    
+    # Dong Nai
+    "Bao Dong Nai": "https://baodongnai.com.vn/rss/home.rss",
+    
+    # Binh Duong
+    "Bao Binh Duong": "https://baobinhduong.vn/rss/home.rss",
+    
+    # Quang Ninh
+    "Bao Quang Ninh": "https://baoquangninh.vn/rss/home.rss",
 }
+
+# Common RSS URL patterns to try for auto-discovery
+RSS_URL_PATTERNS = [
+    "/rss",
+    "/rss.xml",
+    "/feed",
+    "/feed.xml",
+    "/feed/rss",
+    "/rss/home.rss",
+    "/rss/all.rss",
+    "/rss/news.rss",
+    "/rss/tin-moi-nhat.rss",
+    "/en/rss/home.rss",
+]
+
+# ============================================================
+# RSS AUTO-DISCOVERY FUNCTIONS
+# ============================================================
+
+def discover_rss_from_html(base_url, timeout=5):
+    """
+    Discover RSS feed URLs from a website's HTML.
+    Looks for <link rel="alternate" type="application/rss+xml"> tags.
+    """
+    try:
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+        response = requests.get(base_url, headers=headers, timeout=timeout)
+        response.raise_for_status()
+        
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        # Find RSS/Atom link tags
+        rss_links = []
+        for link in soup.find_all('link', rel='alternate'):
+            link_type = link.get('type', '')
+            if 'rss' in link_type or 'atom' in link_type or 'xml' in link_type:
+                href = link.get('href', '')
+                if href:
+                    # Convert relative URL to absolute
+                    full_url = urljoin(base_url, href)
+                    rss_links.append(full_url)
+        
+        return rss_links
+    except Exception as e:
+        return []
+
+
+def try_rss_patterns(base_url, timeout=5):
+    """
+    Try common RSS URL patterns for a given website.
+    Returns list of working RSS URLs.
+    """
+    working_feeds = []
+    
+    # Normalize base URL
+    if not base_url.startswith('http'):
+        base_url = 'https://' + base_url
+    
+    parsed = urlparse(base_url)
+    base = f"{parsed.scheme}://{parsed.netloc}"
+    
+    for pattern in RSS_URL_PATTERNS:
+        rss_url = base + pattern
+        try:
+            response = requests.get(rss_url, timeout=timeout, headers={
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            })
+            if response.status_code == 200:
+                # Verify it's actually RSS/XML
+                content_type = response.headers.get('content-type', '').lower()
+                content_start = response.text[:500].lower()
+                
+                if ('xml' in content_type or 'rss' in content_type or 
+                    '<rss' in content_start or '<feed' in content_start or
+                    '<?xml' in content_start):
+                    
+                    # Try parsing to verify
+                    feed = feedparser.parse(response.content)
+                    if feed.entries:
+                        working_feeds.append({
+                            'url': rss_url,
+                            'title': feed.feed.get('title', ''),
+                            'entries': len(feed.entries)
+                        })
+        except:
+            continue
+    
+    return working_feeds
+
+
+def discover_rss_for_site(site_info):
+    """
+    Discover RSS feeds for a single site.
+    Returns dict with domain and discovered feeds.
+    """
+    domain = site_info.get('domain', '')
+    url = site_info.get('url', '')
+    
+    if not url:
+        return {'domain': domain, 'feeds': [], 'error': 'No URL'}
+    
+    discovered = []
+    
+    # Method 1: Look for RSS links in HTML
+    html_feeds = discover_rss_from_html(url)
+    for feed_url in html_feeds:
+        discovered.append({'url': feed_url, 'method': 'html_link'})
+    
+    # Method 2: Try common patterns
+    if not discovered:
+        pattern_feeds = try_rss_patterns(url)
+        for feed in pattern_feeds:
+            discovered.append({
+                'url': feed['url'],
+                'title': feed.get('title', ''),
+                'entries': feed.get('entries', 0),
+                'method': 'pattern'
+            })
+    
+    return {
+        'domain': domain,
+        'url': url,
+        'feeds': discovered
+    }
+
+
+def load_sources_from_excel():
+    """
+    Load source sites from Excel Source sheet.
+    Returns list of site info dicts.
+    """
+    try:
+        import openpyxl
+        
+        if not os.path.exists(EXCEL_PATH):
+            log(f"Excel file not found: {EXCEL_PATH}")
+            return []
+        
+        wb = openpyxl.load_workbook(EXCEL_PATH, read_only=True)
+        
+        # Find Source sheet
+        source_sheet = None
+        for name in wb.sheetnames:
+            if name.lower() in ['source', 'sources', 'rss_sources']:
+                source_sheet = wb[name]
+                break
+        
+        if not source_sheet:
+            log("Source sheet not found in Excel")
+            return []
+        
+        sites = []
+        headers = [cell.value for cell in source_sheet[1]]
+        
+        # Find column indices
+        domain_col = None
+        url_col = None
+        status_col = None
+        type_col = None
+        
+        for i, h in enumerate(headers):
+            if h:
+                h_lower = h.lower()
+                if 'domain' in h_lower:
+                    domain_col = i
+                elif 'url' in h_lower:
+                    url_col = i
+                elif 'status' in h_lower:
+                    status_col = i
+                elif 'type' in h_lower:
+                    type_col = i
+        
+        if url_col is None:
+            log("URL column not found in Source sheet")
+            return []
+        
+        for row in source_sheet.iter_rows(min_row=2, values_only=True):
+            url = row[url_col] if url_col is not None and url_col < len(row) else None
+            if not url or not isinstance(url, str):
+                continue
+            
+            # Skip inaccessible sites
+            status = row[status_col] if status_col is not None and status_col < len(row) else 'Accessible'
+            if status and 'inaccessible' in str(status).lower():
+                continue
+            
+            # Skip sites with spaces in URL (invalid)
+            if ' ' in url:
+                continue
+            
+            sites.append({
+                'domain': row[domain_col] if domain_col is not None and domain_col < len(row) else '',
+                'url': url,
+                'type': row[type_col] if type_col is not None and type_col < len(row) else 'Media/News',
+                'status': status
+            })
+        
+        wb.close()
+        return sites
+        
+    except Exception as e:
+        log(f"Error loading sources from Excel: {e}")
+        return []
+
+
+def discover_all_rss_feeds(max_sites=50):
+    """
+    Discover RSS feeds from Source sheet sites.
+    Uses parallel processing for efficiency.
+    Returns dict of discovered feeds.
+    """
+    sites = load_sources_from_excel()
+    
+    if not sites:
+        log("No sites loaded from Excel")
+        return {}
+    
+    # Limit number of sites to check
+    sites = sites[:max_sites]
+    log(f"Discovering RSS feeds for {len(sites)} sites...")
+    
+    discovered_feeds = {}
+    
+    with concurrent.futures.ThreadPoolExecutor(max_workers=RSS_DISCOVERY_MAX_WORKERS) as executor:
+        future_to_site = {
+            executor.submit(discover_rss_for_site, site): site 
+            for site in sites
+        }
+        
+        for future in concurrent.futures.as_completed(future_to_site):
+            try:
+                result = future.result()
+                domain = result.get('domain', 'unknown')
+                feeds = result.get('feeds', [])
+                
+                if feeds:
+                    discovered_feeds[domain] = feeds
+                    log(f"  Found {len(feeds)} RSS feed(s) for {domain}")
+            except Exception as e:
+                continue
+    
+    log(f"Total: Discovered RSS feeds for {len(discovered_feeds)} sites")
+    return discovered_feeds
+
+
+def get_all_rss_feeds():
+    """
+    Get all RSS feeds: hardcoded + discovered from Source sheet.
+    Returns dict of name -> URL.
+    """
+    all_feeds = dict(RSS_FEEDS)  # Start with hardcoded feeds
+    
+    # Optionally discover additional feeds
+    if ENABLE_RSS_DISCOVERY:
+        log("RSS discovery enabled - scanning Source sheet sites...")
+        discovered = discover_all_rss_feeds(max_sites=100)
+        
+        for domain, feeds in discovered.items():
+            for i, feed in enumerate(feeds):
+                feed_url = feed.get('url', '')
+                if feed_url and feed_url not in all_feeds.values():
+                    name = f"{domain}" if i == 0 else f"{domain} ({i+1})"
+                    all_feeds[name] = feed_url
+    
+    return all_feeds
 
 # ============================================================
 # SECTOR KEYWORDS - Expanded for better matching
@@ -262,6 +648,7 @@ def extract_province(title, summary=""):
 
 
 def is_english_title(title):
+    """Check if title is primarily English"""
     if not title:
         return False
     ascii_letters = sum(1 for c in title if c.isascii() and c.isalpha())
@@ -270,6 +657,27 @@ def is_english_title(title):
     if total == 0:
         return False
     return (ascii_letters / total) > 0.7
+
+
+def is_vietnamese_title(title):
+    """Check if title is primarily Vietnamese"""
+    if not title:
+        return False
+    # Vietnamese uses Latin alphabet with diacritics
+    # Check for Vietnamese-specific characters
+    vietnamese_chars = set('àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ')
+    has_vietnamese = any(c in vietnamese_chars for c in title)
+    return has_vietnamese
+
+
+def passes_language_filter(title):
+    """Check if title passes the configured language filter"""
+    if LANGUAGE_FILTER == 'all':
+        return True
+    elif LANGUAGE_FILTER == 'vietnamese':
+        return is_vietnamese_title(title) or not is_english_title(title)
+    else:  # 'english' (default)
+        return is_english_title(title)
 
 
 def is_vietnam_related(title, summary=""):
@@ -445,7 +853,11 @@ def collect_news(hours_back=24):
     collected_articles = []  # 수집된 기사 목록
     collection_stats = {}    # RSS 소스별 통계
     
-    for source_name, feed_url in RSS_FEEDS.items():
+    # Get all RSS feeds (hardcoded + discovered)
+    all_feeds = get_all_rss_feeds()
+    log(f"Total RSS feeds to check: {len(all_feeds)}")
+    
+    for source_name, feed_url in all_feeds.items():
         print("")
         print("=" * 50)
         log(f"Source: {source_name}")
@@ -488,7 +900,7 @@ def collect_news(hours_back=24):
             summary = clean_html(getattr(entry, 'summary', getattr(entry, 'description', '')))
             published = getattr(entry, 'published', getattr(entry, 'pubDate', ''))
             
-            if not is_english_title(title):
+            if not passes_language_filter(title):
                 continue
             
             url_hash = generate_url_hash(link)
