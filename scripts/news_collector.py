@@ -494,17 +494,36 @@ def get_all_rss_feeds():
     return all_feeds
 
 # ============================================================
-# SECTOR KEYWORDS - Expanded for better matching
+# SECTOR KEYWORDS
+# 기존 카테고리 구조 복원 (Keyword History 기준) - v5.0
+#
+# [변경] 구버전 7개 → 신버전 9개 카테고리로 분리
+#   - "Waste Water" 에서 water supply 계열 분리 → "Water Supply/Drainage"
+#   - "Urban Development" 에서 교통 분리 → "Transport"
+#   - "Urban Development" 에서 건설 분리 → "Construction"
+#
+# [우선순위] Waste Water > Water Supply/Drainage > Oil & Gas > Power
+#           > Solid Waste > Transport > Industrial Parks > Smart City > Construction
 # ============================================================
 
 SECTOR_KEYWORDS = {
+    # --- ENVIRONMENT ---
     "Waste Water": {
         "primary": [
-            "wastewater", "waste water", "sewage", "water treatment",
-            "drainage", "water supply", "clean water", "tap water",
-            "water infrastructure", "water project", "water plant",
-            "water system", "sanitation", "water network",
-            "water utility", "drinking water", "groundwater"
+            "wastewater", "waste water", "wastewater treatment", "wwtp",
+            "sewage", "sewage treatment", "sewerage", "sewer",
+            "wastewater plant", "effluent", "sludge", "septic"
+        ]
+    },
+    "Water Supply/Drainage": {
+        "primary": [
+            "water supply", "clean water", "drinking water", "tap water",
+            "potable water", "water infrastructure", "water network",
+            "reservoir", "water treatment plant", "water plant",
+            "water project", "water system", "water utility",
+            "groundwater", "sanitation", "drainage", "stormwater",
+            "flood control", "water distribution", "water pipeline",
+            "water purification", "desalination"
         ]
     },
     "Solid Waste": {
@@ -512,9 +531,10 @@ SECTOR_KEYWORDS = {
             "solid waste", "garbage", "trash", "landfill", "waste management",
             "recycling", "incineration", "waste-to-energy", "wte",
             "municipal waste", "hazardous waste", "waste collection",
-            "waste treatment", "waste disposal"
+            "waste treatment", "waste disposal", "circular economy"
         ]
     },
+    # --- ENERGY ---
     "Power": {
         "primary": [
             "power plant", "power station", "electricity", "power generation",
@@ -524,9 +544,9 @@ SECTOR_KEYWORDS = {
             "solar power", "solar farm", "solar energy", "photovoltaic",
             "renewable energy", "clean energy", "green energy",
             "power grid", "transmission line", "substation", "transformer",
-            "lng terminal", "lng plant", "liquefied natural gas",
+            "lng power", "lng terminal", "lng plant", "liquefied natural gas",
             "battery storage", "energy storage", "energy transition",
-            "power capacity", "megawatt", "gigawatt", "mw capacity", "gw capacity",
+            "megawatt", "gigawatt", "mw capacity", "gw capacity",
             "evn", "vietnam electricity", "power project"
         ]
     },
@@ -537,16 +557,19 @@ SECTOR_KEYWORDS = {
             "pipeline", "gas pipeline", "oil pipeline",
             "petrochemical", "natural gas", "crude oil",
             "exploration", "drilling", "upstream", "downstream",
+            "oil exploration", "oil refinery",
             "petrovietnam", "pvn", "binh son", "nghi son", "dung quat"
         ]
     },
+    # --- URBAN DEVELOPMENT ---
     "Industrial Parks": {
         "primary": [
             "industrial park", "industrial zone", "industrial complex",
             "economic zone", "export processing", "free trade zone",
             "manufacturing hub", "tech park", "hi-tech park", "high-tech park",
             "industrial estate", "industrial cluster", "special economic zone",
-            "industrial land", "factory zone", "industrial area"
+            "industrial land", "factory zone", "industrial area",
+            "fdi investment", "manufacturing zone", "factory"
         ]
     },
     "Smart City": {
@@ -556,34 +579,46 @@ SECTOR_KEYWORDS = {
             "smart grid", "smart meter", "smart building",
             "iot infrastructure", "5g infrastructure", "5g network",
             "digital transformation", "e-government",
-            "surveillance system", "cctv", "ai camera"
+            "surveillance system", "cctv", "ai camera",
+            "urban area", "urban development", "city planning"
         ]
     },
-    "Urban Development": {
+    "Transport": {
         "primary": [
-            # Rail/Metro
             "metro", "metro line", "subway", "urban rail", "light rail",
             "railway", "high-speed rail", "high speed rail", "rail project",
-            # Roads
             "expressway", "highway", "motorway", "freeway",
             "ring road", "bypass", "overpass", "flyover", "interchange",
             "road project", "road construction",
-            # Bridges/Tunnels
             "bridge", "tunnel", "viaduct",
-            # Airports/Ports
             "airport", "terminal", "runway",
             "seaport", "port", "container terminal", "logistics hub",
-            "long thanh",
-            # Urban projects
-            "urban development", "city planning", "urban planning",
+            "long thanh", "public transport", "bus rapid transit", "brt"
+        ]
+    },
+    "Construction": {
+        "primary": [
+            "real estate", "building", "property", "cement",
+            "housing", "steel", "construction project",
             "new urban area", "township", "satellite city",
-            "public transport", "bus rapid transit", "brt",
-            # Infrastructure general
             "infrastructure investment", "infrastructure project",
-            "infrastructure development", "construction project",
+            "infrastructure development",
             "billion usd", "billion dollar", "trillion vnd"
         ]
     }
+}
+
+# Sector → Area 매핑 (명시적 딕셔너리로 관리)
+SECTOR_AREA_MAP = {
+    "Waste Water":           "Environment",
+    "Water Supply/Drainage": "Environment",
+    "Solid Waste":           "Environment",
+    "Power":                 "Energy",
+    "Oil & Gas":             "Energy",
+    "Industrial Parks":      "Urban Development",
+    "Smart City":            "Urban Development",
+    "Transport":             "Urban Development",
+    "Construction":          "Urban Development",
 }
 
 # Keywords that EXCLUDE articles
@@ -701,25 +736,42 @@ def should_exclude(title, summary=""):
 
 
 def classify_sector(title, summary=""):
-    text = f"{title} {summary}".lower()
-    
+    """
+    우선순위 기반 비즈니스 섹터 분류.
+    반환값: (sector, area) 튜플
+
+    우선순위: Waste Water > Water Supply/Drainage > Oil & Gas > Power
+              > Solid Waste > Transport > Industrial Parks > Smart City > Construction
+    """
     if should_exclude(title, summary):
-        return None
-    
-    best_match = None
-    best_score = 0
-    
-    for sector, keywords in SECTOR_KEYWORDS.items():
-        score = 0
-        for kw in keywords["primary"]:
-            if kw in text:
-                score += 1
-        
-        if score > best_score:
-            best_score = score
-            best_match = sector
-    
-    return best_match if best_score > 0 else None
+        return None, None
+
+    text = f"{title} {summary}".lower()
+
+    PRIORITY_ORDER = [
+        "Waste Water",
+        "Water Supply/Drainage",
+        "Oil & Gas",
+        "Power",
+        "Solid Waste",
+        "Transport",
+        "Industrial Parks",
+        "Smart City",
+        "Construction",
+    ]
+
+    scores = {}
+    for sector in PRIORITY_ORDER:
+        score = sum(1 for kw in SECTOR_KEYWORDS[sector]["primary"] if kw in text)
+        if score > 0:
+            scores[sector] = score
+
+    if not scores:
+        return None, None
+
+    best_sector = max(scores, key=scores.get)
+    best_area = SECTOR_AREA_MAP.get(best_sector, "Other")
+    return best_sector, best_area
 
 
 def parse_date(date_str):
@@ -917,12 +969,10 @@ def collect_news(hours_back=24):
             if not is_vietnam_related(title, summary):
                 continue
             
-            sector = classify_sector(title, summary)
+            # [v5.0] classify_sector 가 (sector, area) 튜플 반환
+            sector, area = classify_sector(title, summary)
             if not sector:
                 continue
-            
-            area = "Environment" if sector in ["Waste Water", "Solid Waste"] else \
-                   "Energy" if sector in ["Power", "Oil & Gas"] else "Urban Development"
             
             # Extract province from title/summary
             province = extract_province(title, summary)
@@ -1143,15 +1193,17 @@ def update_excel_database(articles, collection_stats=None):
             cell.font = header_font
             cell.alignment = Alignment(horizontal="center")
         
-        # Sector to Area mapping
+        # Sector to Area mapping - 9개 카테고리 기준 (SECTOR_AREA_MAP 과 동일)
         sector_area = {
-            "Waste Water": "Environment",
-            "Solid Waste": "Environment",
-            "Power": "Energy",
-            "Oil & Gas": "Energy",
-            "Industrial Parks": "Urban Development",
-            "Smart City": "Urban Development",
-            "Urban Development": "Urban Development"
+            "Waste Water":           "Environment",
+            "Water Supply/Drainage": "Environment",
+            "Solid Waste":           "Environment",
+            "Power":                 "Energy",
+            "Oil & Gas":             "Energy",
+            "Industrial Parks":      "Urban Development",
+            "Smart City":            "Urban Development",
+            "Transport":             "Urban Development",
+            "Construction":          "Urban Development",
         }
         
         row = 2
