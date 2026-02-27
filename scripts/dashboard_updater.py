@@ -295,29 +295,29 @@ def convert_to_multilingual_format(articles):
     result = []
     
     SECTOR_KO = {
-        "Waste Water": "폐수처리",
-        "Solid Waste": "고형폐기물",
+        "Waste Water":           "폐수처리",
         "Water Supply/Drainage": "상수도/배수",
-        "Power": "발전/전력",
-        "Oil & Gas": "석유/가스",
-        "Industrial Parks": "산업단지",
-        "Smart City": "스마트시티",
-        "Urban Development": "도시개발",
-        "Transport": "교통인프라",
-        "Climate Change": "기후변화"
+        "Solid Waste":           "고형폐기물",
+        "Power":                 "발전/전력",
+        "Oil & Gas":             "석유/가스",
+        "Industrial Parks":      "산업단지",
+        "Smart City":            "스마트시티",
+        "Transport":             "교통인프라",
+        "Construction":          "건설/부동산",
+        "Climate Change":        "기후변화"
     }
     
     SECTOR_VI = {
-        "Waste Water": "Xử lý nước thải",
-        "Solid Waste": "Chất thải rắn",
+        "Waste Water":           "Xử lý nước thải",
         "Water Supply/Drainage": "Cấp thoát nước",
-        "Power": "Điện năng",
-        "Oil & Gas": "Dầu khí",
-        "Industrial Parks": "Khu công nghiệp",
-        "Smart City": "Thành phố thông minh",
-        "Urban Development": "Phát triển đô thị",
-        "Transport": "Giao thông",
-        "Climate Change": "Biến đổi khí hậu"
+        "Solid Waste":           "Chất thải rắn",
+        "Power":                 "Điện năng",
+        "Oil & Gas":             "Dầu khí",
+        "Industrial Parks":      "Khu công nghiệp",
+        "Smart City":            "Thành phố thông minh",
+        "Transport":             "Giao thông",
+        "Construction":          "Xây dựng/Bất động sản",
+        "Climate Change":        "Biến đổi khí hậu"
     }
     
     for article in articles:
@@ -514,7 +514,7 @@ function getText(obj) {{
 
 function getSectorColor(area) {{
     if (area === 'Environment') return 'sector-env';
-    if (area === 'Energy Develop.' || area === 'Energy') return 'sector-energy';
+    if (area === 'Energy') return 'sector-energy';
     return 'sector-urban';
 }}
 
