@@ -283,10 +283,13 @@ class NotificationManager:
                 today_articles.append(article)
         
         area_sector = {
-            "Environment":       {"total": 0, "sectors": Counter()},
-            "Energy":            {"total": 0, "sectors": Counter()},
-            "Urban Development": {"total": 0, "sectors": Counter()}
+    "Environment":      {"total": 0, "sectors": Counter()},
+    "Energy":            {"total": 0, "sectors": Counter()},
+    "Energy Develop.":   {"total": 0, "sectors": Counter()},  # 구버전 DB 호환
+    "Urban Development": {"total": 0, "sectors": Counter()},  # v51 신규
+    "Urban Develop.":    {"total": 0, "sectors": Counter()},  # 구버전 DB 호환
         }
+
         
         province_counts = Counter()
         vietnam_count = 0
