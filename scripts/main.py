@@ -107,14 +107,14 @@ def collect_new_articles():
         collector_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(collector_module)
         
-        collector = collector_module.NewsCollector()
-        new_articles = collector.collect_from_rss(hours_back=48)
+        collected_count, new_articles, collection_stats = \
+            collector_module.collect_news(hours_back=48)
         print(f"Collected {len(new_articles)} new articles")
         
         # Save to Excel
         if new_articles:
             try:
-                collector.save_to_excel()
+                collector_module.update_excel_database(new_articles, collection_stats)
             except Exception as e:
                 print(f"Save error: {e}")
         
