@@ -151,15 +151,15 @@ RSS_FEEDS = {
     "Nang Luong Vietnam":             "https://nangluongvietnam.vn/rss/home.rss",      # Energy ★
     "Vietnam Energy Magazine":        "https://vietnamenergy.vn/rss/home.rss",         # Energy ★
     "Bao Xay Dung":                   "https://baoxaydung.com.vn/rss/home.rss",        # Construction ★
-    "Bao TN Moi Truong":             "https://baotainguyenmoitruong.vn/rss/home.rss", # Environment ★★★
-    "Kinh Te Moi Truong":            "https://kinhtemoitruong.vn/rss/home.rss",        # Environment ★★★
+    "Bao TN Moi Truong":             "https://nongnghiepmoitruong.vn/main-rss.html", # Environment ★★★
+    "Kinh Te Moi Truong":            "https://kinhtemoitruong.vn/rss.html",        # Environment ★★★
     "Moi Truong va Do Thi":          "https://moitruongdothi.vn/rss/home.rss",        # NEW ★★★ Env+Urban
     "Tap chi Moi truong":            "https://tapchimoitruong.vn/rss/home.rss",        # NEW ★★★ Env journal
     "Nong nghiep VN":                "https://nongnghiep.vn/rss/home.rss",             # NEW ★ (water/env agri)
     "Bao Tai nguyen":                "https://baotainguyenmoitruong.vn/rss/moi-truong.rss", # NEW deeper env
 
     # ── REGIONAL — NORTHERN (부족 지역 보완) ─────────────────
-    "Hanoi Moi":                      "https://hanoimoi.vn/rss/home.rss",
+    "Hanoi Moi":                      "https://hanoimoi.vn/rss",
     "Bao Quang Ninh":                 "https://baoquangninh.vn/rss/home.rss",
     "Bao Thai Binh":                  "https://baothaibinh.com.vn/rss/home.rss",       # NEW ★ (northern delta)
     "Bao Phu Tho":                    "https://baophutho.vn/rss/home.rss",             # NEW ★ (northern)
@@ -168,17 +168,17 @@ RSS_FEEDS = {
     # ── REGIONAL — CENTRAL (중부 보완) ───────────────────────
     "Bao Nghe An":                    "https://baonghean.vn/rss/home.rss",             # NEW ★ (central)
     "Bao Ha Tinh":                    "https://baohatinh.vn/rss/home.rss",             # NEW ★ (central)
-    "Bao Quang Nam":                  "https://baoquangnam.vn/rss/home.rss",           # NEW ★ (central)
+    "Bao Quang Nam":                  "https://baoquangninh.vn/rss",           # NEW ★ (central)
     "Bao Binh Dinh":                  "https://baobinhdinh.vn/rss/home.rss",           # NEW ★ (central)
 
     # ── REGIONAL — SOUTHERN (기존 유지) ──────────────────────
     "SGGP":                           "https://www.sggp.org.vn/rss/home.rss",
     "Bao Dong Nai":                   "https://baodongnai.com.vn/rss/home.rss",
     "Bao Binh Duong":                 "https://baobinhduong.vn/rss/home.rss",
-    "Bao Da Nang":                    "https://baodanang.vn/rss/home.rss",
+    "Bao Da Nang":                    "https://en.baodanang.vn/",
 
     # ── MEKONG DELTA REGIONAL (신규) ─────────────────────────
-    "Bao Can Tho":                    "https://baocantho.com.vn/rss/home.rss",         # NEW ★ (Mekong)
+    "Bao Can Tho":                    "https://baocantho.com.vn/thoi-su/",         # NEW ★ (Mekong)
     "Bao An Giang":                   "https://baoangiang.com.vn/rss/home.rss",        # NEW ★ (Mekong)
     "Bao Kien Giang":                 "https://baokiengiang.vn/rss/home.rss",          # NEW ★ (Mekong)
 }
