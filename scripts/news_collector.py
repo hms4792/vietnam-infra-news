@@ -158,8 +158,8 @@ RSS_FEEDS = {
     "Nong nghiep VN":                "https://nongnghiep.vn/rss/home.rss",             # NEW ★ (water/env agri)
     "Bao Tai nguyen":                "https://baotainguyenmoitruong.vn/rss/moi-truong.rss", # NEW deeper env
 
-    # ── REGIONAL — NORTHERN (부족 지역 보완) ─────────────────
-    "Hanoi Moi":                      "https://hanoimoi.vn/rss",
+    # ── REGIONAL — NORTHERN (북부 지역 보완) ─────────────────
+    "Hanoi Moi":                      "https://hanoimoi.vn/",
     "Bao Quang Ninh":                 "https://baoquangninh.vn/rss/home.rss",
     "Bao Thai Binh":                  "https://baothaibinh.com.vn/rss/home.rss",       # NEW ★ (northern delta)
     "Bao Phu Tho":                    "https://baophutho.vn/rss/home.rss",             # NEW ★ (northern)
