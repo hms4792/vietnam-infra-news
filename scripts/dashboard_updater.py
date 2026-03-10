@@ -514,7 +514,7 @@ function getText(obj) {{
 
 function getSectorColor(area) {{
     if (area === 'Environment') return 'sector-env';
-    if (area === 'Energy') return 'sector-energy';
+    if (area === 'Energy' || area === 'Energy Develop.') return 'sector-energy';  // 두 이름 모두 허용
     return 'sector-urban';
 }}
 
