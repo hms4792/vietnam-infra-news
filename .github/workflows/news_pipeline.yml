@@ -44,6 +44,8 @@ jobs:
       - name: Run News Collection
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
+          ENABLE_GNEWS: "true"
         run: |
           HOURS_BACK="${{ github.event.inputs.hours_back || '720' }}"
           echo "Collecting news from last $HOURS_BACK hours"
