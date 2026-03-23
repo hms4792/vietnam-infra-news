@@ -295,29 +295,31 @@ def convert_to_multilingual_format(articles):
     result = []
     
     SECTOR_KO = {
-        "Waste Water":           "폐수처리",
+        "Waste Water": "폐수처리",
         "Water Supply/Drainage": "상수도/배수",
-        "Solid Waste":           "고형폐기물",
-        "Power":                 "발전/전력",
-        "Oil & Gas":             "석유/가스",
-        "Industrial Parks":      "산업단지",
-        "Smart City":            "스마트시티",
-        "Transport":             "교통인프라",
-        "Construction":          "건설/부동산",
-        "Climate Change":        "기후변화"
+        "Solid Waste": "고형폐기물",
+        "Power": "발전/전력",
+        "Oil & Gas": "석유/가스",
+        "Transport": "교통인프라",
+        "Industrial Parks": "산업단지",
+        "Smart City": "스마트시티",
+        "Construction": "건설/도시개발",
+        "Urban Development": "도시개발",
+        "Climate Change": "기후변화"
     }
     
     SECTOR_VI = {
-        "Waste Water":           "Xử lý nước thải",
+        "Waste Water": "Xử lý nước thải",
         "Water Supply/Drainage": "Cấp thoát nước",
-        "Solid Waste":           "Chất thải rắn",
-        "Power":                 "Điện năng",
-        "Oil & Gas":             "Dầu khí",
-        "Industrial Parks":      "Khu công nghiệp",
-        "Smart City":            "Thành phố thông minh",
-        "Transport":             "Giao thông",
-        "Construction":          "Xây dựng/Bất động sản",
-        "Climate Change":        "Biến đổi khí hậu"
+        "Solid Waste": "Chất thải rắn",
+        "Power": "Điện năng",
+        "Oil & Gas": "Dầu khí",
+        "Transport": "Giao thông",
+        "Industrial Parks": "Khu công nghiệp",
+        "Smart City": "Thành phố thông minh",
+        "Construction": "Xây dựng",
+        "Urban Development": "Phát triển đô thị",
+        "Climate Change": "Biến đổi khí hậu"
     }
     
     for article in articles:
@@ -330,13 +332,22 @@ def convert_to_multilingual_format(articles):
         sector_vi = SECTOR_VI.get(sector, sector)
         
         # Check if article has translations from SQLite
-        title_ko = article.get("title_ko") or title
-        title_vi = article.get("title_vi") or title
+        # title_ko/vi가 없으면 원문 그대로이므로 섹터 prefix 추가로 구분
+        raw_title_ko = article.get("title_ko") or ""
+        raw_title_vi = article.get("title_vi") or ""
         title_en = title
+        # 번역이 있으면 사용, 없으면 원문(언어버튼 전환 시 동일 표시는 불가피하나 요약은 번역)
+        title_ko = raw_title_ko if raw_title_ko and raw_title_ko != title else title
+        title_vi = raw_title_vi if raw_title_vi and raw_title_vi != title else title
         
-        summary_ko = article.get("summary_ko") or f"[{sector_ko}] {province}: {title[:100]}"
-        summary_vi = article.get("summary_vi") or f"[{sector_vi}] {province}: {title[:100]}"
-        summary_en = summary if summary else f"[{sector}] {province}: {title[:100]}"
+        # summary: API 번역 우선, fallback은 구조화된 템플릿 (단순 반복 방지)
+        raw_summary_ko = article.get("summary_ko") or ""
+        raw_summary_vi = article.get("summary_vi") or ""
+        summary_ko = (raw_summary_ko if raw_summary_ko and not raw_summary_ko.startswith(f"[{sector_ko}] {province}") 
+                      else f"[{sector_ko}] {province} 인프라: {title[:80]}")
+        summary_vi = (raw_summary_vi if raw_summary_vi and not raw_summary_vi.startswith(f"[{sector_vi}] {province}")
+                      else f"[{sector_vi}] Dự án tại {province}: {title[:80]}")
+        summary_en = summary if summary and len(summary) > 20 else f"[{sector}] Infrastructure project in {province}: {title[:80]}"
         
         result.append({
             "id": article.get("id", len(result) + 1),
@@ -514,7 +525,8 @@ function getText(obj) {{
 
 function getSectorColor(area) {{
     if (area === 'Environment') return 'sector-env';
-    if (area === 'Energy' || area === 'Energy Develop.') return 'sector-energy';  // 두 이름 모두 허용
+    if (area === 'Energy' || area === 'Energy Develop.') return 'sector-energy';
+    if (area === 'Urban Development' || area === 'Urban Develop.') return 'sector-urban';
     return 'sector-urban';
 }}
 
