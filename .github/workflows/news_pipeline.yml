@@ -1,79 +1,121 @@
-# .github/workflows/vietnam-infra-news.yml
-# 수정사항:
-# 1. peaceiris/actions-gh-pages v3 → v4 (Node.js 24 대응)
-# 2. python scripts/main.py 실행 step 추가 (AI 요약 + 대시보드)
-# 3. 환경변수 GNEWS_ENV_QUERY 추가
-
 name: Vietnam Infrastructure News Pipeline
 
 on:
   schedule:
-    - cron: '0 11 * * 1-5'   # 평일 18:00 KST (11:00 UTC)
-  workflow_dispatch:           # 수동 실행
+    - cron: '0 11 * * 1-5'   # 평일 18:00 KST = 11:00 UTC
+  workflow_dispatch:
 
-env:
-  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-  GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
-  ENABLE_GNEWS: "true"
-  LANGUAGE_FILTER: "all"
-  
+# GitHub Actions bot이 저장소에 push할 수 있도록 권한 부여
 permissions:
   contents: write
   pages: write
   id-token: write
+
+env:
+  # API Keys
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  GNEWS_API_KEY:     ${{ secrets.GNEWS_API_KEY }}
+  # 수집 설정
+  ENABLE_GNEWS:      "true"
+  LANGUAGE_FILTER:   "all"
+  HOURS_BACK:        "24"
+  # 데이터 경로 (GitHub 저장소 기준)
+  DB_PATH:           "data/vietnam_infrastructure_news.db"
+  EXCEL_PATH:        "data/database/Vietnam_Infra_News_Database_Final.xlsx"
+  # 이메일 설정
+  EMAIL_SMTP_SERVER: "smtp.gmail.com"
+  EMAIL_SMTP_PORT:   "587"
+  EMAIL_USERNAME:    ${{ secrets.EMAIL_USERNAME }}
+  EMAIL_PASSWORD:    ${{ secrets.EMAIL_PASSWORD }}
+  EMAIL_RECIPIENTS:  ${{ secrets.EMAIL_RECIPIENTS }}
+
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
 
     steps:
+      # ── 1. 저장소 체크아웃 ─────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Python
+      # ── 2. Python 환경 설정 ────────────────────────────────────
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
-      - name: Collect news
+      # ── 3. 뉴스 수집 (SQLite + Excel 동시 업데이트) ────────────
+      - name: Collect news & update Excel DB
         run: |
-          HOURS_BACK="24"
-          echo "Collecting news from last $HOURS_BACK hours"
+          echo "=== [Step 1] News Collection (last $HOURS_BACK hours) ==="
           python scripts/news_collector.py --hours-back $HOURS_BACK
-        env:
-          HOURS_BACK: "24"
+          echo "=== Collection complete ==="
+          # Excel 파일 존재 여부 확인
+          if [ -f "data/database/Vietnam_Infra_News_Database_Final.xlsx" ]; then
+            echo "✓ Excel DB found: $(du -sh data/database/Vietnam_Infra_News_Database_Final.xlsx)"
+          else
+            echo "⚠ Excel DB not found at expected path"
+            find . -name "*.xlsx" 2>/dev/null | head -5
+          fi
 
-      - name: Run AI summarizer & generate dashboard
+      # ── 4. AI 요약 + 대시보드 + 이메일 발송 ──────────────────
+      - name: Run AI summarizer & dashboard & notifications
         run: |
-          echo "Running main pipeline (summarizer + dashboard + notifications)"
+          echo "=== [Step 2] AI Summarizer + Dashboard + Email ==="
           python scripts/main.py
-        env:
-          SKIP_NOTIFY: "false"
+          echo "=== Pipeline complete ==="
 
-      - name: Commit updated Excel DB
+      # ── 5. Excel DB + SQLite를 저장소에 커밋 & 푸시 ───────────
+      - name: Commit & push updated databases
         run: |
-          git config user.name "github-actions[bot]"
+          git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/database/Vietnam_Infra_News_Database_Final.xlsx || true
-          git add data/*.db || true
-          git diff --cached --quiet || git commit -m "Auto-update DB: $(date +'%Y-%m-%d')"
-          git push || true
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4    # ← v3 → v4 변경 (Node.js 24 대응)
+          # 변경된 파일 추가
+          git add data/database/Vietnam_Infra_News_Database_Final.xlsx 2>/dev/null || true
+          git add data/vietnam_infrastructure_news.db 2>/dev/null || true
+
+          # 변경사항이 있을 때만 커밋
+          if git diff --cached --quiet; then
+            echo "No DB changes to commit"
+          else
+            ARTICLE_COUNT=$(python -c "
+          import sqlite3, os
+          try:
+              conn = sqlite3.connect('data/vietnam_infrastructure_news.db')
+              n = conn.execute('SELECT COUNT(*) FROM articles').fetchone()[0]
+              conn.close()
+              print(n)
+          except:
+              print('?')
+          " 2>/dev/null || echo "?")
+            git commit -m "Auto-update DB $(date +'%Y-%m-%d'): ${ARTICLE_COUNT} total articles"
+            git push
+            echo "✓ Databases pushed to repository"
+          fi
+
+      # ── 6. GitHub Pages 배포 (대시보드 HTML) ──────────────────
+      - name: Deploy dashboard to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./outputs
+          publish_dir:    ./outputs
           publish_branch: gh-pages
+          commit_message: "Deploy dashboard: $(date +'%Y-%m-%d %H:%M')"
 
-      - name: Upload artifacts
+      # ── 7. 실행 결과 아티팩트 저장 ────────────────────────────
+      - name: Upload pipeline artifacts
         uses: actions/upload-artifact@v4
         with:
           name: pipeline-outputs-${{ github.run_number }}
-          path: outputs/
+          path: |
+            outputs/
+            data/vietnam_infrastructure_news.db
           retention-days: 7
