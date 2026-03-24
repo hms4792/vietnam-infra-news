@@ -425,8 +425,12 @@ def send_notifications(all_articles, new_articles, qc_result):
 
         # send_all()은 async 함수이므로 asyncio.run() 사용
         # 인자: articles 리스트 (dict가 아님)
+        # 이메일 briefing: 전체 DB 기준 오늘 기사 수 계산
+        # new_articles만 전달하면 today_count가 0건으로 표시됨
+        # all_articles 전달 시 오늘 날짜 기사 수 정확히 집계
+        briefing_articles = all_articles if all_articles else new_articles
         result = asyncio.run(manager.send_all(
-            articles=new_articles,
+            articles=briefing_articles,
             dashboard_url="https://hms4792.github.io/vietnam-infra-news/"
         ))
         logger.info(f"알림 결과: {result}")
