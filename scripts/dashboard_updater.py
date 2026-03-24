@@ -291,74 +291,112 @@ def merge_articles(excel_articles, sqlite_articles):
 
 
 def convert_to_multilingual_format(articles):
-    """Convert articles to multilingual format for BACKEND_DATA."""
-    result = []
+    """
+    Convert articles to multilingual format for BACKEND_DATA.
     
+    다국어 처리 전략:
+    - 신규 기사 (SQLite): ai_summarizer가 생성한 summary_ko/vi 사용
+    - 기존 기사 (Excel): summary_ko가 없으면 구조화 fallback 생성
+    - title_ko/vi: AI 번역 있으면 사용, 없으면 EN 원문 유지
+      (KO 버튼 = 한국어 요약 표시 / title은 EN 원문으로 표시)
+    - summary_en이 있는 기사는 RSS description 활용
+    """
+    result = []
+
     SECTOR_KO = {
         "Waste Water": "폐수처리",
-        "Solid Waste": "고형폐기물",
         "Water Supply/Drainage": "상수도/배수",
+        "Solid Waste": "고형폐기물",
         "Power": "발전/전력",
         "Oil & Gas": "석유/가스",
+        "Transport": "교통인프라",
         "Industrial Parks": "산업단지",
         "Smart City": "스마트시티",
+        "Construction": "건설/도시개발",
         "Urban Development": "도시개발",
-        "Transport": "교통인프라",
-        "Climate Change": "기후변화"
+        "Climate Change": "기후변화",
     }
-    
     SECTOR_VI = {
         "Waste Water": "Xử lý nước thải",
-        "Solid Waste": "Chất thải rắn",
         "Water Supply/Drainage": "Cấp thoát nước",
+        "Solid Waste": "Chất thải rắn",
         "Power": "Điện năng",
         "Oil & Gas": "Dầu khí",
+        "Transport": "Giao thông",
         "Industrial Parks": "Khu công nghiệp",
         "Smart City": "Thành phố thông minh",
+        "Construction": "Xây dựng",
         "Urban Development": "Phát triển đô thị",
-        "Transport": "Giao thông",
-        "Climate Change": "Biến đổi khí hậu"
+        "Climate Change": "Biến đổi khí hậu",
     }
-    
+
     for article in articles:
-        title = article.get("title", "")
-        summary = article.get("summary", "")
-        sector = article.get("sector", "Infrastructure")
+        title   = str(article.get("title", "") or "")
+        summary = str(article.get("summary", "") or "")
+        sector  = article.get("sector", "Infrastructure")
         province = article.get("province", "Vietnam")
-        
+        area    = article.get("area", "Environment")
+
         sector_ko = SECTOR_KO.get(sector, sector)
         sector_vi = SECTOR_VI.get(sector, sector)
-        
-        # Check if article has translations from SQLite
-        title_ko = article.get("title_ko") or title
-        title_vi = article.get("title_vi") or title
+
+        # ── title 처리 ──────────────────────────────────────────
+        # EN: 항상 원문 사용
         title_en = title
-        
-        summary_ko = article.get("summary_ko") or f"[{sector_ko}] {province}: {title[:100]}"
-        summary_vi = article.get("summary_vi") or f"[{sector_vi}] {province}: {title[:100]}"
-        summary_en = summary if summary else f"[{sector}] {province}: {title[:100]}"
-        
+
+        # KO: AI 번역이 있고 원문과 다르면 사용, 없으면 원문 (EN)
+        raw_ko = str(article.get("title_ko") or "").strip()
+        title_ko = raw_ko if (raw_ko and raw_ko != title) else title
+
+        # VI: AI 번역이 있고 원문과 다르면 사용, 없으면 원문 (EN)
+        raw_vi = str(article.get("title_vi") or "").strip()
+        title_vi = raw_vi if (raw_vi and raw_vi != title) else title
+
+        # ── summary 처리 ────────────────────────────────────────
+        # EN: RSS summary 우선, 없으면 구조화 fallback
+        raw_sum_en = str(article.get("summary_en") or summary or "").strip()
+        if raw_sum_en and len(raw_sum_en) > 20:
+            summary_en = raw_sum_en[:300]
+        else:
+            summary_en = f"[{sector}] Infrastructure project in {province}: {title[:100]}"
+
+        # KO: AI 번역 우선, 없으면 구조화 fallback
+        # fallback 형식: [섹터KO] Province 지역 — 원문제목 (단순 반복 방지)
+        raw_sum_ko = str(article.get("summary_ko") or "").strip()
+        if raw_sum_ko and not raw_sum_ko.startswith(f"[{sector_ko}] {province}"):
+            summary_ko = raw_sum_ko[:300]
+        else:
+            # summary_en이 있으면 언급하여 한국어 맥락 제공
+            summary_ko = f"[{sector_ko}] {province} 인프라 프로젝트. {title[:120]}"
+
+        # VI: AI 번역 우선, 없으면 구조화 fallback
+        raw_sum_vi = str(article.get("summary_vi") or "").strip()
+        if raw_sum_vi and not raw_sum_vi.startswith(f"[{sector_vi}] {province}"):
+            summary_vi = raw_sum_vi[:300]
+        else:
+            summary_vi = f"[{sector_vi}] Dự án hạ tầng tại {province}. {title[:120]}"
+
         result.append({
-            "id": article.get("id", len(result) + 1),
-            "date": article.get("date", ""),
-            "area": article.get("area", "Environment"),
-            "sector": sector,
+            "id":       article.get("id", len(result) + 1),
+            "date":     str(article.get("date", "") or ""),
+            "area":     area,
+            "sector":   sector,
             "province": province,
-            "source": article.get("source", ""),
+            "source":   str(article.get("source", "") or ""),
             "title": {
                 "ko": title_ko,
                 "en": title_en,
-                "vi": title_vi
+                "vi": title_vi,
             },
             "summary": {
                 "ko": summary_ko,
                 "en": summary_en,
-                "vi": summary_vi
+                "vi": summary_vi,
             },
-            "url": article.get("url", ""),
-            "is_new": article.get("from_sqlite", False)
+            "url":    str(article.get("url", "") or ""),
+            "is_new": bool(article.get("from_sqlite", False)),
         })
-    
+
     return result
 
 
