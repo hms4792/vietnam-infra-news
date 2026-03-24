@@ -296,29 +296,27 @@ def convert_to_multilingual_format(articles):
     
     SECTOR_KO = {
         "Waste Water": "폐수처리",
-        "Water Supply/Drainage": "상수도/배수",
         "Solid Waste": "고형폐기물",
+        "Water Supply/Drainage": "상수도/배수",
         "Power": "발전/전력",
         "Oil & Gas": "석유/가스",
-        "Transport": "교통인프라",
         "Industrial Parks": "산업단지",
         "Smart City": "스마트시티",
-        "Construction": "건설/도시개발",
         "Urban Development": "도시개발",
+        "Transport": "교통인프라",
         "Climate Change": "기후변화"
     }
     
     SECTOR_VI = {
         "Waste Water": "Xử lý nước thải",
-        "Water Supply/Drainage": "Cấp thoát nước",
         "Solid Waste": "Chất thải rắn",
+        "Water Supply/Drainage": "Cấp thoát nước",
         "Power": "Điện năng",
         "Oil & Gas": "Dầu khí",
-        "Transport": "Giao thông",
         "Industrial Parks": "Khu công nghiệp",
         "Smart City": "Thành phố thông minh",
-        "Construction": "Xây dựng",
         "Urban Development": "Phát triển đô thị",
+        "Transport": "Giao thông",
         "Climate Change": "Biến đổi khí hậu"
     }
     
@@ -332,22 +330,13 @@ def convert_to_multilingual_format(articles):
         sector_vi = SECTOR_VI.get(sector, sector)
         
         # Check if article has translations from SQLite
-        # title_ko/vi가 없으면 원문 그대로이므로 섹터 prefix 추가로 구분
-        raw_title_ko = article.get("title_ko") or ""
-        raw_title_vi = article.get("title_vi") or ""
+        title_ko = article.get("title_ko") or title
+        title_vi = article.get("title_vi") or title
         title_en = title
-        # 번역이 있으면 사용, 없으면 원문(언어버튼 전환 시 동일 표시는 불가피하나 요약은 번역)
-        title_ko = raw_title_ko if raw_title_ko and raw_title_ko != title else title
-        title_vi = raw_title_vi if raw_title_vi and raw_title_vi != title else title
         
-        # summary: API 번역 우선, fallback은 구조화된 템플릿 (단순 반복 방지)
-        raw_summary_ko = article.get("summary_ko") or ""
-        raw_summary_vi = article.get("summary_vi") or ""
-        summary_ko = (raw_summary_ko if raw_summary_ko and not raw_summary_ko.startswith(f"[{sector_ko}] {province}") 
-                      else f"[{sector_ko}] {province} 인프라: {title[:80]}")
-        summary_vi = (raw_summary_vi if raw_summary_vi and not raw_summary_vi.startswith(f"[{sector_vi}] {province}")
-                      else f"[{sector_vi}] Dự án tại {province}: {title[:80]}")
-        summary_en = summary if summary and len(summary) > 20 else f"[{sector}] Infrastructure project in {province}: {title[:80]}"
+        summary_ko = article.get("summary_ko") or f"[{sector_ko}] {province}: {title[:100]}"
+        summary_vi = article.get("summary_vi") or f"[{sector_vi}] {province}: {title[:100]}"
+        summary_en = summary if summary else f"[{sector}] {province}: {title[:100]}"
         
         result.append({
             "id": article.get("id", len(result) + 1),
@@ -525,8 +514,7 @@ function getText(obj) {{
 
 function getSectorColor(area) {{
     if (area === 'Environment') return 'sector-env';
-    if (area === 'Energy' || area === 'Energy Develop.') return 'sector-energy';
-    if (area === 'Urban Development' || area === 'Urban Develop.') return 'sector-urban';
+    if (area === 'Energy Develop.' || area === 'Energy') return 'sector-energy';
     return 'sector-urban';
 }}
 
@@ -553,6 +541,198 @@ renderNews();
 </html>'''
     
     return html
+
+
+
+# ============================================================
+# DashboardUpdater & ExcelUpdater 클래스
+# main.py에서 module.DashboardUpdater() / module.ExcelUpdater() 로 호출됨
+# ============================================================
+
+class DashboardUpdater:
+    """대시보드 HTML 생성 클래스 — main.py 호환"""
+
+    def update(self, articles):
+        """
+        articles 리스트를 받아 index.html + vietnam_dashboard.html 생성.
+        템플릿이 있으면 템플릿 사용, 없으면 내장 HTML 사용.
+        """
+        try:
+            # Excel + SQLite 통합 로드 (전체 히스토리 포함)
+            excel_arts  = load_articles_from_excel()
+            sqlite_arts = load_articles_from_sqlite()
+            all_arts    = merge_articles(excel_arts, sqlite_arts)
+
+            # 전달받은 신규 기사를 is_new=True로 마킹
+            new_urls = {a.get('url','') for a in articles}
+            for a in all_arts:
+                if a.get('url','') in new_urls:
+                    a['from_sqlite'] = True
+
+            logger.info(f"DashboardUpdater: {len(all_arts)} total articles "
+                        f"({len(excel_arts)} Excel + {len(sqlite_arts)} SQLite)")
+            result = generate_dashboard(all_arts)
+            logger.info(f"Dashboard generated: {result}")
+            return result
+        except Exception as e:
+            logger.error(f"DashboardUpdater.update error: {e}")
+            import traceback; traceback.print_exc()
+            return None
+
+
+class ExcelUpdater:
+    """Excel DB 업데이트 클래스 — main.py 호환"""
+
+    def update(self, articles):
+        """
+        신규 기사를 Excel DB에 추가.
+        news_collector.py의 update_excel_database()를 재사용.
+        """
+        if not articles:
+            logger.info("ExcelUpdater: no new articles to add")
+            return True
+
+        try:
+            import openpyxl
+            from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+            import shutil
+            from collections import Counter
+
+            ep = EXCEL_DB_PATH
+            if not ep.exists():
+                logger.warning(f"ExcelUpdater: Excel not found: {ep}")
+                return False
+
+            # 안전 확인
+            wb_c = openpyxl.load_workbook(ep, read_only=True)
+            ws_c = wb_c.active
+            existing_count = sum(1 for r in ws_c.iter_rows(min_row=2, values_only=True) if any(r))
+            wb_c.close()
+            if existing_count < 100:
+                logger.warning(f"ExcelUpdater safety check failed: {existing_count} rows")
+                return False
+
+            shutil.copy2(ep, ep.with_suffix('.xlsx.backup'))
+
+            wb  = openpyxl.load_workbook(ep)
+            ws  = wb.active
+            last_row = ws.max_row
+
+            # URL 컬럼 찾기
+            url_col = 7
+            for c in range(1, ws.max_column + 1):
+                h = ws.cell(row=1, column=c).value
+                if h and "link" in str(h).lower():
+                    url_col = c
+                    break
+
+            existing_urls = set()
+            for row in range(2, last_row + 1):
+                v = ws.cell(row=row, column=url_col).value
+                if v:
+                    existing_urls.add(v)
+
+            # 스타일
+            NEW_FILL  = PatternFill(start_color="FFF9C4", end_color="FFF9C4", fill_type="solid")
+            NEW_FONT  = Font(bold=True, color="1A1A1A", size=10)
+            thin_b    = Border(bottom=Side(style='thin', color='E2E8F0'))
+
+            col_map = {'area':1,'sector':2,'province':3,'title':4,
+                       'date':5,'source':6,'url':7,'summary':8}
+
+            added    = 0
+            new_urls_set = set()
+            for art in articles:
+                if art.get('url') in existing_urls:
+                    continue
+                nr = last_row + 1 + added
+                ws.cell(row=nr, column=col_map['area'],     value=art.get('area',''))
+                ws.cell(row=nr, column=col_map['sector'],   value=art.get('sector',''))
+                ws.cell(row=nr, column=col_map['province'], value=art.get('province','Vietnam'))
+                ws.cell(row=nr, column=col_map['title'],    value=art.get('title',''))
+                ws.cell(row=nr, column=col_map['date'],     value=(art.get('published_date','') or '')[:10])
+                ws.cell(row=nr, column=col_map['source'],   value=art.get('source',''))
+                ws.cell(row=nr, column=col_map['url'],      value=art.get('url',''))
+                # summary: AI 요약 우선, 없으면 RSS 원문
+                summary_val = (art.get('summary_ko') or art.get('summary') or '')[:500]
+                ws.cell(row=nr, column=col_map['summary'],  value=summary_val)
+                for c in range(1, 9):
+                    ws.cell(row=nr, column=c).fill   = NEW_FILL
+                    ws.cell(row=nr, column=c).font   = NEW_FONT
+                    ws.cell(row=nr, column=c).border = thin_b
+                added += 1
+                new_urls_set.add(art.get('url'))
+                existing_urls.add(art.get('url'))
+
+            # 날짜순 정렬 (최신 → 오래된)
+            if added > 0:
+                max_row = ws.max_row
+                ENV_FILL    = PatternFill(start_color="F0FDF4", end_color="F0FDF4", fill_type="solid")
+                ENERGY_FILL = PatternFill(start_color="FFFBEB", end_color="FFFBEB", fill_type="solid")
+                URBAN_FILL  = PatternFill(start_color="F5F3FF", end_color="F5F3FF", fill_type="solid")
+                PLAIN_FONT  = Font(color="1A1A1A", size=10)
+
+                def _afill(area):
+                    a = str(area or '').lower()
+                    if 'environment' in a: return ENV_FILL
+                    if 'energy' in a:      return ENERGY_FILL
+                    return URBAN_FILL
+
+                rows_data = []
+                for r in range(2, max_row + 1):
+                    vals = [ws.cell(row=r, column=c).value for c in range(1, 9)]
+                    date_key = str(vals[4] or '0000-00-00')[:10]
+                    url_key  = str(vals[6] or '')
+                    rows_data.append({'vals': vals, 'date': date_key,
+                                      'is_new': url_key in new_urls_set})
+
+                rows_data.sort(key=lambda x: x['date'], reverse=True)
+                for i, rd in enumerate(rows_data, 2):
+                    fill = NEW_FILL if rd['is_new'] else _afill(rd['vals'][0])
+                    font = NEW_FONT if rd['is_new'] else PLAIN_FONT
+                    for c in range(1, 9):
+                        cell = ws.cell(row=i, column=c)
+                        cell.value  = rd['vals'][c-1]
+                        cell.fill   = fill
+                        cell.font   = font
+                        cell.border = thin_b
+
+            for col, w in zip('ABCDEFGH', [18,22,20,60,12,22,50,60]):
+                ws.column_dimensions[col].width = w
+            ws.freeze_panes = 'A2'
+
+            # Collection_Log 기록
+            from datetime import datetime as _dt
+            if "Collection_Log" not in wb.sheetnames:
+                ws_log = wb.create_sheet("Collection_Log")
+                HDR_FILL = PatternFill(start_color="0F766E", end_color="0F766E", fill_type="solid")
+                HDR_FONT = Font(bold=True, color="FFFFFF")
+                for ci, h in enumerate(["Date","Time","Source","New Articles","Total DB"], 1):
+                    c = ws_log.cell(row=1, column=ci, value=h)
+                    c.fill = HDR_FILL; c.font = HDR_FONT
+            else:
+                ws_log = wb["Collection_Log"]
+
+            now = _dt.now()
+            lr  = ws_log.max_row + 1
+            cur_total = sum(1 for r in ws.iter_rows(min_row=2, values_only=True) if any(r))
+            ws_log.cell(row=lr, column=1, value=now.strftime("%Y-%m-%d"))
+            ws_log.cell(row=lr, column=2, value=now.strftime("%H:%M:%S"))
+            ws_log.cell(row=lr, column=3, value="main.py / ExcelUpdater")
+            ws_log.cell(row=lr, column=4, value=added)
+            ws_log.cell(row=lr, column=5, value=cur_total)
+            ws_log.cell(row=lr, column=1).fill = PatternFill(
+                start_color="DBEAFE", end_color="DBEAFE", fill_type="solid")
+
+            wb.save(ep)
+            wb.close()
+            logger.info(f"ExcelUpdater: +{added} new articles (yellow) | total {cur_total} | sorted ↓date")
+            return True
+
+        except Exception as e:
+            logger.error(f"ExcelUpdater.update error: {e}")
+            import traceback; traceback.print_exc()
+            return False
 
 
 def main():
