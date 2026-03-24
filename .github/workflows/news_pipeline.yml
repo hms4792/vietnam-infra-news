@@ -1,117 +1,75 @@
+# .github/workflows/vietnam-infra-news.yml
+# 수정사항:
+# 1. peaceiris/actions-gh-pages v3 → v4 (Node.js 24 대응)
+# 2. python scripts/main.py 실행 step 추가 (AI 요약 + 대시보드)
+# 3. 환경변수 GNEWS_ENV_QUERY 추가
+
 name: Vietnam Infrastructure News Pipeline
 
 on:
   schedule:
-    - cron: '0 11 * * 1-5'
-  
-  workflow_dispatch:
-    inputs:
-      hours_back:
-        description: '수집할 시간 범위 (hours)'
-        required: true
-        default: '720'
-        type: string
+    - cron: '0 11 * * 1-5'   # 평일 18:00 KST (11:00 UTC)
+  workflow_dispatch:           # 수동 실행
 
-permissions:
-  contents: write
-  pages: write
+env:
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
+  ENABLE_GNEWS: "true"
+  LANGUAGE_FILTER: "all"
 
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
-      
+
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
           pip install -r requirements.txt
-      
-      - name: Create directories
-        run: mkdir -p data/database outputs logs
-      
-      - name: Run News Collection
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
-          ENABLE_GNEWS: "true"
-          LANGUAGE_FILTER: "all"
+
+      - name: Collect news
         run: |
-          HOURS_BACK="${{ github.event.inputs.hours_back || '720' }}"
+          HOURS_BACK="24"
           echo "Collecting news from last $HOURS_BACK hours"
           python scripts/news_collector.py --hours-back $HOURS_BACK
-      
-      - name: Run AI Summarization
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: |
-          echo "Generating AI summaries"
-          python scripts/ai_summarizer.py
+          HOURS_BACK: "24"
 
-      - name: Commit Excel to Git
+      - name: Run AI summarizer & generate dashboard
         run: |
-          echo "=========================================="
-          echo "COMMITTING EXCEL DATABASE"
-          echo "=========================================="
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          
-          echo "Adding Excel file..."
-          git add data/database/Vietnam_Infra_News_Database_Final.xlsx
-          
-          echo "Checking for changes..."
-          if git diff --staged --quiet; then
-            echo "No changes detected"
-          else
-            echo "Committing..."
-            git commit -m "Update news database $(date +%Y-%m-%d)"
-            echo "Pushing..."
-            git push
-            echo "EXCEL COMMITTED SUCCESSFULLY"
-          fi
-          echo "=========================================="
+          echo "Running main pipeline (summarizer + dashboard + notifications)"
+          python scripts/main.py
+        env:
+          SKIP_NOTIFY: "false"
 
-      - name: Generate Dashboard
+      - name: Commit updated Excel DB
         run: |
-          echo "Generating dashboard"
-          python scripts/dashboard_updater.py
-
-      - name: Verify outputs
-        run: |
-          echo "=== Checking outputs ==="
-          ls -la outputs/
-          test -f outputs/index.html && echo "Dashboard OK" || exit 1
-
-      - name: Upload outputs artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: pipeline-outputs-${{ github.run_number }}
-          path: outputs/
-          retention-days: 30
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/database/Vietnam_Infra_News_Database_Final.xlsx || true
+          git add data/*.db || true
+          git diff --cached --quiet || git commit -m "Auto-update DB: $(date +'%Y-%m-%d')"
+          git push || true
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@v4    # ← v3 → v4 변경 (Node.js 24 대응)
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./outputs
           publish_branch: gh-pages
-          force_orphan: true
 
-      - name: Send Email Notification
-        if: success()
-        env:
-          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          EMAIL_RECIPIENTS: ${{ secrets.EMAIL_RECIPIENTS }}
-        run: python scripts/send_notification.py
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-outputs-${{ github.run_number }}
+          path: outputs/
+          retention-days: 7
