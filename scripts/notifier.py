@@ -289,9 +289,11 @@ class NotificationManager:
                 today_articles.append(article)
         
         area_sector = {
-            "Environment": {"total": 0, "sectors": Counter()},
-            "Energy Develop.": {"total": 0, "sectors": Counter()},
-            "Urban Develop.": {"total": 0, "sectors": Counter()}
+            "Environment":       {"total": 0, "sectors": Counter()},
+            "Energy":            {"total": 0, "sectors": Counter()},
+            "Energy Develop.":   {"total": 0, "sectors": Counter()},
+            "Urban Development": {"total": 0, "sectors": Counter()},
+            "Urban Develop.":    {"total": 0, "sectors": Counter()},
         }
         
         province_counts = Counter()
