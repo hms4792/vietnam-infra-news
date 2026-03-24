@@ -322,6 +322,12 @@ SECTOR_KEYWORDS = {
             "cement plant", "steel plant",
         ],
     },
+    # ── 환경/에너지 전문 소스 (신규 추가) ─────────────────────────
+    "VietnamPlus - Moi truong":      "https://www.vietnamplus.vn/rss/moitruong.rss",
+    "Nhandan - Moi truong":          "https://nhandan.vn/rss/moi-truong.rss",
+    "Bao Dau Tu - Energy":           "https://baodautu.vn/rss/nang-luong.rss",
+    "Vietnam Energy alt":            "https://vietnamenergy.vn/rss/tin-tuc.rss",
+    "Tap chi Xay dung":              "https://tapchixaydung.vn/rss/home.rss",
 }
 
 
@@ -440,22 +446,11 @@ RSS_FEEDS = {
     "VnExpress English - News":        "https://e.vnexpress.net/rss/news.rss",
     "VnExpress English - Business":    "https://e.vnexpress.net/rss/business.rss",
     "Vietnam News - Economy":          "https://vietnamnews.vn/rss/economy.rss",
-    "Vietnam News - Environment":      "https://vietnamnews.vn/rss/environment.rss",
-    "Vietnam News - Society":          "https://vietnamnews.vn/rss/society.rss",
-    "VietnamPlus English":             "https://en.vietnamplus.vn/rss/news.rss",
-    "Hanoi Times":                     "https://hanoitimes.vn/rss/news.rss",
-    "VietnamNet English":              "https://vietnamnet.vn/en/rss/home.rss",
-    "The Investor":                    "https://theinvestor.vn/rss/home.rss",
-    "VIR":                             "https://vir.com.vn/rss/vir-rss-feed.rss",
     "Tuoi Tre News":                   "https://tuoitre.vn/rss/tin-moi-nhat.rss",
     "SGGP News English":               "https://en.sggp.org.vn/rss/home.rss",
-    "VOV World":                       "https://vovworld.vn/en-US/rss/news.rss",
     "Nhan Dan English":                "https://en.nhandan.vn/rss/home.rss",
-    "VCCINEWS":                        "https://vccinews.com/rss/news.rss",
     # ── 영문 전문 소스 ─────────────────────────────────────────
-    "Vietnam Energy Magazine EN":      "https://vietnamenergy.vn/en/rss/news.rss",
     "PV-Tech":                         "https://www.pv-tech.org/feed/",
-    "Offshore Energy":                 "https://www.offshore-energy.biz/feed/",
     # ── 베트남어 일반 ──────────────────────────────────────────
     "VnExpress - Kinh doanh":         "https://vnexpress.net/rss/kinh-doanh.rss",
     "VnExpress - Thời sự":            "https://vnexpress.net/rss/thoi-su.rss",
@@ -464,41 +459,16 @@ RSS_FEEDS = {
     "VietnamNet - Kinh doanh":        "https://vietnamnet.vn/rss/kinh-doanh.rss",
     "Dan Tri - Kinh doanh":           "https://dantri.com.vn/rss/kinh-doanh.rss",
     "CafeBiz":                        "https://cafebiz.vn/rss/home.rss",
-    "Bao Dau Tu":                     "https://baodautu.vn/rss/home.rss",
-    "Nhadautu.vn":                    "https://nhadautu.vn/rss/home.rss",
-    "CafeF":                          "https://cafef.vn/rss/home.rss",
     # ── 베트남어 전문 소스 ─────────────────────────────────────
-    "Nang Luong Vietnam":             "https://nangluongvietnam.vn/rss/home.rss",
-    "Vietnam Energy Magazine":        "https://vietnamenergy.vn/rss/home.rss",
     "Bao Xay Dung":                   "https://baoxaydung.com.vn/rss/home.rss",       # [검증보고서] 우선추가
-    "Bao TN Moi Truong":             "https://baotainguyenmoitruong.vn/rss/moi-truong.rss",
-    "Bao TN Moi Truong 2":           "https://baotainguyenmoitruong.vn/rss/home.rss",
-    "Kinh Te Moi Truong":            "https://kinhtemoitruong.vn/rss/kinh-te-moi-truong.rss",
-    "VnExpress - Moi truong":        "https://vnexpress.net/rss/khoa-hoc-moi-truong.rss",
-    "Dan Tri - Moi truong":          "https://dantri.com.vn/rss/moi-truong.rss",
     "VietnamPlus - Moi truong":      "https://www.vietnamplus.vn/rss/moitruong.rss",
-    "Thanh Nien - Moi truong":       "https://thanhnien.vn/rss/moi-truong.rss",
-    "Nong Nghiep VN":                "https://nongnghiep.vn/rss/home.rss",
     # ── 북부 지역 ─────────────────────────────────────────────
-    "Hanoi Moi":                      "https://hanoimoi.com.vn/rss/home.rss",
-    "Bao Quang Ninh EN":              "https://english.baoquangninh.vn/rss/news.rss",
-    "Bao Bac Giang EN":               "https://en.baobacgiang.vn/rss/news.rss",
-    "Bao Thai Binh":                  "https://baothaibinh.com.vn/rss/home.rss",
-    "Bao Hoa Binh":                   "https://baohoabinh.com.vn/rss/home.rss",
     # ── 중부 지역 ─────────────────────────────────────────────
-    "Bao Nghe An":                    "https://baonghean.vn/rss/home.rss",
     "Bao Ha Tinh":                    "https://baohatinh.vn/rss/home.rss",
-    "Da Nang Today":                  "https://danangtoday.com.vn/rss/news.rss",
     "Bao Binh Dinh":                  "https://baobinhdinh.vn/rss/home.rss",
     # ── 남부 지역 ─────────────────────────────────────────────
     "SGGP":                           "https://www.sggp.org.vn/rss/home.rss",
-    "Bao Dong Nai":                   "https://baodongnai.com.vn/rss/home.rss",
-    "Bao Binh Duong":                 "https://baobinhduong.vn/rss/home.rss",
-    "Bao Da Nang":                    "https://baodanang.vn/rss/home.rss",
     # ── 메콩 델타 ─────────────────────────────────────────────
-    "Bao Can Tho":                    "https://baocantho.com.vn/rss/home.rss",
-    "Bao An Giang":                   "https://baoangiang.com.vn/rss/home.rss",
-    "Bao Kien Giang":                 "https://baokiengiang.vn/rss/home.rss",
 }
 
 
@@ -683,36 +653,67 @@ def fetch_rss(url, timeout=30):
 
 def fetch_gnews(query, hours_back=24, max_articles=20):
     """
-    Google News API를 통해 Nikkei, Reuters 등 RSS 미지원 소스 보완.
-    GNEWS_API_KEY 환경변수 필요. https://gnews.io 무료 플랜 사용 가능.
+    NewsData.io API — 상업용 무료 (200크레딧/일), 베트남어 지원, 89개 언어.
+    GNEWS_API_KEY 환경변수에 NewsData.io 키를 설정하면 작동.
+    gnews.io 키도 지원 (자동 감지).
     """
     if not GNEWS_API_KEY:
         return []
 
     articles = []
     try:
-        from_dt = (datetime.utcnow() - timedelta(hours=hours_back)).strftime('%Y-%m-%dT%H:%M:%SZ')
-        url = (
-            f"https://gnews.io/api/v4/search"
-            f"?q={quote(query)}"
-            f"&lang=en&country=vn"
-            f"&from={from_dt}"
-            f"&max={max_articles}"
-            f"&apikey={GNEWS_API_KEY}"
-        )
-        resp = requests.get(url, timeout=15)
-        data = resp.json()
-        for item in data.get('articles', []):
-            articles.append({
-                'title':          item.get('title', ''),
-                'url':            item.get('url', ''),
-                'published_date': item.get('publishedAt', '')[:10],
-                'source_name':    item.get('source', {}).get('name', 'GNews'),
-                'raw_summary':    item.get('description', ''),
-            })
-        log(f"GNews: {len(articles)} articles for query '{query}'")
+        # NewsData.io API (pub_로 시작하면 NewsData, 아니면 gnews.io)
+        is_newsdata = GNEWS_API_KEY.startswith('pub_')
+
+        if is_newsdata:
+            url = (
+                f"https://newsdata.io/api/1/news"
+                f"?apikey={GNEWS_API_KEY}"
+                f"&q={quote(query)}"
+                f"&country=vn"
+                f"&language=en,vi"
+                f"&category=business,politics,technology"
+                f"&size={min(max_articles, 10)}"
+            )
+            resp = requests.get(url, timeout=15)
+            data = resp.json()
+            for item in data.get('results', []):
+                title = item.get('title', '') or ''
+                if not title or len(title.strip()) < 15:
+                    continue
+                articles.append({
+                    'title':          title,
+                    'url':            item.get('link', ''),
+                    'published_date': (item.get('pubDate', '') or '')[:10],
+                    'source_name':    item.get('source_id', 'NewsData'),
+                    'raw_summary':    item.get('description', '') or '',
+                })
+            log(f"NewsData.io: {len(articles)} articles for query '{query[:50]}'")
+        else:
+            # gnews.io fallback
+            from_dt = (datetime.utcnow() - timedelta(hours=min(hours_back,720))).strftime('%Y-%m-%dT%H:%M:%SZ')
+            url = (
+                f"https://gnews.io/api/v4/search"
+                f"?q={quote(query)}"
+                f"&lang=en&country=vn"
+                f"&from={from_dt}"
+                f"&max={max_articles}"
+                f"&apikey={GNEWS_API_KEY}"
+            )
+            resp = requests.get(url, timeout=15)
+            data = resp.json()
+            for item in data.get('articles', []):
+                articles.append({
+                    'title':          item.get('title', ''),
+                    'url':            item.get('url', ''),
+                    'published_date': item.get('publishedAt', '')[:10],
+                    'source_name':    item.get('source', {}).get('name', 'GNews'),
+                    'raw_summary':    item.get('description', ''),
+                })
+            log(f"GNews: {len(articles)} articles for query '{query[:50]}'")
+
     except Exception as e:
-        log(f"GNews error: {e}")
+        log(f"News API error: {e}")
     return articles
 
 
@@ -1132,6 +1133,7 @@ def update_excel_database(articles, collection_stats=None):
             except Exception:
                 return _url
 
+        now = datetime.now()  # Source 시트용 타임스탬프
         _run_date = now.strftime("%Y-%m-%d %H:%M")
 
         # ── RSS 소스별 결과 기록 ──────────────────────────────────
