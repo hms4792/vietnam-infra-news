@@ -321,11 +321,22 @@ def create_dashboard(all_articles):
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
-        dashboard = module.DashboardUpdater()
-        dashboard.update(all_articles)
+        # DashboardUpdater 클래스 호출 (없으면 직접 함수 호출로 fallback)
+        if hasattr(module, 'DashboardUpdater'):
+            dashboard = module.DashboardUpdater()
+            dashboard.update(all_articles)
+            logger.info("✓ DashboardUpdater 완료")
+        else:
+            logger.warning("DashboardUpdater 클래스 없음 → generate_dashboard() 직접 호출")
+            module.generate_dashboard(all_articles)
 
-        excel_updater = module.ExcelUpdater()
-        excel_updater.update(all_articles)
+        # ExcelUpdater 클래스 호출 (없으면 직접 함수 호출로 fallback)
+        if hasattr(module, 'ExcelUpdater'):
+            excel_updater = module.ExcelUpdater()
+            excel_updater.update(all_articles)
+            logger.info("✓ ExcelUpdater 완료")
+        else:
+            logger.warning("ExcelUpdater 클래스 없음 — Excel 업데이트 건너뜀")
 
         logger.info("대시보드 생성 완료")
         return True
@@ -333,6 +344,7 @@ def create_dashboard(all_articles):
     except Exception as e:
         logger.error(f"대시보드 오류: {e}")
         import traceback; traceback.print_exc()
+        logger.warning("Fallback: 최소 대시보드 생성")
         return _create_minimal_dashboard(all_articles)
 
 
