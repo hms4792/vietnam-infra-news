@@ -52,6 +52,7 @@ MIN_CLASSIFY_THRESHOLD = 3
 GNEWS_API_KEY    = os.environ.get('GNEWS_API_KEY', '')
 ENABLE_GNEWS     = os.environ.get('ENABLE_GNEWS', 'false').lower() == 'true'
 GNEWS_QUERY      = 'Vietnam infrastructure OR "Vietnam energy" OR "Vietnam transport"'
+GNEWS_ENV_QUERY  = 'Vietnam environment OR "Vietnam wastewater" OR "Vietnam solid waste" OR "Vietnam water supply"'
 
 
 # ============================================================
@@ -444,11 +445,11 @@ RSS_FEEDS = {
     "VietnamPlus English":             "https://en.vietnamplus.vn/rss/news.rss",
     "Hanoi Times":                     "https://hanoitimes.vn/rss/news.rss",
     "VietnamNet English":              "https://vietnamnet.vn/en/rss/home.rss",
-    "The Investor":                    "https://theinvestor.vn/feed",
-    "VIR":                             "https://vir.com.vn/rss/all.rss",
-    "Tuoi Tre News":                   "https://tuoitrenews.vn/rss/all.rss",
+    "The Investor":                    "https://theinvestor.vn/rss/home.rss",
+    "VIR":                             "https://vir.com.vn/rss/vir-rss-feed.rss",
+    "Tuoi Tre News":                   "https://tuoitre.vn/rss/tin-moi-nhat.rss",
     "SGGP News English":               "https://en.sggp.org.vn/rss/home.rss",
-    "VOV World":                       "https://vovworld.vn/en-US/rss/all.rss",
+    "VOV World":                       "https://vovworld.vn/en-US/rss/news.rss",
     "Nhan Dan English":                "https://en.nhandan.vn/rss/home.rss",
     "VCCINEWS":                        "https://vccinews.com/rss/news.rss",
     # ── 영문 전문 소스 ─────────────────────────────────────────
@@ -470,13 +471,16 @@ RSS_FEEDS = {
     "Nang Luong Vietnam":             "https://nangluongvietnam.vn/rss/home.rss",
     "Vietnam Energy Magazine":        "https://vietnamenergy.vn/rss/home.rss",
     "Bao Xay Dung":                   "https://baoxaydung.com.vn/rss/home.rss",       # [검증보고서] 우선추가
-    "Bao TN Moi Truong":             "https://baotainguyenmoitruong.vn/rss/tin-tuc.rss",
-    "Kinh Te Moi Truong":            "https://kinhtemoitruong.vn/rss/home.rss",
-    "Moi Truong Va Do Thi":          "https://moitruongdothi.vn/rss/home.rss",
-    "Tap Chi Moi Truong":            "https://tapchimoitruong.vn/rss/home.rss",
+    "Bao TN Moi Truong":             "https://baotainguyenmoitruong.vn/rss/moi-truong.rss",
+    "Bao TN Moi Truong 2":           "https://baotainguyenmoitruong.vn/rss/home.rss",
+    "Kinh Te Moi Truong":            "https://kinhtemoitruong.vn/rss/kinh-te-moi-truong.rss",
+    "VnExpress - Moi truong":        "https://vnexpress.net/rss/khoa-hoc-moi-truong.rss",
+    "Dan Tri - Moi truong":          "https://dantri.com.vn/rss/moi-truong.rss",
+    "VietnamPlus - Moi truong":      "https://www.vietnamplus.vn/rss/moitruong.rss",
+    "Thanh Nien - Moi truong":       "https://thanhnien.vn/rss/moi-truong.rss",
     "Nong Nghiep VN":                "https://nongnghiep.vn/rss/home.rss",
     # ── 북부 지역 ─────────────────────────────────────────────
-    "Hanoi Moi":                      "https://hanoimoi.vn/rss/tin-tuc.rss",
+    "Hanoi Moi":                      "https://hanoimoi.com.vn/rss/home.rss",
     "Bao Quang Ninh EN":              "https://english.baoquangninh.vn/rss/news.rss",
     "Bao Bac Giang EN":               "https://en.baobacgiang.vn/rss/news.rss",
     "Bao Thai Binh":                  "https://baothaibinh.com.vn/rss/home.rss",
@@ -869,8 +873,9 @@ def collect_news(hours_back=24):
 
     # ── Google News (보완 채널) ─────────────────────────────
     if ENABLE_GNEWS:
-        log("GNews: fetching supplemental articles...")
+        log("GNews: fetching supplemental articles (infra + environment)...")
         gnews_raw = fetch_gnews(GNEWS_QUERY, hours_back)
+        gnews_raw += fetch_gnews(GNEWS_ENV_QUERY, hours_back, max_articles=15)
         for item in gnews_raw:
             title   = item.get('title', '')
             link    = item.get('url', '')
@@ -929,12 +934,22 @@ def collect_news(hours_back=24):
 # ============================================================
 
 def update_excel_database(articles, collection_stats=None):
+    """
+    Excel DB 완전 업데이트:
+    - 신규기사 노란색(#FFF9C4) 하이라이트
+    - 전체 날짜순 정렬 (최신→오래된)
+    - Area별 색상 구분 (환경=녹, 에너지=황, 도시=보라)
+    - Collection_Log 시트 업데이트
+    - RSS_Sources 시트 업데이트
+    - Summary 시트 업데이트
+    """
     try:
         import openpyxl
-        from openpyxl.styles import Font, PatternFill, Alignment
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+        from collections import Counter
         import shutil
     except ImportError:
-        log("openpyxl not installed — skipping Excel update")
+        log("openpyxl not installed")
         return False
 
     ep = Path(EXCEL_PATH)
@@ -942,7 +957,7 @@ def update_excel_database(articles, collection_stats=None):
         log(f"Excel not found: {ep}")
         return False
 
-    # Safety check
+    # 안전 확인
     try:
         wb_c = openpyxl.load_workbook(ep, read_only=True)
         ws_c = wb_c.active
@@ -955,87 +970,368 @@ def update_excel_database(articles, collection_stats=None):
         log(f"Safety check error: {e}")
         return False
 
-    # Backup
     try:
         shutil.copy2(ep, ep.with_suffix('.xlsx.backup'))
     except Exception:
         pass
 
     try:
-        wb = openpyxl.load_workbook(ep)
-        ws = wb.active
+        wb  = openpyxl.load_workbook(ep)
+        ws  = wb.active
         last_row = ws.max_row
 
-        # Build existing URL set
-        existing_urls = set()
-        url_col = None
-        for col in range(1, ws.max_column + 1):
-            h = ws.cell(row=1, column=col).value
+        # URL 컬럼 찾기
+        url_col = 7
+        for c in range(1, ws.max_column + 1):
+            h = ws.cell(row=1, column=c).value
             if h and "link" in str(h).lower():
-                url_col = col
+                url_col = c
                 break
-        if url_col:
-            for row in range(2, last_row + 1):
-                v = ws.cell(row=row, column=url_col).value
-                if v:
-                    existing_urls.add(v)
 
-        col_map = {
-            'area': 1, 'sector': 2, 'province': 3, 'title': 4,
-            'date': 5, 'source': 6, 'url': 7, 'summary': 8,
-        }
+        # 기존 URL 수집
+        existing_urls = set()
+        for row in range(2, last_row + 1):
+            v = ws.cell(row=row, column=url_col).value
+            if v:
+                existing_urls.add(v)
 
-        added = 0
+        # ── 스타일 ───────────────────────────────────────────
+        NEW_FILL    = PatternFill(start_color="FFF9C4", end_color="FFF9C4", fill_type="solid")
+        NEW_FONT    = Font(bold=True, color="1A1A1A", size=10)
+        ENV_FILL    = PatternFill(start_color="F0FDF4", end_color="F0FDF4", fill_type="solid")
+        ENERGY_FILL = PatternFill(start_color="FFFBEB", end_color="FFFBEB", fill_type="solid")
+        URBAN_FILL  = PatternFill(start_color="F5F3FF", end_color="F5F3FF", fill_type="solid")
+        PLAIN_FONT  = Font(color="1A1A1A", size=10)
+        HDR_FILL    = PatternFill(start_color="0F766E", end_color="0F766E", fill_type="solid")
+        HDR_FONT    = Font(bold=True, color="FFFFFF", size=10)
+        thin_side   = Side(style='thin', color='E2E8F0')
+        thin_border = Border(bottom=thin_side)
+
+        col_map = {'area':1,'sector':2,'province':3,'title':4,'date':5,'source':6,'url':7,'summary':8}
+
+        def area_fill(area):
+            a = str(area).lower()
+            if 'environment' in a: return ENV_FILL
+            if 'energy' in a:      return ENERGY_FILL
+            return URBAN_FILL
+
+        # ── 신규기사 추가 ────────────────────────────────────
+        added    = 0
+        new_urls = set()
         for art in articles:
             if art.get('url') in existing_urls:
                 continue
             nr = last_row + 1 + added
-            ws.cell(row=nr, column=col_map['area'],    value=art.get('area', ''))
-            ws.cell(row=nr, column=col_map['sector'],  value=art.get('sector', ''))
+            ws.cell(row=nr, column=col_map['area'],     value=art.get('area', ''))
+            ws.cell(row=nr, column=col_map['sector'],   value=art.get('sector', ''))
             ws.cell(row=nr, column=col_map['province'], value=art.get('province', 'Vietnam'))
-            ws.cell(row=nr, column=col_map['title'],   value=art.get('title', ''))
-            ws.cell(row=nr, column=col_map['date'],    value=(art.get('published_date', '') or '')[:10])
-            ws.cell(row=nr, column=col_map['source'],  value=art.get('source', ''))
-            ws.cell(row=nr, column=col_map['url'],     value=art.get('url', ''))
-            ws.cell(row=nr, column=col_map['summary'], value=art.get('summary', '')[:500])
-            added += 1
+            ws.cell(row=nr, column=col_map['title'],    value=art.get('title', ''))
+            ws.cell(row=nr, column=col_map['date'],     value=(art.get('published_date','') or '')[:10])
+            ws.cell(row=nr, column=col_map['source'],   value=art.get('source', ''))
+            ws.cell(row=nr, column=col_map['url'],      value=art.get('url', ''))
+            ws.cell(row=nr, column=col_map['summary'],  value=art.get('summary', '')[:500])
+            for c in range(1, 9):
+                ws.cell(row=nr, column=c).fill   = NEW_FILL
+                ws.cell(row=nr, column=c).font   = NEW_FONT
+                ws.cell(row=nr, column=c).border = thin_border
+            added    += 1
+            new_urls.add(art.get('url'))
             existing_urls.add(art.get('url'))
 
-        # Update RSS_Sources sheet
+        log(f"  +{added} new articles added (yellow highlight)")
+
+        # ── 날짜순 정렬 + 색상 재적용 ───────────────────────
+        max_row = ws.max_row
+        if added > 0 and max_row > 2:
+            rows_data = []
+            for r in range(2, max_row + 1):
+                row_vals = [ws.cell(row=r, column=c).value for c in range(1, 9)]
+                date_key = str(row_vals[col_map['date']-1] or '0000-00-00')[:10]
+                url_key  = str(row_vals[col_map['url']-1]  or '')
+                rows_data.append({'vals': row_vals, 'date': date_key, 'is_new': url_key in new_urls})
+
+            rows_data.sort(key=lambda x: x['date'], reverse=True)
+
+            for i, rd in enumerate(rows_data, 2):
+                fill = NEW_FILL if rd['is_new'] else area_fill(rd['vals'][0])
+                font = NEW_FONT if rd['is_new'] else PLAIN_FONT
+                for c in range(1, 9):
+                    cell = ws.cell(row=i, column=c)
+                    cell.value  = rd['vals'][c-1]
+                    cell.fill   = fill
+                    cell.font   = font
+                    cell.border = thin_border
+
+            log(f"  Sorted {max_row-1} rows newest-first | new=yellow env=green energy=yellow urban=purple")
+
+        # 컬럼 너비
+        for col, w in zip('ABCDEFGH', [18,22,20,60,12,22,50,60]):
+            ws.column_dimensions[col].width = w
+        ws.freeze_panes = 'A2'
+
+        # ── RSS_Sources 시트 ──────────────────────────────────
         if collection_stats:
-            if "RSS_Sources" in wb.sheetnames:
-                wb.remove(wb["RSS_Sources"])
+            for sn in ["RSS_Sources"]:
+                if sn in wb.sheetnames:
+                    wb.remove(wb[sn])
             ws_rss = wb.create_sheet("RSS_Sources")
-            hdr_fill = PatternFill(start_color="0F766E", end_color="0F766E", fill_type="solid")
-            for ci, h in enumerate(["Source", "URL", "Status", "Last Check",
-                                    "Entries", "Collected", "Error"], 1):
+            for ci, h in enumerate(["Source","URL","Status","Last Check",
+                                     "Entries","Collected","Error"], 1):
                 c = ws_rss.cell(row=1, column=ci, value=h)
-                c.fill = hdr_fill
-                c.font = Font(bold=True, color="FFFFFF")
+                c.fill = HDR_FILL; c.font = HDR_FONT
+                c.alignment = Alignment(horizontal='center')
+
             for ri, (src, st) in enumerate(collection_stats.items(), 2):
-                ws_rss.cell(row=ri, column=1, value=src)
-                ws_rss.cell(row=ri, column=2, value=st.get('url', ''))
-                ws_rss.cell(row=ri, column=3, value=st.get('status', ''))
-                ws_rss.cell(row=ri, column=4, value=st.get('last_check', ''))
-                ws_rss.cell(row=ri, column=5, value=st.get('entries_found', 0))
-                ws_rss.cell(row=ri, column=6, value=st.get('collected', 0))
-                ws_rss.cell(row=ri, column=7, value=st.get('error', ''))
-                if st.get('status') == 'Success':
-                    ws_rss.cell(row=ri, column=3).fill = PatternFill(
-                        start_color="D1FAE5", end_color="D1FAE5", fill_type="solid")
-                elif st.get('status') == 'Failed':
-                    ws_rss.cell(row=ri, column=3).fill = PatternFill(
-                        start_color="FEE2E2", end_color="FEE2E2", fill_type="solid")
+                ws_rss.cell(row=ri,column=1,value=src)
+                ws_rss.cell(row=ri,column=2,value=st.get('url',''))
+                ws_rss.cell(row=ri,column=3,value=st.get('status',''))
+                ws_rss.cell(row=ri,column=4,value=st.get('last_check',''))
+                ws_rss.cell(row=ri,column=5,value=st.get('entries_found',0))
+                ws_rss.cell(row=ri,column=6,value=st.get('collected',0))
+                ws_rss.cell(row=ri,column=7,value=st.get('error',''))
+                sfill = ("D1FAE5" if st.get('status')=='Success' else
+                         "FEE2E2" if st.get('status')=='Failed' else "F9FAFB")
+                ws_rss.cell(row=ri,column=3).fill = PatternFill(
+                    start_color=sfill,end_color=sfill,fill_type="solid")
+
+            for col,w in zip('ABCDEFG',[28,50,12,20,10,12,45]):
+                ws_rss.column_dimensions[col].width = w
+
+        
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # Source 시트 업데이트 (RSS + GNews API 수집 기록 통합)
+        # 컬럼: Domain | URL | Type | Status | Last Checked |
+        #        Check Result | Articles Found | Note
+        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        _src_sn = "Source"
+        if _src_sn not in wb.sheetnames:
+            ws_src = wb.create_sheet(_src_sn)
+            for _ci, _h in enumerate(["Domain","URL","Type","Status",
+                                       "Last Checked","Check Result","Articles Found","Note"], 1):
+                _c = ws_src.cell(row=1, column=_ci, value=_h)
+                _c.fill = HDR_FILL; _c.font = HDR_FONT
+                _c.alignment = Alignment(horizontal='center')
+        else:
+            ws_src = wb[_src_sn]
+
+        # 기존 도메인·URL → 행번호 인덱스 구축
+        _domain_idx = {}
+        _url_idx    = {}
+        for _r in range(2, ws_src.max_row + 1):
+            _d = ws_src.cell(row=_r, column=1).value
+            _u = ws_src.cell(row=_r, column=2).value
+            if _d:
+                _domain_idx[str(_d).lower().replace('www.','')] = _r
+            if _u:
+                _url_idx[str(_u).rstrip('/')] = _r
+
+        def _ext_domain(_url):
+            try:
+                from urllib.parse import urlparse
+                return urlparse(_url).netloc.lower().replace('www.','')
+            except Exception:
+                return _url
+
+        _run_date = now.strftime("%Y-%m-%d %H:%M")
+
+        # ── RSS 소스별 결과 기록 ──────────────────────────────────
+        if collection_stats:
+            for _sname, _st in collection_stats.items():
+                _feed_url  = _st.get('url', '')
+                if not _feed_url:
+                    continue
+                _domain    = _ext_domain(_feed_url)
+                _status    = _st.get('status', 'Unknown')
+                _collected = _st.get('collected', 0)
+                _entries   = _st.get('entries_found', 0)
+                _err       = _st.get('error', '') or ''
+
+                if _status == 'Success' and _collected > 0:
+                    _result = f"OK — {_entries} entries scanned, {_collected} collected"
+                elif _status == 'Success':
+                    _result = f"OK — {_entries} entries, 0 collected (no matching infra news)"
+                else:
+                    _result = f"FAILED: {_err[:70]}"
+
+                _tr = _url_idx.get(_feed_url.rstrip('/')) or _domain_idx.get(_domain)
+
+                if _tr:
+                    ws_src.cell(row=_tr, column=4, value="Accessible" if _status=='Success' else "Inaccessible")
+                    ws_src.cell(row=_tr, column=5, value=_run_date)
+                    ws_src.cell(row=_tr, column=6, value=_result)
+                    ws_src.cell(row=_tr, column=7, value=_collected)
+                    if _err and _status == 'Failed':
+                        ws_src.cell(row=_tr, column=8, value=_err[:120])
+                else:
+                    _tr = ws_src.max_row + 1
+                    ws_src.cell(row=_tr, column=1, value=_domain)
+                    ws_src.cell(row=_tr, column=2, value=_feed_url)
+                    ws_src.cell(row=_tr, column=3, value="RSS Feed")
+                    ws_src.cell(row=_tr, column=4, value="Accessible" if _status=='Success' else "Inaccessible")
+                    ws_src.cell(row=_tr, column=5, value=_run_date)
+                    ws_src.cell(row=_tr, column=6, value=_result)
+                    ws_src.cell(row=_tr, column=7, value=_collected)
+                    if _err:
+                        ws_src.cell(row=_tr, column=8, value=_err[:120])
+                    _url_idx[_feed_url.rstrip('/')] = _tr
+                    _domain_idx[_domain] = _tr
+
+                _sf = "D1FAE5" if _status == 'Success' else "FEE2E2"
+                ws_src.cell(row=_tr, column=4).fill = PatternFill(
+                    start_color=_sf, end_color=_sf, fill_type="solid")
+
+        # ── GNews API 수집 기사의 원본 소스 기록 ─────────────────
+        _gnews_by_pub = {}
+        _gnews_total  = 0
+        for _art in articles:
+            _asrc = _art.get('source', '') or ''
+            _aurl = _art.get('url', '') or ''
+            _is_gn = ('GNews' in _asrc or 'NewsData' in _asrc or
+                      'gnews' in _aurl.lower() or 'newsdata' in _aurl.lower())
+            if _is_gn:
+                _gnews_total += 1
+                _pub = (_asrc if _asrc not in ('GNews','NewsData')
+                        else _ext_domain(_aurl))
+                _gnews_by_pub[_pub] = _gnews_by_pub.get(_pub, 0) + 1
+
+        _gn_key = "gnews.io (Google News API)"
+        _gn_row = None
+        for _r in range(2, ws_src.max_row + 1):
+            if str(ws_src.cell(row=_r, column=1).value or '').startswith('gnews.io'):
+                _gn_row = _r
+                break
+        if not _gn_row:
+            _gn_row = ws_src.max_row + 1
+
+        ws_src.cell(row=_gn_row, column=1, value=_gn_key)
+        ws_src.cell(row=_gn_row, column=2, value="https://gnews.io/api/v4/search")
+        ws_src.cell(row=_gn_row, column=3, value="News API")
+        ws_src.cell(row=_gn_row, column=4, value="Accessible" if _gnews_total > 0 else "Checked")
+        ws_src.cell(row=_gn_row, column=5, value=_run_date)
+        _pub_list = ', '.join(f"{k}({v})" for k, v in
+                              sorted(_gnews_by_pub.items(), key=lambda x: -x[1])[:10])
+        ws_src.cell(row=_gn_row, column=6,
+                    value=(f"OK — {_gnews_total} articles | {_pub_list}"
+                           if _gnews_total > 0 else f"Queried — 0 new articles")[:200])
+        ws_src.cell(row=_gn_row, column=7, value=_gnews_total)
+        ws_src.cell(row=_gn_row, column=8,
+                    value=f"Queries: Vietnam infra + Vietnam environment | {_run_date}")
+        ws_src.cell(row=_gn_row, column=4).fill = PatternFill(
+            start_color="DBEAFE", end_color="DBEAFE", fill_type="solid")
+
+        # GNews로 수집된 개별 출판사도 Source 시트에 추가/업데이트
+        for _pub, _cnt in _gnews_by_pub.items():
+            if not _pub:
+                continue
+            _ptr = _domain_idx.get(_pub.lower().replace('www.',''))
+            if not _ptr:
+                _ptr = ws_src.max_row + 1
+                ws_src.cell(row=_ptr, column=1, value=_pub)
+                ws_src.cell(row=_ptr, column=2, value=f"(via GNews API: {_pub})")
+                ws_src.cell(row=_ptr, column=3, value="Media/News (via API)")
+                ws_src.cell(row=_ptr, column=4, value="Accessible")
+                _domain_idx[_pub.lower()] = _ptr
+            ws_src.cell(row=_ptr, column=5, value=_run_date)
+            ws_src.cell(row=_ptr, column=6, value=f"Collected via GNews API: {_cnt} articles")
+            ws_src.cell(row=_ptr, column=7, value=_cnt)
+            ws_src.cell(row=_ptr, column=8, value="Accessed via Google News API aggregation")
+
+        # Source 시트 컬럼 너비 & 헤더 정비
+        for _col, _w in zip('ABCDEFGH', [30, 52, 18, 14, 20, 60, 16, 55]):
+            ws_src.column_dimensions[_col].width = _w
+        ws_src.freeze_panes = 'A2'
+        if ws_src.cell(row=1, column=1).value != 'Domain':
+            for _ci, _h in enumerate(["Domain","URL","Type","Status",
+                                       "Last Checked","Check Result","Articles Found","Note"], 1):
+                _c = ws_src.cell(row=1, column=_ci, value=_h)
+                _c.fill = HDR_FILL; _c.font = HDR_FONT
+                _c.alignment = Alignment(horizontal='center')
+
+        _rss_ok = sum(1 for _s in (collection_stats or {}).values() if _s.get('status')=='Success')
+        _rss_tot = len(collection_stats) if collection_stats else 0
+        log(f"✓ Source sheet updated | RSS {_rss_ok}/{_rss_tot} OK | GNews {_gnews_total} articles from {len(_gnews_by_pub)} publishers")
+
+
+        # ── Collection_Log 시트 ───────────────────────────────
+        if "Collection_Log" not in wb.sheetnames:
+            ws_log = wb.create_sheet("Collection_Log")
+            for ci,h in enumerate(["Date","Time","Hours Back","Sources Checked",
+                                    "Success","Failed","New Articles","Total DB"],1):
+                c = ws_log.cell(row=1,column=ci,value=h)
+                c.fill=HDR_FILL; c.font=HDR_FONT
+        else:
+            ws_log = wb["Collection_Log"]
+
+        now      = datetime.now()
+        tot_src  = len(collection_stats) if collection_stats else 0
+        ok_src   = sum(1 for s in (collection_stats or {}).values() if s.get('status')=='Success')
+        log_row  = ws_log.max_row + 1
+        cur_total = sum(1 for r in ws.iter_rows(min_row=2,values_only=True) if any(r))
+
+        ws_log.cell(row=log_row,column=1,value=now.strftime("%Y-%m-%d"))
+        ws_log.cell(row=log_row,column=2,value=now.strftime("%H:%M:%S"))
+        ws_log.cell(row=log_row,column=3,value=HOURS_BACK)
+        ws_log.cell(row=log_row,column=4,value=tot_src)
+        ws_log.cell(row=log_row,column=5,value=ok_src)
+        ws_log.cell(row=log_row,column=6,value=tot_src - ok_src)
+        ws_log.cell(row=log_row,column=7,value=added)
+        ws_log.cell(row=log_row,column=8,value=cur_total)
+        today_hl = PatternFill(start_color="DBEAFE",end_color="DBEAFE",fill_type="solid")
+        for c in range(1,9):
+            ws_log.cell(row=log_row,column=c).fill = today_hl
+
+        # ── Summary 시트 ─────────────────────────────────────
+        for sn in ["Summary"]:
+            if sn in wb.sheetnames:
+                wb.remove(wb[sn])
+        ws_sum = wb.create_sheet("Summary")
+
+        # 전체 집계
+        sectors_all  = [str(ws.cell(row=r,column=2).value or '') for r in range(2,ws.max_row+1) if any(ws.cell(row=r,column=c).value for c in range(1,9))]
+        areas_all    = [str(ws.cell(row=r,column=1).value or '') for r in range(2,ws.max_row+1) if any(ws.cell(row=r,column=c).value for c in range(1,9))]
+        prov_all     = [str(ws.cell(row=r,column=3).value or '') for r in range(2,ws.max_row+1) if any(ws.cell(row=r,column=c).value for c in range(1,9))]
+        total_arts   = len(sectors_all)
+
+        ws_sum.merge_cells('A1:D1')
+        tc = ws_sum.cell(row=1,column=1,value="🇻🇳 Vietnam Infrastructure News — Summary")
+        tc.font=Font(bold=True,size=14,color="0F766E"); tc.alignment=Alignment(horizontal='center')
+        ws_sum.cell(row=2,column=1,value=f"Updated: {now.strftime('%Y-%m-%d %H:%M')}  |  Total: {total_arts:,} articles")
+        ws_sum.cell(row=2,column=1).font=Font(size=10,color="475569")
+
+        r = 4
+        ws_sum.cell(row=r,column=1,value="Business Sector").font=Font(bold=True,size=11)
+        ws_sum.cell(row=r,column=2,value="Articles").font=Font(bold=True,size=11)
+        ws_sum.cell(row=r,column=3,value="Share").font=Font(bold=True,size=11)
+        r += 1
+        for sect,cnt in Counter(sectors_all).most_common():
+            ws_sum.cell(row=r,column=1,value=sect)
+            ws_sum.cell(row=r,column=2,value=cnt)
+            ws_sum.cell(row=r,column=3,value=f"{cnt/total_arts*100:.1f}%" if total_arts else "0%")
+            r += 1
+
+        r += 1
+        ws_sum.cell(row=r,column=1,value="Area").font=Font(bold=True,size=11)
+        r += 1
+        for area,cnt in Counter(areas_all).most_common():
+            ws_sum.cell(row=r,column=1,value=area); ws_sum.cell(row=r,column=2,value=cnt); r+=1
+
+        r += 1
+        ws_sum.cell(row=r,column=1,value="Top 15 Provinces").font=Font(bold=True,size=11)
+        r += 1
+        for prov,cnt in Counter(prov_all).most_common(15):
+            ws_sum.cell(row=r,column=1,value=prov); ws_sum.cell(row=r,column=2,value=cnt); r+=1
+
+        for col,w in zip('ABCD',[30,12,10,10]):
+            ws_sum.column_dimensions[col].width = w
 
         wb.save(ep)
         wb.close()
-        log(f"Excel updated: +{added} articles  |  total {last_row - 1 + added}")
+        log(f"✓ Excel saved | +{added} new(yellow) | total {cur_total} | sorted ↓date | Log+RSS+Summary updated")
         return True
 
     except Exception as e:
         log(f"Excel update error: {e}")
-        import traceback
-        traceback.print_exc()
+        import traceback; traceback.print_exc()
         return False
 
 
