@@ -26,14 +26,20 @@ try:
 except ImportError:
     REQUESTS_AVAILABLE = False
 
-from config.settings import (
-    TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID,
-    SLACK_WEBHOOK_URL,
-    EMAIL_SMTP_SERVER, EMAIL_SMTP_PORT,
-    EMAIL_USERNAME, EMAIL_PASSWORD, EMAIL_RECIPIENTS,
-    KAKAO_REST_API_KEY, KAKAO_REFRESH_TOKEN,
-    DATA_DIR
-)
+import os
+
+# 환경변수에서 직접 읽기 (config.settings 의존성 제거)
+TELEGRAM_BOT_TOKEN  = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+TELEGRAM_CHAT_ID    = os.environ.get('TELEGRAM_CHAT_ID', '')
+SLACK_WEBHOOK_URL   = os.environ.get('SLACK_WEBHOOK_URL', '')
+EMAIL_SMTP_SERVER   = os.environ.get('EMAIL_SMTP_SERVER', 'smtp.gmail.com')
+EMAIL_SMTP_PORT     = int(os.environ.get('EMAIL_SMTP_PORT', '587'))
+EMAIL_USERNAME      = os.environ.get('EMAIL_USERNAME', '')
+EMAIL_PASSWORD      = os.environ.get('EMAIL_PASSWORD', '')
+EMAIL_RECIPIENTS    = os.environ.get('EMAIL_RECIPIENTS', '').split(',')
+KAKAO_REST_API_KEY  = os.environ.get('KAKAO_REST_API_KEY', '')
+KAKAO_REFRESH_TOKEN = os.environ.get('KAKAO_REFRESH_TOKEN', '')
+DATA_DIR            = Path(__file__).parent.parent / "data"
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -283,11 +289,9 @@ class NotificationManager:
                 today_articles.append(article)
         
         area_sector = {
-            "Environment":       {"total": 0, "sectors": Counter()},
-            "Energy":            {"total": 0, "sectors": Counter()},
-            "Energy Develop.":   {"total": 0, "sectors": Counter()},
-            "Urban Development": {"total": 0, "sectors": Counter()},
-            "Urban Develop.":    {"total": 0, "sectors": Counter()}
+            "Environment": {"total": 0, "sectors": Counter()},
+            "Energy Develop.": {"total": 0, "sectors": Counter()},
+            "Urban Develop.": {"total": 0, "sectors": Counter()}
         }
         
         province_counts = Counter()
