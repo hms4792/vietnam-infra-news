@@ -16,7 +16,11 @@ env:
   GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
   ENABLE_GNEWS: "true"
   LANGUAGE_FILTER: "all"
-
+  
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
