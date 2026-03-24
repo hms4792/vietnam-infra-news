@@ -396,9 +396,9 @@ def send_notifications(all_articles, new_articles, qc_result):
         logger.info("[Step 6] 알림 건너뜀 (SKIP_NOTIFY=true)")
         return False
 
-    logger.info("\n[Step 6] 알림 발송...")
+    logger.info(f"\n[Step 6] 알림 발송 ({len(new_articles)}건 신규)...")
     try:
-        import importlib.util
+        import importlib.util, asyncio
         notifier_path = SCRIPT_DIR / "notifier.py"
 
         if not notifier_path.exists():
@@ -410,13 +410,19 @@ def send_notifications(all_articles, new_articles, qc_result):
         spec.loader.exec_module(module)
 
         manager = module.NotificationManager()
-        data    = manager.prepare_briefing_data(new_articles)
-        result  = manager.send_all(data)
+
+        # send_all()은 async 함수이므로 asyncio.run() 사용
+        # 인자: articles 리스트 (dict가 아님)
+        result = asyncio.run(manager.send_all(
+            articles=new_articles,
+            dashboard_url="https://hms4792.github.io/vietnam-infra-news/"
+        ))
         logger.info(f"알림 결과: {result}")
-        return True
+        return result.get("email", False)
 
     except Exception as e:
         logger.error(f"알림 오류: {e}")
+        import traceback; traceback.print_exc()
         return False
 
 
