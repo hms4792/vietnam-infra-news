@@ -323,11 +323,6 @@ SECTOR_KEYWORDS = {
         ],
     },
     # ── 환경/에너지 전문 소스 (신규 추가) ─────────────────────────
-    "VietnamPlus - Moi truong":      "https://www.vietnamplus.vn/rss/moitruong.rss",
-    "Nhandan - Moi truong":          "https://nhandan.vn/rss/moi-truong.rss",
-    "Bao Dau Tu - Energy":           "https://baodautu.vn/rss/nang-luong.rss",
-    "Vietnam Energy alt":            "https://vietnamenergy.vn/rss/tin-tuc.rss",
-    "Tap chi Xay dung":              "https://tapchixaydung.vn/rss/home.rss",
 }
 
 
@@ -461,7 +456,6 @@ RSS_FEEDS = {
     "CafeBiz":                        "https://cafebiz.vn/rss/home.rss",
     # ── 베트남어 전문 소스 ─────────────────────────────────────
     "Bao Xay Dung":                   "https://baoxaydung.com.vn/rss/home.rss",       # [검증보고서] 우선추가
-    "VietnamPlus - Moi truong":      "https://www.vietnamplus.vn/rss/moitruong.rss",
     # ── 북부 지역 ─────────────────────────────────────────────
     # ── 중부 지역 ─────────────────────────────────────────────
     "Bao Ha Tinh":                    "https://baohatinh.vn/rss/home.rss",
@@ -469,6 +463,12 @@ RSS_FEEDS = {
     # ── 남부 지역 ─────────────────────────────────────────────
     "SGGP":                           "https://www.sggp.org.vn/rss/home.rss",
     # ── 메콩 델타 ─────────────────────────────────────────────
+    # ── 환경/에너지 전문 소스 ──────────────────────────────────
+    "VietnamPlus - Moi truong":      "https://www.vietnamplus.vn/rss/moitruong.rss",
+    "Nhandan - Moi truong":          "https://nhandan.vn/rss/moi-truong.rss",
+    "Bao Dau Tu - Energy":           "https://baodautu.vn/rss/nang-luong.rss",
+    "Vietnam Energy alt":            "https://vietnamenergy.vn/rss/tin-tuc.rss",
+    "Tap chi Xay dung":              "https://tapchixaydung.vn/rss/home.rss",
 }
 
 
