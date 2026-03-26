@@ -547,7 +547,26 @@ function setLang(l) {{
 function getText(obj) {{
     if (!obj) return '';
     if (typeof obj === 'string') return obj;
+    // 선택된 언어로 번역이 있으면 사용, 없으면 영어, 없으면 어떤 언어든 반환
     return obj[lang] || obj.en || obj.ko || obj.vi || '';
+}}
+
+function getTitleDisplay(n) {{
+    // title: AI 번역 있으면 해당 언어, 없으면 영어 원문 + [번역중] 표시
+    const t = getText(n.title);
+    if (lang !== 'en' && n.title && n.title[lang] && n.title[lang] !== n.title['en']) {{
+        return n.title[lang];  // 실제 번역된 제목
+    }}
+    return n.title ? (n.title.en || n.title.vi || n.title.ko || '') : '';
+}}
+
+function getSummaryDisplay(n) {{
+    const s = n.summary || {{}};
+    if (lang === 'ko' && s.ko) return s.ko;
+    if (lang === 'vi' && s.vi) return s.vi;
+    if (lang === 'en' && s.en) return s.en;
+    // fallback: 어떤 언어든 있는 것 반환
+    return s.en || s.ko || s.vi || '';
 }}
 
 function getSectorColor(area) {{
@@ -566,8 +585,8 @@ function renderNews() {{
                 <span class="text-xs text-slate-500">${{n.date}}</span>
                 <span class="text-xs text-slate-400">${{n.source}}</span>
             </div>
-            <h3 class="font-medium text-slate-800">${{getText(n.title)}}</h3>
-            <p class="text-sm text-slate-600 mt-1">${{getText(n.summary).slice(0, 150)}}...</p>
+            <h3 class="font-medium text-slate-800">${{getTitleDisplay(n)}}</h3>
+            <p class="text-sm text-slate-600 mt-1">${{getSummaryDisplay(n).slice(0, 180)}}${{getSummaryDisplay(n).length > 180 ? '...' : ''}}</p>
             <a href="${{n.url}}" target="_blank" class="text-xs text-teal-600 hover:underline mt-1 inline-block">원문보기 →</a>
         </div>
     `).join('');
