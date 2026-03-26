@@ -46,7 +46,7 @@ EXCEL_PATH       = os.environ.get('EXCEL_PATH',    'data/database/Vietnam_Infra_
 LANGUAGE_FILTER  = os.environ.get('LANGUAGE_FILTER', 'all').lower()
 
 # [검증보고서] 분류 최소 임계값: 3점 이상이어야 섹터 확정
-MIN_CLASSIFY_THRESHOLD = 3
+MIN_CLASSIFY_THRESHOLD = 2  # 베트남어 기사 포용 (제목 secondary 키워드 2점으로 분류)
 
 # Google News API (Nikkei/Reuters 보완용)
 GNEWS_API_KEY    = os.environ.get('GNEWS_API_KEY', '')
@@ -124,6 +124,10 @@ SECTOR_KEYWORDS = {
             "nước sạch",     # VN: clean water
             "cấp nước",      # VN: water supply
             "thoát nước",    # VN: drainage
+            "chống ngập",    # VN: flood prevention
+            "hồ chứa nước", # VN: reservoir
+            "nhà máy nước", # VN: water plant
+            "nước sinh hoạt", # VN: household water
         ],
         "secondary": [
             "clean water", "drinking water",
@@ -175,6 +179,10 @@ SECTOR_KEYWORDS = {
             "năng lượng tái tạo",   # VN: renewable energy
             "điện mặt trời",        # VN: solar power
             "điện gió",             # VN: wind power
+            "thủy điện",            # VN: hydropower
+            "nhiệt điện",           # VN: thermal power
+            "lưới điện",            # VN: power grid
+            "truyền tải điện",      # VN: power transmission
         ],
         "secondary": [
             "wind power", "solar power", "solar energy", "photovoltaic",
@@ -207,6 +215,10 @@ SECTOR_KEYWORDS = {
             "lò đốt rác",     # VN: incinerator
             "bãi rác",        # VN: landfill/dump
             "xử lý rác",      # VN: waste treatment
+            "chất thải rắn",  # VN: solid waste
+            "nhà máy xử lý rác",  # VN: waste treatment plant
+            "thu gom rác",    # VN: waste collection
+            "đốt rác phát điện",  # VN: waste-to-energy
         ],
         "secondary": [
             "solid waste", "garbage collection", "garbage disposal",
@@ -373,12 +385,27 @@ NON_VIETNAM_COUNTRIES = [
 ]
 
 VIETNAM_KEYWORDS = [
+    # 영문 표기
     "vietnam", "vietnamese", "viet nam",
     "hanoi", "ho chi minh", "hcmc", "saigon",
     "da nang", "hai phong", "can tho",
     "binh duong", "dong nai", "quang ninh",
     "mekong", "evn", "petrovietnam", "pvn",
-    "việt nam",
+    # 베트남어 발음부호 형태 (베트남어 기사 감지용)
+    "việt nam", "hà nội", "tp.hcm", "tp hcm",
+    "đà nẵng", "hải phòng", "cần thơ",
+    "bình dương", "đồng nai", "quảng ninh",
+    "hà long", "bắc ninh", "long an",
+    "quảng ngãi", "bình định", "khánh hòa",
+    "lâm đồng", "đắk lắk", "gia lai",
+    "tiền giang", "bến tre", "an giang",
+    "kiên giang", "cà mau", "sóc trăng",
+    "thanh hoá", "nghệ an", "hà tĩnh",
+    "quảng bình", "quảng trị", "thừa thiên",
+    "thái nguyên", "bắc giang", "hưng yên",
+    "vĩnh phúc", "phú thọ", "hòa bình",
+    # 공기업/기관 베트남어
+    "tập đoàn điện lực", "tập đoàn dầu khí",
 ]
 
 
