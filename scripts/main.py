@@ -152,11 +152,13 @@ def collect_new_articles():
 # ============================================================
 
 def run_summarizer(new_articles):
-    if SKIP_SUMMARIZER or not new_articles:
-        logger.info("[Step 3] 요약 건너뜀")
+    if SKIP_SUMMARIZER:
+        logger.info("[Step 3] 요약 건너뜀 (SKIP_SUMMARIZER=true)")
         return new_articles
 
-    logger.info(f"\n[Step 3] AI 요약 시작 ({len(new_articles)}건)...")
+    logger.info(f"\n[Step 3] AI 요약 시작 (신규 {len(new_articles)}건)...")
+
+    DB_PATH_LOCAL = os.environ.get('DB_PATH', str(DATA_DIR / 'vietnam_infrastructure_news.db'))
 
     try:
         import importlib.util
@@ -171,11 +173,28 @@ def run_summarizer(new_articles):
         spec.loader.exec_module(module)
 
         summarizer = module.AISummarizer()
-        result     = summarizer.process_articles(new_articles)
 
-        api_ok   = sum(1 for a in result if not a.get('is_fallback'))
-        fallback = sum(1 for a in result if a.get('is_fallback'))
-        logger.info(f"요약 완료: API={api_ok} | fallback={fallback}")
+        # ① 신규 기사 번역 (있을 때만)
+        result = new_articles
+        if new_articles:
+            result = summarizer.process_articles(new_articles)
+            api_ok   = sum(1 for a in result if not a.get('is_fallback'))
+            fallback = sum(1 for a in result if a.get('is_fallback'))
+            logger.info(f"  신규 번역: API={api_ok} | fallback={fallback}")
+        else:
+            logger.info("  신규 기사 없음 — 기존 미번역 배치로 이동")
+
+        # ② 기존 미번역 기사 배치 번역 (매 실행 시 최대 20건)
+        # 기존 DB에 summary_ko 없는 기사를 점진적으로 번역
+        if hasattr(summarizer, 'translate_existing_articles'):
+            from pathlib import Path as _P
+            db_path = DB_PATH_LOCAL
+            if _P(db_path).exists():
+                translated = summarizer.translate_existing_articles(db_path, max_batch=20)
+                logger.info(f"  기존 기사 배치 번역: {translated}건 완료")
+            else:
+                logger.info(f"  SQLite DB 없음: {db_path}")
+
         return result
 
     except Exception as e:
