@@ -32,7 +32,7 @@ ANTHROPIC_API_KEY = (
     or os.environ.get('CLAUDE_API_KEY', '')
 )
 MODEL_SUMMARIZER   = os.environ.get('SUMMARIZER_MODEL', 'claude-sonnet-4-20250514')
-MAX_ARTICLES_BATCH = int(os.environ.get('SUMMARIZER_BATCH', 20))
+MAX_ARTICLES_BATCH = int(os.environ.get('SUMMARIZER_BATCH', 30))  # 신규 기사 번역 배치 크기
 REQUEST_DELAY      = float(os.environ.get('SUMMARIZER_DELAY', 1.5))  # 초 (rate limit 방지)
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
@@ -325,6 +325,49 @@ Return ONLY a JSON object (no markdown, no explanation):
             f"qc_flagged={qc_cnt} / {len(articles)} total"
         )
         return articles
+
+    # ── 기존 미번역 기사 배치 번역 (매 실행시 최대 N건) ────────
+    def translate_existing_articles(self, db_path: str, max_batch: int = 20) -> int:
+        """
+        SQLite DB에서 summary_ko가 없는 기존 기사를 배치 번역.
+        신규 기사가 0건이어도 기존 DB를 점진적으로 번역.
+        매 파이프라인 실행 시 max_batch건씩 처리.
+        """
+        if not self.api_available:
+            logger.info("API 없음 — 기존 기사 번역 건너뜀")
+            return 0
+
+        import sqlite3
+        try:
+            conn = sqlite3.connect(db_path)
+            conn.row_factory = sqlite3.Row
+            # summary_ko가 없거나 fallback 패턴인 기사 조회
+            rows = conn.execute("""
+                SELECT url_hash, url, title, summary, sector, area, province
+                FROM articles
+                WHERE (summary_ko IS NULL OR summary_ko = '' OR summary_ko LIKE '[%]%:%')
+                  AND processed = 0
+                ORDER BY collected_date DESC
+                LIMIT ?
+            """, (max_batch,)).fetchall()
+            conn.close()
+
+            if not rows:
+                logger.info("번역 대기 기사 없음")
+                return 0
+
+            logger.info(f"기존 미번역 기사 {len(rows)}건 Claude API 번역 시작...")
+            articles = [dict(r) for r in rows]
+            processed = self.process_articles(articles, max_articles=max_batch)
+            self.update_sqlite_summaries(processed, db_path)
+
+            translated = sum(1 for a in processed if not a.get('is_fallback'))
+            logger.info(f"기존 기사 번역 완료: {translated}/{len(rows)}건 API 번역")
+            return translated
+
+        except Exception as e:
+            logger.error(f"기존 기사 번역 오류: {e}")
+            return 0
 
     # ── SQLite 업데이트 ───────────────────────────────────────
     def update_sqlite_summaries(self, articles: List[Dict], db_path: str):
