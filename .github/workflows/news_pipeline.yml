@@ -29,14 +29,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ── 1. 저장소 체크아웃 ─────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # ── 2. Python 환경 설정 ────────────────────────────────────
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
@@ -46,8 +44,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # ── 3. Excel DB 존재 확인 (없으면 오류 출력) ───────────────
-      - name: Verify Excel DB exists
+      - name: Verify Excel DB
         run: |
           if [ -f "$EXCEL_PATH" ]; then
             echo "✓ Excel DB: $(du -sh $EXCEL_PATH)"
@@ -55,74 +52,56 @@ jobs:
           import openpyxl
           wb = openpyxl.load_workbook('$EXCEL_PATH', read_only=True)
           ws = wb.active
-          count = sum(1 for r in ws.iter_rows(min_row=2, values_only=True) if any(r))
+          n = sum(1 for r in ws.iter_rows(min_row=2,values_only=True) if any(r))
+          print(f'  Rows: {n:,}')
           wb.close()
-          print(f'  Rows: {count:,}')
           "
           else
-            echo "⚠ Excel DB not found: $EXCEL_PATH"
-            echo "  Checking data/ folder:"
-            find data/ -name "*.xlsx" 2>/dev/null || echo "  No xlsx files found"
+            echo "⚠ Excel DB not found at $EXCEL_PATH"
           fi
 
-      # ── 4. 뉴스 수집 (SQLite + Excel 동시 업데이트) ────────────
-      - name: Collect news
-        run: |
-          echo "=== Collecting news (last $HOURS_BACK hours) ==="
-          python scripts/news_collector.py --hours-back $HOURS_BACK
-          echo "=== Collection complete ==="
-
-      # ── 5. AI 요약 + 대시보드 생성 + 이메일 발송 ─────────────
-      - name: Run main pipeline (summarizer + dashboard + email)
+      # ── 핵심: main.py 단일 실행 ──────────────────────────────
+      # news_collector를 별도 실행하지 않음
+      # main.py 내부에서 collect → 번역 → 대시보드 → 이메일 순서로 실행
+      - name: Run full pipeline (collect → translate → dashboard → email)
         run: |
           echo "=== Running main pipeline ==="
           python scripts/main.py
           echo "=== Pipeline complete ==="
-          # 생성된 파일 확인
           echo "Output files:"
-          ls -lh outputs/*.html 2>/dev/null || echo "  No HTML files"
+          ls -lh outputs/*.html 2>/dev/null || echo "  No HTML"
 
-      # ── 6. 변경된 DB 파일 커밋 & 푸시 ────────────────────────
-      - name: Commit & push updated databases
+      - name: Commit & push databases
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # 변경 파일 스테이징
-          git add "$EXCEL_PATH"                         || true
-          git add "data/vietnam_infrastructure_news.db" || true
-
-          # 변경사항 있을 때만 커밋
+          git add "data/database/*.xlsx" || true
+          git add "$EXCEL_PATH"          || true
+          git add "data/*.db"            || true
           if git diff --cached --quiet; then
-            echo "No DB changes to commit"
+            echo "No DB changes"
           else
-            # SQLite에서 총 기사 수 조회
-            ARTICLE_COUNT=$(python3 -c "
+            COUNT=$(python3 -c "
           import sqlite3
           try:
-              c = sqlite3.connect('data/vietnam_infrastructure_news.db')
-              n = c.execute('SELECT COUNT(*) FROM articles').fetchone()[0]
-              c.close()
-              print(n)
-          except Exception as e:
-              print('?')
+            c=sqlite3.connect('data/vietnam_infrastructure_news.db')
+            n=c.execute('SELECT COUNT(*) FROM articles').fetchone()[0]
+            c.close(); print(n)
+          except: print('?')
           " 2>/dev/null || echo "?")
-            git commit -m "Auto-update DB $(date +'%Y-%m-%d'): ${ARTICLE_COUNT} total articles"
+            git commit -m "Auto-update DB $(date +'%Y-%m-%d'): ${COUNT} articles"
             git push
-            echo "✓ DB files pushed (Excel + SQLite)"
+            echo "✓ Pushed"
           fi
 
-      # ── 7. GitHub Pages 배포 ───────────────────────────────────
-      - name: Deploy dashboard to GitHub Pages
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir:    ./outputs
           publish_branch: gh-pages
-          commit_message: "Deploy dashboard $(date +'%Y-%m-%d')"
 
-      # ── 8. 아티팩트 저장 ──────────────────────────────────────
-      - name: Upload pipeline artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: pipeline-outputs-${{ github.run_number }}
