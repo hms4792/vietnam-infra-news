@@ -1,456 +1,203 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Vietnam Infrastructure News — AI Summarizer
-Version 2.0 — Genspark Multilingual Summary Agent 스펙 완전 구현
+ai_summarizer.py
+================
+Claude API를 사용해 베트남어 기사를 3개국어로 번역/요약하는 모듈
 
-반영된 개선사항:
-  [검증보고서] API 키 미설정 시 템플릿 반복 생성 문제 해결
-  [검증보고서] 요약문 71.9% 누락 → 실제 Claude API 호출로 해결
-  [Genspark]  3개 국어 동시 생성 (KO / EN / VI)
-  [Genspark]  Who / What / Where / When 구조화 요약 프롬프트
-  [Genspark]  URL 크롤링 실패 시 RSS description 기반 fallback
-  [Genspark]  Rate limit → 재시도 with 지수 백오프
-  [Genspark]  confidence_score < 80인 기사 → QC 플래그 처리
-  [main.py]   config.settings 의존성 제거 → 환경변수 직접 읽기
+Gemini 진단 수정사항 반영:
+  1. anthropic 패키지 임포트 확인 및 명확한 에러 메시지
+  2. 번역 결과를 반드시 title_en/ko/vi, summary_en/ko/vi 필드로 반환
+  3. API 실패 시 구조화된 fallback 데이터 반환 (파이프라인 중단 방지)
 """
 
-import os
-import sys
-import time
 import json
 import logging
-from pathlib import Path
-from typing import List, Dict, Optional
+import os
+import time
+from typing import Optional
 
-import requests
-from bs4 import BeautifulSoup
-
-# ── 환경변수 직접 읽기 (config.settings 의존성 제거) ──────────
-ANTHROPIC_API_KEY = (
-    os.environ.get('ANTHROPIC_API_KEY', '')
-    or os.environ.get('CLAUDE_API_KEY', '')
-)
-MODEL_SUMMARIZER   = os.environ.get('SUMMARIZER_MODEL', 'claude-sonnet-4-20250514')
-MAX_ARTICLES_BATCH = int(os.environ.get('SUMMARIZER_BATCH', 30))  # 신규 기사 번역 배치 크기
-REQUEST_DELAY      = float(os.environ.get('SUMMARIZER_DELAY', 1.5))  # 초 (rate limit 방지)
-
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-try:
-    from anthropic import Anthropic, RateLimitError, APIError
-    ANTHROPIC_AVAILABLE = True
-except ImportError:
-    ANTHROPIC_AVAILABLE = False
-    logger.warning("anthropic 패키지 미설치 — fallback 모드로 실행")
+# ── Claude API 모델 설정 ───────────────────────────────────
+CLAUDE_MODEL   = "claude-haiku-4-5-20251001"   # 비용 효율적 모델
+MAX_TOKENS     = 800
+BATCH_SIZE     = 5    # 한 번에 처리할 기사 수 (API 부하 조절)
+RETRY_COUNT    = 3    # API 실패 시 재시도 횟수
+RETRY_DELAY    = 2.0  # 재시도 대기 시간(초)
 
-
-# ============================================================
-# SECTOR 번역 매핑 (다국어 요약 품질 향상)
-# ============================================================
-
-SECTOR_KO = {
-    "Waste Water":            "폐수처리",
-    "Water Supply/Drainage":  "상수도/배수",
-    "Solid Waste":            "고형폐기물",
-    "Power":                  "발전/전력",
-    "Oil & Gas":              "석유/가스",
-    "Transport":              "교통인프라",
-    "Industrial Parks":       "산업단지",
-    "Smart City":             "스마트시티",
-    "Construction":           "건설/도시개발",
-}
-
-SECTOR_VI = {
-    "Waste Water":            "Xử lý nước thải",
-    "Water Supply/Drainage":  "Cấp thoát nước",
-    "Solid Waste":            "Chất thải rắn",
-    "Power":                  "Điện năng",
-    "Oil & Gas":              "Dầu khí",
-    "Transport":              "Giao thông",
-    "Industrial Parks":       "Khu công nghiệp",
-    "Smart City":             "Thành phố thông minh",
-    "Construction":           "Xây dựng",
-}
-
-
-# ============================================================
-# URL CONTENT FETCHER
-# [Genspark] Step 1: URL 크롤링 → 본문 추출
-# ============================================================
-
-def fetch_article_content(url: str, timeout: int = 10) -> str:
-    """URL에서 기사 본문을 추출합니다. 실패 시 빈 문자열 반환."""
-    if not url or not url.startswith('http'):
-        return ""
-    try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0.0.0',
-            'Accept': 'text/html,application/xhtml+xml',
-            'Accept-Language': 'en,vi;q=0.9,ko;q=0.8',
-        }
-        resp = requests.get(url, headers=headers, timeout=timeout)
-        resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, 'html.parser')
-
-        # nav / header / footer / aside 제거
-        for tag in soup.find_all(['nav', 'header', 'footer', 'aside',
-                                   'script', 'style', 'noscript']):
-            tag.decompose()
-
-        # 기사 본문 후보 태그 탐색
-        for selector in ['article', '.article-body', '.post-content',
-                         '.entry-content', 'main', '#content']:
-            el = soup.select_one(selector)
-            if el:
-                text = el.get_text(separator=' ', strip=True)
-                if len(text) > 200:
-                    return text[:3000]
-
-        # fallback: body 전체
-        body = soup.find('body')
-        return body.get_text(separator=' ', strip=True)[:3000] if body else ""
-
-    except Exception as e:
-        logger.debug(f"Content fetch failed [{url}]: {e}")
-        return ""
-
-
-# ============================================================
-# SUMMARIZER CLASS
-# ============================================================
 
 class AISummarizer:
     """
-    [Genspark Multilingual Summary Agent 구현]
-    - Claude API로 EN → KO → VI 3개국어 요약 동시 생성
-    - API 실패 시 구조화된 fallback 템플릿 사용
+    Claude API 기반 베트남어 → 3개국어 번역/요약기
+    
+    출력 필드 (반드시 모든 기사에 포함):
+      - title_en:   영어 제목
+      - title_ko:   한국어 제목
+      - title_vi:   베트남어 제목 (원문)
+      - summary_en: 영어 요약 (2~3문장)
+      - summary_ko: 한국어 요약 (2~3문장)
+      - summary_vi: 베트남어 요약 (2~3문장)
     """
 
     def __init__(self):
-        self.client = None
-        self.api_available = False
+        self.api_key = os.environ.get('ANTHROPIC_API_KEY', '')
+        self.client  = None
+        self._init_client()
 
-        if not ANTHROPIC_AVAILABLE:
-            logger.warning("anthropic 패키지 없음 — fallback 모드")
-            return
-
-        if not ANTHROPIC_API_KEY:
-            logger.warning("ANTHROPIC_API_KEY 미설정 — fallback 모드")
+    def _init_client(self):
+        """Anthropic 클라이언트 초기화"""
+        if not self.api_key:
+            logger.error(
+                "[AISummarizer] ANTHROPIC_API_KEY 없음!\n"
+                "  → GitHub Secrets에 ANTHROPIC_API_KEY 등록 필요\n"
+                "  → workflow yml의 env에 ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }} 확인"
+            )
             return
 
         try:
-            self.client       = Anthropic(api_key=ANTHROPIC_API_KEY)
-            self.api_available = True
-            logger.info(f"AISummarizer ready | model={MODEL_SUMMARIZER}")
+            # ★★★ Gemini 진단 #1: anthropic 패키지 필수 ★★★
+            import anthropic
+            self.client = anthropic.Anthropic(api_key=self.api_key)
+            logger.info("[AISummarizer] Claude API 클라이언트 초기화 완료")
+        except ImportError:
+            logger.error(
+                "[AISummarizer] anthropic 패키지 미설치!\n"
+                "  → workflow yml의 pip install 목록에 'anthropic' 추가 필요\n"
+                "  → pip install anthropic"
+            )
         except Exception as e:
-            logger.error(f"Anthropic 초기화 실패: {e}")
+            logger.error(f"[AISummarizer] 클라이언트 초기화 실패: {e}")
 
-    # ── Fallback 요약 ─────────────────────────────────────────
-    def _fallback(self, title: str, sector: str, province: str) -> Dict:
+    def process_articles(self, articles: list) -> list:
         """
-        [검증보고서] API 미작동 시 단순 반복 템플릿 방지
-        → 구조화된 정보 기반 fallback 사용
-        """
-        sector_ko = SECTOR_KO.get(sector, sector)
-        sector_vi = SECTOR_VI.get(sector, sector)
-        short     = title[:120] if len(title) > 120 else title
-
-        return {
-            "en": f"[{sector}] Infrastructure project in {province}: {short}",
-            "ko": f"[{sector_ko}] {province} 인프라 프로젝트: {short}",
-            "vi": f"[{sector_vi}] Dự án hạ tầng tại {province}: {short}",
-            "is_fallback": True,
-        }
-
-    # ── Claude API 호출 (재시도 포함) ─────────────────────────
-    def _call_api(self, prompt: str, retries: int = 3) -> Optional[str]:
-        for attempt in range(retries):
-            try:
-                msg = self.client.messages.create(
-                    model=MODEL_SUMMARIZER,
-                    max_tokens=600,
-                    messages=[{"role": "user", "content": prompt}],
-                )
-                return msg.content[0].text.strip()
-
-            except Exception as e:
-                err_str = str(e)
-                if 'rate_limit' in err_str.lower() or 'overloaded' in err_str.lower():
-                    wait = (2 ** attempt) * 5  # 5, 10, 20초 지수 백오프
-                    logger.warning(f"Rate limit — {wait}초 대기 후 재시도...")
-                    time.sleep(wait)
-                elif attempt < retries - 1:
-                    time.sleep(2)
-                else:
-                    logger.error(f"API 호출 최종 실패: {e}")
-                    return None
-        return None
-
-    # ── 단일 기사 요약 ────────────────────────────────────────
-    def summarize_article(self, article: Dict) -> Dict:
-        """
-        [Genspark] 기사 1건 요약:
-          1. URL 크롤링 시도
-          2. 실패 시 title + raw_summary 사용
-          3. Claude API로 EN/KO/VI 동시 생성
-          4. API 실패 시 fallback
-        """
-        title    = str(article.get('title', ''))
-        sector   = article.get('sector', 'Infrastructure')
-        province = article.get('province', 'Vietnam')
-        url      = article.get('url', '')
-        rss_desc = article.get('summary', '') or article.get('raw_summary', '')
-
-        sector_ko = SECTOR_KO.get(sector, sector)
-        sector_vi = SECTOR_VI.get(sector, sector)
-
-        # 1. URL 크롤링
-        body_text = ""
-        if url:
-            body_text = fetch_article_content(url)
-
-        # 2. Source text 결정
-        source_text = body_text if len(body_text) > 200 else rss_desc
-        source_text = source_text[:1500] if source_text else title
-
-        # 3. API 미사용 → fallback
-        if not self.api_available:
-            result = self._fallback(title, sector, province)
-            article['summary_en'] = result['en']
-            article['summary_ko'] = result['ko']
-            article['summary_vi'] = result['vi']
-            article['is_fallback'] = True
-            return article
-
-        # 4. Claude API 호출
-        # [Genspark] Who / What / Where / When 구조 + 합쇼체(KO) + 전문 보도체
-        prompt = f"""You are a professional infrastructure news analyst.
-Analyze the following Vietnam infrastructure news article and produce concise summaries in 3 languages.
-
-## Article Information
-- Title: {title}
-- Sector: {sector} ({sector_ko})
-- Province: {province}
-- Content: {source_text}
-
-## Output Requirements
-Return ONLY a JSON object (no markdown, no explanation):
-{{
-  "en": "1-2 sentence English summary. Focus on: Investor/Operator, Project type & value, Location, Timeline. Max 250 chars.",
-  "ko": "1-2문장 한국어 요약. 투자자/시행사, 사업 내용 및 금액, 위치, 일정 포함. 합쇼체 사용. 최대 250자.",
-  "vi": "1-2 câu tóm tắt tiếng Việt. Nêu: Nhà đầu tư, Loại dự án & giá trị, Địa điểm, Thời gian. Tối đa 250 ký tự."
-}}
-
-## Style Rules
-- English: Business reporting tone, factual, no sensationalism
-- Korean: Professional 합쇼체 (습니다/합니다), concise
-- Vietnamese: Professional business Vietnamese
-- Structure: "[Sector keyword] [Main fact]. [Key detail]."
-- If specific value/timeline not available, omit rather than guess"""
-
-        raw = self._call_api(prompt)
-        time.sleep(REQUEST_DELAY)  # rate limit 방지
-
-        if raw:
-            try:
-                # JSON 파싱 (마크다운 펜스 제거)
-                clean = raw.replace('```json', '').replace('```', '').strip()
-                data  = json.loads(clean)
-                article['summary_en'] = data.get('en', '')[:300]
-                article['summary_ko'] = data.get('ko', '')[:300]
-                article['summary_vi'] = data.get('vi', '')[:300]
-                article['is_fallback'] = False
-                return article
-            except json.JSONDecodeError:
-                logger.warning(f"JSON 파싱 실패 — fallback 적용: {title[:50]}")
-
-        # API 실패 → fallback
-        result = self._fallback(title, sector, province)
-        article['summary_en'] = result['en']
-        article['summary_ko'] = result['ko']
-        article['summary_vi'] = result['vi']
-        article['is_fallback'] = True
-        return article
-
-    # ── 배치 처리 ─────────────────────────────────────────────
-    def process_articles(self, articles: List[Dict],
-                         max_articles: int = None) -> List[Dict]:
-        """
-        [Genspark] 배치 처리:
-          - confidence < 80인 기사는 'qc_flag' 마킹
-          - max_articles 초과분은 fallback으로 처리
+        전체 기사 리스트 번역 처리
+        
+        Args:
+            articles: 수집된 원문 기사 리스트
+        Returns:
+            번역 완료 기사 리스트 (title_en/ko/vi, summary_en/ko/vi 포함)
         """
         if not articles:
-            return articles
+            return []
 
-        limit    = max_articles or MAX_ARTICLES_BATCH
-        api_cnt  = 0
-        fall_cnt = 0
-        qc_cnt   = 0
+        if not self.client:
+            logger.warning("[AISummarizer] API 클라이언트 없음 → fallback 모드")
+            return [self._make_fallback(a) for a in articles]
 
-        for i, article in enumerate(articles):
-            # confidence 낮은 기사 QC 플래그
-            conf = article.get('confidence', 100)
-            if conf < 80:
-                article['qc_flag'] = True
-                qc_cnt += 1
+        logger.info(f"[AISummarizer] {len(articles)}건 번역 시작 (배치 크기: {BATCH_SIZE})")
 
-            # 이미 요약 있으면 skip
-            if article.get('summary_ko') and not article.get('is_fallback'):
-                continue
+        processed = []
+        total = len(articles)
 
-            if i < limit and self.api_available:
-                self.summarize_article(article)
-                if article.get('is_fallback'):
-                    fall_cnt += 1
-                else:
-                    api_cnt += 1
-            else:
-                # 배치 초과 → 구조화 fallback (단순 반복 방지)
-                fb = self._fallback(
-                    article.get('title', ''),
-                    article.get('sector', ''),
-                    article.get('province', 'Vietnam'),
-                )
-                article['summary_en']  = fb['en']
-                article['summary_ko']  = fb['ko']
-                article['summary_vi']  = fb['vi']
-                article['is_fallback'] = True
-                fall_cnt += 1
+        # 배치 처리: BATCH_SIZE 단위로 묶어 처리
+        for i in range(0, total, BATCH_SIZE):
+            batch = articles[i:i + BATCH_SIZE]
+            batch_num = i // BATCH_SIZE + 1
+            batch_total = (total + BATCH_SIZE - 1) // BATCH_SIZE
 
-        logger.info(
-            f"Summarizer complete: API={api_cnt} | fallback={fall_cnt} | "
-            f"qc_flagged={qc_cnt} / {len(articles)} total"
+            logger.info(f"[AISummarizer] 배치 {batch_num}/{batch_total} 처리 중...")
+
+            for article in batch:
+                result = self._translate_single(article)
+                processed.append(result)
+
+            # API 호출 속도 제한 (Rate Limit) 방지
+            if i + BATCH_SIZE < total:
+                time.sleep(0.5)
+
+        success = sum(
+            1 for a in processed
+            if a.get('title_en') and a['title_en'] != a.get('title', '')
         )
-        return articles
+        logger.info(f"[AISummarizer] 번역 완료: {success}/{len(processed)}건 성공")
+        return processed
 
-    # ── 기존 미번역 기사 배치 번역 (매 실행시 최대 N건) ────────
-    def translate_existing_articles(self, db_path: str, max_batch: int = 20) -> int:
-        """
-        SQLite DB에서 summary_ko가 없는 기존 기사를 배치 번역.
-        신규 기사가 0건이어도 기존 DB를 점진적으로 번역.
-        매 파이프라인 실행 시 max_batch건씩 처리.
-        """
-        if not self.api_available:
-            logger.info("API 없음 — 기존 기사 번역 건너뜀")
-            return 0
+    def _translate_single(self, article: dict) -> dict:
+        """단일 기사 번역 (재시도 포함)"""
+        title   = article.get('title', '')
+        content = article.get('content', '') or article.get('summary', '') or ''
+        sector  = article.get('sector', 'Infrastructure')
 
-        import sqlite3
-        try:
-            conn = sqlite3.connect(db_path)
-            conn.row_factory = sqlite3.Row
-            # summary_ko가 없거나 fallback 패턴인 기사 조회
-            rows = conn.execute("""
-                SELECT url_hash, url, title, summary, sector, area, province
-                FROM articles
-                WHERE (summary_ko IS NULL OR summary_ko = '' OR summary_ko LIKE '[%]%:%')
-                  AND processed = 0
-                ORDER BY collected_date DESC
-                LIMIT ?
-            """, (max_batch,)).fetchall()
-            conn.close()
+        # 제목이 없으면 번역 생략
+        if not title.strip():
+            return self._make_fallback(article)
 
-            if not rows:
-                logger.info("번역 대기 기사 없음")
-                return 0
+        # ── Claude API 프롬프트 ─────────────────────────────
+        prompt = f"""You are a professional Vietnamese infrastructure news translator.
+Translate and summarize this Vietnamese news article into 3 languages.
 
-            logger.info(f"기존 미번역 기사 {len(rows)}건 Claude API 번역 시작...")
-            articles = [dict(r) for r in rows]
-            processed = self.process_articles(articles, max_articles=max_batch)
-            self.update_sqlite_summaries(processed, db_path)
+Sector: {sector}
+Title (Vietnamese): {title}
+Content snippet: {content[:300] if content else 'N/A'}
 
-            translated = sum(1 for a in processed if not a.get('is_fallback'))
-            logger.info(f"기존 기사 번역 완료: {translated}/{len(rows)}건 API 번역")
-            return translated
+Respond ONLY with valid JSON (no markdown, no explanation):
+{{
+  "title_en": "English title translation",
+  "title_ko": "한국어 제목 번역",
+  "title_vi": "Vietnamese original or cleaned title",
+  "summary_en": "2-3 sentence English summary of the infrastructure news",
+  "summary_ko": "2-3문장 한국어 요약",
+  "summary_vi": "Tóm tắt 2-3 câu bằng tiếng Việt"
+}}"""
 
-        except Exception as e:
-            logger.error(f"기존 기사 번역 오류: {e}")
-            return 0
-
-    # ── SQLite 업데이트 ───────────────────────────────────────
-    def update_sqlite_summaries(self, articles: List[Dict], db_path: str):
-        """처리된 요약을 SQLite DB에 저장합니다."""
-        import sqlite3
-        try:
-            conn = sqlite3.connect(db_path)
-            updated = 0
-            for art in articles:
-                url_hash = art.get('url_hash')
-                if not url_hash:
-                    continue
-                conn.execute(
-                    """UPDATE articles SET
-                         summary_ko=?, summary_en=?, summary_vi=?,
-                         title_ko=?, title_en=?, title_vi=?,
-                         processed=1
-                       WHERE url_hash=?""",
-                    (
-                        art.get('summary_ko', ''),
-                        art.get('summary_en', ''),
-                        art.get('summary_vi', ''),
-                        art.get('title', ''),
-                        art.get('title', ''),
-                        art.get('title', ''),
-                        url_hash,
-                    )
+        # 재시도 로직
+        for attempt in range(RETRY_COUNT):
+            try:
+                response = self.client.messages.create(
+                    model=CLAUDE_MODEL,
+                    max_tokens=MAX_TOKENS,
+                    messages=[{"role": "user", "content": prompt}]
                 )
-                updated += 1
-            conn.commit()
-            conn.close()
-            logger.info(f"SQLite summaries updated: {updated} articles")
-        except Exception as e:
-            logger.error(f"SQLite update error: {e}")
 
+                raw_text = response.content[0].text.strip()
 
-# ============================================================
-# STANDALONE RUNNER
-# ============================================================
+                # JSON 파싱
+                # (모델이 간혹 ```json ... ``` 형태로 반환할 경우 제거)
+                if raw_text.startswith('```'):
+                    raw_text = raw_text.split('```')[1]
+                    if raw_text.startswith('json'):
+                        raw_text = raw_text[4:]
+                raw_text = raw_text.strip()
 
-def main():
-    import sqlite3
+                translated = json.loads(raw_text)
 
-    DB_PATH = os.environ.get('DB_PATH', 'data/vietnam_infrastructure_news.db')
+                # 필수 키 검증
+                required = ['title_en', 'title_ko', 'title_vi',
+                            'summary_en', 'summary_ko', 'summary_vi']
+                if not all(k in translated for k in required):
+                    raise ValueError(f"번역 응답에 필수 키 누락: {translated.keys()}")
 
-    print("=" * 60)
-    print("AI SUMMARIZER  v2.0")
-    print("=" * 60)
-    print(f"Model:   {MODEL_SUMMARIZER}")
-    print(f"API:     {'Available' if ANTHROPIC_AVAILABLE and ANTHROPIC_API_KEY else 'Fallback mode'}")
-    print(f"Batch:   {MAX_ARTICLES_BATCH} articles")
-    print()
+                # 원본 데이터에 번역 결과 병합
+                article.update(translated)
+                return article
 
-    summarizer = AISummarizer()
+            except json.JSONDecodeError as e:
+                logger.warning(f"[번역] JSON 파싱 실패 (시도 {attempt+1}/{RETRY_COUNT}): {e}")
+                if attempt < RETRY_COUNT - 1:
+                    time.sleep(RETRY_DELAY)
 
-    # 미처리 기사 로드
-    if not Path(DB_PATH).exists():
-        print(f"DB not found: {DB_PATH}")
-        return
+            except Exception as e:
+                logger.warning(f"[번역] API 오류 (시도 {attempt+1}/{RETRY_COUNT}): {e}")
+                if attempt < RETRY_COUNT - 1:
+                    time.sleep(RETRY_DELAY * (attempt + 1))  # 점진적 대기
 
-    conn     = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    rows     = conn.execute(
-        "SELECT * FROM articles WHERE processed=0 ORDER BY collected_date DESC LIMIT 100"
-    ).fetchall()
-    conn.close()
+        # 모든 재시도 실패 → fallback
+        logger.error(f"[번역] 최종 실패: {title[:50]}")
+        return self._make_fallback(article)
 
-    articles = [dict(r) for r in rows]
-    print(f"Unprocessed articles: {len(articles)}")
+    def _make_fallback(self, article: dict) -> dict:
+        """
+        번역 실패 시 fallback 데이터 생성
+        - 원문을 VI 필드에, 영어 템플릿을 EN/KO 필드에 넣어
+          파이프라인과 대시보드가 중단 없이 동작하도록 함
+        """
+        title   = article.get('title', '')
+        sector  = article.get('sector', 'Infrastructure')
+        summary = article.get('summary', '') or article.get('content', '')[:200] or ''
 
-    if not articles:
-        print("Nothing to process.")
-        return
-
-    processed = summarizer.process_articles(articles)
-    summarizer.update_sqlite_summaries(processed, DB_PATH)
-
-    api_ok   = sum(1 for a in processed if not a.get('is_fallback'))
-    fallback = sum(1 for a in processed if a.get('is_fallback'))
-    qc_flag  = sum(1 for a in processed if a.get('qc_flag'))
-
-    print(f"\nDone: {api_ok} API summaries | {fallback} fallbacks | {qc_flag} QC-flagged")
-
-
-if __name__ == "__main__":
-    main()
+        article.setdefault('title_en',   title)   # 원문 그대로 (번역 실패)
+        article.setdefault('title_ko',   title)
+        article.setdefault('title_vi',   title)
+        article.setdefault('summary_en', summary or f"{sector} project news in Vietnam.")
+        article.setdefault('summary_ko', summary or f"베트남 {sector} 관련 뉴스.")
+        article.setdefault('summary_vi', summary or f"Tin tức {sector} tại Việt Nam.")
+        return article

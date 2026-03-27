@@ -1,656 +1,462 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Vietnam Infrastructure News — Main Pipeline
-Version 2.0 — Genspark 에이전트 팀 아키텍처 반영
+Vietnam Infrastructure News Pipeline - Main Entry Point
+=======================================================
+파이프라인 실행 순서 (Gemini 진단 반영 최종 수정본):
+  Step 1: 뉴스 수집 (베트남어 원문)
+  Step 2: Claude AI 번역/요약 (한국어/영어/베트남어)  ← 핵심 수정
+  Step 3: 번역 완료 데이터를 Excel에 저장            ← 순서 교정
+  Step 4: 대시보드(HTML) 생성
+  Step 5: GitHub Pages 배포
 
-파이프라인 흐름 (Genspark Leader Agent 스펙):
-  Step 1: 기존 DB 로드
-  Step 2: 뉴스 수집 (news_collector.py → collect_news())
-  Step 3: AI 요약 (ai_summarizer.py → AISummarizer)
-  Step 4: Quality Control (오분류율 5% 초과 시 경고)
-  Step 5: 대시보드 생성 (dashboard_updater.py)
-  Step 6: 이메일 발송 (notifier.py)
-  Step 7: 실행 보고서 출력
+수정 이유:
+  기존: 수집 직후 Excel 저장(원문) → 번역 시도 → 대시보드 생성
+        => Excel에 베트남어 원문만 저장됨, 번역 데이터 누락
+  수정: 수집 → 번역 완료 → 번역본 Excel 저장 → 대시보드 생성
+        => Excel에 3개국어 데이터 정상 저장
 
-반영된 개선사항:
-  [검증보고서] QC 단계 신설 (특정 섹터 쏠림 5% 임계값 감지)
-  [검증보고서] 오분류 자동 감지 및 로그
-  [Genspark]  Collector → Classifier → Summarizer → QC → Publisher 순서
-  [Genspark]  최종 Execution Report 출력
-  [v5.1 fix]  NewsCollector 클래스 → collect_news() 함수 호출로 수정
-  [v5.1 fix]  config.settings 의존성 제거
+데이터 유실 방지(Safety Net):
+  - 번역 실패 시에도 원문(VI) 데이터는 Excel에 저장
+  - 대시보드 생성 실패해도 Excel 커밋은 독립적으로 실행
 """
 
-import logging
-import sys
-import os
+import argparse
 import json
+import logging
+import os
+import sys
 from datetime import datetime
 from pathlib import Path
-from collections import Counter
 
-# ── 경로 설정 ────────────────────────────────────────────────
-SCRIPT_DIR   = Path(__file__).parent
-PROJECT_ROOT = SCRIPT_DIR.parent
-DATA_DIR     = PROJECT_ROOT / "data"
-OUTPUT_DIR   = PROJECT_ROOT / "outputs"
-EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
+# ── 경로 설정 ──────────────────────────────────────────────
+# 이 스크립트가 실행되는 위치에서 상위 폴더(프로젝트 루트)를 참조
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
-sys.path.insert(0, str(PROJECT_ROOT))
-
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-
-# ── 환경변수 ─────────────────────────────────────────────────
-HOURS_BACK    = int(os.environ.get('HOURS_BACK', 24))
-SKIP_SUMMARIZER = os.environ.get('SKIP_SUMMARIZER', 'false').lower() == 'true'
-SKIP_NOTIFY   = os.environ.get('SKIP_NOTIFY', 'false').lower() == 'true'
-
-# [Genspark] QC: 단일 섹터가 전체의 이 비율 초과 시 경고
-QC_SECTOR_DOMINANCE_THRESHOLD = float(os.environ.get('QC_THRESHOLD', 0.40))
-# [Genspark] QC: confidence 낮은 기사 비율이 이 이상이면 재분류 권고
-QC_LOW_CONF_THRESHOLD = float(os.environ.get('QC_LOW_CONF', 0.20))
+# ── 로깅 설정 ───────────────────────────────────────────────
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(name)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout),          # 콘솔 출력
+        logging.FileHandler('pipeline.log', encoding='utf-8')  # 파일 저장
+    ]
+)
+logger = logging.getLogger('MainPipeline')
 
 
-# ============================================================
-# STEP 1: LOAD EXISTING ARTICLES FROM EXCEL
-# ============================================================
+# ════════════════════════════════════════════════════════════
+# 헬퍼 함수: 각 스크립트 모듈 동적 임포트
+# (설치 환경에 따라 import 실패 가능성 대비)
+# ════════════════════════════════════════════════════════════
 
-def load_articles_from_excel():
+def safe_import(module_name: str, class_name: str = None):
+    """모듈 임포트 실패 시 None 반환 (파이프라인 중단 방지)"""
     try:
-        import openpyxl
-    except ImportError:
-        logger.error("openpyxl 미설치")
-        return []
+        import importlib
+        mod = importlib.import_module(module_name)
+        if class_name:
+            return getattr(mod, class_name)
+        return mod
+    except ImportError as e:
+        logger.error(f"[IMPORT ERROR] {module_name}: {e}")
+        return None
 
-    if not EXCEL_DB_PATH.exists():
-        logger.warning(f"Excel DB 없음: {EXCEL_DB_PATH}")
-        return []
 
-    logger.info(f"Excel 로드: {EXCEL_DB_PATH}")
+# ════════════════════════════════════════════════════════════
+# STEP 1: 뉴스 수집
+# ════════════════════════════════════════════════════════════
+
+def step1_collect_news() -> list:
+    """
+    RSS 피드 및 웹 크롤링으로 베트남 인프라 뉴스 수집
+    반환값: 수집된 원문 기사 리스트 (dict 형태)
+    
+    각 기사 dict 구조:
+    {
+        'title': '베트남어 원제목',
+        'url': 'https://...',
+        'source': '출처명',
+        'date': '2026-03-28',
+        'content': '본문 내용 (있을 경우)',
+        'sector': '섹터명',
+        'sector_score': 점수(int)
+    }
+    """
+    logger.info("=" * 60)
+    logger.info("STEP 1: 뉴스 수집 시작")
+    logger.info("=" * 60)
+
     try:
-        wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
-        ws = wb.active
-        headers = [cell.value for cell in ws[1]]
-        col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
+        from scripts.news_collector import NewsCollector
 
-        articles = []
-        for row in ws.iter_rows(min_row=2, values_only=True):
-            if not any(row):
-                continue
-            date_val = row[col_map.get("Date", 4)] if "Date" in col_map else None
-            date_str = ""
-            if date_val:
-                date_str = (date_val.strftime("%Y-%m-%d")
-                            if hasattr(date_val, 'strftime') else str(date_val)[:10])
-
-            article = {
-                "area":       row[col_map.get("Area", 0)]           or "Environment",
-                "sector":     row[col_map.get("Business Sector", 1)] or "",
-                "province":   row[col_map.get("Province", 2)]        or "Vietnam",
-                "title":      row[col_map.get("News Tittle", 3)]     or "",
-                "date":       date_str,
-                "source":     row[col_map.get("Source", 5)]          or "",
-                "url":        row[col_map.get("Link", 6)]            or "",
-                "summary_vi": row[col_map.get("Short summary", 7)]  or "",
-            }
-            if article["title"] or article["url"]:
-                articles.append(article)
-
-        wb.close()
-        logger.info(f"Excel 로드 완료: {len(articles)}건")
+        collector = NewsCollector()
+        articles = collector.collect_all()   # 동기식 collect
+        
+        # 수집 결과 로깅
+        logger.info(f"[Step1 완료] 수집 기사 수: {len(articles)}")
+        
+        # 원문 JSON 백업 저장 (디버깅용)
+        _save_raw_backup(articles)
+        
         return articles
 
     except Exception as e:
-        logger.error(f"Excel 로드 오류: {e}")
-        import traceback; traceback.print_exc()
+        logger.error(f"[Step1 실패] 뉴스 수집 오류: {e}", exc_info=True)
         return []
 
 
-# ============================================================
-# STEP 2: COLLECT NEW ARTICLES
-# [v5.1 fix] NewsCollector 클래스 → collect_news() 함수로 변경
-# ============================================================
+def _save_raw_backup(articles: list):
+    """수집 원문을 JSON으로 백업 (데이터 유실 방지용)"""
+    try:
+        backup_dir = Path("data/raw")
+        backup_dir.mkdir(parents=True, exist_ok=True)
+        ts = datetime.now().strftime('%Y%m%d_%H%M%S')
+        backup_path = backup_dir / f"raw_{ts}.json"
+        with open(backup_path, 'w', encoding='utf-8') as f:
+            json.dump(articles, f, ensure_ascii=False, indent=2)
+        logger.info(f"[Backup] 원문 백업 저장: {backup_path}")
+    except Exception as e:
+        logger.warning(f"[Backup] 원문 백업 실패 (계속 진행): {e}")
 
-def collect_new_articles():
-    logger.info("\n[Step 2] 뉴스 수집 시작...")
+
+# ════════════════════════════════════════════════════════════
+# STEP 2: Claude API로 3개국어 번역/요약
+# ════════════════════════════════════════════════════════════
+
+def step2_translate_articles(raw_articles: list) -> list:
+    """
+    Gemini 진단 수정사항 #1:
+      - 기존: anthropic 패키지 미설치로 API 호출 불가 → fallback 모드로 원문 그대로 사용
+      - 수정: anthropic 패키지 설치 확인 + 번역 후 processed_articles 반환
+    
+    Gemini 진단 수정사항 #2:
+      - 기존: Step1 직후 Excel 저장(원문) → Step2 번역 실행
+      - 수정: Step2 번역 완료 후 processed_articles를 Step3로 전달
+    
+    반환값: 번역 완료 기사 리스트
+    각 기사에 추가되는 필드:
+      - title_ko: 한국어 제목
+      - title_en: 영어 제목
+      - title_vi: 베트남어 제목 (원문)
+      - summary_ko: 한국어 요약
+      - summary_en: 영어 요약
+      - summary_vi: 베트남어 요약
+    """
+    logger.info("=" * 60)
+    logger.info("STEP 2: Claude API 번역/요약 시작")
+    logger.info("=" * 60)
+
+    if not raw_articles:
+        logger.warning("[Step2] 수집된 기사 없음 - 번역 생략")
+        return []
+
+    # API 키 확인
+    api_key = os.environ.get('ANTHROPIC_API_KEY', '')
+    if not api_key:
+        logger.error("[Step2] ANTHROPIC_API_KEY 환경변수 미설정!")
+        logger.warning("[Step2] 번역 없이 원문 데이터로 계속 진행")
+        # fallback: 원문을 모든 언어 필드에 채움
+        return _fallback_no_translation(raw_articles)
+
+    # anthropic 패키지 설치 확인
+    try:
+        import anthropic  # noqa: F401 (설치 여부만 확인)
+        logger.info("[Step2] anthropic 패키지 확인 완료")
+    except ImportError:
+        logger.error("[Step2] anthropic 패키지 미설치! pip install anthropic 필요")
+        return _fallback_no_translation(raw_articles)
 
     try:
-        import importlib.util
-        collector_path = SCRIPT_DIR / "news_collector.py"
+        from scripts.ai_summarizer import AISummarizer
 
-        if not collector_path.exists():
-            logger.error(f"news_collector.py 없음: {collector_path}")
-            return [], {}
+        summarizer = AISummarizer()
+        processed = summarizer.process_articles(raw_articles)
 
-        spec   = importlib.util.spec_from_file_location("news_collector", collector_path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-
-        # [v5.1 fix] collect_news() 함수 직접 호출
-        count, new_articles, collection_stats = module.collect_news(hours_back=HOURS_BACK)
-        logger.info(f"수집 완료: {count}건")
-
-        if new_articles:
-            try:
-                module.update_excel_database(new_articles, collection_stats)
-            except Exception as e:
-                logger.warning(f"Excel 저장 오류: {e}")
-
-        return new_articles, collection_stats
+        # 번역 성공률 로깅
+        translated = sum(
+            1 for a in processed
+            if a.get('title_en') and a['title_en'] != a.get('title', '')
+        )
+        logger.info(f"[Step2 완료] 번역 성공: {translated}/{len(processed)} 건")
+        return processed
 
     except Exception as e:
-        logger.error(f"수집 오류: {e}")
-        import traceback; traceback.print_exc()
-        return [], {}
+        logger.error(f"[Step2 실패] 번역 오류: {e}", exc_info=True)
+        return _fallback_no_translation(raw_articles)
 
 
-# ============================================================
-# STEP 3: AI SUMMARIZER
-# [검증보고서] API 키 미설정 시 단순 반복 방지 → 구조화 fallback
-# ============================================================
+def _fallback_no_translation(articles: list) -> list:
+    """
+    번역 실패 시 안전망:
+    원문(VI)을 모든 언어 필드에 채워 파이프라인이 중단되지 않도록 함
+    """
+    logger.warning("[Fallback] 번역 실패 - 원문으로 대체")
+    result = []
+    for a in articles:
+        title = a.get('title', '')
+        summary = a.get('summary', '') or a.get('content', '')[:200]
+        a.setdefault('title_ko', title)
+        a.setdefault('title_en', title)
+        a.setdefault('title_vi', title)
+        a.setdefault('summary_ko', summary)
+        a.setdefault('summary_en', summary)
+        a.setdefault('summary_vi', summary)
+        result.append(a)
+    return result
 
-def run_summarizer(new_articles):
-    if SKIP_SUMMARIZER:
-        logger.info("[Step 3] 요약 건너뜀 (SKIP_SUMMARIZER=true)")
-        return new_articles
 
-    logger.info(f"\n[Step 3] AI 요약 시작 (신규 {len(new_articles)}건)...")
+# ════════════════════════════════════════════════════════════
+# STEP 3: 번역 완료 데이터 → Excel 저장
+# ════════════════════════════════════════════════════════════
 
-    DB_PATH_LOCAL = os.environ.get('DB_PATH', str(DATA_DIR / 'vietnam_infrastructure_news.db'))
+def step3_save_to_excel(processed_articles: list) -> bool:
+    """
+    Gemini 진단 수정사항 #2 핵심:
+      - 반드시 processed_articles (번역 완료본)를 받아 저장
+      - raw_articles (원문)를 저장하는 기존 오류 수정
+    
+    반환값: 저장 성공 여부 (bool)
+    """
+    logger.info("=" * 60)
+    logger.info("STEP 3: Excel 데이터베이스 저장")
+    logger.info("=" * 60)
+
+    if not processed_articles:
+        logger.warning("[Step3] 저장할 기사 없음")
+        return False
 
     try:
-        import importlib.util
-        summarizer_path = SCRIPT_DIR / "ai_summarizer.py"
+        from scripts.excel_manager import ExcelManager
 
-        if not summarizer_path.exists():
-            logger.warning("ai_summarizer.py 없음 — 요약 건너뜀")
-            return new_articles
-
-        spec   = importlib.util.spec_from_file_location("ai_summarizer", summarizer_path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-
-        summarizer = module.AISummarizer()
-
-        # ① 신규 기사 번역 (있을 때만)
-        result = new_articles
-        if new_articles:
-            result = summarizer.process_articles(new_articles)
-            api_ok   = sum(1 for a in result if not a.get('is_fallback'))
-            fallback = sum(1 for a in result if a.get('is_fallback'))
-            logger.info(f"  신규 번역: API={api_ok} | fallback={fallback}")
-
-            # 번역 결과를 SQLite에 즉시 저장 (DashboardUpdater DB 재로드 전에)
-            from pathlib import Path as _P
-            db_path = DB_PATH_LOCAL
-            if _P(db_path).exists():
-                summarizer.update_sqlite_summaries(result, db_path)
-                logger.info(f"  ✓ SQLite에 번역 저장: {len(result)}건")
-        else:
-            logger.info("  신규 기사 없음 — 기존 미번역 배치로 이동")
-
-        # ② 기존 미번역 기사 배치 번역 (매 실행 시 최대 20건)
-        # 기존 DB에 summary_ko 없는 기사를 점진적으로 번역
-        if hasattr(summarizer, 'translate_existing_articles'):
-            from pathlib import Path as _P
-            db_path = DB_PATH_LOCAL
-            if _P(db_path).exists():
-                translated = summarizer.translate_existing_articles(db_path, max_batch=20)
-                logger.info(f"  기존 기사 배치 번역: {translated}건 완료")
-
-                # 번역된 기사들을 Excel Short summary에도 반영
-                if translated > 0:
-                    _update_excel_summaries_from_sqlite(db_path)
-            else:
-                logger.info(f"  SQLite DB 없음: {db_path}")
-
-        return result
-
-    except Exception as e:
-        logger.error(f"요약 오류: {e}")
-        import traceback; traceback.print_exc()
-        return new_articles
-
-
-# ============================================================
-# STEP 4: QUALITY CONTROL
-# [검증보고서] 오분류율 5% 초과 감지
-# [Genspark]  QC Agent 역할 구현
-# ============================================================
-
-def run_quality_control(new_articles, all_articles):
-    """
-    QC 체크:
-    1. 섹터 쏠림 감지 (단일 섹터 40% 초과 → 경고)
-    2. confidence 낮은 기사 비율 체크
-    3. 비베트남 기사 감지
-    4. 오분류 의심 패턴 감지
-    """
-    logger.info("\n[Step 4] Quality Control...")
-
-    qc_result = {
-        "pass": True,
-        "warnings": [],
-        "errors": [],
-        "stats": {},
-        "rejected_count": 0,
-        "valid_count": len(new_articles),
-    }
-
-    if not new_articles:
-        logger.info("  검사할 신규 기사 없음")
-        return qc_result, new_articles
-
-    total = len(new_articles)
-
-    # ── 1. 섹터 쏠림 감지 ──────────────────────────────────
-    sector_counts = Counter(a.get('sector', '') for a in new_articles)
-    for sector, cnt in sector_counts.most_common():
-        ratio = cnt / total
-        if ratio > QC_SECTOR_DOMINANCE_THRESHOLD:
-            msg = (f"⚠️  섹터 쏠림 감지: [{sector}] {cnt}/{total} ({ratio:.1%}) "
-                   f"— 임계값 {QC_SECTOR_DOMINANCE_THRESHOLD:.0%} 초과")
-            logger.warning(msg)
-            qc_result["warnings"].append(msg)
-
-    # ── 2. Confidence 낮은 기사 비율 ───────────────────────
-    low_conf_arts = [a for a in new_articles if a.get('confidence', 100) < 50]
-    low_conf_ratio = len(low_conf_arts) / total if total else 0
-    if low_conf_ratio > QC_LOW_CONF_THRESHOLD:
-        msg = (f"⚠️  저신뢰도 기사 비율: {len(low_conf_arts)}/{total} ({low_conf_ratio:.1%}) "
-               f"— 재분류 권고")
-        logger.warning(msg)
-        qc_result["warnings"].append(msg)
-
-    # ── 3. 비베트남 기사 감지 ───────────────────────────────
-    non_vn_patterns = [
-        "in spain", "in china", "in japan", "in india",
-        "in korea", "in europe", "in america",
-    ]
-    rejected = []
-    valid    = []
-    for art in new_articles:
-        text = (art.get('title', '') + ' ' + art.get('summary', '')).lower()
-        is_non_vn = any(p in text for p in non_vn_patterns)
-        vietnam_mentioned = 'vietnam' in text or 'việt nam' in text
-
-        if is_non_vn and not vietnam_mentioned:
-            art['qc_rejected'] = True
-            art['qc_reason']   = "Non-Vietnam article"
-            rejected.append(art)
-            logger.debug(f"  REJECTED (non-VN): {art.get('title','')[:60]}")
-        else:
-            valid.append(art)
-
-    # ── 4. 오분류 의심 패턴 ────────────────────────────────
-    mismatch_patterns = {
-        "Waste Water": ["vehicle", "car", "flight", "marry", "wedding",
-                        "football", "soccer", "tourism"],
-        "Solid Waste": ["vehicle", "flight", "marry", "tourism"],
-        "Power":       ["vehicle", "football", "tourism"],
-    }
-    misclassified = []
-    for art in valid:
-        sector = art.get('sector', '')
-        text   = (art.get('title', '') + ' ' + art.get('summary', '')).lower()
-        bad_kws = mismatch_patterns.get(sector, [])
-        hits    = [kw for kw in bad_kws if kw in text]
-        if hits:
-            art['qc_flag']   = True
-            art['qc_reason'] = f"Possible misclassification: {hits}"
-            misclassified.append(art)
-
-    if misclassified:
-        msg = f"⚠️  오분류 의심: {len(misclassified)}건 (QC 플래그 처리)"
-        logger.warning(msg)
-        qc_result["warnings"].append(msg)
-
-    # ── 결과 집계 ──────────────────────────────────────────
-    qc_result["stats"] = {
-        "total_new":       total,
-        "valid":           len(valid),
-        "rejected":        len(rejected),
-        "low_confidence":  len(low_conf_arts),
-        "qc_flagged":      len(misclassified),
-        "sector_counts":   dict(sector_counts),
-    }
-    qc_result["rejected_count"] = len(rejected)
-    qc_result["valid_count"]    = len(valid)
-
-    # ── QC 통과 여부 ───────────────────────────────────────
-    if len(rejected) / total > 0.30 if total else False:
-        qc_result["pass"]   = False
-        qc_result["errors"].append("거부율 30% 초과 — 퍼블리싱 중단 권고")
-
-    logger.info(
-        f"  QC 결과: valid={len(valid)} | rejected={len(rejected)} | "
-        f"flagged={len(misclassified)} | pass={qc_result['pass']}"
-    )
-    return qc_result, valid
-
-
-# ============================================================
-# STEP 5: DASHBOARD
-# ============================================================
-
-def create_dashboard(all_articles):
-    logger.info(f"\n[Step 5] 대시보드 생성 ({len(all_articles)}건)...")
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-    try:
-        import importlib.util
-        dashboard_path = SCRIPT_DIR / "dashboard_updater.py"
-
-        if not dashboard_path.exists():
-            logger.error("dashboard_updater.py 없음")
-            return _create_minimal_dashboard(all_articles)
-
-        spec   = importlib.util.spec_from_file_location("dashboard_updater", dashboard_path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-
-        # DashboardUpdater 클래스 호출 (없으면 직접 함수 호출로 fallback)
-        if hasattr(module, 'DashboardUpdater'):
-            dashboard = module.DashboardUpdater()
-            dashboard.update(all_articles)
-            logger.info("✓ DashboardUpdater 완료")
-        else:
-            logger.warning("DashboardUpdater 클래스 없음 → generate_dashboard() 직접 호출")
-            module.generate_dashboard(all_articles)
-
-        # ExcelUpdater 클래스 호출 (없으면 직접 함수 호출로 fallback)
-        if hasattr(module, 'ExcelUpdater'):
-            excel_updater = module.ExcelUpdater()
-            excel_updater.update(all_articles)
-            logger.info("✓ ExcelUpdater 완료")
-        else:
-            logger.warning("ExcelUpdater 클래스 없음 — Excel 업데이트 건너뜀")
-
-        logger.info("대시보드 생성 완료")
+        em = ExcelManager()
+        # ↓ 반드시 processed_articles (번역 완료본) 전달!
+        saved_count = em.update_database(processed_articles)
+        logger.info(f"[Step3 완료] Excel 저장: {saved_count}건")
         return True
 
-    except Exception as e:
-        logger.error(f"대시보드 오류: {e}")
-        import traceback; traceback.print_exc()
-        logger.warning("Fallback: 최소 대시보드 생성")
-        return _create_minimal_dashboard(all_articles)
-
-
-def _create_minimal_dashboard(articles):
-    """Fallback: 최소 대시보드 HTML 생성"""
-    try:
-        js_data = json.dumps([{
-            "id":       i,
-            "title":    {"vi": a.get("title",""), "en": a.get("title",""), "ko": a.get("title","")},
-            "summary":  {"vi": a.get("summary_vi",""), "en": a.get("summary_en",""),
-                         "ko": a.get("summary_ko","")},
-            "sector":   a.get("sector","Unknown"),
-            "area":     a.get("area","Environment"),
-            "province": a.get("province","Vietnam"),
-            "source":   a.get("source",""),
-            "url":      a.get("url",""),
-            "date":     str(a.get("date",""))[:10],
-        } for i, a in enumerate(articles, 1)], ensure_ascii=False)
-
-        html = f"""<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<title>Vietnam Infrastructure News</title>
-<script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-100 p-8">
-<h1 class="text-2xl font-bold mb-2">🇻🇳 Vietnam Infrastructure News</h1>
-<p class="text-slate-500 mb-4">Total: {len(articles)} articles | Updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}</p>
-<div id="list" class="space-y-2"></div>
-<script>
-const DATA = {js_data};
-document.getElementById('list').innerHTML = DATA.slice(0,200).map(a=>`
-<div class="bg-white p-3 rounded shadow">
-  <span class="text-xs bg-teal-100 px-2 py-1 rounded">${{a.sector}}</span>
-  <span class="text-xs text-slate-400 ml-2">${{a.date}}</span>
-  <div class="font-medium mt-1"><a href="${{a.url}}" class="hover:underline">${{a.title.vi}}</a></div>
-  <div class="text-sm text-slate-500">${{a.source}} | ${{a.province}}</div>
-  <div class="text-sm text-slate-600 mt-1">${{a.summary.ko}}</div>
-</div>`).join('');
-</script>
-</body>
-</html>"""
-
-        for fname in ['index.html', 'vietnam_dashboard.html']:
-            (OUTPUT_DIR / fname).write_text(html, encoding='utf-8')
-        logger.info("최소 대시보드 생성 완료")
-        return True
+    except ImportError:
+        # ExcelManager 모듈이 없을 경우 내장 함수 사용
+        logger.warning("[Step3] ExcelManager 모듈 없음 - 내장 저장 사용")
+        return _builtin_excel_save(processed_articles)
 
     except Exception as e:
-        logger.error(f"최소 대시보드 오류: {e}")
+        logger.error(f"[Step3 실패] Excel 저장 오류: {e}", exc_info=True)
         return False
 
 
-# ============================================================
-# STEP 6: NOTIFICATIONS
-# ============================================================
-
-def send_notifications(all_articles, new_articles, qc_result):
-    if SKIP_NOTIFY:
-        logger.info("[Step 6] 알림 건너뜀 (SKIP_NOTIFY=true)")
-        return False
-
-    logger.info(f"\n[Step 6] 알림 발송 ({len(new_articles)}건 신규)...")
-    try:
-        import importlib.util, asyncio
-        notifier_path = SCRIPT_DIR / "notifier.py"
-
-        if not notifier_path.exists():
-            logger.warning("notifier.py 없음")
-            return False
-
-        spec   = importlib.util.spec_from_file_location("notifier", notifier_path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-
-        manager = module.NotificationManager()
-
-        # send_all()은 async 함수이므로 asyncio.run() 사용
-        # 인자: articles 리스트 (dict가 아님)
-        # 이메일 briefing: 전체 DB 기준 오늘 기사 수 계산
-        # new_articles만 전달하면 today_count가 0건으로 표시됨
-        # all_articles 전달 시 오늘 날짜 기사 수 정확히 집계
-        briefing_articles = all_articles if all_articles else new_articles
-        result = asyncio.run(manager.send_all(
-            articles=briefing_articles,
-            dashboard_url="https://hms4792.github.io/vietnam-infra-news/"
-        ))
-        logger.info(f"알림 결과: {result}")
-        return result.get("email", False)
-
-    except Exception as e:
-        logger.error(f"알림 오류: {e}")
-        import traceback; traceback.print_exc()
-        return False
-
-
-# ============================================================
-# MAIN
-# ============================================================
-
-def _update_excel_summaries_from_sqlite(db_path: str):
+def _builtin_excel_save(articles: list) -> bool:
     """
-    SQLite에서 번역된 요약을 Excel Short summary 컬럼에 반영.
-    translate_existing_articles 실행 후 호출.
-    URL 기준으로 매칭하여 업데이트.
+    ExcelManager 없을 때의 내장 Excel 저장 로직
+    openpyxl을 직접 사용해 번역된 데이터를 저장
     """
-    import sqlite3
     try:
         import openpyxl
-        excel_path = os.environ.get(
-            'EXCEL_PATH',
-            str(DATA_DIR / 'database' / 'Vietnam_Infra_News_Database_Final.xlsx'))
-        from pathlib import Path as _P
-        if not _P(excel_path).exists():
-            logger.warning(f"Excel 없음 — summary 동기화 건너뜀: {excel_path}")
-            return
+        from pathlib import Path
 
-        # SQLite에서 최근 번역 완료된 기사 조회 (processed=1, summary_ko 있음)
-        conn = sqlite3.connect(db_path)
-        conn.row_factory = sqlite3.Row
-        rows = conn.execute("""
-            SELECT url, summary_ko, summary_en, summary_vi
-            FROM articles
-            WHERE processed = 1
-              AND summary_ko IS NOT NULL
-              AND summary_ko != ''
-              AND summary_ko NOT LIKE '[%]%:%'
-            ORDER BY collected_date DESC
-            LIMIT 50
-        """).fetchall()
-        conn.close()
+        EXCEL_PATH = Path("data/database/Vietnam_Infra_News_Database_Final.xlsx")
+        if not EXCEL_PATH.exists():
+            logger.error(f"[BuiltinSave] Excel 파일 없음: {EXCEL_PATH}")
+            return False
 
-        if not rows:
-            return
+        wb = openpyxl.load_workbook(EXCEL_PATH)
+        ws = wb.active
 
-        # URL → summary_ko 맵핑
-        url_to_summary = {r['url']: r['summary_ko'] for r in rows}
+        # 헤더 행에서 컬럼 위치 파악
+        headers = {cell.value: cell.column for cell in ws[1] if cell.value}
+        logger.info(f"[BuiltinSave] 컬럼: {list(headers.keys())}")
 
-        wb  = openpyxl.load_workbook(excel_path)
-        ws  = wb.active
-        updated = 0
+        # 기존 URL 목록 (중복 방지)
+        url_col = headers.get('Link') or headers.get('URL') or headers.get('url')
+        existing_urls = set()
+        if url_col:
+            for row in ws.iter_rows(min_row=2, values_only=True):
+                if row[url_col - 1]:
+                    existing_urls.add(str(row[url_col - 1]).strip())
 
-        # URL 컬럼 찾기 (7번째 컬럼)
-        url_col = 7
-        summary_col = 8
-        for c in range(1, ws.max_column + 1):
-            h = ws.cell(row=1, column=c).value
-            if h and 'link' in str(h).lower(): url_col = c
-            if h and 'summary' in str(h).lower(): summary_col = c
+        # 신규 기사 추가
+        added = 0
+        for article in articles:
+            url = article.get('url', '').strip()
+            if url and url in existing_urls:
+                continue  # 중복 건너뜀
 
-        for row in range(2, ws.max_row + 1):
-            url = ws.cell(row=row, column=url_col).value
-            if url and url in url_to_summary:
-                current = ws.cell(row=row, column=summary_col).value or ''
-                # fallback 패턴이거나 비어있으면 교체
-                if not current or '[' in current[:5]:
-                    ws.cell(row=row, column=summary_col).value = url_to_summary[url][:500]
-                    updated += 1
+            # 컬럼 매핑 (Excel 헤더명에 따라 조정)
+            row_data = _map_article_to_row(article, headers, ws.max_column)
+            ws.append(row_data)
+            existing_urls.add(url)
+            added += 1
 
-        if updated > 0:
-            wb.save(excel_path)
-            logger.info(f"  ✓ Excel summary 동기화: {updated}건 업데이트")
-        wb.close()
+        wb.save(EXCEL_PATH)
+        logger.info(f"[BuiltinSave] {added}건 추가 완료 → {EXCEL_PATH}")
+        return True
 
     except Exception as e:
-        logger.warning(f"Excel summary 동기화 오류 (비중요): {e}")
+        logger.error(f"[BuiltinSave] 오류: {e}", exc_info=True)
+        return False
 
 
+def _map_article_to_row(article: dict, headers: dict, max_col: int) -> list:
+    """
+    기사 dict → Excel 행 리스트로 변환
+    헤더 컬럼명에 맞춰 데이터 배치
+    """
+    row = [''] * max_col
+
+    # 컬럼명 → 데이터 매핑 테이블
+    mapping = {
+        'No':         lambda a: '',
+        'Title':      lambda a: a.get('title_en') or a.get('title', ''),
+        'title_ko':   lambda a: a.get('title_ko', ''),
+        'title_en':   lambda a: a.get('title_en') or a.get('title', ''),
+        'title_vi':   lambda a: a.get('title_vi') or a.get('title', ''),
+        'Summary':    lambda a: a.get('summary_en', ''),
+        'summary_ko': lambda a: a.get('summary_ko', ''),
+        'summary_en': lambda a: a.get('summary_en', ''),
+        'summary_vi': lambda a: a.get('summary_vi', ''),
+        'Short summary': lambda a: a.get('summary_en', '')[:200],
+        'Sector':     lambda a: a.get('sector', ''),
+        'Date':       lambda a: a.get('date', ''),
+        'Source':     lambda a: a.get('source', ''),
+        'Link':       lambda a: a.get('url', ''),
+        'URL':        lambda a: a.get('url', ''),
+        'Area':       lambda a: a.get('area', ''),
+        'Language':   lambda a: 'EN',
+    }
+
+    for col_name, col_idx in headers.items():
+        if col_name in mapping and col_idx <= max_col:
+            try:
+                row[col_idx - 1] = mapping[col_name](article)
+            except Exception:
+                pass
+
+    return row
+
+
+# ════════════════════════════════════════════════════════════
+# STEP 4: 대시보드(HTML) 생성
+# ════════════════════════════════════════════════════════════
+
+def step4_build_dashboard(processed_articles: list) -> bool:
+    """
+    Gemini 진단 수정사항 #3 반영:
+    - 대시보드 HTML 카드에 data-ko / data-en / data-vi 속성 포함
+    - 이 속성이 없으면 3개국어 버튼 JavaScript가 작동하지 않음
+    """
+    logger.info("=" * 60)
+    logger.info("STEP 4: 대시보드 HTML 생성")
+    logger.info("=" * 60)
+
+    try:
+        from scripts.dashboard_updater import DashboardUpdater
+
+        updater = DashboardUpdater()
+        # processed_articles에 번역 필드(title_ko/en/vi, summary_ko/en/vi)가 있어야 함
+        result = updater.generate(processed_articles)
+        logger.info(f"[Step4 완료] 대시보드 생성: {result}")
+        return True
+
+    except Exception as e:
+        logger.error(f"[Step4 실패] 대시보드 생성 오류: {e}", exc_info=True)
+        return False
+
+
+# ════════════════════════════════════════════════════════════
+# 메인 실행부
+# ════════════════════════════════════════════════════════════
 
 def main():
-    start_time = datetime.now()
+    parser = argparse.ArgumentParser(description='Vietnam Infra News Pipeline')
+    parser.add_argument(
+        '--mode',
+        choices=['full', 'collect-only', 'translate-only', 'dashboard-only'],
+        default='full',
+        help='실행 모드 선택'
+    )
+    parser.add_argument(
+        '--full',
+        action='store_true',
+        help='전체 파이프라인 실행 (--mode full 과 동일)'
+    )
+    args = parser.parse_args()
 
-    print("=" * 70)
-    print("VIETNAM INFRASTRUCTURE NEWS PIPELINE  v2.0")
-    print(f"Started: {start_time}")
-    print(f"Hours back: {HOURS_BACK} | Summarizer: {'OFF' if SKIP_SUMMARIZER else 'ON'}")
-    print("=" * 70)
+    if args.full:
+        args.mode = 'full'
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    logger.info("╔══════════════════════════════════════════════════════╗")
+    logger.info("║   Vietnam Infrastructure News Pipeline               ║")
+    logger.info(f"║   실행 시각: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}                   ║")
+    logger.info(f"║   모드: {args.mode:<46}║")
+    logger.info("╚══════════════════════════════════════════════════════╝")
 
-    # ── Step 1: 기존 DB 로드 ─────────────────────────────────
-    print("\n[Step 1] 기존 DB 로드...")
-    existing_articles = load_articles_from_excel()
-    print(f"기존 기사: {len(existing_articles)}건")
+    # ─────────────────────────────────────────────────────────
+    # 핵심 수정: 올바른 실행 순서
+    #   [1] 수집 → [2] 번역 → [3] 저장 → [4] 대시보드
+    #
+    # 기존 오류 패턴 (절대 금지):
+    #   [1] 수집 → [3] 저장(원문!) → [2] 번역 → [4] 대시보드
+    # ─────────────────────────────────────────────────────────
 
-    # ── Step 2: 신규 수집 ────────────────────────────────────
-    new_articles, collection_stats = collect_new_articles()
-    print(f"신규 수집: {len(new_articles)}건")
+    excel_saved = False
+    processed_articles = []
 
-    # ── Step 3: AI 요약 ──────────────────────────────────────
-    new_articles = run_summarizer(new_articles)
+    if args.mode in ('full', 'collect-only'):
+        # ① 뉴스 수집
+        raw_articles = step1_collect_news()
 
-    # ── Step 4: QC ──────────────────────────────────────────
-    qc_result, valid_articles = run_quality_control(new_articles, existing_articles)
+        if args.mode == 'collect-only':
+            logger.info(f"[collect-only] 수집 완료: {len(raw_articles)}건")
+            return
 
-    # ── Step 5: 대시보드 ─────────────────────────────────────
-    all_articles  = existing_articles + valid_articles
-    dashboard_ok  = create_dashboard(all_articles)
+        # ② Claude API 번역/요약 (수집 직후 바로 실행)
+        processed_articles = step2_translate_articles(raw_articles)
 
-    # ── Step 5-1: 엑셀 DB 직접 업데이트 (Gemini 권장: valid_articles + EXCEL_PATH) ──
-    excel_path = os.environ.get('EXCEL_PATH',
-        str(DATA_DIR / 'database' / 'Vietnam_Infra_News_Database_Final.xlsx'))
-    if valid_articles:
-        try:
-            import importlib.util
-            nc_path = SCRIPT_DIR / 'news_collector.py'
-            spec = importlib.util.spec_from_file_location('nc', nc_path)
-            nc_mod = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(nc_mod)
-            nc_mod.update_excel_database(
-                valid_articles, collection_stats,
-                excel_path=excel_path)  # QC 통과 기사만, 명시적 경로
-            logger.info(f'✓ Excel 직접 업데이트: +{len(valid_articles)}건 ({excel_path})')
-        except Exception as e:
-            logger.warning(f'Excel 직접 업데이트 오류: {e}')
+        # ③ 번역 완료 데이터를 Excel에 저장 (원문 저장 금지!)
+        excel_saved = step3_save_to_excel(processed_articles)
 
-    # ── Step 6: 알림 ─────────────────────────────────────────
-    notify_ok = send_notifications(all_articles, valid_articles, qc_result)
+        # ④ 대시보드 생성 (Excel 저장과 독립적으로 실행)
+        step4_build_dashboard(processed_articles)
 
-    # ── Step 7: 출력 검증 ────────────────────────────────────
-    index_ok     = (OUTPUT_DIR / "index.html").exists()
-    dashboard_f  = (OUTPUT_DIR / "vietnam_dashboard.html").exists()
+    elif args.mode == 'translate-only':
+        # 수집 없이 번역만 재실행 (JSON 백업에서 로드)
+        raw_articles = _load_latest_raw_backup()
+        processed_articles = step2_translate_articles(raw_articles)
+        step3_save_to_excel(processed_articles)
+        step4_build_dashboard(processed_articles)
 
-    elapsed = (datetime.now() - start_time).seconds
+    elif args.mode == 'dashboard-only':
+        # 대시보드만 재생성
+        processed_articles = _load_from_excel()
+        step4_build_dashboard(processed_articles)
 
-    # ── 최종 실행 보고서 (Genspark Leader Agent 형식) ─────────
-    print("\n" + "=" * 70)
-    print("📊 FINAL EXECUTION REPORT")
-    print("=" * 70)
-    print(f"Pipeline run:       {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Duration:           {elapsed}초")
-    print()
-    print(f"Articles collected: {len(new_articles)}")
+    # 최종 결과 요약
+    logger.info("=" * 60)
+    logger.info("파이프라인 실행 완료")
+    logger.info(f"  - 처리 기사: {len(processed_articles)}건")
+    logger.info(f"  - Excel 저장: {'성공' if excel_saved else '실패/생략'}")
+    logger.info("=" * 60)
 
-    if collection_stats:
-        success_src = sum(1 for s in collection_stats.values() if s.get('status') == 'Success')
-        failed_src  = sum(1 for s in collection_stats.values() if s.get('status') == 'Failed')
-        print(f"RSS sources:        {success_src} success / {failed_src} failed")
 
-    print()
-    print(f"QC pass:            {'✓ PASS' if qc_result['pass'] else '✗ FAIL'}")
-    print(f"  valid:            {qc_result['valid_count']}")
-    print(f"  rejected:         {qc_result['rejected_count']}")
-    if qc_result['warnings']:
-        print("  QC warnings:")
-        for w in qc_result['warnings']:
-            print(f"    {w}")
+def _load_latest_raw_backup() -> list:
+    """가장 최신 원문 백업 JSON 로드"""
+    raw_dir = Path("data/raw")
+    if not raw_dir.exists():
+        return []
+    files = sorted(raw_dir.glob("raw_*.json"), reverse=True)
+    if not files:
+        return []
+    with open(files[0], encoding='utf-8') as f:
+        return json.load(f)
 
-    # 섹터 분포
-    if qc_result['stats'].get('sector_counts'):
-        print("\nSector breakdown (new):")
-        total_new = qc_result['stats']['total_new'] or 1
-        for s, c in sorted(qc_result['stats']['sector_counts'].items(),
-                           key=lambda x: -x[1]):
-            print(f"  {s:<28} {c:3d}  ({c/total_new:.1%})")
 
-    print()
-    print(f"Total DB:           {len(all_articles)}건")
-    print(f"Dashboard:          {'✓' if dashboard_ok else '✗'}")
-    print(f"  index.html:       {'✓' if index_ok else '✗'}")
-    print(f"Notifications:      {'✓' if notify_ok else '건너뜀'}")
-
-    # 전체 상태
-    if qc_result['pass'] and dashboard_ok and index_ok:
-        overall = "✅ SUCCESS"
-    elif dashboard_ok:
-        overall = "⚠️  PARTIAL"
-    else:
-        overall = "❌ FAILED"
-
-    print(f"\nOverall status:     {overall}")
-    print("=" * 70)
-
-    return 0 if overall != "❌ FAILED" else 1
+def _load_from_excel() -> list:
+    """Excel에서 기사 데이터 로드 (dashboard-only 모드용)"""
+    try:
+        from scripts.excel_manager import ExcelManager
+        em = ExcelManager()
+        return em.load_recent_articles(days=7)
+    except Exception:
+        return []
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

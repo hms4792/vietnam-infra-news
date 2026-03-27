@@ -1,859 +1,757 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Vietnam Infrastructure News - Dashboard Updater
-Loads from BOTH Excel (historical) AND SQLite (new collected) databases.
+dashboard_updater.py
+====================
+Gemini 진단 수정사항 #3 완전 반영:
+
+  문제: 대시보드 HTML 기사 카드에 data-ko / data-en / data-vi 속성이 없음
+       → 3개국어 전환 JavaScript가 속성을 찾지 못해 버튼 동작 불가
+
+  수정: 모든 기사 카드 <h3>, <p> 태그에 data-ko / data-en / data-vi 속성 삽입
+       → 버튼 클릭 시 JavaScript가 해당 속성값으로 텍스트 교체 가능
+
+JavaScript 언어 전환 동작 원리:
+  1. 버튼 클릭 → setLanguage('ko') 호출
+  2. document.querySelectorAll('[data-ko]') 로 모든 다국어 요소 탐색
+  3. element.textContent = element.dataset.ko 로 텍스트 교체
+  ↑ 이 흐름이 작동하려면 data-ko/en/vi 속성이 HTML에 반드시 있어야 함!
 """
 
+import html
 import json
 import logging
-import sys
 import os
-import sqlite3
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 
-# Setup paths
-SCRIPT_DIR = Path(__file__).parent
-PROJECT_ROOT = SCRIPT_DIR.parent
-DATA_DIR = PROJECT_ROOT / "data"
-OUTPUT_DIR = PROJECT_ROOT / "outputs"
-TEMPLATE_DIR = PROJECT_ROOT / "templates"
-
-sys.path.insert(0, str(PROJECT_ROOT))
-
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Database paths
-EXCEL_DB_PATH = DATA_DIR / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
-SQLITE_DB_PATH = DATA_DIR / "vietnam_infrastructure_news.db"
-
-# Template paths
-TEMPLATE_HEADER = TEMPLATE_DIR / "dashboard_template_header.html"
-TEMPLATE_FOOTER = TEMPLATE_DIR / "dashboard_template_footer.html"
+# ── 경로 설정 ──────────────────────────────────────────────
+TEMPLATE_PATH = Path("templates/dashboard_template.html")
+OUTPUT_PATH   = Path("docs/index.html")   # GitHub Pages 배포 경로
+EXCEL_PATH    = Path("data/database/Vietnam_Infra_News_Database_Final.xlsx")
 
 
-def load_articles_from_sqlite():
-    """Load articles from SQLite database (newly collected)"""
-    if not SQLITE_DB_PATH.exists():
-        logger.info(f"SQLite DB not found: {SQLITE_DB_PATH}")
-        return []
-    
-    logger.info(f"Loading from SQLite: {SQLITE_DB_PATH}")
-    
-    try:
-        conn = sqlite3.connect(SQLITE_DB_PATH)
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
-        
-        cursor.execute("""
-            SELECT id, url, title, title_vi, title_ko, 
-                   summary, summary_vi, summary_ko,
-                   source, sector, area, province, 
-                   published_date, collected_date
-            FROM articles
-            ORDER BY published_date DESC
-        """)
-        
-        articles = []
-        for row in cursor.fetchall():
-            # Parse date
-            date_str = row['published_date'] or row['collected_date'] or ''
-            if date_str:
-                date_str = date_str[:10]  # Get YYYY-MM-DD part
-            
-            articles.append({
-                "id": row['id'],
-                "date": date_str,
-                "area": row['area'] or "Environment",
-                "sector": row['sector'] or "Infrastructure",
-                "province": row['province'] or "Vietnam",
-                "source": row['source'] or "",
-                "title": row['title'] or "",
-                "title_ko": row['title_ko'] or "",
-                "title_vi": row['title_vi'] or "",
-                "summary": row['summary'] or "",
-                "summary_ko": row['summary_ko'] or "",
-                "summary_vi": row['summary_vi'] or "",
-                "url": row['url'] or "",
-                "from_sqlite": True  # Mark as newly collected
-            })
-        
-        conn.close()
-        logger.info(f"Loaded {len(articles)} articles from SQLite")
-        return articles
-        
-    except Exception as e:
-        logger.error(f"Error loading SQLite: {e}")
-        import traceback
-        traceback.print_exc()
-        return []
+# ════════════════════════════════════════════════════════════
+# 핵심: 기사 카드 HTML 생성 함수 (다국어 속성 완전 포함)
+# ════════════════════════════════════════════════════════════
 
-
-def load_articles_from_excel():
-    """Load ALL articles from Excel database (historical)"""
-    try:
-        import openpyxl
-    except ImportError:
-        logger.error("openpyxl not installed")
-        return []
-    
-    if not EXCEL_DB_PATH.exists():
-        logger.warning(f"Excel database not found: {EXCEL_DB_PATH}")
-        return []
-    
-    logger.info(f"Loading from Excel: {EXCEL_DB_PATH}")
-    
-    try:
-        wb = openpyxl.load_workbook(EXCEL_DB_PATH, read_only=True, data_only=True)
-        
-        logger.info(f"Available sheets: {wb.sheetnames}")
-        
-        # Find the News data sheet (not Summary or other sheets)
-        ws = None
-        
-        # Priority 1: Look for sheet named "News"
-        for sheet_name in wb.sheetnames:
-            if sheet_name.lower() == 'news':
-                ws = wb[sheet_name]
-                logger.info(f"Using sheet: {sheet_name}")
-                break
-        
-        # Priority 2: Look for sheet with "Area" header (main data sheet)
-        if ws is None:
-            for sheet_name in wb.sheetnames:
-                if 'summary' in sheet_name.lower() or 'rss' in sheet_name.lower() or 'keyword' in sheet_name.lower() or 'log' in sheet_name.lower():
-                    continue
-                test_ws = wb[sheet_name]
-                try:
-                    first_row = [cell.value for cell in test_ws[1]]
-                    # Check for expected headers: Area, Business Sector, Province, News Tittle, Date
-                    if any(h and str(h).strip() == 'Area' for h in first_row):
-                        ws = test_ws
-                        logger.info(f"Using sheet with Area header: {sheet_name}")
-                        break
-                except:
-                    continue
-        
-        # Priority 3: Use first sheet that's not Summary/RSS/Keywords/Log
-        if ws is None:
-            for sheet_name in wb.sheetnames:
-                if 'summary' not in sheet_name.lower() and 'rss' not in sheet_name.lower() and 'keyword' not in sheet_name.lower() and 'log' not in sheet_name.lower():
-                    ws = wb[sheet_name]
-                    logger.info(f"Using fallback sheet: {sheet_name}")
-                    break
-        
-        if ws is None:
-            ws = wb.active
-            logger.warning(f"Using active sheet as last fallback: {ws.title}")
-        
-        headers = [cell.value for cell in ws[1]]
-        col_map = {str(h).strip(): i for i, h in enumerate(headers) if h}
-        
-        logger.info(f"Excel headers: {list(col_map.keys())}")
-        
-        # Helper function to safely get column value
-        def safe_get(row, col_name, default_idx, default_val=""):
-            idx = col_map.get(col_name, default_idx)
-            if idx < len(row):
-                return row[idx] if row[idx] is not None else default_val
-            return default_val
-        
-        articles = []
-        for row_num, row in enumerate(ws.iter_rows(min_row=2, values_only=True), start=2):
-            if not any(row):
-                continue
-            
-            # Safely get date
-            date_idx = col_map.get("Date", 4)
-            date_val = row[date_idx] if date_idx < len(row) else None
-            if date_val:
-                if hasattr(date_val, 'strftime'):
-                    date_str = date_val.strftime("%Y-%m-%d")
-                else:
-                    date_str = str(date_val)[:10]
-            else:
-                date_str = ""
-            
-            area = safe_get(row, "Area", 0, "Environment")
-            sector = safe_get(row, "Business Sector", 1, "Unknown")
-            province = safe_get(row, "Province", 2, "Vietnam")
-            title = str(safe_get(row, "News Tittle", 3, ""))
-            source = safe_get(row, "Source", 5, "")
-            url = safe_get(row, "Link", 6, "")
-            summary = str(safe_get(row, "Short summary", 7, ""))
-            
-            if not title and not url:
-                continue
-            
-            articles.append({
-                "id": len(articles) + 1,
-                "date": date_str,
-                "area": area,
-                "sector": sector,
-                "province": province,
-                "source": source,
-                "title": title,
-                "summary": summary,
-                "url": url,
-                "from_sqlite": False
-            })
-        
-        wb.close()
-        logger.info(f"Loaded {len(articles)} articles from Excel")
-        return articles
-        
-    except Exception as e:
-        logger.error(f"Error loading Excel: {e}")
-        import traceback
-        traceback.print_exc()
-        return []
-
-
-def merge_articles(excel_articles, sqlite_articles):
-    """Merge articles from both sources, removing duplicates"""
-    
-    # Debug: Count 2026 articles before merge
-    excel_2026 = [a for a in excel_articles if a.get('date', '').startswith('2026')]
-    sqlite_2026 = [a for a in sqlite_articles if a.get('date', '').startswith('2026')]
-    logger.info(f"Before merge - Excel 2026 articles: {len(excel_2026)}, SQLite 2026: {len(sqlite_2026)}")
-    
-    # Create URL set for deduplication
-    seen_urls = set()
-    seen_titles = set()
-    merged = []
-    
-    # Add SQLite articles first (newer, higher priority)
-    for article in sqlite_articles:
-        url = article.get('url', '')
-        title = article.get('title', '')
-        if url and url not in seen_urls:
-            seen_urls.add(url)
-            if title:
-                seen_titles.add(title)
-            merged.append(article)
-        elif not url and title and title not in seen_titles:
-            seen_titles.add(title)
-            merged.append(article)
-    
-    # Add Excel articles (skip duplicates)
-    skipped_no_url = 0
-    skipped_dup_url = 0
-    skipped_dup_title = 0
-    skipped_2026 = []
-    
-    for article in excel_articles:
-        url = article.get('url', '')
-        title = article.get('title', '')
-        date = article.get('date', '')
-        
-        if url:
-            if url not in seen_urls:
-                seen_urls.add(url)
-                if title:
-                    seen_titles.add(title)
-                merged.append(article)
-            else:
-                skipped_dup_url += 1
-                if date.startswith('2026'):
-                    skipped_2026.append(f"URL dup: {title[:50]}")
-        else:
-            # No URL - check by title
-            if title and title not in seen_titles:
-                seen_titles.add(title)
-                merged.append(article)
-            elif title:
-                skipped_dup_title += 1
-                if date.startswith('2026'):
-                    skipped_2026.append(f"Title dup: {title[:50]}")
-            else:
-                skipped_no_url += 1
-                if date.startswith('2026'):
-                    skipped_2026.append(f"No URL/title: {date}")
-    
-    logger.info(f"Merge stats: skipped {skipped_dup_url} dup URLs, {skipped_dup_title} dup titles, {skipped_no_url} no URL/title")
-    
-    # Debug: Count 2026 articles after merge
-    merged_2026 = [a for a in merged if a.get('date', '').startswith('2026')]
-    logger.info(f"After merge - 2026 articles: {len(merged_2026)}")
-    if skipped_2026:
-        logger.info(f"Skipped 2026 articles: {skipped_2026[:5]}")  # Show first 5
-    
-    # Sort by date (newest first)
-    merged.sort(key=lambda x: x.get('date', ''), reverse=True)
-    
-    # Re-assign IDs
-    for i, article in enumerate(merged):
-        article['id'] = i + 1
-    
-    return merged
-
-
-def convert_to_multilingual_format(articles):
+def _build_article_card(article: dict, idx: int) -> str:
     """
-    Convert articles to multilingual format for BACKEND_DATA.
+    단일 기사 카드 HTML 생성
     
-    다국어 처리 전략:
-    - 신규 기사 (SQLite): ai_summarizer가 생성한 summary_ko/vi 사용
-    - 기존 기사 (Excel): summary_ko가 없으면 구조화 fallback 생성
-    - title_ko/vi: AI 번역 있으면 사용, 없으면 EN 원문 유지
-      (KO 버튼 = 한국어 요약 표시 / title은 EN 원문으로 표시)
-    - summary_en이 있는 기사는 RSS description 활용
+    Gemini 수정사항 #3:
+    - <h3> 제목 태그에 data-en / data-ko / data-vi 속성 추가
+    - <p> 요약 태그에 data-en / data-ko / data-vi 속성 추가
+    - 이 속성들이 없으면 3개국어 버튼이 동작하지 않음!
+    
+    Args:
+        article: 번역 완료 기사 dict
+                 (title_en, title_ko, title_vi, summary_en, summary_ko, summary_vi 포함)
+        idx: 카드 인덱스 (짝수/홀수 스타일 구분용)
     """
-    result = []
+    # ── 다국어 제목 추출 ─────────────────────────────────────
+    # html.escape(): HTML 특수문자(<, >, &, ", ')를 안전하게 변환
+    #   → XSS 방지 및 HTML 속성 내 특수문자 오류 방지
+    title_en = html.escape(article.get('title_en') or article.get('title', '') or '')
+    title_ko = html.escape(article.get('title_ko') or article.get('title', '') or '')
+    title_vi = html.escape(article.get('title_vi') or article.get('title', '') or '')
 
-    SECTOR_KO = {
-        "Waste Water": "폐수처리",
-        "Water Supply/Drainage": "상수도/배수",
-        "Solid Waste": "고형폐기물",
-        "Power": "발전/전력",
-        "Oil & Gas": "석유/가스",
-        "Transport": "교통인프라",
-        "Industrial Parks": "산업단지",
-        "Smart City": "스마트시티",
-        "Construction": "건설/도시개발",
-        "Urban Development": "도시개발",
-        "Climate Change": "기후변화",
+    # ── 다국어 요약 추출 ─────────────────────────────────────
+    summary_en = html.escape(article.get('summary_en', '') or '')
+    summary_ko = html.escape(article.get('summary_ko', '') or '')
+    summary_vi = html.escape(article.get('summary_vi', '') or '')
+
+    # 요약이 없을 경우 기본값
+    if not summary_en:
+        summary_en = html.escape(f"{article.get('sector', 'Infrastructure')} project in Vietnam.")
+    if not summary_ko:
+        summary_ko = html.escape(f"베트남 {article.get('sector', '인프라')} 관련 사업.")
+    if not summary_vi:
+        summary_vi = html.escape(f"Dự án {article.get('sector', 'hạ tầng')} tại Việt Nam.")
+
+    # ── 메타 정보 ─────────────────────────────────────────────
+    sector  = html.escape(article.get('sector', 'General'))
+    source  = html.escape(article.get('source', ''))
+    date    = html.escape(str(article.get('date', '')))
+    url     = article.get('url', '#')
+    area    = html.escape(article.get('area', ''))
+
+    # 섹터별 색상 클래스 매핑
+    sector_class = _get_sector_class(article.get('sector', ''))
+
+    # ── HTML 카드 생성 ────────────────────────────────────────
+    # ★★★ 핵심 수정: data-en / data-ko / data-vi 속성 반드시 포함 ★★★
+    card_html = f"""
+    <div class="article-card" data-sector="{sector}" data-area="{area}" data-idx="{idx}">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge {sector_class}">{sector}</span>
+            <span class="article-date">{date}</span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="{title_en}"
+            data-ko="{title_ko}"
+            data-vi="{title_vi}">
+            {title_en}
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="{summary_en}"
+           data-ko="{summary_ko}"
+           data-vi="{summary_vi}">
+           {summary_en}
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 {source}</span>
+            {f'<span class="area-tag">📍 {area}</span>' if area else ''}
+            <a href="{url}" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    """
+    return card_html
+
+
+def _get_sector_class(sector: str) -> str:
+    """섹터명에 따른 CSS 클래스 반환"""
+    mapping = {
+        'Waste Water':    'sector-ww',
+        'Water Supply':   'sector-ws',
+        'Drainage':       'sector-ws',
+        'Solid Waste':    'sector-sw',
+        'Power':          'sector-pw',
+        'Oil & Gas':      'sector-og',
+        'Industrial':     'sector-ip',
+        'Smart City':     'sector-sc',
+        'Transport':      'sector-tr',
+        'Construction':   'sector-cn',
     }
-    SECTOR_VI = {
-        "Waste Water": "Xử lý nước thải",
-        "Water Supply/Drainage": "Cấp thoát nước",
-        "Solid Waste": "Chất thải rắn",
-        "Power": "Điện năng",
-        "Oil & Gas": "Dầu khí",
-        "Transport": "Giao thông",
-        "Industrial Parks": "Khu công nghiệp",
-        "Smart City": "Thành phố thông minh",
-        "Construction": "Xây dựng",
-        "Urban Development": "Phát triển đô thị",
-        "Climate Change": "Biến đổi khí hậu",
+    for key, cls in mapping.items():
+        if key.lower() in sector.lower():
+            return cls
+    return 'sector-general'
+
+
+# ════════════════════════════════════════════════════════════
+# 언어 전환 JavaScript (3개국어 버튼 동작 로직)
+# ════════════════════════════════════════════════════════════
+
+LANGUAGE_SWITCH_JS = """
+<script>
+// ═══════════════════════════════════════════════════════════
+// 3개국어 전환 JavaScript
+// ═══════════════════════════════════════════════════════════
+// 동작 원리:
+//   1. 언어 버튼 클릭 → setLanguage('en'|'ko'|'vi') 호출
+//   2. data-en / data-ko / data-vi 속성을 가진 모든 요소 탐색
+//   3. 해당 속성값으로 요소의 텍스트 교체
+//
+// 필수 조건:
+//   HTML 요소에 data-en, data-ko, data-vi 속성이 있어야 함!
+//   (dashboard_updater.py에서 카드 생성 시 반드시 포함)
+// ═══════════════════════════════════════════════════════════
+
+let currentLang = 'en';  // 기본 언어: 영어
+
+function setLanguage(lang) {
+    currentLang = lang;
+    
+    // ① 모든 다국어 요소 일괄 업데이트
+    // 'data-en' 속성이 있는 모든 요소를 대상으로 함
+    document.querySelectorAll('[data-en]').forEach(function(el) {
+        const text = el.dataset[lang];  // el.dataset.en / el.dataset.ko / el.dataset.vi
+        if (text && text.trim() !== '') {
+            el.textContent = text;
+        }
+    });
+
+    // ② 버튼 active 상태 업데이트
+    document.querySelectorAll('.lang-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+    });
+    const activeBtn = document.getElementById('btn-' + lang);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    // ③ html lang 속성 업데이트 (접근성)
+    document.documentElement.lang = lang === 'ko' ? 'ko' : lang === 'vi' ? 'vi' : 'en';
+
+    // ④ localStorage에 선택 언어 저장 (페이지 재방문 시 유지)
+    try { localStorage.setItem('preferred_lang', lang); } catch(e) {}
+}
+
+// 페이지 로드 시 저장된 언어 복원
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        const saved = localStorage.getItem('preferred_lang') || 'en';
+        setLanguage(saved);
+    } catch(e) {
+        setLanguage('en');
     }
+    
+    // 필터 초기화
+    initFilters();
+});
 
-    for article in articles:
-        title   = str(article.get("title", "") or "")
-        summary = str(article.get("summary", "") or "")
-        sector  = article.get("sector", "Infrastructure")
-        province = article.get("province", "Vietnam")
-        area    = article.get("area", "Environment")
+// ── 섹터/지역 필터 기능 ──────────────────────────────────
+function initFilters() {
+    // 섹터 필터
+    document.querySelectorAll('.sector-filter-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const sector = this.dataset.sector || 'all';
+            filterBySector(sector);
+            document.querySelectorAll('.sector-filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+}
 
-        sector_ko = SECTOR_KO.get(sector, sector)
-        sector_vi = SECTOR_VI.get(sector, sector)
+function filterBySector(sector) {
+    document.querySelectorAll('.article-card').forEach(function(card) {
+        if (sector === 'all' || card.dataset.sector === sector) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
 
-        # ── title 처리 ──────────────────────────────────────────
-        # EN: 항상 원문 사용
-        title_en = title
+// 검색 기능
+function searchArticles(query) {
+    const q = query.toLowerCase().trim();
+    document.querySelectorAll('.article-card').forEach(function(card) {
+        const title   = (card.querySelector('.article-title')   || {}).textContent || '';
+        const summary = (card.querySelector('.article-summary') || {}).textContent || '';
+        const match   = title.toLowerCase().includes(q) || summary.toLowerCase().includes(q);
+        card.style.display = (q === '' || match) ? '' : 'none';
+    });
+}
+</script>
+"""
 
-        # KO: AI 번역이 있고 원문과 다르면 사용, 없으면 원문 (EN)
-        raw_ko = str(article.get("title_ko") or "").strip()
-        title_ko = raw_ko if (raw_ko and raw_ko != title) else title
+# 언어 버튼 HTML
+LANGUAGE_BUTTONS_HTML = """
+<div class="language-switcher" role="navigation" aria-label="Language selector">
+    <button id="btn-en" class="lang-btn active"
+            onclick="setLanguage('en')"
+            title="Switch to English">
+        🇺🇸 EN
+    </button>
+    <button id="btn-ko" class="lang-btn"
+            onclick="setLanguage('ko')"
+            title="한국어로 전환">
+        🇰🇷 KO
+    </button>
+    <button id="btn-vi" class="lang-btn"
+            onclick="setLanguage('vi')"
+            title="Chuyển sang Tiếng Việt">
+        🇻🇳 VI
+    </button>
+</div>
+"""
 
-        # VI: AI 번역이 있고 원문과 다르면 사용, 없으면 원문 (EN)
-        raw_vi = str(article.get("title_vi") or "").strip()
-        title_vi = raw_vi if (raw_vi and raw_vi != title) else title
 
-        # ── summary 처리 ────────────────────────────────────────
-        # EN: RSS summary 우선, 없으면 구조화 fallback
-        raw_sum_en = str(article.get("summary_en") or summary or "").strip()
-        if raw_sum_en and len(raw_sum_en) > 20:
-            summary_en = raw_sum_en[:300]
-        else:
-            summary_en = f"[{sector}] Infrastructure project in {province}: {title[:100]}"
+# ════════════════════════════════════════════════════════════
+# 전체 대시보드 HTML 생성
+# ════════════════════════════════════════════════════════════
 
-        # KO: AI 번역 우선, 없으면 구조화 fallback
-        # fallback 형식: [섹터KO] Province 지역 — 원문제목 (단순 반복 방지)
-        raw_sum_ko = str(article.get("summary_ko") or "").strip()
-        if raw_sum_ko and not raw_sum_ko.startswith(f"[{sector_ko}] {province}"):
-            summary_ko = raw_sum_ko[:300]
-        else:
-            # summary_en이 있으면 언급하여 한국어 맥락 제공
-            summary_ko = f"[{sector_ko}] {province} 인프라 프로젝트. {title[:120]}"
+def generate_dashboard_html(articles: list) -> str:
+    """
+    전체 대시보드 HTML 생성
+    
+    Args:
+        articles: processed_articles (번역 완료, title_en/ko/vi, summary_en/ko/vi 포함)
+    Returns:
+        완성된 HTML 문자열
+    """
+    if not articles:
+        logger.warning("[Dashboard] 기사 없음 - 빈 대시보드 생성")
 
-        # VI: AI 번역 우선, 없으면 구조화 fallback
-        raw_sum_vi = str(article.get("summary_vi") or "").strip()
-        if raw_sum_vi and not raw_sum_vi.startswith(f"[{sector_vi}] {province}"):
-            summary_vi = raw_sum_vi[:300]
-        else:
-            summary_vi = f"[{sector_vi}] Dự án hạ tầng tại {province}. {title[:120]}"
+    # ── 통계 계산 ─────────────────────────────────────────
+    today = datetime.now().strftime('%Y-%m-%d')
+    today_articles = [a for a in articles if str(a.get('date', '')).startswith(today)]
+    sectors = list(set(a.get('sector', 'General') for a in articles if a.get('sector')))
+    sectors.sort()
 
-        result.append({
-            "id":       article.get("id", len(result) + 1),
-            "date":     str(article.get("date", "") or ""),
-            "area":     area,
-            "sector":   sector,
-            "province": province,
-            "source":   str(article.get("source", "") or ""),
-            "title": {
-                "ko": title_ko,
-                "en": title_en,
-                "vi": title_vi,
+    # ── 기사 카드 HTML 생성 ─────────────────────────────────
+    cards_html = '\n'.join(
+        _build_article_card(article, idx)
+        for idx, article in enumerate(articles[:100])  # 최대 100건 표시
+    )
+
+    # ── 섹터 필터 버튼 ─────────────────────────────────────
+    sector_filter_html = '<button class="sector-filter-btn active" data-sector="all">All</button>\n'
+    for s in sectors:
+        sector_filter_html += f'<button class="sector-filter-btn" data-sector="{html.escape(s)}">{html.escape(s)}</button>\n'
+
+    # ── BACKEND_DATA: JavaScript에서 사용할 전체 데이터 ──────
+    # 대시보드 JS에서 차트나 추가 처리에 사용
+    backend_data = []
+    for a in articles:
+        backend_data.append({
+            'title': {
+                'en': a.get('title_en') or a.get('title', ''),
+                'ko': a.get('title_ko') or a.get('title', ''),
+                'vi': a.get('title_vi') or a.get('title', ''),
             },
-            "summary": {
-                "ko": summary_ko,
-                "en": summary_en,
-                "vi": summary_vi,
+            'summary': {
+                'en': a.get('summary_en', ''),
+                'ko': a.get('summary_ko', ''),
+                'vi': a.get('summary_vi', ''),
             },
-            "url":    str(article.get("url", "") or ""),
-            "is_new": bool(article.get("from_sqlite", False)),
+            'sector':  a.get('sector', ''),
+            'source':  a.get('source', ''),
+            'date':    str(a.get('date', '')),
+            'url':     a.get('url', ''),
+            'area':    a.get('area', ''),
         })
 
-    return result
+    backend_data_json = json.dumps(backend_data, ensure_ascii=False, indent=2)
 
-
-def generate_dashboard(articles):
-    """Generate dashboard HTML"""
-    
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    
-    backend_data = convert_to_multilingual_format(articles)
-    backend_data.sort(key=lambda x: x.get("date", ""), reverse=True)
-    backend_json = json.dumps(backend_data, ensure_ascii=False, indent=2)
-    
-    if TEMPLATE_HEADER.exists() and TEMPLATE_FOOTER.exists():
-        logger.info("Using template files")
-        
-        with open(TEMPLATE_HEADER, 'r', encoding='utf-8') as f:
-            header = f.read()
-        
-        with open(TEMPLATE_FOOTER, 'r', encoding='utf-8') as f:
-            footer = f.read()
-        
-        html = header + f"\nconst BACKEND_DATA = {backend_json};\n" + footer
-    else:
-        logger.info("Template not found, generating minimal dashboard")
-        html = generate_minimal_dashboard(backend_data, backend_json)
-    
-    index_path = OUTPUT_DIR / "index.html"
-    dashboard_path = OUTPUT_DIR / "vietnam_dashboard.html"
-    
-    with open(index_path, 'w', encoding='utf-8') as f:
-        f.write(html)
-    logger.info(f"Saved: {index_path} ({index_path.stat().st_size:,} bytes)")
-    
-    with open(dashboard_path, 'w', encoding='utf-8') as f:
-        f.write(html)
-    logger.info(f"Saved: {dashboard_path}")
-    
-    # Count today's and recent articles
-    today = datetime.now().strftime("%Y-%m-%d")
-    yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
-    
-    today_count = sum(1 for a in backend_data if a.get("date") == today)
-    yesterday_count = sum(1 for a in backend_data if a.get("date") == yesterday)
-    new_count = sum(1 for a in backend_data if a.get("is_new", False))
-    
-    json_path = OUTPUT_DIR / f"news_data_{datetime.now().strftime('%Y%m%d')}.json"
-    with open(json_path, 'w', encoding='utf-8') as f:
-        json.dump({
-            "generated_at": datetime.now().isoformat(),
-            "total": len(backend_data),
-            "today_articles": today_count,
-            "yesterday_articles": yesterday_count,
-            "new_from_collector": new_count
-        }, f, indent=2)
-    
-    logger.info(f"Today's articles: {today_count}")
-    logger.info(f"Yesterday's articles: {yesterday_count}")
-    logger.info(f"New from collector: {new_count}")
-    
-    return str(index_path)
-
-
-def generate_minimal_dashboard(articles, backend_json):
-    """Generate minimal dashboard when template is not available"""
-    
-    today = datetime.now().strftime("%Y-%m-%d")
-    total = len(articles)
-    today_count = sum(1 for a in articles if a.get("date") == today)
-    new_count = sum(1 for a in articles if a.get("is_new", False))
-    
-    html = f'''<!DOCTYPE html>
-<html lang="ko">
+    # ── 완성 HTML ──────────────────────────────────────────
+    html_content = f"""<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vietnam Infrastructure News Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {{ font-family: 'Noto Sans KR', sans-serif; }}
-        .lang-btn.active {{ background: linear-gradient(135deg, #0F766E, #14B8A6); color: white; }}
-        .sector-env {{ background: linear-gradient(135deg, #059669, #10B981); }}
-        .sector-energy {{ background: linear-gradient(135deg, #D97706, #F59E0B); }}
-        .sector-urban {{ background: linear-gradient(135deg, #7C3AED, #8B5CF6); }}
-        .new-badge {{ background: #EF4444; color: white; animation: pulse 2s infinite; }}
-        @keyframes pulse {{ 0%, 100% {{ opacity: 1; }} 50% {{ opacity: 0.7; }} }}
+        /* ── CSS 변수 (테마 색상) ── */
+        :root {{
+            --primary:   #1a5276;
+            --secondary: #2e86c1;
+            --accent:    #f39c12;
+            --bg:        #f4f6f9;
+            --card-bg:   #ffffff;
+            --text:      #2c3e50;
+            --text-light:#7f8c8d;
+            --border:    #dce1e7;
+            --shadow:    0 2px 8px rgba(0,0,0,0.08);
+        }}
+
+        * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+                         'Noto Sans KR', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }}
+
+        /* ── 헤더 ── */
+        .dashboard-header {{
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }}
+
+        .header-title h1 {{
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }}
+
+        .header-title p {{
+            font-size: 0.9rem;
+            opacity: 0.85;
+        }}
+
+        /* ── 언어 전환 버튼 ── */
+        .language-switcher {{
+            display: flex;
+            gap: 8px;
+        }}
+
+        .lang-btn {{
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }}
+
+        .lang-btn:hover,
+        .lang-btn.active {{
+            background: white;
+            color: var(--primary);
+            border-color: white;
+        }}
+
+        /* ── 통계 바 ── */
+        .stats-bar {{
+            background: white;
+            padding: 16px 32px;
+            display: flex;
+            gap: 32px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }}
+
+        .stat-item {{
+            text-align: center;
+        }}
+
+        .stat-value {{
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+        }}
+
+        .stat-label {{
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }}
+
+        /* ── 필터 바 ── */
+        .filter-bar {{
+            padding: 16px 32px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }}
+
+        .filter-bar input {{
+            flex: 1;
+            min-width: 200px;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            outline: none;
+        }}
+
+        .filter-bar input:focus {{
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(46,134,193,0.15);
+        }}
+
+        .sector-filter-btn {{
+            padding: 6px 14px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }}
+
+        .sector-filter-btn:hover,
+        .sector-filter-btn.active {{
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }}
+
+        /* ── 기사 카드 그리드 ── */
+        .articles-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 20px;
+            padding: 24px 32px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }}
+
+        .article-card {{
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            border-left: 4px solid var(--secondary);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }}
+
+        .article-card:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }}
+
+        .card-header {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }}
+
+        .sector-badge {{
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            background: var(--secondary);
+            color: white;
+        }}
+
+        /* 섹터별 색상 */
+        .sector-ww {{ background: #1abc9c; }}
+        .sector-ws {{ background: #3498db; }}
+        .sector-sw {{ background: #e67e22; }}
+        .sector-pw {{ background: #e74c3c; }}
+        .sector-og {{ background: #8e44ad; }}
+        .sector-ip {{ background: #2ecc71; }}
+        .sector-sc {{ background: #f39c12; }}
+        .sector-tr {{ background: #16a085; }}
+        .sector-cn {{ background: #7f8c8d; }}
+
+        .article-date {{
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }}
+
+        .article-title {{
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            color: var(--primary);
+        }}
+
+        .article-summary {{
+            font-size: 0.88rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }}
+
+        .card-footer {{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }}
+
+        .read-more {{
+            margin-left: auto;
+            color: var(--secondary);
+            font-weight: 600;
+            text-decoration: none;
+        }}
+
+        .read-more:hover {{ text-decoration: underline; }}
+
+        .no-articles {{
+            text-align: center;
+            padding: 60px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }}
+
+        /* ── 반응형 ── */
+        @media (max-width: 768px) {{
+            .dashboard-header {{ padding: 16px; }}
+            .articles-grid {{ padding: 16px; grid-template-columns: 1fr; }}
+            .stats-bar {{ padding: 12px 16px; gap: 16px; }}
+            .filter-bar {{ padding: 12px 16px; }}
+        }}
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-50 to-teal-50/30 min-h-screen">
+<body>
 
-<header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 py-3">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-teal-600 to-emerald-500 rounded-lg flex items-center justify-center text-white text-xl">🏗️</div>
-                <div>
-                    <h1 class="text-lg font-bold text-slate-800">Vietnam Infra News</h1>
-                    <p class="text-xs text-slate-500">Updated: {datetime.now().strftime("%Y-%m-%d %H:%M")}</p>
-                </div>
-            </div>
-            <div class="flex gap-1 bg-slate-100 rounded-lg p-0.5">
-                <button onclick="setLang('ko')" class="lang-btn active px-3 py-1.5 rounded text-sm font-medium" data-lang="ko">🇰🇷 한국어</button>
-                <button onclick="setLang('en')" class="lang-btn px-3 py-1.5 rounded text-sm font-medium text-slate-600" data-lang="en">🇺🇸 EN</button>
-                <button onclick="setLang('vi')" class="lang-btn px-3 py-1.5 rounded text-sm font-medium text-slate-600" data-lang="vi">🇻🇳 VI</button>
-            </div>
-        </div>
+<!-- ════ 헤더 ════════════════════════════════════════════ -->
+<header class="dashboard-header">
+    <div class="header-title">
+        <h1>🇻🇳 Vietnam Infrastructure News</h1>
+        <p>
+            <span data-en="Automated Infrastructure Intelligence Dashboard"
+                  data-ko="자동화 인프라 인텔리전스 대시보드"
+                  data-vi="Bảng tin hạ tầng tự động">
+                Automated Infrastructure Intelligence Dashboard
+            </span>
+            &nbsp;|&nbsp; Updated: {today}
+        </p>
     </div>
+
+    <!-- ★ 3개국어 전환 버튼 -->
+    {LANGUAGE_BUTTONS_HTML}
 </header>
 
-<main class="max-w-7xl mx-auto px-4 py-6">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white rounded-xl p-4 shadow-sm border">
-            <div class="text-2xl font-bold text-red-500">{new_count}</div>
-            <div class="text-sm text-slate-500">🆕 신규 수집</div>
-        </div>
-        <div class="bg-white rounded-xl p-4 shadow-sm border">
-            <div class="text-2xl font-bold text-teal-600">{today_count}</div>
-            <div class="text-sm text-slate-500">오늘</div>
-        </div>
-        <div class="bg-white rounded-xl p-4 shadow-sm border">
-            <div class="text-2xl font-bold text-blue-600">{total:,}</div>
-            <div class="text-sm text-slate-500">전체 DB</div>
-        </div>
+<!-- ════ 통계 바 ════════════════════════════════════════ -->
+<div class="stats-bar">
+    <div class="stat-item">
+        <div class="stat-value">{len(articles)}</div>
+        <div class="stat-label"
+             data-en="Total Articles"
+             data-ko="전체 기사"
+             data-vi="Tổng bài viết">Total Articles</div>
     </div>
-    
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-        <div class="bg-gradient-to-r from-teal-700 to-emerald-600 px-4 py-3">
-            <span class="text-white font-bold">📰 뉴스 목록</span>
-            <span class="text-teal-100 text-sm ml-2" id="news-count">{total}건</span>
-        </div>
-        <div id="news-list" class="max-h-[600px] overflow-y-auto"></div>
+    <div class="stat-item">
+        <div class="stat-value">{len(today_articles)}</div>
+        <div class="stat-label"
+             data-en="Today"
+             data-ko="오늘"
+             data-vi="Hôm nay">Today</div>
     </div>
+    <div class="stat-item">
+        <div class="stat-value">{len(sectors)}</div>
+        <div class="stat-label"
+             data-en="Sectors"
+             data-ko="섹터"
+             data-vi="Lĩnh vực">Sectors</div>
+    </div>
+</div>
+
+<!-- ════ 필터 바 ══════════════════════════════════════════ -->
+<div class="filter-bar">
+    <input type="text"
+           id="search-input"
+           placeholder="Search articles..."
+           oninput="searchArticles(this.value)">
+    {sector_filter_html}
+</div>
+
+<!-- ════ 기사 카드 그리드 ═══════════════════════════════ -->
+<main class="articles-grid" id="articles-container">
+    {cards_html if cards_html.strip() else '<div class="no-articles">No articles available today.</div>'}
 </main>
 
+<!-- ════ 백엔드 데이터 (JavaScript용) ══════════════════════ -->
+<!-- 
+    BACKEND_DATA: 전체 기사 데이터를 JavaScript 객체로 저장
+    title/summary는 각 언어별 객체로 구성되어 언어 전환 시 사용
+-->
 <script>
-const BACKEND_DATA = {backend_json};
-
-let lang = 'ko';
-
-function setLang(l) {{
-    lang = l;
-    document.querySelectorAll('.lang-btn').forEach(btn => {{
-        btn.classList.toggle('active', btn.dataset.lang === l);
-    }});
-    renderNews();
-}}
-
-function getText(obj) {{
-    if (!obj) return '';
-    if (typeof obj === 'string') return obj;
-    // 선택된 언어로 번역이 있으면 사용, 없으면 영어, 없으면 어떤 언어든 반환
-    return obj[lang] || obj.en || obj.ko || obj.vi || '';
-}}
-
-function getTitleDisplay(n) {{
-    // title: AI 번역 있으면 해당 언어, 없으면 영어 원문 + [번역중] 표시
-    const t = getText(n.title);
-    if (lang !== 'en' && n.title && n.title[lang] && n.title[lang] !== n.title['en']) {{
-        return n.title[lang];  // 실제 번역된 제목
-    }}
-    return n.title ? (n.title.en || n.title.vi || n.title.ko || '') : '';
-}}
-
-function getSummaryDisplay(n) {{
-    const s = n.summary || {{}};
-    if (lang === 'ko' && s.ko) return s.ko;
-    if (lang === 'vi' && s.vi) return s.vi;
-    if (lang === 'en' && s.en) return s.en;
-    // fallback: 어떤 언어든 있는 것 반환
-    return s.en || s.ko || s.vi || '';
-}}
-
-function getSectorColor(area) {{
-    if (area === 'Environment') return 'sector-env';
-    if (area === 'Energy Develop.' || area === 'Energy') return 'sector-energy';
-    return 'sector-urban';
-}}
-
-function renderNews() {{
-    const container = document.getElementById('news-list');
-    container.innerHTML = BACKEND_DATA.slice(0, 100).map(n => `
-        <div class="px-4 py-3 border-b hover:bg-slate-50">
-            <div class="flex items-center gap-2 mb-1">
-                ${{n.is_new ? '<span class="new-badge px-1.5 py-0.5 rounded text-xs font-bold">NEW</span>' : ''}}
-                <span class="px-2 py-0.5 rounded text-xs font-semibold text-white ${{getSectorColor(n.area)}}">${{n.sector}}</span>
-                <span class="text-xs text-slate-500">${{n.date}}</span>
-                <span class="text-xs text-slate-400">${{n.source}}</span>
-            </div>
-            <h3 class="font-medium text-slate-800">${{getTitleDisplay(n)}}</h3>
-            <p class="text-sm text-slate-600 mt-1">${{getSummaryDisplay(n).slice(0, 180)}}${{getSummaryDisplay(n).length > 180 ? '...' : ''}}</p>
-            <a href="${{n.url}}" target="_blank" class="text-xs text-teal-600 hover:underline mt-1 inline-block">원문보기 →</a>
-        </div>
-    `).join('');
-}}
-
-renderNews();
+const BACKEND_DATA = {backend_data_json};
 </script>
+
+<!-- ════ 3개국어 전환 JavaScript ════════════════════════ -->
+{LANGUAGE_SWITCH_JS}
+
+<!-- ════ 페이지 로드 확인 ═════════════════════════════════ -->
+<script>
+console.log('[Dashboard] 로드 완료');
+console.log('[Dashboard] 기사 수:', BACKEND_DATA.length);
+console.log('[Dashboard] 다국어 요소 수:', document.querySelectorAll('[data-en]').length);
+</script>
+
 </body>
-</html>'''
-    
-    return html
+</html>"""
+
+    return html_content
 
 
-
-# ============================================================
-# DashboardUpdater & ExcelUpdater 클래스
-# main.py에서 module.DashboardUpdater() / module.ExcelUpdater() 로 호출됨
-# ============================================================
+# ════════════════════════════════════════════════════════════
+# DashboardUpdater 클래스 (main.py에서 호출)
+# ════════════════════════════════════════════════════════════
 
 class DashboardUpdater:
-    """대시보드 HTML 생성 클래스 — main.py 호환"""
+    """대시보드 생성 및 저장 관리 클래스"""
 
-    def update(self, articles):
+    def generate(self, articles: list) -> str:
         """
-        articles 리스트를 받아 index.html + vietnam_dashboard.html 생성.
-        전달받은 articles에 summary_ko/en/vi가 있으면 DB 로드 후 덮어씌움.
+        대시보드 HTML 생성 및 저장
+        
+        Args:
+            articles: processed_articles (번역 완료본)
+                      반드시 title_en/ko/vi, summary_en/ko/vi 필드 포함!
+        Returns:
+            생성된 파일 경로 문자열
         """
-        try:
-            # Excel + SQLite 통합 로드 (전체 히스토리 포함)
-            excel_arts  = load_articles_from_excel()
-            sqlite_arts = load_articles_from_sqlite()
-            all_arts    = merge_articles(excel_arts, sqlite_arts)
+        logger.info(f"[DashboardUpdater] 기사 {len(articles)}건으로 대시보드 생성 시작")
 
-            # 전달받은 articles의 번역 데이터를 인덱스화
-            # (run_summarizer에서 번역했지만 SQLite 재로드 시 손실될 수 있음)
-            translated_map = {}
-            for a in articles:
-                url = a.get('url', '')
-                if url and (a.get('summary_ko') or a.get('title_ko')):
-                    translated_map[url] = {
-                        'summary_ko': a.get('summary_ko', ''),
-                        'summary_en': a.get('summary_en', ''),
-                        'summary_vi': a.get('summary_vi', ''),
-                        'title_ko':   a.get('title_ko', ''),
-                        'title_vi':   a.get('title_vi', ''),
-                        'from_sqlite': True,
-                        'is_new': True,
-                    }
+        # 번역 필드 검증
+        sample = articles[0] if articles else {}
+        has_multilang = all(
+            k in sample
+            for k in ['title_en', 'title_ko', 'title_vi', 'summary_en', 'summary_ko', 'summary_vi']
+        )
+        if not has_multilang:
+            logger.warning(
+                "[DashboardUpdater] 다국어 필드 누락! "
+                "main.py에서 step2_translate 후 이 함수를 호출했는지 확인하세요."
+            )
 
-            # DB 로드한 기사에 번역 데이터 병합 + is_new 마킹
-            for a in all_arts:
-                url = a.get('url', '')
-                if url in translated_map:
-                    tm = translated_map[url]
-                    # 번역이 있으면 덮어씌우기
-                    if tm.get('summary_ko'):
-                        a['summary_ko'] = tm['summary_ko']
-                    if tm.get('summary_en'):
-                        a['summary_en'] = tm['summary_en']
-                    if tm.get('summary_vi'):
-                        a['summary_vi'] = tm['summary_vi']
-                    if tm.get('title_ko'):
-                        a['title_ko'] = tm['title_ko']
-                    if tm.get('title_vi'):
-                        a['title_vi'] = tm['title_vi']
-                    a['from_sqlite'] = True
+        # HTML 생성
+        html_str = generate_dashboard_html(articles)
 
-            merged_count = len(translated_map)
-            logger.info(f"DashboardUpdater: {len(all_arts)} total "
-                        f"({len(excel_arts)} Excel + {len(sqlite_arts)} SQLite) "
-                        f"| {merged_count} with translations merged")
-            result = generate_dashboard(all_arts)
-            logger.info(f"Dashboard generated: {result}")
-            return result
-        except Exception as e:
-            logger.error(f"DashboardUpdater.update error: {e}")
-            import traceback; traceback.print_exc()
-            return None
+        # 출력 디렉토리 생성
+        OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
+        # HTML 파일 저장
+        with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
+            f.write(html_str)
 
-class ExcelUpdater:
-    """Excel DB 업데이트 클래스 — main.py 호환"""
+        logger.info(f"[DashboardUpdater] 저장 완료: {OUTPUT_PATH}")
+        return str(OUTPUT_PATH)
 
-    def update(self, articles):
-        """
-        신규 기사를 Excel DB에 추가.
-        news_collector.py의 update_excel_database()를 재사용.
-        """
-        if not articles:
-            logger.info("ExcelUpdater: no new articles to add")
-            return True
+    def generate_from_excel(self) -> str:
+        """Excel 데이터에서 직접 대시보드 생성 (dashboard-only 모드)"""
+        articles = self._load_excel_articles()
+        return self.generate(articles)
 
+    def _load_excel_articles(self) -> list:
+        """Excel 파일에서 기사 데이터 로드"""
         try:
             import openpyxl
-            from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-            import shutil
-            from collections import Counter
+            if not EXCEL_PATH.exists():
+                logger.error(f"Excel 파일 없음: {EXCEL_PATH}")
+                return []
 
-            ep = EXCEL_DB_PATH
-            if not ep.exists():
-                logger.warning(f"ExcelUpdater: Excel not found: {ep}")
-                return False
+            wb = openpyxl.load_workbook(EXCEL_PATH, read_only=True)
+            ws = wb.active
+            headers = [cell.value for cell in ws[1]]
 
-            # 안전 확인
-            wb_c = openpyxl.load_workbook(ep, read_only=True)
-            ws_c = wb_c.active
-            existing_count = sum(1 for r in ws_c.iter_rows(min_row=2, values_only=True) if any(r))
-            wb_c.close()
-            if existing_count < 100:
-                logger.warning(f"ExcelUpdater safety check failed: {existing_count} rows")
-                return False
-
-            shutil.copy2(ep, ep.with_suffix('.xlsx.backup'))
-
-            wb  = openpyxl.load_workbook(ep)
-            ws  = wb.active
-            last_row = ws.max_row
-
-            # URL 컬럼 찾기
-            url_col = 7
-            for c in range(1, ws.max_column + 1):
-                h = ws.cell(row=1, column=c).value
-                if h and "link" in str(h).lower():
-                    url_col = c
-                    break
-
-            existing_urls = set()
-            for row in range(2, last_row + 1):
-                v = ws.cell(row=row, column=url_col).value
-                if v:
-                    existing_urls.add(v)
-
-            # 스타일
-            NEW_FILL  = PatternFill(start_color="FFF9C4", end_color="FFF9C4", fill_type="solid")
-            NEW_FONT  = Font(bold=True, color="1A1A1A", size=10)
-            thin_b    = Border(bottom=Side(style='thin', color='E2E8F0'))
-
-            col_map = {'area':1,'sector':2,'province':3,'title':4,
-                       'date':5,'source':6,'url':7,'summary':8}
-
-            added    = 0
-            new_urls_set = set()
-            for art in articles:
-                if art.get('url') in existing_urls:
+            articles = []
+            for row in ws.iter_rows(min_row=2, values_only=True):
+                if not any(row):
                     continue
-                nr = last_row + 1 + added
-                ws.cell(row=nr, column=col_map['area'],     value=art.get('area',''))
-                ws.cell(row=nr, column=col_map['sector'],   value=art.get('sector',''))
-                ws.cell(row=nr, column=col_map['province'], value=art.get('province','Vietnam'))
-                ws.cell(row=nr, column=col_map['title'],    value=art.get('title',''))
-                ws.cell(row=nr, column=col_map['date'],     value=(art.get('published_date','') or '')[:10])
-                ws.cell(row=nr, column=col_map['source'],   value=art.get('source',''))
-                ws.cell(row=nr, column=col_map['url'],      value=art.get('url',''))
-                # summary: AI 요약 우선, 없으면 RSS 원문
-                summary_val = (art.get('summary_ko') or art.get('summary') or '')[:500]
-                ws.cell(row=nr, column=col_map['summary'],  value=summary_val)
-                for c in range(1, 9):
-                    ws.cell(row=nr, column=c).fill   = NEW_FILL
-                    ws.cell(row=nr, column=c).font   = NEW_FONT
-                    ws.cell(row=nr, column=c).border = thin_b
-                added += 1
-                new_urls_set.add(art.get('url'))
-                existing_urls.add(art.get('url'))
+                article = {}
+                for i, val in enumerate(row):
+                    if i < len(headers) and headers[i]:
+                        article[headers[i]] = val
+                articles.append(article)
 
-            # 날짜순 정렬 (최신 → 오래된)
-            if added > 0:
-                max_row = ws.max_row
-                ENV_FILL    = PatternFill(start_color="F0FDF4", end_color="F0FDF4", fill_type="solid")
-                ENERGY_FILL = PatternFill(start_color="FFFBEB", end_color="FFFBEB", fill_type="solid")
-                URBAN_FILL  = PatternFill(start_color="F5F3FF", end_color="F5F3FF", fill_type="solid")
-                PLAIN_FONT  = Font(color="1A1A1A", size=10)
-
-                def _afill(area):
-                    a = str(area or '').lower()
-                    if 'environment' in a: return ENV_FILL
-                    if 'energy' in a:      return ENERGY_FILL
-                    return URBAN_FILL
-
-                rows_data = []
-                for r in range(2, max_row + 1):
-                    vals = [ws.cell(row=r, column=c).value for c in range(1, 9)]
-                    date_key = str(vals[4] or '0000-00-00')[:10]
-                    url_key  = str(vals[6] or '')
-                    rows_data.append({'vals': vals, 'date': date_key,
-                                      'is_new': url_key in new_urls_set})
-
-                rows_data.sort(key=lambda x: x['date'], reverse=True)
-                for i, rd in enumerate(rows_data, 2):
-                    fill = NEW_FILL if rd['is_new'] else _afill(rd['vals'][0])
-                    font = NEW_FONT if rd['is_new'] else PLAIN_FONT
-                    for c in range(1, 9):
-                        cell = ws.cell(row=i, column=c)
-                        cell.value  = rd['vals'][c-1]
-                        cell.fill   = fill
-                        cell.font   = font
-                        cell.border = thin_b
-
-            for col, w in zip('ABCDEFGH', [18,22,20,60,12,22,50,60]):
-                ws.column_dimensions[col].width = w
-            ws.freeze_panes = 'A2'
-
-            # Collection_Log 기록
-            from datetime import datetime as _dt
-            if "Collection_Log" not in wb.sheetnames:
-                ws_log = wb.create_sheet("Collection_Log")
-                HDR_FILL = PatternFill(start_color="0F766E", end_color="0F766E", fill_type="solid")
-                HDR_FONT = Font(bold=True, color="FFFFFF")
-                for ci, h in enumerate(["Date","Time","Source","New Articles","Total DB"], 1):
-                    c = ws_log.cell(row=1, column=ci, value=h)
-                    c.fill = HDR_FILL; c.font = HDR_FONT
-            else:
-                ws_log = wb["Collection_Log"]
-
-            now = _dt.now()
-            lr  = ws_log.max_row + 1
-            cur_total = sum(1 for r in ws.iter_rows(min_row=2, values_only=True) if any(r))
-            ws_log.cell(row=lr, column=1, value=now.strftime("%Y-%m-%d"))
-            ws_log.cell(row=lr, column=2, value=now.strftime("%H:%M:%S"))
-            ws_log.cell(row=lr, column=3, value="main.py / ExcelUpdater")
-            ws_log.cell(row=lr, column=4, value=added)
-            ws_log.cell(row=lr, column=5, value=cur_total)
-            ws_log.cell(row=lr, column=1).fill = PatternFill(
-                start_color="DBEAFE", end_color="DBEAFE", fill_type="solid")
-
-            wb.save(ep)
             wb.close()
-            logger.info(f"ExcelUpdater: +{added} new articles (yellow) | total {cur_total} | sorted ↓date")
-            return True
+
+            # 컬럼명 정규화 (Excel 헤더 → 내부 키 변환)
+            return [self._normalize_article(a) for a in articles]
 
         except Exception as e:
-            logger.error(f"ExcelUpdater.update error: {e}")
-            import traceback; traceback.print_exc()
-            return False
+            logger.error(f"Excel 로드 실패: {e}", exc_info=True)
+            return []
 
-
-def main():
-    """Main function - loads from BOTH Excel and SQLite"""
-    print("=" * 60)
-    print("DASHBOARD GENERATOR (Merged Sources)")
-    print("=" * 60)
-    print(f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"Excel DB: {EXCEL_DB_PATH}")
-    print(f"SQLite DB: {SQLITE_DB_PATH}")
-    
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    
-    # Load from both sources
-    excel_articles = load_articles_from_excel()
-    sqlite_articles = load_articles_from_sqlite()
-    
-    print(f"\nExcel articles: {len(excel_articles)}")
-    print(f"SQLite articles (new): {len(sqlite_articles)}")
-    
-    # Merge articles
-    all_articles = merge_articles(excel_articles, sqlite_articles)
-    print(f"Total merged: {len(all_articles)}")
-    
-    # Generate dashboard
-    result = generate_dashboard(all_articles)
-    
-    index_path = OUTPUT_DIR / "index.html"
-    if index_path.exists():
-        print(f"\n✓ Dashboard created: {index_path}")
-        print(f"  Size: {index_path.stat().st_size:,} bytes")
-    
-    print("\nDone!")
-
-
-if __name__ == "__main__":
-    main()
+    def _normalize_article(self, raw: dict) -> dict:
+        """Excel 헤더명 → 내부 표준 필드명으로 변환"""
+        return {
+            'title':      raw.get('Title') or raw.get('title') or '',
+            'title_en':   raw.get('title_en') or raw.get('Title') or '',
+            'title_ko':   raw.get('title_ko') or '',
+            'title_vi':   raw.get('title_vi') or raw.get('Title') or '',
+            'summary_en': raw.get('summary_en') or raw.get('Short summary') or raw.get('Summary') or '',
+            'summary_ko': raw.get('summary_ko') or '',
+            'summary_vi': raw.get('summary_vi') or '',
+            'sector':     raw.get('Sector') or raw.get('sector') or 'General',
+            'source':     raw.get('Source') or raw.get('source') or '',
+            'date':       str(raw.get('Date') or raw.get('date') or ''),
+            'url':        raw.get('Link') or raw.get('URL') or raw.get('url') or '#',
+            'area':       raw.get('Area') or raw.get('area') or '',
+        }
