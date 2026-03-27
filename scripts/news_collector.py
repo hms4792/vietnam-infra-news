@@ -124,10 +124,16 @@ SECTOR_KEYWORDS = {
             "nước sạch",     # VN: clean water
             "cấp nước",      # VN: water supply
             "thoát nước",    # VN: drainage
-            "chống ngập",    # VN: flood prevention
-            "hồ chứa nước", # VN: reservoir
-            "nhà máy nước", # VN: water plant
-            "nước sinh hoạt", # VN: household water
+            "chống ngập",             # VN: flood prevention
+            "hồ chứa nước",            # VN: reservoir
+            "nhà máy nước",            # VN: water plant
+            "nước sinh hoạt",          # VN: household water
+            "lũ lụt",                  # VN: flood
+            "hạn hán",                 # VN: drought
+            "nước mưa",                # VN: rainwater
+            "ngập úng",                # VN: waterlogging
+            "biến đổi khí hậu",        # VN: climate change
+            "khí hậu",                 # VN: climate
         ],
         "secondary": [
             "clean water", "drinking water",
@@ -217,8 +223,15 @@ SECTOR_KEYWORDS = {
             "xử lý rác",      # VN: waste treatment
             "chất thải rắn",  # VN: solid waste
             "nhà máy xử lý rác",  # VN: waste treatment plant
-            "thu gom rác",    # VN: waste collection
-            "đốt rác phát điện",  # VN: waste-to-energy
+            "thu gom rác",              # VN: waste collection
+            "đốt rác phát điện",        # VN: waste-to-energy
+            "ô nhiễm môi trường",       # VN: env pollution
+            "ô nhiễm",                  # VN: pollution
+            "phân loại rác",            # VN: waste sorting
+            "không khí",                # VN: air quality
+            "phát thải",                # VN: emissions
+            "môi trường",               # VN: environment (critical)
+            "tài nguyên môi trường",    # VN: natural resources & env
         ],
         "secondary": [
             "solid waste", "garbage collection", "garbage disposal",
@@ -406,6 +419,15 @@ VIETNAM_KEYWORDS = [
     "vĩnh phúc", "phú thọ", "hòa bình",
     # 공기업/기관 베트남어
     "tập đoàn điện lực", "tập đoàn dầu khí",
+    # 추가: 환경부처 + 메콩 델타 + 기후 관련
+    "bộ tài nguyên",          # Ministry of Natural Resources
+    "tài nguyên và môi trường",  # Natural resources & environment
+    "sông cửu long",          # Mekong River (Cuu Long)
+    "đồng bằng sông",         # River delta
+    "cửu long",               # Mekong (Cuu Long)
+    "miền trung",             # Central Vietnam
+    "miền nam",               # Southern Vietnam
+    "miền bắc",               # Northern Vietnam
 ]
 
 
@@ -961,7 +983,7 @@ def collect_news(hours_back=24):
 # EXCEL UPDATE
 # ============================================================
 
-def update_excel_database(articles, collection_stats=None):
+def update_excel_database(articles, collection_stats=None, excel_path=None):
     """
     Excel DB 완전 업데이트:
     - 신규기사 노란색(#FFF9C4) 하이라이트
@@ -980,7 +1002,9 @@ def update_excel_database(articles, collection_stats=None):
         log("openpyxl not installed")
         return False
 
-    ep = Path(EXCEL_PATH)
+    # excel_path 파라미터 > EXCEL_PATH 환경변수 > 기본값 순서로 우선 적용
+    _ep_str = excel_path or os.environ.get('EXCEL_PATH', EXCEL_PATH)
+    ep = Path(_ep_str)
     if not ep.exists():
         log(f"Excel not found: {ep}")
         return False
@@ -1071,9 +1095,10 @@ def update_excel_database(articles, collection_stats=None):
         # ── 날짜순 정렬 + 색상 재적용 ───────────────────────
         max_row = ws.max_row
         if added > 0 and max_row > 2:
+            max_col_dyn = max(8, ws.max_column)  # 사용자 컬럼 보존
             rows_data = []
             for r in range(2, max_row + 1):
-                row_vals = [ws.cell(row=r, column=c).value for c in range(1, 9)]
+                row_vals = [ws.cell(row=r, column=c).value for c in range(1, max_col_dyn + 1)]
                 date_key = str(row_vals[col_map['date']-1] or '0000-00-00')[:10]
                 url_key  = str(row_vals[col_map['url']-1]  or '')
                 rows_data.append({'vals': row_vals, 'date': date_key, 'is_new': url_key in new_urls})
@@ -1083,11 +1108,12 @@ def update_excel_database(articles, collection_stats=None):
             for i, rd in enumerate(rows_data, 2):
                 fill = NEW_FILL if rd['is_new'] else area_fill(rd['vals'][0])
                 font = NEW_FONT if rd['is_new'] else PLAIN_FONT
-                for c in range(1, 9):
+                for c in range(1, max_col + 1):
                     cell = ws.cell(row=i, column=c)
-                    cell.value  = rd['vals'][c-1]
-                    cell.fill   = fill
-                    cell.font   = font
+                    cell.value  = rd['vals'][c-1] if c-1 < len(rd['vals']) else None
+                    if c <= 8:  # 핵심 컬럼만 서식, 나머지는 값만
+                        cell.fill   = fill
+                        cell.font   = font
                     cell.border = thin_border
 
             log(f"  Sorted {max_row-1} rows newest-first | new=yellow env=green energy=yellow urban=purple")
