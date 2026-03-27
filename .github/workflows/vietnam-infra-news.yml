@@ -153,10 +153,10 @@ jobs:
           echo "  수집기간:  ${{ env.HOURS_BACK }}시간 (7일)"
           echo "============================================"
 
-          python scripts/main.py \
+          python $GITHUB_WORKSPACE/scripts/main.py \
             --mode ${{ env.RUN_MODE }} \
             --hours-back ${{ env.HOURS_BACK }}
-
+            
           echo "파이프라인 완료 ✓"
 
       # ── Step 7: Excel 데이터베이스 커밋 ─────────────────────
