@@ -153,18 +153,19 @@ jobs:
           echo "  수집기간:  ${{ env.HOURS_BACK }}시간 (7일)"
           echo "============================================"
 
-          # 어떤 main.py가 실행되는지 확인
-          echo "=== main.py 위치 확인 ==="
-          find . -name "main.py" | head -10
-          echo "=== main.py argparse 확인 ==="
-          grep -n "hours" scripts/main.py | head -5
+          # ★ Python 캐시 파일 삭제 (구버전 .pyc 실행 방지)
+          find . -name "*.pyc" -delete
+          find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
+
+          # ★ 실제 실행될 main.py 내용 확인
+          grep -n "hours" scripts/main.py
 
           python scripts/main.py \
             --mode ${{ env.RUN_MODE }} \
             --hours-back ${{ env.HOURS_BACK }}
-            
-          echo "파이프라인 완료 ✓"
 
+          echo "파이프라인 완료 ✓"
+          
       # ── Step 7: Excel 데이터베이스 커밋 ─────────────────────
       # if: always() → 번역 실패/대시보드 실패 상관없이 반드시 커밋
       - name: 💾 Commit Excel Database
