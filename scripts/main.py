@@ -65,38 +65,38 @@ def safe_import(module_name: str, class_name: str = None):
 # STEP 1: 뉴스 수집
 # ════════════════════════════════════════════════════════════
 
-def step1_collect_news() -> list:
+def step1_collect_news(hours_back: int = 168) -> list:
     """
     RSS 피드 및 웹 크롤링으로 베트남 인프라 뉴스 수집
-    반환값: 수집된 원문 기사 리스트 (dict 형태)
     
-    각 기사 dict 구조:
-    {
-        'title': '베트남어 원제목',
-        'url': 'https://...',
-        'source': '출처명',
-        'date': '2026-03-28',
-        'content': '본문 내용 (있을 경우)',
-        'sector': '섹터명',
-        'sector_score': 점수(int)
-    }
+    Args:
+        hours_back: 수집 기간 (시간). 기본 168 = 7일
+                    news_collector.py 의 collect_all(hours_back=) 으로 전달됨
+    반환값: 수집된 원문 기사 리스트 (dict 형태)
     """
     logger.info("=" * 60)
-    logger.info("STEP 1: 뉴스 수집 시작")
+    logger.info(f"STEP 1: 뉴스 수집 시작 (최근 {hours_back}시간 = {hours_back//24}일)")
     logger.info("=" * 60)
 
     try:
         from scripts.news_collector import NewsCollector
 
         collector = NewsCollector()
-        articles = collector.collect_all()   # 동기식 collect
+        # hours_back 파라미터를 collector에 전달
+        # → news_collector.py 내부에서 날짜 필터로 사용
+        if hasattr(collector, 'collect_all'):
+            try:
+                articles = collector.collect_all(hours_back=hours_back)
+            except TypeError:
+                # 구버전 collector가 hours_back 미지원 시 환경변수로 전달
+                import os
+                os.environ['HOURS_BACK'] = str(hours_back)
+                articles = collector.collect_all()
+        else:
+            articles = collector.collect_news()
         
-        # 수집 결과 로깅
         logger.info(f"[Step1 완료] 수집 기사 수: {len(articles)}")
-        
-        # 원문 JSON 백업 저장 (디버깅용)
         _save_raw_backup(articles)
-        
         return articles
 
     except Exception as e:
@@ -377,6 +377,16 @@ def main():
         action='store_true',
         help='전체 파이프라인 실행 (--mode full 과 동일)'
     )
+    parser.add_argument(
+        '--hours-back',
+        type=int,
+        default=168,
+        dest='hours_back',
+        # 수집 기간(시간) 지정
+        # 기본값 168 = 7일 (주간 실행 기준)
+        # 매일 실행 시 24, 주간 실행 시 168
+        help='수집 기간 (시간 단위, 기본값: 168 = 7일)'
+    )
     args = parser.parse_args()
 
     if args.full:
@@ -386,6 +396,7 @@ def main():
     logger.info("║   Vietnam Infrastructure News Pipeline               ║")
     logger.info(f"║   실행 시각: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}                   ║")
     logger.info(f"║   모드: {args.mode:<46}║")
+    logger.info(f"║   수집기간: {args.hours_back}시간 ({args.hours_back//24}일){'':>39}║")
     logger.info("╚══════════════════════════════════════════════════════╝")
 
     # ─────────────────────────────────────────────────────────
@@ -400,8 +411,8 @@ def main():
     processed_articles = []
 
     if args.mode in ('full', 'collect-only'):
-        # ① 뉴스 수집
-        raw_articles = step1_collect_news()
+        # ① 뉴스 수집 (hours_back 파라미터 전달 → 수집 기간 제어)
+        raw_articles = step1_collect_news(hours_back=args.hours_back)
 
         if args.mode == 'collect-only':
             logger.info(f"[collect-only] 수집 완료: {len(raw_articles)}건")
