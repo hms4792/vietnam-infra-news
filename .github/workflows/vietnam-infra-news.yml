@@ -155,7 +155,7 @@ jobs:
 
           python scripts/main.py \
             --mode ${{ env.RUN_MODE }} \
-
+            --hours-back ${{ env.HOURS_BACK }}
 
           echo "파이프라인 완료 ✓"
 
