@@ -153,7 +153,13 @@ jobs:
           echo "  수집기간:  ${{ env.HOURS_BACK }}시간 (7일)"
           echo "============================================"
 
-          python $GITHUB_WORKSPACE/scripts/main.py \
+          # 어떤 main.py가 실행되는지 확인
+          echo "=== main.py 위치 확인 ==="
+          find . -name "main.py" | head -10
+          echo "=== main.py argparse 확인 ==="
+          grep -n "hours" scripts/main.py | head -5
+
+          python scripts/main.py \
             --mode ${{ env.RUN_MODE }} \
             --hours-back ${{ env.HOURS_BACK }}
             
