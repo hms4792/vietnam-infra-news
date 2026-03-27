@@ -612,7 +612,7 @@ class DashboardUpdater:
     def update(self, articles):
         """
         articles 리스트를 받아 index.html + vietnam_dashboard.html 생성.
-        템플릿이 있으면 템플릿 사용, 없으면 내장 HTML 사용.
+        전달받은 articles에 summary_ko/en/vi가 있으면 DB 로드 후 덮어씌움.
         """
         try:
             # Excel + SQLite 통합 로드 (전체 히스토리 포함)
@@ -620,14 +620,44 @@ class DashboardUpdater:
             sqlite_arts = load_articles_from_sqlite()
             all_arts    = merge_articles(excel_arts, sqlite_arts)
 
-            # 전달받은 신규 기사를 is_new=True로 마킹
-            new_urls = {a.get('url','') for a in articles}
+            # 전달받은 articles의 번역 데이터를 인덱스화
+            # (run_summarizer에서 번역했지만 SQLite 재로드 시 손실될 수 있음)
+            translated_map = {}
+            for a in articles:
+                url = a.get('url', '')
+                if url and (a.get('summary_ko') or a.get('title_ko')):
+                    translated_map[url] = {
+                        'summary_ko': a.get('summary_ko', ''),
+                        'summary_en': a.get('summary_en', ''),
+                        'summary_vi': a.get('summary_vi', ''),
+                        'title_ko':   a.get('title_ko', ''),
+                        'title_vi':   a.get('title_vi', ''),
+                        'from_sqlite': True,
+                        'is_new': True,
+                    }
+
+            # DB 로드한 기사에 번역 데이터 병합 + is_new 마킹
             for a in all_arts:
-                if a.get('url','') in new_urls:
+                url = a.get('url', '')
+                if url in translated_map:
+                    tm = translated_map[url]
+                    # 번역이 있으면 덮어씌우기
+                    if tm.get('summary_ko'):
+                        a['summary_ko'] = tm['summary_ko']
+                    if tm.get('summary_en'):
+                        a['summary_en'] = tm['summary_en']
+                    if tm.get('summary_vi'):
+                        a['summary_vi'] = tm['summary_vi']
+                    if tm.get('title_ko'):
+                        a['title_ko'] = tm['title_ko']
+                    if tm.get('title_vi'):
+                        a['title_vi'] = tm['title_vi']
                     a['from_sqlite'] = True
 
-            logger.info(f"DashboardUpdater: {len(all_arts)} total articles "
-                        f"({len(excel_arts)} Excel + {len(sqlite_arts)} SQLite)")
+            merged_count = len(translated_map)
+            logger.info(f"DashboardUpdater: {len(all_arts)} total "
+                        f"({len(excel_arts)} Excel + {len(sqlite_arts)} SQLite) "
+                        f"| {merged_count} with translations merged")
             result = generate_dashboard(all_arts)
             logger.info(f"Dashboard generated: {result}")
             return result
