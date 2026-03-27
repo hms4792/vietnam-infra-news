@@ -1,0 +1,251 @@
+# ════════════════════════════════════════════════════════════
+# Vietnam Infrastructure News Pipeline - GitHub Actions Workflow
+# ════════════════════════════════════════════════════════════
+#
+# 변경사항 (2026-03 업데이트):
+#   1. 실행 주기: 매일 → 주 1회 (토요일 18:00 KST)
+#      KST 18:00 = UTC 09:00 (KST = UTC+9)
+#      Cron 표현: '0 9 * * 6'   (6=토요일)
+#
+#   2. 수집 기간: 24시간 → 168시간(7일)
+#      HOURS_BACK=168  (지난 토요일 18:00 ~ 이번 토요일 18:00)
+#
+#   3. anthropic 패키지 설치 (Gemini 진단 #1 반영 유지)
+#
+#   4. Excel 전체 시트 업데이트 (9개 시트)
+#      province_keywords, summary 등 신규 시트 포함
+# ════════════════════════════════════════════════════════════
+
+name: Vietnam Infrastructure News Pipeline (Weekly)
+
+on:
+  schedule:
+    # ─────────────────────────────────────────────────────
+    # 매주 토요일 18:00 KST 실행
+    # KST(UTC+9) 18:00 = UTC 09:00
+    # Cron: 분 시 일 월 요일  (요일: 0=일 … 6=토)
+    # ─────────────────────────────────────────────────────
+    - cron: '0 9 * * 6'
+
+  # 수동 실행 (테스트 및 긴급 수집용)
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: '실행 모드'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - collect-only
+          - dashboard-only
+      hours_back:
+        description: '수집 기간 (시간, 기본 168=7일)'
+        required: false
+        default: '168'
+        type: string
+
+# 저장소 쓰기 권한
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  weekly-pipeline:
+    name: 📰 Weekly Infrastructure News Collection
+    runs-on: ubuntu-latest
+    timeout-minutes: 60       # 최대 60분 (번역 API 호출 포함)
+
+    env:
+      # ── 수집 기간 설정 ────────────────────────────────
+      # 수동 실행 시 입력값 사용, 스케줄 실행 시 기본값(168) 사용
+      HOURS_BACK: ${{ github.event.inputs.hours_back || '168' }}
+      RUN_MODE:   ${{ github.event.inputs.mode || 'full' }}
+
+      # ── Claude API 키 ─────────────────────────────────
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      # ── Python 인코딩 ─────────────────────────────────
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+      TZ: "Asia/Seoul"        # 컨테이너 타임존을 한국으로 설정
+
+    steps:
+      # ── Step 1: 저장소 체크아웃 ─────────────────────────
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── Step 2: Python 환경 설정 ────────────────────────
+      - name: 🐍 Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # ── Step 3: 패키지 설치 ─────────────────────────────
+      # ★ anthropic 반드시 포함 (Gemini 진단 #1)
+      - name: 📦 Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+
+          pip install \
+            requests \
+            beautifulsoup4 \
+            feedparser \
+            pandas \
+            openpyxl \
+            anthropic \
+            pydantic \
+            lxml \
+            python-dateutil \
+            pytz
+
+          echo "=== 핵심 패키지 버전 확인 ==="
+          pip show anthropic | grep -E "Name|Version"
+          pip show openpyxl  | grep -E "Name|Version"
+          echo "패키지 설치 완료 ✓"
+
+      # ── Step 4: 수집 기간 정보 출력 ─────────────────────
+      - name: 📅 Show Collection Period
+        run: |
+          python3 << 'EOF'
+          from datetime import datetime, timedelta
+          import pytz
+
+          kst = pytz.timezone('Asia/Seoul')
+          now = datetime.now(kst)
+
+          # 이번 주 토요일 18:00 KST (=수집 종료)
+          days_to_sat = (5 - now.weekday()) % 7
+          period_end  = (now + timedelta(days=days_to_sat)).replace(
+                          hour=18, minute=0, second=0, microsecond=0)
+          period_start = period_end - timedelta(hours=168)
+
+          print(f"실행 시각:    {now.strftime('%Y-%m-%d %H:%M:%S KST')}")
+          print(f"수집 시작:    {period_start.strftime('%Y-%m-%d %H:%M KST')}")
+          print(f"수집 종료:    {period_end.strftime('%Y-%m-%d %H:%M KST')}")
+          print(f"수집 기간:    {${{ env.HOURS_BACK }}}시간 (7일)")
+          EOF
+
+      # ── Step 5: 디렉토리 준비 ────────────────────────────
+      - name: 📁 Prepare Working Directories
+        run: |
+          mkdir -p data/raw
+          mkdir -p data/database
+          mkdir -p docs
+          echo "디렉토리 준비 완료 ✓"
+
+      # ── Step 6: 전체 파이프라인 실행 ───────────────────────
+      # 실행 순서 (main.py 내부):
+      #   [1] 뉴스 수집 (168시간 = 7일치)
+      #   [2] Claude API 번역/요약 (3개국어)
+      #   [3] Excel 9개 시트 전체 업데이트
+      #   [4] 대시보드 HTML 생성
+      - name: 🚀 Run Weekly Pipeline
+        run: |
+          echo "============================================"
+          echo "  파이프라인 시작"
+          echo "  모드:      ${{ env.RUN_MODE }}"
+          echo "  수집기간:  ${{ env.HOURS_BACK }}시간 (7일)"
+          echo "============================================"
+
+          python scripts/main.py \
+            --mode ${{ env.RUN_MODE }} \
+            --hours-back ${{ env.HOURS_BACK }}
+
+          echo "파이프라인 완료 ✓"
+
+      # ── Step 7: Excel 데이터베이스 커밋 ─────────────────────
+      # if: always() → 번역 실패/대시보드 실패 상관없이 반드시 커밋
+      - name: 💾 Commit Excel Database
+        if: always()
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Excel 변경 확인
+          git add data/database/ || true
+
+          if git diff --staged --quiet; then
+            echo "Excel 변경사항 없음"
+          else
+            # 금주 날짜 범위 계산 (커밋 메시지용)
+            PERIOD=$(python3 -c "
+          from datetime import datetime, timedelta
+          import pytz
+          kst  = pytz.timezone('Asia/Seoul')
+          now  = datetime.now(kst)
+          end  = (now + timedelta(days=(5-now.weekday())%7)).replace(hour=18,minute=0,second=0)
+          start = end - timedelta(days=7)
+          print(f'{start.strftime(\"%m/%d\")}~{end.strftime(\"%m/%d\")}')
+            ")
+            git commit -m "📊 Weekly DB Update: ${PERIOD} | Run#${{ github.run_number }}"
+            git push
+            echo "Excel 커밋 완료 ✓"
+          fi
+
+      # ── Step 8: 대시보드 HTML 커밋 ──────────────────────────
+      - name: 🌐 Commit Dashboard to GitHub Pages
+        if: always()
+        run: |
+          git add docs/ || true
+
+          if git diff --staged --quiet; then
+            echo "대시보드 변경사항 없음"
+          else
+            git commit -m "🌐 Weekly Dashboard: $(date '+%Y-%m-%d') | Run#${{ github.run_number }}"
+            git push
+            echo "대시보드 커밋 완료 ✓"
+          fi
+
+      # ── Step 9: 파이프라인 로그 아티팩트 업로드 ──────────────
+      - name: 📋 Upload Pipeline Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-pipeline-log-${{ github.run_number }}
+          path: |
+            pipeline.log
+            data/raw/
+          retention-days: 14    # 2주 보관
+
+      # ── Step 10: 실행 결과 최종 요약 ────────────────────────
+      - name: 📊 Final Summary Report
+        if: always()
+        run: |
+          echo "╔══════════════════════════════════════════════════════╗"
+          echo "║      Vietnam Infrastructure News - Weekly Report     ║"
+          echo "╠══════════════════════════════════════════════════════╣"
+          echo "║ 실행 번호:  Run #${{ github.run_number }}"
+          echo "║ 실행 시각:  $(TZ='Asia/Seoul' date '+%Y-%m-%d %H:%M:%S KST')"
+          echo "╠══════════════════════════════════════════════════════╣"
+
+          # Excel 행 수 확인
+          python3 -c "
+          import openpyxl, os
+          path = 'data/database/Vietnam_Infra_News_Database_Final.xlsx'
+          if os.path.exists(path):
+              wb  = openpyxl.load_workbook(path, read_only=True)
+              ws  = wb.active
+              rows = sum(1 for r in ws.iter_rows(min_row=2, values_only=True) if any(v for v in r))
+              print(f'║ 총 기사 수: {rows:,}건')
+              print(f'║ 시트 수:    {len(wb.sheetnames)}개')
+              print(f'║ 시트 목록:  {wb.sheetnames}')
+              wb.close()
+          else:
+              print('║ Excel 파일 없음')
+          " 2>/dev/null || echo "║ Excel 확인 실패"
+
+          # 대시보드 크기
+          if [ -f "docs/index.html" ]; then
+            SIZE=$(du -sh docs/index.html | cut -f1)
+            echo "║ 대시보드:   ${SIZE} (docs/index.html)"
+          fi
+
+          echo "╚══════════════════════════════════════════════════════╝"
+          echo ""
+          echo "🌐 Dashboard: https://hms4792.github.io/vietnam-infra-news/"
