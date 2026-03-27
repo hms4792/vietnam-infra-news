@@ -181,6 +181,13 @@ def run_summarizer(new_articles):
             api_ok   = sum(1 for a in result if not a.get('is_fallback'))
             fallback = sum(1 for a in result if a.get('is_fallback'))
             logger.info(f"  신규 번역: API={api_ok} | fallback={fallback}")
+
+            # 번역 결과를 SQLite에 즉시 저장 (DashboardUpdater DB 재로드 전에)
+            from pathlib import Path as _P
+            db_path = DB_PATH_LOCAL
+            if _P(db_path).exists():
+                summarizer.update_sqlite_summaries(result, db_path)
+                logger.info(f"  ✓ SQLite에 번역 저장: {len(result)}건")
         else:
             logger.info("  신규 기사 없음 — 기존 미번역 배치로 이동")
 
@@ -494,6 +501,23 @@ def main():
     # ── Step 5: 대시보드 ─────────────────────────────────────
     all_articles  = existing_articles + valid_articles
     dashboard_ok  = create_dashboard(all_articles)
+
+    # ── Step 5-1: 엑셀 DB 직접 업데이트 (Gemini 권장: valid_articles + EXCEL_PATH) ──
+    excel_path = os.environ.get('EXCEL_PATH',
+        str(DATA_DIR / 'database' / 'Vietnam_Infra_News_Database_Final.xlsx'))
+    if valid_articles:
+        try:
+            import importlib.util
+            nc_path = SCRIPT_DIR / 'news_collector.py'
+            spec = importlib.util.spec_from_file_location('nc', nc_path)
+            nc_mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(nc_mod)
+            nc_mod.update_excel_database(
+                valid_articles, collection_stats,
+                excel_path=excel_path)  # QC 통과 기사만, 명시적 경로
+            logger.info(f'✓ Excel 직접 업데이트: +{len(valid_articles)}건 ({excel_path})')
+        except Exception as e:
+            logger.warning(f'Excel 직접 업데이트 오류: {e}')
 
     # ── Step 6: 알림 ─────────────────────────────────────────
     notify_ok = send_notifications(all_articles, valid_articles, qc_result)
