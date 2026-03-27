@@ -199,6 +199,10 @@ def run_summarizer(new_articles):
             if _P(db_path).exists():
                 translated = summarizer.translate_existing_articles(db_path, max_batch=20)
                 logger.info(f"  기존 기사 배치 번역: {translated}건 완료")
+
+                # 번역된 기사들을 Excel Short summary에도 반영
+                if translated > 0:
+                    _update_excel_summaries_from_sqlite(db_path)
             else:
                 logger.info(f"  SQLite DB 없음: {db_path}")
 
@@ -471,6 +475,75 @@ def send_notifications(all_articles, new_articles, qc_result):
 # ============================================================
 # MAIN
 # ============================================================
+
+def _update_excel_summaries_from_sqlite(db_path: str):
+    """
+    SQLite에서 번역된 요약을 Excel Short summary 컬럼에 반영.
+    translate_existing_articles 실행 후 호출.
+    URL 기준으로 매칭하여 업데이트.
+    """
+    import sqlite3
+    try:
+        import openpyxl
+        excel_path = os.environ.get(
+            'EXCEL_PATH',
+            str(DATA_DIR / 'database' / 'Vietnam_Infra_News_Database_Final.xlsx'))
+        from pathlib import Path as _P
+        if not _P(excel_path).exists():
+            logger.warning(f"Excel 없음 — summary 동기화 건너뜀: {excel_path}")
+            return
+
+        # SQLite에서 최근 번역 완료된 기사 조회 (processed=1, summary_ko 있음)
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        rows = conn.execute("""
+            SELECT url, summary_ko, summary_en, summary_vi
+            FROM articles
+            WHERE processed = 1
+              AND summary_ko IS NOT NULL
+              AND summary_ko != ''
+              AND summary_ko NOT LIKE '[%]%:%'
+            ORDER BY collected_date DESC
+            LIMIT 50
+        """).fetchall()
+        conn.close()
+
+        if not rows:
+            return
+
+        # URL → summary_ko 맵핑
+        url_to_summary = {r['url']: r['summary_ko'] for r in rows}
+
+        wb  = openpyxl.load_workbook(excel_path)
+        ws  = wb.active
+        updated = 0
+
+        # URL 컬럼 찾기 (7번째 컬럼)
+        url_col = 7
+        summary_col = 8
+        for c in range(1, ws.max_column + 1):
+            h = ws.cell(row=1, column=c).value
+            if h and 'link' in str(h).lower(): url_col = c
+            if h and 'summary' in str(h).lower(): summary_col = c
+
+        for row in range(2, ws.max_row + 1):
+            url = ws.cell(row=row, column=url_col).value
+            if url and url in url_to_summary:
+                current = ws.cell(row=row, column=summary_col).value or ''
+                # fallback 패턴이거나 비어있으면 교체
+                if not current or '[' in current[:5]:
+                    ws.cell(row=row, column=summary_col).value = url_to_summary[url][:500]
+                    updated += 1
+
+        if updated > 0:
+            wb.save(excel_path)
+            logger.info(f"  ✓ Excel summary 동기화: {updated}건 업데이트")
+        wb.close()
+
+    except Exception as e:
+        logger.warning(f"Excel summary 동기화 오류 (비중요): {e}")
+
+
 
 def main():
     start_time = datetime.now()
