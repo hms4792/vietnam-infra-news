@@ -58,7 +58,7 @@ jobs:
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4 feedparser pandas openpyxl anthropic pydantic lxml python-dateutil pytz
+          pip install requests beautifulsoup4 feedparser pandas openpyxl anthropic pydantic lxml python-dateutil pytz deep-translator
           pip show anthropic | grep -E "Name|Version"
           echo "packages installed OK"
 
