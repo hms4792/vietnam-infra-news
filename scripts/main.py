@@ -29,16 +29,15 @@ def step1_collect_news(hours_back: int = 168) -> list:
     logger.info(f"STEP 1: 뉴스 수집 시작 (최근 {hours_back}시간 = {hours_back//24}일)")
     logger.info("=" * 60)
     try:
-        from scripts.news_collector import NewsCollector
-        collector = NewsCollector()
-        if hasattr(collector, 'collect_all'):
-            try:
-                articles = collector.collect_all(hours_back=hours_back)
-            except TypeError:
-                os.environ['HOURS_BACK'] = str(hours_back)
-                articles = collector.collect_all()
-        else:
-            articles = collector.collect_news()
+        # news_collector.py는 클래스가 아닌 함수 방식
+        # collect_news(hours_back) 함수를 직접 호출
+        import importlib, sys
+        sys.path.insert(0, '.')
+        import scripts.news_collector as nc
+
+        # collect_news() 함수 호출 → (count, articles, stats) 반환
+        cnt, articles, stats = nc.collect_news(hours_back=hours_back)
+
         logger.info(f"[Step1 완료] 수집 기사 수: {len(articles)}")
         _save_raw_backup(articles)
         return articles
