@@ -160,9 +160,7 @@ jobs:
           # ★ 실제 실행될 main.py 내용 확인
           grep -n "hours" scripts/main.py
 
-          python scripts/main.py \
-            --mode ${{ env.RUN_MODE }} \
-            --hours-back ${{ env.HOURS_BACK }}
+          python scripts/main.py --mode ${{ env.RUN_MODE }}
 
           echo "파이프라인 완료 ✓"
           
