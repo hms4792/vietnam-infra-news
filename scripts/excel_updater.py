@@ -183,6 +183,11 @@ class ExcelUpdater:
         if self.path.exists():
             self.wb = openpyxl.load_workbook(self.path)
             logger.info(f"[Excel] 기존 파일 로드: {self.path}")
+            # 구버전 중복 시트 자동 제거
+            for old_sheet in ["Keywords_History"]:
+                if old_sheet in self.wb.sheetnames:
+                    del self.wb[old_sheet]
+                    logger.info(f"[Excel] 구버전 시트 제거: {old_sheet}")
         else:
             self.wb = openpyxl.Workbook()
             logger.info("[Excel] 신규 파일 생성")
@@ -193,6 +198,7 @@ class ExcelUpdater:
             ("News Database",    lambda: self._update_news_database(articles)),
             ("Keywords",         lambda: self._update_keywords()),
             ("Keywords History", lambda: self._update_keywords_history(articles, keyword_map)),
+            # Keywords_History(구버전) 시트가 있으면 제거
             ("Keyword History",  lambda: self._update_keyword_history(articles)),
             ("Source",           lambda: self._update_source()),
             ("RSS_Sources",      lambda: self._update_rss_sources(rss_results or [])),
@@ -274,8 +280,10 @@ class ExcelUpdater:
                 article.get("summary_en", ""),
                 article.get("summary_vi", ""),
             ]
-            next_row = ws.max_row + 1
-            _zebra_row(ws, next_row, row_data)
+            # 최상단(2행)에 삽입 - 최신 기사가 항상 맨 위에
+            ws.insert_rows(2)
+            for col_idx, val in enumerate(row_data, 1):
+                ws.cell(row=2, column=col_idx, value=val)
             existing_urls.add(url)
             added += 1
 
@@ -374,63 +382,135 @@ class ExcelUpdater:
 
     def _update_keywords_history(self, articles: list, keyword_map: dict = None):
         """
-        어떤 키워드로 수집되었는지 기사별 상세 기록
-        검색 품질 검증 핵심 시트
+        Keywords History 시트 - 핵심 설계 원칙:
+          1순위 정렬: Sector (우선순위 순서: Waste Water → Water Supply → Solid Waste → Power → Oil&Gas → Transport → Industrial Parks → Smart City)
+          2순위 정렬: Province (알파벳순)
+          3순위 정렬: Date 내림차순 (최신이 맨 위)
+          신규 기사: 노란색(#FFF9C4) 하이라이트로 구분
         """
         ws = self._get_or_create_sheet("Keywords History")
-
         HDR_STYLE = _hdr(COLOR["header_dark"])
         COLS = [
-            ("No",       6), ("Area",          18), ("Sector",         20),
-            ("Keyword", 25), ("Province",       18), ("Date",           13),
-            ("Title",   55), ("Source",         22), ("URL",            45),
-            ("Summary", 55), ("Match_Reason",   30),
+            ("No",       6), ("Area",          18), ("Sector",         22),
+            ("Keyword", 25), ("Province",       20), ("Date",           13),
+            ("Title",   60), ("Source",         22), ("URL",            45),
+            ("Summary", 55),
         ]
 
-        # 헤더가 없으면 설정
-        if ws.max_row == 0 or ws.cell(1, 1).value != "No":
-            ws.delete_rows(1, ws.max_row + 1)
+        # 헤더 설정 (없거나 구버전이면 업그레이드)
+        if ws.max_row == 0 or ws.cell(1, 1).value not in ("No", None):
+            pass
+        if ws.cell(1, 1).value != "No":
             _set_header_row(ws, COLS, HDR_STYLE)
 
+        # 기존 URL 수집 (중복 방지)
         existing_urls = set()
         for row in ws.iter_rows(min_row=2, values_only=True):
-            if row[7]:  # URL 컬럼
-                existing_urls.add(str(row[7]).strip())
+            if row and row[8]:
+                existing_urls.add(str(row[8]).strip())
 
-        # 현재 row 번호
-        current_no = max(
-            (ws.cell(r, 1).value or 0)
-            for r in range(2, ws.max_row + 1)
-        ) if ws.max_row > 1 else 0
+        # ── 신규 기사 추가 ─────────────────────────────────────
+        NEW_FILL  = PatternFill(start_color="FFF9C4", end_color="FFF9C4", fill_type="solid")
+        NEW_FONT  = Font(bold=True, size=9, color="1A1A1A")
+
+        # 섹터 우선순위 정의
+        SECTOR_ORDER = [
+            "Waste Water", "Water Supply/Drainage", "Solid Waste",
+            "Power", "Oil & Gas",
+            "Transport", "Industrial Parks", "Smart City", "Construction"
+        ]
 
         added = 0
+        new_rows = []  # 신규 기사 임시 저장
+
         for article in articles:
             url = str(article.get("url", "")).strip()
             if url in existing_urls:
                 continue
 
-            current_no += 1
-            matched_kw = article.get("matched_keyword", "") or \
-                         article.get("keyword", "") or ""
-            province = article.get("province", "") or \
-                       (get_province_from_text(article.get("title", ""))
-                        if PROVINCE_OK else "Vietnam")
+            province = article.get("province", "") or (
+                get_province_from_text(article.get("title", ""))
+                if PROVINCE_OK else "Vietnam"
+            )
+            matched_kw = article.get("matched_keyword", "") or article.get("keyword", "") or ""
+            date_val = str(article.get("date") or article.get("published_date", ""))[:10]
+            sector = article.get("sector", "")
 
-            _zebra_row(ws, ws.max_row + 1, [
-                current_no,
-                article.get("area", ""),
-                article.get("sector", ""),
-                matched_kw,
-                province,
-                str(article.get("date") or article.get("published_date", ""))[:10],
-                article.get("title_en") or article.get("title", ""),
-                article.get("source", ""),
-                url,
-                article.get("summary_en", "")[:200],
-                article.get("match_reason", "RSS Feed"),
-            ])
+            new_rows.append({
+                "area":     article.get("area", ""),
+                "sector":   sector,
+                "keyword":  matched_kw,
+                "province": province,
+                "date":     date_val,
+                "title":    article.get("title_en") or article.get("title", ""),
+                "source":   article.get("source", ""),
+                "url":      url,
+                "summary":  article.get("summary_en", "")[:200],
+                "sector_idx": SECTOR_ORDER.index(sector) if sector in SECTOR_ORDER else 99,
+            })
             existing_urls.add(url)
             added += 1
+
+        if new_rows:
+            # ── 전체 시트 데이터 + 신규 합쳐서 재정렬 ──────────────
+            # 기존 데이터 읽기
+            existing_rows = []
+            for row in ws.iter_rows(min_row=2, values_only=True):
+                if not any(row): continue
+                sector = str(row[2] or '')
+                existing_rows.append({
+                    "no":       row[0],
+                    "area":     str(row[1] or ''),
+                    "sector":   sector,
+                    "keyword":  str(row[3] or ''),
+                    "province": str(row[4] or ''),
+                    "date":     str(row[5] or '')[:10],
+                    "title":    str(row[6] or ''),
+                    "source":   str(row[7] or ''),
+                    "url":      str(row[8] or ''),
+                    "summary":  str(row[9] or ''),
+                    "sector_idx": SECTOR_ORDER.index(sector) if sector in SECTOR_ORDER else 99,
+                    "is_new":   False,
+                })
+
+            # 신규 기사에 is_new 플래그
+            for r in new_rows:
+                r["is_new"] = True
+
+            # 전체 합치기
+            all_rows = existing_rows + new_rows
+
+            # 1순위: Sector(우선순위), 2순위: Province(알파벳), 3순위: Date(최신→오래된)
+            all_rows.sort(key=lambda r: (
+                r["sector_idx"],
+                r["province"],
+                r["date"]  # 내림차순은 아래서 역순
+            ))
+            # Date만 역순 적용
+            # sector/province 같은 그룹 내에서 최신이 맨 위
+            all_rows.sort(key=lambda r: (
+                r["sector_idx"],
+                r["province"],
+                tuple(-ord(c) for c in r["date"].ljust(10))
+            ))
+
+            # 번호 재부여 & 시트 재작성
+            ws.delete_rows(2, ws.max_row + 1)
+
+            for i, r in enumerate(all_rows, 1):
+                row_data = [
+                    i,
+                    r["area"], r["sector"], r["keyword"], r["province"],
+                    r["date"], r["title"], r["source"], r["url"], r["summary"]
+                ]
+                row_idx = i + 1  # 헤더 다음부터
+                for col_idx, val in enumerate(row_data, 1):
+                    cell = ws.cell(row=row_idx, column=col_idx, value=val)
+                    if r.get("is_new"):
+                        cell.fill = NEW_FILL
+                        cell.font = NEW_FONT
+                    else:
+                        cell.font = Font(size=9)
 
         _freeze_and_filter(ws)
         logger.info(f"  Keywords History: {added}건 추가")
@@ -615,9 +695,11 @@ class ExcelUpdater:
             ("Sectors Found",     40), ("Run Mode",         15),
         ]
 
-        if ws.max_row == 0 or ws.cell(1, 1).value != "Date":
-            ws.delete_rows(1, ws.max_row + 1)
+        # 헤더가 없거나 컬럼 수가 다르면 업그레이드
+        current_cols = sum(1 for c in range(1, 20) if ws.cell(1, c).value)
+        if ws.max_row == 0 or ws.cell(1, 1).value != "Date" or current_cols < len(COLS):
             _set_header_row(ws, COLS, HDR_STYLE)
+            logger.info(f"  Collection_Log 헤더 업그레이드: {current_cols}→{len(COLS)}컬럼")
 
         # 번역 성공/실패 집계
         trans_ok   = sum(1 for a in articles
@@ -630,7 +712,9 @@ class ExcelUpdater:
         sector_cnt = Counter(a.get("sector", "Unknown") for a in articles)
         sectors_str = ", ".join(f"{k}:{v}" for k, v in sector_cnt.most_common())
 
-        _zebra_row(ws, ws.max_row + 1, [
+        # 최상단 삽입 (최신 실행 기록이 맨 위)
+        ws.insert_rows(2)
+        log_data = [
             self.now.strftime("%Y-%m-%d"),
             self.now.strftime("%H:%M:%S"),
             self.period_start.strftime("%Y-%m-%d %H:%M"),
@@ -643,7 +727,9 @@ class ExcelUpdater:
             trans_fail,
             sectors_str,
             run_stats.get("mode", "full"),
-        ])
+        ]
+        for col_idx, val in enumerate(log_data, 1):
+            ws.cell(row=2, column=col_idx, value=val)
 
         _freeze_and_filter(ws)
         logger.info("  Collection_Log: 1건 추가")
@@ -655,16 +741,29 @@ class ExcelUpdater:
     def _update_summary(self, articles: list):
         """
         전체 누적 통계 + 금주(토~토) 수집 분리 요약
-        검색 품질 검증에 핵심 뷰
+        전체 통계는 News Database 시트 전체 데이터 기준
+        금주 통계는 금번 수집된 articles 기준
         """
         ws = self._get_or_create_sheet("Summary")
         ws.delete_rows(1, ws.max_row + 1)
 
         from collections import Counter
 
-        # 금주 기사 필터 (period_start ~ period_end)
+        # 전체 누적 데이터는 News Database 시트에서 직접 읽기
+        ws_db = self._get_or_create_sheet("News Database", 0)
+        all_articles = []
+        for row in ws_db.iter_rows(min_row=2, values_only=True):
+            if not any(row): continue
+            all_articles.append({
+                'area':     str(row[0] or ''),
+                'sector':   str(row[1] or ''),
+                'province': str(row[2] or ''),
+                'date':     str(row[4] or '')[:10],
+            })
+
+        # 금주 기사 필터 (금번 수집된 articles 기준)
         def is_this_week(article):
-            d = str(article.get("date", ""))[:10]
+            d = str(article.get("date", "") or article.get("published_date", ""))[:10]
             if not d:
                 return False
             try:
@@ -674,7 +773,8 @@ class ExcelUpdater:
                 return False
 
         week_articles = [a for a in articles if is_this_week(a)]
-        all_articles  = articles  # 전체 (누적)
+        # 전체 DB에서도 금주 기사 카운트
+        week_db_cnt = sum(1 for a in all_articles if is_this_week(a))
 
         # ── 헤더 ─────────────────────────────────────────────
         title_cell = ws.cell(row=1, column=1,
@@ -685,7 +785,7 @@ class ExcelUpdater:
         ws.cell(row=2, column=1,
                 value=f"Updated: {self.now.strftime('%Y-%m-%d %H:%M')}  |  "
                       f"Total: {len(all_articles):,} articles  |  "
-                      f"This week: {len(week_articles)} articles "
+                      f"This week: {week_db_cnt} articles "
                       f"({self.period_start.strftime('%m/%d')}~"
                       f"{self.period_end.strftime('%m/%d')})")
         ws.merge_cells("A2:H2")
