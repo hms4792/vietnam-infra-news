@@ -135,7 +135,7 @@ def step3_save_to_excel(processed_articles: list) -> bool:
 
         EXCEL_PATH = Path("data/database/Vietnam_Infra_News_Database_Final.xlsx")
         updater = ExcelUpdater(EXCEL_PATH)
-        result  = updater.update(processed_articles)
+        result  = updater.update_all(processed_articles)
         logger.info(f"[Step3 완료] Excel 전체 시트 업데이트")
         return result
 
