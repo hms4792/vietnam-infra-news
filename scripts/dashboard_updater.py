@@ -195,6 +195,9 @@ def _load_all_articles_from_excel() -> list:
             })
 
         wb.close()
+
+        # 날짜 내림차순 정렬 (최신 기사가 앞으로)
+        articles.sort(key=lambda x: x.get('date', '') or '', reverse=True)
         logger.info(f"[Dashboard] Excel에서 {len(articles)}건 로드")
 
     except Exception as e:
