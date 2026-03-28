@@ -1,4 +1,4 @@
-name: Vietnam Infrastructure News Pipeline (Weekly)
+name: Vietnam Infrastructure News Pipeline Weekly
 
 on:
   schedule:
@@ -15,7 +15,7 @@ on:
           - collect-only
           - dashboard-only
       hours_back:
-        description: 'Hours to collect (default 168=7days)'
+        description: 'Hours to collect'
         required: false
         default: '168'
         type: string
@@ -29,17 +29,15 @@ jobs:
   weekly-pipeline:
     name: Weekly Infrastructure News Collection
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
 
     env:
-      HOURS_BACK:         ${{ github.event.inputs.hours_back || '168' }}
-      RUN_MODE:           ${{ github.event.inputs.mode || 'full' }}
-      ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
-      GMAIL_ADDRESS:      ${{ secrets.GMAIL_ADDRESS }}
-      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-      PYTHONIOENCODING:   utf-8
-      PYTHONUNBUFFERED:   "1"
-      TZ:                 "Asia/Seoul"
+      HOURS_BACK:        ${{ github.event.inputs.hours_back || '168' }}
+      RUN_MODE:          ${{ github.event.inputs.mode || 'full' }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      PYTHONIOENCODING:  utf-8
+      PYTHONUNBUFFERED:  "1"
+      TZ:                "Asia/Seoul"
 
     steps:
 
@@ -59,12 +57,8 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 feedparser pandas openpyxl anthropic pydantic lxml python-dateutil pytz deep-translator
-          pip show anthropic | grep -E "Name|Version"
+          pip show deep-translator | grep -E "Name|Version"
           echo "packages installed OK"
-
-      - name: Show Collection Period
-        run: |
-          python3 scripts/show_period.py 2>/dev/null || echo "Period: last 7 days"
 
       - name: Prepare Working Directories
         run: |
@@ -98,7 +92,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "no dashboard changes"
           else
-            git commit -m "Weekly Dashboard $(date '+%Y-%m-%d') Run#${{ github.run_number }}"
+            git commit -m "Weekly Dashboard Run#${{ github.run_number }}"
             git push
             echo "dashboard committed"
           fi
@@ -106,8 +100,8 @@ jobs:
       - name: Send Email Notification
         if: always()
         env:
-          GMAIL_ADDRESS:      ${{ secrets.GMAIL_ADDRESS }}
-          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: python3 scripts/send_email.py
 
       - name: Upload Pipeline Log
@@ -123,9 +117,6 @@ jobs:
       - name: Final Summary Report
         if: always()
         run: |
-          echo "======================================"
-          echo "Vietnam Infrastructure News - Weekly"
-          echo "Run: ${{ github.run_number }}"
-          echo "Time: $(TZ='Asia/Seoul' date '+%Y-%m-%d %H:%M KST')"
-          echo "Dashboard: https://hms4792.github.io/vietnam-infra-news/"
-          echo "======================================"
+          echo "Vietnam Infra News Weekly Pipeline Done"
+          echo "Run ${{ github.run_number }}"
+          echo "Dashboard https://hms4792.github.io/vietnam-infra-news/"
