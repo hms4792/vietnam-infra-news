@@ -294,7 +294,7 @@
 <!-- ════ 통계 바 ════════════════════════════════════════ -->
 <div class="stats-bar">
     <div class="stat-item">
-        <div class="stat-value">0</div>
+        <div class="stat-value">16</div>
         <div class="stat-label"
              data-en="Total Articles"
              data-ko="전체 기사"
@@ -308,7 +308,7 @@
              data-vi="Hôm nay">Today</div>
     </div>
     <div class="stat-item">
-        <div class="stat-value">0</div>
+        <div class="stat-value">5</div>
         <div class="stat-label"
              data-en="Sectors"
              data-ko="섹터"
@@ -323,12 +323,656 @@
            placeholder="Search articles..."
            oninput="searchArticles(this.value)">
     <button class="sector-filter-btn active" data-sector="all">All</button>
+<button class="sector-filter-btn" data-sector="Power">Power</button>
+<button class="sector-filter-btn" data-sector="Smart City">Smart City</button>
+<button class="sector-filter-btn" data-sector="Solid Waste">Solid Waste</button>
+<button class="sector-filter-btn" data-sector="Transport">Transport</button>
+<button class="sector-filter-btn" data-sector="Water Supply/Drainage">Water Supply/Drainage</button>
 
 </div>
 
 <!-- ════ 기사 카드 그리드 ═══════════════════════════════ -->
 <main class="articles-grid" id="articles-container">
-    <div class="no-articles">No articles available today.</div>
+    
+    <div class="article-card" data-sector="Smart City" data-area="Urban Development" data-idx="0">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-sc">Smart City</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Ho Chi Minh City targets global Top 50 smart cities by 2030"
+            data-ko="Ho Chi Minh City targets global Top 50 smart cities by 2030"
+            data-vi="Ho Chi Minh City targets global Top 50 smart cities by 2030">
+            Ho Chi Minh City targets global Top 50 smart cities by 2030
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Ho Chi Minh City aims to rank among the world’s top 50 smart cities by 2030 under a draft smart urban development plan for 2026–2030, with a vision to 2035. Ha Noi develops smart city with people at the centre Da Nang wins top national smart-city award Ho Chi Minh City expands international cooperation on smart urban development"
+           data-ko="Ho Chi Minh City aims to rank among the world’s top 50 smart cities by 2030 under a draft smart urban development plan for 2026–2030, with a vision to 2035. Ha Noi develops smart city with people at the centre Da Nang wins top national smart-city award Ho Chi Minh City expands international cooperation on smart urban development"
+           data-vi="Ho Chi Minh City aims to rank among the world’s top 50 smart cities by 2030 under a draft smart urban development plan for 2026–2030, with a vision to 2035. Ha Noi develops smart city with people at the centre Da Nang wins top national smart-city award Ho Chi Minh City expands international cooperation on smart urban development">
+           Ho Chi Minh City aims to rank among the world’s top 50 smart cities by 2030 under a draft smart urban development plan for 2026–2030, with a vision to 2035. Ha Noi develops smart city with people at the centre Da Nang wins top national smart-city award Ho Chi Minh City expands international cooperation on smart urban development
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 Nhan Dan English</span>
+            <span class="area-tag">📍 Urban Development</span>
+            <a href="https://en.nhandan.vn/ho-chi-minh-city-targets-global-top-50-smart-cities-by-2030-post160464.html" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Solid Waste" data-area="Environment" data-idx="1">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-sw">Solid Waste</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Kênh từng bị lấp ở TP HCM dang dở sau 11 năm cải tạo"
+            data-ko="Kênh từng bị lấp ở TP HCM dang dở sau 11 năm cải tạo"
+            data-vi="Kênh từng bị lấp ở TP HCM dang dở sau 11 năm cải tạo">
+            Kênh từng bị lấp ở TP HCM dang dở sau 11 năm cải tạo
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Khoảng 500 m kênh Hàng Bàng cơ bản xong nhưng chưa thể khơi dòng do vướng 19 hộ dân, nhiều đoạn nước ô nhiễm, ngập rác thải."
+           data-ko="Khoảng 500 m kênh Hàng Bàng cơ bản xong nhưng chưa thể khơi dòng do vướng 19 hộ dân, nhiều đoạn nước ô nhiễm, ngập rác thải."
+           data-vi="Khoảng 500 m kênh Hàng Bàng cơ bản xong nhưng chưa thể khơi dòng do vướng 19 hộ dân, nhiều đoạn nước ô nhiễm, ngập rác thải.">
+           Khoảng 500 m kênh Hàng Bàng cơ bản xong nhưng chưa thể khơi dòng do vướng 19 hộ dân, nhiều đoạn nước ô nhiễm, ngập rác thải.
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 VnExpress - Thời sự</span>
+            <span class="area-tag">📍 Environment</span>
+            <a href="https://vnexpress.net/kenh-tung-bi-lap-o-tp-hcm-dang-do-sau-11-nam-cai-tao-5054020.html" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Transport" data-area="Urban Development" data-idx="2">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-tr">Transport</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Hà Nội muốn dùng metro để &#x27;tự tạo tiền&#x27; phát triển đô thị"
+            data-ko="Hà Nội muốn dùng metro để &#x27;tự tạo tiền&#x27; phát triển đô thị"
+            data-vi="Hà Nội muốn dùng metro để &#x27;tự tạo tiền&#x27; phát triển đô thị">
+            Hà Nội muốn dùng metro để &#x27;tự tạo tiền&#x27; phát triển đô thị
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Dự thảo Luật Thủ đô sửa đổi cho phép Hà Nội khai thác quỹ đất quanh các tuyến metro theo mô hình TOD, tạo nguồn lực tài chính tại chỗ thay vì phụ thuộc vào ngân sách và vốn vay."
+           data-ko="Dự thảo Luật Thủ đô sửa đổi cho phép Hà Nội khai thác quỹ đất quanh các tuyến metro theo mô hình TOD, tạo nguồn lực tài chính tại chỗ thay vì phụ thuộc vào ngân sách và vốn vay."
+           data-vi="Dự thảo Luật Thủ đô sửa đổi cho phép Hà Nội khai thác quỹ đất quanh các tuyến metro theo mô hình TOD, tạo nguồn lực tài chính tại chỗ thay vì phụ thuộc vào ngân sách và vốn vay.">
+           Dự thảo Luật Thủ đô sửa đổi cho phép Hà Nội khai thác quỹ đất quanh các tuyến metro theo mô hình TOD, tạo nguồn lực tài chính tại chỗ thay vì phụ thuộc vào ngân sách và vốn vay.
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 VnExpress - Thời sự</span>
+            <span class="area-tag">📍 Urban Development</span>
+            <a href="https://vnexpress.net/ha-noi-muon-dung-metro-de-tu-tao-tien-phat-trien-do-thi-5055683.html" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Transport" data-area="Urban Development" data-idx="3">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-tr">Transport</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Metro TP.HCM vào guồng &#x27;nước rút&#x27;"
+            data-ko="Metro TP.HCM vào guồng &#x27;nước rút&#x27;"
+            data-vi="Metro TP.HCM vào guồng &#x27;nước rút&#x27;">
+            Metro TP.HCM vào guồng &#x27;nước rút&#x27;
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Sân bay chờ metro, kỷ nguyên tiến biển chờ metro, cuộc cách mạng giao thông xanh cũng trông chờ vào metro… Chưa bao giờ, tiến độ khung hạ tầng xương sống của TP.HCM lại đứng trước áp lực gắt gao như giai đoạn hiện nay."
+           data-ko="Sân bay chờ metro, kỷ nguyên tiến biển chờ metro, cuộc cách mạng giao thông xanh cũng trông chờ vào metro… Chưa bao giờ, tiến độ khung hạ tầng xương sống của TP.HCM lại đứng trước áp lực gắt gao như giai đoạn hiện nay."
+           data-vi="Sân bay chờ metro, kỷ nguyên tiến biển chờ metro, cuộc cách mạng giao thông xanh cũng trông chờ vào metro… Chưa bao giờ, tiến độ khung hạ tầng xương sống của TP.HCM lại đứng trước áp lực gắt gao như giai đoạn hiện nay.">
+           Sân bay chờ metro, kỷ nguyên tiến biển chờ metro, cuộc cách mạng giao thông xanh cũng trông chờ vào metro… Chưa bao giờ, tiến độ khung hạ tầng xương sống của TP.HCM lại đứng trước áp lực gắt gao như giai đoạn hiện nay.
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 Thanh Nien - Kinh te</span>
+            <span class="area-tag">📍 Urban Development</span>
+            <a href="https://thanhnien.vn/metro-tphcm-vao-guong-nuoc-rut-185260327210635635.htm" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Water Supply/Drainage" data-area="Environment" data-idx="4">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-ws">Water Supply/Drainage</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Cận cảnh cụm dự án hồ điều hoà 25ha hơn 1.100 tỷ đồng chống ngập phía Tây Hà Nội"
+            data-ko="Cận cảnh cụm dự án hồ điều hoà 25ha hơn 1.100 tỷ đồng chống ngập phía Tây Hà Nội"
+            data-vi="Cận cảnh cụm dự án hồ điều hoà 25ha hơn 1.100 tỷ đồng chống ngập phía Tây Hà Nội">
+            Cận cảnh cụm dự án hồ điều hoà 25ha hơn 1.100 tỷ đồng chống ngập phía Tây Hà Nội
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Cụm hồ điều hòa Yên Nghĩa rộng 25ha, tổng vốn hơn 1.100 tỷ đồng tại xã An Khánh đang được thi công khẩn trương, kỳ vọng giảm ngập cho khu vực phía Tây Hà Nội."
+           data-ko="Cụm hồ điều hòa Yên Nghĩa rộng 25ha, tổng vốn hơn 1.100 tỷ đồng tại xã An Khánh đang được thi công khẩn trương, kỳ vọng giảm ngập cho khu vực phía Tây Hà Nội."
+           data-vi="Cụm hồ điều hòa Yên Nghĩa rộng 25ha, tổng vốn hơn 1.100 tỷ đồng tại xã An Khánh đang được thi công khẩn trương, kỳ vọng giảm ngập cho khu vực phía Tây Hà Nội.">
+           Cụm hồ điều hòa Yên Nghĩa rộng 25ha, tổng vốn hơn 1.100 tỷ đồng tại xã An Khánh đang được thi công khẩn trương, kỳ vọng giảm ngập cho khu vực phía Tây Hà Nội.
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 CafeBiz</span>
+            <span class="area-tag">📍 Environment</span>
+            <a href="https://cafebiz.vn/can-canh-cum-du-an-ho-dieu-hoa-25ha-hon-1100-ty-dong-chong-ngap-phia-tay-ha-noi-17626032807294382.chn" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Power" data-area="Energy" data-idx="5">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-pw">Power</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Thủ tướng thăm Nga: 72 tiếng, 30 hoạt động và công trình biểu tượng sánh ngang nhà máy thủy điện Hòa Bình"
+            data-ko="Thủ tướng thăm Nga: 72 tiếng, 30 hoạt động và công trình biểu tượng sánh ngang nhà máy thủy điện Hòa Bình"
+            data-vi="Thủ tướng thăm Nga: 72 tiếng, 30 hoạt động và công trình biểu tượng sánh ngang nhà máy thủy điện Hòa Bình">
+            Thủ tướng thăm Nga: 72 tiếng, 30 hoạt động và công trình biểu tượng sánh ngang nhà máy thủy điện Hòa Bình
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Việc ký kết thỏa thuận xây dựng Nhà máy điện hạt nhân Ninh Thuận 1 là sự kiện lịch sử. Đây sẽ là công trình biểu tượng mới cho quan hệ Việt Nam – Liên bang Nga trong tương lai."
+           data-ko="Việc ký kết thỏa thuận xây dựng Nhà máy điện hạt nhân Ninh Thuận 1 là sự kiện lịch sử. Đây sẽ là công trình biểu tượng mới cho quan hệ Việt Nam – Liên bang Nga trong tương lai."
+           data-vi="Việc ký kết thỏa thuận xây dựng Nhà máy điện hạt nhân Ninh Thuận 1 là sự kiện lịch sử. Đây sẽ là công trình biểu tượng mới cho quan hệ Việt Nam – Liên bang Nga trong tương lai.">
+           Việc ký kết thỏa thuận xây dựng Nhà máy điện hạt nhân Ninh Thuận 1 là sự kiện lịch sử. Đây sẽ là công trình biểu tượng mới cho quan hệ Việt Nam – Liên bang Nga trong tương lai.
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 CafeBiz</span>
+            <span class="area-tag">📍 Energy</span>
+            <a href="https://cafebiz.vn/thu-tuong-tham-nga-72-tieng-30-hoat-dong-va-cong-trinh-bieu-tuong-sanh-ngang-nha-may-thuy-dien-hoa-binh-176260327193804713.chn" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Solid Waste" data-area="Environment" data-idx="6">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-sw">Solid Waste</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="LOTUS V4: Công cụ “chuẩn hóa xanh” cho thị trường xây dựng Việt Nam"
+            data-ko="LOTUS V4: Công cụ “chuẩn hóa xanh” cho thị trường xây dựng Việt Nam"
+            data-vi="LOTUS V4: Công cụ “chuẩn hóa xanh” cho thị trường xây dựng Việt Nam">
+            LOTUS V4: Công cụ “chuẩn hóa xanh” cho thị trường xây dựng Việt Nam
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Trong bối cảnh các tiêu chí ESG (môi trường - xã hội - quản trị) ngày càng quan trọng với nhà đầu tư toàn cầu, ngành Xây dựng không chỉ cần giảm phát thải, mà cần chứng minh được tính minh bạch, khả năng thích ứng và tác động xã hội của công trình."
+           data-ko="Trong bối cảnh các tiêu chí ESG (môi trường - xã hội - quản trị) ngày càng quan trọng với nhà đầu tư toàn cầu, ngành Xây dựng không chỉ cần giảm phát thải, mà cần chứng minh được tính minh bạch, khả năng thích ứng và tác động xã hội của công trình."
+           data-vi="Trong bối cảnh các tiêu chí ESG (môi trường - xã hội - quản trị) ngày càng quan trọng với nhà đầu tư toàn cầu, ngành Xây dựng không chỉ cần giảm phát thải, mà cần chứng minh được tính minh bạch, khả năng thích ứng và tác động xã hội của công trình.">
+           Trong bối cảnh các tiêu chí ESG (môi trường - xã hội - quản trị) ngày càng quan trọng với nhà đầu tư toàn cầu, ngành Xây dựng không chỉ cần giảm phát thải, mà cần chứng minh được tính minh bạch, khả năng thích ứng và tác động xã hội của công trình.
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 Bao Xay Dung</span>
+            <span class="area-tag">📍 Environment</span>
+            <a href="https://baoxaydung.vn/lotus-v4-cong-cu-chuan-hoa-xanh-cho-thi-truong-xay-dung-viet-nam-19226032718230941.htm" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Water Supply/Drainage" data-area="Environment" data-idx="7">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-ws">Water Supply/Drainage</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="[Infographics] Giờ Trái đất 2026: “Sáng tạo xanh - tương lai xanh”"
+            data-ko="[Infographics] Giờ Trái đất 2026: “Sáng tạo xanh - tương lai xanh”"
+            data-vi="[Infographics] Giờ Trái đất 2026: “Sáng tạo xanh - tương lai xanh”">
+            [Infographics] Giờ Trái đất 2026: “Sáng tạo xanh - tương lai xanh”
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Với thông điệp “Sáng tạo xanh – tương lai xanh”, Hà Tĩnh kêu gọi cán bộ, người dân tham gia tắt thiết bị điện không cần thiết trong 1 giờ (từ 20h30 – 21h30 ngày 28/3) nhằm góp phần bảo vệ môi trường, ứng phó biến đổi khí hậu. Hà Tĩnh khởi động Giờ Trái đất: Không chỉ là 60 phút tắt đèn!"
+           data-ko="Với thông điệp “Sáng tạo xanh – tương lai xanh”, Hà Tĩnh kêu gọi cán bộ, người dân tham gia tắt thiết bị điện không cần thiết trong 1 giờ (từ 20h30 – 21h30 ngày 28/3) nhằm góp phần bảo vệ môi trường, ứng phó biến đổi khí hậu. Hà Tĩnh khởi động Giờ Trái đất: Không chỉ là 60 phút tắt đèn!"
+           data-vi="Với thông điệp “Sáng tạo xanh – tương lai xanh”, Hà Tĩnh kêu gọi cán bộ, người dân tham gia tắt thiết bị điện không cần thiết trong 1 giờ (từ 20h30 – 21h30 ngày 28/3) nhằm góp phần bảo vệ môi trường, ứng phó biến đổi khí hậu. Hà Tĩnh khởi động Giờ Trái đất: Không chỉ là 60 phút tắt đèn!">
+           Với thông điệp “Sáng tạo xanh – tương lai xanh”, Hà Tĩnh kêu gọi cán bộ, người dân tham gia tắt thiết bị điện không cần thiết trong 1 giờ (từ 20h30 – 21h30 ngày 28/3) nhằm góp phần bảo vệ môi trường, ứng phó biến đổi khí hậu. Hà Tĩnh khởi động Giờ Trái đất: Không chỉ là 60 phút tắt đèn!
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 Bao Ha Tinh</span>
+            <span class="area-tag">📍 Environment</span>
+            <a href="https://baohatinh.vn/infographics-gio-trai-dat-2026-sang-tao-xanh-tuong-lai-xanh-post308164.html" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Solid Waste" data-area="Environment" data-idx="8">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-sw">Solid Waste</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Tạo chuyển biến trong nhận thức và hành động bảo vệ môi trường"
+            data-ko="Tạo chuyển biến trong nhận thức và hành động bảo vệ môi trường"
+            data-vi="Tạo chuyển biến trong nhận thức và hành động bảo vệ môi trường">
+            Tạo chuyển biến trong nhận thức và hành động bảo vệ môi trường
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Chính phủ triển khai kế hoạch nâng cao hiệu lực bảo vệ môi trường, thúc đẩy kinh tế xanh và kiểm soát ô nhiễm tại Hà Nội, Thành phố Hồ Chí Minh năm 2026. Thị trường carbon: Việt Nam chuẩn bị sẵn sàng các điều kiện vận hành Định vị khu vực nguy cơ bụi cao ở Hà Nội: Khi drone và ảnh viễn thám vào cuộc Bài học từ các đô thị thế giới trong giải quyết tình trạng ô nhiễm không khí"
+           data-ko="Chính phủ triển khai kế hoạch nâng cao hiệu lực bảo vệ môi trường, thúc đẩy kinh tế xanh và kiểm soát ô nhiễm tại Hà Nội, Thành phố Hồ Chí Minh năm 2026. Thị trường carbon: Việt Nam chuẩn bị sẵn sàng các điều kiện vận hành Định vị khu vực nguy cơ bụi cao ở Hà Nội: Khi drone và ảnh viễn thám vào cuộc Bài học từ các đô thị thế giới trong giải quyết tình trạng ô nhiễm không khí"
+           data-vi="Chính phủ triển khai kế hoạch nâng cao hiệu lực bảo vệ môi trường, thúc đẩy kinh tế xanh và kiểm soát ô nhiễm tại Hà Nội, Thành phố Hồ Chí Minh năm 2026. Thị trường carbon: Việt Nam chuẩn bị sẵn sàng các điều kiện vận hành Định vị khu vực nguy cơ bụi cao ở Hà Nội: Khi drone và ảnh viễn thám vào cuộc Bài học từ các đô thị thế giới trong giải quyết tình trạng ô nhiễm không khí">
+           Chính phủ triển khai kế hoạch nâng cao hiệu lực bảo vệ môi trường, thúc đẩy kinh tế xanh và kiểm soát ô nhiễm tại Hà Nội, Thành phố Hồ Chí Minh năm 2026. Thị trường carbon: Việt Nam chuẩn bị sẵn sàng các điều kiện vận hành Định vị khu vực nguy cơ bụi cao ở Hà Nội: Khi drone và ảnh viễn thám vào cuộc Bài học từ các đô thị thế giới trong giải quyết tình trạng ô nhiễm không khí
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 VietnamPlus - Moi truong</span>
+            <span class="area-tag">📍 Environment</span>
+            <a href="https://www.vietnamplus.vn/tao-chuyen-bien-trong-nhan-thuc-va-hanh-dong-bao-ve-moi-truong-post1101059.vnp" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Water Supply/Drainage" data-area="Environment" data-idx="9">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-ws">Water Supply/Drainage</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Hà Nội gấp rút triển khai 10 công trình thoát nước-chống ngập trước mùa mưa 2026"
+            data-ko="Hà Nội gấp rút triển khai 10 công trình thoát nước-chống ngập trước mùa mưa 2026"
+            data-vi="Hà Nội gấp rút triển khai 10 công trình thoát nước-chống ngập trước mùa mưa 2026">
+            Hà Nội gấp rút triển khai 10 công trình thoát nước-chống ngập trước mùa mưa 2026
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Hà Nội khẩn trương triển khai 10 công trình thoát nước với tổng vốn 5.579 tỷ đồng, quyết tâm hoàn thành trước mùa mưa bão 2026 nhằm nâng cao năng lực tiêu thoát nước, giảm tình trạng ngập úng đô thị. Hà Nội đầu tư khẩn cấp hệ thống thoát nước, hồ điều hòa chống ngập diện rộng Hệ thống thoát nước còn thiếu đồng bộ, không theo kịp tốc độ đô thị hóa Hà Nội: Vận hành tối đa công suất các trạm bơm đầu mối để tiêu thoát nước"
+           data-ko="Hà Nội khẩn trương triển khai 10 công trình thoát nước với tổng vốn 5.579 tỷ đồng, quyết tâm hoàn thành trước mùa mưa bão 2026 nhằm nâng cao năng lực tiêu thoát nước, giảm tình trạng ngập úng đô thị. Hà Nội đầu tư khẩn cấp hệ thống thoát nước, hồ điều hòa chống ngập diện rộng Hệ thống thoát nước còn thiếu đồng bộ, không theo kịp tốc độ đô thị hóa Hà Nội: Vận hành tối đa công suất các trạm bơm đầu mối để tiêu thoát nước"
+           data-vi="Hà Nội khẩn trương triển khai 10 công trình thoát nước với tổng vốn 5.579 tỷ đồng, quyết tâm hoàn thành trước mùa mưa bão 2026 nhằm nâng cao năng lực tiêu thoát nước, giảm tình trạng ngập úng đô thị. Hà Nội đầu tư khẩn cấp hệ thống thoát nước, hồ điều hòa chống ngập diện rộng Hệ thống thoát nước còn thiếu đồng bộ, không theo kịp tốc độ đô thị hóa Hà Nội: Vận hành tối đa công suất các trạm bơm đầu mối để tiêu thoát nước">
+           Hà Nội khẩn trương triển khai 10 công trình thoát nước với tổng vốn 5.579 tỷ đồng, quyết tâm hoàn thành trước mùa mưa bão 2026 nhằm nâng cao năng lực tiêu thoát nước, giảm tình trạng ngập úng đô thị. Hà Nội đầu tư khẩn cấp hệ thống thoát nước, hồ điều hòa chống ngập diện rộng Hệ thống thoát nước còn thiếu đồng bộ, không theo kịp tốc độ đô thị hóa Hà Nội: Vận hành tối đa công suất các trạm bơm đầu mối để tiêu thoát nước
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 VietnamPlus - Moi truong</span>
+            <span class="area-tag">📍 Environment</span>
+            <a href="https://www.vietnamplus.vn/ha-noi-gap-rut-trien-khai-10-cong-trinh-thoat-nuoc-chong-ngap-truoc-mua-mua-2026-post1100703.vnp" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Solid Waste" data-area="Environment" data-idx="10">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-sw">Solid Waste</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Giảm phát thải, nâng những cánh bay"
+            data-ko="Giảm phát thải, nâng những cánh bay"
+            data-vi="Giảm phát thải, nâng những cánh bay">
+            Giảm phát thải, nâng những cánh bay
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Từ ngày 1/1/2026, Cục Hàng không Việt Nam đã chính thức tham gia CORSIA - cơ chế toàn cầu về giảm và bù đắp carbon đối với các chuyến bay quốc tế. [Video] Hàng không Việt chính thức tham gia cơ chế giảm phát thải carbon Tiềm năng giảm phát thải ngành giao thông Tổng hạn ngạch phát thải khí nhà kính thí điểm cho năm 2026 là hơn 268 triệu tấn CO2tđ Giải bài toán hạ tầng và kết nối giao thông tại vùng phát thải thấp"
+           data-ko="Từ ngày 1/1/2026, Cục Hàng không Việt Nam đã chính thức tham gia CORSIA - cơ chế toàn cầu về giảm và bù đắp carbon đối với các chuyến bay quốc tế. [Video] Hàng không Việt chính thức tham gia cơ chế giảm phát thải carbon Tiềm năng giảm phát thải ngành giao thông Tổng hạn ngạch phát thải khí nhà kính thí điểm cho năm 2026 là hơn 268 triệu tấn CO2tđ Giải bài toán hạ tầng và kết nối giao thông tại vùng phát thải thấp"
+           data-vi="Từ ngày 1/1/2026, Cục Hàng không Việt Nam đã chính thức tham gia CORSIA - cơ chế toàn cầu về giảm và bù đắp carbon đối với các chuyến bay quốc tế. [Video] Hàng không Việt chính thức tham gia cơ chế giảm phát thải carbon Tiềm năng giảm phát thải ngành giao thông Tổng hạn ngạch phát thải khí nhà kính thí điểm cho năm 2026 là hơn 268 triệu tấn CO2tđ Giải bài toán hạ tầng và kết nối giao thông tại vùng phát thải thấp">
+           Từ ngày 1/1/2026, Cục Hàng không Việt Nam đã chính thức tham gia CORSIA - cơ chế toàn cầu về giảm và bù đắp carbon đối với các chuyến bay quốc tế. [Video] Hàng không Việt chính thức tham gia cơ chế giảm phát thải carbon Tiềm năng giảm phát thải ngành giao thông Tổng hạn ngạch phát thải khí nhà kính thí điểm cho năm 2026 là hơn 268 triệu tấn CO2tđ Giải bài toán hạ tầng và kết nối giao thông tại vùng phát thải thấp
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 Nhandan - Moi truong</span>
+            <span class="area-tag">📍 Environment</span>
+            <a href="https://nhandan.vn/giam-phat-thai-nang-nhung-canh-bay-post951492.html" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Solid Waste" data-area="Environment" data-idx="11">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-sw">Solid Waste</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Đà Nẵng: Cấp bách xử lý tình trạng rác thải ùn ứ nghiêm trọng"
+            data-ko="Đà Nẵng: Cấp bách xử lý tình trạng rác thải ùn ứ nghiêm trọng"
+            data-vi="Đà Nẵng: Cấp bách xử lý tình trạng rác thải ùn ứ nghiêm trọng">
+            Đà Nẵng: Cấp bách xử lý tình trạng rác thải ùn ứ nghiêm trọng
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Đà Nẵng đang khẳng định vai trò tiên phong trong xây dựng “thành phố môi trường” theo định hướng phát triển bền vững . Tuy nhiên, tình trạng rác thải sinh hoạt ùn ứ tại một số địa phương, cùng với việc nhà máy xử lý rác gặp vướng mắc pháp lý, chưa thể vận hành trở lại, đang tạo áp lực lớn lên môi trường đô thị. Đà Nẵng khẩn trương thu gom, xử lý rác thải trên địa bàn phường Điện Bàn Đông [Ảnh] Rác thải vây kín vịnh Mân Quang, Đà Nẵng Thường trực Thành ủy Đà Nẵng chỉ đạo &quot;khẩn&quot; vụ đổ rác thải trộm Đà Nẵng chuẩn bị đấu thầu dịch vụ thu gom, xử lý rác thải"
+           data-ko="Đà Nẵng đang khẳng định vai trò tiên phong trong xây dựng “thành phố môi trường” theo định hướng phát triển bền vững . Tuy nhiên, tình trạng rác thải sinh hoạt ùn ứ tại một số địa phương, cùng với việc nhà máy xử lý rác gặp vướng mắc pháp lý, chưa thể vận hành trở lại, đang tạo áp lực lớn lên môi trường đô thị. Đà Nẵng khẩn trương thu gom, xử lý rác thải trên địa bàn phường Điện Bàn Đông [Ảnh] Rác thải vây kín vịnh Mân Quang, Đà Nẵng Thường trực Thành ủy Đà Nẵng chỉ đạo &quot;khẩn&quot; vụ đổ rác thải trộm Đà Nẵng chuẩn bị đấu thầu dịch vụ thu gom, xử lý rác thải"
+           data-vi="Đà Nẵng đang khẳng định vai trò tiên phong trong xây dựng “thành phố môi trường” theo định hướng phát triển bền vững . Tuy nhiên, tình trạng rác thải sinh hoạt ùn ứ tại một số địa phương, cùng với việc nhà máy xử lý rác gặp vướng mắc pháp lý, chưa thể vận hành trở lại, đang tạo áp lực lớn lên môi trường đô thị. Đà Nẵng khẩn trương thu gom, xử lý rác thải trên địa bàn phường Điện Bàn Đông [Ảnh] Rác thải vây kín vịnh Mân Quang, Đà Nẵng Thường trực Thành ủy Đà Nẵng chỉ đạo &quot;khẩn&quot; vụ đổ rác thải trộm Đà Nẵng chuẩn bị đấu thầu dịch vụ thu gom, xử lý rác thải">
+           Đà Nẵng đang khẳng định vai trò tiên phong trong xây dựng “thành phố môi trường” theo định hướng phát triển bền vững . Tuy nhiên, tình trạng rác thải sinh hoạt ùn ứ tại một số địa phương, cùng với việc nhà máy xử lý rác gặp vướng mắc pháp lý, chưa thể vận hành trở lại, đang tạo áp lực lớn lên môi trường đô thị. Đà Nẵng khẩn trương thu gom, xử lý rác thải trên địa bàn phường Điện Bàn Đông [Ảnh] Rác thải vây kín vịnh Mân Quang, Đà Nẵng Thường trực Thành ủy Đà Nẵng chỉ đạo &quot;khẩn&quot; vụ đổ rác thải trộm Đà Nẵng chuẩn bị đấu thầu dịch vụ thu gom, xử lý rác thải
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 Nhandan - Moi truong</span>
+            <span class="area-tag">📍 Environment</span>
+            <a href="https://nhandan.vn/da-nang-cap-bach-xu-ly-tinh-trang-rac-thai-un-u-nghiem-trong-post950434.html" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Water Supply/Drainage" data-area="Environment" data-idx="12">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-ws">Water Supply/Drainage</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Xã cù lao ven biển tỉnh Đồng Tháp chủ động ứng phó hạn, mặn"
+            data-ko="Xã cù lao ven biển tỉnh Đồng Tháp chủ động ứng phó hạn, mặn"
+            data-vi="Xã cù lao ven biển tỉnh Đồng Tháp chủ động ứng phó hạn, mặn">
+            Xã cù lao ven biển tỉnh Đồng Tháp chủ động ứng phó hạn, mặn
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Tân Phú Đông là xã cù lao ven biển của tỉnh Đồng Tháp . Hằng năm, địa phương chịu tác động trực tiếp của biến đổi khí hậu, đặc biệt là tình trạng hạn hán và xâm nhập mặn trong mùa khô. Trước thực trạng trên, chính quyền và người dân địa phương đã chủ động triển khai nhiều giải pháp để phòng, chống. Xây dựng trung tâm lúa gạo khu vực Đồng bằng sông Cửu Long Đồng Tháp đánh giá về hoạt động khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số Tiên phong phát triển nông nghiệp xanh Địa phương chỉ đạo khắc phục chất lượng nguồn nước cấp cho gần 1.400 hộ dân Mặn xâm nhập sâu vào nội đồng ở Đồng Tháp"
+           data-ko="Tân Phú Đông là xã cù lao ven biển của tỉnh Đồng Tháp . Hằng năm, địa phương chịu tác động trực tiếp của biến đổi khí hậu, đặc biệt là tình trạng hạn hán và xâm nhập mặn trong mùa khô. Trước thực trạng trên, chính quyền và người dân địa phương đã chủ động triển khai nhiều giải pháp để phòng, chống. Xây dựng trung tâm lúa gạo khu vực Đồng bằng sông Cửu Long Đồng Tháp đánh giá về hoạt động khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số Tiên phong phát triển nông nghiệp xanh Địa phương chỉ đạo khắc phục chất lượng nguồn nước cấp cho gần 1.400 hộ dân Mặn xâm nhập sâu vào nội đồng ở Đồng Tháp"
+           data-vi="Tân Phú Đông là xã cù lao ven biển của tỉnh Đồng Tháp . Hằng năm, địa phương chịu tác động trực tiếp của biến đổi khí hậu, đặc biệt là tình trạng hạn hán và xâm nhập mặn trong mùa khô. Trước thực trạng trên, chính quyền và người dân địa phương đã chủ động triển khai nhiều giải pháp để phòng, chống. Xây dựng trung tâm lúa gạo khu vực Đồng bằng sông Cửu Long Đồng Tháp đánh giá về hoạt động khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số Tiên phong phát triển nông nghiệp xanh Địa phương chỉ đạo khắc phục chất lượng nguồn nước cấp cho gần 1.400 hộ dân Mặn xâm nhập sâu vào nội đồng ở Đồng Tháp">
+           Tân Phú Đông là xã cù lao ven biển của tỉnh Đồng Tháp . Hằng năm, địa phương chịu tác động trực tiếp của biến đổi khí hậu, đặc biệt là tình trạng hạn hán và xâm nhập mặn trong mùa khô. Trước thực trạng trên, chính quyền và người dân địa phương đã chủ động triển khai nhiều giải pháp để phòng, chống. Xây dựng trung tâm lúa gạo khu vực Đồng bằng sông Cửu Long Đồng Tháp đánh giá về hoạt động khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số Tiên phong phát triển nông nghiệp xanh Địa phương chỉ đạo khắc phục chất lượng nguồn nước cấp cho gần 1.400 hộ dân Mặn xâm nhập sâu vào nội đồng ở Đồng Tháp
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 Nhandan - Moi truong</span>
+            <span class="area-tag">📍 Environment</span>
+            <a href="https://nhandan.vn/xa-cu-lao-ven-bien-tinh-dong-thap-chu-dong-ung-pho-han-man-post950136.html" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Water Supply/Drainage" data-area="Environment" data-idx="13">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-ws">Water Supply/Drainage</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="An ninh nguồn nước cho Đồng bằng sông Cửu Long trước biến đổi khí hậu"
+            data-ko="An ninh nguồn nước cho Đồng bằng sông Cửu Long trước biến đổi khí hậu"
+            data-vi="An ninh nguồn nước cho Đồng bằng sông Cửu Long trước biến đổi khí hậu">
+            An ninh nguồn nước cho Đồng bằng sông Cửu Long trước biến đổi khí hậu
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Ngày 22/3, nhân Ngày nước thế giới (22/3), tại thành phố Cần Thơ, báo Tiền Phong cùng Ủy ban nhân dân thành phố Cần Thơ và đơn vị đồng hành tổ chức Hội thảo “An ninh nguồn nước Đồng bằng sông Cửu Long trước biến đổi khí hậu ”. Cần Thơ hưởng ứng “Ngày chạy Olympic: Vì sức khỏe toàn dân - Vì an ninh Tổ quốc” Hoàn thiện quản lý hàng hải tại Cần Thơ, Vĩnh Long Hơn 800 vận động viên tranh giải Pickleball VTV Cần Thơ 2026 với giải thưởng hơn 2 tỷ đồng Đoàn kiểm tra, giám sát số 28 của Bộ Chính trị, Ban Bí thư làm việc tại Cần Thơ"
+           data-ko="Ngày 22/3, nhân Ngày nước thế giới (22/3), tại thành phố Cần Thơ, báo Tiền Phong cùng Ủy ban nhân dân thành phố Cần Thơ và đơn vị đồng hành tổ chức Hội thảo “An ninh nguồn nước Đồng bằng sông Cửu Long trước biến đổi khí hậu ”. Cần Thơ hưởng ứng “Ngày chạy Olympic: Vì sức khỏe toàn dân - Vì an ninh Tổ quốc” Hoàn thiện quản lý hàng hải tại Cần Thơ, Vĩnh Long Hơn 800 vận động viên tranh giải Pickleball VTV Cần Thơ 2026 với giải thưởng hơn 2 tỷ đồng Đoàn kiểm tra, giám sát số 28 của Bộ Chính trị, Ban Bí thư làm việc tại Cần Thơ"
+           data-vi="Ngày 22/3, nhân Ngày nước thế giới (22/3), tại thành phố Cần Thơ, báo Tiền Phong cùng Ủy ban nhân dân thành phố Cần Thơ và đơn vị đồng hành tổ chức Hội thảo “An ninh nguồn nước Đồng bằng sông Cửu Long trước biến đổi khí hậu ”. Cần Thơ hưởng ứng “Ngày chạy Olympic: Vì sức khỏe toàn dân - Vì an ninh Tổ quốc” Hoàn thiện quản lý hàng hải tại Cần Thơ, Vĩnh Long Hơn 800 vận động viên tranh giải Pickleball VTV Cần Thơ 2026 với giải thưởng hơn 2 tỷ đồng Đoàn kiểm tra, giám sát số 28 của Bộ Chính trị, Ban Bí thư làm việc tại Cần Thơ">
+           Ngày 22/3, nhân Ngày nước thế giới (22/3), tại thành phố Cần Thơ, báo Tiền Phong cùng Ủy ban nhân dân thành phố Cần Thơ và đơn vị đồng hành tổ chức Hội thảo “An ninh nguồn nước Đồng bằng sông Cửu Long trước biến đổi khí hậu ”. Cần Thơ hưởng ứng “Ngày chạy Olympic: Vì sức khỏe toàn dân - Vì an ninh Tổ quốc” Hoàn thiện quản lý hàng hải tại Cần Thơ, Vĩnh Long Hơn 800 vận động viên tranh giải Pickleball VTV Cần Thơ 2026 với giải thưởng hơn 2 tỷ đồng Đoàn kiểm tra, giám sát số 28 của Bộ Chính trị, Ban Bí thư làm việc tại Cần Thơ
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 Nhandan - Moi truong</span>
+            <span class="area-tag">📍 Environment</span>
+            <a href="https://nhandan.vn/an-ninh-nguon-nuoc-cho-dong-bang-song-cuu-long-truoc-bien-doi-khi-hau-post950087.html" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Water Supply/Drainage" data-area="Environment" data-idx="14">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-ws">Water Supply/Drainage</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Hà Nội đẩy nhanh tiến độ xây bể điều tiết ngầm chống ngập khẩn cấp trước mùa mưa"
+            data-ko="Hà Nội đẩy nhanh tiến độ xây bể điều tiết ngầm chống ngập khẩn cấp trước mùa mưa"
+            data-vi="Hà Nội đẩy nhanh tiến độ xây bể điều tiết ngầm chống ngập khẩn cấp trước mùa mưa">
+            Hà Nội đẩy nhanh tiến độ xây bể điều tiết ngầm chống ngập khẩn cấp trước mùa mưa
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Trước áp lực ngập úng gia tăng, Hà Nội đang tăng tốc thi công các bể điều tiết ngầm tại khu vực nội đô, trong đó có khu vực chợ Hàng Da và dốc cầu Đuống, nhằm kịp hoàn thành trước mùa mưa bão 2026, góp phần nâng cao năng lực thoát nước đô thị. Dự án xây dựng bể điều tiết ngầm khu vực chợ Hàng Da: Giao thông ổn định sau hơn một tháng thi công [Ảnh] Hà Nội: Đẩy nhanh tiến độ, khẩn trương hoàn thành bể ngầm chống ngập khu vực chợ Hàng Da trước ngày 30/4 Cải tạo hạ lưu sông Kim Ngưu: Tăng cường tiêu thoát nước khu vực phía nam Thủ đô Bảo đảm hệ thống thoát nước Thủ đô vận hành an toàn, thông suốt trước cao điểm Tết Nguyên đán"
+           data-ko="Trước áp lực ngập úng gia tăng, Hà Nội đang tăng tốc thi công các bể điều tiết ngầm tại khu vực nội đô, trong đó có khu vực chợ Hàng Da và dốc cầu Đuống, nhằm kịp hoàn thành trước mùa mưa bão 2026, góp phần nâng cao năng lực thoát nước đô thị. Dự án xây dựng bể điều tiết ngầm khu vực chợ Hàng Da: Giao thông ổn định sau hơn một tháng thi công [Ảnh] Hà Nội: Đẩy nhanh tiến độ, khẩn trương hoàn thành bể ngầm chống ngập khu vực chợ Hàng Da trước ngày 30/4 Cải tạo hạ lưu sông Kim Ngưu: Tăng cường tiêu thoát nước khu vực phía nam Thủ đô Bảo đảm hệ thống thoát nước Thủ đô vận hành an toàn, thông suốt trước cao điểm Tết Nguyên đán"
+           data-vi="Trước áp lực ngập úng gia tăng, Hà Nội đang tăng tốc thi công các bể điều tiết ngầm tại khu vực nội đô, trong đó có khu vực chợ Hàng Da và dốc cầu Đuống, nhằm kịp hoàn thành trước mùa mưa bão 2026, góp phần nâng cao năng lực thoát nước đô thị. Dự án xây dựng bể điều tiết ngầm khu vực chợ Hàng Da: Giao thông ổn định sau hơn một tháng thi công [Ảnh] Hà Nội: Đẩy nhanh tiến độ, khẩn trương hoàn thành bể ngầm chống ngập khu vực chợ Hàng Da trước ngày 30/4 Cải tạo hạ lưu sông Kim Ngưu: Tăng cường tiêu thoát nước khu vực phía nam Thủ đô Bảo đảm hệ thống thoát nước Thủ đô vận hành an toàn, thông suốt trước cao điểm Tết Nguyên đán">
+           Trước áp lực ngập úng gia tăng, Hà Nội đang tăng tốc thi công các bể điều tiết ngầm tại khu vực nội đô, trong đó có khu vực chợ Hàng Da và dốc cầu Đuống, nhằm kịp hoàn thành trước mùa mưa bão 2026, góp phần nâng cao năng lực thoát nước đô thị. Dự án xây dựng bể điều tiết ngầm khu vực chợ Hàng Da: Giao thông ổn định sau hơn một tháng thi công [Ảnh] Hà Nội: Đẩy nhanh tiến độ, khẩn trương hoàn thành bể ngầm chống ngập khu vực chợ Hàng Da trước ngày 30/4 Cải tạo hạ lưu sông Kim Ngưu: Tăng cường tiêu thoát nước khu vực phía nam Thủ đô Bảo đảm hệ thống thoát nước Thủ đô vận hành an toàn, thông suốt trước cao điểm Tết Nguyên đán
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 Nhandan - Moi truong</span>
+            <span class="area-tag">📍 Environment</span>
+            <a href="https://nhandan.vn/ha-noi-day-nhanh-tien-do-xay-be-dieu-tiet-ngam-chong-ngap-khan-cap-truoc-mua-mua-post949942.html" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
+
+    <div class="article-card" data-sector="Solid Waste" data-area="Environment" data-idx="15">
+
+        <!-- 섹터 배지 -->
+        <div class="card-header">
+            <span class="sector-badge sector-sw">Solid Waste</span>
+            <span class="article-date"></span>
+        </div>
+
+        <!-- 기사 제목: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <!-- JavaScript: element.textContent = element.dataset[lang] 으로 교체 -->
+        <h3 class="article-title"
+            data-en="Trẻ em, thanh niên chung tay hành động vì không khí sạch và tương lai bền vững"
+            data-ko="Trẻ em, thanh niên chung tay hành động vì không khí sạch và tương lai bền vững"
+            data-vi="Trẻ em, thanh niên chung tay hành động vì không khí sạch và tương lai bền vững">
+            Trẻ em, thanh niên chung tay hành động vì không khí sạch và tương lai bền vững
+        </h3>
+
+        <!-- 기사 요약: data-en/ko/vi 속성으로 3개국어 저장 -->
+        <p class="article-summary"
+           data-en="Sáng 21/3, tại Hà Nội, Bộ Nông nghiệp và Môi trường phối hợp với UNICEF tại Việt Nam cùng nhiều cơ quan, tổ chức trong nước và quốc tế phát động chương trình “Trẻ em và Thanh niên hành động vì không khí sạch và tương lai bền vững”, đồng thời hưởng ứng Ngày Nước thế giới, Ngày Khí tượng thế giới và Giờ Trái đất năm 2026. Tăng cường bảo vệ môi trường, an toàn thực phẩm, nước sạch nông thôn Bảo đảm cung cấp nước sạch và cải thiện điều kiện vệ sinh môi trường ở khu vực nông thôn"
+           data-ko="Sáng 21/3, tại Hà Nội, Bộ Nông nghiệp và Môi trường phối hợp với UNICEF tại Việt Nam cùng nhiều cơ quan, tổ chức trong nước và quốc tế phát động chương trình “Trẻ em và Thanh niên hành động vì không khí sạch và tương lai bền vững”, đồng thời hưởng ứng Ngày Nước thế giới, Ngày Khí tượng thế giới và Giờ Trái đất năm 2026. Tăng cường bảo vệ môi trường, an toàn thực phẩm, nước sạch nông thôn Bảo đảm cung cấp nước sạch và cải thiện điều kiện vệ sinh môi trường ở khu vực nông thôn"
+           data-vi="Sáng 21/3, tại Hà Nội, Bộ Nông nghiệp và Môi trường phối hợp với UNICEF tại Việt Nam cùng nhiều cơ quan, tổ chức trong nước và quốc tế phát động chương trình “Trẻ em và Thanh niên hành động vì không khí sạch và tương lai bền vững”, đồng thời hưởng ứng Ngày Nước thế giới, Ngày Khí tượng thế giới và Giờ Trái đất năm 2026. Tăng cường bảo vệ môi trường, an toàn thực phẩm, nước sạch nông thôn Bảo đảm cung cấp nước sạch và cải thiện điều kiện vệ sinh môi trường ở khu vực nông thôn">
+           Sáng 21/3, tại Hà Nội, Bộ Nông nghiệp và Môi trường phối hợp với UNICEF tại Việt Nam cùng nhiều cơ quan, tổ chức trong nước và quốc tế phát động chương trình “Trẻ em và Thanh niên hành động vì không khí sạch và tương lai bền vững”, đồng thời hưởng ứng Ngày Nước thế giới, Ngày Khí tượng thế giới và Giờ Trái đất năm 2026. Tăng cường bảo vệ môi trường, an toàn thực phẩm, nước sạch nông thôn Bảo đảm cung cấp nước sạch và cải thiện điều kiện vệ sinh môi trường ở khu vực nông thôn
+        </p>
+
+        <!-- 하단 메타 정보 -->
+        <div class="card-footer">
+            <span class="source-tag">📰 Nhandan - Moi truong</span>
+            <span class="area-tag">📍 Environment</span>
+            <a href="https://nhandan.vn/tre-em-thanh-nien-chung-tay-hanh-dong-vi-khong-khi-sach-va-tuong-lai-ben-vung-post949936.html" target="_blank" rel="noopener" class="read-more">
+                <span data-en="Read original"
+                      data-ko="원문 보기"
+                      data-vi="Đọc bản gốc">Read original</span>
+                →
+            </a>
+        </div>
+
+    </div>
+    
 </main>
 
 <!-- ════ 백엔드 데이터 (JavaScript용) ══════════════════════ -->
@@ -337,7 +981,280 @@
     title/summary는 각 언어별 객체로 구성되어 언어 전환 시 사용
 -->
 <script>
-const BACKEND_DATA = [];
+const BACKEND_DATA = [
+  {
+    "title": {
+      "en": "Ho Chi Minh City targets global Top 50 smart cities by 2030",
+      "ko": "Ho Chi Minh City targets global Top 50 smart cities by 2030",
+      "vi": "Ho Chi Minh City targets global Top 50 smart cities by 2030"
+    },
+    "summary": {
+      "en": "Ho Chi Minh City aims to rank among the world’s top 50 smart cities by 2030 under a draft smart urban development plan for 2026–2030, with a vision to 2035. Ha Noi develops smart city with people at the centre Da Nang wins top national smart-city award Ho Chi Minh City expands international cooperation on smart urban development",
+      "ko": "Ho Chi Minh City aims to rank among the world’s top 50 smart cities by 2030 under a draft smart urban development plan for 2026–2030, with a vision to 2035. Ha Noi develops smart city with people at the centre Da Nang wins top national smart-city award Ho Chi Minh City expands international cooperation on smart urban development",
+      "vi": "Ho Chi Minh City aims to rank among the world’s top 50 smart cities by 2030 under a draft smart urban development plan for 2026–2030, with a vision to 2035. Ha Noi develops smart city with people at the centre Da Nang wins top national smart-city award Ho Chi Minh City expands international cooperation on smart urban development"
+    },
+    "sector": "Smart City",
+    "source": "Nhan Dan English",
+    "date": "",
+    "url": "https://en.nhandan.vn/ho-chi-minh-city-targets-global-top-50-smart-cities-by-2030-post160464.html",
+    "area": "Urban Development"
+  },
+  {
+    "title": {
+      "en": "Kênh từng bị lấp ở TP HCM dang dở sau 11 năm cải tạo",
+      "ko": "Kênh từng bị lấp ở TP HCM dang dở sau 11 năm cải tạo",
+      "vi": "Kênh từng bị lấp ở TP HCM dang dở sau 11 năm cải tạo"
+    },
+    "summary": {
+      "en": "Khoảng 500 m kênh Hàng Bàng cơ bản xong nhưng chưa thể khơi dòng do vướng 19 hộ dân, nhiều đoạn nước ô nhiễm, ngập rác thải.",
+      "ko": "Khoảng 500 m kênh Hàng Bàng cơ bản xong nhưng chưa thể khơi dòng do vướng 19 hộ dân, nhiều đoạn nước ô nhiễm, ngập rác thải.",
+      "vi": "Khoảng 500 m kênh Hàng Bàng cơ bản xong nhưng chưa thể khơi dòng do vướng 19 hộ dân, nhiều đoạn nước ô nhiễm, ngập rác thải."
+    },
+    "sector": "Solid Waste",
+    "source": "VnExpress - Thời sự",
+    "date": "",
+    "url": "https://vnexpress.net/kenh-tung-bi-lap-o-tp-hcm-dang-do-sau-11-nam-cai-tao-5054020.html",
+    "area": "Environment"
+  },
+  {
+    "title": {
+      "en": "Hà Nội muốn dùng metro để 'tự tạo tiền' phát triển đô thị",
+      "ko": "Hà Nội muốn dùng metro để 'tự tạo tiền' phát triển đô thị",
+      "vi": "Hà Nội muốn dùng metro để 'tự tạo tiền' phát triển đô thị"
+    },
+    "summary": {
+      "en": "Dự thảo Luật Thủ đô sửa đổi cho phép Hà Nội khai thác quỹ đất quanh các tuyến metro theo mô hình TOD, tạo nguồn lực tài chính tại chỗ thay vì phụ thuộc vào ngân sách và vốn vay.",
+      "ko": "Dự thảo Luật Thủ đô sửa đổi cho phép Hà Nội khai thác quỹ đất quanh các tuyến metro theo mô hình TOD, tạo nguồn lực tài chính tại chỗ thay vì phụ thuộc vào ngân sách và vốn vay.",
+      "vi": "Dự thảo Luật Thủ đô sửa đổi cho phép Hà Nội khai thác quỹ đất quanh các tuyến metro theo mô hình TOD, tạo nguồn lực tài chính tại chỗ thay vì phụ thuộc vào ngân sách và vốn vay."
+    },
+    "sector": "Transport",
+    "source": "VnExpress - Thời sự",
+    "date": "",
+    "url": "https://vnexpress.net/ha-noi-muon-dung-metro-de-tu-tao-tien-phat-trien-do-thi-5055683.html",
+    "area": "Urban Development"
+  },
+  {
+    "title": {
+      "en": "Metro TP.HCM vào guồng 'nước rút'",
+      "ko": "Metro TP.HCM vào guồng 'nước rút'",
+      "vi": "Metro TP.HCM vào guồng 'nước rút'"
+    },
+    "summary": {
+      "en": "Sân bay chờ metro, kỷ nguyên tiến biển chờ metro, cuộc cách mạng giao thông xanh cũng trông chờ vào metro… Chưa bao giờ, tiến độ khung hạ tầng xương sống của TP.HCM lại đứng trước áp lực gắt gao như giai đoạn hiện nay.",
+      "ko": "Sân bay chờ metro, kỷ nguyên tiến biển chờ metro, cuộc cách mạng giao thông xanh cũng trông chờ vào metro… Chưa bao giờ, tiến độ khung hạ tầng xương sống của TP.HCM lại đứng trước áp lực gắt gao như giai đoạn hiện nay.",
+      "vi": "Sân bay chờ metro, kỷ nguyên tiến biển chờ metro, cuộc cách mạng giao thông xanh cũng trông chờ vào metro… Chưa bao giờ, tiến độ khung hạ tầng xương sống của TP.HCM lại đứng trước áp lực gắt gao như giai đoạn hiện nay."
+    },
+    "sector": "Transport",
+    "source": "Thanh Nien - Kinh te",
+    "date": "",
+    "url": "https://thanhnien.vn/metro-tphcm-vao-guong-nuoc-rut-185260327210635635.htm",
+    "area": "Urban Development"
+  },
+  {
+    "title": {
+      "en": "Cận cảnh cụm dự án hồ điều hoà 25ha hơn 1.100 tỷ đồng chống ngập phía Tây Hà Nội",
+      "ko": "Cận cảnh cụm dự án hồ điều hoà 25ha hơn 1.100 tỷ đồng chống ngập phía Tây Hà Nội",
+      "vi": "Cận cảnh cụm dự án hồ điều hoà 25ha hơn 1.100 tỷ đồng chống ngập phía Tây Hà Nội"
+    },
+    "summary": {
+      "en": "Cụm hồ điều hòa Yên Nghĩa rộng 25ha, tổng vốn hơn 1.100 tỷ đồng tại xã An Khánh đang được thi công khẩn trương, kỳ vọng giảm ngập cho khu vực phía Tây Hà Nội.",
+      "ko": "Cụm hồ điều hòa Yên Nghĩa rộng 25ha, tổng vốn hơn 1.100 tỷ đồng tại xã An Khánh đang được thi công khẩn trương, kỳ vọng giảm ngập cho khu vực phía Tây Hà Nội.",
+      "vi": "Cụm hồ điều hòa Yên Nghĩa rộng 25ha, tổng vốn hơn 1.100 tỷ đồng tại xã An Khánh đang được thi công khẩn trương, kỳ vọng giảm ngập cho khu vực phía Tây Hà Nội."
+    },
+    "sector": "Water Supply/Drainage",
+    "source": "CafeBiz",
+    "date": "",
+    "url": "https://cafebiz.vn/can-canh-cum-du-an-ho-dieu-hoa-25ha-hon-1100-ty-dong-chong-ngap-phia-tay-ha-noi-17626032807294382.chn",
+    "area": "Environment"
+  },
+  {
+    "title": {
+      "en": "Thủ tướng thăm Nga: 72 tiếng, 30 hoạt động và công trình biểu tượng sánh ngang nhà máy thủy điện Hòa Bình",
+      "ko": "Thủ tướng thăm Nga: 72 tiếng, 30 hoạt động và công trình biểu tượng sánh ngang nhà máy thủy điện Hòa Bình",
+      "vi": "Thủ tướng thăm Nga: 72 tiếng, 30 hoạt động và công trình biểu tượng sánh ngang nhà máy thủy điện Hòa Bình"
+    },
+    "summary": {
+      "en": "Việc ký kết thỏa thuận xây dựng Nhà máy điện hạt nhân Ninh Thuận 1 là sự kiện lịch sử. Đây sẽ là công trình biểu tượng mới cho quan hệ Việt Nam – Liên bang Nga trong tương lai.",
+      "ko": "Việc ký kết thỏa thuận xây dựng Nhà máy điện hạt nhân Ninh Thuận 1 là sự kiện lịch sử. Đây sẽ là công trình biểu tượng mới cho quan hệ Việt Nam – Liên bang Nga trong tương lai.",
+      "vi": "Việc ký kết thỏa thuận xây dựng Nhà máy điện hạt nhân Ninh Thuận 1 là sự kiện lịch sử. Đây sẽ là công trình biểu tượng mới cho quan hệ Việt Nam – Liên bang Nga trong tương lai."
+    },
+    "sector": "Power",
+    "source": "CafeBiz",
+    "date": "",
+    "url": "https://cafebiz.vn/thu-tuong-tham-nga-72-tieng-30-hoat-dong-va-cong-trinh-bieu-tuong-sanh-ngang-nha-may-thuy-dien-hoa-binh-176260327193804713.chn",
+    "area": "Energy"
+  },
+  {
+    "title": {
+      "en": "LOTUS V4: Công cụ “chuẩn hóa xanh” cho thị trường xây dựng Việt Nam",
+      "ko": "LOTUS V4: Công cụ “chuẩn hóa xanh” cho thị trường xây dựng Việt Nam",
+      "vi": "LOTUS V4: Công cụ “chuẩn hóa xanh” cho thị trường xây dựng Việt Nam"
+    },
+    "summary": {
+      "en": "Trong bối cảnh các tiêu chí ESG (môi trường - xã hội - quản trị) ngày càng quan trọng với nhà đầu tư toàn cầu, ngành Xây dựng không chỉ cần giảm phát thải, mà cần chứng minh được tính minh bạch, khả năng thích ứng và tác động xã hội của công trình.",
+      "ko": "Trong bối cảnh các tiêu chí ESG (môi trường - xã hội - quản trị) ngày càng quan trọng với nhà đầu tư toàn cầu, ngành Xây dựng không chỉ cần giảm phát thải, mà cần chứng minh được tính minh bạch, khả năng thích ứng và tác động xã hội của công trình.",
+      "vi": "Trong bối cảnh các tiêu chí ESG (môi trường - xã hội - quản trị) ngày càng quan trọng với nhà đầu tư toàn cầu, ngành Xây dựng không chỉ cần giảm phát thải, mà cần chứng minh được tính minh bạch, khả năng thích ứng và tác động xã hội của công trình."
+    },
+    "sector": "Solid Waste",
+    "source": "Bao Xay Dung",
+    "date": "",
+    "url": "https://baoxaydung.vn/lotus-v4-cong-cu-chuan-hoa-xanh-cho-thi-truong-xay-dung-viet-nam-19226032718230941.htm",
+    "area": "Environment"
+  },
+  {
+    "title": {
+      "en": "[Infographics] Giờ Trái đất 2026: “Sáng tạo xanh - tương lai xanh”",
+      "ko": "[Infographics] Giờ Trái đất 2026: “Sáng tạo xanh - tương lai xanh”",
+      "vi": "[Infographics] Giờ Trái đất 2026: “Sáng tạo xanh - tương lai xanh”"
+    },
+    "summary": {
+      "en": "Với thông điệp “Sáng tạo xanh – tương lai xanh”, Hà Tĩnh kêu gọi cán bộ, người dân tham gia tắt thiết bị điện không cần thiết trong 1 giờ (từ 20h30 – 21h30 ngày 28/3) nhằm góp phần bảo vệ môi trường, ứng phó biến đổi khí hậu. Hà Tĩnh khởi động Giờ Trái đất: Không chỉ là 60 phút tắt đèn!",
+      "ko": "Với thông điệp “Sáng tạo xanh – tương lai xanh”, Hà Tĩnh kêu gọi cán bộ, người dân tham gia tắt thiết bị điện không cần thiết trong 1 giờ (từ 20h30 – 21h30 ngày 28/3) nhằm góp phần bảo vệ môi trường, ứng phó biến đổi khí hậu. Hà Tĩnh khởi động Giờ Trái đất: Không chỉ là 60 phút tắt đèn!",
+      "vi": "Với thông điệp “Sáng tạo xanh – tương lai xanh”, Hà Tĩnh kêu gọi cán bộ, người dân tham gia tắt thiết bị điện không cần thiết trong 1 giờ (từ 20h30 – 21h30 ngày 28/3) nhằm góp phần bảo vệ môi trường, ứng phó biến đổi khí hậu. Hà Tĩnh khởi động Giờ Trái đất: Không chỉ là 60 phút tắt đèn!"
+    },
+    "sector": "Water Supply/Drainage",
+    "source": "Bao Ha Tinh",
+    "date": "",
+    "url": "https://baohatinh.vn/infographics-gio-trai-dat-2026-sang-tao-xanh-tuong-lai-xanh-post308164.html",
+    "area": "Environment"
+  },
+  {
+    "title": {
+      "en": "Tạo chuyển biến trong nhận thức và hành động bảo vệ môi trường",
+      "ko": "Tạo chuyển biến trong nhận thức và hành động bảo vệ môi trường",
+      "vi": "Tạo chuyển biến trong nhận thức và hành động bảo vệ môi trường"
+    },
+    "summary": {
+      "en": "Chính phủ triển khai kế hoạch nâng cao hiệu lực bảo vệ môi trường, thúc đẩy kinh tế xanh và kiểm soát ô nhiễm tại Hà Nội, Thành phố Hồ Chí Minh năm 2026. Thị trường carbon: Việt Nam chuẩn bị sẵn sàng các điều kiện vận hành Định vị khu vực nguy cơ bụi cao ở Hà Nội: Khi drone và ảnh viễn thám vào cuộc Bài học từ các đô thị thế giới trong giải quyết tình trạng ô nhiễm không khí",
+      "ko": "Chính phủ triển khai kế hoạch nâng cao hiệu lực bảo vệ môi trường, thúc đẩy kinh tế xanh và kiểm soát ô nhiễm tại Hà Nội, Thành phố Hồ Chí Minh năm 2026. Thị trường carbon: Việt Nam chuẩn bị sẵn sàng các điều kiện vận hành Định vị khu vực nguy cơ bụi cao ở Hà Nội: Khi drone và ảnh viễn thám vào cuộc Bài học từ các đô thị thế giới trong giải quyết tình trạng ô nhiễm không khí",
+      "vi": "Chính phủ triển khai kế hoạch nâng cao hiệu lực bảo vệ môi trường, thúc đẩy kinh tế xanh và kiểm soát ô nhiễm tại Hà Nội, Thành phố Hồ Chí Minh năm 2026. Thị trường carbon: Việt Nam chuẩn bị sẵn sàng các điều kiện vận hành Định vị khu vực nguy cơ bụi cao ở Hà Nội: Khi drone và ảnh viễn thám vào cuộc Bài học từ các đô thị thế giới trong giải quyết tình trạng ô nhiễm không khí"
+    },
+    "sector": "Solid Waste",
+    "source": "VietnamPlus - Moi truong",
+    "date": "",
+    "url": "https://www.vietnamplus.vn/tao-chuyen-bien-trong-nhan-thuc-va-hanh-dong-bao-ve-moi-truong-post1101059.vnp",
+    "area": "Environment"
+  },
+  {
+    "title": {
+      "en": "Hà Nội gấp rút triển khai 10 công trình thoát nước-chống ngập trước mùa mưa 2026",
+      "ko": "Hà Nội gấp rút triển khai 10 công trình thoát nước-chống ngập trước mùa mưa 2026",
+      "vi": "Hà Nội gấp rút triển khai 10 công trình thoát nước-chống ngập trước mùa mưa 2026"
+    },
+    "summary": {
+      "en": "Hà Nội khẩn trương triển khai 10 công trình thoát nước với tổng vốn 5.579 tỷ đồng, quyết tâm hoàn thành trước mùa mưa bão 2026 nhằm nâng cao năng lực tiêu thoát nước, giảm tình trạng ngập úng đô thị. Hà Nội đầu tư khẩn cấp hệ thống thoát nước, hồ điều hòa chống ngập diện rộng Hệ thống thoát nước còn thiếu đồng bộ, không theo kịp tốc độ đô thị hóa Hà Nội: Vận hành tối đa công suất các trạm bơm đầu mối để tiêu thoát nước",
+      "ko": "Hà Nội khẩn trương triển khai 10 công trình thoát nước với tổng vốn 5.579 tỷ đồng, quyết tâm hoàn thành trước mùa mưa bão 2026 nhằm nâng cao năng lực tiêu thoát nước, giảm tình trạng ngập úng đô thị. Hà Nội đầu tư khẩn cấp hệ thống thoát nước, hồ điều hòa chống ngập diện rộng Hệ thống thoát nước còn thiếu đồng bộ, không theo kịp tốc độ đô thị hóa Hà Nội: Vận hành tối đa công suất các trạm bơm đầu mối để tiêu thoát nước",
+      "vi": "Hà Nội khẩn trương triển khai 10 công trình thoát nước với tổng vốn 5.579 tỷ đồng, quyết tâm hoàn thành trước mùa mưa bão 2026 nhằm nâng cao năng lực tiêu thoát nước, giảm tình trạng ngập úng đô thị. Hà Nội đầu tư khẩn cấp hệ thống thoát nước, hồ điều hòa chống ngập diện rộng Hệ thống thoát nước còn thiếu đồng bộ, không theo kịp tốc độ đô thị hóa Hà Nội: Vận hành tối đa công suất các trạm bơm đầu mối để tiêu thoát nước"
+    },
+    "sector": "Water Supply/Drainage",
+    "source": "VietnamPlus - Moi truong",
+    "date": "",
+    "url": "https://www.vietnamplus.vn/ha-noi-gap-rut-trien-khai-10-cong-trinh-thoat-nuoc-chong-ngap-truoc-mua-mua-2026-post1100703.vnp",
+    "area": "Environment"
+  },
+  {
+    "title": {
+      "en": "Giảm phát thải, nâng những cánh bay",
+      "ko": "Giảm phát thải, nâng những cánh bay",
+      "vi": "Giảm phát thải, nâng những cánh bay"
+    },
+    "summary": {
+      "en": "Từ ngày 1/1/2026, Cục Hàng không Việt Nam đã chính thức tham gia CORSIA - cơ chế toàn cầu về giảm và bù đắp carbon đối với các chuyến bay quốc tế. [Video] Hàng không Việt chính thức tham gia cơ chế giảm phát thải carbon Tiềm năng giảm phát thải ngành giao thông Tổng hạn ngạch phát thải khí nhà kính thí điểm cho năm 2026 là hơn 268 triệu tấn CO2tđ Giải bài toán hạ tầng và kết nối giao thông tại vùng phát thải thấp",
+      "ko": "Từ ngày 1/1/2026, Cục Hàng không Việt Nam đã chính thức tham gia CORSIA - cơ chế toàn cầu về giảm và bù đắp carbon đối với các chuyến bay quốc tế. [Video] Hàng không Việt chính thức tham gia cơ chế giảm phát thải carbon Tiềm năng giảm phát thải ngành giao thông Tổng hạn ngạch phát thải khí nhà kính thí điểm cho năm 2026 là hơn 268 triệu tấn CO2tđ Giải bài toán hạ tầng và kết nối giao thông tại vùng phát thải thấp",
+      "vi": "Từ ngày 1/1/2026, Cục Hàng không Việt Nam đã chính thức tham gia CORSIA - cơ chế toàn cầu về giảm và bù đắp carbon đối với các chuyến bay quốc tế. [Video] Hàng không Việt chính thức tham gia cơ chế giảm phát thải carbon Tiềm năng giảm phát thải ngành giao thông Tổng hạn ngạch phát thải khí nhà kính thí điểm cho năm 2026 là hơn 268 triệu tấn CO2tđ Giải bài toán hạ tầng và kết nối giao thông tại vùng phát thải thấp"
+    },
+    "sector": "Solid Waste",
+    "source": "Nhandan - Moi truong",
+    "date": "",
+    "url": "https://nhandan.vn/giam-phat-thai-nang-nhung-canh-bay-post951492.html",
+    "area": "Environment"
+  },
+  {
+    "title": {
+      "en": "Đà Nẵng: Cấp bách xử lý tình trạng rác thải ùn ứ nghiêm trọng",
+      "ko": "Đà Nẵng: Cấp bách xử lý tình trạng rác thải ùn ứ nghiêm trọng",
+      "vi": "Đà Nẵng: Cấp bách xử lý tình trạng rác thải ùn ứ nghiêm trọng"
+    },
+    "summary": {
+      "en": "Đà Nẵng đang khẳng định vai trò tiên phong trong xây dựng “thành phố môi trường” theo định hướng phát triển bền vững . Tuy nhiên, tình trạng rác thải sinh hoạt ùn ứ tại một số địa phương, cùng với việc nhà máy xử lý rác gặp vướng mắc pháp lý, chưa thể vận hành trở lại, đang tạo áp lực lớn lên môi trường đô thị. Đà Nẵng khẩn trương thu gom, xử lý rác thải trên địa bàn phường Điện Bàn Đông [Ảnh] Rác thải vây kín vịnh Mân Quang, Đà Nẵng Thường trực Thành ủy Đà Nẵng chỉ đạo \"khẩn\" vụ đổ rác thải trộm Đà Nẵng chuẩn bị đấu thầu dịch vụ thu gom, xử lý rác thải",
+      "ko": "Đà Nẵng đang khẳng định vai trò tiên phong trong xây dựng “thành phố môi trường” theo định hướng phát triển bền vững . Tuy nhiên, tình trạng rác thải sinh hoạt ùn ứ tại một số địa phương, cùng với việc nhà máy xử lý rác gặp vướng mắc pháp lý, chưa thể vận hành trở lại, đang tạo áp lực lớn lên môi trường đô thị. Đà Nẵng khẩn trương thu gom, xử lý rác thải trên địa bàn phường Điện Bàn Đông [Ảnh] Rác thải vây kín vịnh Mân Quang, Đà Nẵng Thường trực Thành ủy Đà Nẵng chỉ đạo \"khẩn\" vụ đổ rác thải trộm Đà Nẵng chuẩn bị đấu thầu dịch vụ thu gom, xử lý rác thải",
+      "vi": "Đà Nẵng đang khẳng định vai trò tiên phong trong xây dựng “thành phố môi trường” theo định hướng phát triển bền vững . Tuy nhiên, tình trạng rác thải sinh hoạt ùn ứ tại một số địa phương, cùng với việc nhà máy xử lý rác gặp vướng mắc pháp lý, chưa thể vận hành trở lại, đang tạo áp lực lớn lên môi trường đô thị. Đà Nẵng khẩn trương thu gom, xử lý rác thải trên địa bàn phường Điện Bàn Đông [Ảnh] Rác thải vây kín vịnh Mân Quang, Đà Nẵng Thường trực Thành ủy Đà Nẵng chỉ đạo \"khẩn\" vụ đổ rác thải trộm Đà Nẵng chuẩn bị đấu thầu dịch vụ thu gom, xử lý rác thải"
+    },
+    "sector": "Solid Waste",
+    "source": "Nhandan - Moi truong",
+    "date": "",
+    "url": "https://nhandan.vn/da-nang-cap-bach-xu-ly-tinh-trang-rac-thai-un-u-nghiem-trong-post950434.html",
+    "area": "Environment"
+  },
+  {
+    "title": {
+      "en": "Xã cù lao ven biển tỉnh Đồng Tháp chủ động ứng phó hạn, mặn",
+      "ko": "Xã cù lao ven biển tỉnh Đồng Tháp chủ động ứng phó hạn, mặn",
+      "vi": "Xã cù lao ven biển tỉnh Đồng Tháp chủ động ứng phó hạn, mặn"
+    },
+    "summary": {
+      "en": "Tân Phú Đông là xã cù lao ven biển của tỉnh Đồng Tháp . Hằng năm, địa phương chịu tác động trực tiếp của biến đổi khí hậu, đặc biệt là tình trạng hạn hán và xâm nhập mặn trong mùa khô. Trước thực trạng trên, chính quyền và người dân địa phương đã chủ động triển khai nhiều giải pháp để phòng, chống. Xây dựng trung tâm lúa gạo khu vực Đồng bằng sông Cửu Long Đồng Tháp đánh giá về hoạt động khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số Tiên phong phát triển nông nghiệp xanh Địa phương chỉ đạo khắc phục chất lượng nguồn nước cấp cho gần 1.400 hộ dân Mặn xâm nhập sâu vào nội đồng ở Đồng Tháp",
+      "ko": "Tân Phú Đông là xã cù lao ven biển của tỉnh Đồng Tháp . Hằng năm, địa phương chịu tác động trực tiếp của biến đổi khí hậu, đặc biệt là tình trạng hạn hán và xâm nhập mặn trong mùa khô. Trước thực trạng trên, chính quyền và người dân địa phương đã chủ động triển khai nhiều giải pháp để phòng, chống. Xây dựng trung tâm lúa gạo khu vực Đồng bằng sông Cửu Long Đồng Tháp đánh giá về hoạt động khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số Tiên phong phát triển nông nghiệp xanh Địa phương chỉ đạo khắc phục chất lượng nguồn nước cấp cho gần 1.400 hộ dân Mặn xâm nhập sâu vào nội đồng ở Đồng Tháp",
+      "vi": "Tân Phú Đông là xã cù lao ven biển của tỉnh Đồng Tháp . Hằng năm, địa phương chịu tác động trực tiếp của biến đổi khí hậu, đặc biệt là tình trạng hạn hán và xâm nhập mặn trong mùa khô. Trước thực trạng trên, chính quyền và người dân địa phương đã chủ động triển khai nhiều giải pháp để phòng, chống. Xây dựng trung tâm lúa gạo khu vực Đồng bằng sông Cửu Long Đồng Tháp đánh giá về hoạt động khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số Tiên phong phát triển nông nghiệp xanh Địa phương chỉ đạo khắc phục chất lượng nguồn nước cấp cho gần 1.400 hộ dân Mặn xâm nhập sâu vào nội đồng ở Đồng Tháp"
+    },
+    "sector": "Water Supply/Drainage",
+    "source": "Nhandan - Moi truong",
+    "date": "",
+    "url": "https://nhandan.vn/xa-cu-lao-ven-bien-tinh-dong-thap-chu-dong-ung-pho-han-man-post950136.html",
+    "area": "Environment"
+  },
+  {
+    "title": {
+      "en": "An ninh nguồn nước cho Đồng bằng sông Cửu Long trước biến đổi khí hậu",
+      "ko": "An ninh nguồn nước cho Đồng bằng sông Cửu Long trước biến đổi khí hậu",
+      "vi": "An ninh nguồn nước cho Đồng bằng sông Cửu Long trước biến đổi khí hậu"
+    },
+    "summary": {
+      "en": "Ngày 22/3, nhân Ngày nước thế giới (22/3), tại thành phố Cần Thơ, báo Tiền Phong cùng Ủy ban nhân dân thành phố Cần Thơ và đơn vị đồng hành tổ chức Hội thảo “An ninh nguồn nước Đồng bằng sông Cửu Long trước biến đổi khí hậu ”. Cần Thơ hưởng ứng “Ngày chạy Olympic: Vì sức khỏe toàn dân - Vì an ninh Tổ quốc” Hoàn thiện quản lý hàng hải tại Cần Thơ, Vĩnh Long Hơn 800 vận động viên tranh giải Pickleball VTV Cần Thơ 2026 với giải thưởng hơn 2 tỷ đồng Đoàn kiểm tra, giám sát số 28 của Bộ Chính trị, Ban Bí thư làm việc tại Cần Thơ",
+      "ko": "Ngày 22/3, nhân Ngày nước thế giới (22/3), tại thành phố Cần Thơ, báo Tiền Phong cùng Ủy ban nhân dân thành phố Cần Thơ và đơn vị đồng hành tổ chức Hội thảo “An ninh nguồn nước Đồng bằng sông Cửu Long trước biến đổi khí hậu ”. Cần Thơ hưởng ứng “Ngày chạy Olympic: Vì sức khỏe toàn dân - Vì an ninh Tổ quốc” Hoàn thiện quản lý hàng hải tại Cần Thơ, Vĩnh Long Hơn 800 vận động viên tranh giải Pickleball VTV Cần Thơ 2026 với giải thưởng hơn 2 tỷ đồng Đoàn kiểm tra, giám sát số 28 của Bộ Chính trị, Ban Bí thư làm việc tại Cần Thơ",
+      "vi": "Ngày 22/3, nhân Ngày nước thế giới (22/3), tại thành phố Cần Thơ, báo Tiền Phong cùng Ủy ban nhân dân thành phố Cần Thơ và đơn vị đồng hành tổ chức Hội thảo “An ninh nguồn nước Đồng bằng sông Cửu Long trước biến đổi khí hậu ”. Cần Thơ hưởng ứng “Ngày chạy Olympic: Vì sức khỏe toàn dân - Vì an ninh Tổ quốc” Hoàn thiện quản lý hàng hải tại Cần Thơ, Vĩnh Long Hơn 800 vận động viên tranh giải Pickleball VTV Cần Thơ 2026 với giải thưởng hơn 2 tỷ đồng Đoàn kiểm tra, giám sát số 28 của Bộ Chính trị, Ban Bí thư làm việc tại Cần Thơ"
+    },
+    "sector": "Water Supply/Drainage",
+    "source": "Nhandan - Moi truong",
+    "date": "",
+    "url": "https://nhandan.vn/an-ninh-nguon-nuoc-cho-dong-bang-song-cuu-long-truoc-bien-doi-khi-hau-post950087.html",
+    "area": "Environment"
+  },
+  {
+    "title": {
+      "en": "Hà Nội đẩy nhanh tiến độ xây bể điều tiết ngầm chống ngập khẩn cấp trước mùa mưa",
+      "ko": "Hà Nội đẩy nhanh tiến độ xây bể điều tiết ngầm chống ngập khẩn cấp trước mùa mưa",
+      "vi": "Hà Nội đẩy nhanh tiến độ xây bể điều tiết ngầm chống ngập khẩn cấp trước mùa mưa"
+    },
+    "summary": {
+      "en": "Trước áp lực ngập úng gia tăng, Hà Nội đang tăng tốc thi công các bể điều tiết ngầm tại khu vực nội đô, trong đó có khu vực chợ Hàng Da và dốc cầu Đuống, nhằm kịp hoàn thành trước mùa mưa bão 2026, góp phần nâng cao năng lực thoát nước đô thị. Dự án xây dựng bể điều tiết ngầm khu vực chợ Hàng Da: Giao thông ổn định sau hơn một tháng thi công [Ảnh] Hà Nội: Đẩy nhanh tiến độ, khẩn trương hoàn thành bể ngầm chống ngập khu vực chợ Hàng Da trước ngày 30/4 Cải tạo hạ lưu sông Kim Ngưu: Tăng cường tiêu thoát nước khu vực phía nam Thủ đô Bảo đảm hệ thống thoát nước Thủ đô vận hành an toàn, thông suốt trước cao điểm Tết Nguyên đán",
+      "ko": "Trước áp lực ngập úng gia tăng, Hà Nội đang tăng tốc thi công các bể điều tiết ngầm tại khu vực nội đô, trong đó có khu vực chợ Hàng Da và dốc cầu Đuống, nhằm kịp hoàn thành trước mùa mưa bão 2026, góp phần nâng cao năng lực thoát nước đô thị. Dự án xây dựng bể điều tiết ngầm khu vực chợ Hàng Da: Giao thông ổn định sau hơn một tháng thi công [Ảnh] Hà Nội: Đẩy nhanh tiến độ, khẩn trương hoàn thành bể ngầm chống ngập khu vực chợ Hàng Da trước ngày 30/4 Cải tạo hạ lưu sông Kim Ngưu: Tăng cường tiêu thoát nước khu vực phía nam Thủ đô Bảo đảm hệ thống thoát nước Thủ đô vận hành an toàn, thông suốt trước cao điểm Tết Nguyên đán",
+      "vi": "Trước áp lực ngập úng gia tăng, Hà Nội đang tăng tốc thi công các bể điều tiết ngầm tại khu vực nội đô, trong đó có khu vực chợ Hàng Da và dốc cầu Đuống, nhằm kịp hoàn thành trước mùa mưa bão 2026, góp phần nâng cao năng lực thoát nước đô thị. Dự án xây dựng bể điều tiết ngầm khu vực chợ Hàng Da: Giao thông ổn định sau hơn một tháng thi công [Ảnh] Hà Nội: Đẩy nhanh tiến độ, khẩn trương hoàn thành bể ngầm chống ngập khu vực chợ Hàng Da trước ngày 30/4 Cải tạo hạ lưu sông Kim Ngưu: Tăng cường tiêu thoát nước khu vực phía nam Thủ đô Bảo đảm hệ thống thoát nước Thủ đô vận hành an toàn, thông suốt trước cao điểm Tết Nguyên đán"
+    },
+    "sector": "Water Supply/Drainage",
+    "source": "Nhandan - Moi truong",
+    "date": "",
+    "url": "https://nhandan.vn/ha-noi-day-nhanh-tien-do-xay-be-dieu-tiet-ngam-chong-ngap-khan-cap-truoc-mua-mua-post949942.html",
+    "area": "Environment"
+  },
+  {
+    "title": {
+      "en": "Trẻ em, thanh niên chung tay hành động vì không khí sạch và tương lai bền vững",
+      "ko": "Trẻ em, thanh niên chung tay hành động vì không khí sạch và tương lai bền vững",
+      "vi": "Trẻ em, thanh niên chung tay hành động vì không khí sạch và tương lai bền vững"
+    },
+    "summary": {
+      "en": "Sáng 21/3, tại Hà Nội, Bộ Nông nghiệp và Môi trường phối hợp với UNICEF tại Việt Nam cùng nhiều cơ quan, tổ chức trong nước và quốc tế phát động chương trình “Trẻ em và Thanh niên hành động vì không khí sạch và tương lai bền vững”, đồng thời hưởng ứng Ngày Nước thế giới, Ngày Khí tượng thế giới và Giờ Trái đất năm 2026. Tăng cường bảo vệ môi trường, an toàn thực phẩm, nước sạch nông thôn Bảo đảm cung cấp nước sạch và cải thiện điều kiện vệ sinh môi trường ở khu vực nông thôn",
+      "ko": "Sáng 21/3, tại Hà Nội, Bộ Nông nghiệp và Môi trường phối hợp với UNICEF tại Việt Nam cùng nhiều cơ quan, tổ chức trong nước và quốc tế phát động chương trình “Trẻ em và Thanh niên hành động vì không khí sạch và tương lai bền vững”, đồng thời hưởng ứng Ngày Nước thế giới, Ngày Khí tượng thế giới và Giờ Trái đất năm 2026. Tăng cường bảo vệ môi trường, an toàn thực phẩm, nước sạch nông thôn Bảo đảm cung cấp nước sạch và cải thiện điều kiện vệ sinh môi trường ở khu vực nông thôn",
+      "vi": "Sáng 21/3, tại Hà Nội, Bộ Nông nghiệp và Môi trường phối hợp với UNICEF tại Việt Nam cùng nhiều cơ quan, tổ chức trong nước và quốc tế phát động chương trình “Trẻ em và Thanh niên hành động vì không khí sạch và tương lai bền vững”, đồng thời hưởng ứng Ngày Nước thế giới, Ngày Khí tượng thế giới và Giờ Trái đất năm 2026. Tăng cường bảo vệ môi trường, an toàn thực phẩm, nước sạch nông thôn Bảo đảm cung cấp nước sạch và cải thiện điều kiện vệ sinh môi trường ở khu vực nông thôn"
+    },
+    "sector": "Solid Waste",
+    "source": "Nhandan - Moi truong",
+    "date": "",
+    "url": "https://nhandan.vn/tre-em-thanh-nien-chung-tay-hanh-dong-vi-khong-khi-sach-va-tuong-lai-ben-vung-post949936.html",
+    "area": "Environment"
+  }
+];
 </script>
 
 <!-- ════ 3개국어 전환 JavaScript ════════════════════════ -->
