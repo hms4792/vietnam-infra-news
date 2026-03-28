@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietnam Infrastructure News Dashboard</title>
+    <style>
+        /* ── CSS 변수 (테마 색상) ── */
+        :root {
+            --primary:   #1a5276;
+            --secondary: #2e86c1;
+            --accent:    #f39c12;
+            --bg:        #f4f6f9;
+            --card-bg:   #ffffff;
+            --text:      #2c3e50;
+            --text-light:#7f8c8d;
+            --border:    #dce1e7;
+            --shadow:    0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 
+                         'Noto Sans KR', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ── 헤더 ── */
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            font-size: 0.9rem;
+            opacity: 0.85;
+        }
+
+        /* ── 언어 전환 버튼 ── */
+        .language-switcher {
+            display: flex;
+            gap: 8px;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+            padding: 8px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover,
+        .lang-btn.active {
+            background: white;
+            color: var(--primary);
+            border-color: white;
+        }
+
+        /* ── 통계 바 ── */
+        .stats-bar {
+            background: white;
+            padding: 16px 32px;
+            display: flex;
+            gap: 32px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* ── 필터 바 ── */
+        .filter-bar {
+            padding: 16px 32px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-bar input {
+            flex: 1;
+            min-width: 200px;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .filter-bar input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(46,134,193,0.15);
+        }
+
+        .sector-filter-btn {
+            padding: 6px 14px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .sector-filter-btn:hover,
+        .sector-filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ── 기사 카드 그리드 ── */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 20px;
+            padding: 24px 32px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .article-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            border-left: 4px solid var(--secondary);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .article-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .sector-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px;
+            background: var(--secondary);
+            color: white;
+        }
+
+        /* 섹터별 색상 */
+        .sector-ww { background: #1abc9c; }
+        .sector-ws { background: #3498db; }
+        .sector-sw { background: #e67e22; }
+        .sector-pw { background: #e74c3c; }
+        .sector-og { background: #8e44ad; }
+        .sector-ip { background: #2ecc71; }
+        .sector-sc { background: #f39c12; }
+        .sector-tr { background: #16a085; }
+        .sector-cn { background: #7f8c8d; }
+
+        .article-date {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .article-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            color: var(--primary);
+        }
+
+        .article-summary {
+            font-size: 0.88rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .read-more {
+            margin-left: auto;
+            color: var(--secondary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .read-more:hover { text-decoration: underline; }
+
+        .no-articles {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* ── 반응형 ── */
+        @media (max-width: 768px) {
+            .dashboard-header { padding: 16px; }
+            .articles-grid { padding: 16px; grid-template-columns: 1fr; }
+            .stats-bar { padding: 12px 16px; gap: 16px; }
+            .filter-bar { padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ════ 헤더 ════════════════════════════════════════════ -->
+<header class="dashboard-header">
+    <div class="header-title">
+        <h1>🇻🇳 Vietnam Infrastructure News</h1>
+        <p>
+            <span data-en="Automated Infrastructure Intelligence Dashboard"
+                  data-ko="자동화 인프라 인텔리전스 대시보드"
+                  data-vi="Bảng tin hạ tầng tự động">
+                Automated Infrastructure Intelligence Dashboard
+            </span>
+            &nbsp;|&nbsp; Updated: 2026-03-28
+        </p>
+    </div>
+
+    <!-- ★ 3개국어 전환 버튼 -->
+    
+<div class="language-switcher" role="navigation" aria-label="Language selector">
+    <button id="btn-en" class="lang-btn active"
+            onclick="setLanguage('en')"
+            title="Switch to English">
+        🇺🇸 EN
+    </button>
+    <button id="btn-ko" class="lang-btn"
+            onclick="setLanguage('ko')"
+            title="한국어로 전환">
+        🇰🇷 KO
+    </button>
+    <button id="btn-vi" class="lang-btn"
+            onclick="setLanguage('vi')"
+            title="Chuyển sang Tiếng Việt">
+        🇻🇳 VI
+    </button>
+</div>
+
+</header>
+
+<!-- ════ 통계 바 ════════════════════════════════════════ -->
+<div class="stats-bar">
+    <div class="stat-item">
+        <div class="stat-value">0</div>
+        <div class="stat-label"
+             data-en="Total Articles"
+             data-ko="전체 기사"
+             data-vi="Tổng bài viết">Total Articles</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-value">0</div>
+        <div class="stat-label"
+             data-en="Today"
+             data-ko="오늘"
+             data-vi="Hôm nay">Today</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-value">0</div>
+        <div class="stat-label"
+             data-en="Sectors"
+             data-ko="섹터"
+             data-vi="Lĩnh vực">Sectors</div>
+    </div>
+</div>
+
+<!-- ════ 필터 바 ══════════════════════════════════════════ -->
+<div class="filter-bar">
+    <input type="text"
+           id="search-input"
+           placeholder="Search articles..."
+           oninput="searchArticles(this.value)">
+    <button class="sector-filter-btn active" data-sector="all">All</button>
+
+</div>
+
+<!-- ════ 기사 카드 그리드 ═══════════════════════════════ -->
+<main class="articles-grid" id="articles-container">
+    <div class="no-articles">No articles available today.</div>
+</main>
+
+<!-- ════ 백엔드 데이터 (JavaScript용) ══════════════════════ -->
+<!-- 
+    BACKEND_DATA: 전체 기사 데이터를 JavaScript 객체로 저장
+    title/summary는 각 언어별 객체로 구성되어 언어 전환 시 사용
+-->
+<script>
+const BACKEND_DATA = [];
+</script>
+
+<!-- ════ 3개국어 전환 JavaScript ════════════════════════ -->
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// 3개국어 전환 JavaScript
+// ═══════════════════════════════════════════════════════════
+// 동작 원리:
+//   1. 언어 버튼 클릭 → setLanguage('en'|'ko'|'vi') 호출
+//   2. data-en / data-ko / data-vi 속성을 가진 모든 요소 탐색
+//   3. 해당 속성값으로 요소의 텍스트 교체
+//
+// 필수 조건:
+//   HTML 요소에 data-en, data-ko, data-vi 속성이 있어야 함!
+//   (dashboard_updater.py에서 카드 생성 시 반드시 포함)
+// ═══════════════════════════════════════════════════════════
+
+let currentLang = 'en';  // 기본 언어: 영어
+
+function setLanguage(lang) {
+    currentLang = lang;
+    
+    // ① 모든 다국어 요소 일괄 업데이트
+    // 'data-en' 속성이 있는 모든 요소를 대상으로 함
+    document.querySelectorAll('[data-en]').forEach(function(el) {
+        const text = el.dataset[lang];  // el.dataset.en / el.dataset.ko / el.dataset.vi
+        if (text && text.trim() !== '') {
+            el.textContent = text;
+        }
+    });
+
+    // ② 버튼 active 상태 업데이트
+    document.querySelectorAll('.lang-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+    });
+    const activeBtn = document.getElementById('btn-' + lang);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    // ③ html lang 속성 업데이트 (접근성)
+    document.documentElement.lang = lang === 'ko' ? 'ko' : lang === 'vi' ? 'vi' : 'en';
+
+    // ④ localStorage에 선택 언어 저장 (페이지 재방문 시 유지)
+    try { localStorage.setItem('preferred_lang', lang); } catch(e) {}
+}
+
+// 페이지 로드 시 저장된 언어 복원
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        const saved = localStorage.getItem('preferred_lang') || 'en';
+        setLanguage(saved);
+    } catch(e) {
+        setLanguage('en');
+    }
+    
+    // 필터 초기화
+    initFilters();
+});
+
+// ── 섹터/지역 필터 기능 ──────────────────────────────────
+function initFilters() {
+    // 섹터 필터
+    document.querySelectorAll('.sector-filter-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const sector = this.dataset.sector || 'all';
+            filterBySector(sector);
+            document.querySelectorAll('.sector-filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+}
+
+function filterBySector(sector) {
+    document.querySelectorAll('.article-card').forEach(function(card) {
+        if (sector === 'all' || card.dataset.sector === sector) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// 검색 기능
+function searchArticles(query) {
+    const q = query.toLowerCase().trim();
+    document.querySelectorAll('.article-card').forEach(function(card) {
+        const title   = (card.querySelector('.article-title')   || {}).textContent || '';
+        const summary = (card.querySelector('.article-summary') || {}).textContent || '';
+        const match   = title.toLowerCase().includes(q) || summary.toLowerCase().includes(q);
+        card.style.display = (q === '' || match) ? '' : 'none';
+    });
+}
+</script>
+
+
+<!-- ════ 페이지 로드 확인 ═════════════════════════════════ -->
+<script>
+console.log('[Dashboard] 로드 완료');
+console.log('[Dashboard] 기사 수:', BACKEND_DATA.length);
+console.log('[Dashboard] 다국어 요소 수:', document.querySelectorAll('[data-en]').length);
+</script>
+
+</body>
+</html>
