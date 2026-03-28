@@ -104,9 +104,25 @@ def build_html(total, weekly):
 
 def send_email():
     """이메일 발송 메인 함수"""
-    gmail_user = os.environ.get("GMAIL_ADDRESS", "").strip()
-    gmail_pw   = os.environ.get("GMAIL_APP_PASSWORD", "").strip()
+# 환경변수 여러 이름으로 시도 (yml env 전달 방식 차이 대응)
+gmail_user = (
+    os.environ.get("GMAIL_ADDRESS") or
+    os.environ.get("gmail_address") or
+    ""
+).strip()
 
+gmail_pw = (
+    os.environ.get("GMAIL_APP_PASSWORD") or
+    os.environ.get("gmail_app_password") or
+    ""
+).strip()
+
+# 디버그: 어떤 환경변수가 있는지 확인 (비밀값은 출력 안 함)
+print(f"[Email] 환경변수 확인:")
+print(f"  GMAIL_ADDRESS 있음: {bool(gmail_user)}")
+print(f"  GMAIL_APP_PASSWORD 있음: {bool(gmail_pw)}")
+gmail_keys = [k for k in os.environ.keys() if 'GMAIL' in k.upper()]
+print(f"  GMAIL 관련 키 목록: {gmail_keys}")
     if not gmail_user or not gmail_pw:
         print("[Email] GMAIL_ADDRESS 또는 GMAIL_APP_PASSWORD Secret 미설정")
         sys.exit(0)
