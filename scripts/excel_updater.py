@@ -236,10 +236,12 @@ class ExcelUpdater:
             ("summary_en",    55), ("summary_vi",      55),
         ]
 
-        # 헤더 설정 (비어있을 때만)
-        if ws.max_row == 0 or ws.cell(1, 1).value is None:
+        # 헤더 설정 (비어있거나 구버전 8컬럼이면 14컬럼으로 업그레이드)
+        current_header_count = sum(1 for c in range(1, 15) if ws.cell(1, c).value)
+        if ws.max_row == 0 or ws.cell(1, 1).value is None or current_header_count < 14:
             _set_header_row(ws, COLS, HDR_STYLE)
             ws.row_dimensions[1].height = 22
+            logger.info(f"  News Database 헤더 업그레이드: {current_header_count}→14컬럼")
 
         # 기존 URL 수집 (중복 방지)
         existing_urls = set()
