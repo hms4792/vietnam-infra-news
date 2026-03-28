@@ -21,8 +21,8 @@ logger = logging.getLogger(__name__)
 CLAUDE_MODEL   = "claude-haiku-4-5-20251001"   # 비용 효율적 모델
 MAX_TOKENS     = 800
 BATCH_SIZE     = 5    # 한 번에 처리할 기사 수 (API 부하 조절)
-RETRY_COUNT    = 3    # API 실패 시 재시도 횟수
-RETRY_DELAY    = 2.0  # 재시도 대기 시간(초)
+RETRY_COUNT    = 5    # API 실패 시 재시도 횟수
+RETRY_DELAY    = 10.0  # 재시도 대기 시간(초)
 
 
 class AISummarizer:
