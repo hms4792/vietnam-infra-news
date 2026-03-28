@@ -263,7 +263,7 @@ class ExcelUpdater:
                 article.get("province", "") or get_province_from_text(
                     article.get("title", "")) if PROVINCE_OK else article.get("province", ""),
                 article.get("title_en") or article.get("title", ""),
-                str(article.get("date", ""))[:10],
+                str(article.get("date") or article.get("published_date", ""))[:10],
                 article.get("source", ""),
                 url,
                 article.get("summary_en", "")[:200],
@@ -422,7 +422,7 @@ class ExcelUpdater:
                 article.get("sector", ""),
                 matched_kw,
                 province,
-                str(article.get("date", ""))[:10],
+                str(article.get("date") or article.get("published_date", ""))[:10],
                 article.get("title_en") or article.get("title", ""),
                 article.get("source", ""),
                 url,
