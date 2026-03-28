@@ -85,6 +85,9 @@ jobs:
             echo "excel committed"
           fi
 
+      - name: Batch translate old articles
+        run: python3 scripts/batch_translate.py --batch 20
+
       - name: Commit Dashboard to GitHub Pages
         if: always()
         run: |
