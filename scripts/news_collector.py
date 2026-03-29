@@ -1458,6 +1458,10 @@ if __name__ == "__main__":
     p.add_argument('--threshold',  type=int, default=MIN_CLASSIFY_THRESHOLD,
                    help='Min classification score (default: 2)')
     p.add_argument('--gnews',      action='store_true', help='Enable Google News API')
+    # [메모리 항목7] main.py Step1→2→3→4 순서 준수:
+    # --no-excel: Excel 저장 생략 → 번역 후 ExcelUpdater(Step3)가 저장
+    p.add_argument('--no-excel',   action='store_true',
+                   help='Skip Excel update (used when main.py handles ExcelUpdater)')
     args = p.parse_args()
 
     HOURS_BACK             = args.hours_back
@@ -1472,7 +1476,36 @@ if __name__ == "__main__":
     print("=" * 60)
 
     cnt, arts, stats = collect_news(HOURS_BACK)
-    update_excel_database(arts, stats)
+
+    if args.no_excel:
+        # [메모리 항목7] main.py 경유 시: Excel 저장 스킵
+        # 수집 결과를 JSON으로 저장 → main.py의 ExcelUpdater가 처리
+        import json
+        _out = {
+            'count': cnt,
+            'articles': [
+                {k: v for k, v in a.items() if k != 'url_hash'}
+                for a in arts
+            ],
+            'stats': {
+                src: {
+                    'url':            st.get('url',''),
+                    'status':         st.get('status',''),
+                    'entries_found':  st.get('entries_found', 0),
+                    'collected':      st.get('collected', 0),
+                    'error':          st.get('error',''),
+                }
+                for src, st in stats.items()
+            }
+        }
+        _json_path = os.environ.get('COLLECTOR_OUTPUT', 'data/collector_output.json')
+        Path(_json_path).parent.mkdir(parents=True, exist_ok=True)
+        with open(_json_path, 'w', encoding='utf-8') as _f:
+            json.dump(_out, _f, ensure_ascii=False, default=str)
+        log(f"Saved {cnt} articles to {_json_path} (Excel update deferred to ExcelUpdater)")
+    else:
+        # 단독 실행 시: Excel 직접 업데이트 (기존 동작 유지)
+        update_excel_database(arts, stats)
 
     print("\nRSS SOURCE STATUS:")
     for src, st in stats.items():
