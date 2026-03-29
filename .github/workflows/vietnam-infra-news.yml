@@ -81,6 +81,18 @@ jobs:
           echo "Order      : collect -> translate(MyMemory) -> excel"
           python3 scripts/news_collector.py --hours-back $HOURS_BACK
 
+      # 소급 번역: title_ko 비어있는 기존 기사 20건씩 처리 [메모리항목15]
+      - name: Batch translate untranslated articles
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+          BATCH_SIZE: '20'
+        run: |
+          if [ -f scripts/batch_translate.py ]; then
+            python3 scripts/batch_translate.py
+          else
+            echo "batch_translate.py not found, skipping"
+          fi
+
       # [메모리항목2] dashboard_template.html 사용
       - name: Generate dashboard
         env:
@@ -112,4 +124,4 @@ jobs:
           EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
-          python3 scripts/email_notifier.py || echo "Email notification skipped"
+          python3 scripts/send_email.py || echo "Email notification skipped"
