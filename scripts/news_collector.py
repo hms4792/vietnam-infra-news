@@ -1256,13 +1256,14 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
             ws.cell(row=nr, column=col_map['source'],   value=art.get('source', ''))
             ws.cell(row=nr, column=col_map['url'],      value=art.get('url', ''))
             ws.cell(row=nr, column=col_map['summary'],  value=art.get('summary', '')[:500])
-            # 번역 컬럼 (9~14): 빈 값으로 삽입 → ai_summarizer.py가 채워넣음
-            ws.cell(row=nr, column=col_map['title_ko'],   value='')
-            ws.cell(row=nr, column=col_map['title_en'],   value='')
-            ws.cell(row=nr, column=col_map['title_vi'],   value='')
-            ws.cell(row=nr, column=col_map['summary_ko'], value='')
-            ws.cell(row=nr, column=col_map['summary_en'], value='')
-            ws.cell(row=nr, column=col_map['summary_vi'], value='')
+            # 번역 컬럼 (9~14): translate_articles()가 채운 값을 저장
+            # [메모리항목7] translate_articles() 실행 후 이 함수 호출 → 번역값 존재
+            ws.cell(row=nr, column=col_map['title_ko'],   value=art.get('title_ko',''))
+            ws.cell(row=nr, column=col_map['title_en'],   value=art.get('title_en',''))
+            ws.cell(row=nr, column=col_map['title_vi'],   value=art.get('title_vi',''))
+            ws.cell(row=nr, column=col_map['summary_ko'], value=art.get('summary_ko',''))
+            ws.cell(row=nr, column=col_map['summary_en'], value=art.get('summary_en',''))
+            ws.cell(row=nr, column=col_map['summary_vi'], value=art.get('summary_vi',''))
             for c in range(1, 15):
                 ws.cell(row=nr, column=c).fill   = NEW_FILL
                 ws.cell(row=nr, column=c).font   = NEW_FONT
