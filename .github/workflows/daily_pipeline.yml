@@ -1,0 +1,185 @@
+# ════════════════════════════════════════════════════════════════════════
+# Vietnam Infrastructure News Pipeline — DAILY (매일 실행)
+#
+# 실행 스케줄: 매일 KST 20:00 (UTC 11:00)
+#   ※ 베트남 현지 기준 오후 6시 뉴스 집계 완료 → KST 오후 8시 수집
+#
+# 영구 제약 조건 (절대 변경 금지):
+#   - 번역: Google Translate (MyMemory → deep-translator 순)
+#            Anthropic API 번역 사용 금지 (GitHub Actions에서 연결 오류)
+#   - 대시보드: dashboard_template.html 기반 렌더링 → docs/index.html 출력
+#   - 배포: main 브랜치 → /docs 폴더 (gh-pages 브랜치 금지)
+#   - Email Secret: EMAIL_USERNAME / EMAIL_PASSWORD (다른 이름 사용 금지)
+#   - main.py 실행 순서: collect → summarize → excel → dashboard (고정)
+#   - yml 내 Python 인라인 코드 금지 (별도 .py 파일 사용)
+#   - ExcelUpdater 메서드: update_all(articles) 사용
+# ════════════════════════════════════════════════════════════════════════
+
+name: Vietnam Infra News — Daily Pipeline
+
+on:
+  # ─────────────────────────────────────────────────────────────────────
+  # 자동 스케줄: 매일 KST 20:00 실행
+  # KST(UTC+9) 20:00 = UTC 11:00
+  # Cron 형식: 분 시 * * *  (* = 매일, 요일 무관)
+  # ─────────────────────────────────────────────────────────────────────
+  schedule:
+    - cron: '0 11 * * *'   # UTC 11:00 = KST 20:00, 매일 실행 (휴일 포함)
+
+  # 수동 실행 트리거 (테스트 및 긴급 수집용)
+  workflow_dispatch:
+    inputs:
+      hours_back:
+        description: '수집 기간 (시간 단위, 기본값: 24 = 하루치)'
+        required: false
+        default: '24'
+        type: string
+      mode:
+        description: '실행 모드'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - full           # 전체 파이프라인 (수집 + 번역 + Excel + 대시보드 + 이메일)
+          - collect-only   # 수집만 (테스트용)
+          - dashboard-only # 대시보드 재생성만 (긴급 수정용)
+
+# GitHub Actions에 저장소 쓰기 권한 부여
+permissions:
+  contents: write  # Git commit & push 허용
+
+jobs:
+  daily-pipeline:
+    name: Daily News Collection & Dashboard Update
+    runs-on: ubuntu-latest
+    timeout-minutes: 30   # 일간 수집은 30분으로 충분
+
+    env:
+      # ── 수집 기간 ─────────────────────────────────────────────────
+      # 수동 실행 시 입력값 사용 / 스케줄 실행 시 기본값 24시간
+      HOURS_BACK: ${{ github.event.inputs.hours_back || '24' }}
+      RUN_MODE:   ${{ github.event.inputs.mode || 'full' }}
+
+      # ── 이메일 시크릿 (기존 등록 값 그대로 사용) ──────────────────
+      # ⚠️ GMAIL_ADDRESS / GMAIL_APP_PASSWORD 이름은 존재하지 않음
+      EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+
+      # ── Python 환경 ────────────────────────────────────────────────
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+      TZ: "Asia/Seoul"   # 컨테이너 타임존 → 로그 시각을 KST로 표시
+
+    steps:
+
+      # ── Step 1: 저장소 체크아웃 ────────────────────────────────────
+      # fetch-depth: 0 → 전체 커밋 히스토리 포함 (Excel DB 이력 보존용)
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # ── Step 2: Python 3.11 설정 ───────────────────────────────────
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'   # pip 캐시로 설치 속도 향상
+
+      # ── Step 3: 의존성 패키지 설치 ────────────────────────────────
+      # deep-translator: Google Translate API (무료, 인증 불필요)
+      # openpyxl: Excel .xlsx 파일 읽기/쓰기
+      # feedparser: RSS 피드 파싱
+      # python-dateutil: 날짜 파싱 유틸리티
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install \
+            requests \
+            beautifulsoup4 \
+            feedparser \
+            pandas \
+            openpyxl \
+            lxml \
+            python-dateutil \
+            pytz \
+            deep-translator
+          echo "=== 설치 확인 ==="
+          pip show deep-translator | grep -E "Name|Version"
+          pip show openpyxl | grep -E "Name|Version"
+          echo "패키지 설치 완료"
+
+      # ── Step 4: 작업 디렉토리 생성 ────────────────────────────────
+      # docs/ → GitHub Pages 배포 대상 폴더 (main 브랜치 /docs)
+      - name: Prepare Working Directories
+        run: |
+          mkdir -p data/database
+          mkdir -p docs
+          echo "디렉토리 준비 완료"
+
+      # ── Step 5: 메인 파이프라인 실행 ──────────────────────────────
+      # main.py 내부 실행 순서 (고정, 변경 금지):
+      #   1) collect_news(hours_back)     ← news_collector.py
+      #   2) AISummarizer 번역            ← ai_summarizer.py (Google Translate)
+      #   3) ExcelUpdater.update_all()    ← excel_updater.py
+      #   4) DashboardUpdater.generate()  ← dashboard_updater.py → docs/index.html
+      - name: Run Daily Pipeline
+        run: |
+          echo "=== 파이프라인 시작 ==="
+          echo "실행 모드: ${{ env.RUN_MODE }}"
+          echo "수집 기간: ${{ env.HOURS_BACK }}시간"
+          echo "실행 시각: $(date '+%Y-%m-%d %H:%M:%S KST')"
+          python3 scripts/main.py \
+            --mode ${{ env.RUN_MODE }} \
+            --hours-back ${{ env.HOURS_BACK }}
+          echo "=== 파이프라인 완료 ==="
+
+      # ── Step 6: Excel DB 커밋 ─────────────────────────────────────
+      # 새 기사가 없으면 커밋하지 않음 (git diff 확인)
+      - name: Commit Excel Database to Repository
+        if: always()   # 파이프라인 실패해도 데이터 보존
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/database/ || true
+          if git diff --staged --quiet; then
+            echo "Excel DB 변경 없음 — 커밋 생략"
+          else
+            git commit -m "Daily DB Update [$(date '+%Y-%m-%d')] Run#${{ github.run_number }}"
+            git push
+            echo "Excel DB 커밋 완료"
+          fi
+
+      # ── Step 7: 대시보드(docs/) 커밋 ─────────────────────────────
+      # docs/index.html → GitHub Pages 자동 배포
+      # 배포 설정: Settings → Pages → Branch: main / Folder: /docs
+      - name: Commit Dashboard to GitHub Pages (docs/)
+        if: always()
+        run: |
+          git add docs/ || true
+          if git diff --staged --quiet; then
+            echo "대시보드 변경 없음 — 커밋 생략"
+          else
+            git commit -m "Daily Dashboard [$(date '+%Y-%m-%d')] Run#${{ github.run_number }}"
+            git push
+            echo "대시보드 커밋 완료"
+          fi
+
+      # ── Step 8: 이메일 알림 발송 ─────────────────────────────────
+      # send_email.py 내부에서 EMAIL_USERNAME / EMAIL_PASSWORD 환경변수 참조
+      - name: Send Email Notification
+        if: always()
+        run: python3 scripts/send_email.py
+
+      # ── Step 9: 실행 로그 업로드 (7일 보관) ──────────────────────
+      - name: Upload Pipeline Log (Artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-log-${{ github.run_number }}-${{ github.run_attempt }}
+          path: |
+            *.log
+            logs/
+          retention-days: 7    # 일간 로그는 7일만 보관 (용량 절감)
+          if-no-files-found: ignore
