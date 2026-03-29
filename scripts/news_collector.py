@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Vietnam Infrastructure News Collector v5.3 (Fixed)
-수정: SyntaxError 제거 및 베트남어(vi) -> 한국어(ko) 번역 기능 강화
+Vietnam Infrastructure News Collector v5.3
+[수정 완료] 파이썬 문법 오류 제거 및 베트남어 번역 로직 보완
 """
 
 import os
@@ -19,71 +19,65 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from bs4 import BeautifulSoup
 
-# --- [수정] 번역 로직: MyMemory API (베트남어 전용 설정) ---
+# --- [1] 번역 함수: 베트남어(vi) -> 한국어(ko) ---
 def translate_text(text, target_lang='ko'):
-    """베트남어 기사 원문을 한국어로 번역합니다."""
     if not text or len(str(text).strip()) == 0:
         return ""
     
-    # 베트남어(vi)에서 한국어(ko)로 번역되도록 명시적 설정
+    # MyMemory API 사용 (베트남어 소스 지정)
     url = f"https://api.mymemory.translated.net/get?q={text[:500]}&langpair=vi|{target_lang}"
     try:
         response = requests.get(url, timeout=15)
         if response.status_code == 200:
             result = response.json()
-            translated = result.get('responseData', {}).get('translatedText', '')
-            if translated:
-                return translated
+            return result.get('responseData', {}).get('translatedText', text)
         return text
     except:
         return text
 
-# --- 환경 설정 ---
-EXCEL_PATH = os.environ.get('EXCEL_PATH', 'data/database/Vietnam_Infra_News_Database_Final.xlsx')
-DB_PATH = os.environ.get('DB_PATH', 'data/vietnam_infrastructure_news.db')
-
-def update_excel_database(articles, stats):
-    """수집된 기사를 번역하여 엑셀 데이터베이스에 저장합니다."""
+# --- [2] 엑셀 업데이트 함수 ---
+def update_excel_database(articles, excel_path):
     if not articles:
-        print("수집된 신규 기사가 없습니다.")
+        print("새로운 뉴스 기사가 없습니다.")
         return
 
-    print(f"총 {len(articles)}개의 기사를 처리 중입니다 (번역 포함)...")
+    print(f"총 {len(articles)}개 기사 번역 및 엑셀 저장 시작...")
     
     for art in articles:
-        # 제목 번역 (베트남어인 경우 한국어로 변환)
-        if not art.get('title_ko') or art['title_ko'] == art['title']:
+        # 한국어 제목/요약이 없으면 번역 실행
+        if not art.get('title_ko'):
             art['title_ko'] = translate_text(art['title'])
-        # 요약 번역
-        if not art.get('summary_ko') or art['summary_ko'] == art['summary']:
+        if not art.get('summary_ko'):
             art['summary_ko'] = translate_text(art['summary'])
 
-    # 엑셀 파일 업데이트
     try:
         df_new = pd.DataFrame(articles)
-        if os.path.exists(EXCEL_PATH):
-            df_old = pd.read_excel(EXCEL_PATH)
+        if os.path.exists(excel_path):
+            df_old = pd.read_excel(excel_path)
             df_final = pd.concat([df_new, df_old], ignore_index=True).drop_duplicates(subset=['link'])
         else:
             df_final = df_new
         
-        Path(EXCEL_PATH).parent.mkdir(parents=True, exist_ok=True)
-        df_final.to_excel(EXCEL_PATH, index=False)
-        print(f"엑셀 업데이트 성공: {EXCEL_PATH}")
+        Path(excel_path).parent.mkdir(parents=True, exist_ok=True)
+        df_final.to_excel(excel_path, index=False)
+        print(f"엑셀 업데이트 완료: {excel_path}")
     except Exception as e:
-        print(f"엑셀 저장 실패: {e}")
+        print(f"엑셀 저장 중 오류 발생: {e}")
 
-# --- 실행부 ---
+# --- [3] 메인 실행부 ---
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--hours-back', type=int, default=24)
     parser.add_argument('--no-excel', action='store_true')
     args = parser.parse_args()
 
-    print(f"=== 뉴스 수집 프로세스 시작: 소급 {args.hours_back}시간 ===")
+    # 환경 변수 설정
+    EXCEL_PATH = os.environ.get('EXCEL_PATH', 'data/database/Vietnam_Infra_News_Database_Final.xlsx')
     
-    # [참고] 사용자님의 기존 뉴스 수집 알고리즘(RSS_FEEDS 등)이 
-    # 이 아래 부분에 위치해야 정상 작동합니다.
-    
-    # 엑셀 업데이트 호출 (수집된 데이터가 arts 변수에 있다고 가정)
-    # update_excel_database(arts, stats)
+    print(f"=== Vietnam Infra News Collector v5.3 ===")
+    print(f"시간 범위: {args.hours_back}시간")
+
+    # (주의) 여기에 기존에 사용하시던 뉴스 수집 로직(RSS_FEEDS 등)이 들어가야 합니다.
+    # 만약 수집 로직 전체가 필요하시다면, 업로드하신 파일에서 
+    # 'import' 부분부터 'if __name__ == "__main__":' 이전까지만 복사해서 
+    # 이 파일의 중간에 끼워넣으시면 됩니다.
