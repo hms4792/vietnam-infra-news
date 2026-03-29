@@ -62,7 +62,7 @@ jobs:
       - name: 📰 Run news collector (v5.3)
         env:
           HOURS_BACK: ${{ github.event.inputs.hours_back || '168' }}
-          EXCEL_PATH: data/Vietnam_Infra_News_Database_Final.xlsx
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
           LANGUAGE_FILTER: all
           GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
@@ -76,7 +76,7 @@ jobs:
       # ── 5. 번역/요약 처리 ────────────────────────────────
       - name: 🌐 Translate & summarize articles
         env:
-          EXCEL_PATH: data/Vietnam_Infra_News_Database_Final.xlsx
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
         run: |
           if [ -f scripts/ai_summarizer.py ]; then
@@ -88,7 +88,7 @@ jobs:
       # ── 6. Excel DB 업데이트 ────────────────────────────
       - name: 📊 Update Excel database
         env:
-          EXCEL_PATH: data/Vietnam_Infra_News_Database_Final.xlsx
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
         run: |
           if [ -f scripts/excel_updater.py ]; then
@@ -100,7 +100,7 @@ jobs:
       # ── 7. 대시보드 재생성 ───────────────────────────────
       - name: 🖥️ Generate dashboard
         env:
-          EXCEL_PATH: data/Vietnam_Infra_News_Database_Final.xlsx
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
         run: |
           if [ -f scripts/dashboard_updater.py ]; then
             python3 scripts/dashboard_updater.py
