@@ -2,83 +2,69 @@
 # Vietnam Infrastructure News — 주간 수집 (오늘 1회 실행용)
 # 파일: .github/workflows/collect_weekly.yml
 #
-# 목적: 2026-03-29 오늘 1회 실행 → 지난 7일치 기사 수집 + 번역
-#       내일(2026-03-30)부터 daily_pipeline.yml 이 매일 자동 실행
+# 목적: 오늘 1회 수동 실행 → 지난 7일치 수집 + 번역 + Excel + 대시보드
+#       내일부터 daily_pipeline.yml 이 매일 자동 실행
 #
 # ★ 영구 제약 (절대 변경 금지):
-#   [1] 번역: Google Translate만 (MyMemory API). Anthropic API 금지
-#   [2] 대시보드: templates/dashboard_template.html 템플릿 사용
-#   [4] 이메일 Secret: EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_* 금지)
-#   [7] 실행순서: main.py → Step1(collect)→Step2(번역)→Step3(Excel)→Step4(대시보드)
-#       순서 절대 변경 금지 — 번역 전 Excel 저장 시 title_ko 빈값 고정
-#  [12] yml 내 python3 -c "..." 인라인 코드 금지 → 별도 .py 파일 호출
+#   [1] 번역: Google Translate (MyMemory API). Anthropic API 금지
+#   [2] 대시보드: templates/dashboard_template.html 사용
+#   [4] 이메일: EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_* 금지)
+#  [12] yml 내 python3 -c "..." 인라인 코드 금지
 # ============================================================
 
-name: 🗓️ Weekly Collection — 7일치 수집 (오늘 1회)
+name: Weekly Collection v5.3 (7days)
 
 on:
-  # 수동 실행 전용 (Actions 탭 → Run workflow 버튼)
   workflow_dispatch:
     inputs:
       hours_back:
         description: '소급 수집 시간 (기본 168 = 7일)'
         required: false
         default: '168'
-
-  # 매주 토요일 KST 18:00 = UTC 09:00 (정기 주간 백업용)
   schedule:
     - cron: '0 9 * * 6'
 
-# 동일 워크플로 중복 실행 방지
 concurrency:
   group: news-collection
   cancel-in-progress: false
 
 jobs:
   weekly_pipeline:
-    name: 📡 7일치 수집 → 번역 → Excel → 대시보드
+    name: Collect + Translate + Excel + Dashboard (7days)
     runs-on: ubuntu-latest
-    timeout-minutes: 55    # 주간 수집은 시간이 더 걸림
+    timeout-minutes: 55
 
     steps:
-      # ── 1. 레포지토리 체크아웃 ───────────────────────────
-      - name: 📥 Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # ── 2. Python 환경 설정 ──────────────────────────────
-      - name: 🐍 Set up Python 3.11
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      # ── 3. 의존성 설치 ──────────────────────────────────
-      # deep-translator: Google Translate (MyMemory API) 번역용 [메모리항목1]
-      - name: 📦 Install dependencies
+      # deep-translator: MyMemory API 번역용 [메모리항목1]
+      - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install requests feedparser beautifulsoup4 openpyxl lxml deep-translator
 
-      # ── 4. SQLite DB 동기화 ──────────────────────────────
-      # Excel DB 기준으로 SQLite 재동기화
-      # → 잘못된 실행으로 오염된 url_hash 제거 → 중복 스킵 방지
-      # [메모리항목12] 별도 .py 파일 호출
-      - name: 🔄 Sync SQLite from Excel DB
+      # SQLite 재동기화 — 중복 스킵 방지 [메모리항목12 별도파일]
+      - name: Sync SQLite from Excel DB
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
         run: |
           python3 scripts/reset_sqlite_db.py
 
-      # ── 5. 메인 파이프라인 실행 (7일치) ─────────────────
-      # [메모리항목7] main.py가 Step1→2→3→4 순서 보장:
-      #   Step1: collect_news(168)    ← 지난 7일치 RSS 수집
-      #   Step2: AISummarizer         ← Google Translate 번역 (MyMemory API)
-      #   Step3: ExcelUpdater.update_all() ← 번역 완료 후 Excel 저장
-      #   Step4: DashboardUpdater.generate() ← dashboard_template.html 사용
-      - name: 🚀 Run weekly pipeline (collect→translate→excel→dashboard)
+      # [메모리항목7] news_collector.py 내부 실행 순서 보장:
+      #   collect_news() -> translate_articles() -> update_excel_database()
+      #   번역 완료 후 Excel 저장 -> title_ko/en/vi 정상 기록
+      # [메모리항목1] MyMemory API, Anthropic API 절대 금지
+      - name: Collect + Translate + Save Excel (v5.3)
         env:
           HOURS_BACK: ${{ github.event.inputs.hours_back || '168' }}
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
@@ -86,19 +72,28 @@ jobs:
           LANGUAGE_FILTER: all
           GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
           ENABLE_GNEWS: 'false'
-          # [메모리항목4] 이메일 Secret 변수명 준수
           EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
-          echo "=== Vietnam Infra News Pipeline v5.3 (WEEKLY) ==="
-          echo "Hours back  : $HOURS_BACK (7일치)"
-          echo "Excel path  : $EXCEL_PATH"
-          echo "Step order  : collect → translate(Google) → excel → dashboard"
-          python3 main.py
+          echo "=== Vietnam Infra News Collector v5.3 (WEEKLY) ==="
+          echo "Hours back : $HOURS_BACK"
+          echo "Excel path : $EXCEL_PATH"
+          echo "Order      : collect -> translate(MyMemory) -> excel"
+          python3 scripts/news_collector.py --hours-back $HOURS_BACK
 
-      # ── 6. 변경사항 Git 커밋 & 푸시 ─────────────────────
-      # [메모리항목8] GitHub Pages: main 브랜치 /docs 폴더
-      - name: 💾 Commit and push changes
+      # [메모리항목2] dashboard_template.html 사용
+      - name: Generate dashboard
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+        run: |
+          if [ -f scripts/dashboard_updater.py ]; then
+            python3 scripts/dashboard_updater.py
+          else
+            echo "dashboard_updater.py not found, skipping"
+          fi
+
+      # [메모리항목8] main 브랜치 /docs 폴더 -> GitHub Pages
+      - name: Commit and push changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
@@ -106,13 +101,12 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "🗓️ Weekly collection (v5.3) — $(date '+%Y-%m-%d %H:%M UTC')"
+            git commit -m "Weekly v5.3 collect+translate -- $(date '+%Y-%m-%d %H:%M UTC')"
             git push
           fi
 
-      # ── 7. 이메일 알림 ──────────────────────────────────
-      # [메모리항목4] EMAIL_USERNAME / EMAIL_PASSWORD 사용 (GMAIL_* 금지)
-      - name: 📧 Send email notification
+      # [메모리항목4] EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_* 금지)
+      - name: Send email notification
         if: always()
         env:
           EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
