@@ -1083,7 +1083,12 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
         thin_side   = Side(style='thin', color='E2E8F0')
         thin_border = Border(bottom=thin_side)
 
-        col_map = {'area':1,'sector':2,'province':3,'title':4,'date':5,'source':6,'url':7,'summary':8}
+        col_map = {
+            'area':1,'sector':2,'province':3,'title':4,'date':5,
+            'source':6,'url':7,'summary':8,
+            'title_ko':9,'title_en':10,'title_vi':11,
+            'summary_ko':12,'summary_en':13,'summary_vi':14,
+        }
 
         def area_fill(area):
             a = str(area).lower()
@@ -1106,7 +1111,14 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
             ws.cell(row=nr, column=col_map['source'],   value=art.get('source', ''))
             ws.cell(row=nr, column=col_map['url'],      value=art.get('url', ''))
             ws.cell(row=nr, column=col_map['summary'],  value=art.get('summary', '')[:500])
-            for c in range(1, 9):
+            # 번역 컬럼 (9~14): 빈 값으로 삽입 → ai_summarizer.py가 채워넣음
+            ws.cell(row=nr, column=col_map['title_ko'],   value='')
+            ws.cell(row=nr, column=col_map['title_en'],   value='')
+            ws.cell(row=nr, column=col_map['title_vi'],   value='')
+            ws.cell(row=nr, column=col_map['summary_ko'], value='')
+            ws.cell(row=nr, column=col_map['summary_en'], value='')
+            ws.cell(row=nr, column=col_map['summary_vi'], value='')
+            for c in range(1, 15):
                 ws.cell(row=nr, column=c).fill   = NEW_FILL
                 ws.cell(row=nr, column=c).font   = NEW_FONT
                 ws.cell(row=nr, column=c).border = thin_border
@@ -1142,7 +1154,7 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
 
             log(f"  Sorted {max_row-1} rows newest-first | new=yellow env=green energy=yellow urban=purple")
 
-        for col, w in zip('ABCDEFGH', [18,22,20,60,12,22,50,60]):
+        for col, w in zip('ABCDEFGHIJKLMN', [18,22,20,60,12,22,50,60,40,40,40,50,50,50]):
             ws.column_dimensions[col].width = w
         ws.freeze_panes = 'A2'
 
@@ -1191,10 +1203,11 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
         for _r in range(2, ws_src.max_row + 1):
             _d = ws_src.cell(row=_r, column=1).value
             _u = ws_src.cell(row=_r, column=2).value
-            if _d:
-                _domain_idx[str(_d).lower().replace('www.','')] = _r
-            if _u:
+            # URL이 http로 시작하는 정상 행만 인덱싱 (separator·오염 행 제외)
+            if _u and str(_u).startswith('http'):
                 _url_idx[str(_u).rstrip('/')] = _r
+                if _d:
+                    _domain_idx[str(_d).lower().replace('www.','')] = _r
 
         def _ext_domain(_url):
             try:
