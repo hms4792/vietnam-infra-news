@@ -556,29 +556,29 @@ RSS_FEEDS = {
     # ✅ VietnamPlus 공식 RSS 페이지에서 직접 확인된 URL (경제/인프라)
     "VietnamPlus - Kinh te":           "https://www.vietnamplus.vn/rss/kinhte-311.rss",
     # ✅ Nhandan RSS 페이지에서 Môi trường 섹션 존재 확인
-    "Nhandan - Moi truong":            "https://nhandan.vn/moi-truong.rss",
+    "Nhandan - Moi truong":            "https://baotintuc.vn/moi-truong.rss",
     # ✅ feedspot 등재 확인 (환경경제 전문지)
-    "Kinhtemoitruong":                 "https://kinhtemoitruong.vn/feed",
+    "Kinhtemoitruong":                 "https://kinhtemoitruong.vn/rss",
     # ⚠️ 환경부 공식 신문 - RSS 직접 접근 차단, 표준 패턴 적용 (실패시 자동 스킵)
-    "Baotainguyenmoitruong":           "https://baotainguyenmoitruong.vn/rss/tin-moi-truong.rss",
+    "Baotainguyenmoitruong":           "https://baotainguyenmoitruong.vn/rss/tin-tuc.rss",
     # ──────────────────────────────────────────────────────────
     # [v5.3 신규 추가] P2: 북부 지역지 RSS
     # ──────────────────────────────────────────────────────────
     # ✅ Nhandan 경제 섹션 (전국 인프라 프로젝트 포함)
-    "Nhandan - Kinh te":               "https://nhandan.vn/kinhte.rss",
+    "Nhandan - Kinh te":               "https://baotintuc.vn/kinh-te.rss",
     # ✅ Source 시트 Accessible 확인 — 하노이 경제/인프라
-    "Hanoimoi - Kinh te":              "https://hanoimoi.com.vn/rss/kinh-te.rss",
+    "Hanoimoi - Kinh te":              "https://hanoimoi.vn/rss/kinh-te.rss",
     # ✅ Source 시트 Accessible 확인 — 박장성 산업단지 특화 (영문)
-    "Baobacgiang English":             "https://en.baobacgiang.vn/feed",
+    "Baobacgiang English":             "https://en.baobacgiang.vn/rss",
     # ⚠️ 꽝닌성 공식 신문 — 403 차단 가능, 실패시 자동 스킵
     "Baoquangninh - Kinh te":          "https://baoquangninh.vn/rss/kinh-te.rss",
     # ──────────────────────────────────────────────────────────
     # [v5.3 신규 추가] P3: 보조 환경/교통 RSS
     # ──────────────────────────────────────────────────────────
     # ✅ Source 시트 Accessible 확인 — 환경 전문
-    "Moitruong Net":                   "https://moitruong.net.vn/feed",
+    "Moitruong Net":                   "https://moitruong.net.vn/rss",
     # ✅ Source 시트 Accessible 확인 — 산업환경 전문
-    "Congnghiepmoitruong":             "https://congnghiepmoitruong.vn/feed",
+    "Congnghiepmoitruong":             "https://congnghiepmoitruong.vn/rss",
     # ✅ VietnamPlus 공식 RSS — 교통 인프라 (Transport 섹터 보완)
     "VietnamPlus - Giao thong":        "https://www.vietnamplus.vn/rss/xahoi/giaothong-358.rss",
     # ── 기존 환경/에너지 전문 소스 (v5.2 유지) ────────────────
