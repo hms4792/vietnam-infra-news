@@ -839,8 +839,38 @@ def init_database(db_path):
 
 
 def get_existing_hashes(conn):
+    """SQLite + Excel 양쪽에서 기존 URL hash를 수집.
+    Excel이 정보의 원천(source of truth) — SQLite 초기화되어도 중복 방지."""
+    # 1) SQLite에서 hash 수집
     cur = conn.execute("SELECT url_hash FROM articles")
-    return {row[0] for row in cur.fetchall()}
+    hashes = {row[0] for row in cur.fetchall()}
+
+    # 2) Excel DB Link 컬럼에서 URL → hash 변환하여 추가
+    _excel = os.environ.get('EXCEL_PATH', EXCEL_PATH)
+    try:
+        from pathlib import Path
+        if Path(_excel).exists():
+            import openpyxl
+            _wb = openpyxl.load_workbook(_excel, read_only=True, data_only=True)
+            _ws = _wb.active
+            # Link 컬럼 위치 찾기 (헤더에서 'Link' 또는 'URL' 검색)
+            _link_col = 7  # 기본값 (G열)
+            for _c in range(1, _ws.max_column + 1):
+                _h = str(_ws.cell(1, _c).value or '').lower()
+                if _h in ('link', 'url'):
+                    _link_col = _c
+                    break
+            # URL → hash 변환
+            for _row in _ws.iter_rows(min_row=2, values_only=True):
+                _url = _row[_link_col - 1] if _link_col - 1 < len(_row) else None
+                if _url and str(_url).startswith('http'):
+                    hashes.add(hashlib.md5(str(_url).encode()).hexdigest())
+            _wb.close()
+            log(f"  Loaded {len(hashes)} existing URL hashes (SQLite + Excel)")
+    except Exception as _e:
+        log(f"  Excel hash load warning: {_e}")
+
+    return hashes
 
 
 def save_article(conn, article):
