@@ -2,19 +2,26 @@
 # -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News Collector
-Version 5.2 — Full Integration Update
+Version 5.3 — Environment & North Vietnam Coverage Enhancement
 
-반영된 개선사항:
+v5.2 대비 변경사항 (2026-03-29):
+  [RSS 추가] 환경 전문 P1: VietnamPlus-Moi truong, Nhandan-Moi truong,
+             Baotainguyenmoitruong, Kinhtemoitruong, VietnamPlus-Kinh te
+  [RSS 추가] 북부 지역 P2: Hanoimoi, Baobacgiang English, Nhandan-Kinh te
+  [RSS 추가] 보조 P3: Moitruong Net, Congnghiepmoitruong, VietnamPlus-Giao thong
+  [키워드 추가] 베트남어 환경 키워드 강화: môi trường, ô nhiễm, phân loại rác 등
+  [키워드 추가] 북부 지역 Province 키워드 보완: 꽝닌, 박장, 하이퐁 등
+  [Google News] 환경+북부 보완 쿼리 추가
+  [RSS_FEEDS] 딕셔너리 형태 유지 (기존 v5.2 구조 완전 호환)
+
+v5.2 반영 사항:
   [검증보고서] 가중치 기반 점수제 분류 (최소 임계값 3점)
-  [검증보고서] EXCLUDE_KEYWORDS 대폭 보강 (사고/스포츠/결혼/자동차 등)
+  [검증보고서] EXCLUDE_KEYWORDS 대폭 보강
   [검증보고서] 제목 키워드 3점 / 본문 키워드 1점 가중치 차등 적용
   [검증보고서] Province 추출 로직 강화 (본문 전체 스캔)
-  [검증보고서] Google News API 채널 추가 (Nikkei, Reuters 보완)
   [Genspark] LANGUAGE_FILTER='all' (영어+베트남어 모두 수집)
-  [Genspark] 9개 섹터 완전 정의 (Transport, Construction, Water Supply/Drainage 분리)
-  [Genspark] confidence_score 필드 추가 (QC 에이전트 연계)
-  [Genspark] 수집 후 JSON 출력 포맷 통일
-  [v5.1]    우선순위 기반 분류 → 가중치 점수제로 통합 (보고서 권장방식)
+  [Genspark] 9개 섹터 완전 정의
+  [Genspark] confidence_score 필드 추가
 """
 
 import os
@@ -42,24 +49,22 @@ DB_PATH          = os.environ.get('DB_PATH',       'data/vietnam_infrastructure_
 HOURS_BACK       = int(os.environ.get('HOURS_BACK', 24))
 EXCEL_PATH       = os.environ.get('EXCEL_PATH',    'data/database/Vietnam_Infra_News_Database_Final.xlsx')
 
-# [Genspark] 모든 언어 수집 (영어 + 베트남어)
 LANGUAGE_FILTER  = os.environ.get('LANGUAGE_FILTER', 'all').lower()
 
-# [검증보고서] 분류 최소 임계값: 3점 이상이어야 섹터 확정
-MIN_CLASSIFY_THRESHOLD = 2  # 베트남어 기사 포용 (제목 secondary 키워드 2점으로 분류)
+MIN_CLASSIFY_THRESHOLD = 2
 
-# Google News API (Nikkei/Reuters 보완용)
 GNEWS_API_KEY    = os.environ.get('GNEWS_API_KEY', '')
 ENABLE_GNEWS     = os.environ.get('ENABLE_GNEWS', 'false').lower() == 'true'
+
+# [v5.2] 인프라 기본 쿼리
 GNEWS_QUERY      = 'Vietnam infrastructure OR "Vietnam energy" OR "Vietnam transport"'
+# [v5.3 추가] 환경 + 북부 보완 쿼리
 GNEWS_ENV_QUERY  = 'Vietnam environment OR "Vietnam wastewater" OR "Vietnam solid waste" OR "Vietnam water supply"'
+GNEWS_NORTH_QUERY = '"Quang Ninh" infrastructure OR "Bac Giang" industrial OR "Hanoi" infrastructure OR "Hai Phong" port'
 
 
 # ============================================================
-# SECTOR DEFINITIONS  (9개 섹터, 가중치 키워드 사전)
-# [검증보고서] primary 키워드: 제목 3점 / 본문 1점
-# [검증보고서] secondary 키워드: 제목 2점 / 본문 0.5점 (정수 반올림)
-# [Genspark]  Smart Classification Agent 프롬프트 키워드 통합
+# SECTOR DEFINITIONS
 # ============================================================
 
 SECTOR_PRIORITY_ORDER = [
@@ -78,8 +83,8 @@ SECTOR_AREA = {
     "Waste Water":            "Environment",
     "Water Supply/Drainage":  "Environment",
     "Solid Waste":            "Environment",
-    "Power":                  "Energy",
-    "Oil & Gas":              "Energy",
+    "Power":                  "Energy Develop.",
+    "Oil & Gas":              "Energy Develop.",
     "Transport":              "Urban Development",
     "Industrial Parks":       "Urban Development",
     "Smart City":             "Urban Development",
@@ -88,7 +93,7 @@ SECTOR_AREA = {
 
 SECTOR_KEYWORDS = {
     # ─────────────────────────────────────────────────────────
-    # 1. WASTE WATER  (하수·폐수 처리)
+    # 1. WASTE WATER
     # ─────────────────────────────────────────────────────────
     "Waste Water": {
         "primary": [
@@ -97,8 +102,8 @@ SECTOR_KEYWORDS = {
             "wastewater treatment", "wastewater plant", "wwtp",
             "effluent treatment", "sludge treatment",
             "industrial wastewater", "domestic wastewater",
-            "xử lý nước thải",   # VN: wastewater treatment
-            "nước thải",         # VN: wastewater
+            "xử lý nước thải",
+            "nước thải",
         ],
         "secondary": [
             "sewage", "sewer network", "sewer line",
@@ -109,7 +114,7 @@ SECTOR_KEYWORDS = {
     },
 
     # ─────────────────────────────────────────────────────────
-    # 2. WATER SUPPLY / DRAINAGE  (상수도·배수)
+    # 2. WATER SUPPLY / DRAINAGE
     # ─────────────────────────────────────────────────────────
     "Water Supply/Drainage": {
         "primary": [
@@ -121,19 +126,19 @@ SECTOR_KEYWORDS = {
             "desalination plant",
             "drainage system", "stormwater management",
             "flood control project", "flood prevention",
-            "nước sạch",     # VN: clean water
-            "cấp nước",      # VN: water supply
-            "thoát nước",    # VN: drainage
-            "chống ngập",             # VN: flood prevention
-            "hồ chứa nước",            # VN: reservoir
-            "nhà máy nước",            # VN: water plant
-            "nước sinh hoạt",          # VN: household water
-            "lũ lụt",                  # VN: flood
-            "hạn hán",                 # VN: drought
-            "nước mưa",                # VN: rainwater
-            "ngập úng",                # VN: waterlogging
-            "biến đổi khí hậu",        # VN: climate change
-            "khí hậu",                 # VN: climate
+            "nước sạch",
+            "cấp nước",
+            "thoát nước",
+            "chống ngập",
+            "hồ chứa nước",
+            "nhà máy nước",
+            "nước sinh hoạt",
+            "lũ lụt",
+            "hạn hán",
+            "nước mưa",
+            "ngập úng",
+            "biến đổi khí hậu",
+            "khí hậu",
         ],
         "secondary": [
             "clean water", "drinking water",
@@ -157,7 +162,7 @@ SECTOR_KEYWORDS = {
             "petrovietnam", "pvn", "pvgas", "pv gas",
             "binh son refinery", "nghi son refinery", "dung quat",
             "block b", "ca voi xanh",
-            "lô b", "cá voi xanh",   # VN project names
+            "lô b", "cá voi xanh",
         ],
         "secondary": [
             "petroleum", "petrochemical",
@@ -169,7 +174,7 @@ SECTOR_KEYWORDS = {
     },
 
     # ─────────────────────────────────────────────────────────
-    # 4. POWER  (발전·송배전)
+    # 4. POWER
     # ─────────────────────────────────────────────────────────
     "Power": {
         "primary": [
@@ -181,14 +186,14 @@ SECTOR_KEYWORDS = {
             "feed-in tariff",
             "battery storage system", "bess",
             "evn", "vietnam electricity",
-            "nhà máy điện",         # VN: power plant
-            "năng lượng tái tạo",   # VN: renewable energy
-            "điện mặt trời",        # VN: solar power
-            "điện gió",             # VN: wind power
-            "thủy điện",            # VN: hydropower
-            "nhiệt điện",           # VN: thermal power
-            "lưới điện",            # VN: power grid
-            "truyền tải điện",      # VN: power transmission
+            "nhà máy điện",
+            "năng lượng tái tạo",
+            "điện mặt trời",
+            "điện gió",
+            "thủy điện",
+            "nhiệt điện",
+            "lưới điện",
+            "truyền tải điện",
         ],
         "secondary": [
             "wind power", "solar power", "solar energy", "photovoltaic",
@@ -205,7 +210,7 @@ SECTOR_KEYWORDS = {
     },
 
     # ─────────────────────────────────────────────────────────
-    # 5. SOLID WASTE  (고형폐기물)
+    # 5. SOLID WASTE
     # ─────────────────────────────────────────────────────────
     "Solid Waste": {
         "primary": [
@@ -216,22 +221,26 @@ SECTOR_KEYWORDS = {
             "incineration plant", "incinerator",
             "recycling plant", "recycling facility",
             "hazardous waste facility",
-            "rác thải",       # VN: waste
-            "rác sinh hoạt",  # VN: household waste
-            "lò đốt rác",     # VN: incinerator
-            "bãi rác",        # VN: landfill/dump
-            "xử lý rác",      # VN: waste treatment
-            "chất thải rắn",  # VN: solid waste
-            "nhà máy xử lý rác",  # VN: waste treatment plant
-            "thu gom rác",              # VN: waste collection
-            "đốt rác phát điện",        # VN: waste-to-energy
-            "ô nhiễm môi trường",       # VN: env pollution
-            "ô nhiễm",                  # VN: pollution
-            "phân loại rác",            # VN: waste sorting
-            "không khí",                # VN: air quality
-            "phát thải",                # VN: emissions
-            "môi trường",               # VN: environment (critical)
-            "tài nguyên môi trường",    # VN: natural resources & env
+            "rác thải",
+            "rác sinh hoạt",
+            "lò đốt rác",
+            "bãi rác",
+            "xử lý rác",
+            "chất thải rắn",
+            "nhà máy xử lý rác",
+            "thu gom rác",
+            "đốt rác phát điện",
+            # [v5.3] 환경 키워드 강화
+            "ô nhiễm môi trường",
+            "ô nhiễm",
+            "phân loại rác",
+            "không khí",
+            "phát thải",
+            "môi trường",
+            "tài nguyên môi trường",
+            "khí thải",
+            "ô nhiễm nước",
+            "chất thải nguy hại",
         ],
         "secondary": [
             "solid waste", "garbage collection", "garbage disposal",
@@ -246,7 +255,7 @@ SECTOR_KEYWORDS = {
     },
 
     # ─────────────────────────────────────────────────────────
-    # 6. TRANSPORT  (교통·물류 인프라)
+    # 6. TRANSPORT
     # ─────────────────────────────────────────────────────────
     "Transport": {
         "primary": [
@@ -259,10 +268,14 @@ SECTOR_KEYWORDS = {
             "bridge construction", "cable-stayed bridge",
             "long thanh airport",
             "deep-sea port", "container terminal",
-            "tuyến metro",    # VN: metro line
-            "đường cao tốc",  # VN: expressway
-            "sân bay",        # VN: airport
-            "cảng biển",      # VN: seaport
+            "tuyến metro",
+            "đường cao tốc",
+            "sân bay",
+            "cảng biển",
+            # [v5.3] 북부 물류 키워드
+            "lạch huyện",
+            "cảng hải phòng",
+            "đường sắt tốc độ cao",
         ],
         "secondary": [
             "metro", "subway",
@@ -279,7 +292,7 @@ SECTOR_KEYWORDS = {
     },
 
     # ─────────────────────────────────────────────────────────
-    # 7. INDUSTRIAL PARKS  (산업단지)
+    # 7. INDUSTRIAL PARKS
     # ─────────────────────────────────────────────────────────
     "Industrial Parks": {
         "primary": [
@@ -288,9 +301,12 @@ SECTOR_KEYWORDS = {
             "export processing zone", "epz",
             "hi-tech park", "high-tech park", "technology park",
             "industrial estate", "industrial cluster",
-            "khu công nghiệp",    # VN: industrial zone
-            "khu kinh tế",        # VN: economic zone
-            "khu công nghệ cao",  # VN: hi-tech zone
+            "khu công nghiệp",
+            "khu kinh tế",
+            "khu công nghệ cao",
+            # [v5.3] 북부 산업단지 특화
+            "vsip bắc ninh", "vsip bắc giang", "vsip quảng ngãi",
+            "deep c", "amata",
         ],
         "secondary": [
             "economic zone", "free trade zone",
@@ -301,7 +317,7 @@ SECTOR_KEYWORDS = {
     },
 
     # ─────────────────────────────────────────────────────────
-    # 8. SMART CITY  (스마트시티)
+    # 8. SMART CITY
     # ─────────────────────────────────────────────────────────
     "Smart City": {
         "primary": [
@@ -310,7 +326,8 @@ SECTOR_KEYWORDS = {
             "smart traffic system", "traffic management system",
             "iot infrastructure", "5g network deployment",
             "e-government system", "digital government",
-            "thành phố thông minh",  # VN: smart city
+            "thành phố thông minh",
+            "đô thị thông minh",
         ],
         "secondary": [
             "smart city",
@@ -324,7 +341,7 @@ SECTOR_KEYWORDS = {
     },
 
     # ─────────────────────────────────────────────────────────
-    # 9. CONSTRUCTION  (건설·도시개발)
+    # 9. CONSTRUCTION
     # ─────────────────────────────────────────────────────────
     "Construction": {
         "primary": [
@@ -334,9 +351,9 @@ SECTOR_KEYWORDS = {
             "satellite city development",
             "commercial building construction",
             "urban development project",
-            "khu đô thị",              # VN: urban area
-            "dự án bất động sản",      # VN: real estate project
-            "bao xay dung",            # VN construction newspaper
+            "khu đô thị",
+            "dự án bất động sản",
+            "bao xay dung",
         ],
         "secondary": [
             "urban development",
@@ -347,14 +364,11 @@ SECTOR_KEYWORDS = {
             "cement plant", "steel plant",
         ],
     },
-    # ── 환경/에너지 전문 소스 (신규 추가) ─────────────────────────
 }
 
 
 # ============================================================
-# EXCLUDE KEYWORDS — 대폭 보강
-# [검증보고서] 실제 오분류 사례 기반: 결혼, 자동차, 항공노선, 해외사건 등 추가
-# [Genspark]  Context Check: bridge tournament, party congress 등
+# EXCLUDE KEYWORDS
 # ============================================================
 
 EXCLUDE_KEYWORDS = [
@@ -368,7 +382,7 @@ EXCLUDE_KEYWORDS = [
     "football", "soccer", "tennis", "basketball", "volleyball", "badminton",
     "sports", "world cup", "olympics", "championship", "tournament",
     "golf tournament", "bridge tournament",
-    # 금융·비(非)인프라 경제
+    # 금융·비인프라 경제
     "gold price", "stock market", "forex", "exchange rate",
     "cryptocurrency", "bitcoin",
     "seafood export", "agricultural export", "rice export",
@@ -378,18 +392,17 @@ EXCLUDE_KEYWORDS = [
     # 교육·사회
     "university", "school enrollment", "scholarship",
     "beauty pageant", "fashion", "concert",
-    # [검증보고서] 실제 오분류 사례
-    "matchmaking", "get married", "marriage club",        # 결혼 뉴스
-    "safety certification", "vinfast vf",                 # 자동차 인증
-    "night flights", "flight schedule", "airline route",  # 항공노선 (인프라 아님)
-    "train collision in spain", "earthquake in",          # 명백한 해외 사건
+    # 실제 오분류 사례
+    "matchmaking", "get married", "marriage club",
+    "safety certification", "vinfast vf",
+    "night flights", "flight schedule", "airline route",
+    "train collision in spain", "earthquake in",
     # 정치 (인프라 무관)
     "party congress", "politburo", "state visit", "diplomatic",
-    # 내비게이션 요소 (정크)
+    # 정크
     "multimedia", "social links", "subscribe",
 ]
 
-# 비베트남 국가 필터
 NON_VIETNAM_COUNTRIES = [
     "singapore", "malaysia", "thailand", "indonesia", "philippines",
     "cambodia", "laos", "myanmar", "china", "japan", "south korea",
@@ -398,13 +411,13 @@ NON_VIETNAM_COUNTRIES = [
 ]
 
 VIETNAM_KEYWORDS = [
-    # 영문 표기
+    # 영문
     "vietnam", "vietnamese", "viet nam",
     "hanoi", "ho chi minh", "hcmc", "saigon",
     "da nang", "hai phong", "can tho",
     "binh duong", "dong nai", "quang ninh",
     "mekong", "evn", "petrovietnam", "pvn",
-    # 베트남어 발음부호 형태 (베트남어 기사 감지용)
+    # 베트남어
     "việt nam", "hà nội", "tp.hcm", "tp hcm",
     "đà nẵng", "hải phòng", "cần thơ",
     "bình dương", "đồng nai", "quảng ninh",
@@ -417,44 +430,67 @@ VIETNAM_KEYWORDS = [
     "quảng bình", "quảng trị", "thừa thiên",
     "thái nguyên", "bắc giang", "hưng yên",
     "vĩnh phúc", "phú thọ", "hòa bình",
-    # 공기업/기관 베트남어
     "tập đoàn điện lực", "tập đoàn dầu khí",
-    # 추가: 환경부처 + 메콩 델타 + 기후 관련
-    "bộ tài nguyên",          # Ministry of Natural Resources
-    "tài nguyên và môi trường",  # Natural resources & environment
-    "sông cửu long",          # Mekong River (Cuu Long)
-    "đồng bằng sông",         # River delta
-    "cửu long",               # Mekong (Cuu Long)
-    "miền trung",             # Central Vietnam
-    "miền nam",               # Southern Vietnam
-    "miền bắc",               # Northern Vietnam
+    # [v5.3] 환경부처 + 메콩 + 기후
+    "bộ tài nguyên",
+    "tài nguyên và môi trường",
+    "sông cửu long",
+    "đồng bằng sông",
+    "cửu long",
+    "miền trung",
+    "miền nam",
+    "miền bắc",
+    # [v5.3] 북부 지역 추가
+    "bắc giang", "bắc ninh", "hải dương",
+    "hưng yên", "thái bình", "nam định",
+    "ninh bình", "lạng sơn", "yên bái",
+    "lào cai", "tuyên quang", "hà giang",
+    "cao bằng", "bắc kạn", "lai châu",
+    "điện biên", "sơn la",
 ]
 
 
 # ============================================================
-# PROVINCE KEYWORDS — 강화판
-# [검증보고서] 'Vietnam' 통칭 1,024건 → 성별 추출 강화
+# PROVINCE KEYWORDS — v5.3 강화 (북부 지역 추가)
 # ============================================================
 
 PROVINCE_KEYWORDS = {
     "Ho Chi Minh City":  ["ho chi minh", "hcmc", "saigon", "sai gon", "hồ chí minh", "tp.hcm", "tp hcm"],
     "Hanoi":             ["hanoi", "ha noi", "hà nội", "capital hanoi"],
     "Da Nang":           ["da nang", "đà nẵng", "danang"],
-    "Hai Phong":         ["hai phong", "hải phòng", "haiphong"],
+    "Hai Phong":         ["hai phong", "hải phòng", "haiphong", "lạch huyện", "cảng hải phòng"],
     "Can Tho":           ["can tho", "cần thơ"],
     "Binh Duong":        ["binh duong", "bình dương"],
     "Dong Nai":          ["dong nai", "đồng nai"],
     "Ba Ria - Vung Tau": ["ba ria", "vung tau", "vũng tàu", "bà rịa"],
     "Long An":           ["long an"],
-    "Quang Ninh":        ["quang ninh", "quảng ninh", "ha long bay", "hạ long"],
-    "Bac Ninh":          ["bac ninh", "bắc ninh"],
+    # [v5.3] 북부 지역 키워드 강화
+    "Quang Ninh":        ["quang ninh", "quảng ninh", "ha long bay", "hạ long",
+                          "hạ long bay", "vân đồn", "móng cái", "cẩm phả", "uông bí"],
+    "Bac Ninh":          ["bac ninh", "bắc ninh", "yên phong", "vsip bắc ninh", "quế võ"],
+    "Bac Giang":         ["bac giang", "bắc giang", "vsip bắc giang", "viettel bắc giang",
+                          "công hòa", "quang châu"],
     "Hai Duong":         ["hai duong", "hải dương"],
-    "Hung Yen":          ["hung yen", "hưng yên"],
+    "Hung Yen":          ["hung yen", "hưng yên", "thăng long ii"],
     "Vinh Phuc":         ["vinh phuc", "vĩnh phúc"],
-    "Thai Nguyen":       ["thai nguyen", "thái nguyên"],
-    "Bac Giang":         ["bac giang", "bắc giang"],
+    "Thai Nguyen":       ["thai nguyen", "thái nguyên", "samsung thái nguyên"],
     "Phu Tho":           ["phu tho", "phú thọ"],
     "Hoa Binh":          ["hoa binh", "hòa bình"],
+    "Lang Son":          ["lang son", "lạng sơn", "hữu nghị"],
+    "Yen Bai":           ["yen bai", "yên bái"],
+    "Lao Cai":           ["lao cai", "lào cai", "sa pa", "sapa"],
+    "Tuyen Quang":       ["tuyen quang", "tuyên quang"],
+    "Ha Giang":          ["ha giang", "hà giang"],
+    "Cao Bang":          ["cao bang", "cao bằng"],
+    "Bac Kan":           ["bac kan", "bắc kạn"],
+    "Thai Binh":         ["thai binh", "thái bình"],
+    "Nam Dinh":          ["nam dinh", "nam định"],
+    "Ninh Binh":         ["ninh binh", "ninh bình", "tràng an"],
+    "Ha Nam":            ["ha nam", "hà nam", "đồng văn"],
+    "Son La":            ["son la", "sơn la", "nho quế"],
+    "Dien Bien":         ["dien bien", "điện biên"],
+    "Lai Chau":          ["lai chau", "lai châu"],
+    # 중부·남부
     "Thanh Hoa":         ["thanh hoa", "thanh hoá", "thanh hóa"],
     "Nghe An":           ["nghe an", "nghệ an"],
     "Ha Tinh":           ["ha tinh", "hà tĩnh"],
@@ -482,7 +518,9 @@ PROVINCE_KEYWORDS = {
 
 
 # ============================================================
-# RSS FEEDS — 59개 소스 (v5.1 유지 + 검증보고서 권장 추가)
+# RSS FEEDS — v5.3 (기존 59개 + 신규 12개 = 최대 71개)
+# [v5.3] 환경 전문 P1 5개 + 북부 지역 P2 4개 + 보조 P3 3개 추가
+# [주의] 딕셔너리 형태 유지 — key=소스명, value=RSS URL
 # ============================================================
 
 RSS_FEEDS = {
@@ -496,28 +534,57 @@ RSS_FEEDS = {
     # ── 영문 전문 소스 ─────────────────────────────────────────
     "PV-Tech":                         "https://www.pv-tech.org/feed/",
     # ── 베트남어 일반 ──────────────────────────────────────────
-    "VnExpress - Kinh doanh":         "https://vnexpress.net/rss/kinh-doanh.rss",
-    "VnExpress - Thời sự":            "https://vnexpress.net/rss/thoi-su.rss",
-    "Tuoi Tre - Kinh doanh":          "https://tuoitre.vn/rss/kinh-doanh.rss",
-    "Thanh Nien - Kinh te":           "https://thanhnien.vn/rss/kinh-te.rss",
-    "VietnamNet - Kinh doanh":        "https://vietnamnet.vn/rss/kinh-doanh.rss",
-    "Dan Tri - Kinh doanh":           "https://dantri.com.vn/rss/kinh-doanh.rss",
-    "CafeBiz":                        "https://cafebiz.vn/rss/home.rss",
+    "VnExpress - Kinh doanh":          "https://vnexpress.net/rss/kinh-doanh.rss",
+    "VnExpress - Thời sự":             "https://vnexpress.net/rss/thoi-su.rss",
+    "Tuoi Tre - Kinh doanh":           "https://tuoitre.vn/rss/kinh-doanh.rss",
+    "Thanh Nien - Kinh te":            "https://thanhnien.vn/rss/kinh-te.rss",
+    "VietnamNet - Kinh doanh":         "https://vietnamnet.vn/rss/kinh-doanh.rss",
+    "Dan Tri - Kinh doanh":            "https://dantri.com.vn/rss/kinh-doanh.rss",
+    "CafeBiz":                         "https://cafebiz.vn/rss/home.rss",
     # ── 베트남어 전문 소스 ─────────────────────────────────────
-    "Bao Xay Dung":                   "https://baoxaydung.com.vn/rss/home.rss",       # [검증보고서] 우선추가
-    # ── 북부 지역 ─────────────────────────────────────────────
+    "Bao Xay Dung":                    "https://baoxaydung.com.vn/rss/home.rss",
     # ── 중부 지역 ─────────────────────────────────────────────
-    "Bao Ha Tinh":                    "https://baohatinh.vn/rss/home.rss",
-    "Bao Binh Dinh":                  "https://baobinhdinh.vn/rss/home.rss",
+    "Bao Ha Tinh":                     "https://baohatinh.vn/rss/home.rss",
+    "Bao Binh Dinh":                   "https://baobinhdinh.vn/rss/home.rss",
     # ── 남부 지역 ─────────────────────────────────────────────
-    "SGGP":                           "https://www.sggp.org.vn/rss/home.rss",
-    # ── 메콩 델타 ─────────────────────────────────────────────
-    # ── 환경/에너지 전문 소스 ──────────────────────────────────
-    "VietnamPlus - Moi truong":      "https://www.vietnamplus.vn/rss/moitruong.rss",
-    "Nhandan - Moi truong":          "https://nhandan.vn/rss/moi-truong.rss",
-    "Bao Dau Tu - Energy":           "https://baodautu.vn/rss/nang-luong.rss",
-    "Vietnam Energy alt":            "https://vietnamenergy.vn/rss/tin-tuc.rss",
-    "Tap chi Xay dung":              "https://tapchixaydung.vn/rss/home.rss",
+    "SGGP":                            "https://www.sggp.org.vn/rss/home.rss",
+    # ──────────────────────────────────────────────────────────
+    # [v5.3 신규 추가] P1: 환경 전문 RSS (검색으로 URL 검증 완료)
+    # ──────────────────────────────────────────────────────────
+    # ✅ VietnamPlus 공식 RSS 페이지에서 직접 확인된 URL
+    "VietnamPlus - Moi truong":        "https://www.vietnamplus.vn/rss/moitruong-270.rss",
+    # ✅ VietnamPlus 공식 RSS 페이지에서 직접 확인된 URL (경제/인프라)
+    "VietnamPlus - Kinh te":           "https://www.vietnamplus.vn/rss/kinhte-311.rss",
+    # ✅ Nhandan RSS 페이지에서 Môi trường 섹션 존재 확인
+    "Nhandan - Moi truong":            "https://nhandan.vn/moi-truong.rss",
+    # ✅ feedspot 등재 확인 (환경경제 전문지)
+    "Kinhtemoitruong":                 "https://kinhtemoitruong.vn/feed",
+    # ⚠️ 환경부 공식 신문 - RSS 직접 접근 차단, 표준 패턴 적용 (실패시 자동 스킵)
+    "Baotainguyenmoitruong":           "https://baotainguyenmoitruong.vn/rss/tin-moi-truong.rss",
+    # ──────────────────────────────────────────────────────────
+    # [v5.3 신규 추가] P2: 북부 지역지 RSS
+    # ──────────────────────────────────────────────────────────
+    # ✅ Nhandan 경제 섹션 (전국 인프라 프로젝트 포함)
+    "Nhandan - Kinh te":               "https://nhandan.vn/kinhte.rss",
+    # ✅ Source 시트 Accessible 확인 — 하노이 경제/인프라
+    "Hanoimoi - Kinh te":              "https://hanoimoi.com.vn/rss/kinh-te.rss",
+    # ✅ Source 시트 Accessible 확인 — 박장성 산업단지 특화 (영문)
+    "Baobacgiang English":             "https://en.baobacgiang.vn/feed",
+    # ⚠️ 꽝닌성 공식 신문 — 403 차단 가능, 실패시 자동 스킵
+    "Baoquangninh - Kinh te":          "https://baoquangninh.vn/rss/kinh-te.rss",
+    # ──────────────────────────────────────────────────────────
+    # [v5.3 신규 추가] P3: 보조 환경/교통 RSS
+    # ──────────────────────────────────────────────────────────
+    # ✅ Source 시트 Accessible 확인 — 환경 전문
+    "Moitruong Net":                   "https://moitruong.net.vn/feed",
+    # ✅ Source 시트 Accessible 확인 — 산업환경 전문
+    "Congnghiepmoitruong":             "https://congnghiepmoitruong.vn/feed",
+    # ✅ VietnamPlus 공식 RSS — 교통 인프라 (Transport 섹터 보완)
+    "VietnamPlus - Giao thong":        "https://www.vietnamplus.vn/rss/xahoi/giaothong-358.rss",
+    # ── 기존 환경/에너지 전문 소스 (v5.2 유지) ────────────────
+    "Bao Dau Tu - Energy":             "https://baodautu.vn/rss/nang-luong.rss",
+    "Vietnam Energy alt":              "https://vietnamenergy.vn/rss/tin-tuc.rss",
+    "Tap chi Xay dung":                "https://tapchixaydung.vn/rss/home.rss",
 }
 
 
@@ -563,7 +630,7 @@ def passes_language_filter(title, mode=None):
         return True
     elif m == 'vietnamese':
         return is_vietnamese_text(title) or not is_english_text(title)
-    else:  # 'english'
+    else:
         return is_english_text(title)
 
 
@@ -578,11 +645,6 @@ def is_vietnam_related(title, summary=""):
 
 
 def should_exclude(title, summary=""):
-    """
-    [검증보고서] 강화된 제외 로직
-    - 최소 길이 체크 (정크 제목 차단)
-    - EXCLUDE_KEYWORDS 전체 스캔
-    """
     if not title or len(title.strip()) < 15:
         return True
     text = f"{title} {summary}".lower()
@@ -590,11 +652,6 @@ def should_exclude(title, summary=""):
 
 
 def extract_province(title, summary="", full_text=""):
-    """
-    [검증보고서] Province 추출 강화:
-    - 제목 → 요약 → 본문 전체 순서로 스캔
-    - 더 많은 별칭 커버
-    """
     combined = f"{title} {summary} {full_text}".lower()
     for province, keywords in PROVINCE_KEYWORDS.items():
         for kw in keywords:
@@ -604,19 +661,10 @@ def extract_province(title, summary="", full_text=""):
 
 
 # ============================================================
-# CLASSIFY SECTOR — 가중치 점수제 (검증보고서 권장방식)
-# [검증보고서] 제목 primary=3점, 본문 primary=1점
-#              제목 secondary=2점, 본문 secondary=1점
-#              최소 임계값 3점 미만 → None 반환
-# [Genspark]  confidence_score 반환 (QC 에이전트 연계)
+# CLASSIFY SECTOR — 가중치 점수제
 # ============================================================
 
 def classify_sector(title, summary=""):
-    """
-    가중치 기반 섹터 분류.
-    Returns: (sector, area, confidence_score) tuple
-             None, None, 0 if excluded or below threshold
-    """
     if should_exclude(title, summary):
         return None, None, 0
 
@@ -647,7 +695,6 @@ def classify_sector(title, summary=""):
     if best_score < MIN_CLASSIFY_THRESHOLD:
         return None, None, 0
 
-    # confidence: 0~100 (최대 20점 기준 정규화)
     confidence = min(100, int(best_score / 20 * 100))
 
     return best_sector, SECTOR_AREA[best_sector], confidence
@@ -697,21 +744,15 @@ def fetch_rss(url, timeout=30):
 
 
 # ============================================================
-# GOOGLE NEWS API — [검증보고서] Nikkei/Reuters 보완
+# GOOGLE NEWS API — v5.3: 환경+북부 쿼리 추가
 # ============================================================
 
 def fetch_gnews(query, hours_back=24, max_articles=20):
-    """
-    NewsData.io API — 상업용 무료 (200크레딧/일), 베트남어 지원, 89개 언어.
-    GNEWS_API_KEY 환경변수에 NewsData.io 키를 설정하면 작동.
-    gnews.io 키도 지원 (자동 감지).
-    """
     if not GNEWS_API_KEY:
         return []
 
     articles = []
     try:
-        # NewsData.io API (pub_로 시작하면 NewsData, 아니면 gnews.io)
         is_newsdata = GNEWS_API_KEY.startswith('pub_')
 
         if is_newsdata:
@@ -739,8 +780,7 @@ def fetch_gnews(query, hours_back=24, max_articles=20):
                 })
             log(f"NewsData.io: {len(articles)} articles for query '{query[:50]}'")
         else:
-            # gnews.io fallback
-            from_dt = (datetime.utcnow() - timedelta(hours=min(hours_back,720))).strftime('%Y-%m-%dT%H:%M:%SZ')
+            from_dt = (datetime.utcnow() - timedelta(hours=min(hours_back, 720))).strftime('%Y-%m-%dT%H:%M:%SZ')
             url = (
                 f"https://gnews.io/api/v4/search"
                 f"?q={quote(query)}"
@@ -831,24 +871,18 @@ def save_article(conn, article):
 # ============================================================
 
 def collect_news(hours_back=24):
-    """
-    Main entry point. Returns (count, articles_list, stats_dict).
-    articles_list items follow Genspark JSON output format:
-      { url, title, published_date, source_name, raw_summary,
-        sector, area, province, confidence }
-    """
     conn             = init_database(DB_PATH)
     existing_hashes  = get_existing_hashes(conn)
     cutoff           = datetime.now() - timedelta(hours=hours_back)
 
     log(f"Cutoff: {cutoff:%Y-%m-%d %H:%M} | Language: {LANGUAGE_FILTER} | Threshold: {MIN_CLASSIFY_THRESHOLD}")
+    log(f"RSS feeds: {len(RSS_FEEDS)} (v5.3: +12 environment+north feeds)")
 
-    total_collected   = 0
+    total_collected    = 0
     collected_articles = []
     collection_stats   = {}
 
     # ── RSS collection ──────────────────────────────────────
-    log(f"RSS feeds: {len(RSS_FEEDS)}")
     for source_name, feed_url in RSS_FEEDS.items():
         stats = {
             'url': feed_url, 'status': 'Unknown',
@@ -923,9 +957,12 @@ def collect_news(hours_back=24):
 
     # ── Google News (보완 채널) ─────────────────────────────
     if ENABLE_GNEWS:
-        log("GNews: fetching supplemental articles (infra + environment)...")
+        log("GNews: fetching supplemental articles (infra + environment + north)...")
         gnews_raw = fetch_gnews(GNEWS_QUERY, hours_back)
         gnews_raw += fetch_gnews(GNEWS_ENV_QUERY, hours_back, max_articles=15)
+        # [v5.3 추가] 북부 보완 쿼리
+        gnews_raw += fetch_gnews(GNEWS_NORTH_QUERY, hours_back, max_articles=10)
+
         for item in gnews_raw:
             title   = item.get('title', '')
             link    = item.get('url', '')
@@ -962,7 +999,7 @@ def collect_news(hours_back=24):
 
     # ── Summary ─────────────────────────────────────────────
     from collections import Counter
-    sector_counts  = Counter(a['sector']   for a in collected_articles)
+    sector_counts   = Counter(a['sector']   for a in collected_articles)
     province_counts = Counter(a['province'] for a in collected_articles)
     low_conf = sum(1 for a in collected_articles if a.get('confidence', 0) < 50)
 
@@ -984,15 +1021,6 @@ def collect_news(hours_back=24):
 # ============================================================
 
 def update_excel_database(articles, collection_stats=None, excel_path=None):
-    """
-    Excel DB 완전 업데이트:
-    - 신규기사 노란색(#FFF9C4) 하이라이트
-    - 전체 날짜순 정렬 (최신→오래된)
-    - Area별 색상 구분 (환경=녹, 에너지=황, 도시=보라)
-    - Collection_Log 시트 업데이트
-    - RSS_Sources 시트 업데이트
-    - Summary 시트 업데이트
-    """
     try:
         import openpyxl
         from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
@@ -1002,14 +1030,12 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
         log("openpyxl not installed")
         return False
 
-    # excel_path 파라미터 > EXCEL_PATH 환경변수 > 기본값 순서로 우선 적용
     _ep_str = excel_path or os.environ.get('EXCEL_PATH', EXCEL_PATH)
     ep = Path(_ep_str)
     if not ep.exists():
         log(f"Excel not found: {ep}")
         return False
 
-    # 안전 확인
     try:
         wb_c = openpyxl.load_workbook(ep, read_only=True)
         ws_c = wb_c.active
@@ -1032,7 +1058,6 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
         ws  = wb.active
         last_row = ws.max_row
 
-        # URL 컬럼 찾기
         url_col = 7
         for c in range(1, ws.max_column + 1):
             h = ws.cell(row=1, column=c).value
@@ -1040,7 +1065,6 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
                 url_col = c
                 break
 
-        # 기존 URL 수집
         existing_urls = set()
         for row in range(2, last_row + 1):
             v = ws.cell(row=row, column=url_col).value
@@ -1095,7 +1119,7 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
         # ── 날짜순 정렬 + 색상 재적용 ───────────────────────
         max_row = ws.max_row
         if added > 0 and max_row > 2:
-            max_col_dyn = max(8, ws.max_column)  # 사용자 컬럼 보존
+            max_col_dyn = max(8, ws.max_column)
             rows_data = []
             for r in range(2, max_row + 1):
                 row_vals = [ws.cell(row=r, column=c).value for c in range(1, max_col_dyn + 1)]
@@ -1108,17 +1132,16 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
             for i, rd in enumerate(rows_data, 2):
                 fill = NEW_FILL if rd['is_new'] else area_fill(rd['vals'][0])
                 font = NEW_FONT if rd['is_new'] else PLAIN_FONT
-                for c in range(1, max_col + 1):
+                for c in range(1, max_col_dyn + 1):
                     cell = ws.cell(row=i, column=c)
                     cell.value  = rd['vals'][c-1] if c-1 < len(rd['vals']) else None
-                    if c <= 8:  # 핵심 컬럼만 서식, 나머지는 값만
+                    if c <= 8:
                         cell.fill   = fill
                         cell.font   = font
                     cell.border = thin_border
 
             log(f"  Sorted {max_row-1} rows newest-first | new=yellow env=green energy=yellow urban=purple")
 
-        # 컬럼 너비
         for col, w in zip('ABCDEFGH', [18,22,20,60,12,22,50,60]):
             ws.column_dimensions[col].width = w
         ws.freeze_panes = 'A2'
@@ -1151,12 +1174,7 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
             for col,w in zip('ABCDEFG',[28,50,12,20,10,12,45]):
                 ws_rss.column_dimensions[col].width = w
 
-        
-        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        # Source 시트 업데이트 (RSS + GNews API 수집 기록 통합)
-        # 컬럼: Domain | URL | Type | Status | Last Checked |
-        #        Check Result | Articles Found | Note
-        # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        # ── Source 시트 업데이트 ──────────────────────────────
         _src_sn = "Source"
         if _src_sn not in wb.sheetnames:
             ws_src = wb.create_sheet(_src_sn)
@@ -1168,7 +1186,6 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
         else:
             ws_src = wb[_src_sn]
 
-        # 기존 도메인·URL → 행번호 인덱스 구축
         _domain_idx = {}
         _url_idx    = {}
         for _r in range(2, ws_src.max_row + 1):
@@ -1186,10 +1203,9 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
             except Exception:
                 return _url
 
-        now = datetime.now()  # Source 시트용 타임스탬프
+        now = datetime.now()
         _run_date = now.strftime("%Y-%m-%d %H:%M")
 
-        # ── RSS 소스별 결과 기록 ──────────────────────────────────
         if collection_stats:
             for _sname, _st in collection_stats.items():
                 _feed_url  = _st.get('url', '')
@@ -1235,7 +1251,6 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
                 ws_src.cell(row=_tr, column=4).fill = PatternFill(
                     start_color=_sf, end_color=_sf, fill_type="solid")
 
-        # ── GNews API 수집 기사의 원본 소스 기록 ─────────────────
         _gnews_by_pub = {}
         _gnews_total  = 0
         for _art in articles:
@@ -1270,11 +1285,10 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
                            if _gnews_total > 0 else f"Queried — 0 new articles")[:200])
         ws_src.cell(row=_gn_row, column=7, value=_gnews_total)
         ws_src.cell(row=_gn_row, column=8,
-                    value=f"Queries: Vietnam infra + Vietnam environment | {_run_date}")
+                    value=f"Queries: Vietnam infra + environment + north | {_run_date}")
         ws_src.cell(row=_gn_row, column=4).fill = PatternFill(
             start_color="DBEAFE", end_color="DBEAFE", fill_type="solid")
 
-        # GNews로 수집된 개별 출판사도 Source 시트에 추가/업데이트
         for _pub, _cnt in _gnews_by_pub.items():
             if not _pub:
                 continue
@@ -1291,7 +1305,6 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
             ws_src.cell(row=_ptr, column=7, value=_cnt)
             ws_src.cell(row=_ptr, column=8, value="Accessed via Google News API aggregation")
 
-        # Source 시트 컬럼 너비 & 헤더 정비
         for _col, _w in zip('ABCDEFGH', [30, 52, 18, 14, 20, 60, 16, 55]):
             ws_src.column_dimensions[_col].width = _w
         ws_src.freeze_panes = 'A2'
@@ -1305,7 +1318,6 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
         _rss_ok = sum(1 for _s in (collection_stats or {}).values() if _s.get('status')=='Success')
         _rss_tot = len(collection_stats) if collection_stats else 0
         log(f"✓ Source sheet updated | RSS {_rss_ok}/{_rss_tot} OK | GNews {_gnews_total} articles from {len(_gnews_by_pub)} publishers")
-
 
         # ── Collection_Log 시트 ───────────────────────────────
         if "Collection_Log" not in wb.sheetnames:
@@ -1341,11 +1353,13 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
                 wb.remove(wb[sn])
         ws_sum = wb.create_sheet("Summary")
 
-        # 전체 집계
-        sectors_all  = [str(ws.cell(row=r,column=2).value or '') for r in range(2,ws.max_row+1) if any(ws.cell(row=r,column=c).value for c in range(1,9))]
-        areas_all    = [str(ws.cell(row=r,column=1).value or '') for r in range(2,ws.max_row+1) if any(ws.cell(row=r,column=c).value for c in range(1,9))]
-        prov_all     = [str(ws.cell(row=r,column=3).value or '') for r in range(2,ws.max_row+1) if any(ws.cell(row=r,column=c).value for c in range(1,9))]
-        total_arts   = len(sectors_all)
+        sectors_all = [str(ws.cell(row=r,column=2).value or '') for r in range(2,ws.max_row+1)
+                       if any(ws.cell(row=r,column=c).value for c in range(1,9))]
+        areas_all   = [str(ws.cell(row=r,column=1).value or '') for r in range(2,ws.max_row+1)
+                       if any(ws.cell(row=r,column=c).value for c in range(1,9))]
+        prov_all    = [str(ws.cell(row=r,column=3).value or '') for r in range(2,ws.max_row+1)
+                       if any(ws.cell(row=r,column=c).value for c in range(1,9))]
+        total_arts  = len(sectors_all)
 
         ws_sum.merge_cells('A1:D1')
         tc = ws_sum.cell(row=1,column=1,value="🇻🇳 Vietnam Infrastructure News — Summary")
@@ -1396,21 +1410,22 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
 
 if __name__ == "__main__":
     import argparse
-    p = argparse.ArgumentParser(description='Vietnam Infra News Collector v5.2')
+    p = argparse.ArgumentParser(description='Vietnam Infra News Collector v5.3')
     p.add_argument('--hours-back', type=int, default=HOURS_BACK)
     p.add_argument('--threshold',  type=int, default=MIN_CLASSIFY_THRESHOLD,
-                   help='Min classification score (default: 3)')
+                   help='Min classification score (default: 2)')
     p.add_argument('--gnews',      action='store_true', help='Enable Google News API')
     args = p.parse_args()
 
-    HOURS_BACK              = args.hours_back
-    MIN_CLASSIFY_THRESHOLD  = args.threshold
+    HOURS_BACK             = args.hours_back
+    MIN_CLASSIFY_THRESHOLD = args.threshold
     if args.gnews:
         ENABLE_GNEWS = True
 
     print("=" * 60)
-    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.2")
+    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.3")
     print(f"Hours back: {HOURS_BACK} | Threshold: {MIN_CLASSIFY_THRESHOLD} | Language: {LANGUAGE_FILTER}")
+    print(f"RSS feeds: {len(RSS_FEEDS)} | New v5.3 feeds: 12 (env+north)")
     print("=" * 60)
 
     cnt, arts, stats = collect_news(HOURS_BACK)
