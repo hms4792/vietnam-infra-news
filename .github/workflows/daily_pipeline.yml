@@ -80,6 +80,18 @@ jobs:
             echo "Mode: DAILY (${HOURS}h)"
           fi
 
+      # ── SQLite DB 동기화 (Excel 기준 재동기화 — 중복 문제 방지)
+      - name: 🔄 Sync SQLite DB from Excel (prevent duplicate skip)
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+          DB_PATH: data/vietnam_infrastructure_news.db
+        run: |
+          if [ -f scripts/reset_sqlite_db.py ]; then
+            python3 scripts/reset_sqlite_db.py
+          else
+            echo "reset_sqlite_db.py not found, skipping sync"
+          fi
+
       # ── 5. 뉴스 수집 실행 ───────────────────────────────
       - name: 📰 Run news collector (v5.3)
         env:
