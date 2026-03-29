@@ -1,12 +1,38 @@
-name: Vietnam Infrastructure News Pipeline Weekly
+# ════════════════════════════════════════════════════════════════════════
+# Vietnam Infrastructure News Pipeline — WEEKLY (보존용 비활성화)
+#
+# ⚠️  현재 상태: DISABLED (비활성화)
+#     자동 실행이 중단되어 있으며, 수동 실행(workflow_dispatch)만 가능합니다.
+#
+# 재활성화 방법:
+#   1. 아래 schedule 블록의 주석(#)을 제거하세요.
+#   2. daily_pipeline.yml의 schedule 블록을 주석 처리하세요.
+#
+# 주간 실행 스케줄 (재활성화 시):
+#   - 매주 토요일 KST 18:00 (UTC 09:00)
+#   - Cron: '0 9 * * 6'
+# ════════════════════════════════════════════════════════════════════════
+
+name: Vietnam Infra News — Weekly Pipeline (DISABLED)
 
 on:
-  schedule:
-    - cron: '0 9 * * 6'
+  # ─────────────────────────────────────────────────────────────────────
+  # 아래 schedule 블록 전체가 주석 처리되어 자동 실행이 비활성화된 상태
+  # 재활성화 시: 아래 4줄의 '#' 를 제거하세요
+  # ─────────────────────────────────────────────────────────────────────
+  # schedule:
+  #   - cron: '0 9 * * 6'   # UTC 09:00 = KST 18:00, 매주 토요일
+
+  # 수동 실행은 항상 가능 (GitHub Actions 탭 → Run workflow)
   workflow_dispatch:
     inputs:
+      hours_back:
+        description: '수집 기간 (시간 단위, 기본값: 168 = 7일치)'
+        required: false
+        default: '168'
+        type: string
       mode:
-        description: 'Run mode'
+        description: '실행 모드'
         required: false
         default: 'full'
         type: choice
@@ -14,30 +40,24 @@ on:
           - full
           - collect-only
           - dashboard-only
-      hours_back:
-        description: 'Hours to collect'
-        required: false
-        default: '168'
-        type: string
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   weekly-pipeline:
-    name: Weekly Infrastructure News Collection
+    name: Weekly News Collection & Dashboard Update
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60   # 주간 수집 + 번역 처리 → 최대 60분
 
     env:
-      HOURS_BACK:        ${{ github.event.inputs.hours_back || '168' }}
-      RUN_MODE:          ${{ github.event.inputs.mode || 'full' }}
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-      PYTHONIOENCODING:  utf-8
-      PYTHONUNBUFFERED:  "1"
-      TZ:                "Asia/Seoul"
+      HOURS_BACK: ${{ github.event.inputs.hours_back || '168' }}
+      RUN_MODE:   ${{ github.event.inputs.mode || 'full' }}
+      EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      PYTHONIOENCODING: utf-8
+      PYTHONUNBUFFERED: "1"
+      TZ: "Asia/Seoul"
 
     steps:
 
@@ -56,70 +76,71 @@ jobs:
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4 feedparser pandas openpyxl anthropic pydantic lxml python-dateutil pytz deep-translator
-          pip show deep-translator | grep -E "Name|Version"
-          echo "packages installed OK"
+          pip install \
+            requests \
+            beautifulsoup4 \
+            feedparser \
+            pandas \
+            openpyxl \
+            lxml \
+            python-dateutil \
+            pytz \
+            deep-translator
+          echo "패키지 설치 완료"
 
       - name: Prepare Working Directories
         run: |
-          mkdir -p data/raw data/database docs
-          echo "directories ready"
+          mkdir -p data/database
+          mkdir -p docs
+          echo "디렉토리 준비 완료"
 
       - name: Run Weekly Pipeline
         run: |
-          echo "=== pipeline start mode=${{ env.RUN_MODE }} hours=${{ env.HOURS_BACK }} ==="
-          python scripts/main.py --mode ${{ env.RUN_MODE }} --hours-back ${{ env.HOURS_BACK }}
-          echo "=== pipeline done ==="
+          echo "=== 주간 파이프라인 시작 ==="
+          echo "수집 기간: ${{ env.HOURS_BACK }}시간 (7일치)"
+          echo "실행 시각: $(date '+%Y-%m-%d %H:%M:%S KST')"
+          python3 scripts/main.py \
+            --mode ${{ env.RUN_MODE }} \
+            --hours-back ${{ env.HOURS_BACK }}
+          echo "=== 주간 파이프라인 완료 ==="
 
-      - name: Commit Excel Database
+      - name: Commit Excel Database to Repository
         if: always()
         run: |
-          git config user.name "github-actions[bot]"
+          git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/database/ || true
           if git diff --staged --quiet; then
-            echo "no excel changes"
+            echo "Excel DB 변경 없음 — 커밋 생략"
           else
-            git commit -m "Weekly DB Update Run#${{ github.run_number }}"
+            git commit -m "Weekly DB Update [$(date '+%Y-%m-%d')] Run#${{ github.run_number }}"
             git push
-            echo "excel committed"
+            echo "Excel DB 커밋 완료"
           fi
 
-      - name: Batch translate old articles
-        run: python3 scripts/batch_translate.py --batch 20
-
-      - name: Commit Dashboard to GitHub Pages
+      - name: Commit Dashboard to GitHub Pages (docs/)
         if: always()
         run: |
           git add docs/ || true
           if git diff --staged --quiet; then
-            echo "no dashboard changes"
+            echo "대시보드 변경 없음 — 커밋 생략"
           else
-            git commit -m "Weekly Dashboard Run#${{ github.run_number }}"
+            git commit -m "Weekly Dashboard [$(date '+%Y-%m-%d')] Run#${{ github.run_number }}"
             git push
-            echo "dashboard committed"
+            echo "대시보드 커밋 완료"
           fi
 
       - name: Send Email Notification
         if: always()
-        env:
-          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: python3 scripts/send_email.py
 
-      - name: Upload Pipeline Log
+      - name: Upload Pipeline Log (Artifact)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: weekly-pipeline-log-${{ github.run_number }}
+          name: weekly-log-${{ github.run_number }}
           path: |
-            pipeline.log
-            data/raw/
-          retention-days: 14
-
-      - name: Final Summary Report
-        if: always()
-        run: |
-          echo "Vietnam Infra News Weekly Pipeline Done"
-          echo "Run ${{ github.run_number }}"
-          echo "Dashboard https://hms4792.github.io/vietnam-infra-news/"
+            *.log
+            logs/
+          retention-days: 30   # 주간 로그는 30일 보관
+          if-no-files-found: ignore
