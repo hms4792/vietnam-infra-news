@@ -1,24 +1,22 @@
 # ============================================================
-# Vietnam Infrastructure News — 일일 수집 워크플로
-# 파일: .github/workflows/collect_daily.yml
+# Vietnam Infrastructure News — 일일 수집 파이프라인
+# 파일: .github/workflows/daily_pipeline.yml
 #
-# 활성화 시점: 2026-03-30(내일)부터
 # 스케줄: 매일 KST 20:00 = UTC 11:00
 #
-# [주의] 오늘(2026-03-29)은 collect_weekly.yml 이 먼저 실행됨
-#        내일부터 이 파일이 매일 자동 실행
-#
-# 영구 제약 (변경 금지):
-#   - EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-#   - GitHub Pages: main 브랜치 /docs 폴더
-#   - EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_* 사용 금지)
-#   - YML 내 python3 -c "..." 인라인 코드 금지
+# ★ 영구 제약 (절대 변경 금지):
+#   [1] 번역: Google Translate만 (MyMemory API). Anthropic API 금지
+#   [2] 대시보드: templates/dashboard_template.html 템플릿 사용
+#   [4] 이메일 Secret: EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_* 사용 금지)
+#   [7] 실행순서: main.py → Step1(collect)→Step2(번역)→Step3(Excel)→Step4(대시보드)
+#       순서 절대 변경 금지 — 번역 전 Excel 저장 시 title_ko 빈값으로 고정됨
+#  [12] yml 내 python3 -c "..." 인라인 코드 금지 → 별도 .py 파일 호출
 # ============================================================
 
-name: 📅 Daily News Collection (v5.3)
+name: 📅 Daily News Pipeline (v5.3)
 
 on:
-  # 매일 KST 20:00 = UTC 11:00 자동 실행
+  # 매일 KST 20:00 = UTC 11:00
   schedule:
     - cron: '0 11 * * *'
 
@@ -26,7 +24,7 @@ on:
   workflow_dispatch:
     inputs:
       hours_back:
-        description: '소급 수집 시간 (기본 24)'
+        description: '소급 수집 시간 (기본 24, 주간=168)'
         required: false
         default: '24'
       force_weekly:
@@ -41,10 +39,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  collect:
-    name: 📡 일일 뉴스 수집 및 DB 업데이트
+  pipeline:
+    name: 📡 수집 → 번역 → Excel → 대시보드
     runs-on: ubuntu-latest
-    timeout-minutes: 30   # 일일 수집은 30분 제한
+    timeout-minutes: 30
 
     steps:
       # ── 1. 레포지토리 체크아웃 ───────────────────────────
@@ -61,13 +59,14 @@ jobs:
           cache: 'pip'
 
       # ── 3. 의존성 설치 ──────────────────────────────────
+      # deep-translator: Google Translate (MyMemory API) 번역용 [메모리항목1]
       - name: 📦 Install dependencies
         run: |
           pip install --upgrade pip
-          pip install requests feedparser beautifulsoup4 openpyxl lxml
+          pip install requests feedparser beautifulsoup4 openpyxl lxml deep-translator
 
       # ── 4. 수집 시간 결정 ────────────────────────────────
-      # force_weekly=true 이면 168, 아니면 inputs 값 또는 기본 24
+      # [메모리항목12] python3 -c "..." 인라인 금지 → 별도 set_hours.py 사용
       - name: ⏱️ Set hours_back
         id: set_hours
         run: |
@@ -80,68 +79,42 @@ jobs:
             echo "Mode: DAILY (${HOURS}h)"
           fi
 
-      # ── SQLite DB 동기화 (Excel 기준 재동기화 — 중복 문제 방지)
-      - name: 🔄 Sync SQLite DB from Excel (prevent duplicate skip)
+      # ── 5. SQLite DB 동기화 ──────────────────────────────
+      # Excel DB 기준으로 SQLite 재동기화 — 잘못된 실행으로 오염된 url_hash 제거
+      # [메모리항목12] 별도 .py 파일 호출
+      - name: 🔄 Sync SQLite from Excel DB
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
         run: |
-          if [ -f scripts/reset_sqlite_db.py ]; then
-            python3 scripts/reset_sqlite_db.py
-          else
-            echo "reset_sqlite_db.py not found, skipping sync"
-          fi
+          python3 scripts/reset_sqlite_db.py
 
-      # ── 5. 뉴스 수집 실행 ───────────────────────────────
-      - name: 📰 Run news collector (v5.3)
+      # ── 6. 메인 파이프라인 실행 ──────────────────────────
+      # [메모리항목7] main.py가 Step1→2→3→4 순서 보장:
+      #   Step1: collect_news(hours_back)  ← news_collector.py의 collect_news()
+      #   Step2: AISummarizer              ← Google Translate (MyMemory API) 번역
+      #   Step3: ExcelUpdater.update_all() ← 번역 완료 후 Excel 저장
+      #   Step4: DashboardUpdater.generate() ← dashboard_template.html 사용
+      - name: 🚀 Run main pipeline (collect→translate→excel→dashboard)
         env:
           HOURS_BACK: ${{ steps.set_hours.outputs.hours }}
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
           LANGUAGE_FILTER: all
           GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
-          ENABLE_GNEWS: ${{ secrets.GNEWS_API_KEY != '' && 'true' || 'false' }}
+          ENABLE_GNEWS: 'false'
+          # [메모리항목4] 이메일 Secret 변수명 준수
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
-          echo "=== Vietnam Infra News Collector v5.3 ==="
-          echo "Hours back: $HOURS_BACK"
-          python3 scripts/news_collector.py --hours-back $HOURS_BACK
+          echo "=== Vietnam Infra News Pipeline v5.3 ==="
+          echo "Hours back  : $HOURS_BACK"
+          echo "Excel path  : $EXCEL_PATH"
+          echo "Step order  : collect → translate(Google) → excel → dashboard"
+          python3 main.py
 
-      # ── 6. 번역/요약 처리 ────────────────────────────────
-      - name: 🌐 Translate & summarize articles
-        env:
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          DB_PATH: data/vietnam_infrastructure_news.db
-        run: |
-          if [ -f scripts/ai_summarizer.py ]; then
-            python3 scripts/ai_summarizer.py
-          else
-            echo "ai_summarizer.py not found, skipping"
-          fi
-
-      # ── 7. Excel DB 업데이트 ────────────────────────────
-      - name: 📊 Update Excel database
-        env:
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          DB_PATH: data/vietnam_infrastructure_news.db
-        run: |
-          if [ -f scripts/excel_updater.py ]; then
-            python3 scripts/excel_updater.py
-          else
-            echo "excel_updater.py not found — collector handles Excel directly"
-          fi
-
-      # ── 8. 대시보드 재생성 ───────────────────────────────
-      - name: 🖥️ Generate dashboard
-        env:
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-        run: |
-          if [ -f scripts/dashboard_updater.py ]; then
-            python3 scripts/dashboard_updater.py
-          else
-            echo "dashboard_updater.py not found, skipping"
-          fi
-
-      # ── 9. 변경사항 Git 커밋 & 푸시 ─────────────────────
+      # ── 7. 변경사항 Git 커밋 & 푸시 ─────────────────────
+      # [메모리항목8] GitHub Pages: main 브랜치 /docs 폴더
       - name: 💾 Commit and push changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
@@ -150,19 +123,16 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "📅 Daily collection (v5.3) — $(date '+%Y-%m-%d %H:%M') KST"
+            git commit -m "📅 Daily pipeline (v5.3) — $(date '+%Y-%m-%d %H:%M UTC')"
             git push
           fi
 
-      # ── 10. 이메일 알림 ─────────────────────────────────
+      # ── 8. 이메일 알림 ──────────────────────────────────
+      # [메모리항목4] EMAIL_USERNAME / EMAIL_PASSWORD 사용 (GMAIL_* 금지)
       - name: 📧 Send email notification
         if: always()
         env:
           EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
-          if [ -f scripts/email_notifier.py ]; then
-            python3 scripts/email_notifier.py || echo "Email notification skipped"
-          else
-            echo "email_notifier.py not found, skipping"
-          fi
+          python3 scripts/email_notifier.py || echo "Email notification skipped"
