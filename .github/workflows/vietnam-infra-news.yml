@@ -1,146 +1,136 @@
-# ════════════════════════════════════════════════════════════════════════
-# Vietnam Infrastructure News Pipeline — WEEKLY (보존용 비활성화)
+# ============================================================
+# Vietnam Infrastructure News — 주간 수집 워크플로
+# 파일: .github/workflows/collect_weekly.yml
 #
-# ⚠️  현재 상태: DISABLED (비활성화)
-#     자동 실행이 중단되어 있으며, 수동 실행(workflow_dispatch)만 가능합니다.
+# 용도: v5.3 RSS 보강 반영 후 1회성 주간 수집 검증
+#   - 오늘(2026-03-29) KST 18:00 자동 실행 (UTC 09:00)
+#   - hours_back=168 (7일치 소급 수집)
+#   - 결과 확인 후 이 파일은 비활성화(disabled) 처리
 #
-# 재활성화 방법:
-#   1. 아래 schedule 블록의 주석(#)을 제거하세요.
-#   2. daily_pipeline.yml의 schedule 블록을 주석 처리하세요.
-#
-# 주간 실행 스케줄 (재활성화 시):
-#   - 매주 토요일 KST 18:00 (UTC 09:00)
-#   - Cron: '0 9 * * 6'
-# ════════════════════════════════════════════════════════════════════════
+# 전환 계획:
+#   1단계 (오늘): 이 파일로 주간 수집 1회 실행 → 결과 확인
+#   2단계 (내일~): collect_daily.yml 활성화, 이 파일 스케줄 제거
+# ============================================================
 
-name: Vietnam Infra News — Weekly Pipeline (DISABLED)
+name: 🗓️ Weekly News Collection (v5.3 검증용)
 
 on:
-  # ─────────────────────────────────────────────────────────────────────
-  # 아래 schedule 블록 전체가 주석 처리되어 자동 실행이 비활성화된 상태
-  # 재활성화 시: 아래 4줄의 '#' 를 제거하세요
-  # ─────────────────────────────────────────────────────────────────────
-  # schedule:
-  #   - cron: '0 9 * * 6'   # UTC 09:00 = KST 18:00, 매주 토요일
+  # 오늘 KST 18:00 = UTC 09:00 자동 실행 (1회)
+  schedule:
+    - cron: '0 9 * * 6'   # 매주 토요일 UTC 09:00 (KST 18:00)
 
-  # 수동 실행은 항상 가능 (GitHub Actions 탭 → Run workflow)
+  # 수동 실행 버튼 (Actions 탭에서 즉시 테스트 가능)
   workflow_dispatch:
     inputs:
       hours_back:
-        description: '수집 기간 (시간 단위, 기본값: 168 = 7일치)'
+        description: '소급 수집 시간 (기본 168 = 7일)'
         required: false
         default: '168'
-        type: string
-      mode:
-        description: '실행 모드'
-        required: false
-        default: 'full'
-        type: choice
-        options:
-          - full
-          - collect-only
-          - dashboard-only
 
-permissions:
-  contents: write
+# 동일 워크플로 중복 실행 방지
+concurrency:
+  group: news-collection
+  cancel-in-progress: false
 
 jobs:
-  weekly-pipeline:
-    name: Weekly News Collection & Dashboard Update
+  collect:
+    name: 📡 뉴스 수집 및 DB 업데이트
     runs-on: ubuntu-latest
-    timeout-minutes: 60   # 주간 수집 + 번역 처리 → 최대 60분
-
-    env:
-      HOURS_BACK: ${{ github.event.inputs.hours_back || '168' }}
-      RUN_MODE:   ${{ github.event.inputs.mode || 'full' }}
-      EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-      EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-      PYTHONIOENCODING: utf-8
-      PYTHONUNBUFFERED: "1"
-      TZ: "Asia/Seoul"
+    timeout-minutes: 55   # 주간 수집은 시간이 더 걸림
 
     steps:
-
-      - name: Checkout Repository
+      # ── 1. 레포지토리 체크아웃 ───────────────────────────
+      - name: 📥 Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Python 3.11
+      # ── 2. Python 환경 설정 ──────────────────────────────
+      - name: 🐍 Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Install Python Dependencies
+      # ── 3. 의존성 설치 ──────────────────────────────────
+      - name: 📦 Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install \
-            requests \
-            beautifulsoup4 \
-            feedparser \
-            pandas \
-            openpyxl \
-            lxml \
-            python-dateutil \
-            pytz \
-            deep-translator
-          echo "패키지 설치 완료"
+          pip install --upgrade pip
+          pip install requests feedparser beautifulsoup4 openpyxl lxml
 
-      - name: Prepare Working Directories
+      # ── 4. 뉴스 수집 실행 ───────────────────────────────
+      - name: 📰 Run news collector (v5.3)
+        env:
+          HOURS_BACK: ${{ github.event.inputs.hours_back || '168' }}
+          EXCEL_PATH: data/Vietnam_Infra_News_Database_Final.xlsx
+          DB_PATH: data/vietnam_infrastructure_news.db
+          LANGUAGE_FILTER: all
+          GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
+          ENABLE_GNEWS: ${{ secrets.GNEWS_API_KEY != '' && 'true' || 'false' }}
         run: |
-          mkdir -p data/database
-          mkdir -p docs
-          echo "디렉토리 준비 완료"
+          echo "=== Vietnam Infra News Collector v5.3 ==="
+          echo "Hours back: $HOURS_BACK"
+          echo "Mode: WEEKLY (7-day lookback)"
+          python3 scripts/news_collector.py --hours-back $HOURS_BACK
 
-      - name: Run Weekly Pipeline
+      # ── 5. 번역/요약 처리 ────────────────────────────────
+      - name: 🌐 Translate & summarize articles
+        env:
+          EXCEL_PATH: data/Vietnam_Infra_News_Database_Final.xlsx
+          DB_PATH: data/vietnam_infrastructure_news.db
         run: |
-          echo "=== 주간 파이프라인 시작 ==="
-          echo "수집 기간: ${{ env.HOURS_BACK }}시간 (7일치)"
-          echo "실행 시각: $(date '+%Y-%m-%d %H:%M:%S KST')"
-          python3 scripts/main.py \
-            --mode ${{ env.RUN_MODE }} \
-            --hours-back ${{ env.HOURS_BACK }}
-          echo "=== 주간 파이프라인 완료 ==="
-
-      - name: Commit Excel Database to Repository
-        if: always()
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/database/ || true
-          if git diff --staged --quiet; then
-            echo "Excel DB 변경 없음 — 커밋 생략"
+          if [ -f scripts/ai_summarizer.py ]; then
+            python3 scripts/ai_summarizer.py
           else
-            git commit -m "Weekly DB Update [$(date '+%Y-%m-%d')] Run#${{ github.run_number }}"
-            git push
-            echo "Excel DB 커밋 완료"
+            echo "ai_summarizer.py not found, skipping"
           fi
 
-      - name: Commit Dashboard to GitHub Pages (docs/)
-        if: always()
+      # ── 6. Excel DB 업데이트 ────────────────────────────
+      - name: 📊 Update Excel database
+        env:
+          EXCEL_PATH: data/Vietnam_Infra_News_Database_Final.xlsx
+          DB_PATH: data/vietnam_infrastructure_news.db
         run: |
-          git add docs/ || true
-          if git diff --staged --quiet; then
-            echo "대시보드 변경 없음 — 커밋 생략"
+          if [ -f scripts/excel_updater.py ]; then
+            python3 scripts/excel_updater.py
           else
-            git commit -m "Weekly Dashboard [$(date '+%Y-%m-%d')] Run#${{ github.run_number }}"
-            git push
-            echo "대시보드 커밋 완료"
+            echo "excel_updater.py not found — collector handles Excel directly"
           fi
 
-      - name: Send Email Notification
-        if: always()
-        run: python3 scripts/send_email.py
+      # ── 7. 대시보드 재생성 ───────────────────────────────
+      - name: 🖥️ Generate dashboard
+        env:
+          EXCEL_PATH: data/Vietnam_Infra_News_Database_Final.xlsx
+        run: |
+          if [ -f scripts/dashboard_updater.py ]; then
+            python3 scripts/dashboard_updater.py
+          else
+            echo "dashboard_updater.py not found, skipping"
+          fi
 
-      - name: Upload Pipeline Log (Artifact)
+      # ── 8. 변경사항 Git 커밋 & 푸시 ─────────────────────
+      - name: 💾 Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          # 변경사항이 있을 때만 커밋
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "🗓️ Weekly collection (v5.3) — $(date '+%Y-%m-%d %H:%M') KST"
+            git push
+          fi
+
+      # ── 9. 이메일 알림 ──────────────────────────────────
+      - name: 📧 Send email notification
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: weekly-log-${{ github.run_number }}
-          path: |
-            *.log
-            logs/
-          retention-days: 30   # 주간 로그는 30일 보관
-          if-no-files-found: ignore
+        env:
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: |
+          if [ -f scripts/email_notifier.py ]; then
+            python3 scripts/email_notifier.py || echo "Email notification skipped"
+          else
+            echo "email_notifier.py not found, skipping"
+          fi
