@@ -921,6 +921,327 @@ def fetch_gnews(query, hours_back=24, max_articles=20):
     return articles
 
 
+
+# ============================================================
+# NEWSDATA.io API — Province 공백 보완 + 전문미디어 타겟팅
+# [메모리항목16] Sub-Agent1 뉴스수집 보완 채널
+# 환경변수: NEWSDATA_API_KEY (pub_로 시작, GitHub Secrets 등록)
+# 일별 200건 무료 크레딧 최적 배분:
+#   Group A (핵심급감 Province): 50건/일
+#   Group B (완전단절 Province): 40건/일 (격일)
+#   전문미디어 domain 타겟팅:    70건/일
+#   Province×전문미디어 교차:    30건/일
+#   Group C (소규모 단절):       10건/일 (주2회)
+# ============================================================
+
+NEWSDATA_API_KEY = os.environ.get('NEWSDATA_API_KEY', '')
+
+# 단절/급감 Province 그룹 — 우선순위별 쿼리 정의
+NEWSDATA_PROVINCE_QUERIES = {
+    # Group A: 핵심 급감 Province (매일 실행)
+    'group_a': [
+        {
+            'province': 'Da Nang',
+            'q': '"Da Nang" AND (infrastructure OR "industrial park" OR wastewater OR "water supply" OR transport)',
+            'language': 'en',
+        },
+        {
+            'province': 'Da Nang',
+            'q': '"Đà Nẵng" AND ("khu công nghiệp" OR "nước thải" OR "cấp nước" OR "giao thông")',
+            'language': 'vi',
+        },
+        {
+            'province': 'Binh Duong',
+            'q': '"Binh Duong" AND ("industrial park" OR wastewater OR "power" OR infrastructure)',
+            'language': 'en',
+        },
+        {
+            'province': 'Binh Duong',
+            'q': '"Bình Dương" AND ("khu công nghiệp" OR "nước thải" OR "điện")',
+            'language': 'vi',
+        },
+        {
+            'province': 'Quang Ninh',
+            'q': '"Quang Ninh" AND ("wind farm" OR "power plant" OR "port" OR "industrial" OR "coal")',
+            'language': 'en',
+        },
+        {
+            'province': 'Dong Nai',
+            'q': '"Dong Nai" AND ("industrial park" OR wastewater OR transport OR infrastructure)',
+            'language': 'en',
+        },
+        {
+            'province': 'Bac Ninh',
+            'q': '"Bac Ninh" AND ("industrial park" OR "semiconductor" OR wastewater OR infrastructure)',
+            'language': 'en',
+        },
+    ],
+    # Group B: 완전 단절 Province (격일 실행 — 홀수일)
+    'group_b': [
+        {
+            'province': 'Ba Ria Vung Tau',
+            'q': '"Vung Tau" AND ("oil" OR "gas" OR "LNG" OR "port" OR "petrochemical")',
+            'language': 'en',
+        },
+        {
+            'province': 'Binh Dinh',
+            'q': '"Binh Dinh" AND (infrastructure OR "industrial park" OR wastewater OR "renewable")',
+            'language': 'en',
+        },
+        {
+            'province': 'Quang Nam',
+            'q': '"Quang Nam" AND (infrastructure OR "industrial park" OR transport OR "water")',
+            'language': 'en',
+        },
+        {
+            'province': 'Thai Nguyen',
+            'q': '"Thai Nguyen" AND ("industrial park" OR "Samsung" OR infrastructure OR wastewater)',
+            'language': 'en',
+        },
+        {
+            'province': 'Ben Tre',
+            'q': '"Ben Tre" AND (infrastructure OR "water supply" OR "renewable energy" OR transport)',
+            'language': 'en',
+        },
+        {
+            'province': 'Bac Giang',
+            'q': '"Bac Giang" AND ("industrial park" OR "VSIP" OR wastewater OR infrastructure)',
+            'language': 'en',
+        },
+    ],
+    # Group C: 소규모 단절 Province (주 2회 — 월·목)
+    'group_c': [
+        {
+            'province': 'Tien Giang',
+            'q': '"Tien Giang" AND (infrastructure OR "water supply" OR transport OR "industrial")',
+            'language': 'en',
+        },
+        {
+            'province': 'Hai Duong',
+            'q': '"Hai Duong" AND ("industrial park" OR wastewater OR infrastructure)',
+            'language': 'en',
+        },
+        {
+            'province': 'Ninh Thuan',
+            'q': '"Ninh Thuan" AND ("wind" OR "solar" OR "renewable energy" OR infrastructure)',
+            'language': 'en',
+        },
+        {
+            'province': 'Quang Binh',
+            'q': '"Quang Binh" AND (infrastructure OR transport OR "industrial" OR "water")',
+            'language': 'en',
+        },
+    ],
+}
+
+# 전문미디어 domain 타겟팅 쿼리
+NEWSDATA_SPECIALIST_QUERIES = [
+    {
+        'source': 'The Investor',
+        'domain': 'theinvestor.vn',
+        'q': 'infrastructure OR "industrial park" OR wastewater OR "power plant" OR "oil gas"',
+        'language': 'en',
+    },
+    {
+        'source': 'Vietnam Investment Review',
+        'domain': 'vir.com.vn',
+        'q': 'infrastructure OR investment OR "industrial zone" OR energy OR transport',
+        'language': 'en',
+    },
+    {
+        'source': 'Hanoi Times',
+        'domain': 'hanoitimes.vn',
+        'q': 'infrastructure OR "industrial park" OR wastewater OR metro OR "urban development"',
+        'language': 'en',
+    },
+    {
+        'source': 'Vietnam Energy',
+        'domain': 'vietnamenergy.vn',
+        'q': 'power OR energy OR "renewable" OR "solar" OR "wind" OR "LNG"',
+        'language': 'en',
+    },
+    {
+        'source': 'Da Nang News',
+        'domain': 'baodanang.vn',
+        'q': 'infrastructure OR "khu công nghiệp" OR "nước thải" OR "giao thông"',
+        'language': 'vi',
+    },
+    {
+        'source': 'Bao Dau Tu',
+        'domain': 'baodautu.vn',
+        'q': 'infrastructure OR "khu công nghiệp" OR "năng lượng" OR "giao thông"',
+        'language': 'vi',
+    },
+    {
+        'source': 'PetroTimes',
+        'domain': 'petrotimes.vn',
+        'q': 'oil OR gas OR LNG OR petroleum OR "dầu khí" OR petrovietnam',
+        'language': 'vi',
+    },
+]
+
+
+def fetch_newsdata(hours_back=24):
+    """
+    NewsData.io API로 단절 Province + 전문미디어 기사 수집.
+    [메모리항목1] 번역은 translate_articles()에서 처리 (여기서 호출 안 함)
+    [메모리항목17] Province 미분류율 25% 이하 목표
+
+    Returns: list of article dicts (RSS 수집 결과와 동일한 구조)
+    """
+    if not NEWSDATA_API_KEY:
+        log("NewsData.io: NEWSDATA_API_KEY 없음 — 스킵")
+        return []
+
+    if not NEWSDATA_API_KEY.startswith('pub_'):
+        log("NewsData.io: 올바른 API 키 형식 아님 (pub_로 시작해야 함) — 스킵")
+        return []
+
+    import datetime as dt_module
+    today = dt_module.datetime.utcnow()
+    day_of_week = today.weekday()   # 0=월 ... 6=일
+    day_of_month = today.day
+
+    articles = []
+    credit_used = 0
+    CREDIT_LIMIT = 195  # 200건 중 5건 여유
+
+    def _call_newsdata(q, language='en', domain=None, size=10):
+        """NewsData.io API 단일 호출"""
+        nonlocal credit_used
+        if credit_used + size > CREDIT_LIMIT:
+            log(f"  NewsData.io: 크레딧 한도 도달 ({credit_used}/{CREDIT_LIMIT})")
+            return []
+
+        params = {
+            'apikey': NEWSDATA_API_KEY,
+            'q': q,
+            'country': 'vn',
+            'language': language,
+            'category': 'business,politics,technology,environment',
+            'size': size,
+        }
+        if domain:
+            params['domain'] = domain
+
+        # from_date: hours_back 기준
+        from_dt = (today - timedelta(hours=min(hours_back, 720)))
+        params['from_date'] = from_dt.strftime('%Y-%m-%d')
+
+        try:
+            resp = requests.get(
+                'https://newsdata.io/api/1/news',
+                params=params,
+                timeout=15
+            )
+            resp.raise_for_status()
+            data = resp.json()
+
+            if data.get('status') != 'success':
+                log(f"  NewsData.io 오류: {data.get('message','unknown')}")
+                return []
+
+            results = data.get('results', [])
+            credit_used += len(results)
+            return results
+
+        except Exception as e:
+            log(f"  NewsData.io 호출 실패: {e}")
+            return []
+
+    def _parse_result(item, source_name, province_hint=None):
+        """NewsData.io 결과 → 기존 article dict 형식으로 변환"""
+        title   = (item.get('title') or '').strip()
+        url     = (item.get('link') or '').strip()
+        summary = (item.get('description') or '').strip()
+        pub_date = (item.get('pubDate') or '')[:10]
+        source  = item.get('source_id') or source_name
+
+        if not title or not url or len(title) < 15:
+            return None
+
+        if not url.startswith('http'):
+            return None
+
+        return {
+            'url_hash':       generate_url_hash(url),
+            'url':            url,
+            'title':          title,
+            'summary':        summary[:1000],
+            'source':         f"NewsData/{source_name}",
+            'source_name':    f"NewsData/{source_name}",
+            'published_date': pub_date,
+            'raw_summary':    summary[:500],
+            '_province_hint': province_hint,  # Province 분류 힌트
+        }
+
+    log(f"NewsData.io: 수집 시작 (일별 크레딧 {CREDIT_LIMIT}건 한도)")
+
+    # ── Group A: 핵심급감 Province (매일) ─────────────────
+    log("  [Group A] 핵심 급감 Province 쿼리...")
+    for q_info in NEWSDATA_PROVINCE_QUERIES['group_a']:
+        if credit_used >= CREDIT_LIMIT:
+            break
+        results = _call_newsdata(q_info['q'], q_info['language'], size=10)
+        for item in results:
+            parsed = _parse_result(item, q_info['province'], q_info['province'])
+            if parsed:
+                articles.append(parsed)
+        if results:
+            log(f"    {q_info['province']} ({q_info['language']}): {len(results)}건")
+        time.sleep(0.3)
+
+    # ── Group B: 완전단절 Province (홀수일만) ─────────────
+    if day_of_month % 2 == 1:
+        log("  [Group B] 완전 단절 Province 쿼리 (홀수일)...")
+        for q_info in NEWSDATA_PROVINCE_QUERIES['group_b']:
+            if credit_used >= CREDIT_LIMIT:
+                break
+            results = _call_newsdata(q_info['q'], q_info['language'], size=10)
+            for item in results:
+                parsed = _parse_result(item, q_info['province'], q_info['province'])
+                if parsed:
+                    articles.append(parsed)
+            if results:
+                log(f"    {q_info['province']}: {len(results)}건")
+            time.sleep(0.3)
+
+    # ── 전문미디어 domain 타겟팅 (매일) ───────────────────
+    log("  [전문미디어] domain 타겟팅 쿼리...")
+    for q_info in NEWSDATA_SPECIALIST_QUERIES:
+        if credit_used >= CREDIT_LIMIT:
+            break
+        results = _call_newsdata(
+            q_info['q'], q_info['language'],
+            domain=q_info['domain'], size=10
+        )
+        for item in results:
+            parsed = _parse_result(item, q_info['source'])
+            if parsed:
+                articles.append(parsed)
+        if results:
+            log(f"    {q_info['source']} ({q_info['domain']}): {len(results)}건")
+        time.sleep(0.3)
+
+    # ── Group C: 소규모 Province (월·목만) ────────────────
+    if day_of_week in (0, 3):  # 0=월요일, 3=목요일
+        log("  [Group C] 소규모 단절 Province 쿼리 (월·목)...")
+        for q_info in NEWSDATA_PROVINCE_QUERIES['group_c']:
+            if credit_used >= CREDIT_LIMIT:
+                break
+            results = _call_newsdata(q_info['q'], q_info['language'], size=5)
+            for item in results:
+                parsed = _parse_result(item, q_info['province'], q_info['province'])
+                if parsed:
+                    articles.append(parsed)
+            if results:
+                log(f"    {q_info['province']}: {len(results)}건")
+            time.sleep(0.3)
+
+    log(f"NewsData.io 완료: {len(articles)}건 수집 | 크레딧 사용: {credit_used}/{CREDIT_LIMIT}")
+    return articles
+
+
 # ============================================================
 # DATABASE
 # ============================================================
@@ -1139,6 +1460,59 @@ def collect_news(hours_back=24):
                 existing_hashes.add(url_hash)
                 total_collected += 1
                 collected_articles.append(article)
+
+    # ── NewsData.io 보완 수집 ──────────────────────────────────
+    # [메모리항목17] Province 미분류율 25% 이하 목표
+    # NEWSDATA_API_KEY 있을 때만 실행 (없으면 자동 스킵)
+    if NEWSDATA_API_KEY:
+        log("NewsData.io: Province 공백 + 전문미디어 보완 수집...")
+        newsdata_raw = fetch_newsdata(hours_back)
+
+        for item in newsdata_raw:
+            title   = item.get('title', '') or ''
+            link    = item.get('url', '') or ''
+            summary = item.get('raw_summary', '') or ''
+
+            if not title or len(title.strip()) < 15:
+                continue
+            if not is_vietnam_related(title, summary):
+                continue
+
+            url_hash = item.get('url_hash') or generate_url_hash(link)
+            if url_hash in existing_hashes:
+                continue
+
+            sector, area, confidence = classify_sector(title, summary)
+            if not sector:
+                continue
+
+            # province_hint: fetch_newsdata()가 쿼리 기반으로 제공한 힌트
+            province_hint = item.get('_province_hint')
+            province = province_hint or extract_province(title, summary)
+
+            article = {
+                'url_hash':       url_hash,
+                'url':            link,
+                'title':          title,
+                'summary':        summary[:1000],
+                'source':         item.get('source_name', 'NewsData'),
+                'source_name':    item.get('source_name', 'NewsData'),
+                'sector':         sector,
+                'area':           area,
+                'province':       province,
+                'confidence':     confidence,
+                'published_date': item.get('published_date', ''),
+                'raw_summary':    summary[:500],
+            }
+            if save_article(conn, article):
+                existing_hashes.add(url_hash)
+                total_collected += 1
+                collected_articles.append(article)
+                log(f"  [NewsData][{sector}|{province}] {title[:55]}...")
+
+        nd_count = sum(1 for a in collected_articles if 'NewsData' in a.get('source',''))
+        log(f"  NewsData.io 기여: {nd_count}건")
+
 
     conn.close()
 
