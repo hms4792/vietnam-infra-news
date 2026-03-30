@@ -1552,6 +1552,135 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
         for col,w in zip('ABCD',[30,12,10,10]):
             ws_sum.column_dimensions[col].width = w
 
+
+        # ── Keywords History 시트 업데이트 ──────────────────
+        # [목적] Area/Sector 1순위, Province 2순위, Date 내림차순 타임라인
+        # [규칙] 신규기사 노란하이라이트, 영문제목 우선, 중복URL 제거
+        # [메모리항목13] Sector 우선순위 고정
+        _KH_SECTOR_ORDER = [
+            "Waste Water", "Water Supply/Drainage", "Solid Waste",
+            "Power", "Oil & Gas", "Transport",
+            "Industrial Parks", "Smart City", "Construction"
+        ]
+        def _kh_sector_rank(s):
+            try: return _KH_SECTOR_ORDER.index(str(s))
+            except ValueError: return 99
+
+        _AREA_CAT = {
+            'Environment': 'Environment',
+            'Energy Develop.': 'Energy Development',
+            'Urban Development': 'Urban Development',
+            'Urban Develop.': 'Urban Development',
+        }
+
+        # 기존 KH에서 URL 집합 수집 (중복 방지)
+        _kh_sn = 'Keywords History'
+        if _kh_sn not in wb.sheetnames:
+            _ws_kh = wb.create_sheet(_kh_sn)
+        else:
+            _ws_kh = wb[_kh_sn]
+
+        # 기존 URL 집합 파악
+        _kh_url_col = 8  # URL 컬럼 기본값
+        for _c in range(1, _ws_kh.max_column + 1):
+            if str(_ws_kh.cell(1, _c).value or '').lower() == 'url':
+                _kh_url_col = _c
+                break
+        _existing_kh_urls = set()
+        for _r in range(2, _ws_kh.max_row + 1):
+            _u = _ws_kh.cell(_r, _kh_url_col).value
+            if _u:
+                _existing_kh_urls.add(str(_u))
+
+        # 신규 기사만 KH에 추가
+        _kh_new_articles = [
+            a for a in articles
+            if a.get('url') and str(a['url']) not in _existing_kh_urls
+        ]
+
+        if _kh_new_articles:
+            # 헤더가 없으면 생성
+            if _ws_kh.cell(1, 1).value != 'No':
+                _kh_headers = ['No','Category','Sector','Province',
+                                'Date','Title','Source','URL','Summary (EN/KO)']
+                _kh_wids    = [5, 16, 22, 18, 12, 65, 22, 50, 55]
+                for _ci, (_h, _w) in enumerate(zip(_kh_headers, _kh_wids), 1):
+                    _c = _ws_kh.cell(1, _ci, _h)
+                    _c.fill = HDR_FILL; _c.font = HDR_FONT
+                    _c.alignment = Alignment(horizontal='center')
+                for _ci, _w in enumerate(_kh_wids, 1):
+                    from openpyxl.utils import get_column_letter
+                    _ws_kh.column_dimensions[get_column_letter(_ci)].width = _w
+                _ws_kh.freeze_panes = 'A2'
+
+            # 신규 기사를 기존 데이터 아래 추가 (노란 하이라이트)
+            _ENV_FILL_KH    = PatternFill(start_color="F0FDF4",end_color="F0FDF4",fill_type="solid")
+            _ENERGY_FILL_KH = PatternFill(start_color="FFFBEB",end_color="FFFBEB",fill_type="solid")
+            _URBAN_FILL_KH  = PatternFill(start_color="F5F3FF",end_color="F5F3FF",fill_type="solid")
+            _KH_SECTOR_FILL = {
+                "Waste Water": _ENV_FILL_KH, "Water Supply/Drainage": _ENV_FILL_KH,
+                "Solid Waste": _ENV_FILL_KH,
+                "Power": _ENERGY_FILL_KH, "Oil & Gas": _ENERGY_FILL_KH,
+                "Transport": _URBAN_FILL_KH, "Industrial Parks": _URBAN_FILL_KH,
+                "Smart City": _URBAN_FILL_KH, "Construction": _URBAN_FILL_KH,
+            }
+
+            _start_r = _ws_kh.max_row + 1
+            _cur_no  = _ws_kh.cell(_start_r - 1, 1).value or (_start_r - 2)
+            try: _cur_no = int(_cur_no)
+            except: _cur_no = _start_r - 2
+
+            # 신규 기사 정렬 후 삽입
+            _kh_new_sorted = sorted(
+                _kh_new_articles,
+                key=lambda a: (
+                    _kh_sector_rank(a.get('sector', '')),
+                    str(a.get('province', 'Vietnam')),
+                    str(a.get('published_date', '') or ''),
+                ),
+                reverse=False
+            )
+
+            for _a in _kh_new_sorted:
+                _cur_no += 1
+                _nr = _ws_kh.max_row + 1
+
+                # 영문 제목 우선
+                _title = (str(_a.get('title_en','') or '').strip() or
+                          str(_a.get('title_ko','') or '').strip() or
+                          str(_a.get('title','') or ''))
+                _summary = (str(_a.get('summary_en','') or '').strip() or
+                            str(_a.get('summary_ko','') or '').strip() or
+                            str(_a.get('summary','') or ''))[:300]
+                _sector  = str(_a.get('sector',''))
+                _area    = str(_a.get('area',''))
+                _cat     = _AREA_CAT.get(_area, _area)
+                _date    = (str(_a.get('published_date','') or '')[:10])
+
+                _kh_vals = [
+                    _cur_no, _cat, _sector,
+                    str(_a.get('province','Vietnam')),
+                    _date, _title,
+                    str(_a.get('source','')),
+                    str(_a.get('url','')),
+                    _summary,
+                ]
+                for _ci, _val in enumerate(_kh_vals, 1):
+                    _cell = _ws_kh.cell(_nr, _ci, _val)
+                    _cell.fill   = NEW_FILL   # 노란 하이라이트
+                    _cell.font   = NEW_FONT
+                    _cell.border = thin_border
+                    if _ci in (1, 5):
+                        _cell.alignment = Alignment(horizontal='center', vertical='top')
+                    else:
+                        _cell.alignment = Alignment(horizontal='left', vertical='top',
+                                                    wrap_text=False)
+                _ws_kh.row_dimensions[_nr].height = 15
+
+            log(f"✓ Keywords History: +{len(_kh_new_articles)} new articles added (yellow)")
+        else:
+            log("Keywords History: no new articles to add")
+
         wb.save(ep)
         wb.close()
         log(f"✓ Excel saved | +{added} new(yellow) | total {cur_total} | sorted ↓date | Log+RSS+Summary updated")
