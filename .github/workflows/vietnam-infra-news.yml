@@ -82,6 +82,21 @@ jobs:
           echo "Order      : collect -> translate(MyMemory) -> excel"
           python3 scripts/news_collector.py --hours-back $HOURS_BACK
 
+
+      # 전문미디어 소급 크롤링 (월 1회 — 주간 실행 시)
+      # 대상: theinvestor.vn, vir.com.vn, hanoitimes.vn
+      # 2025-01-01 이후 기사 소급 수집 (공백 구간 보완)
+      - name: Specialist media crawl (backfill)
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+          DB_PATH: data/vietnam_infrastructure_news.db
+        run: |
+          if [ -f scripts/specialist_crawler.py ]; then
+            python3 scripts/specialist_crawler.py --from-date 2025-01-01
+          else
+            echo "specialist_crawler.py not found, skipping"
+          fi
+
       # 소급 번역: title_ko 비어있는 기존 기사 20건씩 처리 [메모리항목15]
       - name: Batch translate untranslated articles
         env:
