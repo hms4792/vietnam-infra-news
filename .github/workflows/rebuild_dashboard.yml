@@ -2,14 +2,7 @@
 # Vietnam Infrastructure News — 대시보드 단독 재빌드
 # 파일: .github/workflows/rebuild_dashboard.yml
 #
-# 용도: Excel DB 업로드 후 대시보드만 단독 재빌드할 때 사용
-#       전체 파이프라인(수집+번역) 없이 dashboard_updater.py만 실행
-#
-# [사용 시점]
-#   - Excel DB 수동 수정 후 대시보드 반영
-#   - 집계 건수 불일치 수정 후
-#   - 빈 행/중복 정리 후
-#
+# 용도: Excel DB 업로드 후 대시보드만 단독 재빌드
 # [메모리항목2] dashboard_template.html → docs/index.html
 # [메모리항목4] EMAIL_USERNAME / EMAIL_PASSWORD
 # ============================================================
@@ -37,19 +30,37 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
+      # dashboard_updater.py 가 필요로 하는 모든 패키지 설치
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install requests openpyxl
+          pip install requests openpyxl feedparser beautifulsoup4 lxml
 
-      # [메모리항목2] dashboard_template.html 사용
-      - name: Rebuild dashboard from Excel
+      # 실행 전 Excel 파일 존재 확인
+      - name: Check Excel file
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
         run: |
-          echo "=== Dashboard Rebuild ==="
-          echo "Excel: $EXCEL_PATH"
+          echo "=== Excel 파일 확인 ==="
+          ls -lh $EXCEL_PATH
+          python3 -c "
+import openpyxl, os
+wb = openpyxl.load_workbook('$EXCEL_PATH', read_only=True, data_only=True)
+ws = wb.active
+rows = ws.max_row - 1
+print(f'News Database 행수: {rows}건')
+wb.close()
+"
+
+      # [메모리항목2] dashboard_template.html → docs/index.html
+      - name: Rebuild dashboard
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+        run: |
+          echo "=== Dashboard Rebuild 시작 ==="
           python3 scripts/dashboard_updater.py
+          echo "=== Dashboard Rebuild 완료 ==="
+          ls -lh docs/index.html
 
       # [메모리항목8] main 브랜치 /docs 폴더
       - name: Commit and push
@@ -58,8 +69,9 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add docs/index.html
           if git diff --staged --quiet; then
-            echo "No changes"
+            echo "No changes to index.html"
           else
-            git commit -m "Rebuild dashboard -- $(date '+%Y-%m-%d %H:%M UTC')"
+            git commit -m "Rebuild dashboard $(date '+%Y-%m-%d %H:%M UTC')"
             git push
+            echo "Dashboard updated successfully"
           fi
