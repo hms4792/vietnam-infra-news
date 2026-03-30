@@ -1,0 +1,65 @@
+# ============================================================
+# Vietnam Infrastructure News — 대시보드 단독 재빌드
+# 파일: .github/workflows/rebuild_dashboard.yml
+#
+# 용도: Excel DB 업로드 후 대시보드만 단독 재빌드할 때 사용
+#       전체 파이프라인(수집+번역) 없이 dashboard_updater.py만 실행
+#
+# [사용 시점]
+#   - Excel DB 수동 수정 후 대시보드 반영
+#   - 집계 건수 불일치 수정 후
+#   - 빈 행/중복 정리 후
+#
+# [메모리항목2] dashboard_template.html → docs/index.html
+# [메모리항목4] EMAIL_USERNAME / EMAIL_PASSWORD
+# ============================================================
+
+name: Rebuild Dashboard Only
+
+on:
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    name: dashboard_updater.py 단독 실행
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests openpyxl
+
+      # [메모리항목2] dashboard_template.html 사용
+      - name: Rebuild dashboard from Excel
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+        run: |
+          echo "=== Dashboard Rebuild ==="
+          echo "Excel: $EXCEL_PATH"
+          python3 scripts/dashboard_updater.py
+
+      # [메모리항목8] main 브랜치 /docs 폴더
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/index.html
+          if git diff --staged --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Rebuild dashboard -- $(date '+%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
