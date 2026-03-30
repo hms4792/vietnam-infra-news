@@ -1655,6 +1655,10 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
             rows_data = []
             for r in range(2, max_row + 1):
                 row_vals = [ws.cell(row=r, column=c).value for c in range(1, max_col_dyn + 1)]
+                # [버그수정] 빈 행(제목 없음) 완전 제외 — 재정렬 시 빈 행 재삽입 방지
+                title_val = row_vals[col_map['title']-1] if col_map['title']-1 < len(row_vals) else None
+                if not title_val or str(title_val).strip() == '':
+                    continue
                 date_key = str(row_vals[col_map['date']-1] or '0000-00-00')[:10]
                 url_key  = str(row_vals[col_map['url']-1]  or '')
                 rows_data.append({'vals': row_vals, 'date': date_key, 'is_new': url_key in new_urls})
