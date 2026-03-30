@@ -72,6 +72,7 @@ jobs:
           LANGUAGE_FILTER: all
           GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
           ENABLE_GNEWS: 'false'
+          NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
           EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
