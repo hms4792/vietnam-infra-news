@@ -1,10 +1,11 @@
 # ============================================================
 # Vietnam Infrastructure News — 대시보드 단독 재빌드
-# 파일: .github/workflows/rebuild_dashboard.yml
+# .github/workflows/rebuild_dashboard.yml
 #
-# 용도: Excel DB 업로드 후 대시보드만 단독 재빌드
-# [메모리항목2] dashboard_template.html -> docs/index.html
-# [메모리항목12] yml 내 python3 -c "..." 인라인 코드 금지
+# v3 수정 (2026-03-30):
+#   - dashboard_updater.py 우회
+#   - Python으로 직접 Excel 읽기 → /*__BACKEND_DATA__*/[] 주입
+#   - 별도 check_excel.py, build_dashboard.py 활용
 # ============================================================
 
 name: Rebuild Dashboard Only
@@ -14,7 +15,6 @@ on:
 
 jobs:
   rebuild:
-    name: dashboard_updater.py 단독 실행
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install requests openpyxl feedparser beautifulsoup4 lxml
+          pip install openpyxl
 
       - name: Check Excel file
         env:
@@ -41,13 +41,11 @@ jobs:
         run: |
           python3 scripts/check_excel.py
 
-      - name: Rebuild dashboard
+      - name: Build dashboard directly
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
         run: |
-          echo "=== Dashboard Rebuild ==="
-          python3 scripts/dashboard_updater.py
-          ls -lh docs/index.html
+          python3 scripts/build_dashboard.py
 
       - name: Commit and push
         run: |
