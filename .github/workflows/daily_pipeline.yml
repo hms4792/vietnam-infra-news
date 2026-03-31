@@ -1,17 +1,14 @@
 # ============================================================
 # Vietnam Infrastructure News — 일일 수집 파이프라인
-# 파일: .github/workflows/daily_pipeline.yml
+# .github/workflows/daily_pipeline.yml
 #
-# 스케줄: 매일 KST 20:00 = UTC 11:00 (내일부터 자동 실행)
-#
-# ★ 영구 제약 (절대 변경 금지):
-#   [1] 번역: Google Translate (MyMemory API). Anthropic API 금지
-#   [2] 대시보드: templates/dashboard_template.html 사용
-#   [4] 이메일: EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_* 금지)
-#  [12] yml 내 python3 -c "..." 인라인 코드 금지
+# 스케줄: 매일 KST 20:00 (UTC 11:00)
+# [메모리항목4] EMAIL_USERNAME / EMAIL_PASSWORD
+# [메모리항목8] main 브랜치 /docs 폴더
+# [메모리항목12] yml 내 python3 -c "..." 인라인 코드 금지
 # ============================================================
 
-name: Daily Pipeline v5.3
+name: Daily Pipeline v5.4
 
 on:
   schedule:
@@ -19,22 +16,17 @@ on:
   workflow_dispatch:
     inputs:
       hours_back:
-        description: '소급 수집 시간 (기본 24)'
+        description: '수집 시간 범위 (기본 24)'
         required: false
         default: '24'
-      force_weekly:
-        description: '주간 모드 강제 실행 (168시간)'
-        required: false
-        default: 'false'
-        type: boolean
 
 concurrency:
   group: news-collection
   cancel-in-progress: false
 
 jobs:
-  daily_pipeline:
-    name: Collect + Translate + Excel + Dashboard (daily)
+  daily:
+    name: 일일 수집 및 대시보드 업데이트
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -50,54 +42,32 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      # deep-translator: MyMemory API 번역용 [메모리항목1]
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install requests feedparser beautifulsoup4 openpyxl lxml deep-translator
+          pip install requests openpyxl feedparser beautifulsoup4 lxml deep-translator
 
-      # 수집 시간 결정 [메모리항목12 별도파일 원칙 준수 - 단순 shell만 사용]
-      - name: Set hours_back
-        id: set_hours
-        run: |
-          if [ "${{ github.event.inputs.force_weekly }}" = "true" ]; then
-            echo "hours=168" >> $GITHUB_OUTPUT
-          else
-            echo "hours=${{ github.event.inputs.hours_back || '24' }}" >> $GITHUB_OUTPUT
-          fi
-
-      # SQLite 재동기화 [메모리항목12 별도파일]
-      - name: Sync SQLite from Excel DB
+      - name: Check Excel file
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          DB_PATH: data/vietnam_infrastructure_news.db
         run: |
-          python3 scripts/reset_sqlite_db.py
+          python3 scripts/check_excel.py
 
-      # [메모리항목7] collect_news() -> translate_articles() -> update_excel_database()
-      # [메모리항목1] MyMemory API, Anthropic API 절대 금지
-      - name: Collect + Translate + Save Excel (v5.3)
+      - name: Collect news
         env:
-          HOURS_BACK: ${{ steps.set_hours.outputs.hours }}
+          HOURS_BACK: ${{ github.event.inputs.hours_back || '24' }}
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
           LANGUAGE_FILTER: all
-          GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
-          ENABLE_GNEWS: 'false'
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
-          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
-          echo "=== Vietnam Infra News Collector v5.3 (DAILY) ==="
-          echo "Hours back : $HOURS_BACK"
-          echo "Excel path : $EXCEL_PATH"
+          echo "=== News Collection (hours_back=$HOURS_BACK) ==="
           python3 scripts/news_collector.py --hours-back $HOURS_BACK
 
-      # 소급 번역: title_ko 비어있는 기존 기사 20건씩 처리 [메모리항목15]
-      - name: Batch translate untranslated articles
+      - name: Batch translate (20건 소급)
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          BATCH_SIZE: '20'
+          DB_PATH: data/vietnam_infrastructure_news.db
         run: |
           if [ -f scripts/batch_translate.py ]; then
             python3 scripts/batch_translate.py
@@ -105,35 +75,38 @@ jobs:
             echo "batch_translate.py not found, skipping"
           fi
 
-      # [메모리항목2] dashboard_template.html 사용
-      - name: Generate dashboard
+      - name: Build dashboard
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
         run: |
-          if [ -f scripts/dashboard_updater.py ]; then
-            python3 scripts/dashboard_updater.py
-          else
-            echo "dashboard_updater.py not found, skipping"
-          fi
+          echo "=== Dashboard Build ==="
+          python3 scripts/build_dashboard.py
+          echo "index.html size: $(wc -c < docs/index.html) bytes"
 
-      # [메모리항목8] main 브랜치 /docs 폴더 -> GitHub Pages
-      - name: Commit and push changes
+      - name: Commit and push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add -A
+          git add data/database/Vietnam_Infra_News_Database_Final.xlsx
+          git add data/vietnam_infrastructure_news.db || true
+          git add docs/index.html
           if git diff --staged --quiet; then
-            echo "No changes to commit"
+            echo "No changes"
           else
-            git commit -m "Daily v5.3 collect+translate -- $(date '+%Y-%m-%d %H:%M UTC')"
+            git commit -m "Daily update $(date '+%Y-%m-%d') KST"
             git push
+            echo "Pushed successfully"
           fi
 
-      # [메모리항목4] EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_* 금지)
       - name: Send email notification
         if: always()
         env:
           EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
         run: |
-          python3 scripts/send_email.py || echo "Email notification skipped"
+          if [ -f scripts/send_email.py ]; then
+            python3 scripts/send_email.py || echo "Email skipped"
+          else
+            echo "send_email.py not found"
+          fi
