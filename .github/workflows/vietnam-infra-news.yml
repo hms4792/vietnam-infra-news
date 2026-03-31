@@ -1,36 +1,31 @@
 # ============================================================
-# Vietnam Infrastructure News — 주간 수집 (오늘 1회 실행용)
-# 파일: .github/workflows/collect_weekly.yml
+# Vietnam Infrastructure News — 주간 수집 파이프라인
+# .github/workflows/collect_weekly.yml
 #
-# 목적: 오늘 1회 수동 실행 → 지난 7일치 수집 + 번역 + Excel + 대시보드
-#       내일부터 daily_pipeline.yml 이 매일 자동 실행
-#
-# ★ 영구 제약 (절대 변경 금지):
-#   [1] 번역: Google Translate (MyMemory API). Anthropic API 금지
-#   [2] 대시보드: templates/dashboard_template.html 사용
-#   [4] 이메일: EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_* 금지)
-#  [12] yml 내 python3 -c "..." 인라인 코드 금지
+# 스케줄: 매주 토요일 KST 18:00 (UTC 09:00)
+# [메모리항목4] EMAIL_USERNAME / EMAIL_PASSWORD
+# [메모리항목12] yml 내 python3 -c "..." 인라인 코드 금지
 # ============================================================
 
 name: Weekly Collection v5.3 (7days)
 
 on:
+  schedule:
+    - cron: '0 9 * * 6'
   workflow_dispatch:
     inputs:
       hours_back:
-        description: '소급 수집 시간 (기본 168 = 7일)'
+        description: '소급 수집 시간 (기본 168=7일)'
         required: false
         default: '168'
-  schedule:
-    - cron: '0 9 * * 6'
 
 concurrency:
   group: news-collection
   cancel-in-progress: false
 
 jobs:
-  weekly_pipeline:
-    name: Collect + Translate + Excel + Dashboard (7days)
+  weekly:
+    name: 주간 수집 및 전문미디어 크롤링
     runs-on: ubuntu-latest
     timeout-minutes: 55
 
@@ -46,47 +41,29 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      # deep-translator: MyMemory API 번역용 [메모리항목1]
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install requests feedparser beautifulsoup4 openpyxl lxml deep-translator
+          pip install requests openpyxl feedparser beautifulsoup4 lxml deep-translator
 
-      # SQLite 재동기화 — 중복 스킵 방지 [메모리항목12 별도파일]
-      - name: Sync SQLite from Excel DB
+      - name: Check Excel file
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          DB_PATH: data/vietnam_infrastructure_news.db
         run: |
-          python3 scripts/reset_sqlite_db.py
+          python3 scripts/check_excel.py
 
-      # [메모리항목7] news_collector.py 내부 실행 순서 보장:
-      #   collect_news() -> translate_articles() -> update_excel_database()
-      #   번역 완료 후 Excel 저장 -> title_ko/en/vi 정상 기록
-      # [메모리항목1] MyMemory API, Anthropic API 절대 금지
-      - name: Collect + Translate + Save Excel (v5.3)
+      - name: Collect news (7-day lookback)
         env:
           HOURS_BACK: ${{ github.event.inputs.hours_back || '168' }}
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
           LANGUAGE_FILTER: all
-          GNEWS_API_KEY: ${{ secrets.GNEWS_API_KEY }}
-          ENABLE_GNEWS: 'false'
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
-          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
-          echo "=== Vietnam Infra News Collector v5.3 (WEEKLY) ==="
-          echo "Hours back : $HOURS_BACK"
-          echo "Excel path : $EXCEL_PATH"
-          echo "Order      : collect -> translate(MyMemory) -> excel"
+          echo "=== Weekly News Collection (hours_back=$HOURS_BACK) ==="
           python3 scripts/news_collector.py --hours-back $HOURS_BACK
 
-
-      # 전문미디어 소급 크롤링 (월 1회 — 주간 실행 시)
-      # 대상: theinvestor.vn, vir.com.vn, hanoitimes.vn
-      # 2025-01-01 이후 기사 소급 수집 (공백 구간 보완)
-      - name: Specialist media crawl (backfill)
+      - name: Specialist crawler (theinvestor / vir / hanoitimes)
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
@@ -97,11 +74,10 @@ jobs:
             echo "specialist_crawler.py not found, skipping"
           fi
 
-      # 소급 번역: title_ko 비어있는 기존 기사 20건씩 처리 [메모리항목15]
-      - name: Batch translate untranslated articles
+      - name: Batch translate (20건 소급)
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          BATCH_SIZE: '20'
+          DB_PATH: data/vietnam_infrastructure_news.db
         run: |
           if [ -f scripts/batch_translate.py ]; then
             python3 scripts/batch_translate.py
@@ -109,35 +85,39 @@ jobs:
             echo "batch_translate.py not found, skipping"
           fi
 
-      # [메모리항목2] dashboard_template.html 사용
-      - name: Generate dashboard
+      # [핵심 수정] build_dashboard.py 사용
+      - name: Build dashboard
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
         run: |
-          if [ -f scripts/dashboard_updater.py ]; then
-            python3 scripts/dashboard_updater.py
-          else
-            echo "dashboard_updater.py not found, skipping"
-          fi
+          echo "=== Dashboard Build ==="
+          python3 scripts/build_dashboard.py
+          echo "index.html size: $(wc -c < docs/index.html) bytes"
 
-      # [메모리항목8] main 브랜치 /docs 폴더 -> GitHub Pages
-      - name: Commit and push changes
+      - name: Commit and push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add -A
+          git add data/database/Vietnam_Infra_News_Database_Final.xlsx
+          git add data/vietnam_infrastructure_news.db || true
+          git add docs/index.html
           if git diff --staged --quiet; then
-            echo "No changes to commit"
+            echo "No changes"
           else
-            git commit -m "Weekly v5.3 collect+translate -- $(date '+%Y-%m-%d %H:%M UTC')"
+            git commit -m "Weekly update $(date '+%Y-%m-%d') KST"
             git push
+            echo "Pushed successfully"
           fi
 
-      # [메모리항목4] EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_* 금지)
       - name: Send email notification
         if: always()
         env:
           EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
         run: |
-          python3 scripts/send_email.py || echo "Email notification skipped"
+          if [ -f scripts/send_email.py ]; then
+            python3 scripts/send_email.py || echo "Email skipped"
+          else
+            echo "send_email.py not found"
+          fi
