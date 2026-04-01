@@ -110,3 +110,14 @@ jobs:
           else
             echo "send_email.py not found"
           fi
+
+      - name: Export shared files for Genspark
+        run: python3 scripts/export_shared.py
+
+      - name: Commit and push shared files
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add docs/shared/
+          git diff --cached --quiet || git commit -m "Daily shared export $(date +%Y-%m-%d)"
+          git push
