@@ -2085,6 +2085,8 @@ if __name__ == "__main__":
     # --no-excel: Excel 저장 생략 → 번역 후 ExcelUpdater(Step3)가 저장
     p.add_argument('--no-excel',   action='store_true',
                    help='Skip Excel update (used when main.py handles ExcelUpdater)')
+    p.add_argument('--agent-mode', action='store_true',
+                   help='Save output to data/agent_output/collector_output.json (skips Excel)')
     args = p.parse_args()
 
     HOURS_BACK             = args.hours_back
@@ -2105,7 +2107,38 @@ if __name__ == "__main__":
     if cnt > 0:
         arts = translate_articles(arts)
 
-    if args.no_excel:
+    if args.agent_mode:
+        # --agent-mode: data/agent_output/collector_output.json 으로 저장 (Excel 스킵)
+        import json as _json
+        from datetime import timezone as _tz
+        _total = len(arts)
+        _vietnam_ratio = (
+            sum(1 for a in arts if a.get('province', '') == 'Vietnam') / _total
+            if _total > 0 else 0.0
+        )
+        _missing = [a.get('title', '')[:40] for a in arts if not a.get('province')]
+        _out = {
+            'run_timestamp':   datetime.now(_tz.utc).isoformat(),
+            'hours_back':      HOURS_BACK,
+            'total_collected': cnt,
+            'articles': [
+                {k: v for k, v in a.items() if k != 'url_hash'}
+                for a in arts
+            ],
+            'quality_flags': {
+                'vietnam_ratio':    round(_vietnam_ratio, 3),
+                'missing_provinces': _missing,
+            },
+        }
+        _json_path = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            'data', 'agent_output', 'collector_output.json'
+        )
+        Path(_json_path).parent.mkdir(parents=True, exist_ok=True)
+        with open(_json_path, 'w', encoding='utf-8') as _f:
+            _json.dump(_out, _f, ensure_ascii=False, default=str)
+        log(f"[agent-mode] Saved {cnt} articles to {_json_path}")
+    elif args.no_excel:
         # [메모리 항목7] main.py 경유 시: Excel 저장 스킵
         # 수집 결과를 JSON으로 저장 → main.py의 ExcelUpdater가 처리
         import json
