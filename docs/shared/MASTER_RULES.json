@@ -1,0 +1,32 @@
+{
+  "shared_version": "1.0.0",
+  "last_updated": "2026-04-01",
+  "sectors": [
+    "Waste Water", "Water Supply/Drainage", "Solid Waste",
+    "Power", "Oil & Gas", "Industrial Parks", "Smart City"
+  ],
+  "area_mapping": {
+    "Waste Water": "Environment",
+    "Water Supply/Drainage": "Environment",
+    "Solid Waste": "Environment",
+    "Power": "Energy Develop.",
+    "Oil & Gas": "Energy Develop.",
+    "Industrial Parks": "Urban Develop.",
+    "Smart City": "Urban Develop."
+  },
+  "quality_thresholds": {
+    "province_unclassified_max": 0.25,
+    "specialist_media_min": 0.30,
+    "sector_mismatch_max": 0.05
+  },
+  "specialist_sources": [
+    "The Investor", "VIR", "Vietnam Investment Review",
+    "Hanoitimes", "Nikkei Asia", "Reuters Vietnam"
+  ],
+  "province_name_mapping": {
+    "Ho Chi Minh City": ["HCMC", "TP.HCM", "Saigon"],
+    "Da Nang": ["Danang", "Đà Nẵng"],
+    "Hanoi": ["Hà Nội", "Ha Noi"]
+  },
+  "shared_base_url": "https://hms4792.github.io/vietnam-infra-news/shared/"
+}
