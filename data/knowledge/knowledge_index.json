@@ -1,0 +1,76 @@
+[
+  {
+    "doc_id": "VN-WW-2030",
+    "title": "베트남 국가 수처리 마스터플랜 2021-2030",
+    "source": "MPI",
+    "year": 2021,
+    "sectors": ["Waste Water", "Water Supply/Drainage"],
+    "provinces": ["Hanoi", "Ho Chi Minh City", "Binh Duong", "Dong Nai", "Binh Dinh", "Can Tho"],
+    "key_targets": [
+      {
+        "province": "Binh Duong",
+        "sector": "Waste Water",
+        "target": "하수처리율 70% 달성 by 2025",
+        "budget_usd_m": 450,
+        "status": "in_progress"
+      },
+      {
+        "province": "Hanoi",
+        "sector": "Water Supply/Drainage",
+        "target": "상수도 보급률 95% 달성 by 2025",
+        "budget_usd_m": 800,
+        "status": "in_progress"
+      }
+    ],
+    "keywords_en": ["wastewater treatment", "sewage network", "drainage system",
+                    "water treatment plant", "sanitation", "wwtp", "sewage"],
+    "keywords_vi": ["xử lý nước thải", "hệ thống thoát nước", "nhà máy xử lý"]
+  },
+  {
+    "doc_id": "VN-PWR-PDP8",
+    "title": "전력개발계획 8 (PDP8) 2021-2030",
+    "source": "MOIT",
+    "year": 2023,
+    "sectors": ["Power"],
+    "provinces": ["Vietnam", "Binh Thuan", "Ninh Thuan", "Quang Binh", "Quang Tri"],
+    "key_targets": [
+      {
+        "province": "Binh Thuan",
+        "sector": "Power",
+        "target": "풍력 2000MW 개발 by 2030",
+        "budget_usd_m": 2800,
+        "status": "planning"
+      },
+      {
+        "province": "Ninh Thuan",
+        "sector": "Power",
+        "target": "태양광 3000MW 개발 by 2030",
+        "budget_usd_m": 3200,
+        "status": "planning"
+      }
+    ],
+    "keywords_en": ["wind power", "solar energy", "power plant", "electricity grid",
+                    "renewable energy", "PDP8", "EVN", "energy transition"],
+    "keywords_vi": ["điện gió", "điện mặt trời", "nhà máy điện", "lưới điện"]
+  },
+  {
+    "doc_id": "VN-SW-2025",
+    "title": "베트남 고형폐기물 관리 국가전략 2025",
+    "source": "MONRE",
+    "year": 2022,
+    "sectors": ["Solid Waste"],
+    "provinces": ["Vietnam", "Hanoi", "Ho Chi Minh City", "Da Nang", "Can Tho"],
+    "key_targets": [
+      {
+        "province": "Vietnam",
+        "sector": "Solid Waste",
+        "target": "도시 고형폐기물 95% 수거 by 2025",
+        "budget_usd_m": 1200,
+        "status": "in_progress"
+      }
+    ],
+    "keywords_en": ["solid waste", "landfill", "waste management", "recycling",
+                    "incineration", "waste-to-energy", "municipal waste"],
+    "keywords_vi": ["chất thải rắn", "bãi rác", "xử lý rác", "tái chế"]
+  }
+]
