@@ -90,6 +90,7 @@ jobs:
           git add data/database/Vietnam_Infra_News_Database_Final.xlsx
           git add data/vietnam_infrastructure_news.db || true
           git add docs/index.html
+          git add data/agent_output/ || true
           if git diff --staged --quiet; then
             echo "No changes"
           else
