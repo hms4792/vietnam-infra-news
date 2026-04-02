@@ -62,7 +62,7 @@ jobs:
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
         run: |
           echo "=== News Collection (hours_back=$HOURS_BACK) ==="
-          python3 scripts/news_collector.py --hours-back $HOURS_BACK
+          python3 scripts/news_collector.py --hours-back $HOURS_BACK --agent-mode
 
       - name: Batch translate (20건 소급)
         env:
