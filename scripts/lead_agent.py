@@ -1,6 +1,6 @@
 """
-Lead Agent — SA-1~6 오케스트레이터
-실행 순서: collect → knowledge → summarize → excel → dashboard → export_shared
+Lead Agent — SA-1~7 오케스트레이터
+실행 순서: collect → knowledge → summarize → excel → dashboard → quality_context → export_shared
 """
 
 import os
@@ -219,22 +219,53 @@ def step5_dashboard():
         step_results["step5"] = {"status": "error", "msg": str(e)}
 
 
-# ── Step 6: 공유 레이어 Export ───────────────────────────────────────────────
+# ── Step 6: 품질 분석 ────────────────────────────────────────────────────────
 
-def step6_export():
-    banner("Step 6: 공유 레이어 Export (export_shared.py)")
+def step6_quality():
+    banner("Step 6: 품질 분석 (quality_context_agent.py)")
     try:
-        rc = run_script("export_shared.py")
+        if not script_exists("quality_context_agent.py"):
+            print("quality_context_agent.py 없음, 건너뜀")
+            step_results["step6"] = {"status": "skipped"}
+            return
+
+        rc = run_script("quality_context_agent.py")
+
+        grade = None
+        quality_json = os.path.join(AGENT_OUT_DIR, "quality_report.json")
+        if os.path.exists(quality_json):
+            with open(quality_json, "r", encoding="utf-8") as f:
+                q = json.load(f)
+            grade = q.get("quality_grade")
+
         if rc == 0:
-            print("[OK] export_shared.py 완료")
-            step_results["step6"] = {"status": "ok"}
+            print(f"[OK] quality_report.json 생성 완료 (등급: {grade})")
+            step_results["step6"] = {"status": "ok", "grade": grade}
         else:
-            print(f"[WARN] export_shared.py 비정상 종료 (returncode={rc})")
-            step_results["step6"] = {"status": "warn"}
+            print(f"[WARN] quality_context_agent.py 비정상 종료 (returncode={rc})")
+            step_results["step6"] = {"status": "warn", "grade": grade}
 
     except Exception as e:
         print(f"[ERROR] Step 6 실패: {e}")
         step_results["step6"] = {"status": "error", "msg": str(e)}
+
+
+# ── Step 7: 공유 레이어 Export ───────────────────────────────────────────────
+
+def step7_export():
+    banner("Step 7: 공유 레이어 Export (export_shared.py)")
+    try:
+        rc = run_script("export_shared.py")
+        if rc == 0:
+            print("[OK] export_shared.py 완료")
+            step_results["step7"] = {"status": "ok"}
+        else:
+            print(f"[WARN] export_shared.py 비정상 종료 (returncode={rc})")
+            step_results["step7"] = {"status": "warn"}
+
+    except Exception as e:
+        print(f"[ERROR] Step 7 실패: {e}")
+        step_results["step7"] = {"status": "error", "msg": str(e)}
 
 
 # ── 최종 리포트 ──────────────────────────────────────────────────────────────
@@ -249,7 +280,8 @@ def print_summary():
         "step3": "Step 3: AI 요약",
         "step4": "Step 4: Excel 업데이트",
         "step5": "Step 5: 대시보드",
-        "step6": "Step 6: Export",
+        "step6": "Step 6: 품질 분석",
+        "step7": "Step 7: Export",
     }
 
     has_error = False
@@ -269,6 +301,8 @@ def print_summary():
             elif key == "step4":
                 detail = f" {r.get('updated', 0)}건"
             elif key == "step6":
+                detail = f" 등급:{r.get('grade', '?')}"
+            elif key == "step7":
                 detail = " 완료"
         elif status == "skipped":
             detail = " 건너뜀"
@@ -285,7 +319,7 @@ def print_summary():
     if has_error:
         overall = "FAILED" if all(
             step_results.get(k, {}).get("status") == "error"
-            for k in labels
+            for k in ("step1", "step2", "step3", "step4", "step5", "step6", "step7")
         ) else "PARTIAL"
     elif has_warn:
         overall = "PARTIAL"
@@ -308,7 +342,8 @@ def main():
     step3_summarize()
     step4_excel(articles)
     step5_dashboard()
-    step6_export()
+    step6_quality()
+    step7_export()
     print_summary()
 
 

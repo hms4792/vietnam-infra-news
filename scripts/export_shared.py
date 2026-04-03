@@ -142,6 +142,20 @@ def main():
 
     print(f"\nExport 완료: {count}개 파일 처리됨")
 
+    # 5. Google Drive 동기화 (GDRIVE_FOLDER_ID 설정 시에만)
+    if os.environ.get("GDRIVE_FOLDER_ID"):
+        try:
+            import sys
+            scripts_dir = os.path.dirname(os.path.abspath(__file__))
+            sys.path.insert(0, scripts_dir)
+            import gdrive_upload
+            print("\n[Google Drive 동기화]")
+            gdrive_upload.main()
+        except Exception as e:
+            print(f"  [ERROR] Google Drive 동기화 실패: {e}")
+    else:
+        print("  [SKIP] Google Drive 동기화 (GDRIVE_FOLDER_ID 미설정)")
+
 
 if __name__ == "__main__":
     main()

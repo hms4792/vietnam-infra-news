@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "google-drive": {
+      "command": "npx",
+      "args": ["@piotr-agier/google-drive-mcp"],
+      "env": {
+        "GOOGLE_DRIVE_OAUTH_CREDENTIALS": "C:/Users/hms47/.google/gdrive_oauth.keys.json"
+      }
+    }
+  }
+}
