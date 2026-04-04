@@ -144,9 +144,9 @@ def build():
     # 검증
     try:
         json.loads(json_str)
-        print(f"  JSON 검증 ✅ ({len(json_str):,} bytes)")
+        print(f"  JSON 검증 [OK] ({len(json_str):,} bytes)")
     except json.JSONDecodeError as e:
-        print(f"  JSON 검증 ❌ {e}")
+        print(f"  JSON 검증 [ERROR] {e}")
         sys.exit(1)
 
     if not TEMPLATE_PATH.exists():
@@ -166,7 +166,7 @@ def build():
         f.write(html_out)
 
     size = OUTPUT_PATH.stat().st_size
-    print(f"\n✅ 저장 완료: {OUTPUT_PATH} ({size:,} bytes)")
+    print(f"\n[OK] 저장 완료: {OUTPUT_PATH} ({size:,} bytes)")
     print(f"   기사: {total}건 | 최신: {latest}")
     print(f"   빌드: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
 
