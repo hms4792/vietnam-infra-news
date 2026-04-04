@@ -112,6 +112,9 @@ jobs:
             echo "send_email.py not found"
           fi
 
+      - name: Run Quality Context Agent (SA-6)
+        run: python3 scripts/quality_context_agent.py
+
       - name: Export shared files for Genspark
         run: python3 scripts/export_shared.py
 
