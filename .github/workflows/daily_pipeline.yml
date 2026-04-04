@@ -75,6 +75,12 @@ jobs:
             echo "batch_translate.py not found, skipping"
           fi
 
+      - name: Update Excel (SA-4)
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+          DB_PATH: data/vietnam_infrastructure_news.db
+        run: python3 scripts/run_excel_updater.py
+
       - name: Build dashboard
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx

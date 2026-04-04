@@ -567,7 +567,7 @@ class ExcelUpdater:
         for article in articles:
             sector  = article.get("sector", "")
             title   = (article.get("title_en") or article.get("title", "")).lower()
-            date_s  = str(article.get("date", ""))[:10]
+            date_s  = str(article.get("date") or article.get("published_date", ""))[:10]
             year    = date_s[:4] if date_s else ""
             province = article.get("province", "Vietnam")
 
