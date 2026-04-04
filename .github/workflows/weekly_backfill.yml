@@ -1,0 +1,77 @@
+# ============================================================
+# Vietnam Infrastructure News — 주간 백필 파이프라인
+# .github/workflows/weekly_backfill.yml
+#
+# 스케줄: 매주 일요일 KST 10:00 (UTC 01:00)
+# 역할: NewsData.io Archive API로 과거 기사 역순 재수집
+# ============================================================
+
+name: Weekly Backfill
+
+on:
+  schedule:
+    - cron: '0 1 * * 0'
+  workflow_dispatch:
+    inputs:
+      backfill_from:
+        description: '수집 시작 날짜 (기본: 8주 전)'
+        required: false
+        default: ''
+      backfill_to:
+        description: '수집 종료 날짜 (기본: 어제)'
+        required: false
+        default: ''
+
+concurrency:
+  group: backfill
+  cancel-in-progress: false
+
+jobs:
+  backfill:
+    name: 주간 백필 수집
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests openpyxl
+
+      - name: Run backfill
+        env:
+          NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+          BACKFILL_FROM: ${{ github.event.inputs.backfill_from }}
+          BACKFILL_TO: ${{ github.event.inputs.backfill_to }}
+        run: python3 scripts/backfill_newsdata.py
+
+      - name: Rebuild dashboard
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+        run: python3 scripts/build_dashboard.py
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/database/Vietnam_Infra_News_Database_Final.xlsx
+          git add data/agent_output/ || true
+          git add docs/index.html || true
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Weekly backfill $(date '+%Y-%m-%d') UTC"
+            git push
+          fi
