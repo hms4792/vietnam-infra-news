@@ -6,7 +6,8 @@ Excel DB에서 title_ko가 비어있는 기사를 배치 번역
 [메모리항목15] 하루 20건씩 처리 (MyMemory API 한도 고려)
 [메모리항목1] Google Translate (MyMemory 1차 + deep-translator 2차). Anthropic API 금지
 """
-import os, hashlib, time
+import sys, os, hashlib, time
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 from pathlib import Path
 
 EXCEL_PATH = os.environ.get('EXCEL_PATH', 'data/database/Vietnam_Infra_News_Database_Final.xlsx')
@@ -110,10 +111,10 @@ def run_batch():
                 ws.cell(r, c).fill = DONE_FILL
 
             translated += 1
-            print(f"  [{i+1}/{len(batch)}] ✅ {title[:50]}")
+            print(f"  [{i+1}/{len(batch)}] OK {title[:50]}")
 
         except Exception as e:
-            print(f"  [{i+1}/{len(batch)}] ❌ 오류: {e} | {title[:40]}")
+            print(f"  [{i+1}/{len(batch)}] ERROR: {e} | {title[:40]}")
 
         # API 과부하 방지
         if (i + 1) % 5 == 0:
