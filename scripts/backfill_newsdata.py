@@ -65,13 +65,14 @@ PROVINCE_LIST = [
 
 def load_cursor():
     """backfill_cursor.json 읽기. 없으면 오늘부터 시작하는 초기값 반환."""
-    today     = date.today()
-    default_to   = (today - timedelta(days=1)).isoformat()
-    default_from = (today - timedelta(days=WINDOW_DAYS)).isoformat()
+    env_to   = os.environ.get("BACKFILL_TO",   "").strip()
+    env_from = os.environ.get("BACKFILL_FROM", "").strip()
 
-    env_to   = os.environ.get("BACKFILL_TO",   default_to)
-    env_from = os.environ.get("BACKFILL_FROM",
-                              (date.today() - timedelta(weeks=8)).isoformat())
+    # 빈 문자열이면 기본값 사용
+    if not env_to:
+        env_to   = (datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%d")
+    if not env_from:
+        env_from = (datetime.utcnow() - timedelta(days=15)).strftime("%Y-%m-%d")
 
     if os.path.exists(CURSOR_PATH):
         with open(CURSOR_PATH, encoding="utf-8") as f:
