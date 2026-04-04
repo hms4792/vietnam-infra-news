@@ -26,7 +26,7 @@ def translate_text(text, target_lang='ko'):
         r = requests.get(url, timeout=10)
         data = r.json()
         result = data.get('responseData', {}).get('translatedText', '')
-        if result and result != text and 'INVALID' not in str(result).upper():
+        if result and result != text and 'INVALID' not in str(result).upper() and not str(result).startswith('MYMEMORY WARNING'):
             return result
     except Exception:
         pass
@@ -98,6 +98,11 @@ def run_batch():
             sko = translate_text(summary[:300], 'ko') if summary else ''
             sen = translate_text(summary[:300], 'en') if summary else ''
             svi = translate_text(summary[:300], 'vi') if summary else ''
+
+            # MYMEMORY 한도 초과 오류면 저장하지 않고 건너뜀
+            if any(str(v).startswith('MYMEMORY WARNING') for v in [tko, ten, tvi] if v):
+                print(f"  [{i+1}/{len(batch)}] SKIP (API limit) {title[:40]}")
+                continue
 
             ws.cell(r, title_ko_col).value = tko
             ws.cell(r, title_en_col).value = ten
