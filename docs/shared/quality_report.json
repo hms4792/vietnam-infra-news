@@ -1,0 +1,67 @@
+{
+  "generated_at": "2026-04-04T11:26:11.599158+00:00",
+  "total_articles": 21,
+  "quality_grade": "C",
+  "targets_met": {
+    "province_unclassified_le_25pct": true,
+    "specialist_media_ge_30pct": false,
+    "all_7_sectors_covered": false
+  },
+  "metrics": {
+    "province_unclassified_rate": 0.0,
+    "specialist_media_ratio": 0.238,
+    "sector_coverage": {
+      "covered": [
+        "Industrial Parks",
+        "Oil & Gas",
+        "Power",
+        "Solid Waste"
+      ],
+      "missing": [
+        "Waste Water",
+        "Water Supply/Drainage",
+        "Smart City"
+      ],
+      "ratio": 0.571
+    },
+    "area_distribution": {
+      "Environment": 3,
+      "Energy Develop.": 9,
+      "Urban Develop.": 2,
+      "Other": 7
+    },
+    "policy_alignment": {
+      "matched_ratio": 0.0,
+      "high_relevance_ratio": 0.0
+    },
+    "collector_flags": {
+      "vietnam_ratio": 0.19,
+      "missing_provinces": []
+    }
+  },
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "metric": "specialist_media_ratio",
+      "current": 0.238,
+      "target": 0.3,
+      "action": "전문 RSS 소스 추가 또는 Google News 전문 쿼리 확대 필요"
+    },
+    {
+      "priority": "MEDIUM",
+      "metric": "sector_coverage",
+      "missing": [
+        "Waste Water",
+        "Water Supply/Drainage",
+        "Smart City"
+      ],
+      "action": "Waste Water, Water Supply/Drainage, Smart City 섹터 RSS/키워드 보강 필요"
+    },
+    {
+      "priority": "LOW",
+      "metric": "policy_alignment",
+      "current": 0.0,
+      "action": "knowledge_index.json 확장으로 정책 연계율 개선 가능"
+    }
+  ]
+}
