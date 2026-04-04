@@ -72,5 +72,252 @@
     "keywords_en": ["solid waste", "landfill", "waste management", "recycling",
                     "incineration", "waste-to-energy", "municipal waste"],
     "keywords_vi": ["chất thải rắn", "bãi rác", "xử lý rác", "tái chế"]
+  },
+  {
+    "doc_id": "VN-SW-MEKONG-2030",
+    "title": "메콩델타 고형폐기물 처리 계획 2030",
+    "source": "MONRE",
+    "year": 2023,
+    "sectors": ["Solid Waste"],
+    "provinces": ["Can Tho", "An Giang", "Dong Thap", "Long An", "Tien Giang", "Ben Tre", "Tra Vinh", "Vinh Long", "Hau Giang", "Soc Trang", "Bac Lieu", "Ca Mau", "Kien Giang"],
+    "key_targets": [
+      {
+        "province": "Can Tho",
+        "sector": "Solid Waste",
+        "target": "고형폐기물 100% 수거 및 처리 by 2030",
+        "budget_usd_m": 280,
+        "status": "planning"
+      },
+      {
+        "province": "An Giang",
+        "sector": "Solid Waste",
+        "target": "폐기물 소각 발전소 2기 건설 by 2028",
+        "budget_usd_m": 150,
+        "status": "planning"
+      }
+    ],
+    "keywords_en": ["solid waste", "waste management", "landfill", "incineration",
+                    "waste-to-energy", "recycling", "municipal waste", "garbage collection",
+                    "waste treatment", "circular economy"],
+    "keywords_vi": ["chất thải rắn", "rác thải", "bãi rác", "xử lý rác", "tái chế", "đốt rác"]
+  },
+  {
+    "doc_id": "VN-IP-2030",
+    "title": "베트남 산업단지 개발 마스터플랜 2030",
+    "source": "MPI",
+    "year": 2022,
+    "sectors": ["Industrial Parks"],
+    "provinces": ["Binh Duong", "Dong Nai", "Ho Chi Minh City", "Hanoi", "Hai Phong", "Quang Ninh", "Bac Ninh", "Vinh Phuc", "Long An", "Tay Ninh"],
+    "key_targets": [
+      {
+        "province": "Binh Duong",
+        "sector": "Industrial Parks",
+        "target": "신규 산업단지 5개 조성 by 2030, FDI 200억 달러 유치",
+        "budget_usd_m": 3500,
+        "status": "in_progress"
+      },
+      {
+        "province": "Hai Phong",
+        "sector": "Industrial Parks",
+        "target": "딥씨포트 연계 물류산업단지 개발",
+        "budget_usd_m": 1200,
+        "status": "planning"
+      }
+    ],
+    "keywords_en": ["industrial park", "industrial zone", "export processing zone",
+                    "logistics park", "manufacturing", "FDI", "factory",
+                    "investment attraction"],
+    "keywords_vi": ["khu công nghiệp", "khu chế xuất", "khu kinh tế", "nhà máy", "đầu tư FDI"]
+  },
+  {
+    "doc_id": "VN-SC-2030",
+    "title": "베트남 스마트시티 개발 국가전략 2030",
+    "source": "MOST",
+    "year": 2022,
+    "sectors": ["Smart City"],
+    "provinces": ["Hanoi", "Ho Chi Minh City", "Da Nang", "Binh Duong", "Can Tho", "Hai Phong"],
+    "key_targets": [
+      {
+        "province": "Da Nang",
+        "sector": "Smart City",
+        "target": "스마트시티 선도 도시 지정, IoT 인프라 전면 구축 by 2025",
+        "budget_usd_m": 500,
+        "status": "in_progress"
+      },
+      {
+        "province": "Ho Chi Minh City",
+        "sector": "Smart City",
+        "target": "AI 데이터센터 및 디지털 인프라 투자 21억 달러",
+        "budget_usd_m": 2100,
+        "status": "in_progress"
+      }
+    ],
+    "keywords_en": ["smart city", "digital infrastructure", "IoT", "data center",
+                    "e-government", "digital transformation", "AI", "5G",
+                    "urban digital", "smart traffic"],
+    "keywords_vi": ["thành phố thông minh", "hạ tầng số", "chuyển đổi số", "trung tâm dữ liệu"]
+  },
+  {
+    "doc_id": "VN-WW-CENTRAL-2030",
+    "title": "베트남 중부·남부 하수처리 인프라 계획 2030",
+    "source": "MONRE",
+    "year": 2022,
+    "sectors": ["Waste Water"],
+    "provinces": ["Da Nang", "Quang Nam", "Quang Ngai", "Binh Dinh", "Phu Yen", "Khanh Hoa", "Ninh Thuan", "Binh Thuan", "Ba Ria Vung Tau", "Long An", "Tien Giang"],
+    "key_targets": [
+      {
+        "province": "Da Nang",
+        "sector": "Waste Water",
+        "target": "하수처리율 90% 달성 by 2025, 3개 WWTP 신설",
+        "budget_usd_m": 320,
+        "status": "in_progress"
+      },
+      {
+        "province": "Khanh Hoa",
+        "sector": "Waste Water",
+        "target": "관광지역 하수처리 인프라 확충 by 2027",
+        "budget_usd_m": 180,
+        "status": "planning"
+      },
+      {
+        "province": "Binh Dinh",
+        "sector": "Waste Water",
+        "target": "Quy Nhon 시 하수처리장 현대화 by 2026",
+        "budget_usd_m": 95,
+        "status": "planning"
+      }
+    ],
+    "keywords_en": ["wastewater treatment", "sewage", "wwtp", "sludge", "effluent",
+                    "sewage network", "wastewater plant", "drainage system",
+                    "septic", "sanitation", "wastewater infrastructure"],
+    "keywords_vi": ["xử lý nước thải", "hệ thống thoát nước", "nhà máy xử lý nước thải",
+                    "bùn thải", "cống thoát nước", "vệ sinh môi trường"]
+  },
+  {
+    "doc_id": "VN-WS-NORTH-2030",
+    "title": "베트남 북부·중부고원 농촌 상수도 공급 계획 2030",
+    "source": "MARD",
+    "year": 2023,
+    "sectors": ["Water Supply/Drainage"],
+    "provinces": ["Gia Lai", "Dak Lak", "Dak Nong", "Kon Tum", "Lam Dong", "Thai Nguyen", "Bac Kan", "Cao Bang", "Ha Giang", "Lai Chau", "Dien Bien", "Son La", "Hoa Binh", "Tuyen Quang", "Yen Bai", "Lao Cai", "Phu Tho"],
+    "key_targets": [
+      {
+        "province": "Gia Lai",
+        "sector": "Water Supply/Drainage",
+        "target": "농촌 지역 청정 상수도 보급률 95% by 2030",
+        "budget_usd_m": 220,
+        "status": "in_progress"
+      },
+      {
+        "province": "Dak Lak",
+        "sector": "Water Supply/Drainage",
+        "target": "소수민족 거주지역 상수도 인프라 확충",
+        "budget_usd_m": 140,
+        "status": "planning"
+      },
+      {
+        "province": "Dien Bien",
+        "sector": "Water Supply/Drainage",
+        "target": "산간지역 소규모 정수장 20개 신설 by 2027",
+        "budget_usd_m": 85,
+        "status": "planning"
+      }
+    ],
+    "keywords_en": ["water supply", "clean water", "drinking water", "tap water",
+                    "potable water", "water infrastructure", "water network",
+                    "reservoir", "water treatment plant", "water purification",
+                    "water distribution", "water pipeline", "groundwater",
+                    "drainage", "flood control", "stormwater"],
+    "keywords_vi": ["cấp nước sạch", "nước sinh hoạt", "hệ thống cấp nước", "nhà máy nước",
+                    "đường ống nước", "thoát nước", "chống ngập", "nước ngầm"]
+  },
+  {
+    "doc_id": "VN-PWR-RENEW-2030",
+    "title": "베트남 재생에너지 개발 계획 2030 (PDP8 세부)",
+    "source": "MOIT",
+    "year": 2023,
+    "sectors": ["Power"],
+    "provinces": ["Binh Thuan", "Ninh Thuan", "Gia Lai", "Dak Lak", "Kon Tum", "Quang Binh", "Quang Tri", "Ha Tinh", "Nghe An", "Thanh Hoa", "Bac Lieu", "Ca Mau", "Soc Trang", "Tra Vinh"],
+    "key_targets": [
+      {
+        "province": "Ninh Thuan",
+        "sector": "Power",
+        "target": "태양광 3,000MW + 풍력 1,500MW 개발 by 2030",
+        "budget_usd_m": 4500,
+        "status": "in_progress"
+      },
+      {
+        "province": "Gia Lai",
+        "sector": "Power",
+        "target": "수력+풍력 복합 에너지 허브 구축 by 2028",
+        "budget_usd_m": 1800,
+        "status": "in_progress"
+      },
+      {
+        "province": "Bac Lieu",
+        "sector": "Power",
+        "target": "해상풍력 800MW 개발 by 2030",
+        "budget_usd_m": 2200,
+        "status": "planning"
+      },
+      {
+        "province": "Ha Tinh",
+        "sector": "Power",
+        "target": "LNG 복합화력 1,200MW 건설 by 2027",
+        "budget_usd_m": 1600,
+        "status": "planning"
+      }
+    ],
+    "keywords_en": ["wind power", "solar energy", "solar power", "power plant",
+                    "electricity grid", "renewable energy", "PDP8", "EVN",
+                    "energy transition", "hydropower", "LNG power",
+                    "offshore wind", "onshore wind", "photovoltaic",
+                    "electricity generation", "power transmission"],
+    "keywords_vi": ["điện gió", "điện mặt trời", "nhà máy điện", "lưới điện",
+                    "năng lượng tái tạo", "thủy điện", "điện khí LNG", "EVN"]
+  },
+  {
+    "doc_id": "VN-OG-2030",
+    "title": "베트남 석유가스 인프라 개발 계획 2030",
+    "source": "MOIT",
+    "year": 2023,
+    "sectors": ["Oil & Gas"],
+    "provinces": ["Ba Ria Vung Tau", "Thanh Hoa", "Quang Ngai", "Binh Dinh", "Ca Mau", "Kien Giang", "Tien Giang", "Ha Tinh"],
+    "key_targets": [
+      {
+        "province": "Ba Ria Vung Tau",
+        "sector": "Oil & Gas",
+        "target": "원유 저장시설 확충 및 정유 고도화 by 2028",
+        "budget_usd_m": 2500,
+        "status": "in_progress"
+      },
+      {
+        "province": "Thanh Hoa",
+        "sector": "Oil & Gas",
+        "target": "Nghi Son 정유공장 2단계 확장 by 2027",
+        "budget_usd_m": 3200,
+        "status": "in_progress"
+      },
+      {
+        "province": "Ca Mau",
+        "sector": "Oil & Gas",
+        "target": "LNG 터미널 및 가스관 인프라 신설 by 2026",
+        "budget_usd_m": 1100,
+        "status": "planning"
+      },
+      {
+        "province": "Quang Ngai",
+        "sector": "Oil & Gas",
+        "target": "Dung Quat 정유단지 고도화 및 석화단지 조성",
+        "budget_usd_m": 4800,
+        "status": "in_progress"
+      }
+    ],
+    "keywords_en": ["petroleum", "refinery", "gas pipeline", "offshore drilling",
+                    "PVN", "LNG terminal", "crude oil", "oil storage",
+                    "petrochemical", "natural gas", "oil refinery",
+                    "upstream", "downstream", "oil field", "gas field"],
+    "keywords_vi": ["dầu khí", "nhà máy lọc dầu", "đường ống khí", "khai thác dầu",
+                    "Petrovietnam", "PVN", "khí LNG", "lọc hóa dầu", "dầu thô"]
   }
 ]
