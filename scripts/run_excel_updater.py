@@ -19,6 +19,7 @@ with open(COLLECTOR_JSON, "r", encoding="utf-8") as f:
     data = json.load(f)
 
 articles = data.get("articles", [])
+stats    = data.get("stats", {})
 if not articles:
     print("[SKIP] 수집 기사 없음")
     sys.exit(0)
@@ -26,5 +27,5 @@ if not articles:
 from scripts.excel_updater import ExcelUpdater
 
 updater = ExcelUpdater()
-updater.update_all(articles)
+updater.update_all(articles, run_stats=stats)
 print(f"[OK] ExcelUpdater 완료: {len(articles)}건")
