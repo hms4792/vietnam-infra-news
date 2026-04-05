@@ -10,7 +10,8 @@ name: Weekly Backfill
 
 on:
   schedule:
-    - cron: '0 1 * * 0'
+    - cron: '0 1 * * 0'   # 매주 일요일 KST 10:00
+    - cron: '0 1 * * 3'   # 매주 수요일 KST 10:00
   workflow_dispatch:
     inputs:
       backfill_from:
