@@ -585,20 +585,17 @@ RSS_FEEDS = {
     "Bao Dau Tu - Energy":             "https://baodautu.vn/rss/nang-luong.rss",
     "Vietnam Energy alt":              "https://vietnamenergy.vn/rss/tin-tuc.rss",
     "Tap chi Xay dung":                "https://tapchixaydung.vn/rss/home.rss",
-    # ──────────────────────────────────────────────────────────
-    # [신규 추가] 환경 전문 — Waste Water / Smart City 보완
-    # ──────────────────────────────────────────────────────────
-    # 전문미디어 (전문미디어 비율 30% 목표)
+    # ── [신규] 전문미디어 (전문미디어 비율 30% 목표) ──────────
     "The Investor":                    "https://theinvestor.vn/feed",
     "VIR - Vietnam Investment Review": "https://vir.com.vn/rss/news.aspx",
     "Construction Vietnam":            "https://constructionvietnam.net/feed",
     "VietnamBiz":                      "https://vietnambiz.vn/rss.rss",
-    # Waste Water 전용
+    # ── [신규] Waste Water 전용 ───────────────────────────────
     "MONRE Official":                  "https://monre.gov.vn/rss/tintuc.aspx",
     "VEA - Vietnam Environment":       "https://vea.gov.vn/vn/tintuc/tintuchangngay/rss",
     "Nhadepso Environment":            "https://nhadepso.com/feed/",
     "Moitruong Online":                "https://moitruong.com.vn/feed",
-    # Smart City 전용
+    # ── [신규] Smart City 전용 ────────────────────────────────
     "ICT Vietnam":                     "https://ictvietnam.vn/feed",
     "MIC Vietnam":                     "https://mic.gov.vn/rss/tintuc.aspx",
     "Smartcity Vietnam":               "https://smartcity.mobi/feed",
