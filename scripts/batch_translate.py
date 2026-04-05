@@ -46,7 +46,7 @@ def run_batch():
 
     ep = Path(EXCEL_PATH)
     if not ep.exists():
-        print(f"❌ Excel not found: {ep}")
+        print(f"Excel not found: {ep}")
         return 0
 
     print(f"Excel: {ep}")
@@ -68,6 +68,7 @@ def run_batch():
     sum_en_col   = headers.get('summary_en', 13)
     sum_vi_col   = headers.get('summary_vi', 14)
     summary_col  = headers.get('Short Summary', 8)
+    date_col     = headers.get('Date', 5)
 
     print(f"컬럼 확인: title={title_col}, title_ko={title_ko_col}")
 
@@ -79,9 +80,22 @@ def run_batch():
         if title and (not tko or str(tko).strip() == ''):
             empty_rows.append(r)
 
+    # 2025년 이후 기사 우선, 최신순 역순 (2026년 → 2025년 → 2024년 이전)
+    priority = []
+    others = []
+    for r in empty_rows:
+        date_val = str(ws.cell(r, date_col).value or '')[:10]
+        if date_val >= '2025-01-01':
+            priority.append((r, date_val))
+        else:
+            others.append((r, date_val))
+    priority.sort(key=lambda x: x[1], reverse=True)
+    others.sort(key=lambda x: x[1], reverse=True)
+    empty_rows = [r for r, _ in priority] + [r for r, _ in others]
+
     total_empty = len(empty_rows)
     batch = empty_rows[:BATCH_SIZE]
-    print(f"번역 미완료: {total_empty}건 | 이번 배치: {len(batch)}건")
+    print(f"번역 미완료: {total_empty}건 (2025년 이후: {len(priority)}건) | 이번 배치: {len(batch)}건")
 
     translated = 0
     DONE_FILL = PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid")
@@ -91,7 +105,6 @@ def run_batch():
         summary = str(ws.cell(r, summary_col).value or '') if summary_col else ''
 
         try:
-            # 언어 자동 감지 후 번역
             tko = translate_text(title, 'ko')
             ten = translate_text(title, 'en')
             tvi = translate_text(title, 'vi')
@@ -111,7 +124,6 @@ def run_batch():
             ws.cell(r, sum_en_col).value   = sen
             ws.cell(r, sum_vi_col).value   = svi
 
-            # 번역 완료 표시 (연초록)
             for c in range(1, ws.max_column + 1):
                 ws.cell(r, c).fill = DONE_FILL
 
@@ -121,14 +133,17 @@ def run_batch():
         except Exception as e:
             print(f"  [{i+1}/{len(batch)}] ERROR: {e} | {title[:40]}")
 
-        # API 과부하 방지
         if (i + 1) % 5 == 0:
             time.sleep(1)
 
     wb.save(ep)
     wb.close()
-    print(f"\n완료: {translated}/{len(batch)}건 번역 | 잔여: {total_empty - translated}건")
+    print(f"\n완료: {translated}/{len(batch)}건 번역 | 잔여: {total_empty - translated}건 (2025년~ 기준)")
     return translated
 
 if __name__ == '__main__':
     run_batch()
+```
+
+---
+
