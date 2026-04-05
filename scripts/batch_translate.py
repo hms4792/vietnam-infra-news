@@ -3,34 +3,40 @@
 """
 batch_translate.py
 Excel DB에서 title_ko가 비어있는 기사를 배치 번역
-[메모리항목15] 하루 20건씩 처리 (MyMemory API 한도 고려)
-[메모리항목1] Google Translate (MyMemory 1차 + deep-translator 2차). Anthropic API 금지
+- 하루 20건씩 처리 (MyMemory API 한도 고려)
+- Google Translate (MyMemory 1차 + deep-translator 2차). Anthropic API 금지
+- 2025년 이후 기사 우선, 최신순 역순 (2026년 -> 2025년 -> 2024년 이전)
 """
-import sys, os, hashlib, time
+import sys
+import os
+import time
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 from pathlib import Path
 
 EXCEL_PATH = os.environ.get('EXCEL_PATH', 'data/database/Vietnam_Infra_News_Database_Final.xlsx')
 BATCH_SIZE = int(os.environ.get('BATCH_SIZE', 20))
 
+
 def translate_text(text, target_lang='ko'):
     """MyMemory API 1차, deep-translator 2차 폴백"""
     if not text or len(text.strip()) < 3:
         return ''
     import requests
-    # 1차: MyMemory API [메모리항목1]
     try:
-        url = (f"https://api.mymemory.translated.net/get"
-               f"?q={requests.utils.quote(str(text)[:500])}"
-               f"&langpair=auto|{target_lang}")
+        url = (
+            "https://api.mymemory.translated.net/get"
+            "?q=" + requests.utils.quote(str(text)[:500]) +
+            "&langpair=auto|" + target_lang
+        )
         r = requests.get(url, timeout=10)
         data = r.json()
         result = data.get('responseData', {}).get('translatedText', '')
-        if result and result != text and 'INVALID' not in str(result).upper() and not str(result).startswith('MYMEMORY WARNING'):
+        if (result and result != text
+                and 'INVALID' not in str(result).upper()
+                and not str(result).startswith('MYMEMORY WARNING')):
             return result
     except Exception:
         pass
-    # 2차: deep-translator
     try:
         from deep_translator import GoogleTranslator
         result = GoogleTranslator(source='auto', target=target_lang).translate(str(text)[:500])
@@ -39,6 +45,7 @@ def translate_text(text, target_lang='ko'):
     except Exception:
         pass
     return text
+
 
 def run_batch():
     import openpyxl
@@ -70,7 +77,7 @@ def run_batch():
     summary_col  = headers.get('Short Summary', 8)
     date_col     = headers.get('Date', 5)
 
-    print(f"컬럼 확인: title={title_col}, title_ko={title_ko_col}")
+    print(f"컬럼 확인: title={title_col}, title_ko={title_ko_col}, date={date_col}")
 
     # title_ko 비어있는 행 찾기
     empty_rows = []
@@ -80,25 +87,26 @@ def run_batch():
         if title and (not tko or str(tko).strip() == ''):
             empty_rows.append(r)
 
-    # 2025년 이후 기사 우선, 최신순 역순 (2026년 → 2025년 → 2024년 이전)
+    # 2025년 이후 기사 우선, 최신순 역순 (2026년 -> 2025년 -> 2024년 이전)
     priority = []
-    others = []
+    others   = []
     for r in empty_rows:
         date_val = str(ws.cell(r, date_col).value or '')[:10]
         if date_val >= '2025-01-01':
             priority.append((r, date_val))
         else:
             others.append((r, date_val))
+
     priority.sort(key=lambda x: x[1], reverse=True)
     others.sort(key=lambda x: x[1], reverse=True)
     empty_rows = [r for r, _ in priority] + [r for r, _ in others]
 
     total_empty = len(empty_rows)
-    batch = empty_rows[:BATCH_SIZE]
+    batch       = empty_rows[:BATCH_SIZE]
     print(f"번역 미완료: {total_empty}건 (2025년 이후: {len(priority)}건) | 이번 배치: {len(batch)}건")
 
     translated = 0
-    DONE_FILL = PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid")
+    DONE_FILL  = PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid")
 
     for i, r in enumerate(batch):
         title   = str(ws.cell(r, title_col).value or '')
@@ -124,6 +132,7 @@ def run_batch():
             ws.cell(r, sum_en_col).value   = sen
             ws.cell(r, sum_vi_col).value   = svi
 
+            # 번역 완료 표시 (연초록)
             for c in range(1, ws.max_column + 1):
                 ws.cell(r, c).fill = DONE_FILL
 
@@ -133,6 +142,7 @@ def run_batch():
         except Exception as e:
             print(f"  [{i+1}/{len(batch)}] ERROR: {e} | {title[:40]}")
 
+        # API 과부하 방지
         if (i + 1) % 5 == 0:
             time.sleep(1)
 
@@ -141,9 +151,6 @@ def run_batch():
     print(f"\n완료: {translated}/{len(batch)}건 번역 | 잔여: {total_empty - translated}건 (2025년~ 기준)")
     return translated
 
+
 if __name__ == '__main__':
     run_batch()
-```
-
----
-
