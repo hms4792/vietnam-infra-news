@@ -31,16 +31,3 @@ jobs:
           git add -A
           git commit -m "Cleanup: remove MYMEMORY WARNING from Excel" || echo "No changes"
           git push
-```
-
-### 3단계 — 실행 후 예상 결과
-```
-실행 전:
-  title_ko = "MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIO..."
-  → 대시보드에 경고 메시지 표시
-
-실행 후:
-  삭제: News Title 자체가 WARNING인 행 (약 소수)
-  교체: title_ko = '' (빈 문자열)
-  → 대시보드에 원문 베트남어 제목 표시 (경고 메시지 사라짐)
-  → batch_translate가 다음 실행 시 자동 재번역
