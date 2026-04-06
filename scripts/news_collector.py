@@ -2,17 +2,21 @@
 # -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News Collector
-Version 5.6 — Smart City 과매칭 수정 + NewsData 오류 해결
+Version 5.6 — Smart City 과매칭 수정 + NewsData 오류 해결 + 중복 방지 강화
 
-v5.6 변경사항 (2026-04-06):
-  [수정] Smart City 과매칭 해소
-         범용 단어(AI, IoT, 5G, data 등) primary에서 제거 → secondary로 이동
-         오분류 방지: 국회 개원, 교통사고 등 비관련 기사 필터링
-  [수정] NewsData.io from_date 파라미터 제거 (422 오류 해결)
-         latest API는 날짜 파라미터 미지원 → 제거
-  [수정] RSS URL 수정
-         The Investor: /feed → /rss
-         VIR: /rss/news.aspx → /rss
+v5.6 변경사항 (2026-04-07):
+  [수정1] Smart City primary 키워드 정리 (117→64개)
+          AI, IoT, 5G, data 등 범용어 secondary 이동 → 오분류 방지
+  [수정2] NewsData.io 422 오류 근본 해결
+          /news → /latest 엔드포인트 변경
+          domain 파라미터 사용 시 category 제거 (충돌 방지)
+          422 응답 시 category 제거 후 자동 재시도
+  [수정3] 중복 기사 방지 강화
+          URL hash + 제목 hash 이중 체크
+          같은 기사가 다른 RSS 소스에서 수집되는 경우 차단
+  [수정4] RSS URL 수정
+          The Investor: /feed → /rss
+          VIR: /rss/news.aspx → /rss
 
 v5.5 변경사항 (2026-04-06):
   [핵심] Genspark 487개 Master Plan 프로젝트 키워드 통합
@@ -993,8 +997,13 @@ def translate_text(text, target_lang='ko'):
         )
         r = requests.get(url, timeout=10)
         data = r.json()
-        result = data.get('responseData', {}).get('translatedText', '')
-        if result and result != text and 'INVALID' not in result.upper():
+        result = data.get('responseData', {}).get('translatedText', '') or ''
+        # [v5.6] MYMEMORY WARNING 및 INVALID 필터 강화
+        result_up = result.upper()
+        if (result and result != text
+                and 'INVALID' not in result_up
+                and 'MYMEMORY WARNING' not in result_up
+                and not result_up.startswith('PLEASE SELECT')):
             return result
     except Exception:
         pass
@@ -1008,11 +1017,25 @@ def translate_text(text, target_lang='ko'):
     return text
 
 
+def _is_bad_translation(val: str) -> bool:
+    """번역 결과가 경고/오류 메시지인지 확인"""
+    if not val:
+        return False
+    v = val.upper().strip()
+    return (
+        v.startswith('MYMEMORY WARNING') or
+        v.startswith('PLEASE SELECT') or
+        'INVALID' in v or
+        v.startswith('YOU USED ALL AVAILABLE')
+    )
+
+
 def translate_articles(articles):
     if not articles:
         return articles
 
     log(f"Translating {len(articles)} articles (ko/en/vi)...")
+    api_limit_hit = False  # API 한도 초과 감지 플래그
 
     for i, art in enumerate(articles):
         title   = art.get('title', '') or ''
@@ -1021,12 +1044,27 @@ def translate_articles(articles):
         is_vi   = is_vietnamese_text(title)
 
         try:
-            art['title_ko']   = translate_text(title, 'ko')
-            art['title_en']   = title if is_en else translate_text(title, 'en')
-            art['title_vi']   = title if is_vi else translate_text(title, 'vi')
-            art['summary_ko'] = translate_text(summary[:300], 'ko') if summary else ''
-            art['summary_en'] = summary if is_en else (translate_text(summary[:300], 'en') if summary else '')
-            art['summary_vi'] = summary if is_vi else (translate_text(summary[:300], 'vi') if summary else '')
+            tko = translate_text(title, 'ko')
+            ten = title if is_en else translate_text(title, 'en')
+            tvi = title if is_vi else translate_text(title, 'vi')
+            sko = translate_text(summary[:300], 'ko') if summary else ''
+            sen = summary if is_en else (translate_text(summary[:300], 'en') if summary else '')
+            svi = summary if is_vi else (translate_text(summary[:300], 'vi') if summary else '')
+
+            # [v5.6] MYMEMORY WARNING 경고 메시지 저장 방지
+            # 경고 메시지이면 원문 제목을 그대로 사용 (빈 문자열 X)
+            art['title_ko']   = '' if _is_bad_translation(tko) else tko
+            art['title_en']   = ten if not _is_bad_translation(ten) else title
+            art['title_vi']   = '' if _is_bad_translation(tvi) else tvi
+            art['summary_ko'] = '' if _is_bad_translation(sko) else sko
+            art['summary_en'] = sen if not _is_bad_translation(sen) else summary
+            art['summary_vi'] = '' if _is_bad_translation(svi) else svi
+
+            # API 한도 초과 감지
+            if _is_bad_translation(tko) and not api_limit_hit:
+                api_limit_hit = True
+                log(f"  [WARN] MyMemory API 한도 초과 감지 — 나머지 기사 번역 건너뜀")
+
         except Exception as e:
             log(f"  Translation error [{art.get('title','')[:40]}]: {e}")
             art.setdefault('title_ko', '')
@@ -1245,20 +1283,40 @@ def fetch_newsdata(hours_back=24):
         nonlocal credit_used
         if credit_used + size > CREDIT_LIMIT:
             return []
+
+        # [v5.6 수정] 422 오류 근본 해결:
+        # - from_date 제거 (latest API 미지원)
+        # - domain 파라미터 사용 시 category 제거 (충돌 방지)
+        # - country=vn 유지 (베트남 필터)
         params = {
-            'apikey': NEWSDATA_API_KEY, 'q': q,
-            'country': 'vn', 'language': language,
-            'category': 'business,politics,technology,environment',
-            'size': size,
-            # [v5.6 수정] from_date 제거 — latest API는 날짜 파라미터 미지원 (422 오류 방지)
+            'apikey':   NEWSDATA_API_KEY,
+            'q':        q,
+            'country':  'vn',
+            'language': language,
+            'size':     size,
         }
+        # category는 domain 없을 때만 — domain+category 조합이 422 유발
         if domain:
             params['domain'] = domain
+        else:
+            params['category'] = 'business,politics,technology,environment'
+
         try:
-            resp = requests.get('https://newsdata.io/api/1/news', params=params, timeout=15)
+            resp = requests.get(
+                'https://newsdata.io/api/1/latest',  # latest 엔드포인트 사용
+                params=params, timeout=15
+            )
+            if resp.status_code == 422:
+                # 422 시 category 제거 후 재시도
+                params.pop('category', None)
+                resp = requests.get(
+                    'https://newsdata.io/api/1/latest',
+                    params=params, timeout=15
+                )
             resp.raise_for_status()
             data = resp.json()
             if data.get('status') != 'success':
+                log(f"  NewsData.io 오류: {data.get('message','unknown')}")
                 return []
             results = data.get('results', [])
             credit_used += len(results)
@@ -1370,6 +1428,10 @@ def init_database(db_path):
 
 
 def get_existing_hashes(conn):
+    """
+    SQLite + Excel 양쪽에서 기존 URL hash 수집.
+    [v5.6] 제목 hash도 수집 → 같은 제목 다른 RSS 소스 중복 방지
+    """
     cur    = conn.execute("SELECT url_hash FROM articles")
     hashes = {row[0] for row in cur.fetchall()}
     _excel = os.environ.get('EXCEL_PATH', EXCEL_PATH)
@@ -1378,18 +1440,26 @@ def get_existing_hashes(conn):
             import openpyxl
             _wb = openpyxl.load_workbook(_excel, read_only=True, data_only=True)
             _ws = _wb.active
-            _link_col = 7
+            _link_col  = 7
+            _title_col = 4
             for _c in range(1, _ws.max_column + 1):
                 _h = str(_ws.cell(1, _c).value or '').lower()
                 if _h in ('link', 'url'):
                     _link_col = _c
-                    break
+                if _h in ('news title', 'title'):
+                    _title_col = _c
             for _row in _ws.iter_rows(min_row=2, values_only=True):
+                # URL hash
                 _url = _row[_link_col - 1] if _link_col - 1 < len(_row) else None
                 if _url and str(_url).startswith('http'):
                     hashes.add(hashlib.md5(str(_url).encode()).hexdigest())
+                # 제목 hash (앞 60자) — 같은 제목 다른 소스 중복 방지
+                _title = _row[_title_col - 1] if _title_col - 1 < len(_row) else None
+                if _title and len(str(_title)) > 15:
+                    _t_key = str(_title).strip().lower()[:60]
+                    hashes.add("title:" + hashlib.md5(_t_key.encode()).hexdigest())
             _wb.close()
-            log(f"  Loaded {len(hashes)} existing URL hashes (SQLite + Excel)")
+            log(f"  Loaded {len(hashes)} existing hashes (SQLite + Excel URL + Title)")
     except Exception as _e:
         log(f"  Excel hash load warning: {_e}")
     return hashes
@@ -1465,6 +1535,12 @@ def collect_news(hours_back=24):
             if url_hash in existing_hashes:
                 continue
 
+            # [v5.6] 제목 hash 중복 체크 — 같은 내용 다른 RSS 소스 중복 방지
+            title_key  = title.strip().lower()[:60]
+            title_hash = "title:" + hashlib.md5(title_key.encode()).hexdigest()
+            if title_hash in existing_hashes:
+                continue
+
             pub_dt = parse_date(pubdate)
             if pub_dt:
                 if pub_dt.tzinfo:
@@ -1498,6 +1574,7 @@ def collect_news(hours_back=24):
 
             if save_article(conn, article):
                 existing_hashes.add(url_hash)
+                existing_hashes.add(title_hash)  # 제목 hash도 등록
                 source_cnt      += 1
                 total_collected += 1
                 collected_articles.append(article)
