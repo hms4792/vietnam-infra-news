@@ -2,18 +2,21 @@
 # -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News Collector
-Version 5.5 — Master Plan Keywords Integration
+Version 5.6 — Smart City 과매칭 수정 + NewsData 오류 해결
+
+v5.6 변경사항 (2026-04-06):
+  [수정] Smart City 과매칭 해소
+         범용 단어(AI, IoT, 5G, data 등) primary에서 제거 → secondary로 이동
+         오분류 방지: 국회 개원, 교통사고 등 비관련 기사 필터링
+  [수정] NewsData.io from_date 파라미터 제거 (422 오류 해결)
+         latest API는 날짜 파라미터 미지원 → 제거
+  [수정] RSS URL 수정
+         The Investor: /feed → /rss
+         VIR: /rss/news.aspx → /rss
 
 v5.5 변경사항 (2026-04-06):
   [핵심] Genspark 487개 Master Plan 프로젝트 키워드 통합
   [효과] 정책 연계율 0% → 60%+ 목표 (실제 프로젝트명 매칭)
-  [Waste Water]     EN 14개 → 58개 / VI 14개 → 46개
-  [Water Supply]    EN 20개 → 65개 / VI 14개 → 54개
-  [Solid Waste]     EN 21개 → 70개 / VI 21개 → 58개
-  [Power]           EN 24개 → 76개 / VI 16개 → 50개
-  [Oil & Gas]       EN 14개 → 59개 / VI 14개 → 58개
-  [Industrial Parks]EN 14개 → 63개 / VI 16개 → 52개
-  [Smart City]      EN 12개 → 76개 / VI 10개 → 76개
 
 v5.4 변경사항 (2026-04-05):
   [RSS 추가] 전문미디어 4개 + Waste Water 4개 + Smart City 3개 (총 44개)
@@ -571,68 +574,46 @@ SECTOR_KEYWORDS = {
     # 8. SMART CITY
     # [마스터플랜] VN-SC-2030 / Hanoi Master Plan 2045 / HCMC 2040
     # [대상Province] Hanoi, HCMC, Da Nang, Binh Duong, Can Tho, Hai Phong
+    # [v5.6 수정] 범용 단어(AI, IoT, 5G, data) primary 제거 → secondary 이동
+    #             오분류 방지: 국회 개원, 교통사고 등 비관련 기사 필터링
     # ─────────────────────────────────────────────────────────
     "Smart City": {
         "primary": [
-            # --- 기존 키워드 ---
+            # --- 핵심: 명확한 Smart City 전용 키워드만 유지 ---
             "smart city project", "smart city development",
+            "smart city strategy", "smart city investment",
             "intelligent city", "digital city",
             "smart traffic system", "traffic management system",
-            "iot infrastructure", "5g network deployment",
             "e-government system", "digital government",
-            # --- v5.5 Genspark EN 키워드 ---
-            "smart city", "smart urban",
-            "urban digital transformation", "smart infrastructure",
-            "iot", "internet of things", "5g network",
-            "smart sensor", "big data", "data analytics",
-            "artificial intelligence", "ai",
-            "cloud computing", "data center", "digital platform",
-            "smart grid", "smart lighting", "smart parking",
-            "e-government", "smart governance", "smart traffic",
-            "intelligent transportation",
-            "smart healthcare", "telemedicine",
-            "smart education", "smart waste management",
-            "smart water management", "smart energy",
-            "building automation",
+            "smart city infrastructure",
+            "5g network deployment", "iot infrastructure",
+            # --- 실제 프로젝트명 (오분류 위험 낮음) ---
             "da nang smart city", "binh duong smart city",
             "thu duc smart city", "brg smart city dong anh",
             "hanoi smart city", "hcmc smart city",
-            "gis", "geographic information system",
-            "urban spatial database", "urban planning database",
-            "digital mapping", "3d city model",
-            "urban monitoring system",
             "hoa lac satellite city", "hoa lac hi-tech park",
             "me linh satellite", "dong anh satellite",
             "son tay satellite", "xuan mai satellite",
             "phu xuyen satellite", "soc son satellite",
-            "thu thiem new urban", "saigon south",
-            "phu my hung", "thu duc city",
-            "hcmc innovation district",
-            "smart city strategy", "digital transformation plan",
-            "smart city investment", "urban innovation",
-            "sustainable urban development",
-            # --- v5.5 Genspark VI 키워드 ---
+            "thu thiem new urban",
+            "thu duc city", "hcmc innovation district",
+            "urban digital transformation",
+            "urban monitoring system", "urban spatial database",
+            "geographic information system",
+            "smart city vietnam", "smart urban vietnam",
+            # --- VI 핵심 키워드 ---
             "thanh pho thong minh", "do thi thong minh",
-            "thanh pho so", "chuyen doi so do thi",
-            "ha tang thong minh",
-            "internet van vat", "mang 5g",
-            "cam bien thong minh", "du lieu lon",
-            "tri tue nhan tao", "dieu toan dam may",
-            "trung tam du lieu", "chinh quyen dien tu",
-            "giao thong thong minh", "y te thong minh",
-            "giao duc thong minh",
-            "quan ly rac thai thong minh",
-            "nang luong thong minh",
+            "thanh pho so",
             "da nang thanh pho thong minh",
             "binh duong thanh pho thong minh",
             "thu duc thanh pho thong minh",
             "brg smart city dong anh",
-            "he thong thong tin dia ly", "ban do so",
             "hoa lac ve tinh", "me linh ve tinh",
-            "dong anh ve tinh", "son tay ve tinh",
-            "xuan mai ve tinh", "phu xuyen ve tinh",
-            "thu thiem do thi moi", "sai gon nam",
+            "dong anh ve tinh",
+            "thu thiem do thi moi",
             "phu my hung", "thanh pho thu duc",
+            "he thong thong tin dia ly",
+            "chien luoc thanh pho thong minh",
             # 베트남어 원문
             "th\xe0nh ph\u1ed1 th\xf4ng minh",
             "\u0111\xf4 th\u1ecb th\xf4ng minh",
@@ -649,10 +630,21 @@ SECTOR_KEYWORDS = {
             "Th\xe0nh ph\u1ed1 Th\u1ee7 \u0110\u1ee9c",
         ],
         "secondary": [
+            # 범용 단어는 secondary로 — 제목에서만 매칭 시 점수 부여
             "smart city", "smart urban",
             "smart grid", "smart meter", "smart building",
             "5g infrastructure", "digital transformation",
             "surveillance system", "cctv network", "ai camera",
+            "iot", "internet of things", "5g network",
+            "big data", "data analytics",
+            "artificial intelligence",
+            "cloud computing", "data center",
+            "e-government", "smart governance", "smart traffic",
+            "intelligent transportation",
+            "gis", "digital mapping", "3d city model",
+            "urban innovation", "sustainable urban development",
+            "chinh quyen dien tu", "giao thong thong minh",
+            "ban do so", "chuyen doi so do thi",
         ],
     },
 
@@ -895,8 +887,8 @@ RSS_FEEDS = {
     "Vietnam Energy alt":              "https://vietnamenergy.vn/rss/tin-tuc.rss",
     "Tap chi Xay dung":                "https://tapchixaydung.vn/rss/home.rss",
     # ── v5.4: 전문미디어 (30% 목표) ────────────────────────────
-    "The Investor":                    "https://theinvestor.vn/feed",
-    "VIR - Vietnam Investment Review": "https://vir.com.vn/rss/news.aspx",
+    "The Investor":                    "https://theinvestor.vn/rss",       # v5.6: /feed→/rss
+    "VIR - Vietnam Investment Review": "https://vir.com.vn/rss",           # v5.6: /rss/news.aspx→/rss
     "Construction Vietnam":            "https://constructionvietnam.net/feed",
     "VietnamBiz":                      "https://vietnambiz.vn/rss.rss",
     # ── v5.4: Waste Water 전용 ─────────────────────────────────
@@ -1258,7 +1250,7 @@ def fetch_newsdata(hours_back=24):
             'country': 'vn', 'language': language,
             'category': 'business,politics,technology,environment',
             'size': size,
-            'from_date': (today - timedelta(hours=min(hours_back, 720))).strftime('%Y-%m-%d'),
+            # [v5.6 수정] from_date 제거 — latest API는 날짜 파라미터 미지원 (422 오류 방지)
         }
         if domain:
             params['domain'] = domain
@@ -2086,9 +2078,9 @@ if __name__ == "__main__":
         ENABLE_GNEWS = True
 
     print("=" * 60)
-    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.5")
+    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.6")
     print(f"Hours back: {HOURS_BACK} | Threshold: {MIN_CLASSIFY_THRESHOLD} | Language: {LANGUAGE_FILTER}")
-    print(f"RSS feeds: {len(RSS_FEEDS)} | Master Plan keywords: 445개 통합 (7섹터)")
+    print(f"RSS feeds: {len(RSS_FEEDS)} | v5.6: Smart City 과매칭 수정 + NewsData 422 해결")
     print("=" * 60)
 
     cnt, arts, stats = collect_news(HOURS_BACK)
