@@ -106,11 +106,17 @@ def run_batch():
     print(f"번역 미완료: {total_empty}건 (2025년 이후: {len(priority)}건) | 이번 배치: {len(batch)}건")
 
     translated = 0
+    api_limit  = False  # API 한도 초과 플래그
     DONE_FILL  = PatternFill(start_color="E8F5E9", end_color="E8F5E9", fill_type="solid")
 
     for i, r in enumerate(batch):
         title   = str(ws.cell(r, title_col).value or '')
         summary = str(ws.cell(r, summary_col).value or '') if summary_col else ''
+
+        # API 한도 초과 후 나머지 건너뜀
+        if api_limit:
+            print(f"  [{i+1}/{len(batch)}] SKIP (API limit reached)")
+            continue
 
         try:
             tko = translate_text(title, 'ko')
@@ -120,8 +126,16 @@ def run_batch():
             sen = translate_text(summary[:300], 'en') if summary else ''
             svi = translate_text(summary[:300], 'vi') if summary else ''
 
-            # MYMEMORY 한도 초과 오류면 저장하지 않고 건너뜀
-            if any(str(v).startswith('MYMEMORY WARNING') for v in [tko, ten, tvi] if v):
+            # [v5.6] MYMEMORY WARNING 감지 — 경고 메시지 저장 방지
+            def _is_warning(v):
+                if not v: return False
+                u = str(v).upper()
+                return (u.startswith('MYMEMORY WARNING') or
+                        u.startswith('PLEASE SELECT') or
+                        u.startswith('YOU USED ALL AVAILABLE'))
+
+            if any(_is_warning(v) for v in [tko, ten, tvi] if v):
+                api_limit = True
                 print(f"  [{i+1}/{len(batch)}] SKIP (API limit) {title[:40]}")
                 continue
 
