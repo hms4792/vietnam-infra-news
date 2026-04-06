@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-05T13:40:56.504253+00:00",
-  "total_articles": 9,
+  "generated_at": "2026-04-06T11:47:32.896818+00:00",
+  "total_articles": 66,
   "quality_grade": "D",
   "targets_met": {
     "province_unclassified_le_25pct": true,
@@ -9,33 +9,33 @@
   },
   "metrics": {
     "province_unclassified_rate": 0.0,
-    "specialist_media_ratio": 0.0,
+    "specialist_media_ratio": 0.091,
     "sector_coverage": {
       "covered": [
+        "Industrial Parks",
         "Power",
+        "Smart City",
         "Solid Waste",
         "Water Supply/Drainage"
       ],
       "missing": [
         "Waste Water",
-        "Oil & Gas",
-        "Industrial Parks",
-        "Smart City"
+        "Oil & Gas"
       ],
-      "ratio": 0.429
+      "ratio": 0.714
     },
     "area_distribution": {
-      "Environment": 3,
+      "Environment": 6,
       "Energy Develop.": 2,
-      "Urban Develop.": 0,
-      "Other": 4
+      "Urban Develop.": 53,
+      "Other": 5
     },
     "policy_alignment": {
       "matched_ratio": 0.0,
       "high_relevance_ratio": 0.0
     },
     "collector_flags": {
-      "vietnam_ratio": 0.222,
+      "vietnam_ratio": 0.258,
       "missing_provinces": []
     }
   },
@@ -43,7 +43,7 @@
     {
       "priority": "HIGH",
       "metric": "specialist_media_ratio",
-      "current": 0.0,
+      "current": 0.091,
       "target": 0.3,
       "action": "전문 RSS 소스 추가 또는 Google News 전문 쿼리 확대 필요"
     },
@@ -52,11 +52,9 @@
       "metric": "sector_coverage",
       "missing": [
         "Waste Water",
-        "Oil & Gas",
-        "Industrial Parks",
-        "Smart City"
+        "Oil & Gas"
       ],
-      "action": "Waste Water, Oil & Gas, Industrial Parks, Smart City 섹터 RSS/키워드 보강 필요"
+      "action": "Waste Water, Oil & Gas 섹터 RSS/키워드 보강 필요"
     },
     {
       "priority": "LOW",
