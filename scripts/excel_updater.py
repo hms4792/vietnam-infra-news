@@ -339,8 +339,19 @@ class ExcelUpdater:
     # ────────────────────────────────────────────────────────
 
     def _update_keywords_history(self, articles: list, keyword_map: dict = None):
+        """
+        Keywords History 시트
+        [메모리 규칙] 컬럼 순서: No, Area, Sector, Keyword, Province, Date, Title, Source, URL, Summary
+        [메모리 규칙] 1순위: Sector(우선순위), 2순위: Province(알파벳), 3순위: Date(최신→오래된)
+        [메모리 규칙] 신규 기사: 노란색(#FFF9C4) 하이라이트
+        [v2.2 수정] Keyword 컬럼 복원 (기존에 누락됨)
+        [v2.2 수정] nan 값 방지 (None → '' 안전 변환)
+        [v2.2 수정] 기존 시트 컬럼 구조 불일치 시 헤더 재설정
+        """
         ws        = self._get_or_create_sheet("Keywords History")
         HDR_STYLE = _hdr(COLOR["header_dark"])
+
+        # [메모리 규칙] 정확한 컬럼 순서: No, Area, Sector, Keyword, Province, Date, Title, Source, URL, Summary
         COLS = [
             ("No",       6), ("Area",     18), ("Sector",   22),
             ("Keyword", 25), ("Province", 20), ("Date",     13),
@@ -348,14 +359,21 @@ class ExcelUpdater:
             ("Summary", 55),
         ]
 
-        if ws.cell(1, 1).value != "No":
+        # 헤더 검증 — 컬럼4가 Keyword인지 확인 (구버전은 Province가 있음)
+        current_col4 = ws.cell(1, 4).value
+        if ws.cell(1, 1).value != "No" or current_col4 != "Keyword":
+            # 헤더 재설정 필요
             _set_header_row(ws, COLS, HDR_STYLE)
+            logger.info(f"  Keywords History 헤더 재설정 (기존 col4={current_col4} → Keyword)")
 
-        # 기존 URL 수집 (중복 방지)
+        # 기존 URL 수집 — URL은 9번째 컬럼(인덱스8)
         existing_urls = set()
         for row in ws.iter_rows(min_row=2, values_only=True):
-            if row and len(row) > 8 and row[8]:
-                existing_urls.add(str(row[8]).strip())
+            if not row or not any(row):
+                continue
+            r = list(row) + [""] * max(0, 10 - len(row))
+            if r[8]:
+                existing_urls.add(str(r[8]).strip())
 
         NEW_FILL = PatternFill(start_color="FFF9C4", end_color="FFF9C4", fill_type="solid")
         NEW_FONT = Font(bold=True, size=9, color="1A1A1A")
@@ -370,31 +388,41 @@ class ExcelUpdater:
         new_rows = []
 
         for article in articles:
-            url = str(article.get("url", "")).strip()
-            if url in existing_urls:
+            url = str(article.get("url") or "").strip()
+            if not url or url in existing_urls:
                 continue
 
-            province   = article.get("province", "") or (
+            province   = str(article.get("province") or "") or (
                 get_province_from_text(article.get("title", ""))
                 if PROVINCE_OK else "Vietnam"
             )
-            matched_kw = (article.get("matched_keyword", "") or
-                          article.get("keyword", "") or "")
+            matched_kw = str(
+                article.get("matched_keyword") or
+                article.get("keyword") or ""
+            )
             date_val   = str(
-                article.get("date") or article.get("published_date", "")
+                article.get("date") or article.get("published_date") or ""
             )[:10]
-            sector     = article.get("sector", "")
+            sector     = str(article.get("sector") or "")
+            # title: 영문 우선, 없으면 원문
+            title_val  = str(
+                article.get("title_en") or article.get("title") or ""
+            )
+            # summary: nan 방지 — None이면 빈 문자열
+            summary_val = str(article.get("summary_en") or "")[:200]
+            if summary_val.lower() in ("nan", "none"):
+                summary_val = ""
 
             new_rows.append({
-                "area":       article.get("area", ""),
+                "area":       str(article.get("area") or ""),
                 "sector":     sector,
                 "keyword":    matched_kw,
                 "province":   province,
                 "date":       date_val,
-                "title":      article.get("title_en") or article.get("title", ""),
-                "source":     article.get("source", ""),
+                "title":      title_val,
+                "source":     str(article.get("source") or ""),
                 "url":        url,
-                "summary":    article.get("summary_en", "")[:200],
+                "summary":    summary_val,
                 "sector_idx": SECTOR_ORDER.index(sector)
                                if sector in SECTOR_ORDER else 99,
                 "is_new":     True,
@@ -403,14 +431,24 @@ class ExcelUpdater:
             added += 1
 
         if new_rows:
-            # 기존 데이터 읽기 — [수정] row 길이 안전 체크
+            # 기존 데이터 읽기
+            # [v2.2] 컬럼 구조: No(0), Area(1), Sector(2), Keyword(3), Province(4),
+            #                    Date(5), Title(6), Source(7), URL(8), Summary(9)
             existing_rows = []
             for row in ws.iter_rows(min_row=2, values_only=True):
                 if not row or not any(row):
                     continue
-                # 컬럼이 부족한 행은 빈 문자열로 패딩
                 r = list(row) + [""] * max(0, 10 - len(row))
+
+                # URL은 인덱스 8
+                row_url = str(r[8] or "").strip()
                 sector_val = str(r[2] or "")
+
+                # summary nan 방지
+                summary_raw = str(r[9] or "")
+                if summary_raw.lower() in ("nan", "none"):
+                    summary_raw = ""
+
                 existing_rows.append({
                     "no":         r[0],
                     "area":       str(r[1] or ""),
@@ -420,8 +458,8 @@ class ExcelUpdater:
                     "date":       str(r[5] or "")[:10],
                     "title":      str(r[6] or ""),
                     "source":     str(r[7] or ""),
-                    "url":        str(r[8] or ""),
-                    "summary":    str(r[9] or ""),   # ← 수정: 안전 접근
+                    "url":        row_url,
+                    "summary":    summary_raw,
                     "sector_idx": SECTOR_ORDER.index(sector_val)
                                   if sector_val in SECTOR_ORDER else 99,
                     "is_new":     False,
@@ -429,16 +467,13 @@ class ExcelUpdater:
 
             all_rows = existing_rows + new_rows
 
-            # 1순위: Sector, 2순위: Province, 3순위: Date 내림차순
+            # [메모리 규칙] 1순위: Sector 우선순위, 2순위: Province 알파벳, 3순위: Date 내림차순
             all_rows.sort(key=lambda r: (
                 r["sector_idx"],
-                r["province"],
-                r["date"],
-            ))
-            all_rows.sort(key=lambda r: (
-                r["sector_idx"],
-                r["province"],
-                tuple(-ord(c) for c in r["date"].ljust(10)),
+                str(r["province"]),
+                # Date 내림차순: 문자열 앞에 - 붙이면 역순
+                "".join(chr(0x10FFFF - ord(c)) if c.isdigit() else c
+                        for c in str(r["date"]).ljust(10)),
             ))
 
             # 시트 재작성
@@ -459,7 +494,7 @@ class ExcelUpdater:
                         cell.font = Font(size=9)
 
         _freeze_and_filter(ws)
-        logger.info(f"  Keywords History: {added}건 추가")
+        logger.info(f"  Keywords History: {added}건 추가 (총 {ws.max_row - 1}건)")
 
     # ────────────────────────────────────────────────────────
     # 시트 4: Keyword History
@@ -511,22 +546,22 @@ class ExcelUpdater:
         }
 
         for article in articles:
-            sector   = article.get("sector", "")
-            title    = (
-                article.get("title_en") or article.get("title", "")
+            sector   = str(article.get("sector") or "")
+            title    = str(
+                article.get("title_en") or article.get("title") or ""
             ).lower()
             date_s   = str(
-                article.get("date") or article.get("published_date", "")
+                article.get("date") or article.get("published_date") or ""
             )[:10]
             year     = date_s[:4] if date_s else ""
-            province = article.get("province", "Vietnam")
+            province = str(article.get("province") or "Vietnam")
 
             matched_kws = [
                 kw for kw in sector_kw_map.get(sector, [])
                 if kw.lower() in title
             ]
             if not matched_kws:
-                matched_kws = [sector.lower()]
+                matched_kws = [sector.lower() or "unknown"]
 
             for kw in matched_kws:
                 key = (sector, kw)
@@ -536,9 +571,11 @@ class ExcelUpdater:
                     s[year] += 1
                 if date_s > s["last_date"]:
                     s["last_date"] = date_s
-                    s["sample"]    = (
-                        article.get("title_en") or article.get("title", "")
+                    # nan 방지
+                    raw_sample = str(
+                        article.get("title_en") or article.get("title") or ""
                     )[:80]
+                    s["sample"] = raw_sample if raw_sample.lower() not in ("nan","none","") else ""
                 s["provinces"][province] += 1
 
         # 시트 재작성
@@ -630,6 +667,11 @@ class ExcelUpdater:
     # ────────────────────────────────────────────────────────
 
     def _update_collection_log(self, articles: list, run_stats: dict):
+        """
+        파이프라인 실행 로그 추가
+        [v2.2 수정] RSS Entries, New Added, Total DB 공백 문제 해결
+                    run_stats 키 이름 통일
+        """
         ws        = self._get_or_create_sheet("Collection_Log")
         HDR_STYLE = _hdr(COLOR["header_dark"])
         COLS = [
@@ -647,7 +689,7 @@ class ExcelUpdater:
 
         trans_ok   = sum(
             1 for a in articles
-            if a.get("title_en") and a["title_en"] != a.get("title", "")
+            if a.get("title_ko") and str(a["title_ko"]).strip()
         )
         trans_fail = len(articles) - trans_ok
 
@@ -656,16 +698,29 @@ class ExcelUpdater:
             f"{k}:{v}" for k, v in sector_cnt.most_common()
         )
 
+        # [v2.2] run_stats 키 이름 통일 — 여러 키 이름 모두 지원
+        rss_entries = (run_stats.get("rss_entries") or
+                       run_stats.get("total_entries") or
+                       run_stats.get("entries", 0) or 0)
+        new_added   = (run_stats.get("new_added") or
+                       run_stats.get("added") or
+                       run_stats.get("new", 0) or 0)
+        total_db    = (run_stats.get("total_db") or
+                       run_stats.get("total", 0) or 0)
+        collected   = (run_stats.get("collected") or
+                       run_stats.get("total_collected") or
+                       len(articles))
+
         ws.insert_rows(2)
         log_data = [
             self.now.strftime("%Y-%m-%d"),
             self.now.strftime("%H:%M:%S"),
             self.period_start.strftime("%Y-%m-%d %H:%M"),
             self.period_end.strftime("%Y-%m-%d %H:%M"),
-            run_stats.get("rss_entries",  0),
-            run_stats.get("collected",    len(articles)),
-            run_stats.get("new_added",    0),
-            run_stats.get("total_db",     0),
+            int(rss_entries),
+            int(collected),
+            int(new_added),
+            int(total_db),
             trans_ok,
             trans_fail,
             sectors_str,
