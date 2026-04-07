@@ -2,8 +2,8 @@
 # Vietnam Infrastructure News — 주간 백필 파이프라인
 # .github/workflows/weekly_backfill.yml
 #
-# 스케줄: 매주 일요일 KST 10:00 (UTC 01:00)
-# 역할: NewsData.io Archive API로 과거 기사 역순 재수집
+# 스케줄: 매주 수·일 KST 10:00 (UTC 01:00)
+# 역할: NewsData.io Latest API로 7섹터 기사 보완 수집
 # ============================================================
 
 name: Weekly Backfill
@@ -48,14 +48,15 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install requests openpyxl
+          pip install requests openpyxl feedparser deep-translator deepl
 
       - name: Run backfill
         env:
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          BACKFILL_FROM: ${{ github.event.inputs.backfill_from }}
-          BACKFILL_TO: ${{ github.event.inputs.backfill_to }}
+          EXCEL_PATH:       data/database/Vietnam_Infra_News_Database_Final.xlsx
+          DEEPL_API_KEY:    ${{ secrets.DEEPL_API_KEY }}
+          BACKFILL_FROM:    ${{ github.event.inputs.backfill_from }}
+          BACKFILL_TO:      ${{ github.event.inputs.backfill_to }}
         run: python3 scripts/backfill_newsdata.py
 
       - name: Rebuild dashboard
