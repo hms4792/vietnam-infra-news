@@ -2,21 +2,23 @@
 # -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News Collector
-Version 5.6 — Smart City 과매칭 수정 + NewsData 오류 해결 + 중복 방지 강화
+Version 5.7 — DeepL API 번역 1순위 적용
+
+v5.7 변경사항 (2026-04-07):
+  [핵심] 번역 폴백 체인 재설계
+         1순위: DeepL API Free (월 500K자, 품질 최상)
+         2순위: MyMemory (일 5,000자, WARNING 필터)
+         3순위: deep-translator (Google)
+  [추가] DEEPL_API_KEY 환경변수 지원
+         GitHub Secrets → DEEPL_API_KEY 등록 필요
+  [추가] DeepL 월 한도 초과(456) 자동 감지 → 폴백 전환
+  [추가] _try_deepl / _try_mymemory / _try_google 함수 분리
 
 v5.6 변경사항 (2026-04-07):
-  [수정1] Smart City primary 키워드 정리 (117→64개)
-          AI, IoT, 5G, data 등 범용어 secondary 이동 → 오분류 방지
-  [수정2] NewsData.io 422 오류 근본 해결
-          /news → /latest 엔드포인트 변경
-          domain 파라미터 사용 시 category 제거 (충돌 방지)
-          422 응답 시 category 제거 후 자동 재시도
-  [수정3] 중복 기사 방지 강화
-          URL hash + 제목 hash 이중 체크
-          같은 기사가 다른 RSS 소스에서 수집되는 경우 차단
-  [수정4] RSS URL 수정
-          The Investor: /feed → /rss
-          VIR: /rss/news.aspx → /rss
+  [수정] Smart City primary 키워드 정리 (117→64개)
+  [수정] NewsData.io 422 오류 근본 해결
+  [수정] 중복 기사 방지 (URL hash + 제목 hash 이중 체크)
+  [수정] MYMEMORY WARNING 저장 방지
 
 v5.5 변경사항 (2026-04-06):
   [핵심] Genspark 487개 Master Plan 프로젝트 키워드 통합
@@ -985,9 +987,62 @@ def extract_province(title, summary="", full_text=""):
 # TRANSLATE ARTICLES
 # ============================================================
 
-def translate_text(text, target_lang='ko'):
-    if not text or len(text.strip()) < 3:
-        return text or ''
+# ── DeepL API 상태 관리 ──────────────────────────────────────
+# GitHub Actions 환경변수: DEEPL_API_KEY
+# 무료 플랜: 월 500,000자 한도
+# 한도 초과 시 자동으로 MyMemory → deep-translator 폴백
+
+DEEPL_API_KEY   = os.environ.get('DEEPL_API_KEY', '').strip()
+_deepl_quota_ok = True   # False가 되면 DeepL 건너뜀 (한도 초과)
+
+# DeepL 언어 코드 매핑 (target_lang → DeepL 코드)
+_DEEPL_LANG = {
+    'ko': 'KO',
+    'en': 'EN-US',
+    'vi': 'VI',
+}
+
+
+def _try_deepl(text: str, target_lang: str) -> str:
+    """
+    DeepL API Free로 번역 시도.
+    성공 → 번역 결과 반환
+    실패(한도 초과/오류) → '' 반환 → 폴백으로 넘어감
+    """
+    global _deepl_quota_ok
+    if not DEEPL_API_KEY or not _deepl_quota_ok:
+        return ''
+    deepl_target = _DEEPL_LANG.get(target_lang, target_lang.upper())
+    try:
+        resp = requests.post(
+            'https://api-free.deepl.com/v2/translate',
+            headers={'Authorization': f'DeepL-Auth-Key {DEEPL_API_KEY}'},
+            data={
+                'text':        text[:500],
+                'target_lang': deepl_target,
+            },
+            timeout=10,
+        )
+        if resp.status_code == 456:
+            # 456 = Quota Exceeded — 이번 달 한도 소진
+            log("  [DeepL] 월 한도 초과(456) — MyMemory로 폴백")
+            _deepl_quota_ok = False
+            return ''
+        if resp.status_code == 403:
+            log("  [DeepL] 인증 오류(403) — API Key 확인 필요")
+            _deepl_quota_ok = False
+            return ''
+        if resp.status_code != 200:
+            return ''
+        data   = resp.json()
+        result = data.get('translations', [{}])[0].get('text', '')
+        return result if result and result != text else ''
+    except Exception:
+        return ''
+
+
+def _try_mymemory(text: str, target_lang: str) -> str:
+    """MyMemory API로 번역 시도."""
     src = 'en' if is_english_text(text) else 'vi'
     try:
         url = (
@@ -995,25 +1050,65 @@ def translate_text(text, target_lang='ko'):
             "?q=" + requests.utils.quote(text[:500]) +
             "&langpair=" + src + "|" + target_lang
         )
-        r = requests.get(url, timeout=10)
-        data = r.json()
+        r      = requests.get(url, timeout=10)
+        data   = r.json()
         result = data.get('responseData', {}).get('translatedText', '') or ''
-        # [v5.6] MYMEMORY WARNING 및 INVALID 필터 강화
         result_up = result.upper()
         if (result and result != text
-                and 'INVALID' not in result_up
+                and 'INVALID'          not in result_up
                 and 'MYMEMORY WARNING' not in result_up
-                and not result_up.startswith('PLEASE SELECT')):
+                and 'PLEASE SELECT'    not in result_up
+                and 'YOU USED ALL'     not in result_up):
             return result
     except Exception:
         pass
+    return ''
+
+
+def _try_google(text: str, target_lang: str) -> str:
+    """deep-translator(Google) 로 번역 시도."""
     try:
         from deep_translator import GoogleTranslator
-        result = GoogleTranslator(source='auto', target=target_lang).translate(text[:500])
+        result = GoogleTranslator(
+            source='auto', target=target_lang
+        ).translate(text[:500])
+        return result if result else ''
+    except Exception:
+        return ''
+
+
+def translate_text(text: str, target_lang: str = 'ko') -> str:
+    """
+    3단계 번역 폴백 체인:
+      1순위: DeepL API Free   (품질 최상, 월 500K자 무료)
+      2순위: MyMemory         (일 5,000자, WARNING 필터 적용)
+      3순위: deep-translator  (Google Translate 비공식)
+      실패 시: 원문 반환
+
+    [v5.7] DeepL을 1순위로 추가
+           DeepL 한도 초과 시 자동 폴백
+           MyMemory WARNING 완전 차단
+    """
+    if not text or len(text.strip()) < 3:
+        return text or ''
+
+    # 1순위: DeepL
+    if DEEPL_API_KEY:
+        result = _try_deepl(text, target_lang)
         if result:
             return result
-    except Exception:
-        pass
+
+    # 2순위: MyMemory
+    result = _try_mymemory(text, target_lang)
+    if result:
+        return result
+
+    # 3순위: Google (deep-translator)
+    result = _try_google(text, target_lang)
+    if result:
+        return result
+
+    # 모두 실패 → 원문 반환
     return text
 
 
@@ -2155,9 +2250,10 @@ if __name__ == "__main__":
         ENABLE_GNEWS = True
 
     print("=" * 60)
-    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.6")
+    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.7")
     print(f"Hours back: {HOURS_BACK} | Threshold: {MIN_CLASSIFY_THRESHOLD} | Language: {LANGUAGE_FILTER}")
-    print(f"RSS feeds: {len(RSS_FEEDS)} | v5.6: Smart City 과매칭 수정 + NewsData 422 해결")
+    deepl_status = f"DeepL={'ON' if DEEPL_API_KEY else 'OFF(키없음)'}"
+    print(f"RSS feeds: {len(RSS_FEEDS)} | 번역: {deepl_status} → MyMemory → Google")
     print("=" * 60)
 
     cnt, arts, stats = collect_news(HOURS_BACK)
