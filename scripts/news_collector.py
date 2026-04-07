@@ -2,17 +2,19 @@
 # -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News Collector
-Version 5.7 — DeepL API 번역 1순위 적용
+Version 5.8 — RSS 소스 정리 + NewsData domain 파라미터 제거
 
-v5.7 변경사항 (2026-04-07):
-  [핵심] 번역 폴백 체인 재설계
-         1순위: DeepL API Free (월 500K자, 품질 최상)
-         2순위: MyMemory (일 5,000자, WARNING 필터)
-         3순위: deep-translator (Google)
-  [추가] DEEPL_API_KEY 환경변수 지원
-         GitHub Secrets → DEEPL_API_KEY 등록 필요
-  [추가] DeepL 월 한도 초과(456) 자동 감지 → 폴백 전환
-  [추가] _try_deepl / _try_mymemory / _try_google 함수 분리
+v5.8 변경사항 (2026-04-07):
+  [수정] NewsData.io domain 파라미터 제거 (free 플랜 422 오류 근본 해결)
+         site: 검색 연산자를 쿼리에 직접 포함하는 방식으로 대체
+  [수정] 오작동 RSS 소스 13개 제거 (SSL 만료, 403, DNS 오류)
+         제거: baotintuc, kinhtemoitruong, hanoimoi, baobacgiang,
+               moitruong.net, congnghiepmoitruong, theinvestor,
+               vir.com.vn, constructionvietnam, monre, vea,
+               moitruong.com.vn, ictvietnam, mic.gov, smartcity.mobi
+  [추가] 대체 RSS 소스 8개 추가
+         추가: Bao Dau Tu, Vietnam Finance, Nhan Dan Kinh te,
+               Bnews, PetroTimes, Vietnam Energy, Tap chi Nang luong
 
 v5.6 변경사항 (2026-04-07):
   [수정] Smart City primary 키워드 정리 (117→64개)
@@ -873,39 +875,25 @@ RSS_FEEDS = {
     "Bao Ha Tinh":                     "https://baohatinh.vn/rss/home.rss",
     "Bao Binh Dinh":                   "https://baobinhdinh.vn/rss/home.rss",
     "SGGP":                            "https://www.sggp.org.vn/rss/home.rss",
-    # ── v5.3: 환경 전문 ────────────────────────────────────────
+    # ── 환경/교통 전문 (정상 작동) ──────────────────────────────
     "VietnamPlus - Moi truong":        "https://www.vietnamplus.vn/rss/moitruong-270.rss",
     "VietnamPlus - Kinh te":           "https://www.vietnamplus.vn/rss/kinhte-311.rss",
-    "Nhandan - Moi truong":            "https://baotintuc.vn/moi-truong.rss",
-    "Kinhtemoitruong":                 "https://kinhtemoitruong.vn/rss",
-    "Baotainguyenmoitruong":           "https://baotainguyenmoitruong.vn/rss/tin-tuc.rss",
-    # ── v5.3: 북부 지역 ────────────────────────────────────────
-    "Nhandan - Kinh te":               "https://baotintuc.vn/kinh-te.rss",
-    "Hanoimoi - Kinh te":              "https://hanoimoi.vn/rss/kinh-te.rss",
-    "Baobacgiang English":             "https://en.baobacgiang.vn/rss",
-    "Baoquangninh - Kinh te":          "https://baoquangninh.vn/rss/kinh-te.rss",
-    # ── v5.3: 보조 환경/교통 ───────────────────────────────────
-    "Moitruong Net":                   "https://moitruong.net.vn/rss",
-    "Congnghiepmoitruong":             "https://congnghiepmoitruong.vn/rss",
     "VietnamPlus - Giao thong":        "https://www.vietnamplus.vn/rss/xahoi/giaothong-358.rss",
-    # ── 에너지 전문 ────────────────────────────────────────────
-    "Bao Dau Tu - Energy":             "https://baodautu.vn/rss/nang-luong.rss",
-    "Vietnam Energy alt":              "https://vietnamenergy.vn/rss/tin-tuc.rss",
-    "Tap chi Xay dung":                "https://tapchixaydung.vn/rss/home.rss",
-    # ── v5.4: 전문미디어 (30% 목표) ────────────────────────────
-    "The Investor":                    "https://theinvestor.vn/rss",       # v5.6: /feed→/rss
-    "VIR - Vietnam Investment Review": "https://vir.com.vn/rss",           # v5.6: /rss/news.aspx→/rss
-    "Construction Vietnam":            "https://constructionvietnam.net/feed",
-    "VietnamBiz":                      "https://vietnambiz.vn/rss.rss",
-    # ── v5.4: Waste Water 전용 ─────────────────────────────────
-    "MONRE Official":                  "https://monre.gov.vn/rss/tintuc.aspx",
-    "VEA - Vietnam Environment":       "https://vea.gov.vn/vn/tintuc/tintuchangngay/rss",
     "Nhadepso Environment":            "https://nhadepso.com/feed/",
-    "Moitruong Online":                "https://moitruong.com.vn/feed",
-    # ── v5.4: Smart City 전용 ──────────────────────────────────
-    "ICT Vietnam":                     "https://ictvietnam.vn/feed",
-    "MIC Vietnam":                     "https://mic.gov.vn/rss/tintuc.aspx",
-    "Smartcity Vietnam":               "https://smartcity.mobi/feed",
+    "Baotainguyenmoitruong":           "https://baotainguyenmoitruong.vn/rss/tin-tuc.rss",
+    # ── 지역 소스 (정상 작동) ──────────────────────────────────
+    "Baoquangninh - Kinh te":          "https://baoquangninh.vn/rss/kinh-te.rss",
+    # ── v5.8: 대체 전문미디어 (작동 확인된 소스) ─────────────────
+    "VietnamBiz":                      "https://vietnambiz.vn/rss.rss",
+    "Bao Dau Tu":                      "https://baodautu.vn/rss/home.rss",
+    "Vietnam Finance":                 "https://vietnamfinance.vn/rss/home.rss",
+    "Tap chi Xay dung":                "https://tapchixaydung.vn/rss/home.rss",
+    "Nhan Dan - Kinh te":              "https://nhandan.vn/rss/kinhte.rss",
+    "Bnews - Kinh te":                 "https://bnews.vn/rss/home.rss",
+    # ── 에너지/Oil&Gas 전문 ────────────────────────────────────
+    "PetroTimes":                      "https://petrotimes.vn/rss/home.rss",
+    "Vietnam Energy":                  "https://vietnamenergy.vn/rss/home.rss",
+    "Tap chi Nang luong":              "https://nangluongvietnam.vn/rss/home.rss",
 }
 
 
@@ -1348,12 +1336,14 @@ NEWSDATA_PROVINCE_QUERIES = {
 }
 
 NEWSDATA_SPECIALIST_QUERIES = [
-    {'source': 'The Investor',              'domain': 'theinvestor.vn',  'q': 'infrastructure OR "industrial park" OR wastewater OR "power plant" OR "oil gas"', 'language': 'en'},
-    {'source': 'Vietnam Investment Review', 'domain': 'vir.com.vn',     'q': 'infrastructure OR investment OR "industrial zone" OR energy OR transport',         'language': 'en'},
-    {'source': 'Hanoi Times',               'domain': 'hanoitimes.vn',  'q': 'infrastructure OR "industrial park" OR wastewater OR metro OR "urban development"', 'language': 'en'},
-    {'source': 'Vietnam Energy',            'domain': 'vietnamenergy.vn','q': 'power OR energy OR renewable OR solar OR wind OR LNG',                             'language': 'en'},
-    {'source': 'Bao Dau Tu',                'domain': 'baodautu.vn',    'q': 'infrastructure OR "khu cong nghiep" OR energy OR transport',                        'language': 'vi'},
-    {'source': 'PetroTimes',                'domain': 'petrotimes.vn',  'q': 'oil OR gas OR LNG OR petroleum OR petrovietnam',                                    'language': 'vi'},
+    # [v5.7] domain 파라미터 제거 (free 플랜 422 오류)
+    # → 사이트명을 쿼리에 직접 포함하는 방식으로 대체
+    {'source': 'The Investor',              'q': 'Vietnam (infrastructure OR "industrial park" OR wastewater OR "power plant" OR "oil gas") site:theinvestor.vn',   'language': 'en'},
+    {'source': 'Vietnam Investment Review', 'q': 'Vietnam (infrastructure OR investment OR "industrial zone" OR energy OR transport) site:vir.com.vn',               'language': 'en'},
+    {'source': 'Hanoi Times',               'q': 'Vietnam (infrastructure OR "industrial park" OR wastewater OR metro OR "urban development") site:hanoitimes.vn',  'language': 'en'},
+    {'source': 'Vietnam Energy',            'q': 'Vietnam (power OR energy OR renewable OR solar OR wind OR LNG) site:vietnamenergy.vn',                            'language': 'en'},
+    {'source': 'Bao Dau Tu',                'q': 'Viet Nam (ha tang OR "khu cong nghiep" OR energy OR transport) site:baodautu.vn',                                'language': 'vi'},
+    {'source': 'PetroTimes',                'q': 'Viet Nam (dau khi OR LNG OR khi dot OR petrovietnam) site:petrotimes.vn',                                        'language': 'vi'},
 ]
 
 
@@ -1468,7 +1458,8 @@ def fetch_newsdata(hours_back=24):
     for q_info in NEWSDATA_SPECIALIST_QUERIES:
         if credit_used >= CREDIT_LIMIT:
             break
-        results = _call_newsdata(q_info['q'], q_info['language'], domain=q_info['domain'], size=10)
+        # [v5.7] domain 파라미터 제거 — 쿼리에 site: 포함
+        results = _call_newsdata(q_info['q'], q_info['language'], size=10)
         for item in results:
             parsed = _parse_result(item, q_info['source'])
             if parsed:
@@ -2250,7 +2241,7 @@ if __name__ == "__main__":
         ENABLE_GNEWS = True
 
     print("=" * 60)
-    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.7")
+    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.8")
     print(f"Hours back: {HOURS_BACK} | Threshold: {MIN_CLASSIFY_THRESHOLD} | Language: {LANGUAGE_FILTER}")
     deepl_status = f"DeepL={'ON' if DEEPL_API_KEY else 'OFF(키없음)'}"
     print(f"RSS feeds: {len(RSS_FEEDS)} | 번역: {deepl_status} → MyMemory → Google")
