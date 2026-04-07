@@ -1,0 +1,149 @@
+# ============================================================
+# Vietnam Infrastructure News — 주간 수집 파이프라인
+# .github/workflows/vietnam-infra-news.yml
+#
+# 스케줄: 매주 토요일 KST 18:00 (UTC 09:00)
+# 역할: 7일치 수집 + 전문미디어 크롤러 (specialist_crawler.py)
+# [메모리항목4] EMAIL_USERNAME / EMAIL_PASSWORD
+# [메모리항목12] yml 내 python3 -c "..." 인라인 코드 금지
+#
+# v5.8 업데이트 (2026-04-07):
+#   - DEEPL_API_KEY 추가 (번역 1순위)
+#   - deepl pip 패키지 추가
+#   - specialist_crawler.py 연동 유지
+#   - daily_pipeline과 충돌 방지 (토요일만 실행)
+# ============================================================
+
+name: Weekly Collection v5.8 (7days)
+
+on:
+  schedule:
+    - cron: '0 13 * * 6'   # 매주 토요일 KST 22:00 (UTC 13:00)
+                            # daily_pipeline(UTC 11:00) 완료 후 실행 → Git 충돌 방지
+  workflow_dispatch:
+    inputs:
+      hours_back:
+        description: '소급 수집 시간 (기본 168=7일)'
+        required: false
+        default: '168'
+
+concurrency:
+  group: weekly-collection   # daily_pipeline(news-collection)과 분리 → 충돌 방지
+  cancel-in-progress: false
+
+jobs:
+  weekly:
+    name: 주간 수집 및 전문미디어 크롤링
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests openpyxl feedparser beautifulsoup4 lxml deep-translator deepl
+
+      - name: Check Excel file
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+        run: |
+          python3 scripts/check_excel.py
+
+      - name: Collect news (7-day lookback)
+        env:
+          HOURS_BACK: ${{ github.event.inputs.hours_back || '168' }}
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+          DB_PATH: data/vietnam_infrastructure_news.db
+          LANGUAGE_FILTER: all
+          NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
+          DEEPL_API_KEY:    ${{ secrets.DEEPL_API_KEY }}
+        run: |
+          echo "=== Weekly News Collection (hours_back=$HOURS_BACK) ==="
+          python3 scripts/news_collector.py --hours-back $HOURS_BACK --agent-mode
+
+      - name: Specialist crawler (theinvestor / vir / hanoitimes)
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+          DB_PATH: data/vietnam_infrastructure_news.db
+          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+        run: |
+          if [ -f scripts/specialist_crawler.py ]; then
+            echo "=== Specialist Media Crawl ==="
+            python3 scripts/specialist_crawler.py --from-date 2025-01-01
+          else
+            echo "specialist_crawler.py not found, skipping"
+          fi
+
+      - name: Batch translate (20건 소급)
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+          DB_PATH: data/vietnam_infrastructure_news.db
+          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+        run: |
+          if [ -f scripts/batch_translate.py ]; then
+            python3 scripts/batch_translate.py
+          else
+            echo "batch_translate.py not found, skipping"
+          fi
+
+      - name: Build dashboard
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+        run: |
+          echo "=== Dashboard Build ==="
+          python3 scripts/build_dashboard.py
+          echo "index.html size: $(wc -c < docs/index.html) bytes"
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/database/Vietnam_Infra_News_Database_Final.xlsx
+          git add data/vietnam_infrastructure_news.db || true
+          git add docs/index.html
+          git add data/agent_output/ || true
+          if git diff --staged --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Weekly update $(date '+%Y-%m-%d') KST"
+            git push
+            echo "Pushed successfully"
+          fi
+
+      - name: Send email notification
+        if: always()
+        env:
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+        run: |
+          if [ -f scripts/send_email.py ]; then
+            python3 scripts/send_email.py || echo "Email skipped"
+          else
+            echo "send_email.py not found"
+          fi
+
+      - name: Run Quality Context Agent (SA-6)
+        run: python3 scripts/quality_context_agent.py
+
+      - name: Export shared files for Genspark
+        run: python3 scripts/export_shared.py
+
+      - name: Commit and push shared files
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add docs/shared/
+          git diff --cached --quiet || git commit -m "Weekly shared export $(date +%Y-%m-%d)"
+          git push
