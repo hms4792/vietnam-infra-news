@@ -3,9 +3,15 @@
 """
 batch_translate.py
 Excel DB에서 title_ko가 비어있는 기사를 배치 번역
-- 하루 20건씩 처리 (MyMemory API 한도 고려)
-- Google Translate (MyMemory 1차 + deep-translator 2차). Anthropic API 금지
-- 2025년 이후 기사 우선, 최신순 역순 (2026년 -> 2025년 -> 2024년 이전)
+
+번역 폴백 체인 (v5.7):
+  1순위: DeepL API Free   (월 500K자, 품질 최상) — DEEPL_API_KEY 환경변수 필요
+  2순위: MyMemory         (일 5,000자, WARNING 필터)
+  3순위: deep-translator  (Google Translate 비공식)
+
+- 하루 20건씩 처리
+- 2025년 이후 기사 우선, 최신순 역순
+- Anthropic API 금지
 """
 import sys
 import os
@@ -13,37 +19,91 @@ import time
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 from pathlib import Path
 
-EXCEL_PATH = os.environ.get('EXCEL_PATH', 'data/database/Vietnam_Infra_News_Database_Final.xlsx')
-BATCH_SIZE = int(os.environ.get('BATCH_SIZE', 20))
+EXCEL_PATH    = os.environ.get('EXCEL_PATH', 'data/database/Vietnam_Infra_News_Database_Final.xlsx')
+BATCH_SIZE    = int(os.environ.get('BATCH_SIZE', 20))
+DEEPL_API_KEY = os.environ.get('DEEPL_API_KEY', '').strip()
+
+# DeepL 언어 코드 매핑
+_DEEPL_LANG = {'ko': 'KO', 'en': 'EN-US', 'vi': 'VI'}
+_deepl_ok   = True  # 한도 초과 시 False
+
+
+def _try_deepl(text, target_lang):
+    """DeepL API Free 번역. 실패/한도초과 시 '' 반환."""
+    global _deepl_ok
+    if not DEEPL_API_KEY or not _deepl_ok:
+        return ''
+    import requests
+    try:
+        resp = requests.post(
+            'https://api-free.deepl.com/v2/translate',
+            headers={'Authorization': f'DeepL-Auth-Key {DEEPL_API_KEY}'},
+            data={'text': str(text)[:500],
+                  'target_lang': _DEEPL_LANG.get(target_lang, target_lang.upper())},
+            timeout=10,
+        )
+        if resp.status_code == 456:
+            print("  [DeepL] 월 한도 초과 → MyMemory 폴백")
+            _deepl_ok = False
+            return ''
+        if resp.status_code != 200:
+            return ''
+        result = resp.json().get('translations', [{}])[0].get('text', '')
+        return result if result and result != text else ''
+    except Exception:
+        return ''
+
+
+def _is_warning(v):
+    """MyMemory 경고 메시지 여부 확인"""
+    if not v:
+        return False
+    u = str(v).upper()
+    return ('MYMEMORY WARNING' in u or
+            'PLEASE SELECT'   in u or
+            'YOU USED ALL'    in u or
+            'INVALID'         in u)
 
 
 def translate_text(text, target_lang='ko'):
-    """MyMemory API 1차, deep-translator 2차 폴백"""
-    if not text or len(text.strip()) < 3:
+    """
+    3단계 폴백 번역:
+      DeepL (1순위) → MyMemory (2순위) → Google (3순위)
+    """
+    if not text or len(str(text).strip()) < 3:
         return ''
     import requests
+
+    # 1순위: DeepL
+    result = _try_deepl(text, target_lang)
+    if result:
+        return result
+
+    # 2순위: MyMemory
     try:
         url = (
             "https://api.mymemory.translated.net/get"
             "?q=" + requests.utils.quote(str(text)[:500]) +
             "&langpair=auto|" + target_lang
         )
-        r = requests.get(url, timeout=10)
-        data = r.json()
-        result = data.get('responseData', {}).get('translatedText', '')
-        if (result and result != text
-                and 'INVALID' not in str(result).upper()
-                and not str(result).startswith('MYMEMORY WARNING')):
+        r      = requests.get(url, timeout=10)
+        result = r.json().get('responseData', {}).get('translatedText', '')
+        if result and not _is_warning(result) and result != text:
             return result
     except Exception:
         pass
+
+    # 3순위: Google (deep-translator)
     try:
         from deep_translator import GoogleTranslator
-        result = GoogleTranslator(source='auto', target=target_lang).translate(str(text)[:500])
+        result = GoogleTranslator(
+            source='auto', target=target_lang
+        ).translate(str(text)[:500])
         if result:
             return result
     except Exception:
         pass
+
     return text
 
 
