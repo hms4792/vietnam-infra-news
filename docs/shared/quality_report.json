@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-07T05:12:10.121697+00:00",
-  "total_articles": 3,
+  "generated_at": "2026-04-07T05:23:25.587663+00:00",
+  "total_articles": 0,
   "quality_grade": "D",
   "targets_met": {
     "province_unclassified_le_25pct": true,
@@ -11,23 +11,22 @@
     "province_unclassified_rate": 0.0,
     "specialist_media_ratio": 0.0,
     "sector_coverage": {
-      "covered": [
-        "Industrial Parks",
-        "Oil & Gas",
-        "Smart City"
-      ],
+      "covered": [],
       "missing": [
         "Waste Water",
         "Water Supply/Drainage",
         "Solid Waste",
-        "Power"
+        "Power",
+        "Oil & Gas",
+        "Industrial Parks",
+        "Smart City"
       ],
-      "ratio": 0.429
+      "ratio": 0.0
     },
     "area_distribution": {
       "Environment": 0,
-      "Energy Develop.": 1,
-      "Urban Develop.": 2,
+      "Energy Develop.": 0,
+      "Urban Develop.": 0,
       "Other": 0
     },
     "policy_alignment": {
@@ -35,7 +34,7 @@
       "high_relevance_ratio": 0.0
     },
     "collector_flags": {
-      "vietnam_ratio": 0.333,
+      "vietnam_ratio": 0.0,
       "missing_provinces": []
     }
   },
@@ -54,9 +53,12 @@
         "Waste Water",
         "Water Supply/Drainage",
         "Solid Waste",
-        "Power"
+        "Power",
+        "Oil & Gas",
+        "Industrial Parks",
+        "Smart City"
       ],
-      "action": "Waste Water, Water Supply/Drainage, Solid Waste, Power 섹터 RSS/키워드 보강 필요"
+      "action": "Waste Water, Water Supply/Drainage, Solid Waste, Power, Oil & Gas, Industrial Parks, Smart City 섹터 RSS/키워드 보강 필요"
     },
     {
       "priority": "LOW",
