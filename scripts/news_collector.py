@@ -2,19 +2,18 @@
 # -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News Collector
-Version 5.8 — RSS 소스 정리 + NewsData domain 파라미터 제거
+Version 5.9 — RSS 소스 테스트 검증 완료 소스 6개 추가
 
-v5.8 변경사항 (2026-04-07):
-  [수정] NewsData.io domain 파라미터 제거 (free 플랜 422 오류 근본 해결)
-         site: 검색 연산자를 쿼리에 직접 포함하는 방식으로 대체
-  [수정] 오작동 RSS 소스 13개 제거 (SSL 만료, 403, DNS 오류)
-         제거: baotintuc, kinhtemoitruong, hanoimoi, baobacgiang,
-               moitruong.net, congnghiepmoitruong, theinvestor,
-               vir.com.vn, constructionvietnam, monre, vea,
-               moitruong.com.vn, ictvietnam, mic.gov, smartcity.mobi
-  [추가] 대체 RSS 소스 8개 추가
-         추가: Bao Dau Tu, Vietnam Finance, Nhan Dan Kinh te,
-               Bnews, PetroTimes, Vietnam Energy, Tap chi Nang luong
+v5.9 변경사항 (2026-04-07):
+  [추가] 52개 RSS 후보 GitHub Actions 테스트 → 6개 정상 확인
+         Hanoi Times       (20건/회) 전문미디어 하노이 인프라
+         PV-Tech           (50건/회) 국제 태양광/재생에너지
+         Energy Monitor    (10건/회) 국제 에너지전환
+         Nikkei Asia       (50건/회) 아시아 비즈니스
+         Moi truong & CS   (30건/회) 환경/폐기물 베트남어
+         VietnamNet ICT    (36건/회) 스마트시티/ICT 베트남어
+  [효과] 전문미디어 비율 향상 기대 (Hanoi Times, PV-Tech, Nikkei)
+         Power/Smart City 섹터 커버리지 개선 기대
 
 v5.6 변경사항 (2026-04-07):
   [수정] Smart City primary 키워드 정리 (117→64개)
@@ -892,6 +891,14 @@ RSS_FEEDS = {
     "PetroTimes":                      "https://petrotimes.vn/rss/home.rss",
     "Vietnam Energy":                  "https://vietnamenergy.vn/rss/home.rss",
     "Tap chi Nang luong":              "https://nangluongvietnam.vn/rss/home.rss",
+    # ── v5.9: RSS 테스트 검증 완료 소스 (2026-04-07) ─────────────
+    # 52개 후보 테스트 → 6개 정상 확인
+    "Hanoi Times":                     "https://hanoitimes.vn/rss/home.rss",       # 20건/회 | 전문미디어 | 하노이 인프라·도시개발
+    "PV-Tech":                         "https://www.pv-tech.org/feed/",            # 50건/회 | 국제 태양광·재생에너지 전문지
+    "Energy Monitor":                  "https://www.energymonitor.ai/rss",         # 10건/회 | 국제 에너지전환 전문지
+    "Nikkei Asia":                     "https://asia.nikkei.com/rss/feed/nar",     # 50건/회 | 아시아 비즈니스 (베트남 필터 적용)
+    "Moi truong & Cuoc song":          "https://moitruong.net.vn/rss/home.rss",    # 30건/회 | 환경·폐기물 베트남어 전문지
+    "VietnamNet - Cong nghe":          "https://vietnamnet.vn/rss/cong-nghe.rss",  # 36건/회 | 스마트시티·ICT 베트남어
 }
 
 
@@ -2239,7 +2246,7 @@ if __name__ == "__main__":
         ENABLE_GNEWS = True
 
     print("=" * 60)
-    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.8")
+    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.9")
     print(f"Hours back: {HOURS_BACK} | Threshold: {MIN_CLASSIFY_THRESHOLD} | Language: {LANGUAGE_FILTER}")
     deepl_status = f"DeepL={'ON' if DEEPL_API_KEY else 'OFF(키없음)'}"
     print(f"RSS feeds: {len(RSS_FEEDS)} | 번역: {deepl_status} → MyMemory → Google")
