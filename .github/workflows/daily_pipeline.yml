@@ -8,7 +8,7 @@
 # [메모리항목12] yml 내 python3 -c "..." 인라인 코드 금지
 # ============================================================
 
-name: Daily Pipeline v5.4
+name: Daily Pipeline v5.7
 
 on:
   schedule:
@@ -45,7 +45,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install requests openpyxl feedparser beautifulsoup4 lxml deep-translator
+          pip install requests openpyxl feedparser beautifulsoup4 lxml deep-translator deepl
 
       - name: Check Excel file
         env:
@@ -60,6 +60,7 @@ jobs:
           DB_PATH: data/vietnam_infrastructure_news.db
           LANGUAGE_FILTER: all
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
+          DEEPL_API_KEY:    ${{ secrets.DEEPL_API_KEY }}
         run: |
           echo "=== News Collection (hours_back=$HOURS_BACK) ==="
           python3 scripts/news_collector.py --hours-back $HOURS_BACK --agent-mode
@@ -68,6 +69,7 @@ jobs:
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
+          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
         run: |
           if [ -f scripts/batch_translate.py ]; then
             python3 scripts/batch_translate.py
