@@ -1,0 +1,294 @@
+{
+  "tested_at": "2026-04-07T05:49:50.436891Z",
+  "total": 52,
+  "ok_count": 6,
+  "fail_count": 46,
+  "ok_sources": [
+    {
+      "name": "Hanoi Times (Home)",
+      "url": "https://hanoitimes.vn/rss/home.rss",
+      "status": "OK",
+      "http_code": 200,
+      "entries": 20,
+      "sample_title": "Ao Dai Week seeks to elevate Vietnam’s national dress at wor",
+      "error": ""
+    },
+    {
+      "name": "PV-Tech (All)",
+      "url": "https://www.pv-tech.org/feed/",
+      "status": "OK",
+      "http_code": 200,
+      "entries": 50,
+      "sample_title": "Aggreko, Harmony Gold ink PPA for Australia’s ‘largest’ off-",
+      "error": ""
+    },
+    {
+      "name": "Energy Monitor",
+      "url": "https://www.energymonitor.ai/rss",
+      "status": "OK",
+      "http_code": 200,
+      "entries": 10,
+      "sample_title": "Geronimo Power begins operations at 117MW solar project in O",
+      "error": ""
+    },
+    {
+      "name": "Nikkei Asia",
+      "url": "https://asia.nikkei.com/rss/feed/nar",
+      "status": "OK",
+      "http_code": 200,
+      "entries": 50,
+      "sample_title": "Bangladesh eyes energy sector overhaul as Iran war drags on",
+      "error": ""
+    },
+    {
+      "name": "Moi truong & Cuoc song",
+      "url": "https://moitruong.net.vn/rss/home.rss",
+      "status": "OK",
+      "http_code": 200,
+      "entries": 30,
+      "sample_title": "Thêm kênh cảnh báo thiên tai qua ứng dụng “Thời tiết Việt Na",
+      "error": ""
+    },
+    {
+      "name": "VietnamNet ICT",
+      "url": "https://vietnamnet.vn/rss/cong-nghe.rss",
+      "status": "OK",
+      "http_code": 200,
+      "entries": 36,
+      "sample_title": "Thử nghiệm thiết bị 5G tại Trung Đông, Make in Viet Nam tiến",
+      "error": ""
+    }
+  ],
+  "fail_sources": [
+    {
+      "name": "The Investor (EN)",
+      "url": "https://theinvestor.vn/rss/en.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "The Investor (All)",
+      "url": "https://theinvestor.vn/rss/all.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "The Investor (Feed)",
+      "url": "https://theinvestor.vn/feed.xml",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "The Investor (Atom)",
+      "url": "https://theinvestor.vn/atom.xml",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "VIR (Home RSS)",
+      "url": "https://vir.com.vn/rss/home.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "VIR (Atom)",
+      "url": "https://vir.com.vn/atom.xml",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "VIR (Infrastructure)",
+      "url": "https://vir.com.vn/rss/infrastructure.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "Hanoi Times (RSS)",
+      "url": "https://hanoitimes.vn/rss.xml",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Hanoi Times (Feed)",
+      "url": "https://hanoitimes.vn/feed",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Vietnam.vn (EN Feed)",
+      "url": "https://www.vietnam.vn/en/feed",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Vietnam.vn (RSS)",
+      "url": "https://www.vietnam.vn/rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "MoIT (Energy EN)",
+      "url": "https://moit.gov.vn/en/rss/energy.rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "MoIT (News EN)",
+      "url": "https://moit.gov.vn/en/rss.xml",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "EVN (EN News)",
+      "url": "https://en.evn.com.vn/rss/news.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "EVN (EN RSS)",
+      "url": "https://en.evn.com.vn/rss.xml",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "PVN (Petrovietnam EN)",
+      "url": "https://www.pvn.vn/en/rss",
+      "status": "ERROR"
+    },
+    {
+      "name": "PVN (EN Feed)",
+      "url": "https://www.pvn.vn/en/feed",
+      "status": "ERROR"
+    },
+    {
+      "name": "PV-Tech (Asia)",
+      "url": "https://www.pv-tech.org/category/asia/feed/",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "Offshore Energy (Asia)",
+      "url": "https://www.offshore-energy.biz/category/asia/feed/",
+      "status": "HTTP_502"
+    },
+    {
+      "name": "Recharge News",
+      "url": "https://www.rechargenews.com/rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "Vietnam Briefing",
+      "url": "https://www.vietnam-briefing.com/news/feed",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Vietnam Briefing (RSS)",
+      "url": "https://www.vietnam-briefing.com/rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Oxford Business Group VN",
+      "url": "https://oxfordbusinessgroup.com/rss/vietnam",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "KPMG Vietnam",
+      "url": "https://home.kpmg/vn/en/home/insights.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "Bao Xay Dung (Moi truong)",
+      "url": "https://baoxaydung.com.vn/rss/moi-truong.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "Bao Xay Dung (Ha Tang)",
+      "url": "https://baoxaydung.com.vn/rss/ha-tang.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "Bao Xay Dung (Cap Nuoc)",
+      "url": "https://baoxaydung.com.vn/rss/cap-thoat-nuoc.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "Bao Xay Dung (KCN)",
+      "url": "https://baoxaydung.com.vn/rss/khu-do-thi.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "PetroTimes (Home)",
+      "url": "https://petrotimes.vn/rss/home.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "PetroTimes (Dau Khi)",
+      "url": "https://petrotimes.vn/rss/dau-khi.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "PetroTimes (Nang luong)",
+      "url": "https://petrotimes.vn/rss/nang-luong.rss",
+      "status": "HTTP_404"
+    },
+    {
+      "name": "Vietnam Energy (Home)",
+      "url": "https://vietnamenergy.vn/rss/home.rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Vietnam Energy (Tin Tuc)",
+      "url": "https://vietnamenergy.vn/rss/tin-tuc.rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Tap chi Nang luong VN",
+      "url": "https://nangluongvietnam.vn/rss/home.rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Nang luong VN (Feed)",
+      "url": "https://nangluongvietnam.vn/feed",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Bao Dau Tu (Home)",
+      "url": "https://baodautu.vn/rss/home.rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Bao Dau Tu (Dau Tu)",
+      "url": "https://baodautu.vn/rss/dau-tu.rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Bao Dau Tu (Nang Luong)",
+      "url": "https://baodautu.vn/rss/nang-luong.rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "VietnamBiz (RSS)",
+      "url": "https://vietnambiz.vn/rss.rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "VietnamBiz (Feed)",
+      "url": "https://vietnambiz.vn/feed",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Tap chi Moi Truong",
+      "url": "https://tapchimôitruong.vn/rss/home.rss",
+      "status": "ERROR"
+    },
+    {
+      "name": "Tap chi MT (Feed)",
+      "url": "https://tapchimôitruong.vn/feed",
+      "status": "ERROR"
+    },
+    {
+      "name": "Bao TN&MT",
+      "url": "https://baotainguyenmoitruong.vn/rss/tin-tuc.rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Bao TN&MT (Home)",
+      "url": "https://baotainguyenmoitruong.vn/rss/home.rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "ICT News VN",
+      "url": "https://ictnews.vietnamnet.vn/rss/home.rss",
+      "status": "NO_ENTRIES"
+    },
+    {
+      "name": "Zing News Cong nghe",
+      "url": "https://zingnews.vn/cong-nghe.rss",
+      "status": "HTTP_404"
+    }
+  ]
+}
