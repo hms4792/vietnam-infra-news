@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-04-07T06:20:15.548627+00:00",
-  "total_articles": 0,
-  "quality_grade": "D",
+  "generated_at": "2026-04-07T11:49:26.386095+00:00",
+  "total_articles": 16,
+  "quality_grade": "C",
   "targets_met": {
     "province_unclassified_le_25pct": true,
     "specialist_media_ge_30pct": false,
@@ -9,32 +9,33 @@
   },
   "metrics": {
     "province_unclassified_rate": 0.0,
-    "specialist_media_ratio": 0.0,
+    "specialist_media_ratio": 0.188,
     "sector_coverage": {
-      "covered": [],
+      "covered": [
+        "Industrial Parks",
+        "Oil & Gas",
+        "Power",
+        "Smart City",
+        "Solid Waste"
+      ],
       "missing": [
         "Waste Water",
-        "Water Supply/Drainage",
-        "Solid Waste",
-        "Power",
-        "Oil & Gas",
-        "Industrial Parks",
-        "Smart City"
+        "Water Supply/Drainage"
       ],
-      "ratio": 0.0
+      "ratio": 0.714
     },
     "area_distribution": {
-      "Environment": 0,
-      "Energy Develop.": 0,
-      "Urban Develop.": 0,
-      "Other": 0
+      "Environment": 2,
+      "Energy Develop.": 6,
+      "Urban Develop.": 6,
+      "Other": 2
     },
     "policy_alignment": {
       "matched_ratio": 0.0,
       "high_relevance_ratio": 0.0
     },
     "collector_flags": {
-      "vietnam_ratio": 0.0,
+      "vietnam_ratio": 0.25,
       "missing_provinces": []
     }
   },
@@ -42,7 +43,7 @@
     {
       "priority": "HIGH",
       "metric": "specialist_media_ratio",
-      "current": 0.0,
+      "current": 0.188,
       "target": 0.3,
       "action": "전문 RSS 소스 추가 또는 Google News 전문 쿼리 확대 필요"
     },
@@ -51,14 +52,9 @@
       "metric": "sector_coverage",
       "missing": [
         "Waste Water",
-        "Water Supply/Drainage",
-        "Solid Waste",
-        "Power",
-        "Oil & Gas",
-        "Industrial Parks",
-        "Smart City"
+        "Water Supply/Drainage"
       ],
-      "action": "Waste Water, Water Supply/Drainage, Solid Waste, Power, Oil & Gas, Industrial Parks, Smart City 섹터 RSS/키워드 보강 필요"
+      "action": "Waste Water, Water Supply/Drainage 섹터 RSS/키워드 보강 필요"
     },
     {
       "priority": "LOW",
