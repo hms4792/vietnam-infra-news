@@ -886,10 +886,8 @@ RSS_FEEDS = {
     # ── v5.8: 대체 전문미디어 (작동 확인된 소스) ─────────────────
     "VietnamBiz":                      "https://vietnambiz.vn/rss.rss",
     "Bao Dau Tu":                      "https://baodautu.vn/rss/home.rss",
-    "Vietnam Finance":                 "https://vietnamfinance.vn/rss/home.rss",
     "Tap chi Xay dung":                "https://tapchixaydung.vn/rss/home.rss",
     "Nhan Dan - Kinh te":              "https://nhandan.vn/rss/kinhte.rss",
-    "Bnews - Kinh te":                 "https://bnews.vn/rss/home.rss",
     # ── 에너지/Oil&Gas 전문 ────────────────────────────────────
     "PetroTimes":                      "https://petrotimes.vn/rss/home.rss",
     "Vietnam Energy":                  "https://vietnamenergy.vn/rss/home.rss",
@@ -1336,14 +1334,14 @@ NEWSDATA_PROVINCE_QUERIES = {
 }
 
 NEWSDATA_SPECIALIST_QUERIES = [
-    # [v5.7] domain 파라미터 제거 (free 플랜 422 오류)
-    # → 사이트명을 쿼리에 직접 포함하는 방식으로 대체
-    {'source': 'The Investor',              'q': 'Vietnam (infrastructure OR "industrial park" OR wastewater OR "power plant" OR "oil gas") site:theinvestor.vn',   'language': 'en'},
-    {'source': 'Vietnam Investment Review', 'q': 'Vietnam (infrastructure OR investment OR "industrial zone" OR energy OR transport) site:vir.com.vn',               'language': 'en'},
-    {'source': 'Hanoi Times',               'q': 'Vietnam (infrastructure OR "industrial park" OR wastewater OR metro OR "urban development") site:hanoitimes.vn',  'language': 'en'},
-    {'source': 'Vietnam Energy',            'q': 'Vietnam (power OR energy OR renewable OR solar OR wind OR LNG) site:vietnamenergy.vn',                            'language': 'en'},
-    {'source': 'Bao Dau Tu',                'q': 'Viet Nam (ha tang OR "khu cong nghiep" OR energy OR transport) site:baodautu.vn',                                'language': 'vi'},
-    {'source': 'PetroTimes',                'q': 'Viet Nam (dau khi OR LNG OR khi dot OR petrovietnam) site:petrotimes.vn',                                        'language': 'vi'},
+    # [v5.8] site: 연산자도 free 플랜 미지원 → 순수 키워드 쿼리로 교체
+    # 전문미디어 대신 누락 섹터를 보완하는 쿼리로 활용
+    {'source': 'Waste Water',    'q': 'Vietnam wastewater OR "nuoc thai" OR "sewage treatment" OR WWTP OR "thoat nuoc"', 'language': 'en'},
+    {'source': 'Water Supply',   'q': 'Vietnam "water supply" OR "nuoc sach" OR "cap nuoc" OR "water plant" OR "water treatment"', 'language': 'en'},
+    {'source': 'Oil Gas',        'q': 'Vietnam petroleum OR LNG OR "dau khi" OR PVN OR "Petrovietnam" OR "gas pipeline"', 'language': 'en'},
+    {'source': 'Smart City',     'q': 'Vietnam "smart city" OR "thanh pho thong minh" OR "digital transformation" OR "e-government"', 'language': 'en'},
+    {'source': 'Industrial VI',  'q': 'Viet Nam "khu cong nghiep" OR "khu kinh te" OR VSIP OR "FDI" OR "dau tu nuoc ngoai"', 'language': 'vi'},
+    {'source': 'Energy VI',      'q': 'Viet Nam "nha may dien" OR "dien gio" OR "dien mat troi" OR EVN OR "nang luong tai tao"', 'language': 'vi'},
 ]
 
 
