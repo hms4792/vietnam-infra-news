@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-07T11:49:26.386095+00:00",
-  "total_articles": 16,
+  "generated_at": "2026-04-08T11:50:29.450095+00:00",
+  "total_articles": 37,
   "quality_grade": "C",
   "targets_met": {
     "province_unclassified_le_25pct": true,
@@ -9,33 +9,33 @@
   },
   "metrics": {
     "province_unclassified_rate": 0.0,
-    "specialist_media_ratio": 0.188,
+    "specialist_media_ratio": 0.081,
     "sector_coverage": {
       "covered": [
         "Industrial Parks",
         "Oil & Gas",
         "Power",
         "Smart City",
-        "Solid Waste"
-      ],
-      "missing": [
-        "Waste Water",
+        "Solid Waste",
         "Water Supply/Drainage"
       ],
-      "ratio": 0.714
+      "missing": [
+        "Waste Water"
+      ],
+      "ratio": 0.857
     },
     "area_distribution": {
-      "Environment": 2,
+      "Environment": 5,
       "Energy Develop.": 6,
-      "Urban Develop.": 6,
-      "Other": 2
+      "Urban Develop.": 20,
+      "Other": 6
     },
     "policy_alignment": {
       "matched_ratio": 0.0,
       "high_relevance_ratio": 0.0
     },
     "collector_flags": {
-      "vietnam_ratio": 0.25,
+      "vietnam_ratio": 0.216,
       "missing_provinces": []
     }
   },
@@ -43,7 +43,7 @@
     {
       "priority": "HIGH",
       "metric": "specialist_media_ratio",
-      "current": 0.188,
+      "current": 0.081,
       "target": 0.3,
       "action": "전문 RSS 소스 추가 또는 Google News 전문 쿼리 확대 필요"
     },
@@ -51,10 +51,9 @@
       "priority": "MEDIUM",
       "metric": "sector_coverage",
       "missing": [
-        "Waste Water",
-        "Water Supply/Drainage"
+        "Waste Water"
       ],
-      "action": "Waste Water, Water Supply/Drainage 섹터 RSS/키워드 보강 필요"
+      "action": "Waste Water 섹터 RSS/키워드 보강 필요"
     },
     {
       "priority": "LOW",
