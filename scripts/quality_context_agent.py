@@ -1,294 +1,417 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-SA-6: Quality Context Agent
-수집된 기사의 품질 지표를 측정하고 MI Reporting Team 공유용 리포트를 생성한다.
+quality_context_agent.py  (SA-6)
+==================================
+Claude Code Agent Team — Sub-Agent 6
+역할: 수집 품질 분석 + Master Plan 정책 연계율 계산
 
-입력: data/agent_output/collector_output.json
-      data/agent_output/knowledge_output.json  (없으면 건너뜀)
-출력: data/agent_output/quality_report.json
+[v2.0 주요 변경 2026-04-09]
+  knowledge_index.json 기반 정책 연계 매칭 로직 추가
+  → Genspark와 동일한 기준으로 정책 연계율 계산
+  → 기사 제목/요약의 키워드가 마스터플랜 keywords와 일치하면 매칭
+
+[출력]
+  data/agent_output/quality_report.json  → docs/shared/ 로 export
 """
 
-import os
 import json
-from datetime import datetime, timezone
+import os
+import re
+from datetime import datetime
+from pathlib import Path
 
-BASE_DIR        = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-AGENT_OUT_DIR   = os.path.join(BASE_DIR, "data", "agent_output")
-COLLECTOR_JSON  = os.path.join(AGENT_OUT_DIR, "collector_output.json")
-KNOWLEDGE_JSON  = os.path.join(AGENT_OUT_DIR, "knowledge_output.json")
-QUALITY_JSON    = os.path.join(AGENT_OUT_DIR, "quality_report.json")
+# ── 경로 설정 ───────────────────────────────────────────────
+BASE_DIR        = Path(__file__).parent.parent
+AGENT_OUT       = BASE_DIR / "data" / "agent_output"
+SHARED_DOCS     = BASE_DIR / "docs" / "shared"
+COLLECTOR_OUT   = AGENT_OUT / "collector_output.json"
+QUALITY_REPORT  = AGENT_OUT / "quality_report.json"
 
-# ── 목표 기준 (WHAT_I_NEED.md) ───────────────────────────────────────────────
-TARGET_PROVINCE_UNCLASSIFIED_MAX = 0.25   # 미분류율 25% 이하
-TARGET_SPECIALIST_MEDIA_MIN      = 0.30   # 전문미디어 비율 30% 이상
-
-# 7개 대상 섹터 (WHO_I_AM.md)
-TARGET_SECTORS = [
-    "Waste Water",
-    "Water Supply/Drainage",
-    "Solid Waste",
-    "Power",
-    "Oil & Gas",
-    "Industrial Parks",
-    "Smart City",
+# knowledge_index.json 탐색 경로 (Claude 생성 or Genspark 공유)
+KNOWLEDGE_INDEX_PATHS = [
+    SHARED_DOCS / "knowledge_index.json",          # docs/shared/ (Genspark 공유)
+    BASE_DIR / "data" / "shared" / "knowledge_index.json",
+    AGENT_OUT / "knowledge_index.json",
 ]
 
-# Area 매핑
-SECTOR_AREA = {
-    "Waste Water":           "Environment",
-    "Water Supply/Drainage": "Environment",
-    "Solid Waste":           "Environment",
-    "Power":                 "Energy Develop.",
-    "Oil & Gas":             "Energy Develop.",
-    "Industrial Parks":      "Urban Develop.",
-    "Smart City":            "Urban Develop.",
-}
-
-# 전문미디어 판별 — RSS 소스명 기반 (news_collector.py RSS_FEEDS 기준)
+# ── 전문미디어 소스 목록 ─────────────────────────────────────
 SPECIALIST_SOURCES = {
-    # 에너지 전문
-    "PV-Tech",
-    "Bao Dau Tu - Energy",
-    "Vietnam Energy alt",
-    # 환경 전문
-    "VietnamPlus - Moi truong",
-    "Nhandan - Moi truong",
-    "Kinhtemoitruong",
-    "Baotainguyenmoitruong",
-    "Moitruong Net",
-    "Congnghiepmoitruong",
-    # 건설/도시 전문
-    "Bao Xay Dung",
-    "Tap chi Xay dung",
-    # 산업단지 전문
-    "Baobacgiang English",
+    "The Investor", "Vietnam Investment Review", "Hanoi Times",
+    "VIR", "PV-Tech", "Offshore Energy", "Energy Monitor",
+    "Nikkei Asia", "Vietnam Energy", "PetroTimes",
+    "Tap chi Nang luong", "Moi truong & Cuoc song",
 }
 
-
-# ── 지표 계산 ─────────────────────────────────────────────────────────────────
-
-def calc_province_unclassified(articles):
-    """Province 미분류율: 비어 있는 province 비율."""
-    if not articles:
-        return 0.0
-    missing = sum(1 for a in articles if not a.get("province"))
-    return round(missing / len(articles), 3)
+# ── 7개 섹터 ─────────────────────────────────────────────────
+ALL_SECTORS = [
+    "Waste Water", "Water Supply/Drainage", "Solid Waste",
+    "Power", "Oil & Gas", "Industrial Parks", "Smart City",
+]
 
 
-def calc_specialist_ratio(articles):
-    """전문미디어 비율: SPECIALIST_SOURCES에 속하는 기사 비율."""
-    if not articles:
-        return 0.0
-    specialist = sum(1 for a in articles if a.get("source", "") in SPECIALIST_SOURCES)
-    return round(specialist / len(articles), 3)
+# ============================================================
+# 1. knowledge_index.json 로드
+# ============================================================
+
+def load_knowledge_index():
+    """Genspark 공유 knowledge_index.json 로드"""
+    for path in KNOWLEDGE_INDEX_PATHS:
+        if path.exists():
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                print(f"  [knowledge_index] {len(data)}개 마스터플랜 로드: {path.name}")
+                return data
+            except Exception as e:
+                print(f"  [WARN] knowledge_index 로드 실패 ({path}): {e}")
+    print("  [WARN] knowledge_index.json 없음 → 정책 연계율 계산 불가")
+    return []
 
 
-def calc_sector_coverage(articles):
-    """7개 목표 섹터 커버리지."""
-    found = {a.get("sector") for a in articles if a.get("sector") in TARGET_SECTORS}
-    missing = [s for s in TARGET_SECTORS if s not in found]
+# ============================================================
+# 2. 정책 연계 매칭
+# ============================================================
+
+def match_article_to_policy(article, knowledge_index):
+    """
+    기사 1건을 knowledge_index의 마스터플랜과 매칭.
+    매칭 기준:
+      1) 섹터 일치 (기사 sector ∈ 마스터플랜 sectors)
+      2) 키워드 일치 (기사 제목/요약에 마스터플랜 keywords_en/vi 중 하나 포함)
+      3) Province 일치 (선택적 — 일치하면 high_relevance)
+
+    반환: {matched: bool, doc_id: str, relevance: "high"/"medium"/None}
+    """
+    if not knowledge_index:
+        return {"matched": False, "doc_id": None, "relevance": None}
+
+    title   = (article.get("title", "") or "").lower()
+    summary = (article.get("summary", "") or "").lower()
+    text    = f"{title} {summary}"
+
+    art_sector   = article.get("sector", "")
+    art_province = article.get("province", "")
+
+    best_match = None
+    best_score = 0
+
+    for doc in knowledge_index:
+        score = 0
+
+        # 섹터 일치 확인
+        doc_sectors = doc.get("sectors", [])
+        if art_sector not in doc_sectors:
+            continue
+        score += 10
+
+        # 키워드 매칭
+        kw_en = [k.lower() for k in doc.get("keywords_en", [])]
+        kw_vi = [k.lower() for k in doc.get("keywords_vi", [])]
+        all_kw = kw_en + kw_vi
+
+        matched_kw = sum(1 for kw in all_kw if kw in text)
+        if matched_kw == 0:
+            continue
+        score += matched_kw * 3
+
+        # Province 일치 (보너스)
+        doc_provinces = [p.lower() for p in doc.get("provinces", [])]
+        if art_province and art_province.lower() in doc_provinces:
+            score += 5
+
+        if score > best_score:
+            best_score = score
+            best_match = doc
+
+    if best_match and best_score >= 13:  # 섹터+키워드 1개 이상 필수
+        # Province까지 일치하면 high_relevance
+        doc_provinces = [p.lower() for p in best_match.get("provinces", [])]
+        relevance = (
+            "high"
+            if art_province and art_province.lower() in doc_provinces
+            else "medium"
+        )
+        return {
+            "matched":    True,
+            "doc_id":     best_match["doc_id"],
+            "relevance":  relevance,
+            "score":      best_score,
+        }
+
+    return {"matched": False, "doc_id": None, "relevance": None}
+
+
+def calculate_policy_alignment(articles, knowledge_index):
+    """전체 기사에 대한 정책 연계율 계산"""
+    if not articles or not knowledge_index:
+        return {
+            "matched_ratio":       0.0,
+            "high_relevance_ratio": 0.0,
+            "matched_count":       0,
+            "high_relevance_count": 0,
+            "matched_articles":    [],
+        }
+
+    matched      = []
+    high_rel     = []
+
+    for art in articles:
+        result = match_article_to_policy(art, knowledge_index)
+        if result["matched"]:
+            matched.append({
+                "title":     art.get("title", "")[:60],
+                "sector":    art.get("sector", ""),
+                "province":  art.get("province", ""),
+                "doc_id":    result["doc_id"],
+                "relevance": result["relevance"],
+            })
+            if result["relevance"] == "high":
+                high_rel.append(result["doc_id"])
+
+    total = len(articles)
     return {
-        "covered":  sorted(found),
-        "missing":  missing,
-        "ratio":    round(len(found) / len(TARGET_SECTORS), 3),
+        "matched_ratio":        round(len(matched) / total, 3) if total else 0.0,
+        "high_relevance_ratio": round(len(high_rel) / total, 3) if total else 0.0,
+        "matched_count":        len(matched),
+        "high_relevance_count": len(high_rel),
+        "matched_articles":     matched[:10],  # 상위 10건만 저장
     }
 
 
-def calc_area_distribution(articles):
-    """Area별 기사 분포."""
-    counts = {"Environment": 0, "Energy Develop.": 0, "Urban Develop.": 0, "Other": 0}
-    for a in articles:
-        area = SECTOR_AREA.get(a.get("sector", ""), "Other")
-        counts[area] += 1
-    return counts
+# ============================================================
+# 3. 품질 분석
+# ============================================================
 
+def analyze_quality(articles, knowledge_index):
+    """수집 기사 품질 분석 + 정책 연계율 계산"""
+    total = len(articles)
+    print(f"[SA-6] 분석 대상 기사: {total}건")
 
-def calc_policy_alignment(knowledge_data, total_articles):
-    """지식베이스 매칭률 (knowledge_agent 결과 활용)."""
-    if not knowledge_data or total_articles == 0:
-        return {"matched_ratio": 0.0, "high_relevance_ratio": 0.0}
-    matched       = knowledge_data.get("matched_count", 0)
-    high_rel      = knowledge_data.get("high_relevance_count", 0)
+    # Province 미분류율
+    unclassified = sum(
+        1 for a in articles
+        if not a.get("province") or a.get("province") in ("Vietnam", "")
+    )
+    province_rate = round(unclassified / total, 3) if total else 0.0
+
+    # 전문미디어 비율
+    specialist_cnt = sum(
+        1 for a in articles
+        if a.get("source", "") in SPECIALIST_SOURCES
+    )
+    specialist_ratio = round(specialist_cnt / total, 3) if total else 0.0
+
+    # 섹터 커버리지
+    covered_sectors = set(
+        a.get("sector", "") for a in articles
+        if a.get("sector", "") in ALL_SECTORS
+    )
+    missing_sectors = [s for s in ALL_SECTORS if s not in covered_sectors]
+    sector_ratio    = round(len(covered_sectors) / len(ALL_SECTORS), 3)
+
+    # 정책 연계율 (knowledge_index 매칭)
+    policy = calculate_policy_alignment(articles, knowledge_index)
+
+    # 품질 등급 결정
+    grade = _calc_grade(
+        province_rate, specialist_ratio, sector_ratio, policy["matched_ratio"]
+    )
+
     return {
-        "matched_ratio":       round(matched / total_articles, 3),
-        "high_relevance_ratio": round(high_rel / total_articles, 3),
+        "province_unclassified_rate": province_rate,
+        "specialist_media_ratio":     specialist_ratio,
+        "specialist_count":           specialist_cnt,
+        "sector_coverage": {
+            "covered": sorted(list(covered_sectors)),
+            "missing": missing_sectors,
+            "ratio":   sector_ratio,
+        },
+        "policy_alignment": policy,
+        "grade":            grade,
     }
 
 
-def make_recommendations(metrics):
-    """품질 지표를 바탕으로 개선 권고사항 생성."""
+def _calc_grade(province_rate, specialist_ratio, sector_ratio, policy_ratio):
+    """
+    품질 등급 계산
+    A: 모든 목표 달성
+    B: 3개 달성
+    C: 2개 달성
+    D: 1개 이하 달성
+    """
+    score = 0
+    if province_rate   <= 0.25: score += 1
+    if specialist_ratio >= 0.30: score += 1
+    if sector_ratio    >= 1.0:  score += 1
+    if policy_ratio    >= 0.30: score += 1
+
+    return {4: "A", 3: "B", 2: "C"}.get(score, "D")
+
+
+# ============================================================
+# 4. 권고사항
+# ============================================================
+
+def generate_recommendations(metrics):
     recs = []
 
-    prov_rate = metrics["province_unclassified_rate"]
-    if prov_rate > TARGET_PROVINCE_UNCLASSIFIED_MAX:
-        recs.append({
-            "priority": "HIGH",
-            "metric":   "province_unclassified_rate",
-            "current":  prov_rate,
-            "target":   TARGET_PROVINCE_UNCLASSIFIED_MAX,
-            "action":   "province_keywords.py 보강 또는 뉴스 본문 스캔 확대 필요",
-        })
-
-    spec_rate = metrics["specialist_media_ratio"]
-    if spec_rate < TARGET_SPECIALIST_MEDIA_MIN:
+    if metrics["specialist_media_ratio"] < 0.30:
         recs.append({
             "priority": "HIGH",
             "metric":   "specialist_media_ratio",
-            "current":  spec_rate,
-            "target":   TARGET_SPECIALIST_MEDIA_MIN,
-            "action":   "전문 RSS 소스 추가 또는 Google News 전문 쿼리 확대 필요",
+            "current":  metrics["specialist_media_ratio"],
+            "target":   0.3,
+            "action":   "전문 RSS 소스 추가 또는 specialist_crawler 정상화 필요"
+                        " (theinvestor.vn, vir.com.vn HTML 크롤링)",
         })
 
-    missing_sectors = metrics["sector_coverage"]["missing"]
-    if missing_sectors:
+    missing = metrics["sector_coverage"]["missing"]
+    if missing:
         recs.append({
             "priority": "MEDIUM",
             "metric":   "sector_coverage",
-            "missing":  missing_sectors,
-            "action":   f"{', '.join(missing_sectors)} 섹터 RSS/키워드 보강 필요",
+            "missing":  missing,
+            "action":   f"{', '.join(missing)} 섹터 RSS/키워드 보강 필요",
         })
 
-    alignment = metrics["policy_alignment"]
-    if alignment["matched_ratio"] < 0.30:
+    if metrics["policy_alignment"]["matched_ratio"] < 0.30:
         recs.append({
             "priority": "LOW",
             "metric":   "policy_alignment",
-            "current":  alignment["matched_ratio"],
-            "action":   "knowledge_index.json 확장으로 정책 연계율 개선 가능",
+            "current":  metrics["policy_alignment"]["matched_ratio"],
+            "action":   "knowledge_index.json 확장 또는 키워드 보강으로 정책 연계율 개선 가능",
         })
 
     return recs
 
 
-def grade(metrics):
-    """전체 품질 등급 산출: A/B/C/D."""
-    score = 0
+# ============================================================
+# 5. 리포트 저장
+# ============================================================
 
-    # Province 미분류율 (30점)
-    prov = metrics["province_unclassified_rate"]
-    if prov <= 0.15:
-        score += 30
-    elif prov <= 0.25:
-        score += 20
-    elif prov <= 0.40:
-        score += 10
+def save_report(report):
+    AGENT_OUT.mkdir(parents=True, exist_ok=True)
+    with open(QUALITY_REPORT, "w", encoding="utf-8") as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
+    print(f"[OK] quality_report.json 저장 완료")
 
-    # 전문미디어 비율 (30점)
-    spec = metrics["specialist_media_ratio"]
-    if spec >= 0.50:
-        score += 30
-    elif spec >= 0.30:
-        score += 20
-    elif spec >= 0.15:
-        score += 10
-
-    # 섹터 커버리지 (25점)
-    cov = metrics["sector_coverage"]["ratio"]
-    score += int(cov * 25)
-
-    # 정책 연계율 (15점)
-    pol = metrics["policy_alignment"]["matched_ratio"]
-    if pol >= 0.60:
-        score += 15
-    elif pol >= 0.30:
-        score += 10
-    elif pol >= 0.10:
-        score += 5
-
-    if score >= 85:
-        return "A"
-    elif score >= 70:
-        return "B"
-    elif score >= 50:
-        return "C"
-    else:
-        return "D"
+    # docs/shared/ 로 즉시 복사
+    try:
+        SHARED_DOCS.mkdir(parents=True, exist_ok=True)
+        import shutil
+        shutil.copy2(QUALITY_REPORT, SHARED_DOCS / "quality_report.json")
+        print(f"[OK] docs/shared/quality_report.json 업데이트")
+    except Exception as e:
+        print(f"[WARN] shared 복사 실패: {e}")
 
 
-# ── 메인 ─────────────────────────────────────────────────────────────────────
+# ============================================================
+# 6. MAIN
+# ============================================================
 
 def main():
-    os.makedirs(AGENT_OUT_DIR, exist_ok=True)
+    # collector_output.json 로드
+    articles = []
+    if COLLECTOR_OUT.exists():
+        try:
+            with open(COLLECTOR_OUT, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            articles = data.get("articles", [])
+        except Exception as e:
+            print(f"[WARN] collector_output.json 로드 실패: {e}")
 
-    # 1. collector_output.json 읽기
-    if not os.path.exists(COLLECTOR_JSON):
-        print("[WARN] collector_output.json 없음 — news_collector.py 먼저 실행하세요.")
-        articles     = []
-        quality_flags = {}
-    else:
-        with open(COLLECTOR_JSON, "r", encoding="utf-8") as f:
-            collector_data = json.load(f)
-        articles      = collector_data.get("articles", [])
-        quality_flags = collector_data.get("quality_flags", {})
+    # knowledge_index.json 로드 (Genspark 공유)
+    knowledge_index = load_knowledge_index()
 
-    # 2. knowledge_output.json 읽기 (선택)
-    knowledge_data = None
-    if os.path.exists(KNOWLEDGE_JSON):
-        with open(KNOWLEDGE_JSON, "r", encoding="utf-8") as f:
-            knowledge_data = json.load(f)
+    # 품질 분석
+    metrics = analyze_quality(articles, knowledge_index)
+    recommendations = generate_recommendations(metrics)
 
-    total = len(articles)
-    print(f"[SA-6] 분석 대상 기사: {total}건")
+    # 등급 출력
+    grade = metrics["grade"]
+    print()
+    print("=" * 50)
+    print(f"  품질 등급: {grade}")
+    print(f"  Province 미분류율:  "
+          f"{metrics['province_unclassified_rate']:.1%}"
+          f"  (목표 ≤25%: {'OK' if metrics['province_unclassified_rate'] <= 0.25 else 'NG'})")
+    print(f"  전문미디어 비율:    "
+          f"{metrics['specialist_media_ratio']:.1%}"
+          f"  (목표 ≥30%: {'OK' if metrics['specialist_media_ratio'] >= 0.30 else 'NG'})")
+    print(f"  섹터 커버리지:      "
+          f"{len(metrics['sector_coverage']['covered'])}/7"
+          f"  (미커버: {metrics['sector_coverage']['missing']})")
+    print(f"  정책 연계율:        "
+          f"{metrics['policy_alignment']['matched_ratio']:.1%}"
+          f"  (매칭 {metrics['policy_alignment']['matched_count']}건"
+          f" / 고연관 {metrics['policy_alignment']['high_relevance_count']}건)")
+    print("=" * 50)
 
-    # 3. 지표 계산
-    metrics = {
-        "province_unclassified_rate": calc_province_unclassified(articles),
-        "specialist_media_ratio":     calc_specialist_ratio(articles),
-        "sector_coverage":            calc_sector_coverage(articles),
-        "area_distribution":          calc_area_distribution(articles),
-        "policy_alignment":           calc_policy_alignment(knowledge_data, total),
-        # collector_output의 quality_flags를 그대로 포함
-        "collector_flags": quality_flags,
-    }
-
-    # 4. 품질 등급 + 권고사항
-    quality_grade   = grade(metrics)
-    recommendations = make_recommendations(metrics)
-
-    # 5. 목표 달성 여부 요약
-    targets_met = {
-        "province_unclassified_le_25pct": (
-            metrics["province_unclassified_rate"] <= TARGET_PROVINCE_UNCLASSIFIED_MAX
-        ),
-        "specialist_media_ge_30pct": (
-            metrics["specialist_media_ratio"] >= TARGET_SPECIALIST_MEDIA_MIN
-        ),
-        "all_7_sectors_covered": (
-            len(metrics["sector_coverage"]["missing"]) == 0
-        ),
-    }
-
-    # 6. 결과 저장
-    report = {
-        "generated_at":    datetime.now(timezone.utc).isoformat(),
-        "total_articles":  total,
-        "quality_grade":   quality_grade,
-        "targets_met":     targets_met,
-        "metrics":         metrics,
-        "recommendations": recommendations,
-    }
-
-    with open(QUALITY_JSON, "w", encoding="utf-8") as f:
-        json.dump(report, f, ensure_ascii=False, indent=2)
-
-    # 7. 콘솔 요약
-    print(f"\n{'='*50}")
-    print(f"  품질 등급: {quality_grade}")
-    print(f"  Province 미분류율: {metrics['province_unclassified_rate']:.1%}"
-          f"  (목표 ≤25%: {'OK' if targets_met['province_unclassified_le_25pct'] else 'NG'})")
-    print(f"  전문미디어 비율:   {metrics['specialist_media_ratio']:.1%}"
-          f"  (목표 ≥30%: {'OK' if targets_met['specialist_media_ge_30pct'] else 'NG'})")
-    cov = metrics["sector_coverage"]
-    print(f"  섹터 커버리지:     {len(cov['covered'])}/7"
-          f"  (미커버: {cov['missing'] or '없음'})")
-    print(f"  정책 연계율:       {metrics['policy_alignment']['matched_ratio']:.1%}")
-    print(f"{'='*50}")
+    if metrics["policy_alignment"]["matched_articles"]:
+        print("\n  정책 연계 기사 (상위):")
+        for m in metrics["policy_alignment"]["matched_articles"][:5]:
+            print(f"    [{m['doc_id']}|{m['relevance']}] "
+                  f"[{m['sector']}|{m['province']}] {m['title']}")
 
     if recommendations:
         print(f"\n  권고사항 {len(recommendations)}건:")
         for r in recommendations:
             print(f"  [{r['priority']}] {r['action']}")
 
-    print(f"\n[OK] quality_report.json 저장 완료")
+    # 리포트 저장
+    report = {
+        "generated_at":   datetime.utcnow().isoformat() + "+00:00",
+        "total_articles": len(articles),
+        "quality_grade":  grade,
+        "targets_met": {
+            "province_unclassified_le_25pct":
+                metrics["province_unclassified_rate"] <= 0.25,
+            "specialist_media_ge_30pct":
+                metrics["specialist_media_ratio"] >= 0.30,
+            "all_7_sectors_covered":
+                len(metrics["sector_coverage"]["missing"]) == 0,
+            "policy_alignment_ge_30pct":
+                metrics["policy_alignment"]["matched_ratio"] >= 0.30,
+        },
+        "metrics": {
+            "province_unclassified_rate":
+                metrics["province_unclassified_rate"],
+            "specialist_media_ratio":
+                metrics["specialist_media_ratio"],
+            "sector_coverage":
+                metrics["sector_coverage"],
+            "area_distribution":
+                _count_area(articles),
+            "policy_alignment":
+                metrics["policy_alignment"],
+            "collector_flags": {
+                "vietnam_ratio": _calc_vietnam_ratio(articles),
+                "missing_provinces": [],
+            },
+        },
+        "knowledge_index_loaded": len(knowledge_index),
+        "recommendations": recommendations,
+    }
+    save_report(report)
+
+
+def _count_area(articles):
+    counts = {}
+    for a in articles:
+        area = a.get("area", "Other") or "Other"
+        counts[area] = counts.get(area, 0) + 1
+    return counts
+
+
+def _calc_vietnam_ratio(articles):
+    if not articles:
+        return 0.0
+    vn = sum(
+        1 for a in articles
+        if a.get("province", "") in ("Vietnam", "") or not a.get("province")
+    )
+    return round(vn / len(articles), 3)
 
 
 if __name__ == "__main__":
