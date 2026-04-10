@@ -1,16 +1,16 @@
 {
-  "generated_at": "2026-04-09T11:51:02.677975+00:00",
-  "total_articles": 36,
-  "quality_grade": "B",
+  "generated_at": "2026-04-10T11:45:02.418934+00:00",
+  "total_articles": 46,
+  "quality_grade": "D",
   "targets_met": {
-    "province_unclassified_le_25pct": true,
+    "province_unclassified_le_25pct": false,
     "specialist_media_ge_30pct": false,
-    "all_7_sectors_covered": true,
+    "all_7_sectors_covered": false,
     "policy_alignment_ge_30pct": true
   },
   "metrics": {
-    "province_unclassified_rate": 0.167,
-    "specialist_media_ratio": 0.083,
+    "province_unclassified_rate": 0.261,
+    "specialist_media_ratio": 0.109,
     "sector_coverage": {
       "covered": [
         "Industrial Parks",
@@ -18,97 +18,98 @@
         "Power",
         "Smart City",
         "Solid Waste",
-        "Waste Water",
         "Water Supply/Drainage"
       ],
-      "missing": [],
-      "ratio": 1.0
+      "missing": [
+        "Waste Water"
+      ],
+      "ratio": 0.857
     },
     "area_distribution": {
-      "Urban Development": 20,
-      "Environment": 6,
-      "Energy Develop.": 10
+      "Environment": 11,
+      "Urban Development": 21,
+      "Energy Develop.": 14
     },
     "policy_alignment": {
-      "matched_ratio": 0.556,
-      "high_relevance_ratio": 0.222,
-      "matched_count": 20,
-      "high_relevance_count": 8,
+      "matched_ratio": 0.413,
+      "high_relevance_ratio": 0.152,
+      "matched_count": 19,
+      "high_relevance_count": 7,
       "matched_articles": [
         {
-          "title": "Patriotic emulation movements catalyze breakthroughs in HCMC",
-          "sector": "Smart City",
-          "province": "Ho Chi Minh City",
-          "doc_id": "VN-SC-2030",
-          "relevance": "high"
-        },
-        {
-          "title": "Vietnam’s economy sustains growth momentum, FDI remains brig",
-          "sector": "Industrial Parks",
-          "province": "Ho Chi Minh City",
-          "doc_id": "VN-IP-2030",
-          "relevance": "high"
-        },
-        {
-          "title": "Đà Nẵng lo sinh kế cho người dân vùng thủy điện",
-          "sector": "Power",
-          "province": "Da Nang",
-          "doc_id": "VN-PWR-RENEW-2030",
-          "relevance": "medium"
-        },
-        {
-          "title": "Bãi rác cháy hơn một tuần, khói tấn công khu dân cư",
+          "title": "Smoke blankets Vietnam's North-South Expressway section as l",
           "sector": "Solid Waste",
-          "province": "Quang Ninh",
+          "province": "Vietnam",
           "doc_id": "VN-SW-2025",
-          "relevance": "medium"
+          "relevance": "high"
         },
         {
-          "title": "Phú Thọ khởi công dự án khu công nghiệp trọng điểm quy mô vố",
+          "title": "Phú Thọ breaks ground on Phúc Yên Industrial Park, aiming to",
           "sector": "Industrial Parks",
           "province": "Phu Tho",
           "doc_id": "VN-IP-2030",
           "relevance": "medium"
         },
         {
-          "title": "15 dự án điện gió, điện mặt trời hưởng giá FIT tại Gia Lai đ",
-          "sector": "Power",
-          "province": "Gia Lai",
-          "doc_id": "VN-PWR-RENEW-2030",
+          "title": "Double-digit growth target drives HCMC’s 2026 patriotic emul",
+          "sector": "Smart City",
+          "province": "Ho Chi Minh City",
+          "doc_id": "VN-SC-2030",
           "relevance": "high"
         },
         {
-          "title": "EVN thúc đẩy triển khai BESS trên lưới điện",
+          "title": "Ho Chi Minh City charts roadmap for 105 industrial zones",
+          "sector": "Industrial Parks",
+          "province": "Ho Chi Minh City",
+          "doc_id": "VN-IP-2030",
+          "relevance": "high"
+        },
+        {
+          "title": "Top legislator's visit expected to create fresh momentum for",
+          "sector": "Smart City",
+          "province": "Vietnam",
+          "doc_id": "VN-SC-2030",
+          "relevance": "medium"
+        },
+        {
+          "title": "Lawmakers to examine social-economic issues, fuel taxes on A",
+          "sector": "Oil & Gas",
+          "province": "Vietnam",
+          "doc_id": "VN-OG-2030",
+          "relevance": "medium"
+        },
+        {
+          "title": "An Giang cần cơ chế đặc thù để giải phóng mặt bằng làm dự án",
+          "sector": "Power",
+          "province": "An Giang",
+          "doc_id": "VN-PWR-PDP8",
+          "relevance": "medium"
+        },
+        {
+          "title": "Chủ tịch Petrovietnam: Chúng ta đang kiểm soát tốt về đảm bả",
+          "sector": "Oil & Gas",
+          "province": "Vietnam",
+          "doc_id": "VN-OG-2030",
+          "relevance": "medium"
+        },
+        {
+          "title": "Quảng Ninh phê duyệt nhà máy điện gió 200 MW",
+          "sector": "Power",
+          "province": "Quang Ninh",
+          "doc_id": "VN-PWR-PDP8",
+          "relevance": "medium"
+        },
+        {
+          "title": "EVNGENCO2: Tăng tốc đầu tư nguồn điện mới",
           "sector": "Power",
           "province": "Vietnam",
           "doc_id": "VN-PWR-PDP8",
           "relevance": "high"
-        },
-        {
-          "title": "Khởi công dự án đầu tư xây dựng và kinh doanh kết cấu hạ tần",
-          "sector": "Industrial Parks",
-          "province": "Vinh Phuc",
-          "doc_id": "VN-IP-2030",
-          "relevance": "high"
-        },
-        {
-          "title": "Kinh tế Việt Nam duy trì đà tăng trưởng, FDI tiếp tục là điể",
-          "sector": "Industrial Parks",
-          "province": "Vietnam",
-          "doc_id": "VN-IP-2030",
-          "relevance": "medium"
-        },
-        {
-          "title": "Hà Nội đốc thúc tiến độ các dự án chống ngập",
-          "sector": "Water Supply/Drainage",
-          "province": "Hanoi",
-          "doc_id": "VN-WS-NORTH-2030",
-          "relevance": "medium"
         }
       ]
     },
     "collector_flags": {
-      "vietnam_ratio": 0.167,
+      "vietnam_ratio": 0.261,
       "missing_provinces": []
     }
   },
@@ -117,9 +118,17 @@
     {
       "priority": "HIGH",
       "metric": "specialist_media_ratio",
-      "current": 0.083,
+      "current": 0.109,
       "target": 0.3,
       "action": "전문 RSS 소스 추가 또는 specialist_crawler 정상화 필요 (theinvestor.vn, vir.com.vn HTML 크롤링)"
+    },
+    {
+      "priority": "MEDIUM",
+      "metric": "sector_coverage",
+      "missing": [
+        "Waste Water"
+      ],
+      "action": "Waste Water 섹터 RSS/키워드 보강 필요"
     }
   ]
 }
