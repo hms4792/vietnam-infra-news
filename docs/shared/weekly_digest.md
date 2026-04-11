@@ -9,8 +9,8 @@
 |--------|-------|
 | Waste Water | 1 |
 | Water Supply/Drainage | 10 |
-| Solid Waste | 35 |
-| Power | 31 |
-| Oil & Gas | 22 |
-| Industrial Parks | 71 |
+| Solid Waste | 36 |
+| Power | 32 |
+| Oil & Gas | 23 |
+| Industrial Parks | 73 |
 | Smart City | 55 |
