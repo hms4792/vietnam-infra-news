@@ -56,10 +56,10 @@ def main():
         print("[SKIP] 수집 기사 없음")
         return
 
-    excel_path = os.environ.get(
+    excel_path = Path(os.environ.get(
         "EXCEL_PATH",
         str(BASE_DIR / "data" / "database" / "Vietnam_Infra_News_Database_Final.xlsx")
-    )
+    ))
 
     updater = ExcelUpdater(excel_path=excel_path)
     updater.update_all(articles)
