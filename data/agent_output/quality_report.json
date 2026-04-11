@@ -1,0 +1,203 @@
+{
+  "generated_at": "2026-04-11T12:03:31.141514+00:00",
+  "total_articles": 34,
+  "quality_grade": "C",
+  "targets_met": {
+    "province_unclassified_le_25pct": true,
+    "specialist_media_ge_30pct": false,
+    "all_7_sectors_covered": false,
+    "policy_alignment_ge_30pct": true
+  },
+  "metrics": {
+    "province_unclassified_rate": 0.206,
+    "specialist_media_ratio": 0.029,
+    "sector_coverage": {
+      "covered": [
+        "Industrial Parks",
+        "Oil & Gas",
+        "Power",
+        "Smart City",
+        "Solid Waste",
+        "Water Supply/Drainage"
+      ],
+      "missing": [
+        "Waste Water"
+      ],
+      "ratio": 0.857
+    },
+    "area_distribution": {
+      "Energy Develop.": 8,
+      "Urban Development": 17,
+      "Environment": 9
+    },
+    "policy_alignment": {
+      "matched_ratio": 0.441,
+      "high_relevance_ratio": 0.235,
+      "matched_count": 15,
+      "high_relevance_count": 8,
+      "matched_articles": [
+        {
+          "title": "Investment deal signed for Cà Ná LNG power plant, wharf proj",
+          "sector": "Power",
+          "province": "Khanh Hoa",
+          "doc_id": "VN-PWR-RENEW-2030",
+          "plan_name": "베트남 재생에너지 개발 계획 2030 (PDP8 세부)",
+          "relevance": "medium",
+          "url": "https://vietnamnews.vn/economy/1779216/investment-deal-signed-for-ca-na-lng-power-plant-wharf-projects.html"
+        },
+        {
+          "title": "Nhiều phường ở TP.HCM ra quân chỉnh trang đô thị, dọn dẹp mô",
+          "sector": "Solid Waste",
+          "province": "Ho Chi Minh City",
+          "doc_id": "VN-SW-MEKONG-2030",
+          "plan_name": "메콩델타 고형폐기물 처리 계획 2030",
+          "relevance": "medium",
+          "url": "https://tuoitre.vn/nhieu-phuong-o-tp-hcm-ra-quan-chinh-trang-do-thi-don-dep-moi-truong-20260411100219098.htm"
+        },
+        {
+          "title": "Social science education reformed to meet demand of big data",
+          "sector": "Smart City",
+          "province": "Vietnam",
+          "doc_id": "VN-SC-2030",
+          "plan_name": "베트남 스마트시티 개발 국가전략 2030",
+          "relevance": "medium",
+          "url": "https://en.sggp.org.vn/social-science-education-reformed-to-meet-demand-of-big-data-empirical-research-post125323.html"
+        },
+        {
+          "title": "Ba dự án chống ngập khẩn cấp của Hà Nội tăng tốc trước mùa m",
+          "sector": "Water Supply/Drainage",
+          "province": "Hanoi",
+          "doc_id": "VN-WS-NORTH-2030",
+          "plan_name": "베트남 북부·중부고원 농촌 상수도 공급 계획 2030",
+          "relevance": "medium",
+          "url": "https://baoxaydung.vn/ba-du-an-chong-ngap-khan-cap-cua-ha-noi-tang-toc-truoc-mua-mua-19226041115052313.htm"
+        },
+        {
+          "title": "Tái thiết hạ tầng đô thị miền núi: Ưu tiên “thoát nước chậm”",
+          "sector": "Water Supply/Drainage",
+          "province": "Cao Bang",
+          "doc_id": "VN-WS-NORTH-2030",
+          "plan_name": "베트남 북부·중부고원 농촌 상수도 공급 계획 2030",
+          "relevance": "high",
+          "url": "https://baoxaydung.vn/tai-thiet-ha-tang-do-thi-mien-nui-uu-tien-thoat-nuoc-cham-tang-kha-nang-chong-chiu-192260411093201003.htm"
+        },
+        {
+          "title": "Gấp rút đưa dự án lưới điện về đích, \"giải bài toán\" phụ tải",
+          "sector": "Power",
+          "province": "Ha Tinh",
+          "doc_id": "VN-PWR-RENEW-2030",
+          "plan_name": "베트남 재생에너지 개발 계획 2030 (PDP8 세부)",
+          "relevance": "high",
+          "url": "https://baohatinh.vn/gap-rut-dua-du-an-luoi-dien-ve-dich-giai-bai-toan-phu-tai-mua-nang-nong-post308943.html"
+        },
+        {
+          "title": "Công ty cổ phần Cấp thoát nước Gia Lai thông báo tuyển dụng",
+          "sector": "Water Supply/Drainage",
+          "province": "Binh Dinh",
+          "doc_id": "VN-WS-NORTH-2030",
+          "plan_name": "베트남 북부·중부고원 농촌 상수도 공급 계획 2030",
+          "relevance": "medium",
+          "url": "https://baogialai.com.vn/cong-ty-co-phan-cap-thoat-nuoc-gia-lai-thong-bao-tuyen-dung-post584485.html"
+        },
+        {
+          "title": "Nhiều loại rác thải trên cao tốc TPHCM - Trung Lương - Mỹ Th",
+          "sector": "Solid Waste",
+          "province": "Can Tho",
+          "doc_id": "VN-SW-MEKONG-2030",
+          "plan_name": "메콩델타 고형폐기물 처리 계획 2030",
+          "relevance": "high",
+          "url": "https://www.sggp.org.vn/nhieu-loai-rac-thai-tren-cao-toc-tphcm-trung-luong-my-thuan-can-tho-post847538.html"
+        },
+        {
+          "title": "Nhiều loại rác thải trên cao tốc TPHCM – Trung Lương – Mỹ Th",
+          "sector": "Solid Waste",
+          "province": "Can Tho",
+          "doc_id": "VN-SW-MEKONG-2030",
+          "plan_name": "메콩델타 고형폐기물 처리 계획 2030",
+          "relevance": "high",
+          "url": "https://www.sggp.org.vn/nhieu-loai-rac-thai-tren-cao-toc-tphcm-trung-luong-my-thuan-can-tho-post847431.html"
+        },
+        {
+          "title": "Hoàn thành thu hồi đất Khu công nghiệp Biên Hòa 1",
+          "sector": "Industrial Parks",
+          "province": "Dong Nai",
+          "doc_id": "VN-IP-2030",
+          "plan_name": "베트남 산업단지 개발 마스터플랜 2030",
+          "relevance": "high",
+          "url": "https://nhandan.vn/hoan-thanh-thu-hoi-dat-khu-cong-nghiep-bien-hoa-1-post954806.html"
+        },
+        {
+          "title": "Ho Chi Minh City introduces special procedures for industria",
+          "sector": "Industrial Parks",
+          "province": "Bac Ninh",
+          "doc_id": "VN-IP-2030",
+          "plan_name": "베트남 산업단지 개발 마스터플랜 2030",
+          "relevance": "high",
+          "url": "https://vir.com.vn/ho-chi-minh-city-introduces-special-procedures-for-industrial-zone-investment-projects-150364.html"
+        },
+        {
+          "title": "Amkor Technology seeks LPG priority for semiconductor plant",
+          "sector": "Oil & Gas",
+          "province": "Bac Ninh",
+          "doc_id": "VN-OG-2030",
+          "plan_name": "베트남 석유가스 인프라 개발 계획 2030",
+          "relevance": "medium",
+          "url": "https://vir.com.vn/amkor-technology-seeks-lpg-priority-for-semiconductor-plant-150301.html"
+        },
+        {
+          "title": "Phuc Yen Industrial Park positioned as strategic manufacturi",
+          "sector": "Industrial Parks",
+          "province": "Bac Ninh",
+          "doc_id": "VN-IP-2030",
+          "plan_name": "베트남 산업단지 개발 마스터플랜 2030",
+          "relevance": "high",
+          "url": "https://vir.com.vn/phuc-yen-industrial-park-positioned-as-strategic-manufacturing-hub-150302.html"
+        },
+        {
+          "title": "Gia Lai tightens control of wind power project transfers",
+          "sector": "Power",
+          "province": "Bac Giang",
+          "doc_id": "VN-PWR-PDP8",
+          "plan_name": "전력개발계획 8 (PDP8) 2021-2030",
+          "relevance": "medium",
+          "url": "https://vir.com.vn/gia-lai-tightens-control-of-wind-power-project-transfers-150196.html"
+        },
+        {
+          "title": "Ho Chi Minh City: Investment licences granted within 15 days",
+          "sector": "Industrial Parks",
+          "province": "Ho Chi Minh City",
+          "doc_id": "VN-IP-2030",
+          "plan_name": "베트남 산업단지 개발 마스터플랜 2030",
+          "relevance": "high",
+          "url": "https://en.vietnamplus.vn/ho-chi-minh-city-investment-licences-granted-within-15-days-under-special-mechanism-post340851.vnp"
+        }
+      ]
+    },
+    "policy_highlight_count": 15,
+    "collector_flags": {
+      "vietnam_ratio": 0.206,
+      "missing_provinces": []
+    }
+  },
+  "knowledge_index_loaded": 10,
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "metric": "specialist_media_ratio",
+      "current": 0.029,
+      "target": 0.3,
+      "action": "전문 RSS 소스 추가 또는 specialist_crawler 정상화 필요"
+    },
+    {
+      "priority": "MEDIUM",
+      "metric": "sector_coverage",
+      "missing": [
+        "Waste Water"
+      ],
+      "action": "Waste Water 섹터 RSS/키워드 보강 필요"
+    }
+  ],
+  "genspark_feedback": {
+    "available": false
+  }
+}
