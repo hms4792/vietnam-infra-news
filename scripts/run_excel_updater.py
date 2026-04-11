@@ -61,7 +61,6 @@ def main():
         str(BASE_DIR / "data" / "database" / "Vietnam_Infra_News_Database_Final.xlsx")
     )
 
-    # ExcelUpdater는 excel_path만 받음 (db_path 없음)
     updater = ExcelUpdater(excel_path=excel_path)
     updater.update_all(articles)
     print(f"[OK] ExcelUpdater 완료: {len(articles)}건 처리")
