@@ -2,24 +2,21 @@
 # Vietnam Infrastructure News — 주간 수집 파이프라인
 # .github/workflows/vietnam-infra-news.yml
 #
-# 스케줄: 매주 토요일 KST 18:00 (UTC 09:00)
-# 역할: 7일치 수집 + 전문미디어 크롤러 (specialist_crawler.py)
-# [메모리항목4] EMAIL_USERNAME / EMAIL_PASSWORD
-# [메모리항목12] yml 내 python3 -c "..." 인라인 코드 금지
+# 스케줄: 매주 토요일 KST 22:00 (UTC 13:00)
+# 역할: 7일치 수집 + 전문미디어 크롤러 + 정책 매핑 + 노란색 표시
 #
-# v5.8 업데이트 (2026-04-07):
-#   - DEEPL_API_KEY 추가 (번역 1순위)
-#   - deepl pip 패키지 추가
-#   - specialist_crawler.py 연동 유지
-#   - daily_pipeline과 충돌 방지 (토요일만 실행)
+# v5.9 업데이트 (2026-04-12):
+#   - SA-6 실행 순서 변경: Excel 업데이트 전으로 이동 (daily_pipeline과 동일)
+#   - run_excel_updater.py 스텝 추가 (기존 누락)
+#   - policy_highlighted_articles.json → Excel 노란색 반영
+#   - export_shared.py → Genspark 공유 (23:30 실행 전 준비)
 # ============================================================
 
-name: Weekly Collection v5.8 (7days)
+name: Weekly Collection v5.9
 
 on:
   schedule:
     - cron: '0 13 * * 6'   # 매주 토요일 KST 22:00 (UTC 13:00)
-                            # daily_pipeline(UTC 11:00) 완료 후 실행 → Git 충돌 방지
   workflow_dispatch:
     inputs:
       hours_back:
@@ -28,7 +25,7 @@ on:
         default: '168'
 
 concurrency:
-  group: weekly-collection   # daily_pipeline(news-collection)과 분리 → 충돌 방지
+  group: weekly-collection
   cancel-in-progress: false
 
 jobs:
@@ -72,7 +69,7 @@ jobs:
           echo "=== Weekly News Collection (hours_back=$HOURS_BACK) ==="
           python3 scripts/news_collector.py --hours-back $HOURS_BACK --agent-mode
 
-      - name: Specialist crawler (theinvestor / vir / hanoitimes)
+      - name: Specialist crawler (theinvestor / vir)
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
@@ -80,7 +77,7 @@ jobs:
         run: |
           if [ -f scripts/specialist_crawler.py ]; then
             echo "=== Specialist Media Crawl ==="
-            python3 scripts/specialist_crawler.py --from-date 2025-01-01
+            python3 scripts/specialist_crawler.py --from-date 2026-04-05
           else
             echo "specialist_crawler.py not found, skipping"
           fi
@@ -96,6 +93,18 @@ jobs:
           else
             echo "batch_translate.py not found, skipping"
           fi
+
+      - name: Run Quality Context Agent SA-6 (정책 매핑 + 노란색 플래그)
+        run: |
+          python3 scripts/quality_context_agent.py
+          echo "=== 정책 연계 기사 하이라이트 플래그 생성 완료 ==="
+
+      - name: Update Excel with policy highlights
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+          DB_PATH: data/vietnam_infrastructure_news.db
+        run: |
+          python3 scripts/run_excel_updater.py
 
       - name: Build dashboard
         env:
@@ -133,9 +142,6 @@ jobs:
           else
             echo "send_email.py not found"
           fi
-
-      - name: Run Quality Context Agent (SA-6)
-        run: python3 scripts/quality_context_agent.py
 
       - name: Export shared files for Genspark
         run: python3 scripts/export_shared.py
