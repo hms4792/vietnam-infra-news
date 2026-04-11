@@ -3,12 +3,11 @@
 # .github/workflows/daily_pipeline.yml
 #
 # 스케줄: 매일 KST 20:00 (UTC 11:00)
-# [메모리항목4] EMAIL_USERNAME / EMAIL_PASSWORD
-# [메모리항목8] main 브랜치 /docs 폴더
-# [메모리항목12] yml 내 python3 -c "..." 인라인 코드 금지
+# v5.9: SA-6 실행 순서 변경 (Excel 업데이트 전으로 이동)
+#       → policy_highlighted_articles.json 생성 후 Excel에 노란색 반영
 # ============================================================
 
-name: Daily Pipeline v5.7
+name: Daily Pipeline v5.9
 
 on:
   schedule:
@@ -77,11 +76,17 @@ jobs:
             echo "batch_translate.py not found, skipping"
           fi
 
-      - name: Update Excel (SA-4)
+      - name: Run Quality Context Agent SA-6 (정책 매핑 + 노란색 플래그 생성)
+        run: |
+          python3 scripts/quality_context_agent.py
+          echo "=== 정책 연계 기사 하이라이트 플래그 생성 완료 ==="
+
+      - name: Update Excel with policy highlights (SA-4)
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
-        run: python3 scripts/run_excel_updater.py
+        run: |
+          python3 scripts/run_excel_updater.py
 
       - name: Build dashboard
         env:
@@ -119,9 +124,6 @@ jobs:
           else
             echo "send_email.py not found"
           fi
-
-      - name: Run Quality Context Agent (SA-6)
-        run: python3 scripts/quality_context_agent.py
 
       - name: Export shared files for Genspark
         run: python3 scripts/export_shared.py
