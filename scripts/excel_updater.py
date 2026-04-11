@@ -246,6 +246,16 @@ class ExcelUpdater:
             existing_urls.add(url)
             added += 1
 
+            # [v2.3] 정책 매핑 기사 노란색 하이라이트 (policy_highlight=True)
+            if article.get("policy_highlight"):
+                POLICY_FILL = PatternFill(
+                    start_color="FFF176",   # 밝은 노란색 (정책 매핑)
+                    end_color="FFF176",
+                    fill_type="solid"
+                )
+                for col_idx in range(1, 15):
+                    ws.cell(row=2, column=col_idx).fill = POLICY_FILL
+
         _freeze_and_filter(ws)
         logger.info(f"  News Database: {added}건 추가 (누적 {ws.max_row - 1}건)")
 
@@ -344,9 +354,9 @@ class ExcelUpdater:
         [메모리 규칙] 컬럼 순서: No, Area, Sector, Keyword, Province, Date, Title, Source, URL, Summary
         [메모리 규칙] 1순위: Sector(우선순위), 2순위: Province(알파벳), 3순위: Date(최신→오래된)
         [메모리 규칙] 신규 기사: 노란색(#FFF9C4) 하이라이트
-        [v2.2 수정] Keyword 컬럼 복원 (기존에 누락됨)
-        [v2.2 수정] nan 값 방지 (None → '' 안전 변환)
-        [v2.2 수정] 기존 시트 컬럼 구조 불일치 시 헤더 재설정
+        [v2.3 수정] Keyword 컬럼 복원 (기존에 누락됨)
+        [v2.3 수정] nan 값 방지 (None → '' 안전 변환)
+        [v2.3 수정] 기존 시트 컬럼 구조 불일치 시 헤더 재설정
         """
         ws        = self._get_or_create_sheet("Keywords History")
         HDR_STYLE = _hdr(COLOR["header_dark"])
@@ -432,7 +442,7 @@ class ExcelUpdater:
 
         if new_rows:
             # 기존 데이터 읽기
-            # [v2.2] 컬럼 구조: No(0), Area(1), Sector(2), Keyword(3), Province(4),
+            # [v2.3] 컬럼 구조: No(0), Area(1), Sector(2), Keyword(3), Province(4),
             #                    Date(5), Title(6), Source(7), URL(8), Summary(9)
             existing_rows = []
             for row in ws.iter_rows(min_row=2, values_only=True):
@@ -669,7 +679,7 @@ class ExcelUpdater:
     def _update_collection_log(self, articles: list, run_stats: dict):
         """
         파이프라인 실행 로그 추가
-        [v2.2 수정] RSS Entries, New Added, Total DB 공백 문제 해결
+        [v2.3 수정] RSS Entries, New Added, Total DB 공백 문제 해결
                     run_stats 키 이름 통일
         """
         ws        = self._get_or_create_sheet("Collection_Log")
@@ -698,7 +708,7 @@ class ExcelUpdater:
             f"{k}:{v}" for k, v in sector_cnt.most_common()
         )
 
-        # [v2.2] run_stats 키 이름 통일 — 여러 키 이름 모두 지원
+        # [v2.3] run_stats 키 이름 통일 — 여러 키 이름 모두 지원
         rss_entries = (run_stats.get("rss_entries") or
                        run_stats.get("total_entries") or
                        run_stats.get("entries", 0) or 0)
