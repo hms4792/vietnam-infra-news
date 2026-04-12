@@ -2,34 +2,19 @@
 # -*- coding: utf-8 -*-
 """
 Vietnam Infrastructure News Collector
-Version 5.9 — RSS 소스 테스트 검증 완료 소스 6개 추가
-
-v5.9 변경사항 (2026-04-07):
-  [추가] 52개 RSS 후보 GitHub Actions 테스트 → 6개 정상 확인
-         Hanoi Times       (20건/회) 전문미디어 하노이 인프라
-         PV-Tech           (50건/회) 국제 태양광/재생에너지
-         Energy Monitor    (10건/회) 국제 에너지전환
-         Nikkei Asia       (50건/회) 아시아 비즈니스
-         Moi truong & CS   (30건/회) 환경/폐기물 베트남어
-         VietnamNet ICT    (36건/회) 스마트시티/ICT 베트남어
-  [효과] 전문미디어 비율 향상 기대 (Hanoi Times, PV-Tech, Nikkei)
-         Power/Smart City 섹터 커버리지 개선 기대
-
-v5.6 변경사항 (2026-04-07):
-  [수정] Smart City primary 키워드 정리 (117→64개)
-  [수정] NewsData.io 422 오류 근본 해결
-  [수정] 중복 기사 방지 (URL hash + 제목 hash 이중 체크)
-  [수정] MYMEMORY WARNING 저장 방지
-
-v5.5 변경사항 (2026-04-06):
-  [핵심] Genspark 487개 Master Plan 프로젝트 키워드 통합
-  [효과] 정책 연계율 0% → 60%+ 목표 (실제 프로젝트명 매칭)
+Version 5.4 — Specialist Media + Waste Water + Smart City RSS 추가
 
 v5.4 변경사항 (2026-04-05):
-  [RSS 추가] 전문미디어 4개 + Waste Water 4개 + Smart City 3개 (총 44개)
+  [RSS 추가] 전문미디어 4개: The Investor, VIR, Construction Vietnam, VietnamBiz
+  [RSS 추가] Waste Water 전용 4개: MONRE, VEA, Nhadepso, Moitruong Online
+  [RSS 추가] Smart City 전용 3개: ICT Vietnam, MIC Vietnam, Smartcity Vietnam
+  총 RSS 소스: 기존 33개 + 신규 11개 = 44개
 
 v5.3 변경사항 (2026-03-29):
-  [RSS 추가] 환경 전문 P1 + 북부 지역 P2 + 보조 P3 (12개)
+  [RSS 추가] 환경 전문 P1: VietnamPlus-Moi truong, Nhandan-Moi truong,
+             Baotainguyenmoitruong, Kinhtemoitruong, VietnamPlus-Kinh te
+  [RSS 추가] 북부 지역 P2: Hanoimoi, Baobacgiang English, Nhandan-Kinh te
+  [RSS 추가] 보조 P3: Moitruong Net, Congnghiepmoitruong, VietnamPlus-Giao thong
 """
 
 import os
@@ -97,99 +82,33 @@ SECTOR_AREA = {
     "Construction":           "Urban Development",
 }
 
-
-# ============================================================
-# SECTOR KEYWORDS — v5.5 Master Plan 통합
-# [출처] Genspark 487개 Master Plan 프로젝트 Primary Keywords
-# ============================================================
-
 SECTOR_KEYWORDS = {
-
-    # ─────────────────────────────────────────────────────────
-    # 1. WASTE WATER
-    # [마스터플랜] VN-WW-2030 / VN-WW-CENTRAL-2030
-    # [대상Province] Hanoi, HCMC, Binh Duong, Dong Nai, Da Nang,
-    #                Can Tho, Hai Phong, Binh Dinh, Khanh Hoa,
-    #                Ba Ria Vung Tau, Long An, Tien Giang, Quang Nam, Quang Ngai
-    # ─────────────────────────────────────────────────────────
     "Waste Water": {
         "primary": [
-            # --- 기존 키워드 ---
             "wastewater", "waste water",
             "sewage treatment", "sewage plant", "sewage system",
             "wastewater treatment", "wastewater plant", "wwtp",
             "effluent treatment", "sludge treatment",
             "industrial wastewater", "domestic wastewater",
-            # --- v5.5 Genspark EN 키워드 ---
-            "wastewater treatment plant", "sewage treatment plant",
-            "wastewater treatment facility", "sewage network",
-            "sewage collection system", "wastewater infrastructure",
-            "drainage system", "sewer system", "biological treatment",
-            "membrane bioreactor", "mbr technology", "recirculating reactor",
-            "biofilter", "sedimentation tank", "sludge treatment",
-            "effluent treatment", "wastewater discharge",
-            "yen xa wastewater", "bac thang long van tri",
-            "tham luong ben cat", "binh hung wastewater",
-            "binh hung hoa", "nhon trach wastewater",
-            "song than wastewater", "thu dau mot wastewater",
-            "hoa xuan wastewater", "da phuoc wastewater",
-            "phu loc wastewater", "wastewater master plan",
-            "sewage infrastructure investment",
-            "wastewater treatment capacity", "sanitation improvement",
-            "urban wastewater management", "wastewater collection rate",
-            # --- v5.5 Genspark VI 키워드 ---
-            "nha may xu ly nuoc thai",
-            "tram xu ly nuoc thai",
-            "he thong thoat nuoc",
-            "he thong thu gom nuoc thai",
-            "cong thoat nuoc",
-            "mang luoi thoat nuoc",
-            "xu ly sinh hoc",
-            "cong nghe mang mbr",
-            "be lang",
-            "xu ly bun thai",
-            "nuoc thai do thi",
-            "nuoc thai sinh hoat",
-            "nuoc thai cong nghiep",
-            "yen xa nuoc thai",
-            "bac thang long van tri",
-            "tham luong ben cat",
-            "binh hung nuoc thai",
-            "binh hung hoa",
-            "nhon trach nuoc thai",
-            "quy hoach nuoc thai",
-            "dau tu ha tang thoat nuoc",
-            "cong suat xu ly nuoc thai",
-            "ve sinh moi truong do thi",
-            # 베트남어 원문
-            "x\u1eed l\xfd n\u01b0\u1edbc th\u1ea3i",
+            "xu ly nuoc thai",
+            "nuoc thai",
+            "xu\u1eed l\xfd n\u01b0\u1edbc th\u1ea3i",
             "n\u01b0\u1edbc th\u1ea3i",
-            "nh\xe0 m\xe1y x\u1eed l\xfd n\u01b0\u1edbc th\u1ea3i",
-            "tr\u1ea1m x\u1eed l\xfd n\u01b0\u1edbc th\u1ea3i",
-            "h\u1ec7 th\u1ed1ng tho\u00e1t n\u01b0\u1edbc",
-            "Y\xean X\xe1 n\u01b0\u1edbc th\u1ea3i",
-            "Th\u1ea1m L\u01b0\u01a1ng B\u1ebfn C\xe1t",
-            "B\xecnh H\u01b0ng n\u01b0\u1edbc th\u1ea3i",
-            "Nh\u01a1n Tr\u1ea1ch n\u01b0\u1edbc th\u1ea3i",
         ],
         "secondary": [
             "sewage", "sewer network", "sewer line",
             "effluent", "sludge",
             "water pollution control",
             "water quality improvement",
+            # VN-ENV-IND-1894 산업폐수 처리
+            "industrial wastewater treatment", "industrial effluent treatment",
+            "wastewater treatment equipment",
+            "xu ly nuoc thai cong nghiep", "nuoc thai khu cong nghiep",
         ],
     },
 
-    # ─────────────────────────────────────────────────────────
-    # 2. WATER SUPPLY / DRAINAGE
-    # [마스터플랜] VN-WW-2030 / VN-WS-NORTH-2030
-    # [대상Province] Hanoi, HCMC, Da Nang, Can Tho, Hai Phong,
-    #                Binh Duong, Dong Nai, Ba Ria Vung Tau, Long An,
-    #                Gia Lai, Dak Lak, Thai Nguyen, Bac Kan, Ha Giang
-    # ─────────────────────────────────────────────────────────
     "Water Supply/Drainage": {
         "primary": [
-            # --- 기존 키워드 ---
             "water supply system", "water supply network",
             "clean water supply", "drinking water supply",
             "tap water", "piped water", "potable water",
@@ -198,48 +117,19 @@ SECTOR_KEYWORDS = {
             "desalination plant",
             "drainage system", "stormwater management",
             "flood control project", "flood prevention",
-            # --- v5.5 Genspark EN 키워드 ---
-            "water supply plant", "clean water plant",
-            "drinking water plant", "water distribution system",
-            "water pipeline", "groundwater",
-            "surface water treatment", "water filtration",
-            "water reservoir", "water storage",
-            "water pumping station", "water quality monitoring",
-            "leakage reduction",
-            "song da water plant", "thu duc water plant",
-            "cau do water treatment", "can tho water supply",
-            "saigon river water plant", "phu my water plant",
-            "bac thang long water", "hai phong water plant",
-            "dong nai water plant",
-            "flood control", "urban drainage",
-            "flood prevention infrastructure", "water supply master plan",
-            "clean water access", "rural water supply",
-            "water supply capacity expansion",
-            "water infrastructure investment",
-            # --- v5.5 Genspark VI 키워드 ---
-            "nha may nuoc", "nha may cap nuoc",
-            "tram cap nuoc sach", "he thong cap nuoc",
-            "duong ong nuoc", "mang luoi cap nuoc",
-            "nuoc sach", "nuoc sinh hoat", "nuoc may",
-            "nuoc ngam", "xu ly nuoc", "loc nuoc",
-            "be chua nuoc", "tram bom nuoc",
-            "song da cap nuoc", "thu duc cap nuoc",
-            "cau do xu ly nuoc", "can tho cap nuoc",
-            "song sai gon cap nuoc", "phu my cap nuoc",
-            "he thong thoat nuoc", "chong ngap",
-            "tieu thoat nuoc", "quy hoach cap nuoc",
-            "cap nuoc sach nong thon",
-            "dau tu ha tang cap nuoc",
-            "ty le tiep can nuoc sach",
-            # 베트남어 원문
-            "n\u01b0\u1edbc s\u1ea1ch", "c\u1ea5p n\u01b0\u1edbc",
-            "tho\u00e1t n\u01b0\u1edbc", "ch\u1ed1ng ng\u1eadp",
+            "n\u01b0\u1edbc s\u1ea1ch",
+            "c\u1ea5p n\u01b0\u1edbc",
+            "tho\u00e1t n\u01b0\u1edbc",
+            "ch\u1ed1ng ng\u1eadp",
             "h\u1ed3 ch\u1ee9a n\u01b0\u1edbc",
-            "nh\xe0 m\xe1y n\u01b0\u1edbc",
+            "nh\u00e0 m\u00e1y n\u01b0\u1edbc",
             "n\u01b0\u1edbc sinh ho\u1ea1t",
-            "S\xf4ng \u0110\xe0 c\u1ea5p n\u01b0\u1edbc",
-            "Th\u1ee7 \u0110\u1ee9c c\u1ea5p n\u01b0\u1edbc",
-            "C\u1ea7n Th\u01a1 c\u1ea5p n\u01b0\u1edbc",
+            "l\u0169 l\u1ee5t",
+            "h\u1ea1n h\u00e1n",
+            "n\u01b0\u1edbc m\u01b0a",
+            "ng\u1eadp \u00fang",
+            "bi\u1ebfn \u0111\u1ed5i kh\u00ed h\u1eadu",
+            "kh\u00ed h\u1eadu",
         ],
         "secondary": [
             "clean water", "drinking water",
@@ -247,18 +137,14 @@ SECTOR_KEYWORDS = {
             "groundwater management",
             "flood control", "anti-flooding",
             "water pipeline",
+            # VN-ENV-IND-1894 수처리 설비/기술
+            "water treatment technology", "water treatment equipment",
+            "environmental water services",
         ],
     },
 
-    # ─────────────────────────────────────────────────────────
-    # 3. OIL & GAS
-    # [마스터플랜] VN-OG-2030
-    # [대상Province] Ba Ria Vung Tau, Thanh Hoa, Quang Ngai,
-    #                Binh Dinh, Ca Mau, Kien Giang, Tien Giang, Ha Tinh
-    # ─────────────────────────────────────────────────────────
     "Oil & Gas": {
         "primary": [
-            # --- 기존 키워드 ---
             "oil and gas", "oil & gas",
             "petroleum refinery", "oil refinery",
             "offshore oil", "offshore gas", "offshore drilling",
@@ -267,66 +153,19 @@ SECTOR_KEYWORDS = {
             "petrovietnam", "pvn", "pvgas", "pv gas",
             "binh son refinery", "nghi son refinery", "dung quat",
             "block b", "ca voi xanh",
-            # --- v5.5 Genspark EN 키워드 ---
-            "refinery plant", "lng import terminal",
-            "gas terminal", "oil storage facility",
-            "crude oil storage", "petroleum depot",
-            "petrochemical complex", "crude oil", "petroleum",
-            "natural gas", "lng",
-            "oil exploration", "gas field", "oil field",
-            "upstream oil", "downstream oil", "midstream",
-            "refining capacity", "petrochemical", "oil processing",
-            "vietnam oil and gas group", "petroVietnam gas",
-            "petroVietnam power",
-            "dung quat refinery", "dung quat petrochemical",
-            "ba ria vung tau refinery",
-            "ca mau lng terminal", "thi vai lng", "son my lng",
-            "oil and gas master plan", "refinery expansion",
-            "lng infrastructure", "gas supply security",
-            "petroleum industry development",
-            # --- v5.5 Genspark VI 키워드 ---
-            "nha may loc dau", "nha may loc hoa dau",
-            "cang lng", "cang khi hoa long",
-            "kho dau", "kho chua dau",
-            "duong ong dan khi", "duong ong dan dau",
-            "khu lien hop loc hoa dau",
-            "dau tho", "dau khi", "khi thien nhien",
-            "khi hoa long", "khai thac dau khi",
-            "tham do dau khi", "mo dau", "mo khi",
-            "cong suat loc dau", "loc hoa dau",
-            "loc dau nghi son", "loc dau dung quat",
-            "hoa dau dung quat", "lng ca mau",
-            "lng thi vai", "lng son my",
-            # 베트남어 원문
             "l\xf4 b", "c\xe1 voi xanh",
-            "nh\xe0 m\xe1y l\u1ecdc d\u1ea7u",
-            "c\u1ea3ng LNG",
-            "d\u1ea7u kh\xed",
-            "kh\xed thi\xean nhi\xean",
-            "Petrovietnam", "PVN",
-            "l\u1ecdc d\u1ea7u Nghi S\u01a1n",
-            "l\u1ecdc d\u1ea7u Dung Qu\u1ea5t",
-            "LNG C\xe0 Mau", "LNG Th\u1ecb V\u1ea3i",
-            "LNG S\u01a1n M\u1ef9",
         ],
         "secondary": [
             "petroleum", "petrochemical",
             "natural gas plant", "crude oil",
-            "drilling", "upstream", "downstream", "midstream",
+            "oil exploration", "gas exploration", "drilling",
+            "upstream", "downstream", "midstream",
             "gas field", "oil field",
         ],
     },
 
-    # ─────────────────────────────────────────────────────────
-    # 4. POWER
-    # [마스터플랜] VN-PWR-PDP8 / VN-PWR-RENEW-2030
-    # [대상Province] Binh Thuan, Ninh Thuan, Gia Lai, Dak Lak,
-    #                Quang Binh, Quang Tri, Ha Tinh, Nghe An,
-    #                Thanh Hoa, Bac Lieu, Ca Mau, Ba Ria Vung Tau
-    # ─────────────────────────────────────────────────────────
     "Power": {
         "primary": [
-            # --- 기존 키워드 ---
             "power plant", "power station", "power project",
             "wind farm", "offshore wind farm", "solar farm",
             "hydroelectric plant", "hydropower plant",
@@ -335,37 +174,6 @@ SECTOR_KEYWORDS = {
             "feed-in tariff",
             "battery storage system", "bess",
             "evn", "vietnam electricity",
-            # --- v5.5 Genspark EN 키워드 ---
-            "electricity generation", "thermal power plant",
-            "coal-fired power", "gas-fired power",
-            "lng power plant", "combined cycle power plant",
-            "wind power", "wind turbine",
-            "onshore wind", "offshore wind",
-            "solar power", "solar panel", "photovoltaic", "pv plant",
-            "hydropower", "hydroelectric dam", "pumped storage",
-            "biomass power", "waste-to-energy power",
-            "power grid", "electricity grid",
-            "substation", "power transmission",
-            "electricity distribution", "smart grid",
-            "electricity of vietnam", "pdp8",
-            "power development plan", "renewable energy target",
-            "energy transition", "clean energy",
-            "binh thuan wind power", "ninh thuan solar",
-            "ninh thuan wind", "gia lai hydropower",
-            "bac lieu offshore wind", "ca mau wind farm",
-            "quang binh wind", "quang tri offshore",
-            "ha tinh lng", "nghi son power", "dung quat power",
-            # --- v5.5 Genspark VI 키워드 ---
-            "nha may dien", "phat dien", "tram dien",
-            "nhiet dien", "dien than", "dien khi", "dien lng",
-            "dien gio", "trang trai dien gio", "tuabin gio",
-            "dien mat troi", "trang trai dien mat troi",
-            "pin mat troi", "thuy dien", "dap thuy dien",
-            "sinh khoi", "luoi dien", "duong day truyen tai",
-            "tram bien ap", "quy hoach dien 8",
-            "nang luong tai tao", "chuyen doi nang luong",
-            "nang luong sach",
-            # 베트남어 원문
             "nh\xe0 m\xe1y \u0111i\u1ec7n",
             "n\u0103ng l\u01b0\u1ee3ng t\xe1i t\u1ea1o",
             "\u0111i\u1ec7n m\u1eb7t tr\u1eddi",
@@ -374,10 +182,6 @@ SECTOR_KEYWORDS = {
             "nhi\u1ec7t \u0111i\u1ec7n",
             "l\u01b0\u1edbi \u0111i\u1ec7n",
             "truy\u1ec1n t\u1ea3i \u0111i\u1ec7n",
-            "Quy ho\u1ea1ch \u0111i\u1ec7n 8",
-            "EVN", "T\u1eadp \u0111o\xe0n \u0110i\u1ec7n l\u1ef1c Vi\u1ec7t Nam",
-            "B\u1eafc Li\xeau \u0111i\u1ec7n gi\xf3",
-            "Ninh Thu\u1eadn n\u0103ng l\u01b0\u1ee3ng",
         ],
         "secondary": [
             "wind power", "solar power", "solar energy", "photovoltaic",
@@ -390,19 +194,22 @@ SECTOR_KEYWORDS = {
             "megawatt", "gigawatt", " mw ", " gw ",
             "energy storage", "energy transition",
             "lng power",
+            # VN-PWR-PDP8 (국가전력개발계획 8차 — Decision 500/QĐ-TTg 2023)
+            "power development plan", "pdp8",
+            "offshore wind power", "offshore wind farm",
+            "just energy transition", "jetp",
+            "direct power purchase agreement", "dppa",
+            "coal power phase-out", "energy transition",
+            "long an lng", "ca na lng", "bac lieu lng",
+            "transmission line", "power transmission",
+            "quy hoach dien", "duong day dien",
+            "phong dien ngoai khoi", "dien gio ngoai khoi",
+            "thi truong dien canh tranh",
         ],
     },
 
-    # ─────────────────────────────────────────────────────────
-    # 5. SOLID WASTE
-    # [마스터플랜] VN-SW-2025 / VN-SW-MEKONG-2030
-    # [대상Province] Hanoi, HCMC, Da Nang, Hai Phong, Can Tho,
-    #                Binh Duong, Dong Nai, Quang Ninh, Ba Ria Vung Tau,
-    #                Long An, Bac Ninh, Hai Duong, Thanh Hoa, + Mekong 9개
-    # ─────────────────────────────────────────────────────────
     "Solid Waste": {
         "primary": [
-            # --- 기존 키워드 ---
             "solid waste management",
             "municipal solid waste", "msw",
             "landfill site", "sanitary landfill",
@@ -410,70 +217,52 @@ SECTOR_KEYWORDS = {
             "incineration plant", "incinerator",
             "recycling plant", "recycling facility",
             "hazardous waste facility",
-            # --- v5.5 Genspark EN 키워드 ---
-            "waste treatment plant", "waste-to-energy plant",
-            "wte plant", "solid waste treatment", "landfill",
-            "waste incineration plant", "waste management facility",
-            "recycling center", "composting plant",
-            "household waste", "domestic waste",
-            "industrial waste", "hazardous waste", "medical waste",
-            "waste collection", "waste sorting", "waste recycling",
-            "incineration technology", "pyrolysis",
-            "anaerobic digestion", "circular economy",
-            "resource recovery",
-            "nam son waste plant", "soc son wte",
-            "da phuoc waste", "phoc hiep waste",
-            "cau dien waste", "cu chi wte",
-            "binh duong waste plant", "tam sinh nghia wte",
-            "quang ninh waste", "da nang waste plant",
-            "waste management master plan",
-            "waste-to-energy investment",
-            "waste treatment capacity", "waste collection rate",
-            "recycling rate target", "landfill reduction",
-            # --- v5.5 Genspark VI 키워드 ---
-            "nha may xu ly rac", "nha may dien rac",
-            "nha may dot rac phat dien",
-            "xu ly chat thai ran", "bai rac",
-            "bai chon lap", "trung tam tai che",
-            "nha may compost",
-            "rac thai sinh hoat", "rac thai do thi",
-            "rac thai cong nghiep", "rac thai nguy hai",
-            "rac thai y te", "thu gom rac",
-            "phan loai rac", "tai che rac", "dot rac",
-            "kinh te tuan hoan",
-            "nam son xu ly rac", "soc son dien rac",
-            "da phuoc rac", "phuoc hiep rac",
-            "cau dien rac", "cu chi dien rac",
-            "quy hoach quan ly rac thai",
-            "dau tu dien rac", "cong suat xu ly rac",
-            "ty le thu gom rac", "ty le tai che",
-            # 베트남어 원문
-            "r\xe1c th\u1ea3i", "r\xe1c sinh ho\u1ea1t",
-            "l\xf2 \u0111\u1ed1t r\xe1c", "b\xe3i r\xe1c",
-            "x\u1eed l\xfd r\xe1c", "ch\u1ea5t th\u1ea3i r\u1eafn",
+            "r\xe1c th\u1ea3i",
+            "r\xe1c sinh ho\u1ea1t",
+            "l\xf2 \u0111\u1ed1t r\xe1c",
+            "b\xe3i r\xe1c",
+            "x\u1eed l\xfd r\xe1c",
+            "ch\u1ea5t th\u1ea3i r\u1eafn",
             "nh\xe0 m\xe1y x\u1eed l\xfd r\xe1c",
             "thu gom r\xe1c",
             "\u0111\u1ed1t r\xe1c ph\xe1t \u0111i\u1ec7n",
             "\xf4 nhi\u1ec5m m\xf4i tr\u01b0\u1eddng",
+            "\xf4 nhi\u1ec5m",
+            "ph\xe2n lo\u1ea1i r\xe1c",
+            "kh\xf4ng kh\xed",
+            "ph\xe1t th\u1ea3i",
             "m\xf4i tr\u01b0\u1eddng",
-            "Nam S\u01a1n x\u1eed l\xfd r\xe1c",
-            "S\xf3c S\u01a1n \u0111i\u1ec7n r\xe1c",
-            "\u0110a Ph\u01b0\u1edbc r\xe1c",
-            "Ph\u01b0\u1edbc Hi\u1ec7p r\xe1c",
-            "C\u1ee7 Chi \u0111i\u1ec7n r\xe1c",
+            "t\xe0i nguy\xean m\xf4i tr\u01b0\u1eddng",
+            "kh\xed th\u1ea3i",
+            "\xf4 nhi\u1ec5m n\u01b0\u1edbc",
+            "ch\u1ea5t th\u1ea3i nguy h\u1ea1i",
         ],
         "secondary": [
             "solid waste", "garbage collection", "garbage disposal",
-            "trash collection", "landfill",
-            "waste-to-energy", "wte", "incineration",
-            "composting facility", "electronic waste", "e-waste",
+            "trash collection",
+            "landfill",
+            "waste-to-energy", "wte",
+            "incineration",
+            "composting facility",
+            "electronic waste", "e-waste",
             "construction waste disposal",
+            # VN-ENV-IND-1894 (환경산업 발전 프로그램 — 핵심 섹터)
+            "environmental industry", "circular economy",
+            "pollution control", "environmental services",
+            "hazardous waste", "cong nghiep moi truong",
+            "kinh te tuan hoan", "lo dot rac phat dien",
+            # 추가: 대기오염/토양복원/모니터링
+            "air pollution control", "air quality monitoring",
+            "soil remediation", "contaminated land",
+            "environmental monitoring system",
+            "environmental consulting", "environmental audit",
+            "environmental technology", "clean technology",
+            "xu ly o nhiem", "quan trac moi truong",
+            "cong nghe moi truong", "xu ly khi thai",
+            "xu ly dat o nhiem", "thiet bi moi truong",
         ],
     },
 
-    # ─────────────────────────────────────────────────────────
-    # 6. TRANSPORT
-    # ─────────────────────────────────────────────────────────
     "Transport": {
         "primary": [
             "metro line", "metro project", "metro station",
@@ -485,19 +274,17 @@ SECTOR_KEYWORDS = {
             "bridge construction", "cable-stayed bridge",
             "long thanh airport",
             "deep-sea port", "container terminal",
-            "tuyen metro", "duong cao toc", "san bay", "cang bien",
-            "lach huyen", "cang hai phong",
-            "duong sat toc do cao",
-            # 베트남어 원문
             "tuy\u1ebfn metro",
             "\u0111\u01b0\u1eddng cao t\u1ed1c",
-            "s\xe2n bay", "c\u1ea3ng bi\u1ec3n",
+            "s\xe2n bay",
+            "c\u1ea3ng bi\u1ec3n",
             "l\u1ea1ch huy\u1ec7n",
             "c\u1ea3ng h\u1ea3i ph\xf2ng",
             "\u0111\u01b0\u1eddng s\u1eaft t\u1ed1c \u0111\u1ed9 cao",
         ],
         "secondary": [
-            "metro", "subway", "railway", "railroad",
+            "metro", "subway",
+            "railway", "railroad",
             "expressway", "highway", "motorway",
             "bypass road", "overpass", "flyover", "interchange",
             "road construction", "road upgrade",
@@ -509,64 +296,17 @@ SECTOR_KEYWORDS = {
         ],
     },
 
-    # ─────────────────────────────────────────────────────────
-    # 7. INDUSTRIAL PARKS
-    # [마스터플랜] VN-IP-2030
-    # [대상Province] Binh Duong, Dong Nai, HCMC, Hanoi,
-    #                Hai Phong, Quang Ninh, Bac Ninh, Vinh Phuc,
-    #                Long An, Tay Ninh, Ba Ria Vung Tau, Thai Nguyen
-    # ─────────────────────────────────────────────────────────
     "Industrial Parks": {
         "primary": [
-            # --- 기존 키워드 ---
             "industrial park", "industrial zone", "industrial complex",
             "special economic zone", "sez",
             "export processing zone", "epz",
             "hi-tech park", "high-tech park", "technology park",
             "industrial estate", "industrial cluster",
-            # --- v5.5 Genspark EN 키워드 ---
-            "iz", "ip", "epz", "economic zone",
-            "manufacturing zone", "logistics park",
-            "logistics center", "science park",
-            "fdi", "foreign direct investment",
-            "industrial investment", "factory construction",
-            "manufacturing facility", "industrial land",
-            "industrial infrastructure",
-            "vsip binh duong", "vsip hai phong", "vsip bac ninh",
-            "amata binh duong", "amata dong nai",
-            "song than industrial", "nhon trach industrial",
-            "deep c hai phong", "dinh vu hai phong",
-            "long thanh industrial", "vinh phuc industrial",
-            "industrial park development", "industrial zoning",
-            "manufacturing hub", "investment attraction",
-            "industrial park infrastructure",
-            # --- v5.5 Genspark VI 키워드 ---
-            "khu cong nghiep", "kcn", "khu che xuat",
-            "kcx", "khu kinh te",
-            "khu cong nghiep do thi dich vu",
-            "khu logistics", "trung tam logistics",
-            "khu cong nghe cao", "khu cong nghe thong tin",
-            "dau tu fdi", "dau tu nuoc ngoai",
-            "dau tu cong nghiep", "xay dung nha may",
-            "ha tang cong nghiep",
-            "vsip binh duong", "vsip hai phong", "vsip bac ninh",
-            "amata binh duong", "amata dong nai",
-            "song than", "nhon trach",
-            "deep c hai phong",
-            "phat trien khu cong nghiep",
-            "thu hut dau tu", "quy hoach khu cong nghiep",
-            # 베트남어 원문
             "khu c\xf4ng nghi\u1ec7p",
             "khu kinh t\u1ebf",
             "khu c\xf4ng ngh\u1ec7 cao",
-            "VSIP B\xecnh D\u01b0\u01a1ng",
-            "VSIP H\u1ea3i Ph\xf2ng",
-            "VSIP B\u1eafc Ninh",
-            "Amata B\xecnh D\u01b0\u01a1ng",
-            "Amata \u0110\u1ed3ng Nai",
-            "Song Than", "Nh\u01a1n Tr\u1ea1ch",
-            "Deep C H\u1ea3i Ph\xf2ng",
-            "vsip b\u1eafc ninh", "vsip b\u1eafc giang",
+            "vsip b\u1eafc ninh", "vsip b\u1eafc giang", "vsip qu\u1ea3ng ng\xe3i",
             "deep c", "amata",
         ],
         "secondary": [
@@ -574,90 +314,35 @@ SECTOR_KEYWORDS = {
             "manufacturing hub", "manufacturing zone",
             "factory zone", "industrial area",
             "fdi project",
+            # VN-ENV-IND-1894 생태산업단지
+            "eco-industrial park", "green industrial zone",
+            "environmental industry cluster", "industrial ecology",
+            "clean production", "green manufacturing",
+            "khu cong nghiep sinh thai", "cong nghiep xanh",
         ],
     },
 
-    # ─────────────────────────────────────────────────────────
-    # 8. SMART CITY
-    # [마스터플랜] VN-SC-2030 / Hanoi Master Plan 2045 / HCMC 2040
-    # [대상Province] Hanoi, HCMC, Da Nang, Binh Duong, Can Tho, Hai Phong
-    # [v5.6 수정] 범용 단어(AI, IoT, 5G, data) primary 제거 → secondary 이동
-    #             오분류 방지: 국회 개원, 교통사고 등 비관련 기사 필터링
-    # ─────────────────────────────────────────────────────────
     "Smart City": {
         "primary": [
-            # --- 핵심: 명확한 Smart City 전용 키워드만 유지 ---
             "smart city project", "smart city development",
-            "smart city strategy", "smart city investment",
             "intelligent city", "digital city",
             "smart traffic system", "traffic management system",
+            "iot infrastructure", "5g network deployment",
             "e-government system", "digital government",
-            "smart city infrastructure",
-            "5g network deployment", "iot infrastructure",
-            # --- 실제 프로젝트명 (오분류 위험 낮음) ---
-            "da nang smart city", "binh duong smart city",
-            "thu duc smart city", "brg smart city dong anh",
-            "hanoi smart city", "hcmc smart city",
-            "hoa lac satellite city", "hoa lac hi-tech park",
-            "me linh satellite", "dong anh satellite",
-            "son tay satellite", "xuan mai satellite",
-            "phu xuyen satellite", "soc son satellite",
-            "thu thiem new urban",
-            "thu duc city", "hcmc innovation district",
-            "urban digital transformation",
-            "urban monitoring system", "urban spatial database",
-            "geographic information system",
-            "smart city vietnam", "smart urban vietnam",
-            # --- VI 핵심 키워드 ---
-            "thanh pho thong minh", "do thi thong minh",
-            "thanh pho so",
-            "da nang thanh pho thong minh",
-            "binh duong thanh pho thong minh",
-            "thu duc thanh pho thong minh",
-            "brg smart city dong anh",
-            "hoa lac ve tinh", "me linh ve tinh",
-            "dong anh ve tinh",
-            "thu thiem do thi moi",
-            "phu my hung", "thanh pho thu duc",
-            "he thong thong tin dia ly",
-            "chien luoc thanh pho thong minh",
-            # 베트남어 원문
             "th\xe0nh ph\u1ed1 th\xf4ng minh",
             "\u0111\xf4 th\u1ecb th\xf4ng minh",
-            "th\xe0nh ph\u1ed1 s\u1ed1",
-            "\u0110\xe0 N\u1eb5ng th\xe0nh ph\u1ed1 th\xf4ng minh",
-            "B\xecnh D\u01b0\u01a1ng th\xe0nh ph\u1ed1 th\xf4ng minh",
-            "Th\u1ee7 \u0110\u1ee9c th\xe0nh ph\u1ed1 th\xf4ng minh",
-            "BRG Smart City \u0110\xf4ng Anh",
-            "H\xf2a L\u1ea1c v\u1ec7 tinh",
-            "M\xea Linh v\u1ec7 tinh",
-            "\u0110\xf4ng Anh v\u1ec7 tinh",
-            "Thu Thi\xeam \u0111\xf4 th\u1ecb m\u1edbi",
-            "Ph\xfa M\u1ef9 H\u01b0ng",
-            "Th\xe0nh ph\u1ed1 Th\u1ee7 \u0110\u1ee9c",
         ],
         "secondary": [
-            # 범용 단어는 secondary로 — 제목에서만 매칭 시 점수 부여
-            "smart city", "smart urban",
-            "smart grid", "smart meter", "smart building",
-            "5g infrastructure", "digital transformation",
+            "smart city",
+            "smart urban",
+            "smart grid", "smart meter",
+            "smart building",
+            "5g infrastructure",
+            "digital transformation",
             "surveillance system", "cctv network", "ai camera",
-            "iot", "internet of things", "5g network",
-            "big data", "data analytics",
-            "artificial intelligence",
-            "cloud computing", "data center",
-            "e-government", "smart governance", "smart traffic",
-            "intelligent transportation",
-            "gis", "digital mapping", "3d city model",
-            "urban innovation", "sustainable urban development",
-            "chinh quyen dien tu", "giao thong thong minh",
-            "ban do so", "chuyen doi so do thi",
         ],
     },
 
-    # ─────────────────────────────────────────────────────────
-    # 9. CONSTRUCTION
-    # ─────────────────────────────────────────────────────────
     "Construction": {
         "primary": [
             "real estate development", "property development",
@@ -666,15 +351,17 @@ SECTOR_KEYWORDS = {
             "satellite city development",
             "commercial building construction",
             "urban development project",
-            "khu do thi", "du an bat dong san", "bao xay dung",
-            # 베트남어 원문
             "khu \u0111\xf4 th\u1ecb",
             "d\u1ef1 \xe1n b\u1ea5t \u0111\u1ed9ng s\u1ea3n",
+            "bao xay dung",
         ],
         "secondary": [
-            "urban development", "city planning", "urban planning",
-            "construction project", "building construction",
-            "urban infrastructure", "cement plant", "steel plant",
+            "urban development",
+            "city planning", "urban planning",
+            "construction project",
+            "building construction",
+            "urban infrastructure",
+            "cement plant", "steel plant",
         ],
     },
 }
@@ -732,26 +419,21 @@ VIETNAM_KEYWORDS = [
     "qu\u1ea3ng b\xecnh", "qu\u1ea3ng tr\u1ecb", "th\u1eeba thi\xean",
     "th\xe1i nguy\xean", "b\u1eafc giang", "h\u01b0ng y\xean",
     "v\u0129nh ph\xfac", "ph\xfa th\u1ecd", "h\xf2a b\xecnh",
-    "t\u1eadp \u0111o\xe0n \u0111i\u1ec7n l\u1ef1c",
-    "t\u1eadp \u0111o\xe0n d\u1ea7u kh\xed",
+    "t\u1eadp \u0111o\xe0n \u0111i\u1ec7n l\u1ef1c", "t\u1eadp \u0111o\xe0n d\u1ea7u kh\xed",
     "b\u1ed9 t\xe0i nguy\xean",
     "t\xe0i nguy\xean v\xe0 m\xf4i tr\u01b0\u1eddng",
-    "s\xf4ng c\u1eedu long", "\u0111\u1ed3ng b\u1eb1ng s\xf4ng",
-    "c\u1eedu long", "mi\u1ec1n trung", "mi\u1ec1n nam", "mi\u1ec1n b\u1eafc",
+    "s\xf4ng c\u1eedu long",
+    "\u0111\u1ed3ng b\u1eb1ng s\xf4ng",
+    "c\u1eedu long",
+    "mi\u1ec1n trung",
+    "mi\u1ec1n nam",
+    "mi\u1ec1n b\u1eafc",
     "b\u1eafc giang", "b\u1eafc ninh", "h\u1ea3i d\u01b0\u01a1ng",
     "h\u01b0ng y\xean", "th\xe1i b\xecnh", "nam \u0111\u1ecbnh",
     "ninh b\xecnh", "l\u1ea1ng s\u01a1n", "y\xean b\xe1i",
     "l\xe0o cai", "tuy\xean quang", "h\xe0 giang",
     "cao b\u1eb1ng", "b\u1eafc k\u1ea1n", "lai ch\xe2u",
     "\u0111i\u1ec7n bi\xean", "s\u01a1n la",
-    # v5.5 Master Plan 관련 기관
-    "monre", "bo tai nguyen moi truong",
-    "moit", "bo cong thuong",
-    "mpi", "bo ke hoach dau tu",
-    "moc", "bo xay dung",
-    "mic", "bo thong tin truyen thong",
-    "oecd vietnam", "adb vietnam", "world bank vietnam",
-    "jica vietnam", "kfw vietnam",
 ]
 
 
@@ -760,38 +442,27 @@ VIETNAM_KEYWORDS = [
 # ============================================================
 
 PROVINCE_KEYWORDS = {
-    "Ho Chi Minh City":  ["ho chi minh", "hcmc", "saigon", "sai gon",
-                          "h\u1ed3 ch\xed minh", "tp.hcm", "tp hcm",
-                          "thu duc city", "thu thiem", "phu my hung"],
-    "Hanoi":             ["hanoi", "ha noi", "h\xe0 n\u1ed9i", "capital hanoi",
-                          "dong anh", "me linh", "hoa lac", "ha dong"],
+    "Ho Chi Minh City":  ["ho chi minh", "hcmc", "saigon", "sai gon", "h\u1ed3 ch\xed minh", "tp.hcm", "tp hcm"],
+    "Hanoi":             ["hanoi", "ha noi", "h\xe0 n\u1ed9i", "capital hanoi"],
     "Da Nang":           ["da nang", "\u0111\xe0 n\u1eb5ng", "danang"],
-    "Hai Phong":         ["hai phong", "h\u1ea3i ph\xf2ng", "haiphong",
-                          "l\u1ea1ch huy\u1ec7n", "c\u1ea3ng h\u1ea3i ph\xf2ng",
-                          "dinh vu", "deep c hai phong"],
+    "Hai Phong":         ["hai phong", "h\u1ea3i ph\xf2ng", "haiphong", "l\u1ea1ch huy\u1ec7n", "c\u1ea3ng h\u1ea3i ph\xf2ng"],
     "Can Tho":           ["can tho", "c\u1ea7n th\u01a1"],
-    "Binh Duong":        ["binh duong", "b\xecnh d\u01b0\u01a1ng",
-                          "vsip binh duong", "amata binh duong", "song than"],
-    "Dong Nai":          ["dong nai", "\u0111\u1ed3ng nai",
-                          "amata dong nai", "nhon trach", "long thanh"],
-    "Ba Ria - Vung Tau": ["ba ria", "vung tau", "v\u0169ng t\xe0u", "b\xe0 r\u1ecba",
-                          "thi vai", "phu my"],
+    "Binh Duong":        ["binh duong", "b\xecnh d\u01b0\u01a1ng"],
+    "Dong Nai":          ["dong nai", "\u0111\u1ed3ng nai"],
+    "Ba Ria - Vung Tau": ["ba ria", "vung tau", "v\u0169ng t\xe0u", "b\xe0 r\u1ecba"],
     "Long An":           ["long an"],
-    "Quang Ninh":        ["quang ninh", "qu\u1ea3ng ninh", "ha long bay",
-                          "h\u1ea1 long", "van don", "mong cai", "cam pha",
-                          "uong bi"],
-    "Bac Ninh":          ["bac ninh", "b\u1eafc ninh", "yen phong",
-                          "vsip bac ninh", "que vo"],
-    "Bac Giang":         ["bac giang", "b\u1eafc giang", "vsip bac giang",
-                          "cong hoa", "quang chau"],
+    "Quang Ninh":        ["quang ninh", "qu\u1ea3ng ninh", "ha long bay", "h\u1ea1 long",
+                          "h\u1ea1 long bay", "v\xe2n \u0111\u1ed3n", "m\xf3ng c\xe1i", "c\u1ea9m ph\u1ea3", "u\xf4ng b\xed"],
+    "Bac Ninh":          ["bac ninh", "b\u1eafc ninh", "y\xean phong", "vsip b\u1eafc ninh", "qu\u1ebf v\xf5"],
+    "Bac Giang":         ["bac giang", "b\u1eafc giang", "vsip b\u1eafc giang", "viettel b\u1eafc giang",
+                          "c\xf4ng h\xf2a", "quang ch\xe2u"],
     "Hai Duong":         ["hai duong", "h\u1ea3i d\u01b0\u01a1ng"],
-    "Hung Yen":          ["hung yen", "h\u01b0ng y\xean", "thang long ii"],
+    "Hung Yen":          ["hung yen", "h\u01b0ng y\xean", "th\u0103ng long ii"],
     "Vinh Phuc":         ["vinh phuc", "v\u0129nh ph\xfac"],
-    "Thai Nguyen":       ["thai nguyen", "th\xe1i nguy\xean",
-                          "samsung thai nguyen"],
+    "Thai Nguyen":       ["thai nguyen", "th\xe1i nguy\xean", "samsung th\xe1i nguy\xean"],
     "Phu Tho":           ["phu tho", "ph\xfa th\u1ecd"],
     "Hoa Binh":          ["hoa binh", "h\xf2a b\xecnh"],
-    "Lang Son":          ["lang son", "l\u1ea1ng s\u01a1n", "huu nghi"],
+    "Lang Son":          ["lang son", "l\u1ea1ng s\u01a1n", "h\u1eefu ngh\u1ecb"],
     "Yen Bai":           ["yen bai", "y\xean b\xe1i"],
     "Lao Cai":           ["lao cai", "l\xe0o cai", "sa pa", "sapa"],
     "Tuyen Quang":       ["tuyen quang", "tuy\xean quang"],
@@ -800,32 +471,22 @@ PROVINCE_KEYWORDS = {
     "Bac Kan":           ["bac kan", "b\u1eafc k\u1ea1n"],
     "Thai Binh":         ["thai binh", "th\xe1i b\xecnh"],
     "Nam Dinh":          ["nam dinh", "nam \u0111\u1ecbnh"],
-    "Ninh Binh":         ["ninh binh", "ninh b\xecnh", "trang an"],
-    "Ha Nam":            ["ha nam", "h\xe0 nam", "dong van"],
-    "Son La":            ["son la", "s\u01a1n la"],
+    "Ninh Binh":         ["ninh binh", "ninh b\xecnh", "tr\xe0ng an"],
+    "Ha Nam":            ["ha nam", "h\xe0 nam", "\u0111\u1ed3ng v\u0103n"],
+    "Son La":            ["son la", "s\u01a1n la", "nho qu\u1ebf"],
     "Dien Bien":         ["dien bien", "\u0111i\u1ec7n bi\xean"],
     "Lai Chau":          ["lai chau", "lai ch\xe2u"],
-    "Thanh Hoa":         ["thanh hoa", "thanh ho\xe1", "thanh h\xf3a",
-                          "nghi son"],
+    "Thanh Hoa":         ["thanh hoa", "thanh ho\xe1", "thanh h\xf3a"],
     "Nghe An":           ["nghe an", "ngh\u1ec7 an"],
-    "Ha Tinh":           ["ha tinh", "h\xe0 t\u0129nh", "vung ang",
-                          "formosa ha tinh"],
+    "Ha Tinh":           ["ha tinh", "h\xe0 t\u0129nh"],
     "Quang Binh":        ["quang binh", "qu\u1ea3ng b\xecnh"],
-    "Thua Thien Hue":    ["thua thien hue", "hu\u1ebf", " hue ", "thua thien",
-                          "chan may"],
-    "Quang Nam":         ["quang nam", "qu\u1ea3ng nam", "chu lai"],
-    "Quang Ngai":        ["quang ngai", "qu\u1ea3ng ng\xe3i", "dung quat"],
-    "Binh Dinh":         ["binh dinh", "b\xecnh \u0111\u1ecbnh",
-                          "nhon hoi"],
-    "Khanh Hoa":         ["khanh hoa", "kh\xe1nh h\xf2a", "nha trang",
-                          "van phong"],
-    "Ninh Thuan":        ["ninh thuan", "ninh thu\u1eadn"],
-    "Binh Thuan":        ["binh thuan", "b\xecnh thu\u1eadn"],
-    "Lam Dong":          ["lam dong", "l\xe2m \u0111\u1ed3ng",
-                          "da lat", "\u0111\xe0 l\u1ea1t", "dalat"],
-    "Dak Lak":           ["dak lak", "\u0111\u1eafk l\u1eafk",
-                          "buon ma thuot"],
-    "Dak Nong":          ["dak nong", "\u0111\u1eafk n\xf4ng"],
+    "Thua Thien Hue":    ["thua thien hue", "hu\u1ebf", " hue ", "thua thien"],
+    "Quang Nam":         ["quang nam", "qu\u1ea3ng nam"],
+    "Quang Ngai":        ["quang ngai", "qu\u1ea3ng ng\xe3i"],
+    "Binh Dinh":         ["binh dinh", "b\xecnh \u0111\u1ecbnh"],
+    "Khanh Hoa":         ["khanh hoa", "kh\xe1nh h\xf2a", "nha trang"],
+    "Lam Dong":          ["lam dong", "l\xe2m \u0111\u1ed3ng", "da lat", "\u0111\xe0 l\u1ea1t", "dalat"],
+    "Dak Lak":           ["dak lak", "\u0111\u1eafk l\u1eafk", "buon ma thuot"],
     "Gia Lai":           ["gia lai"],
     "Kon Tum":           ["kon tum"],
     "Tien Giang":        ["tien giang", "ti\u1ec1n giang"],
@@ -833,18 +494,11 @@ PROVINCE_KEYWORDS = {
     "Vinh Long":         ["vinh long", "v\u0129nh long"],
     "Dong Thap":         ["dong thap", "\u0111\u1ed3ng th\xe1p"],
     "An Giang":          ["an giang"],
-    "Kien Giang":        ["kien giang", "ki\xean giang",
-                          "phu quoc", "ph\xfa qu\u1ed1c"],
+    "Kien Giang":        ["kien giang", "ki\xean giang", "phu quoc", "ph\xfa qu\u1ed1c"],
     "Ca Mau":            ["ca mau", "c\xe0 mau"],
-    "Hau Giang":         ["hau giang", "h\u1eadu giang"],
-    "Soc Trang":         ["soc trang", "s\xf3c tr\u0103ng"],
-    "Bac Lieu":          ["bac lieu", "b\u1ea1c li\xeau"],
-    "Tra Vinh":          ["tra vinh", "tr\xe0 vinh"],
     "Long Thanh":        ["long thanh airport", "long th\xe0nh airport"],
-    "Mekong Delta":      ["mekong delta", "mekong region",
-                          "dong bang song cuu long"],
+    "Mekong Delta":      ["mekong delta", "mekong region"],
     "Central Highlands": ["central highlands", "tay nguyen"],
-    "Central Region":    ["central region", "mien trung"],
 }
 
 
@@ -860,6 +514,7 @@ RSS_FEEDS = {
     "Tuoi Tre News":                   "https://tuoitre.vn/rss/tin-moi-nhat.rss",
     "SGGP News English":               "https://en.sggp.org.vn/rss/home.rss",
     "Nhan Dan English":                "https://en.nhandan.vn/rss/home.rss",
+    # ── 영문 전문 소스 ─────────────────────────────────────────
     "PV-Tech":                         "https://www.pv-tech.org/feed/",
     # ── 베트남어 일반 ──────────────────────────────────────────
     "VnExpress - Kinh doanh":          "https://vnexpress.net/rss/kinh-doanh.rss",
@@ -871,34 +526,44 @@ RSS_FEEDS = {
     "CafeBiz":                         "https://cafebiz.vn/rss/home.rss",
     # ── 베트남어 전문 소스 ─────────────────────────────────────
     "Bao Xay Dung":                    "https://baoxaydung.com.vn/rss/home.rss",
+    # ── 중부 지역 ─────────────────────────────────────────────
     "Bao Ha Tinh":                     "https://baohatinh.vn/rss/home.rss",
     "Bao Binh Dinh":                   "https://baobinhdinh.vn/rss/home.rss",
+    # ── 남부 지역 ─────────────────────────────────────────────
     "SGGP":                            "https://www.sggp.org.vn/rss/home.rss",
-    # ── 환경/교통 전문 (정상 작동) ──────────────────────────────
+    # ── v5.3: 환경 전문 P1 ────────────────────────────────────
     "VietnamPlus - Moi truong":        "https://www.vietnamplus.vn/rss/moitruong-270.rss",
     "VietnamPlus - Kinh te":           "https://www.vietnamplus.vn/rss/kinhte-311.rss",
-    "VietnamPlus - Giao thong":        "https://www.vietnamplus.vn/rss/xahoi/giaothong-358.rss",
-    "Nhadepso Environment":            "https://nhadepso.com/feed/",
+    "Nhandan - Moi truong":            "https://baotintuc.vn/moi-truong.rss",
+    "Kinhtemoitruong":                 "https://kinhtemoitruong.vn/rss",
     "Baotainguyenmoitruong":           "https://baotainguyenmoitruong.vn/rss/tin-tuc.rss",
-    # ── 지역 소스 (정상 작동) ──────────────────────────────────
+    # ── v5.3: 북부 지역 P2 ────────────────────────────────────
+    "Nhandan - Kinh te":               "https://baotintuc.vn/kinh-te.rss",
+    "Hanoimoi - Kinh te":              "https://hanoimoi.vn/rss/kinh-te.rss",
+    "Baobacgiang English":             "https://en.baobacgiang.vn/rss",
     "Baoquangninh - Kinh te":          "https://baoquangninh.vn/rss/kinh-te.rss",
-    # ── v5.8: 대체 전문미디어 (작동 확인된 소스) ─────────────────
-    "VietnamBiz":                      "https://vietnambiz.vn/rss.rss",
-    "Bao Dau Tu":                      "https://baodautu.vn/rss/home.rss",
+    # ── v5.3: 보조 환경/교통 P3 ───────────────────────────────
+    "Moitruong Net":                   "https://moitruong.net.vn/rss",
+    "Congnghiepmoitruong":             "https://congnghiepmoitruong.vn/rss",
+    "VietnamPlus - Giao thong":        "https://www.vietnamplus.vn/rss/xahoi/giaothong-358.rss",
+    # ── 기존 에너지 전문 ──────────────────────────────────────
+    "Bao Dau Tu - Energy":             "https://baodautu.vn/rss/nang-luong.rss",
+    "Vietnam Energy alt":              "https://vietnamenergy.vn/rss/tin-tuc.rss",
     "Tap chi Xay dung":                "https://tapchixaydung.vn/rss/home.rss",
-    "Nhan Dan - Kinh te":              "https://nhandan.vn/rss/kinhte.rss",
-    # ── 에너지/Oil&Gas 전문 ────────────────────────────────────
-    "PetroTimes":                      "https://petrotimes.vn/rss/home.rss",
-    "Vietnam Energy":                  "https://vietnamenergy.vn/rss/home.rss",
-    "Tap chi Nang luong":              "https://nangluongvietnam.vn/rss/home.rss",
-    # ── v5.9: RSS 테스트 검증 완료 소스 (2026-04-07) ─────────────
-    # 52개 후보 테스트 → 6개 정상 확인
-    "Hanoi Times":                     "https://hanoitimes.vn/rss/home.rss",       # 20건/회 | 전문미디어 | 하노이 인프라·도시개발
-    "PV-Tech":                         "https://www.pv-tech.org/feed/",            # 50건/회 | 국제 태양광·재생에너지 전문지
-    "Energy Monitor":                  "https://www.energymonitor.ai/rss",         # 10건/회 | 국제 에너지전환 전문지
-    "Nikkei Asia":                     "https://asia.nikkei.com/rss/feed/nar",     # 50건/회 | 아시아 비즈니스 (베트남 필터 적용)
-    "Moi truong & Cuoc song":          "https://moitruong.net.vn/rss/home.rss",    # 30건/회 | 환경·폐기물 베트남어 전문지
-    "VietnamNet - Cong nghe":          "https://vietnamnet.vn/rss/cong-nghe.rss",  # 36건/회 | 스마트시티·ICT 베트남어
+    # ── v5.4 신규: 전문미디어 (전문미디어 비율 30% 목표) ────────
+    "The Investor":                    "https://theinvestor.vn/feed",
+    "VIR - Vietnam Investment Review": "https://vir.com.vn/rss/news.aspx",
+    "Construction Vietnam":            "https://constructionvietnam.net/feed",
+    "VietnamBiz":                      "https://vietnambiz.vn/rss.rss",
+    # ── v5.4 신규: Waste Water 전용 ──────────────────────────
+    "MONRE Official":                  "https://monre.gov.vn/rss/tintuc.aspx",
+    "VEA - Vietnam Environment":       "https://vea.gov.vn/vn/tintuc/tintuchangngay/rss",
+    "Nhadepso Environment":            "https://nhadepso.com/feed/",
+    "Moitruong Online":                "https://moitruong.com.vn/feed",
+    # ── v5.4 신규: Smart City 전용 ───────────────────────────
+    "ICT Vietnam":                     "https://ictvietnam.vn/feed",
+    "MIC Vietnam":                     "https://mic.gov.vn/rss/tintuc.aspx",
+    "Smartcity Vietnam":               "https://smartcity.mobi/feed",
 }
 
 
@@ -933,10 +598,8 @@ def is_english_text(title):
 def is_vietnamese_text(title):
     if not title:
         return False
-    vn_chars = set(
-        'àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ'
-        'ÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ'
-    )
+    vn_chars = set('àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ'
+                   'ÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ')
     return any(c in vn_chars for c in title)
 
 
@@ -980,142 +643,29 @@ def extract_province(title, summary="", full_text=""):
 # TRANSLATE ARTICLES
 # ============================================================
 
-# ── DeepL API 상태 관리 ──────────────────────────────────────
-# GitHub Actions 환경변수: DEEPL_API_KEY
-# 무료 플랜: 월 500,000자 한도
-# 한도 초과 시 자동으로 MyMemory → deep-translator 폴백
-
-DEEPL_API_KEY   = os.environ.get('DEEPL_API_KEY', '').strip()
-_deepl_quota_ok = True   # False가 되면 DeepL 건너뜀 (한도 초과)
-
-# DeepL 언어 코드 매핑 (target_lang → DeepL 코드)
-_DEEPL_LANG = {
-    'ko': 'KO',
-    'en': 'EN-US',
-    'vi': 'VI',
-}
-
-
-def _try_deepl(text: str, target_lang: str) -> str:
-    """
-    DeepL API Free로 번역 시도.
-    성공 → 번역 결과 반환
-    실패(한도 초과/오류) → '' 반환 → 폴백으로 넘어감
-    """
-    global _deepl_quota_ok
-    if not DEEPL_API_KEY or not _deepl_quota_ok:
-        return ''
-    deepl_target = _DEEPL_LANG.get(target_lang, target_lang.upper())
-    try:
-        resp = requests.post(
-            'https://api-free.deepl.com/v2/translate',
-            headers={'Authorization': f'DeepL-Auth-Key {DEEPL_API_KEY}'},
-            data={
-                'text':        text[:500],
-                'target_lang': deepl_target,
-            },
-            timeout=10,
-        )
-        if resp.status_code == 456:
-            # 456 = Quota Exceeded — 이번 달 한도 소진
-            log("  [DeepL] 월 한도 초과(456) — MyMemory로 폴백")
-            _deepl_quota_ok = False
-            return ''
-        if resp.status_code == 403:
-            log("  [DeepL] 인증 오류(403) — API Key 확인 필요")
-            _deepl_quota_ok = False
-            return ''
-        if resp.status_code != 200:
-            return ''
-        data   = resp.json()
-        result = data.get('translations', [{}])[0].get('text', '')
-        return result if result and result != text else ''
-    except Exception:
-        return ''
-
-
-def _try_mymemory(text: str, target_lang: str) -> str:
-    """MyMemory API로 번역 시도."""
+def translate_text(text, target_lang='ko'):
+    if not text or len(text.strip()) < 3:
+        return text or ''
     src = 'en' if is_english_text(text) else 'vi'
     try:
-        url = (
-            "https://api.mymemory.translated.net/get"
-            "?q=" + requests.utils.quote(text[:500]) +
-            "&langpair=" + src + "|" + target_lang
-        )
-        r      = requests.get(url, timeout=10)
-        data   = r.json()
-        result = data.get('responseData', {}).get('translatedText', '') or ''
-        result_up = result.upper()
-        if (result and result != text
-                and 'INVALID'          not in result_up
-                and 'MYMEMORY WARNING' not in result_up
-                and 'PLEASE SELECT'    not in result_up
-                and 'YOU USED ALL'     not in result_up):
+        url = (f"https://api.mymemory.translated.net/get"
+               f"?q={requests.utils.quote(text[:500])}"
+               f"&langpair={src}|{target_lang}")
+        r = requests.get(url, timeout=10)
+        data = r.json()
+        result = data.get('responseData', {}).get('translatedText', '')
+        if result and result != text and 'INVALID' not in result.upper():
             return result
     except Exception:
         pass
-    return ''
-
-
-def _try_google(text: str, target_lang: str) -> str:
-    """deep-translator(Google) 로 번역 시도."""
     try:
         from deep_translator import GoogleTranslator
-        result = GoogleTranslator(
-            source='auto', target=target_lang
-        ).translate(text[:500])
-        return result if result else ''
-    except Exception:
-        return ''
-
-
-def translate_text(text: str, target_lang: str = 'ko') -> str:
-    """
-    3단계 번역 폴백 체인:
-      1순위: DeepL API Free   (품질 최상, 월 500K자 무료)
-      2순위: MyMemory         (일 5,000자, WARNING 필터 적용)
-      3순위: deep-translator  (Google Translate 비공식)
-      실패 시: 원문 반환
-
-    [v5.7] DeepL을 1순위로 추가
-           DeepL 한도 초과 시 자동 폴백
-           MyMemory WARNING 완전 차단
-    """
-    if not text or len(text.strip()) < 3:
-        return text or ''
-
-    # 1순위: DeepL
-    if DEEPL_API_KEY:
-        result = _try_deepl(text, target_lang)
+        result = GoogleTranslator(source='auto', target=target_lang).translate(text[:500])
         if result:
             return result
-
-    # 2순위: MyMemory
-    result = _try_mymemory(text, target_lang)
-    if result:
-        return result
-
-    # 3순위: Google (deep-translator)
-    result = _try_google(text, target_lang)
-    if result:
-        return result
-
-    # 모두 실패 → 원문 반환
+    except Exception:
+        pass
     return text
-
-
-def _is_bad_translation(val: str) -> bool:
-    """번역 결과가 경고/오류 메시지인지 확인"""
-    if not val:
-        return False
-    v = val.upper().strip()
-    return (
-        v.startswith('MYMEMORY WARNING') or
-        v.startswith('PLEASE SELECT') or
-        'INVALID' in v or
-        v.startswith('YOU USED ALL AVAILABLE')
-    )
 
 
 def translate_articles(articles):
@@ -1123,7 +673,6 @@ def translate_articles(articles):
         return articles
 
     log(f"Translating {len(articles)} articles (ko/en/vi)...")
-    api_limit_hit = False  # API 한도 초과 감지 플래그
 
     for i, art in enumerate(articles):
         title   = art.get('title', '') or ''
@@ -1132,27 +681,12 @@ def translate_articles(articles):
         is_vi   = is_vietnamese_text(title)
 
         try:
-            tko = translate_text(title, 'ko')
-            ten = title if is_en else translate_text(title, 'en')
-            tvi = title if is_vi else translate_text(title, 'vi')
-            sko = translate_text(summary[:300], 'ko') if summary else ''
-            sen = summary if is_en else (translate_text(summary[:300], 'en') if summary else '')
-            svi = summary if is_vi else (translate_text(summary[:300], 'vi') if summary else '')
-
-            # [v5.6] MYMEMORY WARNING 경고 메시지 저장 방지
-            # 경고 메시지이면 원문 제목을 그대로 사용 (빈 문자열 X)
-            art['title_ko']   = '' if _is_bad_translation(tko) else tko
-            art['title_en']   = ten if not _is_bad_translation(ten) else title
-            art['title_vi']   = '' if _is_bad_translation(tvi) else tvi
-            art['summary_ko'] = '' if _is_bad_translation(sko) else sko
-            art['summary_en'] = sen if not _is_bad_translation(sen) else summary
-            art['summary_vi'] = '' if _is_bad_translation(svi) else svi
-
-            # API 한도 초과 감지
-            if _is_bad_translation(tko) and not api_limit_hit:
-                api_limit_hit = True
-                log(f"  [WARN] MyMemory API 한도 초과 감지 — 나머지 기사 번역 건너뜀")
-
+            art['title_ko']   = translate_text(title, 'ko')
+            art['title_en']   = title if is_en else translate_text(title, 'en')
+            art['title_vi']   = title if is_vi else translate_text(title, 'vi')
+            art['summary_ko'] = translate_text(summary[:300], 'ko') if summary else ''
+            art['summary_en'] = summary if is_en else (translate_text(summary[:300], 'en') if summary else '')
+            art['summary_vi'] = summary if is_vi else (translate_text(summary[:300], 'vi') if summary else '')
         except Exception as e:
             log(f"  Translation error [{art.get('title','')[:40]}]: {e}")
             art.setdefault('title_ko', '')
@@ -1260,17 +794,20 @@ def fetch_rss(url, timeout=30):
 def fetch_gnews(query, hours_back=24, max_articles=20):
     if not GNEWS_API_KEY:
         return []
+
     articles = []
     try:
         is_newsdata = GNEWS_API_KEY.startswith('pub_')
+
         if is_newsdata:
             url = (
-                "https://newsdata.io/api/1/news"
-                "?apikey=" + GNEWS_API_KEY +
-                "&q=" + quote(query) +
-                "&country=vn&language=en,vi"
-                "&category=business,politics,technology"
-                "&size=" + str(min(max_articles, 10))
+                f"https://newsdata.io/api/1/news"
+                f"?apikey={GNEWS_API_KEY}"
+                f"&q={quote(query)}"
+                f"&country=vn"
+                f"&language=en,vi"
+                f"&category=business,politics,technology"
+                f"&size={min(max_articles, 10)}"
             )
             resp = requests.get(url, timeout=15)
             data = resp.json()
@@ -1285,16 +822,16 @@ def fetch_gnews(query, hours_back=24, max_articles=20):
                     'source_name':    item.get('source_id', 'NewsData'),
                     'raw_summary':    item.get('description', '') or '',
                 })
-            log(f"NewsData.io: {len(articles)} articles for '{query[:50]}'")
+            log(f"NewsData.io: {len(articles)} articles for query '{query[:50]}'")
         else:
             from_dt = (datetime.utcnow() - timedelta(hours=min(hours_back, 720))).strftime('%Y-%m-%dT%H:%M:%SZ')
             url = (
-                "https://gnews.io/api/v4/search"
-                "?q=" + quote(query) +
-                "&lang=en&country=vn"
-                "&from=" + from_dt +
-                "&max=" + str(max_articles) +
-                "&apikey=" + GNEWS_API_KEY
+                f"https://gnews.io/api/v4/search"
+                f"?q={quote(query)}"
+                f"&lang=en&country=vn"
+                f"&from={from_dt}"
+                f"&max={max_articles}"
+                f"&apikey={GNEWS_API_KEY}"
             )
             resp = requests.get(url, timeout=15)
             data = resp.json()
@@ -1306,6 +843,8 @@ def fetch_gnews(query, hours_back=24, max_articles=20):
                     'source_name':    item.get('source', {}).get('name', 'GNews'),
                     'raw_summary':    item.get('description', ''),
                 })
+            log(f"GNews: {len(articles)} articles for query '{query[:50]}'")
+
     except Exception as e:
         log(f"News API error: {e}")
     return articles
@@ -1320,35 +859,37 @@ NEWSDATA_API_KEY = os.environ.get('NEWSDATA_API_KEY', '')
 NEWSDATA_PROVINCE_QUERIES = {
     'group_a': [
         {'province': 'Da Nang',    'q': '"Da Nang" AND (infrastructure OR "industrial park" OR wastewater OR "water supply" OR transport)', 'language': 'en'},
-        {'province': 'Binh Duong', 'q': '"Binh Duong" AND ("industrial park" OR wastewater OR power OR infrastructure)', 'language': 'en'},
-        {'province': 'Quang Ninh', 'q': '"Quang Ninh" AND ("wind farm" OR "power plant" OR port OR industrial OR coal)', 'language': 'en'},
+        {'province': 'Da Nang',    'q': '"Da Nang" AND ("khu cong nghiep" OR "nuoc thai" OR "cap nuoc" OR "giao thong")', 'language': 'vi'},
+        {'province': 'Binh Duong', 'q': '"Binh Duong" AND ("industrial park" OR wastewater OR "power" OR infrastructure)', 'language': 'en'},
+        {'province': 'Binh Duong', 'q': '"Binh Duong" AND ("khu cong nghiep" OR "nuoc thai" OR "dien")', 'language': 'vi'},
+        {'province': 'Quang Ninh', 'q': '"Quang Ninh" AND ("wind farm" OR "power plant" OR "port" OR "industrial" OR "coal")', 'language': 'en'},
         {'province': 'Dong Nai',   'q': '"Dong Nai" AND ("industrial park" OR wastewater OR transport OR infrastructure)', 'language': 'en'},
-        {'province': 'Bac Ninh',   'q': '"Bac Ninh" AND ("industrial park" OR semiconductor OR wastewater OR infrastructure)', 'language': 'en'},
+        {'province': 'Bac Ninh',   'q': '"Bac Ninh" AND ("industrial park" OR "semiconductor" OR wastewater OR infrastructure)', 'language': 'en'},
     ],
     'group_b': [
-        {'province': 'Ba Ria Vung Tau', 'q': '"Vung Tau" AND (oil OR gas OR LNG OR port OR petrochemical)', 'language': 'en'},
-        {'province': 'Binh Dinh',       'q': '"Binh Dinh" AND (infrastructure OR "industrial park" OR wastewater OR renewable)', 'language': 'en'},
-        {'province': 'Quang Nam',       'q': '"Quang Nam" AND (infrastructure OR "industrial park" OR transport OR water)', 'language': 'en'},
-        {'province': 'Thai Nguyen',     'q': '"Thai Nguyen" AND ("industrial park" OR Samsung OR infrastructure OR wastewater)', 'language': 'en'},
-        {'province': 'Bac Giang',       'q': '"Bac Giang" AND ("industrial park" OR VSIP OR wastewater OR infrastructure)', 'language': 'en'},
+        {'province': 'Ba Ria Vung Tau', 'q': '"Vung Tau" AND ("oil" OR "gas" OR "LNG" OR "port" OR "petrochemical")', 'language': 'en'},
+        {'province': 'Binh Dinh',       'q': '"Binh Dinh" AND (infrastructure OR "industrial park" OR wastewater OR "renewable")', 'language': 'en'},
+        {'province': 'Quang Nam',       'q': '"Quang Nam" AND (infrastructure OR "industrial park" OR transport OR "water")', 'language': 'en'},
+        {'province': 'Thai Nguyen',     'q': '"Thai Nguyen" AND ("industrial park" OR "Samsung" OR infrastructure OR wastewater)', 'language': 'en'},
+        {'province': 'Ben Tre',         'q': '"Ben Tre" AND (infrastructure OR "water supply" OR "renewable energy" OR transport)', 'language': 'en'},
+        {'province': 'Bac Giang',       'q': '"Bac Giang" AND ("industrial park" OR "VSIP" OR wastewater OR infrastructure)', 'language': 'en'},
     ],
     'group_c': [
-        {'province': 'Tien Giang', 'q': '"Tien Giang" AND (infrastructure OR "water supply" OR transport OR industrial)', 'language': 'en'},
+        {'province': 'Tien Giang', 'q': '"Tien Giang" AND (infrastructure OR "water supply" OR transport OR "industrial")', 'language': 'en'},
         {'province': 'Hai Duong',  'q': '"Hai Duong" AND ("industrial park" OR wastewater OR infrastructure)', 'language': 'en'},
-        {'province': 'Ninh Thuan', 'q': '"Ninh Thuan" AND (wind OR solar OR "renewable energy" OR infrastructure)', 'language': 'en'},
-        {'province': 'Quang Binh', 'q': '"Quang Binh" AND (infrastructure OR transport OR industrial OR water)', 'language': 'en'},
+        {'province': 'Ninh Thuan', 'q': '"Ninh Thuan" AND ("wind" OR "solar" OR "renewable energy" OR infrastructure)', 'language': 'en'},
+        {'province': 'Quang Binh', 'q': '"Quang Binh" AND (infrastructure OR transport OR "industrial" OR "water")', 'language': 'en'},
     ],
 }
 
 NEWSDATA_SPECIALIST_QUERIES = [
-    # [v5.8] site: 연산자도 free 플랜 미지원 → 순수 키워드 쿼리로 교체
-    # 전문미디어 대신 누락 섹터를 보완하는 쿼리로 활용
-    {'source': 'Waste Water',    'q': 'Vietnam wastewater OR "nuoc thai" OR "sewage treatment" OR WWTP OR "thoat nuoc"', 'language': 'en'},
-    {'source': 'Water Supply',   'q': 'Vietnam "water supply" OR "nuoc sach" OR "cap nuoc" OR "water plant" OR "water treatment"', 'language': 'en'},
-    {'source': 'Oil Gas',        'q': 'Vietnam petroleum OR LNG OR "dau khi" OR PVN OR "Petrovietnam" OR "gas pipeline"', 'language': 'en'},
-    {'source': 'Smart City',     'q': 'Vietnam "smart city" OR "thanh pho thong minh" OR "digital transformation" OR "e-government"', 'language': 'en'},
-    {'source': 'Industrial VI',  'q': 'Viet Nam "khu cong nghiep" OR "khu kinh te" OR VSIP OR "FDI" OR "dau tu nuoc ngoai"', 'language': 'vi'},
-    {'source': 'Energy VI',      'q': 'Viet Nam "nha may dien" OR "dien gio" OR "dien mat troi" OR EVN OR "nang luong tai tao"', 'language': 'vi'},
+    {'source': 'The Investor',          'domain': 'theinvestor.vn',  'q': 'infrastructure OR "industrial park" OR wastewater OR "power plant" OR "oil gas"', 'language': 'en'},
+    {'source': 'Vietnam Investment Review', 'domain': 'vir.com.vn',  'q': 'infrastructure OR investment OR "industrial zone" OR energy OR transport',        'language': 'en'},
+    {'source': 'Hanoi Times',           'domain': 'hanoitimes.vn',   'q': 'infrastructure OR "industrial park" OR wastewater OR metro OR "urban development"','language': 'en'},
+    {'source': 'Vietnam Energy',        'domain': 'vietnamenergy.vn','q': 'power OR energy OR "renewable" OR "solar" OR "wind" OR "LNG"',                    'language': 'en'},
+    {'source': 'Da Nang News',          'domain': 'baodanang.vn',    'q': 'infrastructure OR "khu cong nghiep" OR "nuoc thai" OR "giao thong"',              'language': 'vi'},
+    {'source': 'Bao Dau Tu',            'domain': 'baodautu.vn',     'q': 'infrastructure OR "khu cong nghiep" OR "nang luong" OR "giao thong"',             'language': 'vi'},
+    {'source': 'PetroTimes',            'domain': 'petrotimes.vn',   'q': 'oil OR gas OR LNG OR petroleum OR "dau khi" OR petrovietnam',                     'language': 'vi'},
 ]
 
 
@@ -1356,6 +897,7 @@ def fetch_newsdata(hours_back=24):
     if not NEWSDATA_API_KEY:
         log("NewsData.io: NEWSDATA_API_KEY 없음 — 스킵")
         return []
+
     if not NEWSDATA_API_KEY.startswith('pub_'):
         log("NewsData.io: 올바른 API 키 형식 아님 — 스킵")
         return []
@@ -1372,37 +914,19 @@ def fetch_newsdata(hours_back=24):
     def _call_newsdata(q, language='en', domain=None, size=10):
         nonlocal credit_used
         if credit_used + size > CREDIT_LIMIT:
+            log(f"  NewsData.io: 크레딧 한도 도달 ({credit_used}/{CREDIT_LIMIT})")
             return []
-
-        # [v5.6 수정] 422 오류 근본 해결:
-        # - from_date 제거 (latest API 미지원)
-        # - domain 파라미터 사용 시 category 제거 (충돌 방지)
-        # - country=vn 유지 (베트남 필터)
         params = {
-            'apikey':   NEWSDATA_API_KEY,
-            'q':        q,
-            'country':  'vn',
-            'language': language,
-            'size':     size,
+            'apikey': NEWSDATA_API_KEY, 'q': q,
+            'country': 'vn', 'language': language,
+            'category': 'business,politics,technology,environment',
+            'size': size,
+            'from_date': (today - timedelta(hours=min(hours_back, 720))).strftime('%Y-%m-%d'),
         }
-        # category는 domain 없을 때만 — domain+category 조합이 422 유발
         if domain:
             params['domain'] = domain
-        else:
-            params['category'] = 'business,politics,technology,environment'
-
         try:
-            resp = requests.get(
-                'https://newsdata.io/api/1/latest',  # latest 엔드포인트 사용
-                params=params, timeout=15
-            )
-            if resp.status_code == 422:
-                # 422 시 category 제거 후 재시도
-                params.pop('category', None)
-                resp = requests.get(
-                    'https://newsdata.io/api/1/latest',
-                    params=params, timeout=15
-                )
+            resp = requests.get('https://newsdata.io/api/1/news', params=params, timeout=15)
             resp.raise_for_status()
             data = resp.json()
             if data.get('status') != 'success':
@@ -1439,6 +963,7 @@ def fetch_newsdata(hours_back=24):
 
     log(f"NewsData.io: 수집 시작 (크레딧 한도 {CREDIT_LIMIT}건)")
 
+    log("  [Group A] 핵심 급감 Province...")
     for q_info in NEWSDATA_PROVINCE_QUERIES['group_a']:
         if credit_used >= CREDIT_LIMIT:
             break
@@ -1447,9 +972,12 @@ def fetch_newsdata(hours_back=24):
             parsed = _parse_result(item, q_info['province'], q_info['province'])
             if parsed:
                 articles.append(parsed)
+        if results:
+            log(f"    {q_info['province']}: {len(results)}건")
         time.sleep(0.3)
 
     if day_of_month % 2 == 1:
+        log("  [Group B] 완전 단절 Province (홀수일)...")
         for q_info in NEWSDATA_PROVINCE_QUERIES['group_b']:
             if credit_used >= CREDIT_LIMIT:
                 break
@@ -1458,20 +986,25 @@ def fetch_newsdata(hours_back=24):
                 parsed = _parse_result(item, q_info['province'], q_info['province'])
                 if parsed:
                     articles.append(parsed)
+            if results:
+                log(f"    {q_info['province']}: {len(results)}건")
             time.sleep(0.3)
 
+    log("  [전문미디어] domain 타겟팅...")
     for q_info in NEWSDATA_SPECIALIST_QUERIES:
         if credit_used >= CREDIT_LIMIT:
             break
-        # [v5.7] domain 파라미터 제거 — 쿼리에 site: 포함
-        results = _call_newsdata(q_info['q'], q_info['language'], size=10)
+        results = _call_newsdata(q_info['q'], q_info['language'], domain=q_info['domain'], size=10)
         for item in results:
             parsed = _parse_result(item, q_info['source'])
             if parsed:
                 articles.append(parsed)
+        if results:
+            log(f"    {q_info['source']}: {len(results)}건")
         time.sleep(0.3)
 
     if day_of_week in (0, 3):
+        log("  [Group C] 소규모 Province (월·목)...")
         for q_info in NEWSDATA_PROVINCE_QUERIES['group_c']:
             if credit_used >= CREDIT_LIMIT:
                 break
@@ -1480,6 +1013,8 @@ def fetch_newsdata(hours_back=24):
                 parsed = _parse_result(item, q_info['province'], q_info['province'])
                 if parsed:
                     articles.append(parsed)
+            if results:
+                log(f"    {q_info['province']}: {len(results)}건")
             time.sleep(0.3)
 
     log(f"NewsData.io 완료: {len(articles)}건 | 크레딧: {credit_used}/{CREDIT_LIMIT}")
@@ -1519,10 +1054,6 @@ def init_database(db_path):
 
 
 def get_existing_hashes(conn):
-    """
-    SQLite + Excel 양쪽에서 기존 URL hash 수집.
-    [v5.6] 제목 hash도 수집 → 같은 제목 다른 RSS 소스 중복 방지
-    """
     cur    = conn.execute("SELECT url_hash FROM articles")
     hashes = {row[0] for row in cur.fetchall()}
     _excel = os.environ.get('EXCEL_PATH', EXCEL_PATH)
@@ -1531,26 +1062,18 @@ def get_existing_hashes(conn):
             import openpyxl
             _wb = openpyxl.load_workbook(_excel, read_only=True, data_only=True)
             _ws = _wb.active
-            _link_col  = 7
-            _title_col = 4
+            _link_col = 7
             for _c in range(1, _ws.max_column + 1):
                 _h = str(_ws.cell(1, _c).value or '').lower()
                 if _h in ('link', 'url'):
                     _link_col = _c
-                if _h in ('news title', 'title'):
-                    _title_col = _c
+                    break
             for _row in _ws.iter_rows(min_row=2, values_only=True):
-                # URL hash
                 _url = _row[_link_col - 1] if _link_col - 1 < len(_row) else None
                 if _url and str(_url).startswith('http'):
                     hashes.add(hashlib.md5(str(_url).encode()).hexdigest())
-                # 제목 hash (앞 60자) — 같은 제목 다른 소스 중복 방지
-                _title = _row[_title_col - 1] if _title_col - 1 < len(_row) else None
-                if _title and len(str(_title)) > 15:
-                    _t_key = str(_title).strip().lower()[:60]
-                    hashes.add("title:" + hashlib.md5(_t_key.encode()).hexdigest())
             _wb.close()
-            log(f"  Loaded {len(hashes)} existing hashes (SQLite + Excel URL + Title)")
+            log(f"  Loaded {len(hashes)} existing URL hashes (SQLite + Excel)")
     except Exception as _e:
         log(f"  Excel hash load warning: {_e}")
     return hashes
@@ -1589,7 +1112,7 @@ def collect_news(hours_back=24):
     cutoff          = datetime.now() - timedelta(hours=hours_back)
 
     log(f"Cutoff: {cutoff:%Y-%m-%d %H:%M} | Language: {LANGUAGE_FILTER} | Threshold: {MIN_CLASSIFY_THRESHOLD}")
-    log(f"RSS feeds: {len(RSS_FEEDS)} | v5.5: Master Plan 487 keywords integrated")
+    log(f"RSS feeds: {len(RSS_FEEDS)} (v5.4: +11 specialist+wastewater+smartcity)")
 
     total_collected    = 0
     collected_articles = []
@@ -1626,12 +1149,6 @@ def collect_news(hours_back=24):
             if url_hash in existing_hashes:
                 continue
 
-            # [v5.6] 제목 hash 중복 체크 — 같은 내용 다른 RSS 소스 중복 방지
-            title_key  = title.strip().lower()[:60]
-            title_hash = "title:" + hashlib.md5(title_key.encode()).hexdigest()
-            if title_hash in existing_hashes:
-                continue
-
             pub_dt = parse_date(pubdate)
             if pub_dt:
                 if pub_dt.tzinfo:
@@ -1665,7 +1182,6 @@ def collect_news(hours_back=24):
 
             if save_article(conn, article):
                 existing_hashes.add(url_hash)
-                existing_hashes.add(title_hash)  # 제목 hash도 등록
                 source_cnt      += 1
                 total_collected += 1
                 collected_articles.append(article)
@@ -1955,7 +1471,7 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
             except Exception:
                 return _url
 
-        now       = datetime.now()
+        now      = datetime.now()
         _run_date = now.strftime("%Y-%m-%d %H:%M")
 
         if collection_stats:
@@ -2030,8 +1546,24 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
         _pub_list = ', '.join(f"{k}({v})" for k, v in sorted(_gnews_by_pub.items(), key=lambda x: -x[1])[:10])
         ws_src.cell(row=_gn_row, column=6, value=(f"OK — {_gnews_total} articles | {_pub_list}" if _gnews_total > 0 else "Queried — 0 new articles")[:200])
         ws_src.cell(row=_gn_row, column=7, value=_gnews_total)
-        ws_src.cell(row=_gn_row, column=8, value=f"Vietnam infra + environment + north | {_run_date}")
+        ws_src.cell(row=_gn_row, column=8, value=f"Queries: Vietnam infra + environment + north | {_run_date}")
         ws_src.cell(row=_gn_row, column=4).fill = PatternFill(start_color="DBEAFE",end_color="DBEAFE",fill_type="solid")
+
+        for _pub, _cnt in _gnews_by_pub.items():
+            if not _pub:
+                continue
+            _ptr = _domain_idx.get(_pub.lower().replace('www.',''))
+            if not _ptr:
+                _ptr = ws_src.max_row + 1
+                ws_src.cell(row=_ptr, column=1, value=_pub)
+                ws_src.cell(row=_ptr, column=2, value=f"(via GNews API: {_pub})")
+                ws_src.cell(row=_ptr, column=3, value="Media/News (via API)")
+                ws_src.cell(row=_ptr, column=4, value="Accessible")
+                _domain_idx[_pub.lower()] = _ptr
+            ws_src.cell(row=_ptr, column=5, value=_run_date)
+            ws_src.cell(row=_ptr, column=6, value=f"Collected via GNews API: {_cnt} articles")
+            ws_src.cell(row=_ptr, column=7, value=_cnt)
+            ws_src.cell(row=_ptr, column=8, value="Accessed via Google News API aggregation")
 
         for _col, _w in zip('ABCDEFGH', [30, 52, 18, 14, 20, 60, 16, 55]):
             ws_src.column_dimensions[_col].width = _w
@@ -2039,7 +1571,7 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
 
         _rss_ok  = sum(1 for _s in (collection_stats or {}).values() if _s.get('status')=='Success')
         _rss_tot = len(collection_stats) if collection_stats else 0
-        log(f"Source sheet updated | RSS {_rss_ok}/{_rss_tot} OK")
+        log(f"Source sheet updated | RSS {_rss_ok}/{_rss_tot} OK | GNews {_gnews_total} articles")
 
         if "Collection_Log" not in wb.sheetnames:
             ws_log = wb.create_sheet("Collection_Log")
@@ -2049,10 +1581,10 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
         else:
             ws_log = wb["Collection_Log"]
 
-        now       = datetime.now()
-        tot_src   = len(collection_stats) if collection_stats else 0
-        ok_src    = sum(1 for s in (collection_stats or {}).values() if s.get('status')=='Success')
-        log_row   = ws_log.max_row + 1
+        now      = datetime.now()
+        tot_src  = len(collection_stats) if collection_stats else 0
+        ok_src   = sum(1 for s in (collection_stats or {}).values() if s.get('status')=='Success')
+        log_row  = ws_log.max_row + 1
         cur_total = sum(1 for r in ws.iter_rows(min_row=2,values_only=True) if any(r))
 
         ws_log.cell(row=log_row,column=1,value=now.strftime("%Y-%m-%d"))
@@ -2232,7 +1764,7 @@ def update_excel_database(articles, collection_stats=None, excel_path=None):
 
 if __name__ == "__main__":
     import argparse
-    p = argparse.ArgumentParser(description='Vietnam Infra News Collector v5.5')
+    p = argparse.ArgumentParser(description='Vietnam Infra News Collector v5.4')
     p.add_argument('--hours-back', type=int, default=HOURS_BACK)
     p.add_argument('--threshold',  type=int, default=MIN_CLASSIFY_THRESHOLD)
     p.add_argument('--gnews',      action='store_true', help='Enable Google News API')
@@ -2246,10 +1778,9 @@ if __name__ == "__main__":
         ENABLE_GNEWS = True
 
     print("=" * 60)
-    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.9")
+    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.4")
     print(f"Hours back: {HOURS_BACK} | Threshold: {MIN_CLASSIFY_THRESHOLD} | Language: {LANGUAGE_FILTER}")
-    deepl_status = f"DeepL={'ON' if DEEPL_API_KEY else 'OFF(키없음)'}"
-    print(f"RSS feeds: {len(RSS_FEEDS)} | 번역: {deepl_status} → MyMemory → Google")
+    print(f"RSS feeds: {len(RSS_FEEDS)} | v5.4 신규: 11개 (전문미디어+WasteWater+SmartCity)")
     print("=" * 60)
 
     cnt, arts, stats = collect_news(HOURS_BACK)
@@ -2319,6 +1850,6 @@ if __name__ == "__main__":
     print("\nRSS SOURCE STATUS:")
     for src, st in stats.items():
         icon = "✓" if st['status'] == 'Success' else "✗"
-        print(f"  {icon} {src}: {st['entries_found']} entries -> {st['collected']} collected")
+        print(f"  {icon} {src}: {st['entries_found']} entries → {st['collected']} collected")
 
     print(f"\nTOTAL: {cnt} new articles collected")
