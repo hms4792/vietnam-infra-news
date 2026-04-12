@@ -96,6 +96,11 @@ jobs:
           python3 scripts/build_dashboard.py
           echo "index.html size: $(wc -c < docs/index.html) bytes"
 
+      - name: Inject policy highlights into dashboard
+        run: |
+          python3 scripts/inject_policy_highlights.py
+          echo "=== Policy highlight injection 완료 ==="
+
       - name: Commit and push
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
