@@ -1,32 +1,208 @@
 {
-  "shared_version": "1.0.0",
-  "last_updated": "2026-04-01",
-  "sectors": [
-    "Waste Water", "Water Supply/Drainage", "Solid Waste",
-    "Power", "Oil & Gas", "Industrial Parks", "Smart City"
+  "version": "2.1",
+  "updated_at": "2026-04-12",
+  "description": "Claude-Genspark 협업 공유 규칙 파일",
+  "master_plans": [
+    {
+      "id": "VN-WW-2030",
+      "name_ko": "베트남 국가 수처리 마스터플랜 2021-2030",
+      "sector": "Waste Water",
+      "search_keywords": [
+        "wastewater",
+        "sewage",
+        "WWTP",
+        "nuoc thai",
+        "xu ly nuoc thai",
+        "drainage"
+      ],
+      "target_provinces": [
+        "Hanoi",
+        "Ho Chi Minh City",
+        "Da Nang",
+        "Binh Duong",
+        "Hai Phong",
+        "Can Tho"
+      ]
+    },
+    {
+      "id": "VN-SC-2030",
+      "name_ko": "베트남 스마트시티 국가전략 2030",
+      "sector": "Smart City",
+      "search_keywords": [
+        "smart city",
+        "digital city",
+        "data center",
+        "IoT",
+        "AI infrastructure",
+        "thanh pho thong minh"
+      ],
+      "target_provinces": [
+        "Ho Chi Minh City",
+        "Hanoi",
+        "Da Nang",
+        "Binh Duong"
+      ]
+    },
+    {
+      "id": "VN-WS-NORTH-2030",
+      "name_ko": "북부 상수도 인프라 계획 2030",
+      "sector": "Water Supply/Drainage",
+      "search_keywords": [
+        "water supply",
+        "clean water",
+        "drinking water",
+        "cap nuoc",
+        "nha may nuoc"
+      ],
+      "target_provinces": [
+        "Hanoi",
+        "Quang Ninh",
+        "Hai Phong",
+        "Bac Ninh",
+        "Hung Yen"
+      ]
+    },
+    {
+      "id": "VN-SW-MEKONG-2030",
+      "name_ko": "메콩 델타 폐수처리 네트워크 2025-2030",
+      "sector": "Water Supply/Drainage",
+      "search_keywords": [
+        "mekong delta",
+        "inter-regional water",
+        "bau bang",
+        "ADB water",
+        "DNP water"
+      ],
+      "target_provinces": [
+        "Can Tho",
+        "Long An",
+        "Tien Giang",
+        "An Giang",
+        "Dong Thap"
+      ]
+    },
+    {
+      "id": "VN-IP-NORTH-2030",
+      "name_ko": "북부 산업단지 개발 계획 2030",
+      "sector": "Industrial Parks",
+      "search_keywords": [
+        "industrial park",
+        "economic zone",
+        "FDI",
+        "VSIP",
+        "khu cong nghiep"
+      ],
+      "target_provinces": [
+        "Bac Ninh",
+        "Hung Yen",
+        "Hai Phong",
+        "Quang Ninh",
+        "Thai Nguyen"
+      ]
+    },
+    {
+      "id": "VN-OG-2030",
+      "name_ko": "베트남 석유가스 개발 계획 2030",
+      "sector": "Oil & Gas",
+      "search_keywords": [
+        "oil and gas",
+        "petroleum",
+        "LNG",
+        "refinery",
+        "gas pipeline",
+        "dau khi"
+      ],
+      "target_provinces": [
+        "Ca Mau",
+        "Ba Ria Vung Tau",
+        "Quang Ngai",
+        "Thanh Hoa"
+      ]
+    },
+    {
+      "id": "VN-PWR-PDP8",
+      "name_ko": "베트남 국가전력개발계획 8차 (PDP8) 2021-2030",
+      "sector": "Power",
+      "search_keywords": [
+        "power development plan",
+        "pdp8",
+        "renewable energy",
+        "wind power",
+        "solar power",
+        "lng terminal",
+        "quy hoach dien",
+        "nang luong tai tao"
+      ],
+      "target_provinces": [
+        "Quang Ninh",
+        "Gia Lai",
+        "Binh Thuan",
+        "Ninh Thuan",
+        "Ca Mau",
+        "Khanh Hoa",
+        "Binh Dinh"
+      ]
+    },
+    {
+      "id": "VN-ENV-IND-1894",
+      "name_ko": "베트남 환경산업 발전 프로그램 (Decision 1894)",
+      "sector": "Solid Waste",
+      "search_keywords": [
+        "waste treatment",
+        "waste-to-energy",
+        "recycling plant",
+        "incineration plant",
+        "industrial wastewater treatment",
+        "industrial effluent",
+        "air pollution control",
+        "air quality monitoring",
+        "soil remediation",
+        "contaminated land",
+        "environmental monitoring system",
+        "environmental technology",
+        "environmental consulting",
+        "eco-industrial park",
+        "green industrial zone",
+        "cong nghiep moi truong",
+        "xu ly nuoc thai cong nghiep",
+        "xu ly khi thai",
+        "quan trac moi truong",
+        "khu cong nghiep sinh thai",
+        "xu ly o nhiem"
+      ],
+      "target_provinces": [
+        "Ho Chi Minh City",
+        "Hanoi",
+        "Da Nang",
+        "Hue",
+        "Binh Duong",
+        "Dong Nai",
+        "Hai Phong"
+      ],
+      "sectors": [
+        "Solid Waste",
+        "Waste Water",
+        "Water Supply/Drainage",
+        "Industrial Parks"
+      ],
+      "match_threshold": 35
+    }
   ],
-  "area_mapping": {
-    "Waste Water": "Environment",
-    "Water Supply/Drainage": "Environment",
-    "Solid Waste": "Environment",
-    "Power": "Energy Develop.",
-    "Oil & Gas": "Energy Develop.",
-    "Industrial Parks": "Urban Develop.",
-    "Smart City": "Urban Develop."
-  },
-  "quality_thresholds": {
-    "province_unclassified_max": 0.25,
-    "specialist_media_min": 0.30,
-    "sector_mismatch_max": 0.05
-  },
-  "specialist_sources": [
-    "The Investor", "VIR", "Vietnam Investment Review",
-    "Hanoitimes", "Nikkei Asia", "Reuters Vietnam"
+  "sectors_priority": [
+    "Waste Water",
+    "Water Supply/Drainage",
+    "Solid Waste",
+    "Power",
+    "Oil & Gas",
+    "Industrial Parks",
+    "Smart City"
   ],
-  "province_name_mapping": {
-    "Ho Chi Minh City": ["HCMC", "TP.HCM", "Saigon"],
-    "Da Nang": ["Danang", "Đà Nẵng"],
-    "Hanoi": ["Hà Nội", "Ha Noi"]
-  },
-  "shared_base_url": "https://hms4792.github.io/vietnam-infra-news/shared/"
+  "banned_rss": [
+    "theinvestor.vn/rss",
+    "vir.com.vn/rss",
+    "monre.gov.vn",
+    "vea.gov.vn",
+    "mic.gov.vn",
+    "smartcity.mobi"
+  ]
 }
