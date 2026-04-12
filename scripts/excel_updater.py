@@ -653,6 +653,16 @@ class ExcelUpdater:
             ("Last Check", 20), ("Entries",  10), ("Collected", 12),
             ("New Added",  12), ("Error",    40),
         ]
+
+        # [v2.4 수정] rss_results가 비어있으면 기존 데이터 유지 (삭제 금지)
+        if not rss_results:
+            if ws.max_row <= 1:
+                # 헤더만 설정
+                ws.delete_rows(1, ws.max_row + 1)
+                _set_header_row(ws, COLS, HDR_STYLE)
+            logger.info("  RSS_Sources: rss_results 없음 — 기존 데이터 유지")
+            return
+
         ws.delete_rows(1, ws.max_row + 1)
         _set_header_row(ws, COLS, HDR_STYLE)
 
@@ -715,8 +725,15 @@ class ExcelUpdater:
         new_added   = (run_stats.get("new_added") or
                        run_stats.get("added") or
                        run_stats.get("new", 0) or 0)
+        # [v2.4 수정] Total DB: run_stats에 없으면 News Database 실제 행 수 계산
         total_db    = (run_stats.get("total_db") or
                        run_stats.get("total", 0) or 0)
+        if not total_db:
+            try:
+                ws_db = self.wb["News Database"]
+                total_db = ws_db.max_row - 1  # 헤더 제외
+            except Exception:
+                total_db = 0
         collected   = (run_stats.get("collected") or
                        run_stats.get("total_collected") or
                        len(articles))
@@ -896,27 +913,39 @@ class ExcelUpdater:
 
     def _update_province_keywords(self):
         ws = self._get_or_create_sheet("Province_Keywords")
-        ws.delete_rows(1, ws.max_row + 1)
-
         HDR_STYLE = _hdr(COLOR["header_gold"], font_color="1C2833")
         COLS = [
             ("Province (Standard)", 28), ("Region Category",  22),
             ("Keywords",            80), ("Keyword Count",    14),
             ("Old Province Names",  35), ("Updated",          16),
         ]
-        _set_header_row(ws, COLS, HDR_STYLE)
+
+        # [v2.4 수정] PROVINCE_OK=False 일 때 기존 데이터 유지 (삭제 금지)
+        if not PROVINCE_OK:
+            if ws.max_row <= 1:
+                ws.delete_rows(1, ws.max_row + 1)
+                _set_header_row(ws, COLS, HDR_STYLE)
+            logger.info("  Province_Keywords: province_keywords 모듈 없음 — 기존 데이터 유지")
+            return
 
         old_names_map = defaultdict(list)
-        if PROVINCE_OK:
-            try:
-                from scripts.province_keywords import PROVINCE_ALIAS_MAP
-                for old, new in PROVINCE_ALIAS_MAP.items():
-                    old_names_map[new].append(old)
-            except ImportError:
-                pass
+        try:
+            from scripts.province_keywords import PROVINCE_ALIAS_MAP
+            for old, new in PROVINCE_ALIAS_MAP.items():
+                old_names_map[new].append(old)
+        except ImportError:
+            pass
 
         today_str  = self.now.strftime("%Y-%m-%d")
-        prov_data  = get_provinces_for_excel() if PROVINCE_OK else []
+        prov_data  = get_provinces_for_excel()
+
+        if not prov_data:
+            # 데이터 없으면 기존 유지
+            logger.info("  Province_Keywords: prov_data 없음 — 기존 데이터 유지")
+            return
+
+        ws.delete_rows(1, ws.max_row + 1)
+        _set_header_row(ws, COLS, HDR_STYLE)
 
         for i, prow in enumerate(prov_data, 2):
             province  = prow["Province"]
