@@ -1,7 +1,7 @@
 {
   "version": "2.1",
-  "updated_at": "2026-04-12",
-  "total_masterplans": 8,
+  "updated_at": "2026-04-13",
+  "total_masterplans": 18,
   "description": "베트남 인프라 마스터플랜 지식 베이스 — Claude+Genspark 공유",
   "new_in_v2_1": [
     "VN-PWR-PDP8",
@@ -842,6 +842,372 @@
         "kinh te tuan hoan",
         "tai chinh xanh"
       ]
+    },
+    "VN-TRAN-2055": {
+      "id": "VN-TRAN-2055",
+      "name_ko": "베트남 교통인프라 마스터플랜 2055",
+      "name_en": "Vietnam Transport Infrastructure Master Plan 2055",
+      "decision_number": "1454/QĐ-TTg (2021)",
+      "sectors": [
+        "Smart City"
+      ],
+      "primary_sector": "Smart City",
+      "area": "Urban Develop.",
+      "match_threshold": 40,
+      "keywords_en": [
+        "highway",
+        "expressway",
+        "national road",
+        "road construction",
+        "bridge",
+        "transport infrastructure",
+        "logistics",
+        "freight",
+        "road network",
+        "north-south expressway",
+        "coastal road"
+      ],
+      "keywords_vi": [
+        "duong cao toc",
+        "quoc lo",
+        "cau",
+        "ha tang giao thong"
+      ],
+      "provinces": [
+        "Hanoi",
+        "Ho Chi Minh City",
+        "Da Nang",
+        "Hai Phong",
+        "Can Tho"
+      ],
+      "budget": "약 2,430억달러"
+    },
+    "VN-URB-METRO-2030": {
+      "id": "VN-URB-METRO-2030",
+      "name_ko": "베트남 도시철도·메트로 개발계획 2030",
+      "name_en": "Vietnam Urban Rail/Metro Development Plan 2030",
+      "decision_number": "1259/QĐ-TTg",
+      "sectors": [
+        "Smart City"
+      ],
+      "primary_sector": "Smart City",
+      "area": "Urban Develop.",
+      "match_threshold": 40,
+      "keywords_en": [
+        "metro",
+        "urban rail",
+        "subway",
+        "MRT",
+        "light rail",
+        "BRT",
+        "city railway",
+        "urban transit",
+        "metro line",
+        "rail transit"
+      ],
+      "keywords_vi": [
+        "tau dien ngam",
+        "duong sat do thi",
+        "metro"
+      ],
+      "provinces": [
+        "Hanoi",
+        "Ho Chi Minh City",
+        "Da Nang"
+      ],
+      "budget": "약 670억달러"
+    },
+    "VN-GAS-PDP8": {
+      "id": "VN-GAS-PDP8",
+      "name_ko": "베트남 가스 인프라 개발계획 (PDP8 연계)",
+      "name_en": "Vietnam Gas Infrastructure Plan (PDP8 linked)",
+      "sectors": [
+        "Oil & Gas"
+      ],
+      "primary_sector": "Oil & Gas",
+      "area": "Energy Develop.",
+      "match_threshold": 40,
+      "keywords_en": [
+        "LNG",
+        "LNG terminal",
+        "gas pipeline",
+        "natural gas",
+        "gas infrastructure",
+        "regasification",
+        "gas-fired power",
+        "gas power plant",
+        "lng import"
+      ],
+      "keywords_vi": [
+        "khi dot",
+        "duong ong khi",
+        "cang LNG",
+        "nha may dien khi"
+      ],
+      "provinces": [
+        "Ba Ria-Vung Tau",
+        "Binh Thuan",
+        "Quang Ninh",
+        "Khanh Hoa"
+      ],
+      "budget": "약 120억달러"
+    },
+    "VN-WAT-2050": {
+      "id": "VN-WAT-2050",
+      "name_ko": "베트남 수자원 개발 마스터플랜 2050",
+      "name_en": "Vietnam Water Resources Development Master Plan 2050",
+      "sectors": [
+        "Water Supply/Drainage"
+      ],
+      "primary_sector": "Water Supply/Drainage",
+      "area": "Environment",
+      "match_threshold": 40,
+      "keywords_en": [
+        "dam",
+        "reservoir",
+        "irrigation",
+        "flood control",
+        "drought",
+        "water resource",
+        "hydropower",
+        "mekong",
+        "river basin"
+      ],
+      "keywords_vi": [
+        "dap",
+        "ho chua",
+        "thuy loi",
+        "lu lut",
+        "han han",
+        "tai nguyen nuoc"
+      ],
+      "provinces": [
+        "An Giang",
+        "Dong Thap",
+        "Kien Giang",
+        "Long An",
+        "Tien Giang"
+      ],
+      "budget": "약 90억달러"
+    },
+    "VN-REN-NPP-2050": {
+      "id": "VN-REN-NPP-2050",
+      "name_ko": "베트남 원자력·신에너지 개발계획 2050",
+      "name_en": "Vietnam Nuclear & New Energy Plan 2050",
+      "sectors": [
+        "Power"
+      ],
+      "primary_sector": "Power",
+      "area": "Energy Develop.",
+      "match_threshold": 40,
+      "keywords_en": [
+        "nuclear",
+        "nuclear power",
+        "NPP",
+        "atomic energy",
+        "hydrogen",
+        "green hydrogen",
+        "ammonia",
+        "new energy"
+      ],
+      "keywords_vi": [
+        "hat nhan",
+        "nha may dien hat nhan",
+        "hydro xanh",
+        "nang luong moi"
+      ],
+      "provinces": [
+        "Ninh Thuan",
+        "Binh Dinh"
+      ],
+      "budget": "약 200억달러"
+    },
+    "VN-COAL-RETIRE": {
+      "id": "VN-COAL-RETIRE",
+      "name_ko": "베트남 석탄화력 단계적 폐지 계획 (JETP)",
+      "name_en": "Vietnam Coal Power Phase-out Plan (JETP)",
+      "sectors": [
+        "Power"
+      ],
+      "primary_sector": "Power",
+      "area": "Energy Develop.",
+      "match_threshold": 40,
+      "keywords_en": [
+        "coal",
+        "coal plant",
+        "coal retirement",
+        "coal phase-out",
+        "just energy transition",
+        "JET-P",
+        "JETP",
+        "early retirement",
+        "coal closure",
+        "coal decommission"
+      ],
+      "keywords_vi": [
+        "nhiet dien than",
+        "dong cua nha may than",
+        "chuyen dich nang luong"
+      ],
+      "provinces": [
+        "Quang Ninh",
+        "Ha Tinh",
+        "Nghe An",
+        "Binh Dinh"
+      ],
+      "budget": "약 150억달러 (국제지원)"
+    },
+    "VN-GRID-SMART": {
+      "id": "VN-GRID-SMART",
+      "name_ko": "베트남 스마트그리드 고도화 계획",
+      "name_en": "Vietnam Smart Grid Upgrade Plan",
+      "sectors": [
+        "Power"
+      ],
+      "primary_sector": "Power",
+      "area": "Energy Develop.",
+      "match_threshold": 40,
+      "keywords_en": [
+        "smart grid",
+        "transmission line",
+        "power grid",
+        "substation",
+        "500kV",
+        "grid upgrade",
+        "power transmission",
+        "grid modernization",
+        "SCADA",
+        "energy storage",
+        "battery storage"
+      ],
+      "keywords_vi": [
+        "luoi dien thong minh",
+        "duong day truyen tai",
+        "tram bien ap",
+        "500kV"
+      ],
+      "provinces": [
+        "Hanoi",
+        "Ho Chi Minh City",
+        "Quang Ninh",
+        "Binh Duong"
+      ],
+      "budget": "약 80억달러"
+    },
+    "VN-EV-2030": {
+      "id": "VN-EV-2030",
+      "name_ko": "베트남 전기차·친환경 모빌리티 2030",
+      "name_en": "Vietnam Electric Vehicle & Green Mobility 2030",
+      "sectors": [
+        "Smart City"
+      ],
+      "primary_sector": "Smart City",
+      "area": "Urban Develop.",
+      "match_threshold": 40,
+      "keywords_en": [
+        "electric vehicle",
+        "EV",
+        "charging station",
+        "e-mobility",
+        "VinFast",
+        "electric bus",
+        "electric motorcycle",
+        "e-scooter"
+      ],
+      "keywords_vi": [
+        "xe dien",
+        "tram sac",
+        "phuong tien dien",
+        "VinFast"
+      ],
+      "provinces": [
+        "Hanoi",
+        "Ho Chi Minh City",
+        "Hai Phong",
+        "Quang Ninh"
+      ],
+      "budget": "약 60억달러"
+    },
+    "VN-CARBON-2050": {
+      "id": "VN-CARBON-2050",
+      "name_ko": "베트남 탄소중립 2050 로드맵",
+      "name_en": "Vietnam Carbon Neutrality Roadmap 2050",
+      "sectors": [
+        "Solid Waste"
+      ],
+      "primary_sector": "Solid Waste",
+      "area": "Environment",
+      "match_threshold": 40,
+      "keywords_en": [
+        "carbon neutral",
+        "net zero",
+        "carbon emission",
+        "CO2",
+        "greenhouse gas",
+        "carbon credit",
+        "carbon market",
+        "ESG",
+        "climate change",
+        "NDC",
+        "Paris Agreement"
+      ],
+      "keywords_vi": [
+        "trung hoa carbon",
+        "phat thai carbon",
+        "bien doi khi hau",
+        "tin chi carbon"
+      ],
+      "provinces": [
+        "Hanoi",
+        "Ho Chi Minh City"
+      ],
+      "budget": "N/A (정책 로드맵)"
+    },
+    "VN-LNG-HUB": {
+      "id": "VN-LNG-HUB",
+      "name_ko": "베트남 LNG 허브 개발 전략",
+      "name_en": "Vietnam LNG Hub Development Strategy",
+      "sectors": [
+        "Oil & Gas"
+      ],
+      "primary_sector": "Oil & Gas",
+      "area": "Energy Develop.",
+      "match_threshold": 40,
+      "keywords_en": [
+        "LNG hub",
+        "LNG import",
+        "regasification",
+        "FSRU",
+        "floating storage",
+        "LNG barge",
+        "LNG terminal",
+        "lng capacity"
+      ],
+      "keywords_vi": [
+        "nhap khau LNG",
+        "tai hoa khi",
+        "kho cang LNG",
+        "FSRU"
+      ],
+      "provinces": [
+        "Ba Ria-Vung Tau",
+        "Binh Thuan",
+        "Khanh Hoa",
+        "Quang Ninh"
+      ],
+      "budget": "약 50억달러"
     }
-  }
+  },
+  "new_in_v2_2": [
+    "VN-TRAN-2055",
+    "VN-URB-METRO-2030",
+    "VN-GAS-PDP8",
+    "VN-WAT-2050",
+    "VN-REN-NPP-2050",
+    "VN-COAL-RETIRE",
+    "VN-GRID-SMART",
+    "VN-EV-2030",
+    "VN-CARBON-2050",
+    "VN-LNG-HUB"
+  ]
 }
