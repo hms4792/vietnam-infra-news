@@ -1,0 +1,39 @@
+{
+  "total": 23,
+  "passed": 22,
+  "failed": 1,
+  "qc_rate": 95.7,
+  "qc07_pro_media_ratio": 21.7,
+  "qc07_pass": false,
+  "qc08_sector_balance": 43.5,
+  "qc08_pass": true,
+  "qc09_pdp8_count": 0,
+  "qc09_pass": false,
+  "qc10_d1894_count": 0,
+  "qc10_pass": false,
+  "qc12_unclassified_province_ratio": 87.0,
+  "qc12_pass": false,
+  "qc13_pass_rate_ok": true,
+  "qc14_integrity_ok": true,
+  "sector_distribution": {
+    "Power & Energy": 10,
+    "Transport & Infrastructure": 3,
+    "Other": 5,
+    "Urban Development": 3,
+    "Environment & Climate": 2
+  },
+  "issues_log": [
+    {
+      "title": "Hạ tầng xanh - xám giúp giải quyết ngập úng cho đô",
+      "issues": [
+        "QC11: Duplicate title"
+      ]
+    }
+  ],
+  "recommendations": [
+    "전문 미디어 소스 비율 증가 필요 (현재 22%)",
+    "PDP8 관련 기사 추가 수집 필요 (현재 0건)",
+    "Decision 1894 관련 기사 추가 필요 (현재 0건)",
+    "Province 미분류 비율 감소 필요 (현재 87%)"
+  ]
+}
