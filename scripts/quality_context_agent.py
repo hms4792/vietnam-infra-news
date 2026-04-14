@@ -151,10 +151,10 @@ def match_article_to_policy(article, knowledge_index):
         )
         return {
             "matched":   True,
-            "doc_id":    best_match["doc_id"],
+            "doc_id":    best_match.get("doc_id") or best_match.get("id", ""),
             "relevance": relevance,
             "score":     best_score,
-            "plan_name": best_match.get("title", ""),
+            "plan_name": best_match.get("title") or best_match.get("name_en") or best_match.get("name_ko", ""),
         }
     return {"matched": False, "doc_id": None, "relevance": None}
 
