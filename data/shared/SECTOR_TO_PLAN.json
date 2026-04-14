@@ -1,0 +1,60 @@
+{
+  "schema_version": "2.0",
+  "last_updated": "2026-04-14",
+  "description": "Claude SA 7개 섹터 ↔ Claw 24개 플랜ID 매핑",
+  "mapping": {
+    "Waste Water": [
+      "VN-WW-2030"
+    ],
+    "Water Supply/Drainage": [
+      "VN-WAT-RESOURCES",
+      "VN-WAT-URBAN",
+      "VN-WAT-RURAL"
+    ],
+    "Solid Waste": [
+      "VN-SWM-NATIONAL-2030",
+      "VN-ENV-IND-1894"
+    ],
+    "Power": [
+      "VN-PDP8-RENEWABLE",
+      "VN-PDP8-LNG",
+      "VN-PDP8-NUCLEAR",
+      "VN-PDP8-COAL",
+      "VN-PDP8-GRID",
+      "VN-PDP8-HYDROGEN",
+      "VN-CARBON-2050"
+    ],
+    "Oil & Gas": [
+      "VN-OG-2030"
+    ],
+    "Industrial Parks": [
+      "VN-IP-NORTH-2030",
+      "VN-RED-RIVER-2030",
+      "VN-MEKONG-DELTA-2030"
+    ],
+    "Smart City": [
+      "VN-SC-2030",
+      "VN-URB-METRO-2030",
+      "HN-URBAN-NORTH",
+      "HN-URBAN-WEST",
+      "HN-URBAN-INFRA"
+    ],
+    "Transport": [
+      "VN-TRAN-2055",
+      "VN-URB-METRO-2030"
+    ],
+    "EV/Mobility": [
+      "VN-EV-2030"
+    ],
+    "Environment/Tech": [
+      "VN-ENV-IND-1894",
+      "VN-CARBON-2050"
+    ],
+    "Hanoi": [
+      "HN-URBAN-NORTH",
+      "HN-URBAN-WEST",
+      "HN-URBAN-INFRA"
+    ]
+  },
+  "note": "Claude SA의 sector 필드 → Claw plan_id 매핑. genspark_output.json의 sector 값 기준으로 matched_plans 추론 가능."
+}
