@@ -68,8 +68,35 @@ def inject_policy_flags(html_content, policy_map):
     try:
         articles = json.loads(match.group(1))
     except json.JSONDecodeError as e:
-        print(f"  [ERROR] BACKEND_DATA JSON 파싱 실패: {e}")
-        return html_content, 0
+        print(f"  [WARN] BACKEND_DATA JSON 파싱 실패: {e}")
+        print(f"  [INFO] policy_highlighted_articles.json으로 URL 기반 직접 매핑 시도")
+        # ── Fallback: URL 기반으로 policy_map과 직접 비교 ──────────────
+        # BACKEND_DATA 파싱 없이 docs/index.html의 URL 패턴에서 정책 배지 JS 삽입
+        articles = None  # fallback 모드
+
+    # Fallback: articles 파싱 실패 시 JS 주입 방식으로 대체
+    if articles is None:
+        # policy_map의 URL 목록을 JS 배열로 대시보드에 주입
+        policy_urls = list(policy_map.keys())
+        js_injection = f"""
+<script>
+// Policy highlight injection (URL-based fallback)
+(function() {{
+  var policyUrls = {json.dumps(policy_urls)};
+  document.addEventListener('DOMContentLoaded', function() {{
+    document.querySelectorAll('a[href]').forEach(function(a) {{
+      if (policyUrls.includes(a.href)) {{
+        var card = a.closest('.article-card, tr, li, div[data-url]');
+        if (card) card.style.backgroundColor = '#FFF9C4';
+      }}
+    }});
+  }});
+}})();
+</script>"""
+        if '</body>' in html_content:
+            html_content = html_content.replace('</body>', js_injection + '</body>')
+            print(f"  [OK] URL 기반 정책 배지 JS 주입 ({len(policy_urls)}건)")
+        return html_content, len(policy_urls)
 
     updated = 0
     for art in articles:
