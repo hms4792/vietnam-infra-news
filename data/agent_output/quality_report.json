@@ -1,82 +1,82 @@
 {
-  "generated_at": "2026-04-11T14:01:23.919740+00:00",
-  "total_articles": 7,
+  "generated_at": "2026-04-14T13:18:57.140525+00:00",
+  "total_articles": 26,
   "quality_grade": "D",
   "targets_met": {
-    "province_unclassified_le_25pct": false,
+    "province_unclassified_le_25pct": true,
     "specialist_media_ge_30pct": false,
     "all_7_sectors_covered": false,
-    "policy_alignment_ge_30pct": true
+    "policy_alignment_ge_30pct": false
   },
   "metrics": {
-    "province_unclassified_rate": 0.286,
-    "specialist_media_ratio": 0.286,
+    "province_unclassified_rate": 0.192,
+    "specialist_media_ratio": 0.0,
     "sector_coverage": {
       "covered": [
         "Industrial Parks",
         "Oil & Gas",
         "Power",
-        "Solid Waste"
+        "Smart City",
+        "Solid Waste",
+        "Water Supply/Drainage"
       ],
       "missing": [
-        "Waste Water",
-        "Water Supply/Drainage",
-        "Smart City"
+        "Waste Water"
       ],
-      "ratio": 0.571
+      "ratio": 0.857
     },
     "area_distribution": {
-      "Energy Develop.": 2,
-      "Urban Development": 4,
-      "Environment": 1
+      "Urban Development": 12,
+      "Environment": 6,
+      "Energy Develop.": 8
     },
     "policy_alignment": {
-      "matched_ratio": 0.429,
-      "high_relevance_ratio": 0.143,
+      "matched_ratio": 0.115,
+      "high_relevance_ratio": 0.077,
       "matched_count": 3,
-      "high_relevance_count": 1,
+      "high_relevance_count": 2,
       "matched_articles": [
         {
-          "title": "PVCFC vận hành ổn định, mở rộng chuỗi giá trị",
-          "sector": "Oil & Gas",
-          "province": "Ca Mau",
-          "doc_id": "VN-OG-2030",
-          "plan_name": "베트남 석유가스 인프라 개발 계획 2030",
-          "relevance": "high",
-          "url": "https://tuoitre.vn/pvcfc-van-hanh-on-dinh-mo-rong-chuoi-gia-tri-20260411190610392.htm"
-        },
-        {
-          "title": "Thái Nguyên dẫn đầu cả nước về thu hút dòng vốn FDI mới, Ngh",
-          "sector": "Industrial Parks",
-          "province": "Thai Nguyen",
-          "doc_id": "VN-IP-2030",
-          "plan_name": "베트남 산업단지 개발 마스터플랜 2030",
-          "relevance": "medium",
-          "url": "https://vietnamnet.vn/thai-nguyen-dan-dau-ca-nuoc-ve-thu-hut-dong-von-fdi-moi-nghe-an-thu-hai-2503434.html"
-        },
-        {
-          "title": "Quảng Ninh: Đẩy nhanh giải phóng mặt bằng Dự án Nhà máy điện",
+          "title": "Việt Nam tự sản xuất pin lưu trữ, góp phần \"giải cứu\" lưới đ",
           "sector": "Power",
-          "province": "Quang Ninh",
-          "doc_id": "VN-PWR-RENEW-2030",
-          "plan_name": "베트남 재생에너지 개발 계획 2030 (PDP8 세부)",
+          "province": "Vietnam",
+          "doc_id": "VN-PWR-PDP8",
+          "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
+          "relevance": "high",
+          "url": "https://dantri.com.vn/kinh-doanh/viet-nam-tu-san-xuat-pin-luu-tru-gop-phan-giai-cuu-luoi-dien-20260412081025664.htm"
+        },
+        {
+          "title": "Bật điều hòa + quạt có tốn điện hơn không? EVN đưa ra đáp án",
+          "sector": "Power",
+          "province": "Vietnam",
+          "doc_id": "VN-PWR-PDP8",
+          "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
+          "relevance": "high",
+          "url": "https://cafebiz.vn/bat-dieu-hoa-quat-co-ton-dien-hon-khong-evn-dua-ra-dap-an-176260414161941773.chn"
+        },
+        {
+          "title": "EVNSPC nỗ lực gỡ vướng các dự án trọng điểm cấp điện cho APE",
+          "sector": "Power",
+          "province": "Kien Giang",
+          "doc_id": "VN-PWR-PDP8",
+          "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
           "relevance": "medium",
-          "url": "https://moitruong.net.vn/quang-ninh-day-nhanh-giai-phong-mat-bang-du-an-nha-may-dien-gio-quang-ninh-1-98822.html"
+          "url": "https://baoxaydung.vn/evnspc-no-luc-go-vuong-cac-du-an-trong-diem-cap-dien-cho-apec-2027-192260414124127625.htm"
         }
       ]
     },
     "policy_highlight_count": 3,
     "collector_flags": {
-      "vietnam_ratio": 0.286,
+      "vietnam_ratio": 0.192,
       "missing_provinces": []
     }
   },
-  "knowledge_index_loaded": 10,
+  "knowledge_index_loaded": 18,
   "recommendations": [
     {
       "priority": "HIGH",
       "metric": "specialist_media_ratio",
-      "current": 0.286,
+      "current": 0.0,
       "target": 0.3,
       "action": "전문 RSS 소스 추가 또는 specialist_crawler 정상화 필요"
     },
@@ -84,14 +84,47 @@
       "priority": "MEDIUM",
       "metric": "sector_coverage",
       "missing": [
-        "Waste Water",
-        "Water Supply/Drainage",
-        "Smart City"
+        "Waste Water"
       ],
-      "action": "Waste Water, Water Supply/Drainage, Smart City 섹터 RSS/키워드 보강 필요"
+      "action": "Waste Water 섹터 RSS/키워드 보강 필요"
+    },
+    {
+      "priority": "LOW",
+      "metric": "policy_alignment",
+      "current": 0.115,
+      "action": "knowledge_index.json 키워드 보강으로 정책 연계율 개선 가능"
     }
   ],
   "genspark_feedback": {
-    "available": false
+    "available": true,
+    "week": "latest",
+    "genspark_total": 157,
+    "claude_only_count": 26,
+    "genspark_only_count": 157,
+    "genspark_only_sources": {
+      "": 157
+    },
+    "missing_sectors_in_claude": [
+      "Waste Water"
+    ],
+    "policy_rate_comparison": {
+      "claude": 0.0,
+      "genspark": 0.0,
+      "gap": 0.0
+    },
+    "improvement_recommendations": [
+      {
+        "priority": "HIGH",
+        "type": "missing_sector",
+        "message": "Genspark 수집 섹터 중 Claude 미수집: ['Waste Water']",
+        "action": "news_collector.py SECTOR_KEYWORDS에 해당 섹터 키워드 보강 필요"
+      },
+      {
+        "priority": "MEDIUM",
+        "type": "missing_source",
+        "message": "Genspark만 수집한 소스 상위 5개: ['']",
+        "action": "RSS_FEEDS 또는 specialist_crawler 대상에 추가 검토"
+      }
+    ]
   }
 }
