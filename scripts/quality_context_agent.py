@@ -58,8 +58,17 @@ def load_knowledge_index():
             try:
                 with open(path, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                print(f"  [knowledge_index] {len(data)}개 마스터플랜 로드: {path.name}")
-                return data
+                # ── 구조 정규화 ──────────────────────────────────
+                # knowledge_index.json은 {"masterplans": {id: {...}, ...}} 구조
+                # quality_context_agent는 [{...}, {...}] 리스트 형태로 사용
+                if isinstance(data, dict) and "masterplans" in data:
+                    plans = list(data["masterplans"].values())
+                elif isinstance(data, list):
+                    plans = data
+                else:
+                    plans = list(data.values()) if isinstance(data, dict) else []
+                print(f"  [knowledge_index] {len(plans)}개 마스터플랜 로드: {path.name}")
+                return plans
             except Exception as e:
                 print(f"  [WARN] knowledge_index 로드 실패 ({path}): {e}")
     print("  [WARN] knowledge_index.json 없음")
@@ -67,17 +76,36 @@ def load_knowledge_index():
 
 
 def load_genspark_output():
-    """Genspark 피드백 로드 — 없으면 None 반환"""
+    """Genspark 피드백 로드 — 없으면 None 반환
+    genspark_output.json은 기사 list 직접 반환 구조:
+      [{id, title, sector, matched_plans, summary_ko, ...}, ...]
+    """
     if not GENSPARK_OUTPUT.exists():
         print("  [INFO] genspark_output.json 없음 — 피드백 없이 진행")
         return None
     try:
         with open(GENSPARK_OUTPUT, "r", encoding="utf-8") as f:
             data = json.load(f)
-        week = data.get("week", "unknown")
-        total = data.get("total_collected", 0)
-        print(f"  [genspark] 피드백 로드: {week} | {total}건")
-        return data
+        # ── 구조 정규화 ──────────────────────────────────────────
+        # list 직접 반환 구조 (현재 Genspark Claw 방식)
+        if isinstance(data, list):
+            print(f"  [genspark] 기사 로드: {len(data)}건 (list 구조)")
+            return {
+                "articles": data,
+                "week": "latest",
+                "total_collected": len(data),
+                "matching_summary": {},
+                "quality_summary": {},
+            }
+        # dict 구조 (이전 방식 호환)
+        elif isinstance(data, dict):
+            week  = data.get("week", "unknown")
+            total = data.get("total_collected", len(data.get("articles", [])))
+            print(f"  [genspark] 피드백 로드: {week} | {total}건")
+            return data
+        else:
+            print(f"  [WARN] genspark_output.json 형식 불명: {type(data)}")
+            return None
     except Exception as e:
         print(f"  [WARN] genspark_output.json 로드 실패: {e}")
         return None
