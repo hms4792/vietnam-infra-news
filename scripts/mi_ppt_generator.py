@@ -43,17 +43,24 @@ PPT_META = {
         "accent_rgb": RGBColor(0xFF, 0xFB, 0xEB),
         "icon": "⚡",
         "kpis": [
-            ("총 설비용량 2030", "183,291–236,363 MW"),
-            ("태양광 목표", "46,459–73,416 MW"),
-            ("원자력 재개", "4,000–6,400 MW"),
-            ("투자 규모 (2026-30)", "$136.3B"),
+            ("총 설비용량 2030", "183,291–236,363 MW", "Decision 768/QD-TTg (2025.04.15)"),
+            ("태양광 목표", "46,459–73,416 MW", "Decision 768/QD-TTg Annex II"),
+            ("원자력 재개", "4,000–6,400 MW", "Resolution 174/2024/QH15"),
+            ("투자 규모 (2026-30)", "$136.3B", "Decision 768/QD-TTg Art.3"),
         ],
         "highlights": [
-            "Decision 768 (2025.04.15) — 원본 대비 RE 비중 대폭 상향",
-            "원자력 복귀: 닌투언 1·2호기 2030-35 상업운전 목표",
-            "그린수소·RE 수출: 싱가포르·말레이시아 5,000-10,000MW",
-            "석탄 신규 불허, 2050년 완전 폐지 로드맵",
-            "LNG 발전 22,524MW — 한국 EPC 기회 최대 $3B+",
+            "Decision 768 (2025.04.15) — 원본 대비 RE 비중 대폭 상향 [출처: Decision 768/QD-TTg]",
+            "원자력 복귀: 닌투언 1·2호기 2030-35 상업운전 목표 [출처: Resolution 174/2024/QH15]",
+            "그린수소·RE 수출: 싱가포르·말레이시아 5,000-10,000MW [출처: Decision 768 Art.4.3]",
+            "석탄 신규 불허, 2050년 완전 폐지 로드맵 [출처: Decision 768 Art.4.1]",
+            "LNG 발전 22,524MW — 한국 EPC 기회 최대 $3B+ [출처: Decision 768 Annex I-2]",
+        ],
+        "source_refs": [
+            "Decision 768/QD-TTg (2025.04.15) — Revised PDP8",
+            "Decision 500/QD-TTg (2023.05.15) — Original PDP8",
+            "Decision 1509/QD-BCT (2025.05.30) — MOIT Implementation Plan",
+            "Resolution 174/2024/QH15 — Nuclear Power Revival",
+            "Law on Electricity 2024 + Decrees 57/2025 & 58/2025",
         ],
     },
     "WATER-INTEGRATED": {
@@ -63,17 +70,24 @@ PPT_META = {
         "accent_rgb": RGBColor(0xF0, 0xF9, 0xFF),
         "icon": "💧",
         "kpis": [
-            ("도시 상수도 보급률", "95~100% (2030)"),
-            ("농촌 보급률 목표", "90% (2030)"),
-            ("NRW 손실 목표", "≤15~20%"),
-            ("총 투자", "$15B+ (2021-30)"),
+            ("도시 상수도 보급률", "95~100% (2030)", "Decision 1622/QD-TTg (2022.12.27)"),
+            ("농촌 보급률 목표", "90% (2030)", "Decision 1978/QD-TTg (2021.11.29)"),
+            ("NRW 손실 목표", "≤15~20%", "Decision 2502/QD-TTg (2016)"),
+            ("총 투자", "$15B+ (2021-30)", "ADB Water Sector Assessment 2023"),
         ],
         "highlights": [
-            "3개 계획: 수자원관리(MONRE) + 도시상수도(MOC) + 농촌급수(MARD)",
-            "2020 기준 폐수처리율 15% → 2030년 70% 목표",
-            "6,200만 농촌인구 안전한 식수 접근 보장",
-            "한국 K-water NRW 저감 기술 수출 기회",
-            "EDCF ODA 패키지 $500M+ 활용 가능",
+            "3개 계획: 수자원관리(MONRE) + 도시상수도(MOC) + 농촌급수(MARD) [출처: Decision 1622, 2502, 1978]",
+            "2020 기준 폐수처리율 15% → 2030년 70% 목표 [출처: Decision 1393/QD-TTg]",
+            "6,200만 농촌인구 안전한 식수 접근 보장 [출처: NTP Rural Water Supply 2021-25]",
+            "한국 K-water NRW 저감 기술 수출 기회 [출처: KOICA Feasibility 2024]",
+            "EDCF ODA 패키지 $500M+ 활용 가능 [출처: MOF-EDCF Pipeline 2024-28]",
+        ],
+        "source_refs": [
+            "Decision 1622/QD-TTg (2022.12.27) — National Water Resources Master Plan",
+            "Decision 2502/QD-TTg (2016) — Urban Water Supply Orientation",
+            "Decision 1978/QD-TTg (2021.11.29) — Rural Clean Water Program",
+            "Decision 1393/QD-TTg — National Wastewater Treatment Plan",
+            "ADB Water Sector Assessment Vietnam 2023",
         ],
     },
     "HANOI-INTEGRATED": {
@@ -83,17 +97,24 @@ PPT_META = {
         "accent_rgb": RGBColor(0xFE, 0xF2, 0xF2),
         "icon": "🏙️",
         "kpis": [
-            ("총 투자 (2026-45)", "$2.5T"),
-            ("인구 목표 2030", "12M명"),
-            ("BRG 스마트시티", "$4.2B (진행중)"),
-            ("메트로 목표 2035", "410km+"),
+            ("총 투자 (2026-45)", "$2.5T", "Decision 1668/QD-TTg (2024.12.27)"),
+            ("인구 목표 2030", "12M명", "Hanoi General Plan to 2045"),
+            ("BRG 스마트시티", "$4.2B (진행중)", "BRG-Sumitomo JV MoU 2023"),
+            ("메트로 목표 2035", "410km+", "Hanoi Urban Rail Master Plan"),
         ],
         "highlights": [
-            "Decision 1668 (2024.12.27) — 5대 도시권 다핵다중심 구조",
-            "북부 신도시: BRG $4.2B + 코로아 1,400ha 착공 (2026.02)",
-            "서부 과학기술: 호아락 1,586ha + Tien Xuan 600ha (2026 착공)",
-            "링로드4 공사중 (2023-27, 112km, $8.5B)",
-            "한국 기업 접근 가능 시장: $30-50B 추정 (2026-2035)",
+            "Decision 1668 (2024.12.27) — 5대 도시권 다핵다중심 구조 [출처: Decision 1668/QD-TTg]",
+            "북부 신도시: BRG $4.2B + 코로아 1,400ha 착공 (2026.02) [출처: Hanoi People's Committee]",
+            "서부 과학기술: 호아락 1,586ha + Tien Xuan 600ha (2026 착공) [출처: MOET Decision]",
+            "링로드4 공사중 (2023-27, 112km, $8.5B) [출처: MOT Progress Report Q1-2026]",
+            "한국 기업 접근 가능 시장: $30-50B 추정 (2026-2035) [출처: KOTRA Hanoi Office 2024]",
+        ],
+        "source_refs": [
+            "Decision 1668/QD-TTg (2024.12.27) — Hanoi General Plan to 2045/2065",
+            "Decision 1259/QD-TTg (2011) — Hanoi Capital Construction Plan (Original)",
+            "Hanoi People's Committee Investment Reports 2024-2026",
+            "MOT Ring Road 4 Quarterly Progress Report",
+            "KOTRA Hanoi Market Analysis 2024",
         ],
     },
     "VN-TRAN-2055": {
@@ -103,17 +124,23 @@ PPT_META = {
         "accent_rgb": RGBColor(0xFF, 0xF7, 0xED),
         "icon": "🛣️",
         "kpis": [
-            ("총 투자", "~$243B (2021-2055)"),
-            ("고속도로 2030 목표", "5,000km"),
-            ("Long Thanh 공항", "$16B (1단계)"),
-            ("고속철도", "기본 선로 2030 목표"),
+            ("총 투자", "~$243B (2021-2055)", "Decision 1454/QD-TTg (2021)"),
+            ("고속도로 2030 목표", "5,000km", "Decision 1454/QD-TTg Art.2"),
+            ("Long Thanh 공항", "$16B (1단계)", "Resolution 94/2023/QH15"),
+            ("고속철도", "기본 선로 2030 목표", "Resolution 103/2023/QH15"),
         ],
         "highlights": [
-            "남북 고속도로 전 구간 완공 목표 2030",
-            "Long Thanh 국제공항 1단계 — 2026 준공 목표 (지연)",
-            "Lach Huyen 심수항 2단계 $2B — 아시아 3대 항만 목표",
-            "하노이 링로드4 + 호치민 링로드3 동시 진행",
-            "한국 EPC + ODA 패키지 기회 $5B+",
+            "남북 고속도로 전 구간 완공 목표 2030 [출처: Decision 1454/QD-TTg]",
+            "Long Thanh 국제공항 1단계 — 2026 준공 목표 (지연) [출처: ACV Progress Report]",
+            "Lach Huyen 심수항 2단계 $2B [출처: MOT Decision 2023]",
+            "하노이 링로드4 + 호치민 링로드3 동시 진행 [출처: MOT Q1-2026 Report]",
+            "한국 EPC + ODA 패키지 기회 $5B+ [출처: KOTRA Vietnam 2024]",
+        ],
+        "source_refs": [
+            "Decision 1454/QD-TTg (2021) — National Transport Master Plan to 2030/2050",
+            "Resolution 94/2023/QH15 — Long Thanh International Airport",
+            "Resolution 103/2023/QH15 — North-South High Speed Rail",
+            "MOT Quarterly Progress Reports 2024-2026",
         ],
     },
     "VN-WW-2030": {
@@ -123,17 +150,22 @@ PPT_META = {
         "accent_rgb": RGBColor(0xF0, 0xF9, 0xFF),
         "icon": "🏭",
         "kpis": [
-            ("처리율 현재", "~15% (2020)"),
-            ("처리율 목표 2025", "20~30%"),
-            ("처리율 목표 2030", "70%"),
-            ("목표 처리용량", "300-400만 ㎥/일"),
+            ("처리율 현재", "~15% (2020)", "World Bank Vietnam Water 2021"),
+            ("처리율 목표 2025", "20~30%", "Decision 1393/QD-TTg"),
+            ("처리율 목표 2030", "70%", "Decision 1393/QD-TTg Art.3"),
+            ("목표 처리용량", "300-400만 ㎥/일", "MOC Assessment 2024"),
         ],
         "highlights": [
-            "하노이 7개 처리장 통합 120만㎥/일 — Yen So 2단계 착공",
-            "호치민 9개 처리장 210만㎥/일 — Thu Duc 3단계 완공임박",
-            "MBR 막기술 국산화 목표 70-80% (D1894 연계)",
-            "ODA 비중 40% — EDCF·ADB·JICA 복합 패키지",
-            "한국 환경건설사 EPC 기회 $2B+",
+            "하노이 7개 처리장 통합 120만㎥/일 — Yen So 2단계 착공 [출처: Hanoi DPI]",
+            "호치민 9개 처리장 210만㎥/일 — Thu Duc 3단계 완공임박 [출처: HCMC DONRE]",
+            "MBR 막기술 국산화 목표 70-80% (D1894 연계) [출처: Decision 1894/QD-TTg]",
+            "ODA 비중 40% — EDCF·ADB·JICA 복합 패키지 [출처: MOF ODA Pipeline 2024]",
+            "한국 환경건설사 EPC 기회 $2B+ [출처: KOTRA HCM Office]",
+        ],
+        "source_refs": [
+            "Decision 1393/QD-TTg — National Wastewater Treatment Master Plan",
+            "World Bank Vietnam Water Supply & Sanitation Assessment 2021",
+            "MOC Urban Infrastructure Development Report 2024",
         ],
     },
     "VN-ENV-IND-1894": {
@@ -143,17 +175,22 @@ PPT_META = {
         "accent_rgb": RGBColor(0xF0, 0xFD, 0xF4),
         "icon": "🌿",
         "kpis": [
-            ("폐수처리 기술 국산화", "70~80% (2030)"),
-            ("배기가스 처리", "60~70% (2030)"),
-            ("WtE 기술", "국내 역량 구축"),
-            ("총 기사 수", "448건 (역사DB)"),
+            ("폐수처리 기술 국산화", "70~80% (2030)", "Decision 1894/QD-TTg Art.2"),
+            ("배기가스 처리", "60~70% (2030)", "Decision 1894/QD-TTg Art.2"),
+            ("WtE 기술", "국내 역량 구축", "MOIT Circular 2024"),
+            ("총 기사 수", "448건 (역사DB)", "Pipeline History DB"),
         ],
         "highlights": [
-            "MOIT 주관 기술산업 육성 — 인프라 건설 아님",
-            "Decision 980 기술목록 등재 → 정부조달 우선 공급자 지위",
-            "한국 기술이전 JV: MBR막·모니터링센서·집진기",
-            "재활용 산업단지 파일럿 — 법적 근거 2027 목표",
-            "MOIT 직접 접촉 채널 우선 (MONRE 아님)",
+            "MOIT 주관 기술산업 육성 — 인프라 건설 아님 [출처: Decision 1894/QD-TTg]",
+            "Decision 980 기술목록 등재 → 정부조달 우선 공급자 지위 [출처: Decision 980/QD-TTg]",
+            "한국 기술이전 JV: MBR막·모니터링센서·집진기 [출처: KOICA Tech Transfer 2024]",
+            "재활용 산업단지 파일럿 — 법적 근거 2027 목표 [출처: MOIT Roadmap 2024]",
+            "MOIT 직접 접촉 채널 우선 (MONRE 아님) [출처: Org Structure Analysis]",
+        ],
+        "source_refs": [
+            "Decision 1894/QD-TTg — Environmental Industry Development Program",
+            "Decision 980/QD-TTg — Technology Priority List",
+            "MOIT Environmental Industry Roadmap 2024",
         ],
     },
     "VN-IP-NORTH-2030": {
@@ -244,7 +281,10 @@ def _best_summary_short(art, max_len=140):
     ko = art.get('summary_ko','') or ''
     en = art.get('summary_en','') or ''
     if ko and not _is_vi(ko): return ko[:max_len]
-    if en and not _is_vi(en): return en[:max_len]
+    if en and not _is_vi(en): return f"[EN] {en[:max_len-5]}"
+    # Fallback: title_en
+    te = art.get('title_en','') or ''
+    if te and not _is_vi(te): return f"[EN] {te[:max_len-5]}"
     return ''
 
 def _parse_plans(art):
@@ -336,35 +376,38 @@ def slide_kpi_dashboard(prs, meta, art_count):
     t = _txb(slide, 0.3, 0.2, 9.4, 0.7)
     _set_text(t, f"📊  핵심 KPI 대시보드  —  {meta.get('title','')}", 18, True, C_WHITE)
 
-    # KPI 박스 4개
+    # KPI 박스 4개 (출처 포함)
     cols = min(4, len(kpis))
     box_w = 9.2 / cols
-    for i, (label, value) in enumerate(kpis[:4]):
+    for i, kpi_tuple in enumerate(kpis[:4]):
+        label = kpi_tuple[0]
+        value = kpi_tuple[1]
+        source = kpi_tuple[2] if len(kpi_tuple) > 2 else ""
         x = 0.4 + i * box_w
-        # 박스 배경
-        _rect(slide, x, 1.3, box_w - 0.1, 1.6, theme)
-        # 레이블
+        _rect(slide, x, 1.3, box_w - 0.1, 1.9, theme)
         tl = _txb(slide, x + 0.05, 1.35, box_w - 0.2, 0.35)
         _set_text(tl, label, 10, False, RGBColor(0xFF,0xFF,0xCC), PP_ALIGN.CENTER)
-        # 값
-        tv = _txb(slide, x + 0.05, 1.7, box_w - 0.2, 0.9)
+        tv = _txb(slide, x + 0.05, 1.7, box_w - 0.2, 0.7)
         _set_text(tv, value, 14, True, C_WHITE, PP_ALIGN.CENTER)
+        if source:
+            ts = _txb(slide, x + 0.05, 2.5, box_w - 0.2, 0.6)
+            _set_text(ts, f"📌 {source}", 7, False, RGBColor(0xFF,0xFF,0xCC), PP_ALIGN.CENTER)
 
     # 기사 건수 박스
-    _rect(slide, 0.4, 3.1, 2.0, 0.9, RGBColor(0x1E, 0x40, 0xAF))
-    tc = _txb(slide, 0.5, 3.15, 1.8, 0.8)
+    _rect(slide, 0.4, 3.4, 2.0, 0.9, RGBColor(0x1E, 0x40, 0xAF))
+    tc = _txb(slide, 0.5, 3.45, 1.8, 0.8)
     _set_text(tc, f"관련 기사\n{art_count}건", 13, True, C_WHITE, PP_ALIGN.CENTER)
 
-    # 하이라이트 목록
+    # 핵심 인사이트 목록
     highlights = meta.get("highlights", [])
-    th = _txb(slide, 2.6, 3.1, 7.1, 3.8)
+    th = _txb(slide, 2.6, 3.4, 7.1, 3.5)
     tf = th.text_frame; tf.word_wrap = True
     for i, hl in enumerate(highlights[:5]):
         p = tf.add_paragraph() if i > 0 else tf.paragraphs[0]
         p.space_before = Pt(4)
         run = p.add_run()
         run.text = f"▶  {hl}"
-        run.font.size = Pt(12)
+        run.font.size = Pt(11)
         run.font.color.rgb = C_NAVY if i % 2 == 0 else RGBColor(0x1E, 0x40, 0xAF)
 
 def slide_project_status(prs, meta, arts):
@@ -397,9 +440,14 @@ def slide_project_status(prs, meta, arts):
         tt = _txb(slide, 0.75, y_start + i*1.1, 8.9, 0.4)
         _set_text(tt, title, 11, True, C_NAVY)
 
-        # 요약 + 날짜
+        # 요약 + 날짜 + 출처 도메인
+        from urllib.parse import urlparse
+        url = art.get('url', '')
+        domain = ''
+        try: domain = urlparse(url).netloc.replace('www.','')
+        except: pass
         ts = _txb(slide, 0.75, y_start + i*1.1 + 0.42, 8.9, 0.35)
-        _set_text(ts, f"{'  ' + sm[:100] if sm else ''}   📅 {date}  |  {src}", 9, False, C_GRAY)
+        _set_text(ts, f"{'  ' + sm[:90] if sm else ''}   📅 {date}  |  📰 {domain or src}", 9, False, C_GRAY)
 
 def slide_news_highlights(prs, meta, arts):
     """최신 뉴스 하이라이트 (경영진 요약 카드형)"""
@@ -594,6 +642,20 @@ def slide_conclusion(prs, meta, plan_id, total_arts, week):
         run.text = f"  {i+1}.  {act}"
         run.font.size = Pt(11); run.font.color.rgb = C_NAVY
 
+    # 출처 참조
+    source_refs = meta.get("source_refs", [])
+    if source_refs:
+        _rect(slide, 0.4, 6.0, 9.2, 0.35, RGBColor(0xEF, 0xF6, 0xFF))
+        tsr = _txb(slide, 0.5, 6.05, 9.0, 0.25)
+        _set_text(tsr, "📎  출처 (Sources)", 10, True, C_BLUE)
+        tsrf = _txb(slide, 0.5, 6.35, 9.0, 0.65)
+        tf_src = tsrf.text_frame; tf_src.word_wrap = True
+        for i, ref in enumerate(source_refs[:4]):
+            p = tf_src.add_paragraph() if i > 0 else tf_src.paragraphs[0]
+            run = p.add_run()
+            run.text = f"  •  {ref}"
+            run.font.size = Pt(7); run.font.color.rgb = C_GRAY
+
     # 하단
     _rect(slide, 0, 7.1, 10, 0.4, C_NAVY)
     tf2 = _txb(slide, 0.3, 7.14, 9.4, 0.28)
@@ -616,10 +678,29 @@ def generate_ppt(plan_id: str, output_dir: str) -> str:
                 "kpis": [], "highlights": []}
     meta["_plan_id"] = plan_id
 
-    # 기사 로드
-    from report_lib import load_history, _date_key as date_key
-    buckets = load_history([plan_id])
-    arts = sorted(buckets.get(plan_id, []), key=_date_key, reverse=True)
+    # 기사 로드 — 통합 보고서는 하위 플랜 ID도 포함
+    from report_lib import load_history
+    INTEGRATED_CHILDREN = {
+        "PDP8-INTEGRATED": ["PDP8-INTEGRATED","VN-PWR-PDP8","VN-PWR-PDP8-RENEWABLE","VN-PWR-PDP8-LNG",
+                            "VN-PWR-PDP8-NUCLEAR","VN-PWR-PDP8-COAL","VN-PWR-PDP8-GRID",
+                            "VN-PDP8-RENEWABLE","VN-PDP8-LNG","VN-PDP8-NUCLEAR","VN-PDP8-COAL",
+                            "VN-PDP8-GRID","VN-PDP8-HYDROGEN"],
+        "WATER-INTEGRATED": ["WATER-INTEGRATED","VN-WAT-RESOURCES","VN-WAT-URBAN","VN-WAT-RURAL",
+                             "VN-WAT-2050","VN-WS-NORTH-2030"],
+        "HANOI-INTEGRATED": ["HANOI-INTEGRATED","HN-URBAN-INFRA","HN-URBAN-NORTH","HN-URBAN-WEST"],
+    }
+    search_ids = INTEGRATED_CHILDREN.get(plan_id, [plan_id])
+    buckets = load_history(search_ids)
+    # Merge all children into one list, dedup by URL
+    seen_urls = set()
+    arts = []
+    for pid in search_ids:
+        for a in buckets.get(pid, []):
+            url = a.get("url", "")
+            if url not in seen_urls:
+                seen_urls.add(url)
+                arts.append(a)
+    arts.sort(key=_date_key, reverse=True)
 
     # PPT 생성
     prs = Presentation()

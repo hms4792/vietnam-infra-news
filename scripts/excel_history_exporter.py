@@ -752,6 +752,73 @@ def generate_history_excel(output_path: str = None) -> str:
     return output_path
 
 
+def generate_weekly_excel(articles: list, output_dir: str = None) -> dict:
+    """
+    주간 수집 기사 Excel 생성 (History DB와 동일 양식)
+    - 전체 기사 Excel (All + Matched + 플랜별 시트)
+    - 플랜별 개별 Excel (플랜당 1파일)
+    반환: {"all": path, "plans": {plan_id: path, ...}}
+    """
+    from collections import defaultdict
+    now = datetime.now()
+    week = now.isocalendar()[1]
+
+    if not output_dir:
+        output_dir = str(BASE_DIR / "outputs/reports/weekly_excel")
+    Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+    results = {"all": None, "plans": {}}
+
+    # 플랜별 버킷
+    plan_buckets = defaultdict(list)
+    for art in articles:
+        plans = art.get('matched_plans') or []
+        if isinstance(plans, str):
+            try: plans = json.loads(plans)
+            except: plans = [plans] if plans else []
+        for p in plans:
+            plan_buckets[p].append(art)
+
+    # ── 1. 전체 주간 기사 Excel ──
+    print("  ▶ 주간 전체 Excel 생성...")
+    wb_all = openpyxl.Workbook()
+    ws1 = wb_all.active; ws1.title = "All_Articles"
+    n1 = build_all_articles_sheet(ws1, articles)
+
+    ws2 = wb_all.create_sheet("Matched_Only")
+    n2 = build_matched_only_sheet(ws2, articles)
+
+    # 활성 플랜 시트
+    for plan_id in sorted(plan_buckets.keys()):
+        arts = plan_buckets[plan_id]
+        short_name = PLAN_NAMES.get(plan_id, plan_id)[:28]
+        ws_p = wb_all.create_sheet(short_name)
+        build_plan_sheet(ws_p, plan_id, arts, short_name)
+
+    all_path = os.path.join(output_dir, f"Vietnam_Infra_Weekly_W{week:02d}.xlsx")
+    wb_all.save(all_path)
+    results["all"] = all_path
+    print(f"    ✅ 전체: {all_path} ({os.path.getsize(all_path)//1024}KB, {len(wb_all.sheetnames)}시트)")
+
+    # ── 2. 플랜별 개별 Excel ──
+    print("  ▶ 플랜별 개별 Excel 생성...")
+    for plan_id, arts in plan_buckets.items():
+        wb_plan = openpyxl.Workbook()
+        ws_plan = wb_plan.active
+        short_name = PLAN_NAMES.get(plan_id, plan_id)[:28]
+        ws_plan.title = short_name
+        build_plan_sheet(ws_plan, plan_id, arts, short_name)
+
+        safe_id = plan_id.replace("-", "_")
+        plan_path = os.path.join(output_dir, f"Weekly_{safe_id}_W{week:02d}.xlsx")
+        wb_plan.save(plan_path)
+        results["plans"][plan_id] = plan_path
+        print(f"    {plan_id}: {len(arts)}건 → {os.path.getsize(plan_path)//1024}KB")
+
+    print(f"  ✅ 주간 Excel 완료: 전체 1 + 플랜별 {len(results['plans'])}개")
+    return results
+
+
 if __name__ == "__main__":
     sys.path.insert(0, str(BASE_DIR/"scripts"))
     path = generate_history_excel()

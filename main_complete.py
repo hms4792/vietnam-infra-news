@@ -182,9 +182,23 @@ class VietnamNewsPipeline:
         # 4. History DB Excel (전체 2668건 + 플랜별 시트 + 노란색 컬러링)
         print("  → [4/4] History DB Excel 생성 (All + 24개 플랜별 시트)...")
         try:
-            from scripts.excel_history_exporter import generate_history_excel
+            from scripts.excel_history_exporter import generate_history_excel, generate_weekly_excel
             xlsx_path = generate_history_excel()
             print(f"  ✓ History Excel 완료: {os.path.basename(xlsx_path)}")
+
+            # 주간 기사 Excel (대시보드 다운로드용, History DB와 동일 양식)
+            articles_path = self.output_dir / 'genspark_output.json'
+            if articles_path.exists():
+                with open(articles_path, 'r', encoding='utf-8') as f:
+                    weekly_arts = json.load(f)
+                if isinstance(weekly_arts, dict):
+                    weekly_arts = weekly_arts.get('articles', [])
+                weekly_xl = generate_weekly_excel(weekly_arts,
+                    str(self.output_dir / 'reports/weekly_excel'))
+                self._weekly_excel_paths = weekly_xl
+                print(f"  ✓ 주간 Excel 완료: 전체 1 + 플랜별 {len(weekly_xl.get('plans',{}))}개")
+            else:
+                print("  ⚠ genspark_output.json 없음 — 주간 Excel 건너뜀")
         except Exception as e:
             print(f"  ⚠ History Excel 오류: {e}")
             # 구버전 fallback
@@ -302,6 +316,55 @@ class VietnamNewsPipeline:
         except Exception as e:
             print(f"  ⚠ AI Drive 업로드 오류: {e}")
 
+        # 6. 주간 Excel GitHub Pages 업로드 + report_urls 갱신
+        try:
+            weekly_xl = getattr(self, '_weekly_excel_paths', None)
+            if weekly_xl:
+                now = datetime.now()
+                week = now.isocalendar()[1]
+                date_str = now.strftime('%m%d')
+                report_urls_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config/report_urls.json')
+                report_urls = {}
+                if os.path.exists(report_urls_path):
+                    with open(report_urls_path, 'r') as f:
+                        report_urls = json.load(f)
+
+                gh_base = f'https://{self.github_repo.split("/")[0]}.github.io/{self.github_repo.split("/")[1]}/genspark/excel'
+
+                # 전체 주간 Excel
+                all_xl = weekly_xl.get('all')
+                if all_xl and os.path.exists(all_xl):
+                    gh_filename = f'Vietnam_Infra_Weekly_W{week:02d}.xlsx'
+                    uploader.upload_file(
+                        local_path=all_xl,
+                        github_path=f'docs/genspark/excel/{gh_filename}',
+                        commit_message=f'Weekly Excel W{week:02d}'
+                    )
+                    report_urls['_weekly_excel'] = f'{gh_base}/{gh_filename}'
+                    total_up += 1
+
+                # 플랜별 Excel
+                for plan_id, plan_xl_path in weekly_xl.get('plans', {}).items():
+                    if os.path.exists(plan_xl_path):
+                        safe_id = plan_id.replace('-', '_')
+                        gh_filename = f'Weekly_{safe_id}_W{week:02d}.xlsx'
+                        uploader.upload_file(
+                            local_path=plan_xl_path,
+                            github_path=f'docs/genspark/excel/{gh_filename}',
+                            commit_message=f'Plan Excel {plan_id} W{week:02d}'
+                        )
+                        # report_urls에 플랜별 excel URL 추가
+                        if plan_id in report_urls and isinstance(report_urls[plan_id], dict):
+                            report_urls[plan_id]['excel'] = f'{gh_base}/{gh_filename}'
+                        total_up += 1
+
+                # report_urls.json 갱신
+                with open(report_urls_path, 'w') as f:
+                    json.dump(report_urls, f, indent=2, ensure_ascii=False)
+                print(f"  ✓ 주간 Excel GitHub 업로드 완료 + report_urls 갱신")
+        except Exception as e:
+            print(f"  ⚠ 주간 Excel GitHub 업로드 오류: {e}")
+
         print("  ✓ All files uploaded to GitHub + AI Drive")
     
     def _send_email(self):
@@ -341,8 +404,9 @@ class VietnamNewsPipeline:
         
         # 이메일 전송
         sender = EmailSender(self.email_user, self.email_pass, self.email_to)
-        subject = f"Vietnam Infrastructure News - Daily Report {datetime.now().strftime('%Y-%m-%d')}"
-        html_body = sender.create_kpi_email(stats)
+        week_num = datetime.now().isocalendar()[1]
+        subject = f"🇻🇳 Vietnam Infra Weekly W{week_num:02d} — {stats.get('plan_matched',0)}건 매핑"
+        html_body = sender.create_kpi_email(stats, articles)
         sender.send_email(subject, html_body)
         
         print(f"  ✓ Email sent to {self.email_to}")

@@ -1,10 +1,12 @@
 """
-Email Sender — Vietnam Infrastructure Intelligence Hub v5.0
-디자인 철학: 세련된 뉴스레터 스타일
-- 첫 화면: 이번 주 매핑 기사 요약 테이블 (플랜명/날짜/제목/출처)
-- 상단 단일 버튼 바: 플랜 선택 → Excel/Word/PPT 바로 접근
+Email Sender — Vietnam Infrastructure Intelligence Hub v6.0
+──────────────────────────────────────────────────────────────
+모바일 퍼스트 · Bloomberg/Morning Brew 스타일 뉴스레터
+- 첫 화면: 매핑 기사 테이블 ONLY (플랜 배지 + 날짜 + 제목 + 출처)
+- 보고서: 대시보드 링크 1개 (드릴다운)
+- Gmail 호환: inline style only, table layout, no CSS class
 """
-import os, sys, smtplib, json
+import os, sys, smtplib, json, ast
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
@@ -13,66 +15,73 @@ from urllib.parse import urlparse
 from pathlib import Path
 from collections import defaultdict
 
-# ── 플랜 메타데이터 (24개) ─────────────────────────────────────────────────
+# ── 플랜 메타 ────────────────────────────────────────────────────────────
 PLAN_META = {
-    "VN-PDP8-RENEWABLE":    {"name": "PDP8 재생에너지",    "icon": "☀️", "color": "#F59E0B", "group": "⚡ PDP8 에너지"},
-    "VN-PDP8-LNG":          {"name": "PDP8 LNG",           "icon": "🔥", "color": "#D97706", "group": "⚡ PDP8 에너지"},
-    "VN-PDP8-NUCLEAR":      {"name": "PDP8 원자력",         "icon": "⚛️", "color": "#B45309", "group": "⚡ PDP8 에너지"},
-    "VN-PDP8-COAL":         {"name": "PDP8 석탄전환",       "icon": "🏭", "color": "#92400E", "group": "⚡ PDP8 에너지"},
-    "VN-PDP8-GRID":         {"name": "PDP8 전력망",         "icon": "⚡", "color": "#78350F", "group": "⚡ PDP8 에너지"},
-    "VN-PDP8-HYDROGEN":     {"name": "PDP8 수소",           "icon": "💨", "color": "#FBBF24", "group": "⚡ PDP8 에너지"},
-    "VN-WAT-RESOURCES":     {"name": "수자원 관리",          "icon": "🌊", "color": "#0EA5E9", "group": "💧 수자원"},
-    "VN-WAT-URBAN":         {"name": "도시 상수도",          "icon": "🚰", "color": "#0284C7", "group": "💧 수자원"},
-    "VN-WAT-RURAL":         {"name": "농촌 급수",            "icon": "🏡", "color": "#0369A1", "group": "💧 수자원"},
-    "HN-URBAN-INFRA":       {"name": "하노이 인프라",        "icon": "🏗️", "color": "#DC2626", "group": "🏙️ 하노이"},
-    "HN-URBAN-NORTH":       {"name": "하노이 북부 신도시",   "icon": "🌆", "color": "#B91C1C", "group": "🏙️ 하노이"},
-    "HN-URBAN-WEST":        {"name": "하노이 서부 첨단",     "icon": "🔬", "color": "#991B1B", "group": "🏙️ 하노이"},
-    "VN-TRAN-2055":         {"name": "교통 마스터플랜 2055", "icon": "🛣️", "color": "#EA580C", "group": "🛣️ 교통·도시"},
-    "VN-URB-METRO-2030":    {"name": "도시 메트로 2030",     "icon": "🚇", "color": "#C2410C", "group": "🛣️ 교통·도시"},
-    "VN-MEKONG-DELTA-2030": {"name": "메콩 델타 2030",       "icon": "🌾", "color": "#0D9488", "group": "🌏 지역개발"},
-    "VN-RED-RIVER-2030":    {"name": "홍강 델타 2030",       "icon": "🏔️", "color": "#BE123C", "group": "🌏 지역개발"},
-    "VN-IP-NORTH-2030":     {"name": "북부 산업단지 2030",   "icon": "🏭", "color": "#7C3AED", "group": "🌏 지역개발"},
-    "VN-ENV-IND-1894":      {"name": "환경산업 D1894",       "icon": "🌿", "color": "#15803D", "group": "🌿 환경·탄소"},
-    "VN-WW-2030":           {"name": "폐수처리 2030",         "icon": "💧", "color": "#0891B2", "group": "🌿 환경·탄소"},
-    "VN-SWM-NATIONAL-2030": {"name": "고형폐기물 2030",       "icon": "♻️", "color": "#16A34A", "group": "🌿 환경·탄소"},
-    "VN-SC-2030":           {"name": "스마트 시티 2030",      "icon": "🏙️", "color": "#6D28D9", "group": "🌿 환경·탄소"},
-    "VN-OG-2030":           {"name": "석유가스 2030",         "icon": "⛽", "color": "#D97706", "group": "🌿 환경·탄소"},
-    "VN-EV-2030":           {"name": "전기차 2030",           "icon": "🚗", "color": "#0D9488", "group": "🌿 환경·탄소"},
-    "VN-CARBON-2050":       {"name": "탄소중립 2050",         "icon": "🌍", "color": "#166534", "group": "🌿 환경·탄소"},
-    # legacy 매핑
-    "VN-PWR-PDP8":          {"name": "PDP8 전력",            "icon": "⚡", "color": "#F59E0B", "group": "⚡ PDP8 에너지"},
-    "VN-GAS-PDP8":          {"name": "PDP8 가스",            "icon": "🔥", "color": "#D97706", "group": "⚡ PDP8 에너지"},
-    "VN-WAT-2050":          {"name": "수자원 2050",           "icon": "💧", "color": "#0EA5E9", "group": "💧 수자원"},
-    "VN-WS-NORTH-2030":     {"name": "북부 상수도",           "icon": "🚰", "color": "#0284C7", "group": "💧 수자원"},
-    "VN-SW-MEKONG-2030":    {"name": "메콩 폐수",             "icon": "🌊", "color": "#0D9488", "group": "🌏 지역개발"},
-    "VN-SWM-NATIONAL-2030": {"name": "고형폐기물",            "icon": "♻️", "color": "#16A34A", "group": "🌿 환경·탄소"},
-    "VN-GRID-SMART":        {"name": "스마트 그리드",         "icon": "⚡", "color": "#78350F", "group": "⚡ PDP8 에너지"},
-    "VN-COAL-RETIRE":       {"name": "석탄 폐지",             "icon": "🏭", "color": "#92400E", "group": "⚡ PDP8 에너지"},
-    "VN-REN-NPP-2050":      {"name": "원자력 2050",           "icon": "⚛️", "color": "#B45309", "group": "⚡ PDP8 에너지"},
-    "VN-LNG-HUB":           {"name": "LNG 허브",              "icon": "🛢️", "color": "#D97706", "group": "⚡ PDP8 에너지"},
+    "VN-PDP8-RENEWABLE":    {"name": "PDP8 재생에너지",  "color": "#D97706", "group": "⚡ PDP8"},
+    "VN-PDP8-LNG":          {"name": "PDP8 LNG",         "color": "#D97706", "group": "⚡ PDP8"},
+    "VN-PDP8-NUCLEAR":      {"name": "PDP8 원자력",       "color": "#D97706", "group": "⚡ PDP8"},
+    "VN-PDP8-COAL":         {"name": "PDP8 석탄전환",     "color": "#D97706", "group": "⚡ PDP8"},
+    "VN-PDP8-GRID":         {"name": "PDP8 전력망",       "color": "#D97706", "group": "⚡ PDP8"},
+    "VN-PDP8-HYDROGEN":     {"name": "PDP8 수소",         "color": "#D97706", "group": "⚡ PDP8"},
+    "VN-PWR-PDP8":          {"name": "PDP8 전력",         "color": "#D97706", "group": "⚡ PDP8"},
+    "VN-PWR-PDP8-RENEWABLE":{"name": "PDP8 재생에너지",  "color": "#D97706", "group": "⚡ PDP8"},
+    "VN-PWR-PDP8-LNG":     {"name": "PDP8 LNG",         "color": "#D97706", "group": "⚡ PDP8"},
+    "VN-PWR-PDP8-NUCLEAR":  {"name": "PDP8 원자력·수소", "color": "#D97706", "group": "⚡ PDP8"},
+    "VN-PWR-PDP8-COAL":    {"name": "PDP8 석탄전환",     "color": "#D97706", "group": "⚡ PDP8"},
+    "VN-PWR-PDP8-GRID":    {"name": "PDP8 전력망",       "color": "#D97706", "group": "⚡ PDP8"},
+    "VN-WAT-RESOURCES":     {"name": "수자원 관리",       "color": "#0284C7", "group": "💧 수자원"},
+    "VN-WAT-URBAN":         {"name": "도시 상수도",       "color": "#0284C7", "group": "💧 수자원"},
+    "VN-WAT-RURAL":         {"name": "농촌 급수",         "color": "#0284C7", "group": "💧 수자원"},
+    "HN-URBAN-INFRA":       {"name": "하노이 인프라",     "color": "#DC2626", "group": "🏙️ 하노이"},
+    "HN-URBAN-NORTH":       {"name": "하노이 북부",       "color": "#DC2626", "group": "🏙️ 하노이"},
+    "HN-URBAN-WEST":        {"name": "하노이 서부",       "color": "#DC2626", "group": "🏙️ 하노이"},
+    "VN-TRAN-2055":         {"name": "교통 2055",         "color": "#EA580C", "group": "🛣️ 교통"},
+    "VN-URB-METRO-2030":    {"name": "메트로 2030",       "color": "#C2410C", "group": "🛣️ 교통"},
+    "VN-MEKONG-DELTA-2030": {"name": "메콩 델타",         "color": "#0D9488", "group": "🌏 지역"},
+    "VN-RED-RIVER-2030":    {"name": "홍강 델타",         "color": "#BE123C", "group": "🌏 지역"},
+    "VN-IP-NORTH-2030":     {"name": "북부 산업단지",     "color": "#7C3AED", "group": "🌏 지역"},
+    "VN-ENV-IND-1894":      {"name": "환경산업 D1894",    "color": "#15803D", "group": "🌿 환경"},
+    "VN-WW-2030":           {"name": "폐수처리 2030",     "color": "#0891B2", "group": "🌿 환경"},
+    "VN-SWM-NATIONAL-2030": {"name": "고형폐기물",        "color": "#16A34A", "group": "🌿 환경"},
+    "VN-SC-2030":           {"name": "스마트시티",         "color": "#6D28D9", "group": "🌿 환경"},
+    "VN-OG-2030":           {"name": "석유가스 2030",      "color": "#D97706", "group": "🌿 환경"},
+    "VN-EV-2030":           {"name": "전기차 2030",        "color": "#0D9488", "group": "🌿 환경"},
+    "VN-CARBON-2050":       {"name": "탄소중립 2050",      "color": "#166534", "group": "🌿 환경"},
 }
 
-# 보고서 키 매핑
-PLAN_TO_REPORT_KEY = {
-    "VN-PDP8-RENEWABLE": "PDP8-INTEGRATED", "VN-PDP8-LNG": "PDP8-INTEGRATED",
-    "VN-PDP8-NUCLEAR":   "PDP8-INTEGRATED", "VN-PDP8-COAL": "PDP8-INTEGRATED",
-    "VN-PDP8-GRID":      "PDP8-INTEGRATED", "VN-PDP8-HYDROGEN": "PDP8-INTEGRATED",
-    "VN-WAT-RESOURCES":  "WATER-INTEGRATED","VN-WAT-URBAN": "WATER-INTEGRATED",
-    "VN-WAT-RURAL":      "WATER-INTEGRATED",
-    "HN-URBAN-INFRA":    "HANOI-INTEGRATED","HN-URBAN-NORTH": "HANOI-INTEGRATED",
-    "HN-URBAN-WEST":     "HANOI-INTEGRATED",
-    # legacy
-    "VN-PWR-PDP8": "PDP8-INTEGRATED", "VN-GAS-PDP8": "PDP8-INTEGRATED",
-    "VN-GRID-SMART": "PDP8-INTEGRATED", "VN-COAL-RETIRE": "PDP8-INTEGRATED",
-    "VN-REN-NPP-2050": "PDP8-INTEGRATED", "VN-LNG-HUB": "PDP8-INTEGRATED",
-    "VN-WAT-2050": "WATER-INTEGRATED", "VN-WS-NORTH-2030": "WATER-INTEGRATED",
-    "VN-SW-MEKONG-2030": "VN-MEKONG-DELTA-2030",
+# Legacy alias
+_ALIAS = {
+    "VN-PWR-PDP8":"VN-PWR-PDP8","VN-GAS-PDP8":"VN-PWR-PDP8-LNG",
+    "VN-GRID-SMART":"VN-PWR-PDP8-GRID","VN-COAL-RETIRE":"VN-PWR-PDP8-COAL",
+    "VN-REN-NPP-2050":"VN-PWR-PDP8-NUCLEAR","VN-LNG-HUB":"VN-PWR-PDP8-LNG",
+    "VN-WAT-2050":"VN-WAT-RESOURCES","VN-WS-NORTH-2030":"VN-WAT-URBAN",
+    "VN-SW-MEKONG-2030":"VN-MEKONG-DELTA-2030",
+    "VN-PDP8-RENEWABLE":"VN-PWR-PDP8-RENEWABLE","VN-PDP8-LNG":"VN-PWR-PDP8-LNG",
+    "VN-PDP8-NUCLEAR":"VN-PWR-PDP8-NUCLEAR","VN-PDP8-COAL":"VN-PWR-PDP8-COAL",
+    "VN-PDP8-GRID":"VN-PWR-PDP8-GRID","VN-PDP8-HYDROGEN":"VN-PWR-PDP8-NUCLEAR",
 }
-# 개별 플랜은 ID가 곧 report key
-for pid in ["VN-TRAN-2055","VN-URB-METRO-2030","VN-MEKONG-DELTA-2030","VN-RED-RIVER-2030",
-            "VN-IP-NORTH-2030","VN-ENV-IND-1894","VN-WW-2030","VN-SWM-NATIONAL-2030",
-            "VN-SC-2030","VN-OG-2030","VN-EV-2030","VN-CARBON-2050"]:
-    PLAN_TO_REPORT_KEY[pid] = pid
+
+# Report key mapping
+PLAN_TO_REPORT_KEY = {
+    "VN-PWR-PDP8":"PDP8-INTEGRATED",
+    "VN-PWR-PDP8-RENEWABLE":"PDP8-INTEGRATED","VN-PWR-PDP8-LNG":"PDP8-INTEGRATED",
+    "VN-PWR-PDP8-NUCLEAR":"PDP8-INTEGRATED","VN-PWR-PDP8-COAL":"PDP8-INTEGRATED",
+    "VN-PWR-PDP8-GRID":"PDP8-INTEGRATED",
+    "VN-WAT-RESOURCES":"WATER-INTEGRATED","VN-WAT-URBAN":"WATER-INTEGRATED",
+    "VN-WAT-RURAL":"WATER-INTEGRATED",
+    "HN-URBAN-INFRA":"HANOI-INTEGRATED","HN-URBAN-NORTH":"HANOI-INTEGRATED",
+    "HN-URBAN-WEST":"HANOI-INTEGRATED",
+}
+for _pid in ["VN-TRAN-2055","VN-URB-METRO-2030","VN-MEKONG-DELTA-2030","VN-RED-RIVER-2030",
+             "VN-IP-NORTH-2030","VN-ENV-IND-1894","VN-WW-2030","VN-SWM-NATIONAL-2030",
+             "VN-SC-2030","VN-OG-2030","VN-EV-2030","VN-CARBON-2050"]:
+    PLAN_TO_REPORT_KEY[_pid] = _pid
+
+# Group border colors
+_GROUP_BORDER = {
+    "⚡ PDP8": "#F59E0B", "💧 수자원": "#0EA5E9", "🏙️ 하노이": "#EF4444",
+    "🛣️ 교통": "#F97316", "🌏 지역": "#14B8A6", "🌿 환경": "#22C55E",
+}
 
 
 def _domain(url: str) -> str:
@@ -84,18 +93,22 @@ def _domain(url: str) -> str:
 
 
 def _normalise_date(raw: str) -> str:
-    """다양한 날짜 포맷 → YYYY-MM-DD 또는 원본 유지"""
-    if not raw:
-        return "—"
+    if not raw: return "—"
     raw = raw.strip()
     for fmt in ("%Y-%m-%d", "%b %d, %Y", "%B %d, %Y", "%d %b %Y"):
-        try:
-            return datetime.strptime(raw, fmt).strftime("%Y-%m-%d")
-        except:
-            pass
-    # "N days ago" 등
-    if "ago" in raw.lower() or "day" in raw.lower():
-        return datetime.now().strftime("%Y-%m-%d")
+        try: return datetime.strptime(raw, fmt).strftime("%m/%d")
+        except: pass
+    if "ago" in raw.lower():
+        return datetime.now().strftime("%m/%d")
+    return raw[:5]
+
+
+def _normalise_date_full(raw: str) -> str:
+    if not raw: return "—"
+    raw = raw.strip()
+    for fmt in ("%Y-%m-%d", "%b %d, %Y", "%B %d, %Y", "%d %b %Y"):
+        try: return datetime.strptime(raw, fmt).strftime("%Y-%m-%d")
+        except: pass
     return raw[:10]
 
 
@@ -106,12 +119,17 @@ def _is_vi(text: str) -> bool:
 
 def _best_title(a: dict) -> str:
     t = a.get("title") or ""
-    if not _is_vi(t):
-        return t[:110]
+    if not _is_vi(t): return t[:100]
     en = a.get("title_en") or a.get("summary_en") or ""
-    if en and not _is_vi(en):
-        return f"[EN] {en[:104]}"
-    return t[:110]
+    if en and not _is_vi(en): return en[:100]
+    return t[:100]
+
+
+def _resolve_plans(plans_raw) -> list:
+    if isinstance(plans_raw, str):
+        try: plans_raw = ast.literal_eval(plans_raw)
+        except: plans_raw = [plans_raw]
+    return list(dict.fromkeys(_ALIAS.get(p, p) for p in (plans_raw or [])))
 
 
 class EmailSender:
@@ -123,301 +141,157 @@ class EmailSender:
         self.smtp_server = smtp_server
         self.smtp_port   = smtp_port
 
-    # ─────────────────────────────────────────────────────────────────────────
-    # PUBLIC: create_kpi_email
-    # ─────────────────────────────────────────────────────────────────────────
     def create_kpi_email(self, stats: Dict, articles: List[Dict] = None) -> str:
-        """v5.1 — Gmail 최적화 뉴스레터
-        • 첫 화면: 헤더 + KPI 4개 + 보고서 버튼 바
-        • 본문: 이번 주 매핑 기사 테이블 (날짜/플랜/제목/출처)
-        """
-        import ast, json as _json
-        from pathlib import Path
-
+        """v6.0 — Mobile-first professional newsletter"""
         now      = datetime.now()
         week     = now.isocalendar()[1]
-        week_str = f"W{week:02d} · {now.strftime('%Y-%m-%d')}"
-        now_kst  = now.strftime("%Y년 %m월 %d일 %H:%M KST")
+        date_str = now.strftime("%Y.%m.%d")
         total    = stats.get("total_articles", 0)
-        qc_pass  = stats.get("qc_passed", 0)
         matched  = stats.get("plan_matched", 0)
         rate     = stats.get("qc_rate", 0)
-        dash_url = stats.get("dashboard_url", "https://hms4792.github.io/vietnam-infra-news/genspark/")
-        gh_url   = stats.get("github_url", "https://github.com/hms4792/vietnam-infra-news")
-        matched_pct = round(matched / total * 100) if total else 0
+        dash_url = stats.get("dashboard_url",
+                             "https://hms4792.github.io/vietnam-infra-news/genspark/")
+        gh_url   = stats.get("github_url",
+                             "https://github.com/hms4792/vietnam-infra-news")
 
-        # 보고서 URL
+        # Report URLs
         report_urls: dict = {}
         try:
             p = Path(__file__).parent.parent / "config/report_urls.json"
-            if p.exists():
-                report_urls = _json.loads(p.read_text())
+            if p.exists(): report_urls = json.loads(p.read_text())
         except: pass
         excel_db_url = report_urls.get("_excel_db", "")
 
-        # legacy alias
-        _ALIAS = {
-            "VN-PWR-PDP8":"VN-PDP8-RENEWABLE","VN-GAS-PDP8":"VN-PDP8-LNG",
-            "VN-GRID-SMART":"VN-PDP8-GRID","VN-COAL-RETIRE":"VN-PDP8-COAL",
-            "VN-REN-NPP-2050":"VN-PDP8-NUCLEAR","VN-LNG-HUB":"VN-PDP8-HYDROGEN",
-            "VN-WAT-2050":"VN-WAT-RESOURCES","VN-WS-NORTH-2030":"VN-WAT-URBAN",
-            "VN-SW-MEKONG-2030":"VN-MEKONG-DELTA-2030",
-        }
-
-        # 매핑 기사 수집 + 최신순 정렬
+        # Collect mapped articles
         arts = articles or []
-        seen_urls: set = set()
-        mapped_arts = []
+        seen: set = set()
+        mapped = []
         for a in arts:
-            plans = a.get("matched_plans") or []
+            plans = _resolve_plans(a.get("matched_plans"))
             if not plans: continue
             url = a.get("url", "#")
-            if url in seen_urls: continue
-            seen_urls.add(url)
-            if isinstance(plans, str):
-                try: plans = ast.literal_eval(plans)
-                except: plans = [plans]
-            plans = list(dict.fromkeys(_ALIAS.get(p, p) for p in plans))
-            mapped_arts.append({**a, "_plans_canonical": plans})
+            if url in seen: continue
+            seen.add(url)
+            mapped.append({**a, "_plans": plans})
+        mapped.sort(key=lambda a: _normalise_date_full(a.get("published_date", "")), reverse=True)
 
-        def _skey(a):
-            d = _normalise_date(a.get("published_date", ""))
-            return d if d and d != "—" else "0000-00-00"
-        mapped_arts.sort(key=_skey, reverse=True)
+        # Group articles by plan group for visual sectioning
+        plan_groups: dict = defaultdict(list)
+        for a in mapped:
+            first_plan = a["_plans"][0]
+            m = PLAN_META.get(first_plan, {})
+            group = m.get("group", "기타")
+            plan_groups[group].append(a)
 
-        # ── 보고서 버튼 바 ───────────────────────────────────────────────
-        REPORT_DEFS = [
-            ("PDP8-INTEGRATED",    "⚡ PDP8 에너지",  "#B45309"),
-            ("WATER-INTEGRATED",   "💧 수자원",        "#0369A1"),
-            ("HANOI-INTEGRATED",   "🏙️ 하노이",        "#B91C1C"),
-            ("VN-TRAN-2055",       "🛣️ 교통 2055",     "#EA580C"),
-            ("VN-URB-METRO-2030",  "🚇 메트로",        "#C2410C"),
-            ("VN-MEKONG-DELTA-2030","🌾 메콩 델타",    "#0D9488"),
-            ("VN-RED-RIVER-2030",  "🏔️ 홍강",          "#BE123C"),
-            ("VN-IP-NORTH-2030",   "🏭 산업단지",      "#7C3AED"),
-            ("VN-ENV-IND-1894",    "🌿 D1894",          "#15803D"),
-            ("VN-WW-2030",         "💧 폐수",           "#0891B2"),
-            ("VN-SWM-NATIONAL-2030","♻️ 고형폐기물",   "#16A34A"),
-            ("VN-SC-2030",         "🏙️ 스마트시티",    "#6D28D9"),
-            ("VN-OG-2030",         "⛽ 석유가스",       "#D97706"),
-            ("VN-EV-2030",         "🚗 전기차",         "#0D9488"),
-            ("VN-CARBON-2050",     "🌍 탄소중립",       "#166534"),
-        ]
-        rpt_cells = ""
-        for rk, lbl, color in REPORT_DEFS:
-            ru = report_urls.get(rk, {})
-            if not isinstance(ru, dict): continue
-            word_url = ru.get("word", "")
-            ppt_url  = ru.get("ppt", "")
-            if not word_url and not ppt_url: continue
-            sub_btns = ""
-            if word_url:
-                sub_btns += f'<a href="{word_url}" style="color:#fff;background:rgba(0,0,0,.2);border-radius:3px;padding:1px 6px;font-size:9px;font-weight:800;text-decoration:none;margin-left:3px">Word</a>'
-            if ppt_url:
-                sub_btns += f'<a href="{ppt_url}"  style="color:#fff;background:rgba(0,0,0,.2);border-radius:3px;padding:1px 6px;font-size:9px;font-weight:800;text-decoration:none;margin-left:3px">PPT</a>'
-            rpt_cells += f'''<td style="padding:2px 3px">
-              <span style="display:inline-flex;align-items:center;background:{color};border-radius:6px;padding:5px 8px;white-space:nowrap">
-                <span style="color:#fff;font-size:10px;font-weight:700">{lbl}</span>{sub_btns}
-              </span>
-            </td>'''
-
-        # ── 기사 테이블 행 ────────────────────────────────────────────────
+        # ── Article rows ──────────────────────────────────────────────
         art_rows = ""
-        for i, a in enumerate(mapped_arts):
-            plans    = a["_plans_canonical"]
-            url      = a.get("url", "#")
-            title    = _best_title(a)[:95]
-            date     = _normalise_date(a.get("published_date", ""))
-            src      = _domain(url)
-            bg       = "#FFFFFF" if i % 2 == 0 else "#F8FAFC"
+        for i, a in enumerate(mapped):
+            plans = a["_plans"]
+            url   = a.get("url", "#")
+            title = _best_title(a)
+            date  = _normalise_date(a.get("published_date", ""))
+            src   = _domain(url)
+            first_plan = plans[0]
+            m = PLAN_META.get(first_plan, {})
+            border_color = _GROUP_BORDER.get(m.get("group", ""), "#64748B")
+            plan_name = m.get("name", first_plan)
+            plan_color = m.get("color", "#64748B")
 
-            # 플랜 배지 (최대 2개)
-            badges = ""
-            for pid in plans[:2]:
-                m = PLAN_META.get(pid, {})
-                c = m.get("color", "#64748B")
-                n = m.get("name", pid)
-                ic= m.get("icon", "")
-                badges += f'<span style="display:inline-block;background:{c};color:#fff;font-size:8px;font-weight:800;padding:1px 6px;border-radius:8px;margin:0 2px 2px 0;white-space:nowrap">{ic} {n}</span>'
-            if len(plans) > 2:
-                badges += f'<span style="display:inline-block;background:#94A3B8;color:#fff;font-size:8px;padding:1px 5px;border-radius:8px">+{len(plans)-2}</span>'
+            # Extra plans badge
+            extra = ""
+            if len(plans) > 1:
+                extra = f' <span style="color:#94A3B8;font-size:11px">+{len(plans)-1}</span>'
 
-            art_rows += f'''
-            <tr style="background:{bg}">
-              <td style="padding:10px 12px;border-bottom:1px solid #EEF2F7;
-                         font-size:11px;color:#64748B;white-space:nowrap;
-                         vertical-align:top;width:82px">
-                📅 {date}
-              </td>
-              <td style="padding:10px 12px;border-bottom:1px solid #EEF2F7;vertical-align:top">
-                <div style="margin-bottom:4px">{badges}</div>
-                <a href="{url}" style="color:#1E293B;font-size:12px;font-weight:700;
-                   line-height:1.4;text-decoration:none">{title}</a>
-              </td>
-              <td style="padding:10px 12px;border-bottom:1px solid #EEF2F7;
-                         text-align:right;vertical-align:top;width:80px">
-                <a href="{url}" style="color:#3B82F6;font-size:10px;
-                   font-weight:700;text-decoration:none;white-space:nowrap">{src} ↗</a>
-              </td>
-            </tr>'''
+            bg = "#FFFFFF" if i % 2 == 0 else "#F9FAFB"
+
+            art_rows += f'''<tr style="background:{bg}">
+  <td style="padding:14px 16px;border-bottom:1px solid #F1F5F9;border-left:4px solid {border_color};vertical-align:top;width:1%">
+    <span style="display:inline-block;background:{plan_color};color:#fff;font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;line-height:1.4">{plan_name}</span>{extra}
+  </td>
+  <td style="padding:14px 12px;border-bottom:1px solid #F1F5F9;vertical-align:top">
+    <a href="{url}" style="color:#111827;font-size:14px;font-weight:600;text-decoration:none;line-height:1.5;display:block">{title}</a>
+    <span style="color:#9CA3AF;font-size:12px">{date} · {src}</span>
+  </td>
+</tr>'''
 
         if not art_rows:
-            art_rows = '<tr><td colspan="3" style="padding:32px;text-align:center;color:#94A3B8;font-size:13px">이번 주 매핑된 기사가 없습니다</td></tr>'
+            art_rows = '''<tr><td colspan="2" style="padding:40px 16px;text-align:center;color:#9CA3AF;font-size:14px">이번 주 매핑된 기사가 없습니다</td></tr>'''
 
-        qc_ok = rate >= 95
-        badge_bg = "#DCFCE7" if qc_ok else "#FEF3C7"
-        badge_c  = "#166534" if qc_ok else "#92400E"
-        badge_t  = "✅ 정상" if qc_ok else "⚠️ 점검"
-
-        html = f"""<!DOCTYPE html>
+        # ── Build HTML ────────────────────────────────────────────────
+        html = f'''<!DOCTYPE html>
 <html lang="ko">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vietnam Infra Intelligence {week_str}</title>
-</head>
-<body style="margin:0;padding:0;background:#EEF2F7;font-family:'Segoe UI',Arial,sans-serif">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#F3F4F6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-text-size-adjust:100%">
 
-<!-- OUTER WRAPPER -->
-<table width="100%" cellpadding="0" cellspacing="0"
-       style="background:#EEF2F7;padding:28px 0">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#F3F4F6;padding:16px 8px">
 <tr><td align="center">
-<table width="660" cellpadding="0" cellspacing="0"
-       style="max-width:660px;width:100%;background:#fff;
-              border-radius:14px;box-shadow:0 4px 24px rgba(0,0,0,.10)">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#FFFFFF;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08)">
 
-  <!-- ── HEADER ───────────────────────────────────────────────── -->
-  <tr><td style="background:linear-gradient(135deg,#0F172A 0%,#1D4ED8 100%);
-                 border-radius:14px 14px 0 0;padding:30px 32px 24px">
+  <!-- ── HEADER ── -->
+  <tr><td style="background:#0F172A;padding:24px 20px 20px">
     <table width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td>
-        <div style="color:#93C5FD;font-size:9px;font-weight:800;letter-spacing:3px;
-                    text-transform:uppercase;margin-bottom:7px">Weekly Intelligence Report</div>
-        <div style="color:#fff;font-size:20px;font-weight:900;line-height:1.2;margin-bottom:5px">
-          🇻🇳 Vietnam Infrastructure Hub</div>
-        <div style="color:#BFDBFE;font-size:11px">{week_str} &nbsp;·&nbsp; {now_kst}</div>
+      <td style="vertical-align:top">
+        <div style="color:#FFFFFF;font-size:18px;font-weight:800;line-height:1.3;margin-bottom:4px">🇻🇳 Vietnam Infra Weekly</div>
+        <div style="color:#94A3B8;font-size:13px;font-weight:500">W{week:02d} · {date_str}</div>
       </td>
-      <td style="text-align:right;vertical-align:middle">
-        <div style="background:rgba(255,255,255,.12);border-radius:10px;
-                    padding:12px 18px;display:inline-block;text-align:center">
-          <div style="color:#FCD34D;font-size:28px;font-weight:900;line-height:1">{len(mapped_arts)}</div>
-          <div style="color:#BFDBFE;font-size:9px;margin-top:3px;font-weight:700">매핑 기사</div>
-        </div>
+      <td style="text-align:right;vertical-align:top">
+        <div style="color:#FCD34D;font-size:24px;font-weight:900;line-height:1">{matched}</div>
+        <div style="color:#94A3B8;font-size:11px;margin-top:2px">신규 매핑</div>
       </td>
     </tr></table>
   </td></tr>
 
-  <!-- ── KPI 4개 ───────────────────────────────────────────────── -->
-  <tr><td style="background:#1E293B;padding:0">
+  <!-- ── STATS BAR ── -->
+  <tr><td style="background:#1E293B;padding:12px 20px">
     <table width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td width="25%" style="padding:16px 0;text-align:center;
-                              border-right:1px solid rgba(255,255,255,.08)">
-        <div style="color:#fff;font-size:22px;font-weight:900">{total}</div>
-        <div style="color:#94A3B8;font-size:9px;margin-top:3px;font-weight:600">수집 기사</div>
-      </td>
-      <td width="25%" style="padding:16px 0;text-align:center;
-                              border-right:1px solid rgba(255,255,255,.08)">
-        <div style="color:#4ADE80;font-size:22px;font-weight:900">{matched}</div>
-        <div style="color:#94A3B8;font-size:9px;margin-top:3px;font-weight:600">플랜 매핑</div>
-      </td>
-      <td width="25%" style="padding:16px 0;text-align:center;
-                              border-right:1px solid rgba(255,255,255,.08)">
-        <div style="color:#FCD34D;font-size:22px;font-weight:900">{matched_pct}%</div>
-        <div style="color:#94A3B8;font-size:9px;margin-top:3px;font-weight:600">매핑률</div>
-      </td>
-      <td width="25%" style="padding:16px 0;text-align:center">
-        <div style="display:inline-block;background:{badge_bg};color:{badge_c};
-                    font-size:11px;font-weight:800;padding:4px 10px;border-radius:8px">
-          {badge_t}</div>
-        <div style="color:#94A3B8;font-size:9px;margin-top:5px;font-weight:600">QC {rate}%</div>
+      <td style="color:#CBD5E1;font-size:13px">
+        수집 <span style="color:#FFFFFF;font-weight:700">{total}</span>건 &nbsp;·&nbsp;
+        매핑 <span style="color:#FCD34D;font-weight:700">{matched}</span>건 &nbsp;·&nbsp;
+        QC <span style="color:#4ADE80;font-weight:700">{rate}%</span>
       </td>
     </tr></table>
   </td></tr>
 
-  <!-- ── 보고서 버튼 바 ─────────────────────────────────────────── -->
-  <tr><td style="background:#F8FAFC;border-bottom:2px solid #EEF2F7;padding:14px 20px">
-    <div style="color:#64748B;font-size:9px;font-weight:800;letter-spacing:1.5px;
-                text-transform:uppercase;margin-bottom:10px">📁 보고서 다운로드 — Word · PPT</div>
-    <div style="overflow-x:auto">
-    <table cellpadding="0" cellspacing="0"><tr>
-      {rpt_cells if rpt_cells else '<td><span style="color:#94A3B8;font-size:11px">5월 2일 첫 자동 실행 후 보고서 링크가 등록됩니다</span></td>'}
-    </tr></table>
-    </div>
-    <!-- 버튼 -->
-    <table cellpadding="0" cellspacing="0" style="margin-top:12px"><tr>
-      <td style="padding-right:8px">
-        <a href="{dash_url}" style="display:inline-block;background:#1D4ED8;color:#fff;
-           padding:8px 16px;border-radius:7px;font-size:11px;font-weight:700;
-           text-decoration:none">📊 대시보드</a>
-      </td>
-      {"<td style=\"padding-right:8px\"><a href=\"" + excel_db_url + "\" style=\"display:inline-block;background:#7C3AED;color:#fff;padding:8px 16px;border-radius:7px;font-size:11px;font-weight:700;text-decoration:none\">🗄️ History DB Excel</a></td>" if excel_db_url else ""}
-      <td>
-        <a href="{gh_url}" style="display:inline-block;background:#F1F5F9;color:#475569;
-           padding:8px 14px;border-radius:7px;font-size:11px;font-weight:700;
-           text-decoration:none;border:1px solid #E2E8F0">⚙️ GitHub</a>
-      </td>
-    </tr></table>
+  <!-- ── SECTION LABEL ── -->
+  <tr><td style="padding:20px 20px 10px">
+    <div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:2px">📌 이번 주 마스터플랜 매핑 기사</div>
+    <div style="font-size:12px;color:#9CA3AF">최신순 · 제목 클릭 시 원문 이동</div>
   </td></tr>
 
-  <!-- ── 기사 섹션 헤더 ─────────────────────────────────────────── -->
-  <tr><td style="padding:18px 20px 8px">
-    <table width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td>
-        <span style="font-size:13px;font-weight:800;color:#0F172A">
-          이번 주 마스터플랜 매핑 기사</span>
-        <span style="font-size:10px;color:#94A3B8;margin-left:8px">
-          최신순 · 원문 링크 포함</span>
-      </td>
-      <td style="text-align:right">
-        <span style="background:#EFF6FF;color:#1D4ED8;font-size:10px;
-               font-weight:800;padding:3px 10px;border-radius:8px">
-          총 {len(mapped_arts)}건</span>
-      </td>
-    </tr></table>
-  </td></tr>
-
-  <!-- ── 기사 테이블 ────────────────────────────────────────────── -->
-  <tr><td style="padding:0 0 8px">
-    <!-- 컬럼 헤더 -->
-    <table width="100%" cellpadding="0" cellspacing="0">
-      <tr style="background:#F8FAFC">
-        <td style="padding:7px 12px;font-size:9px;font-weight:800;color:#94A3B8;
-                   letter-spacing:1px;text-transform:uppercase;width:82px;
-                   border-bottom:2px solid #EEF2F7">날짜</td>
-        <td style="padding:7px 12px;font-size:9px;font-weight:800;color:#94A3B8;
-                   letter-spacing:1px;text-transform:uppercase;
-                   border-bottom:2px solid #EEF2F7">플랜 &amp; 기사 제목</td>
-        <td style="padding:7px 12px;font-size:9px;font-weight:800;color:#94A3B8;
-                   letter-spacing:1px;text-transform:uppercase;width:80px;
-                   text-align:right;border-bottom:2px solid #EEF2F7">출처</td>
-      </tr>
+  <!-- ── ARTICLE TABLE ── -->
+  <tr><td style="padding:0 12px">
+    <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
       {art_rows}
     </table>
   </td></tr>
 
-  <!-- ── FOOTER ────────────────────────────────────────────────── -->
-  <tr><td style="background:#0F172A;border-radius:0 0 14px 14px;padding:16px 24px">
+  <!-- ── ACTION BUTTONS ── -->
+  <tr><td style="padding:24px 20px 16px">
     <table width="100%" cellpadding="0" cellspacing="0"><tr>
-      <td>
-        <div style="color:#475569;font-size:10px;line-height:1.7">
-          Vietnam Infrastructure Intelligence Hub &nbsp;·&nbsp; Pipeline v5.0<br>
-          매주 토요일 23:30 KST 자동 실행 · 24개 마스터플랜 추적
-        </div>
+      <td style="text-align:center;padding-bottom:8px">
+        <a href="{dash_url}" style="display:inline-block;background:#2563EB;color:#FFFFFF;font-size:14px;font-weight:700;padding:12px 28px;border-radius:8px;text-decoration:none">📊 대시보드에서 보고서 열기</a>
       </td>
-      <td style="text-align:right">
-        <a href="{dash_url}" style="color:#60A5FA;font-size:11px;
-           text-decoration:none;font-weight:700">대시보드 →</a>
-      </td>
-    </tr></table>
+    </tr>
+    <tr><td style="text-align:center;padding-top:8px">
+      {f'<a href="{excel_db_url}" style="color:#6B7280;font-size:12px;font-weight:600;text-decoration:none;margin-right:16px">🗄️ History DB</a>' if excel_db_url else ''}
+      <a href="{gh_url}" style="color:#6B7280;font-size:12px;font-weight:600;text-decoration:none">⚙️ GitHub</a>
+    </td></tr></table>
   </td></tr>
 
-</table><!-- /inner -->
-</td></tr>
-</table><!-- /outer -->
-</body>
-</html>"""
+  <!-- ── FOOTER ── -->
+  <tr><td style="background:#F9FAFB;padding:16px 20px;border-top:1px solid #F1F5F9">
+    <div style="color:#9CA3AF;font-size:11px;text-align:center;line-height:1.6">
+      Vietnam Infrastructure Intelligence Hub · Pipeline v6.0 · 매주 토 23:30 KST 자동 실행
+    </div>
+  </td></tr>
+
+</table>
+</td></tr></table>
+</body></html>'''
         return html
 
     def send_email(self, subject: str, html_body: str):
-        # 1차: SMTP 시도
+        # 1st: SMTP
         try:
             msg = MIMEMultipart("alternative")
             msg["From"]    = self.username
@@ -432,29 +306,20 @@ class EmailSender:
             return
         except Exception as e:
             print(f"⚠ SMTP failed: {e}")
-            print("  → gsk vm_email 폴백 시도...")
+            print("  → gsk vm_email fallback...")
 
-        # 2차: gsk vm_email 폴백
+        # 2nd: gsk vm_email
         try:
-            import subprocess, os
+            import subprocess
             vm_name = os.environ.get("OPENCLAW_VM_NAME", "")
-            # HTML을 임시 파일로 저장 후 -b @file 로 전달
-            tmp = "/tmp/_email_body.html"
-            with open(tmp, "w", encoding="utf-8") as f:
-                f.write(html_body)
-            cmd = [
-                "gsk", "vm_email", "send", self.recipient,
-                "-s", subject,
-                "-b", html_body[:4000],  # gsk 길이 제한
-            ]
-            if vm_name:
-                cmd += ["-f", vm_name]
+            cmd = ["gsk", "vm_email", "send", self.recipient,
+                   "-s", subject, "-b", html_body[:4000]]
+            if vm_name: cmd += ["-f", vm_name]
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
             if result.returncode == 0 and "ok" in result.stdout.lower():
                 print(f"✓ Email sent via gsk vm_email to {self.recipient}")
             else:
-                print(f"✗ gsk vm_email also failed: {result.stderr or result.stdout}")
-                raise RuntimeError(f"Both SMTP and gsk vm_email failed")
+                raise RuntimeError(f"gsk vm_email failed: {result.stderr or result.stdout}")
         except Exception as e2:
             print(f"✗ All email methods failed: {e2}")
             raise
