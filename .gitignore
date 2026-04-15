@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.pyc
+outputs/
+.env
+config/history_db.json
+config/ref_change_log.json
+*.xlsx
+*.docx
+*.pptx

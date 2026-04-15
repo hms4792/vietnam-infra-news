@@ -1,0 +1,241 @@
+{
+  "_meta": {
+    "legal_basis_main": "Decision 1668/QD-TTg (December 27, 2024) — Adjusted Hanoi General Planning to 2045, Vision to 2065",
+    "legal_basis_capital_plan": "Decision 1569/QD-TTg (December 12, 2024) — Hanoi Capital Plan 2021-2030, Vision 2050",
+    "integration_resolution": "Resolution 258/2025/QH15 (December 11, 2025) — Single integrated plan combining Capital Plan + Master Plan",
+    "lead_agency": "Hanoi People's Committee + Ministry of Construction",
+    "investment_2026_2035": "$556.4 billion (VND 14.5 quadrillion)",
+    "investment_2036_2045": "$1.9 trillion (VND 50.34 quadrillion)",
+    "total_2026_2045": "$2.5 trillion (VND 64.84 quadrillion)"
+  },
+
+  "urban_model": {
+    "concept": "Multi-polar, multi-center, multi-layer urban cluster — '동심원형 도시 클러스터'",
+    "central_axes": 9,
+    "growth_poles": 9,
+    "major_centers": 9,
+    "admin_area_sqkm": 3359.84,
+    "admin_units": "126 commune-level (51 wards + 75 communes)",
+    "population_2030": "12 million (10.5M permanent)",
+    "population_2045": "14.6–16 million (13M permanent)",
+    "population_2065": "17–19 million",
+    "population_2100": "≤20 million (stabilized)"
+  },
+
+  "five_urban_zones": {
+    "zone_1_central": {
+      "id": "HN-CENTRAL",
+      "name_ko": "하노이 중심 도시권 (구시가·구도심)",
+      "name_en": "Central Urban Zone — Southern Red River",
+      "area_sqkm": 133,
+      "population_2045": "2.81 million",
+      "districts": ["Hoan Kiem", "Ba Dinh", "Dong Da", "Hai Ba Trung", "Tay Ho", "Cau Giay",
+                    "Thanh Xuan", "Hoang Mai", "Ha Dong (inner)", "Dan Phuong", "Hoai Duc",
+                    "Thanh Tri", "Thanh Oai (part)", "Thuong Tin (part)"],
+      "function": "Political-administrative center, cultural heritage, commercial-service hub",
+      "key_axes": ["Red River riverside (To Lich rehabilitation)", "Ring Road 2/3 restructuring",
+                   "Ba Dinh political center", "Hoan Kiem heritage zone", "French Quarter",
+                   "West Lake cultural corridor", "Inner-city population decongestion"],
+      "key_projects": [
+        {"name": "Ring Road 3 Inner-City Restructuring", "investment": "Part of $556.4B total", "status": "Planning"},
+        {"name": "To Lich River Rehabilitation", "investment": "TBD", "status": "Design phase"},
+        {"name": "Red River Corridor Development (Both Banks)", "investment": "$1.5B+", "status": "Early groundbreaking Feb 2026"},
+        {"name": "Old Quarter Heritage-Tourism Zone", "investment": "TBD", "status": "Ongoing"},
+        {"name": "West Lake Waterfront Development", "investment": "TBD", "status": "Planning"}
+      ],
+      "korean_presence": "Multiple Korean retail (Lotte, Hyundai), Korean Embassy district (Tay Ho)"
+    },
+
+    "zone_2_northern": {
+      "id": "HN-NORTH",
+      "name_ko": "하노이 북부 신도시 (동아인·미린·속선)",
+      "name_en": "Northern Urban Zone → Northern City",
+      "area_sqkm": 632,
+      "population_2030": "1.96 million",
+      "population_2045": "2.7–2.9 million",
+      "districts": ["Dong Anh", "Me Linh", "Soc Son"],
+      "function": "Northern satellite city — Smart city, financial center, international entertainment, green industries, Noi Bai Airport gateway",
+      "key_axes": ["Nhat Tan – Noi Bai axis (finance + airport corridor)", "West Lake – Co Loa axis"],
+      "key_projects": [
+        {"name": "BRG-Sumitomo North Hanoi Smart City", "area_ha": 272, "investment_usd": "4.2B",
+         "developer": "BRG Group + Sumitomo Corporation (Japan)", "phases": 5,
+         "features": "108-floor financial tower (tallest in Vietnam), smart city infrastructure, Japanese-standard urban model",
+         "status": "Under construction (groundbreaking 2020, Phase 1 progress 2026)", "province_zone": "Dong Anh"},
+        {"name": "Co Loa – Dong Anh Urban Development (1,400ha)", "area_ha": 1400,
+         "investment_usd": "5B+", "developer": "Multiple consortiums",
+         "status": "Groundbreaking February 2026", "province_zone": "Dong Anh"},
+        {"name": "Nhat Tan – Noi Bai Financial Corridor", "investment_usd": "TBD",
+         "status": "Master plan approved", "province_zone": "Dong Anh – Soc Son"},
+        {"name": "Noi Bai International Airport T3 Expansion", "investment_usd": "4.0B",
+         "status": "Design competition 2025-2026", "province_zone": "Soc Son"},
+        {"name": "Me Linh Urban Zone", "investment_usd": "TBD",
+         "status": "Planning", "province_zone": "Me Linh"}
+      ],
+      "korean_presence": "LH Corporation (Korea Land & Housing) — smart city pilot; Korean construction firms in BRG project"
+    },
+
+    "zone_3_eastern": {
+      "id": "HN-EAST",
+      "name_ko": "하노이 동부 도시권 (롱비엔·자람)",
+      "name_en": "Eastern Urban Zone — Long Bien & Gia Lam",
+      "area_sqkm": 176,
+      "population_2030": "850,000",
+      "districts": ["Long Bien", "Gia Lam"],
+      "function": "Eastern urban expansion — residential + industrial + logistics",
+      "key_axes": ["Red River eastern bank bridges (multiple new crossings)", "Gia Lam urban development corridor"],
+      "key_projects": [
+        {"name": "Ring Road 4 (Hanoi section)", "investment_usd": "Part of total $1.5B Ring Road 4",
+         "length_km": 58.2, "status": "Under construction 2023-2027",
+         "note": "Multi-province: Hanoi + Bac Ninh + Hung Yen"},
+        {"name": "Gia Lam Urban District Development", "investment_usd": "TBD",
+         "status": "Planning after Gia Lam district upgrade to urban district"},
+        {"name": "Multiple New Red River Bridges", "investment_usd": "TBD",
+         "count": "5+ new crossings planned by 2030", "status": "Various stages"}
+      ],
+      "korean_presence": "Samsung (Bac Ninh nearby), Korean industrial park tenants"
+    },
+
+    "zone_4_western": {
+      "id": "HN-WEST",
+      "name_ko": "하노이 서부 과학기술도시 (호아락·쑤안마이·선따이)",
+      "name_en": "Western Urban Zone → Western City (Science & Technology)",
+      "area_sqkm": 17000,
+      "districts": ["Hoa Lac (Thach That + Quoc Oai)", "Xuan Mai (Chuong My)", "Son Tay (town)", "Ba Vi", "Phuc Tho"],
+      "function": "Science, technology, high-quality education, cultural tourism, ecological services — R&D hub",
+      "key_axes": ["West Lake – Ba Vi cultural-scientific axis", "Lang – Hoa Lac expressway (TOD nodes)"],
+      "sub_areas": {
+        "Hoa Lac Hi-Tech Park": {
+          "area_ha": 1586, "total_area_ha": 17000,
+          "function": "Capital Region innovation hub — R&D, universities, high-tech manufacturing",
+          "status": "Under development; 2026 Tien Xuan Smart Urban Area (600ha) under construction",
+          "key_projects": [
+            "Tien Xuan Smart Urban Area (600ha) — construction 2026",
+            "TOD node at Km26 (Lang-Hoa Lac expressway) — 2026",
+            "SJ Group Smart Urban Area (western Hoa Lac) — Dec 2025 approved"
+          ]
+        },
+        "Son Tay City": {
+          "upgrade": "Son Tay town → Son Tay City (post-2030)",
+          "function": "Education, healthcare, high-tech",
+          "metro_connection": "Urban Rail Line 8 (West Lake – Hoa Lac)"
+        }
+      },
+      "key_projects": [
+        {"name": "Hoa Lac Hi-Tech Park Phase 2 Development", "area_ha": 1586,
+         "investment_usd": "10B+ total", "status": "Ongoing; accelerated 2026"},
+        {"name": "Tien Xuan Smart Urban Area", "area_ha": 600,
+         "investment_usd": "TBD", "status": "Construction begins 2026"},
+        {"name": "SJ Group Smart Urban Area (Hoa Lac)", "investment_usd": "TBD",
+         "status": "Approved Dec 2025"},
+        {"name": "Urban Rail Line 8 (Metro)", "route": "West Lake – Hoa Lac",
+         "length_km": 35, "investment_usd": "2B+", "status": "Planning/Design"}
+      ],
+      "korean_presence": "POSCO, LG, Korean universities exploring Hoa Lac research partnerships"
+    },
+
+    "zone_5_southern": {
+      "id": "HN-SOUTH",
+      "name_ko": "하노이 남부 물류산업 도시 (푸쑤엔·트엉띤)",
+      "name_en": "Southern Urban Zone → Southern City (Logistics Hub)",
+      "area_sqkm": 303,
+      "population_target": "1.6 million",
+      "districts": ["Thuong Tin", "Phu Xuyen", "Thanh Oai", "Ung Hoa", "My Duc"],
+      "function": "Logistics hub, industrial support, public services — Gateway to second airport (Gia Binh/Phu Xuyen)",
+      "key_projects": [
+        {"name": "Phu Xuyen Airport (Gia Binh Airport) — Second Airport",
+         "investment_usd": "10B+", "status": "Site selected; planning 2025-2030",
+         "note": "Replaces Noi Bai as future capacity for Hanoi long-term"},
+        {"name": "Phu Xuyen Industrial Zone Expansion", "investment_usd": "TBD",
+         "status": "Planning — inner-city factory relocation target"},
+        {"name": "Southern Logistics Hub (Ring Road 4 southern section)", "investment_usd": "TBD",
+         "status": "Planning"},
+        {"name": "Quan Son – Huong Son Heritage-Tourism Corridor", "investment_usd": "TBD",
+         "status": "Planning"}
+      ],
+      "korean_presence": "Korean logistics companies (CJ, Lotte Logistics) potential relocation targets"
+    }
+  },
+
+  "urban_rail_network": {
+    "target_2035": "410+ km, all planned lines operational",
+    "target_2065": "616+ km, 15 lines",
+    "active_lines": [
+      {"line": "Line 2A (Cat Linh – Ha Dong)", "length_km": 13, "status": "Operating since 2021"},
+      {"line": "Line 3 (Nhon – Hanoi Station)", "length_km": 12.5, "status": "Partially operating 2024"}
+    ],
+    "under_construction": [
+      {"line": "Line 1 (Ngoc Hoi – Yen Vien)", "length_km": 38, "investment_usd": "2.5B", "status": "Construction"},
+      {"line": "Line 5 (Van Cao – Hoa Lac)", "length_km": 38.4, "investment_usd": "2B+", "status": "Design"}
+    ],
+    "planned": [
+      {"line": "Line 6 (Noi Bai – Ngoc Hoi RING)", "status": "Planning"},
+      {"line": "Line 7, 8, 9, 10, 11, 12", "status": "Master plan only"}
+    ]
+  },
+
+  "ring_roads": {
+    "Ring_Road_1": {"status": "Complete", "note": "Inner city"},
+    "Ring_Road_2": {"status": "Complete (most sections)"},
+    "Ring_Road_3": {"length_km": 65, "status": "Complete"},
+    "Ring_Road_3_5": {"length_km": 65, "status": "Under construction"},
+    "Ring_Road_4": {"length_km": 112, "investment_usd": "1.5B total (Hanoi + Bac Ninh + Hung Yen)",
+                    "status": "Under construction 2023–2027", "completion": "2027"},
+    "Ring_Road_5": {"status": "Planning — long term"}
+  },
+
+  "smart_city_framework": {
+    "basis": "National Smart City Program + Hanoi Smart City Master Plan",
+    "distinction": "스마트시티 = 기술·플랫폼 레이어 / 도시개발 마스터플랜 = 공간·인프라 레이어",
+    "hanoi_specific": {
+      "smart_components": ["Smart traffic (AI-powered)", "E-government platform", "Smart energy grid",
+                           "Digital twin city model", "Smart water management", "Environmental monitoring IoT"],
+      "pilot_areas": ["Dong Anh BRG Smart City (Japanese model)", "Hoa Lac Hi-Tech (innovation hub)",
+                      "Inner-city smart infrastructure retrofit"],
+      "challenges": ["Slow smart city rollout (acknowledged in master plan Jan 2026)",
+                     "Traffic congestion despite smart signals",
+                     "Environmental monitoring gaps"]
+    }
+  },
+
+  "tracking_sub_units": {
+    "HN-URBAN-NORTH": {
+      "desc": "하노이 북부 신도시 — 동아인·BRG 스마트시티·노이바이 공항",
+      "keywords_en": ["dong anh", "me linh", "soc son", "noi bai", "brg smart city",
+                      "north hanoi", "northern city hanoi", "co loa",
+                      "nhat tan noi bai", "hanoi northern district"],
+      "keywords_vi": ["đông anh", "mê linh", "sóc sơn", "nội bài", "thành phố thông minh đông anh",
+                      "thành phố phía bắc", "đô thị phía bắc hà nội"]
+    },
+    "HN-URBAN-WEST": {
+      "desc": "하노이 서부 과학도시 — 호아락·하이테크파크·쑤안마이·선따이",
+      "keywords_en": ["hoa lac", "hoa lac hi-tech", "western hanoi", "xuan mai", "son tay",
+                      "thach that", "quoc oai", "lang hoa lac", "hanoi western city",
+                      "tien xuan", "ba vi"],
+      "keywords_vi": ["hòa lạc", "khu công nghệ cao hòa lạc", "thành phố phía tây",
+                      "xuân mai", "sơn tây", "thạch thất", "đô thị tây hà nội"]
+    },
+    "HN-URBAN-EAST": {
+      "desc": "하노이 동부 도시권 — 롱비엔·자람·링로드4",
+      "keywords_en": ["gia lam", "long bien", "eastern hanoi", "ring road 4 hanoi",
+                      "red river bridge hanoi", "hanoi eastern district"],
+      "keywords_vi": ["gia lâm", "long biên", "đô thị phía đông hà nội",
+                      "vành đai 4 hà nội", "cầu qua sông hồng"]
+    },
+    "HN-URBAN-SOUTH": {
+      "desc": "하노이 남부 물류도시 — 푸쑤엔·자빈공항·트엉띤",
+      "keywords_en": ["phu xuyen", "thuong tin", "gia binh airport", "southern hanoi",
+                      "hanoi second airport", "southern logistics hanoi"],
+      "keywords_vi": ["phú xuyên", "thường tín", "sân bay gia bình", "đô thị phía nam hà nội",
+                      "sân bay thứ hai hà nội"]
+    },
+    "HN-URBAN-INFRA": {
+      "desc": "하노이 도시 인프라 공통 — 메트로·링로드·홍강·도심재개발",
+      "keywords_en": ["hanoi metro", "hanoi urban rail", "hanoi ring road", "red river hanoi",
+                      "hanoi master plan", "hanoi urban development", "hanoi bridge",
+                      "to lich river", "hanoi flooding", "hanoi traffic"],
+      "keywords_vi": ["metro hà nội", "đường sắt đô thị hà nội", "vành đai hà nội",
+                      "sông hồng hà nội", "quy hoạch hà nội", "cầu hà nội",
+                      "sông tô lịch", "ngập lụt hà nội", "ùn tắc hà nội"]
+    }
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "_meta": {
+    "note": "Vietnam National Water Sector — Three integrated master plans",
+    "plan_group": "VN-WATER-INTEGRATED"
+  },
+
+  "sub_tracks": {
+    "VN-WAT-RESOURCES": {
+      "id": "VN-WAT-RESOURCES",
+      "name_ko": "국가 수자원 마스터플랜 2021-2030/2050",
+      "legal_basis": "Decision 1622/QD-TTg, December 27, 2022",
+      "lead_ministry": "MONRE (Ministry of Natural Resources and Environment)",
+      "scope": "전국 13개 주요 하천유역 + 6개 사회경제 권역 수자원 관리",
+      "nature": "수량·수질·유역 관리, 국가 수안보, 수해 방지 — 공급 인프라 건설 계획 아님",
+      "kpi_2030": {
+        "water_demand_management": "총 수요 1,225억 m³/년 충족",
+        "urban_clean_water_rate": "도시 주민 95–100% 청정수 접근",
+        "rural_clean_water_rate": "농촌 주민 65% 청정수 접근",
+        "exploitation_control": "수자원 개발·이용 활동 90% 통제",
+        "water_loss_reduction": "수공급 시스템 손실률 10%로 감소",
+        "wastewater_treatment": "등급 II 이상 도시 하수 30% 이상 처리 후 방류",
+        "digital_governance": "디지털 기술 기반 수자원 통합 관리 시스템 구축"
+      },
+      "kpi_2050": {
+        "water_security_index": "세계 수준의 수안보 국가 그룹 진입",
+        "water_demand": "총 수요 1,317억 m³/년 충족",
+        "proactive_management": "모든 상황에서 홍수·가뭄·염수침입·오염 선제 대응"
+      },
+      "13_river_basins": [
+        "Bang Giang-Ky Cung (북부 국경)",
+        "Red-Thai Binh (홍강-태평강, 하노이)",
+        "Ma (타잉호아)",
+        "Ca (응에안·하띤)",
+        "Huong (티엔후에)",
+        "Vu Gia-Thu Bon (다낭·꽝남)",
+        "Tra Khuc (꽝응아이)",
+        "Kon-Ha Thanh (빈딘)",
+        "Ba (푸옌)",
+        "Se San (꼰뚬·자라이 → 캄보디아)",
+        "Srepok (닥락·닥농 → 캄보디아)",
+        "Dong Nai (동남부, HCM시티)",
+        "Mekong (메콩 삼각주)"
+      ],
+      "priority_issues": [
+        "메콩델타 염수침입 및 가뭄 (건기 담수 부족)",
+        "중남부 해안 수자원 부족 (중부 고원 → 해안 유역 간 이송)",
+        "홍강 델타 지하수 고갈 및 지반침하 (하노이)",
+        "동나이강 수질오염 (HCM시티 취수원 보호)",
+        "국제 수계 협력 (메콩강 상류 댐 — 중국·라오스)",
+        "닌투언·빈투언 만성 가뭄 지역 대응"
+      ],
+      "key_projects": [
+        "11개 주요 하천유역 저수지 연계운영 최적화",
+        "홍강 하류 Nhue-Day-Bac Hung Hai 수질 복원",
+        "메콩델타 담수 저장 및 염수차단 인프라",
+        "중부 고원 Se San·Srepok 유역 수자원 배분 조정",
+        "국가 수자원 실시간 모니터링·예보 시스템 (디지털 전환)"
+      ],
+      "tracking_keywords": {
+        "en": ["water resources master plan", "river basin management", "water security vietnam",
+               "flood control infrastructure", "drought relief vietnam", "saltwater intrusion",
+               "dam reservoir management", "irrigation infrastructure", "groundwater depletion",
+               "water resource distribution", "mekong water resources", "red river water",
+               "decision 1622 water", "river basin plan"],
+        "vi": ["quy hoạch tài nguyên nước", "lưu vực sông", "an ninh nguồn nước",
+               "chống hạn hán", "xâm nhập mặn", "lũ lụt", "hồ chứa nước",
+               "tài nguyên nước quốc gia", "sông mêkông nước", "sông hồng nước"]
+      }
+    },
+
+    "VN-WAT-URBAN": {
+      "id": "VN-WAT-URBAN",
+      "name_ko": "도시 상수도 인프라 개발 계획 2025/2035",
+      "legal_basis": [
+        "Decision 1929/QD-TTg (November 20, 2009) — Urban Water Supply Orientations to 2025, Vision 2050",
+        "Decision 1566/QD-TTg (August 9, 2016) — National Program for Safe Water Supply 2016-2025",
+        "Decision 2147/QD-TTg (November 24, 2010) — National Program for Reducing Water Loss to 2025",
+        "New phase 2026-2035 program under preparation by MOC"
+      ],
+      "lead_ministry": "MOC (Ministry of Construction)",
+      "current_status_2025": {
+        "urban_clean_water_coverage": "~95% (도시 인구)",
+        "water_loss_rate": "~15% (도시 집중급수 시스템 평균)",
+        "provinces_with_safe_water_plan": "31/63개 성시 안전급수계획 수립 완료",
+        "centralized_system_coverage": "대부분 도시 집중급수 시스템 운영 중"
+      },
+      "kpi_2025_achieved": {
+        "urban_coverage": "100% (등급 IV 이상 도시)",
+        "water_supply_norm": "120 L/인/일 평균",
+        "water_loss": "<15% (집중급수 시스템)"
+      },
+      "kpi_2030": {
+        "centralized_safe_water_plan": "집중급수 시스템 90% 이상 안전급수계획 수립·이행",
+        "decentralized_safe_water_plan": "분산급수 시스템 40% 이상 안전급수계획 수립",
+        "water_loss_centralized": "<15%",
+        "water_loss_decentralized": "<20%",
+        "emergency_plans": "집중급수 시스템 100% 사고·오염 비상계획 수립"
+      },
+      "kpi_2035": {
+        "centralized_safe_water_plan": "100%",
+        "decentralized_safe_water_plan": "80% 이상",
+        "water_loss_centralized": "<13%",
+        "water_loss_decentralized": "<18%"
+      },
+      "kpi_2050": "모든 도시·산업단지 안정적 고품질 상수도 100% 공급",
+      "key_challenges": [
+        "원수 오염 및 기후변화 영향 심화",
+        "노후 배관 교체 투자 부족",
+        "성·시 합병(2025년) 후 새로운 관할 지역 급수 계획 수립",
+        "민간 투자 유치를 위한 수도요금 현실화",
+        "스마트 수도 시스템 전환 (IoT 누수감지, 압력관리)"
+      ],
+      "key_projects_by_city": {
+        "Hanoi": "지하수 의존도 감소 + 표면수 강화 (Red River 취수원); 배관망 스마트화",
+        "Ho Chi Minh City": "Thu Duc 수처리장 확장; Dong Nai 원수원 보호; 스마트 미터링",
+        "Da Nang": "Hoa Lien 취수원 보호; 기후변화 대응 비상계획",
+        "Can Tho": "메콩델타 모델 도시 상수도; 염수침입 대응 백업 시스템",
+        "Hai Phong": "지역 급수 시스템 통합; 북부 공업단지 급수 확대"
+      },
+      "tracking_keywords": {
+        "en": ["water supply plant", "water treatment plant", "clean water supply", "water pipeline",
+               "water network upgrade", "water loss reduction", "safe water program",
+               "urban water supply", "water supply coverage", "water pressure", "water meter",
+               "smart water system", "water tariff", "centralized water supply",
+               "drinking water quality", "water supply investment"],
+        "vi": ["nhà máy nước", "cấp nước đô thị", "mạng lưới cấp nước", "giảm thất thoát nước",
+               "nước sạch đô thị", "cấp nước an toàn", "đường ống cấp nước",
+               "đồng hồ nước thông minh", "nước sạch 100%", "trạm bơm nước"]
+      }
+    },
+
+    "VN-WAT-RURAL": {
+      "id": "VN-WAT-RURAL",
+      "name_ko": "농촌 상수도·위생 국가전략 2030/2045",
+      "legal_basis": "Decision 1978/QD-TTg, November 24, 2021 — National Strategy for Rural Water Supply and Sanitation 2030, Vision 2045",
+      "lead_ministry": "MARD (Ministry of Agriculture and Rural Development)",
+      "co_agencies": "UNICEF, World Bank, Netherlands Embassy support",
+      "target_population": "6,200만+ 농촌 인구",
+      "current_status_2021": {
+        "moh_standard_clean_water": "51% 농촌 가구 (보건부 기준 청정수)",
+        "hygienic_latrines": "75% 농촌 가구",
+        "ecoli_contamination": "44% 수원 대장균 오염"
+      },
+      "kpi_2030": {
+        "rural_clean_water": "농촌 인구의 안전 관리 청정수 접근 보장",
+        "rural_sanitation": "농촌 위생 시설 접근 보장",
+        "livestock_waste": "100% 농장·가정 축산폐수 처리"
+      },
+      "kpi_2045": {
+        "rural_clean_water": "농촌 인구 100% 안전·지속가능 청정수 접근",
+        "rural_wastewater": "농촌 거주지역 50% 생활하수 수집 시스템 설치",
+        "rural_wastewater_treatment": "생활하수 30% 처리",
+        "livestock_waste": "100% 축산폐수 처리 유지"
+      },
+      "priority_regions": [
+        "중부 고원 소수민족 지역 (Gia Lai, Kon Tum, Dak Lak)",
+        "북부 산악 소수민족 지역 (Lai Chau, Dien Bien, Ha Giang)",
+        "중남부 만성가뭄 지역 (Ninh Thuan, Binh Thuan)",
+        "메콩델타 염수침입 지역 (Ca Mau, Kien Giang, Bac Lieu)",
+        "외딴 섬 지역 (Phu Quoc, Con Dao, Ly Son)"
+      ],
+      "key_challenges": [
+        "소수민족·오지 지역 급수 인프라 부재",
+        "기후변화 — 가뭄·염수침입으로 원수원 오염",
+        "분산급수 시스템 유지관리 인력·예산 부족",
+        "아동 발육부진 — 5세 미만 아동 20%에 영향 (소수민족 32%)",
+        "대장균 오염 — 수원 44%에서 검출"
+      ],
+      "tracking_keywords": {
+        "en": ["rural water supply", "rural sanitation", "rural clean water", "commune water supply",
+               "ethnic minority water", "highland water supply", "village water system",
+               "rural waterworks", "decision 1978 rural water", "mard water supply",
+               "wash vietnam", "water sanitation hygiene"],
+        "vi": ["cấp nước nông thôn", "vệ sinh nông thôn", "nước sạch nông thôn",
+               "cấp nước vùng cao", "cấp nước miền núi", "hệ thống cấp nước thôn bản",
+               "nước sinh hoạt nông thôn", "vệ sinh môi trường nông thôn"]
+      }
+    }
+  },
+
+  "integration_rationale": {
+    "why_merge": "Three water sector plans form a coherent national water security ecosystem. Separating them creates artificial silos: water resources (supply capacity) → urban WTP (treatment+distribution) → rural WASH (last-mile delivery) are sequential components of the same system.",
+    "reporting_structure": "Single integrated report with 3 sub-sections mirrors PDP8 structure. Province sections show all 3 dimensions per province.",
+    "key_distinction_from_wastewater": "VN-WW-2030 covers wastewater TREATMENT (sewerage + WWTP). These plans cover water SUPPLY (clean water IN). Completely different infrastructure chain."
+  }
+}
