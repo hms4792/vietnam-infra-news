@@ -1,35 +1,238 @@
 {
   "schema_version": "2.0",
-  "last_updated": "2026-04-14",
+  "last_updated": "2026-04-15",
   "generated_by": "claw_pipeline/export_masterplan_rules.py",
   "description": "기사-마스터플랜 관련성 필터 규칙 (Claw 파이프라인 기준)",
   "rules": {
-    "VN-SC-2030": {
+    "VN-WW-2030": {
       "must_any": [
-        "smart city",
-        "digital city",
-        "smart infrastructure",
-        "e-government",
-        "iot city",
-        "ai traffic",
-        "5g network",
-        "스마트시티",
-        "디지털시티",
-        "스마트인프라",
-        "전자정부"
+        "wastewater treatment",
+        "wwtp",
+        "sewage treatment",
+        "sewage plant",
+        "wastewater plant",
+        "sewer",
+        "sanitation plant",
+        "하수처리",
+        "폐수처리",
+        "하수도",
+        "wwtp",
+        "정화조"
       ],
       "boost": [
-        "thu duc smart city",
-        "uocc",
-        "smart traffic",
-        "digital twin city"
+        "yen xa",
+        "binh tan",
+        "wwtp capacity",
+        "sewerage network",
+        "sludge treatment",
+        "jica wastewater"
       ],
       "conflict": [
-        "electric vehicle sales",
+        "water supply",
+        "dam",
+        "irrigation",
+        "electric vehicle",
         "power plant",
-        "lng terminal",
+        "highway",
+        "industrial waste"
+      ],
+      "min_score": 2,
+      "sector_tags": [],
+      "hard_exclude": []
+    },
+    "VN-IP-NORTH-2030": {
+      "must_any": [
+        "industrial park",
+        "industrial zone",
+        "economic zone",
+        "vsip",
+        "fdi park",
+        "manufacturing zone",
+        "industrial estate",
+        "산업단지",
+        "경제특구",
+        "공업단지",
+        "vsip"
+      ],
+      "boost": [
+        "vsip",
+        "hai phong industrial",
+        "quang ninh industrial",
+        "north vietnam factory",
+        "fdi manufacturing"
+      ],
+      "conflict": [
+        "wastewater",
+        "power plant",
+        "electric vehicle",
+        "smart city",
+        "highway km"
+      ],
+      "min_score": 2,
+      "sector_tags": [],
+      "hard_exclude": []
+    },
+    "VN-RED-RIVER-2030": {
+      "must_any": [
+        "red river delta",
+        "red river region",
+        "hung yen",
+        "bac ninh development",
+        "thai nguyen development",
+        "vinh phuc development",
+        "ha nam development",
+        "northern vietnam development",
+        "hanoi ha phong economic corridor",
+        "vùng đồng bằng sông hồng",
+        "kinh tế vùng bắc bộ",
+        "hưng yên",
+        "bắc ninh"
+      ],
+      "boost": [
+        "red river delta",
+        "hung yen industrial",
+        "bac ninh samsung"
+      ],
+      "conflict": [
+        "mekong delta",
+        "southern vietnam",
+        "wastewater treatment"
+      ],
+      "min_score": 1,
+      "sector_tags": [],
+      "hard_exclude": []
+    },
+    "HN-URBAN-NORTH": {
+      "must_any": [
+        "dong anh",
+        "me linh",
+        "soc son",
+        "brg smart city",
+        "brg sumitomo",
+        "north hanoi smart city",
+        "nhat tan noi bai",
+        "co loa urban",
+        "đông anh",
+        "mê linh",
+        "sóc sơn",
+        "thành phố thông minh đông anh",
+        "đô thị phía bắc hà nội"
+      ],
+      "boost": [
+        "brg smart city",
+        "north hanoi",
+        "noi bai expansion",
+        "co loa"
+      ],
+      "conflict": [
+        "mekong delta",
+        "ho chi minh city development",
+        "da nang",
         "wastewater plant",
-        "highway construction"
+        "power plant mw"
+      ],
+      "min_score": 1,
+      "sector_tags": [],
+      "hard_exclude": []
+    },
+    "VN-PDP8-HYDROGEN": {
+      "must_any": [
+        "lng hub",
+        "lng import",
+        "fsru",
+        "floating storage",
+        "lng bunkering",
+        "lng trade",
+        "lng supply chain",
+        "lng허브",
+        "lng 수입",
+        "부유식lng"
+      ],
+      "boost": [
+        "lng hub",
+        "regional lng",
+        "fsru vessel",
+        "lng bunkering port"
+      ],
+      "conflict": [
+        "electric vehicle",
+        "highway",
+        "metro",
+        "wastewater",
+        "nuclear",
+        "solar capacity"
+      ],
+      "min_score": 2,
+      "sector_tags": [],
+      "hard_exclude": []
+    },
+    "VN-MEKONG-DELTA-2030": {
+      "must_any": [
+        "mekong delta",
+        "đồng bằng sông cửu long",
+        "đbscl",
+        "can tho",
+        "dong thap",
+        "an giang",
+        "kien giang",
+        "ca mau",
+        "soc trang",
+        "bac lieu",
+        "hau giang",
+        "vinh long",
+        "long an mekong",
+        "tien giang",
+        "ben tre",
+        "메콩델타",
+        "메콩강 삼각주",
+        "껀터 개발"
+      ],
+      "boost": [
+        "mekong delta development plan",
+        "decision 287",
+        "decision 616 mekong",
+        "quy hoach vung dbscl",
+        "mekong delta expressway",
+        "mekong delta logistics"
+      ],
+      "conflict": [
+        "mekong river dam china",
+        "upper mekong laos",
+        "wastewater plant contract bid",
+        "solid waste bid"
+      ],
+      "min_score": 2,
+      "sector_tags": [],
+      "hard_exclude": []
+    },
+    "VN-CARBON-2050": {
+      "must_any": [
+        "carbon neutral",
+        "net zero",
+        "carbon credit",
+        "ndc",
+        "greenhouse gas reduction",
+        "carbon market",
+        "climate finance",
+        "탄소중립",
+        "넷제로",
+        "탄소크레딧",
+        "온실가스",
+        "기후금융"
+      ],
+      "boost": [
+        "carbon credit trading",
+        "ndc target",
+        "climate finance",
+        "emission reduction",
+        "paris agreement"
+      ],
+      "conflict": [
+        "electric vehicle model",
+        "lng import",
+        "coal power",
+        "wastewater plant",
+        "highway project"
       ],
       "min_score": 2,
       "sector_tags": [],
@@ -71,135 +274,98 @@
       "sector_tags": [],
       "hard_exclude": []
     },
-    "VN-PDP8-COAL": {
+    "VN-WAT-URBAN": {
       "must_any": [
-        "coal phase",
-        "coal retirement",
-        "coal plant closure",
-        "jetp",
-        "just energy transition",
-        "coal power decommission",
-        "탈석탄",
-        "석탄발전 폐지",
-        "에너지전환파트너십",
-        "석탄 조기폐쇄"
+        "water supply",
+        "clean water supply",
+        "drinking water",
+        "water treatment plant",
+        "tap water network",
+        "water utility",
+        "상수도",
+        "정수장",
+        "수돗물",
+        "급수"
       ],
       "boost": [
-        "jetp",
-        "coal phase-out",
-        "just transition",
-        "early retirement coal"
+        "water supply plant",
+        "clean water project",
+        "nrw reduction"
+      ],
+      "conflict": [
+        "wastewater",
+        "sewage",
+        "irrigation",
+        "electric vehicle",
+        "power plant"
+      ],
+      "min_score": 2,
+      "sector_tags": [],
+      "hard_exclude": []
+    },
+    "VN-OG-2030": {
+      "must_any": [
+        "oil field",
+        "crude oil",
+        "petroleum",
+        "oil exploration",
+        "oil refinery",
+        "offshore oil",
+        "petrovietnam",
+        "석유",
+        "원유",
+        "유전",
+        "해상유전",
+        "정유",
+        "페트로베트남"
+      ],
+      "boost": [
+        "petrovietnam",
+        "block oil",
+        "offshore exploration",
+        "crude production",
+        "oil refinery expansion"
       ],
       "conflict": [
         "electric vehicle",
         "lng terminal",
-        "solar farm",
         "wastewater",
+        "solar farm",
+        "wind farm",
         "highway"
       ],
       "min_score": 2,
       "sector_tags": [],
       "hard_exclude": []
     },
-    "VN-EV-2030": {
+    "HN-URBAN-INFRA": {
       "must_any": [
-        "electric vehicle",
-        "ev ",
-        "vinfast",
-        "e-mobility",
-        "charging station",
-        "electric bus",
-        "ev charger",
-        "전기차",
-        "ev충전",
-        "vinfast",
-        "전기버스",
-        "전동킥보드"
+        "hanoi metro",
+        "hanoi ring road",
+        "ring road 4 hanoi",
+        "ring road 3.5",
+        "red river corridor hanoi",
+        "to lich river",
+        "hanoi bridge",
+        "hanoi master plan",
+        "decision 1668",
+        "metro hà nội",
+        "vành đai 4 hà nội",
+        "sông hồng hà nội",
+        "quy hoạch hà nội",
+        "sông tô lịch"
       ],
       "boost": [
-        "vinfast",
-        "ev sales",
-        "charging infrastructure",
-        "electric motorcycle",
-        "ev subsidy",
-        "battery swap"
+        "ring road 4",
+        "red river hanoi",
+        "hanoi 2030 plan"
       ],
       "conflict": [
-        "power plant",
-        "solar farm",
-        "wind energy",
-        "pdp8",
-        "lng terminal",
-        "wastewater",
-        "highway km",
-        "nuclear power",
-        "oil field",
-        "coal plant"
-      ],
-      "min_score": 3,
-      "sector_tags": [],
-      "hard_exclude": []
-    },
-    "HN-URBAN-WEST": {
-      "must_any": [
-        "hoa lac",
-        "hoa lac hi-tech",
-        "hoa lac high tech",
-        "western hanoi",
-        "xuan mai",
-        "son tay hanoi",
-        "thach that",
-        "tien xuan",
-        "sj group hanoi",
-        "hòa lạc",
-        "khu công nghệ cao hòa lạc",
-        "xuân mai",
-        "sơn tây",
-        "đô thị tây hà nội"
-      ],
-      "boost": [
-        "hoa lac hi-tech",
-        "hoa lac park",
-        "western hanoi city"
-      ],
-      "conflict": [
-        "mekong delta",
-        "ho chi minh",
-        "wastewater treatment plant"
+        "ho chi minh metro",
+        "mekong",
+        "wastewater treatment plant mw"
       ],
       "min_score": 1,
-      "sector_tags": [],
-      "hard_exclude": []
-    },
-    "VN-IP-NORTH-2030": {
-      "must_any": [
-        "industrial park",
-        "industrial zone",
-        "economic zone",
-        "vsip",
-        "fdi park",
-        "manufacturing zone",
-        "industrial estate",
-        "산업단지",
-        "경제특구",
-        "공업단지",
-        "vsip"
-      ],
-      "boost": [
-        "vsip",
-        "hai phong industrial",
-        "quang ninh industrial",
-        "north vietnam factory",
-        "fdi manufacturing"
-      ],
-      "conflict": [
-        "wastewater",
-        "power plant",
-        "electric vehicle",
-        "smart city",
-        "highway km"
-      ],
-      "min_score": 2,
       "sector_tags": [],
       "hard_exclude": []
     },
@@ -240,6 +406,39 @@
       "sector_tags": [],
       "hard_exclude": []
     },
+    "VN-URB-METRO-2030": {
+      "must_any": [
+        "metro",
+        "subway",
+        "urban rail",
+        "mrt",
+        "tram line",
+        "light rail",
+        "metro line",
+        "지하철",
+        "도시철도",
+        "메트로",
+        "경전철"
+      ],
+      "boost": [
+        "metro line",
+        "hanoi metro",
+        "hcmc metro",
+        "ben thanh",
+        "nhon ga ha noi",
+        "cat linh"
+      ],
+      "conflict": [
+        "highway",
+        "airport",
+        "seaport",
+        "electric vehicle",
+        "power plant"
+      ],
+      "min_score": 2,
+      "sector_tags": [],
+      "hard_exclude": []
+    },
     "VN-WAT-RURAL": {
       "must_any": [
         "rural water supply",
@@ -267,298 +466,62 @@
       "sector_tags": [],
       "hard_exclude": []
     },
-    "VN-SWM-NATIONAL-2030": {
+    "VN-SC-2030": {
       "must_any": [
-        "solid waste",
-        "municipal waste",
-        "waste-to-energy",
-        "wte plant",
-        "incineration plant",
-        "landfill vietnam",
-        "composting plant",
-        "hazardous waste",
-        "medical waste",
-        "waste collection rate",
-        "garbage treatment",
-        "recycling plant",
-        "plastic waste",
-        "waste sorting",
-        "chất thải rắn",
-        "rác thải",
-        "xử lý rác",
-        "đốt rác",
-        "bãi chôn lấp",
-        "고형폐기물",
-        "쓰레기 처리",
-        "WtE 발전소",
-        "매립지 폐쇄",
-        "소각로"
+        "smart city",
+        "digital city",
+        "smart infrastructure",
+        "e-government",
+        "iot city",
+        "ai traffic",
+        "5g network",
+        "스마트시티",
+        "디지털시티",
+        "스마트인프라",
+        "전자정부"
       ],
       "boost": [
-        "decision 491 solid waste",
-        "national solid waste strategy",
-        "wte capacity mw",
-        "landfill closure",
-        "epr plastic"
+        "thu duc smart city",
+        "uocc",
+        "smart traffic",
+        "digital twin city"
       ],
       "conflict": [
-        "wastewater treatment plant",
-        "sewage plant",
-        "water supply pipeline",
-        "environmental technology industry",
-        "environmental equipment manufacturing"
-      ],
-      "min_score": 2,
-      "sector_tags": [],
-      "hard_exclude": []
-    },
-    "HN-URBAN-INFRA": {
-      "must_any": [
-        "hanoi metro",
-        "hanoi ring road",
-        "ring road 4 hanoi",
-        "ring road 3.5",
-        "red river corridor hanoi",
-        "to lich river",
-        "hanoi bridge",
-        "hanoi master plan",
-        "decision 1668",
-        "metro hà nội",
-        "vành đai 4 hà nội",
-        "sông hồng hà nội",
-        "quy hoạch hà nội",
-        "sông tô lịch"
-      ],
-      "boost": [
-        "ring road 4",
-        "red river hanoi",
-        "hanoi 2030 plan"
-      ],
-      "conflict": [
-        "ho chi minh metro",
-        "mekong",
-        "wastewater treatment plant mw"
-      ],
-      "min_score": 1,
-      "sector_tags": [],
-      "hard_exclude": []
-    },
-    "VN-OG-2030": {
-      "must_any": [
-        "oil field",
-        "crude oil",
-        "petroleum",
-        "oil exploration",
-        "oil refinery",
-        "offshore oil",
-        "petrovietnam",
-        "석유",
-        "원유",
-        "유전",
-        "해상유전",
-        "정유",
-        "페트로베트남"
-      ],
-      "boost": [
-        "petrovietnam",
-        "block oil",
-        "offshore exploration",
-        "crude production",
-        "oil refinery expansion"
-      ],
-      "conflict": [
-        "electric vehicle",
-        "lng terminal",
-        "wastewater",
-        "solar farm",
-        "wind farm",
-        "highway"
-      ],
-      "min_score": 2,
-      "sector_tags": [],
-      "hard_exclude": []
-    },
-    "VN-PDP8-LNG": {
-      "must_any": [
-        "lng",
-        "liquefied natural gas",
-        "gas terminal",
-        "gas pipeline",
-        "regasification",
-        "fsru",
-        "gas power plant",
-        "lng power",
-        "가스 터미널",
-        "lng 터미널",
-        "천연가스",
-        "가스복합화력"
-      ],
-      "boost": [
-        "lng terminal",
-        "lng import",
-        "fsru",
-        "regasification",
-        "mtpa",
-        "ca mau lng",
-        "son my",
-        "thi vai"
-      ],
-      "conflict": [
-        "electric vehicle",
-        "ev",
-        "solar farm",
-        "wind farm",
-        "wastewater",
-        "highway",
-        "metro",
-        "crude oil",
-        "oil field"
-      ],
-      "min_score": 2,
-      "sector_tags": [],
-      "hard_exclude": []
-    },
-    "HN-URBAN-NORTH": {
-      "must_any": [
-        "dong anh",
-        "me linh",
-        "soc son",
-        "brg smart city",
-        "brg sumitomo",
-        "north hanoi smart city",
-        "nhat tan noi bai",
-        "co loa urban",
-        "đông anh",
-        "mê linh",
-        "sóc sơn",
-        "thành phố thông minh đông anh",
-        "đô thị phía bắc hà nội"
-      ],
-      "boost": [
-        "brg smart city",
-        "north hanoi",
-        "noi bai expansion",
-        "co loa"
-      ],
-      "conflict": [
-        "mekong delta",
-        "ho chi minh city development",
-        "da nang",
-        "wastewater plant",
-        "power plant mw"
-      ],
-      "min_score": 1,
-      "sector_tags": [],
-      "hard_exclude": []
-    },
-    "VN-TRAN-2055": {
-      "must_any": [
-        "highway",
-        "expressway",
-        "high-speed rail",
-        "railway",
-        "port",
-        "airport",
-        "bridge construction",
-        "road project",
-        "transport infrastructure",
-        "고속도로",
-        "고속철도",
-        "철도",
-        "항만",
-        "공항",
-        "교통인프라",
-        "ring road",
-        "north-south expressway",
-        "long thanh"
-      ],
-      "boost": [
-        "expressway km",
-        "ring road",
-        "long thanh airport",
-        "lach huyen",
-        "high-speed rail",
-        "north-south railway",
-        "moc bai",
-        "cau"
-      ],
-      "conflict": [
-        "electric vehicle",
-        "ev charging",
+        "electric vehicle sales",
         "power plant",
-        "solar farm",
-        "wastewater",
-        "nuclear",
-        "smart city digital"
+        "lng terminal",
+        "wastewater plant",
+        "highway construction"
       ],
       "min_score": 2,
       "sector_tags": [],
       "hard_exclude": []
     },
-    "VN-RED-RIVER-2030": {
+    "VN-PDP8-COAL": {
       "must_any": [
-        "red river delta",
-        "red river region",
-        "hung yen",
-        "bac ninh development",
-        "thai nguyen development",
-        "vinh phuc development",
-        "ha nam development",
-        "northern vietnam development",
-        "hanoi ha phong economic corridor",
-        "vùng đồng bằng sông hồng",
-        "kinh tế vùng bắc bộ",
-        "hưng yên",
-        "bắc ninh"
+        "coal phase",
+        "coal retirement",
+        "coal plant closure",
+        "jetp",
+        "just energy transition",
+        "coal power decommission",
+        "탈석탄",
+        "석탄발전 폐지",
+        "에너지전환파트너십",
+        "석탄 조기폐쇄"
       ],
       "boost": [
-        "red river delta",
-        "hung yen industrial",
-        "bac ninh samsung"
+        "jetp",
+        "coal phase-out",
+        "just transition",
+        "early retirement coal"
       ],
       "conflict": [
-        "mekong delta",
-        "southern vietnam",
-        "wastewater treatment"
-      ],
-      "min_score": 1,
-      "sector_tags": [],
-      "hard_exclude": []
-    },
-    "VN-MEKONG-DELTA-2030": {
-      "must_any": [
-        "mekong delta",
-        "đồng bằng sông cửu long",
-        "đbscl",
-        "can tho",
-        "dong thap",
-        "an giang",
-        "kien giang",
-        "ca mau",
-        "soc trang",
-        "bac lieu",
-        "hau giang",
-        "vinh long",
-        "long an mekong",
-        "tien giang",
-        "ben tre",
-        "메콩델타",
-        "메콩강 삼각주",
-        "껀터 개발"
-      ],
-      "boost": [
-        "mekong delta development plan",
-        "decision 287",
-        "decision 616 mekong",
-        "quy hoach vung dbscl",
-        "mekong delta expressway",
-        "mekong delta logistics"
-      ],
-      "conflict": [
-        "mekong river dam china",
-        "upper mekong laos",
-        "wastewater plant contract bid",
-        "solid waste bid"
+        "electric vehicle",
+        "lng terminal",
+        "solar farm",
+        "wastewater",
+        "highway"
       ],
       "min_score": 2,
       "sector_tags": [],
@@ -610,6 +573,37 @@
       "sector_tags": [],
       "hard_exclude": []
     },
+    "HN-URBAN-WEST": {
+      "must_any": [
+        "hoa lac",
+        "hoa lac hi-tech",
+        "hoa lac high tech",
+        "western hanoi",
+        "xuan mai",
+        "son tay hanoi",
+        "thach that",
+        "tien xuan",
+        "sj group hanoi",
+        "hòa lạc",
+        "khu công nghệ cao hòa lạc",
+        "xuân mai",
+        "sơn tây",
+        "đô thị tây hà nội"
+      ],
+      "boost": [
+        "hoa lac hi-tech",
+        "hoa lac park",
+        "western hanoi city"
+      ],
+      "conflict": [
+        "mekong delta",
+        "ho chi minh",
+        "wastewater treatment plant"
+      ],
+      "min_score": 1,
+      "sector_tags": [],
+      "hard_exclude": []
+    },
     "VN-PDP8-GRID": {
       "must_any": [
         "smart grid",
@@ -640,6 +634,135 @@
         "nuclear",
         "coal plant",
         "solar farm capacity"
+      ],
+      "min_score": 2,
+      "sector_tags": [],
+      "hard_exclude": []
+    },
+    "VN-PDP8-LNG": {
+      "must_any": [
+        "lng",
+        "liquefied natural gas",
+        "gas terminal",
+        "gas pipeline",
+        "regasification",
+        "fsru",
+        "gas power plant",
+        "lng power",
+        "가스 터미널",
+        "lng 터미널",
+        "천연가스",
+        "가스복합화력"
+      ],
+      "boost": [
+        "lng terminal",
+        "lng import",
+        "fsru",
+        "regasification",
+        "mtpa",
+        "ca mau lng",
+        "son my",
+        "thi vai"
+      ],
+      "conflict": [
+        "electric vehicle",
+        "ev",
+        "solar farm",
+        "wind farm",
+        "wastewater",
+        "highway",
+        "metro",
+        "crude oil",
+        "oil field"
+      ],
+      "min_score": 2,
+      "sector_tags": [],
+      "hard_exclude": []
+    },
+    "VN-TRAN-2055": {
+      "must_any": [
+        "highway",
+        "expressway",
+        "high-speed rail",
+        "railway",
+        "port",
+        "airport",
+        "bridge construction",
+        "road project",
+        "transport infrastructure",
+        "고속도로",
+        "고속철도",
+        "철도",
+        "항만",
+        "공항",
+        "교통인프라",
+        "ring road",
+        "north-south expressway",
+        "long thanh"
+      ],
+      "boost": [
+        "expressway km",
+        "ring road",
+        "long thanh airport",
+        "lach huyen",
+        "high-speed rail",
+        "north-south railway",
+        "moc bai",
+        "cau"
+      ],
+      "conflict": [
+        "electric vehicle",
+        "ev charging",
+        "power plant",
+        "solar farm",
+        "wastewater",
+        "nuclear",
+        "smart city digital"
+      ],
+      "min_score": 2,
+      "sector_tags": [],
+      "hard_exclude": []
+    },
+    "VN-SWM-NATIONAL-2030": {
+      "must_any": [
+        "solid waste",
+        "municipal waste",
+        "waste-to-energy",
+        "wte plant",
+        "incineration plant",
+        "landfill vietnam",
+        "composting plant",
+        "hazardous waste",
+        "medical waste",
+        "waste collection rate",
+        "garbage treatment",
+        "recycling plant",
+        "plastic waste",
+        "waste sorting",
+        "chất thải rắn",
+        "rác thải",
+        "xử lý rác",
+        "đốt rác",
+        "bãi chôn lấp",
+        "고형폐기물",
+        "쓰레기 처리",
+        "WtE 발전소",
+        "매립지 폐쇄",
+        "소각로"
+      ],
+      "boost": [
+        "decision 491 solid waste",
+        "national solid waste strategy",
+        "wte capacity mw",
+        "landfill closure",
+        "epr plastic"
+      ],
+      "conflict": [
+        "wastewater treatment plant",
+        "sewage plant",
+        "water supply pipeline",
+        "environmental technology industry",
+        "environmental equipment manufacturing"
       ],
       "min_score": 2,
       "sector_tags": [],
@@ -680,165 +803,42 @@
       "sector_tags": [],
       "hard_exclude": []
     },
-    "VN-PDP8-HYDROGEN": {
+    "VN-EV-2030": {
       "must_any": [
-        "lng hub",
-        "lng import",
-        "fsru",
-        "floating storage",
-        "lng bunkering",
-        "lng trade",
-        "lng supply chain",
-        "lng허브",
-        "lng 수입",
-        "부유식lng"
-      ],
-      "boost": [
-        "lng hub",
-        "regional lng",
-        "fsru vessel",
-        "lng bunkering port"
-      ],
-      "conflict": [
         "electric vehicle",
-        "highway",
-        "metro",
-        "wastewater",
-        "nuclear",
-        "solar capacity"
-      ],
-      "min_score": 2,
-      "sector_tags": [],
-      "hard_exclude": []
-    },
-    "VN-URB-METRO-2030": {
-      "must_any": [
-        "metro",
-        "subway",
-        "urban rail",
-        "mrt",
-        "tram line",
-        "light rail",
-        "metro line",
-        "지하철",
-        "도시철도",
-        "메트로",
-        "경전철"
+        "ev ",
+        "vinfast",
+        "e-mobility",
+        "charging station",
+        "electric bus",
+        "ev charger",
+        "전기차",
+        "ev충전",
+        "vinfast",
+        "전기버스",
+        "전동킥보드"
       ],
       "boost": [
-        "metro line",
-        "hanoi metro",
-        "hcmc metro",
-        "ben thanh",
-        "nhon ga ha noi",
-        "cat linh"
+        "vinfast",
+        "ev sales",
+        "charging infrastructure",
+        "electric motorcycle",
+        "ev subsidy",
+        "battery swap"
       ],
       "conflict": [
-        "highway",
-        "airport",
-        "seaport",
-        "electric vehicle",
-        "power plant"
-      ],
-      "min_score": 2,
-      "sector_tags": [],
-      "hard_exclude": []
-    },
-    "VN-CARBON-2050": {
-      "must_any": [
-        "carbon neutral",
-        "net zero",
-        "carbon credit",
-        "ndc",
-        "greenhouse gas reduction",
-        "carbon market",
-        "climate finance",
-        "탄소중립",
-        "넷제로",
-        "탄소크레딧",
-        "온실가스",
-        "기후금융"
-      ],
-      "boost": [
-        "carbon credit trading",
-        "ndc target",
-        "climate finance",
-        "emission reduction",
-        "paris agreement"
-      ],
-      "conflict": [
-        "electric vehicle model",
-        "lng import",
-        "coal power",
-        "wastewater plant",
-        "highway project"
-      ],
-      "min_score": 2,
-      "sector_tags": [],
-      "hard_exclude": []
-    },
-    "VN-WW-2030": {
-      "must_any": [
-        "wastewater treatment",
-        "wwtp",
-        "sewage treatment",
-        "sewage plant",
-        "wastewater plant",
-        "sewer",
-        "sanitation plant",
-        "하수처리",
-        "폐수처리",
-        "하수도",
-        "wwtp",
-        "정화조"
-      ],
-      "boost": [
-        "yen xa",
-        "binh tan",
-        "wwtp capacity",
-        "sewerage network",
-        "sludge treatment",
-        "jica wastewater"
-      ],
-      "conflict": [
-        "water supply",
-        "dam",
-        "irrigation",
-        "electric vehicle",
         "power plant",
-        "highway",
-        "industrial waste"
-      ],
-      "min_score": 2,
-      "sector_tags": [],
-      "hard_exclude": []
-    },
-    "VN-WAT-URBAN": {
-      "must_any": [
-        "water supply",
-        "clean water supply",
-        "drinking water",
-        "water treatment plant",
-        "tap water network",
-        "water utility",
-        "상수도",
-        "정수장",
-        "수돗물",
-        "급수"
-      ],
-      "boost": [
-        "water supply plant",
-        "clean water project",
-        "nrw reduction"
-      ],
-      "conflict": [
+        "solar farm",
+        "wind energy",
+        "pdp8",
+        "lng terminal",
         "wastewater",
-        "sewage",
-        "irrigation",
-        "electric vehicle",
-        "power plant"
+        "highway km",
+        "nuclear power",
+        "oil field",
+        "coal plant"
       ],
-      "min_score": 2,
+      "min_score": 3,
       "sector_tags": [],
       "hard_exclude": []
     }
