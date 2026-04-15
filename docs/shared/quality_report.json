@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-04-14T13:18:57.140525+00:00",
-  "total_articles": 26,
+  "generated_at": "2026-04-15T13:39:15.695713+00:00",
+  "total_articles": 25,
   "quality_grade": "D",
   "targets_met": {
-    "province_unclassified_le_25pct": true,
+    "province_unclassified_le_25pct": false,
     "specialist_media_ge_30pct": false,
     "all_7_sectors_covered": false,
     "policy_alignment_ge_30pct": false
   },
   "metrics": {
-    "province_unclassified_rate": 0.192,
+    "province_unclassified_rate": 0.28,
     "specialist_media_ratio": 0.0,
     "sector_coverage": {
       "covered": [
@@ -26,48 +26,66 @@
       "ratio": 0.857
     },
     "area_distribution": {
-      "Urban Development": 12,
-      "Environment": 6,
-      "Energy Develop.": 8
+      "Urban Development": 10,
+      "Environment": 8,
+      "Energy Develop.": 7
     },
     "policy_alignment": {
-      "matched_ratio": 0.115,
-      "high_relevance_ratio": 0.077,
-      "matched_count": 3,
-      "high_relevance_count": 2,
+      "matched_ratio": 0.2,
+      "high_relevance_ratio": 0.16,
+      "matched_count": 5,
+      "high_relevance_count": 4,
       "matched_articles": [
         {
-          "title": "Việt Nam tự sản xuất pin lưu trữ, góp phần \"giải cứu\" lưới đ",
+          "title": "EVN đề xuất kéo dài thời gian tính giá điện giờ cao điểm tối",
           "sector": "Power",
           "province": "Vietnam",
           "doc_id": "VN-PWR-PDP8",
           "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
           "relevance": "high",
-          "url": "https://dantri.com.vn/kinh-doanh/viet-nam-tu-san-xuat-pin-luu-tru-gop-phan-giai-cuu-luoi-dien-20260412081025664.htm"
+          "url": "https://tuoitre.vn/evn-de-xuat-keo-dai-thoi-gian-tinh-gia-dien-gio-cao-diem-toi-khong-ap-dung-gia-cao-ban-ngay-20260415112202999.htm"
         },
         {
-          "title": "Bật điều hòa + quạt có tốn điện hơn không? EVN đưa ra đáp án",
+          "title": "Bộ Công Thương muốn đổi khung giờ cao điểm điện theo mùa, EV",
           "sector": "Power",
           "province": "Vietnam",
           "doc_id": "VN-PWR-PDP8",
           "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
           "relevance": "high",
-          "url": "https://cafebiz.vn/bat-dieu-hoa-quat-co-ton-dien-hon-khong-evn-dua-ra-dap-an-176260414161941773.chn"
+          "url": "https://vietnamnet.vn/bo-cong-thuong-muon-doi-khung-gio-cao-diem-dien-theo-mua-evn-lo-de-sai-sot-2506486.html"
         },
         {
-          "title": "EVNSPC nỗ lực gỡ vướng các dự án trọng điểm cấp điện cho APE",
+          "title": "Bộ Công Thương đề xuất đổi giờ cao điểm sử dụng điện, EVN lo",
           "sector": "Power",
-          "province": "Kien Giang",
+          "province": "Vietnam",
+          "doc_id": "VN-PWR-PDP8",
+          "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
+          "relevance": "high",
+          "url": "https://cafebiz.vn/bo-cong-thuong-de-xuat-doi-gio-cao-diem-su-dung-dien-evn-lo-xay-ra-tranh-chap-176260415171839476.chn"
+        },
+        {
+          "title": "Hàng triệu gia đình chú ý: EVN Việt Nam chỉ thẳng “thủ phạm”",
+          "sector": "Power",
+          "province": "Vietnam",
+          "doc_id": "VN-PWR-PDP8",
+          "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
+          "relevance": "high",
+          "url": "https://cafebiz.vn/hang-trieu-gia-dinh-chu-y-evn-viet-nam-chi-thang-thu-pham-khien-hoa-don-tien-dien-mua-nang-nong-tang-vot-176260415120155493.chn"
+        },
+        {
+          "title": "Công ty Thủy điện Đồng Nai hưởng ứng các hoạt động tiết kiệm",
+          "sector": "Power",
+          "province": "Dong Nai",
           "doc_id": "VN-PWR-PDP8",
           "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
           "relevance": "medium",
-          "url": "https://baoxaydung.vn/evnspc-no-luc-go-vuong-cac-du-an-trong-diem-cap-dien-cho-apec-2027-192260414124127625.htm"
+          "url": "https://www.sggp.org.vn/cong-ty-thuy-dien-dong-nai-huong-ung-cac-hoat-dong-tiet-kiem-dien-post848167.html"
         }
       ]
     },
-    "policy_highlight_count": 3,
+    "policy_highlight_count": 5,
     "collector_flags": {
-      "vietnam_ratio": 0.192,
+      "vietnam_ratio": 0.28,
       "missing_provinces": []
     }
   },
@@ -91,18 +109,18 @@
     {
       "priority": "LOW",
       "metric": "policy_alignment",
-      "current": 0.115,
+      "current": 0.2,
       "action": "knowledge_index.json 키워드 보강으로 정책 연계율 개선 가능"
     }
   ],
   "genspark_feedback": {
     "available": true,
     "week": "latest",
-    "genspark_total": 157,
-    "claude_only_count": 26,
-    "genspark_only_count": 157,
+    "genspark_total": 128,
+    "claude_only_count": 25,
+    "genspark_only_count": 128,
     "genspark_only_sources": {
-      "": 157
+      "": 128
     },
     "missing_sectors_in_claude": [
       "Waste Water"
