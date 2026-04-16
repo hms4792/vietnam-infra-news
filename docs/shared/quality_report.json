@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-15T13:39:15.695713+00:00",
-  "total_articles": 25,
+  "generated_at": "2026-04-16T12:00:41.114126+00:00",
+  "total_articles": 23,
   "quality_grade": "D",
   "targets_met": {
     "province_unclassified_le_25pct": false,
@@ -9,83 +9,83 @@
     "policy_alignment_ge_30pct": false
   },
   "metrics": {
-    "province_unclassified_rate": 0.28,
+    "province_unclassified_rate": 0.391,
     "specialist_media_ratio": 0.0,
     "sector_coverage": {
       "covered": [
         "Industrial Parks",
-        "Oil & Gas",
         "Power",
-        "Smart City",
         "Solid Waste",
         "Water Supply/Drainage"
       ],
       "missing": [
-        "Waste Water"
+        "Waste Water",
+        "Oil & Gas",
+        "Smart City"
       ],
-      "ratio": 0.857
+      "ratio": 0.571
     },
     "area_distribution": {
-      "Urban Development": 10,
-      "Environment": 8,
-      "Energy Develop.": 7
+      "Urban Development": 8,
+      "Energy Develop.": 8,
+      "Environment": 7
     },
     "policy_alignment": {
-      "matched_ratio": 0.2,
-      "high_relevance_ratio": 0.16,
+      "matched_ratio": 0.217,
+      "high_relevance_ratio": 0.174,
       "matched_count": 5,
       "high_relevance_count": 4,
       "matched_articles": [
         {
-          "title": "EVN đề xuất kéo dài thời gian tính giá điện giờ cao điểm tối",
+          "title": "Việt Nam sustains growth with focus on productivity, energy ",
           "sector": "Power",
           "province": "Vietnam",
           "doc_id": "VN-PWR-PDP8",
           "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
           "relevance": "high",
-          "url": "https://tuoitre.vn/evn-de-xuat-keo-dai-thoi-gian-tinh-gia-dien-gio-cao-diem-toi-khong-ap-dung-gia-cao-ban-ngay-20260415112202999.htm"
+          "url": "https://vietnamnews.vn/economy/1779537/viet-nam-sustains-growth-with-focus-on-productivity-energy-transition-adb.html"
         },
         {
-          "title": "Bộ Công Thương muốn đổi khung giờ cao điểm điện theo mùa, EV",
+          "title": "EVN Việt Nam cảnh báo: 5 thiết bị tắt rồi vẫn \"chạy ngầm\" 24",
           "sector": "Power",
           "province": "Vietnam",
           "doc_id": "VN-PWR-PDP8",
           "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
           "relevance": "high",
-          "url": "https://vietnamnet.vn/bo-cong-thuong-muon-doi-khung-gio-cao-diem-dien-theo-mua-evn-lo-de-sai-sot-2506486.html"
+          "url": "https://cafebiz.vn/evn-viet-nam-canh-bao-5-thiet-bi-tat-roi-van-chay-ngam-24-7-nhieu-nha-bi-ton-dien-oan-176260416170618231.chn"
         },
         {
-          "title": "Bộ Công Thương đề xuất đổi giờ cao điểm sử dụng điện, EVN lo",
+          "title": "EVN Việt Nam hướng dẫn: Làm điều này trước khi ngủ có thể gi",
           "sector": "Power",
           "province": "Vietnam",
           "doc_id": "VN-PWR-PDP8",
           "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
           "relevance": "high",
-          "url": "https://cafebiz.vn/bo-cong-thuong-de-xuat-doi-gio-cao-diem-su-dung-dien-evn-lo-xay-ra-tranh-chap-176260415171839476.chn"
+          "url": "https://cafebiz.vn/evn-viet-nam-huong-dan-lam-dieu-nay-truoc-khi-ngu-co-the-giup-giam-tien-dien-moi-thang-176260416170443507.chn"
         },
         {
-          "title": "Hàng triệu gia đình chú ý: EVN Việt Nam chỉ thẳng “thủ phạm”",
-          "sector": "Power",
+          "title": "Việt Nam đẩy mạnh chuyển đổi năng lượng xanh với nhiên liệu ",
+          "sector": "Solid Waste",
           "province": "Vietnam",
-          "doc_id": "VN-PWR-PDP8",
-          "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
-          "relevance": "high",
-          "url": "https://cafebiz.vn/hang-trieu-gia-dinh-chu-y-evn-viet-nam-chi-thang-thu-pham-khien-hoa-don-tien-dien-mua-nang-nong-tang-vot-176260415120155493.chn"
-        },
-        {
-          "title": "Công ty Thủy điện Đồng Nai hưởng ứng các hoạt động tiết kiệm",
-          "sector": "Power",
-          "province": "Dong Nai",
-          "doc_id": "VN-PWR-PDP8",
-          "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
+          "doc_id": "VN-CARBON-2050",
+          "plan_name": "Vietnam Carbon Neutrality Roadmap 2050",
           "relevance": "medium",
-          "url": "https://www.sggp.org.vn/cong-ty-thuy-dien-dong-nai-huong-ung-cac-hoat-dong-tiet-kiem-dien-post848167.html"
+          "url": "https://www.vietnamplus.vn/viet-nam-day-manh-chuyen-doi-nang-luong-xanh-voi-nhien-lieu-ben-vung-post1105200.vnp"
+        },
+        {
+          "title": "Gạo phát thải thấp: 'Mắt xích' quan trọng trên hành trình Ne",
+          "sector": "Solid Waste",
+          "province": "Vietnam",
+          "doc_id": "VN-ENV-IND-1894",
+          "plan_name": "Vietnam Environmental Industry Development Programme (Decision 1894/QĐ-TTg)",
+          "relevance": "high",
+          "url": "https://www.vietnamplus.vn/gao-phat-thai-thap-mat-xich-quan-trong-tren-hanh-trinh-net-zero-post1105279.vnp"
         }
       ]
     },
     "policy_highlight_count": 5,
     "collector_flags": {
-      "vietnam_ratio": 0.28,
+      "vietnam_ratio": 0.391,
       "missing_provinces": []
     }
   },
@@ -102,14 +102,16 @@
       "priority": "MEDIUM",
       "metric": "sector_coverage",
       "missing": [
-        "Waste Water"
+        "Waste Water",
+        "Oil & Gas",
+        "Smart City"
       ],
-      "action": "Waste Water 섹터 RSS/키워드 보강 필요"
+      "action": "Waste Water, Oil & Gas, Smart City 섹터 RSS/키워드 보강 필요"
     },
     {
       "priority": "LOW",
       "metric": "policy_alignment",
-      "current": 0.2,
+      "current": 0.217,
       "action": "knowledge_index.json 키워드 보강으로 정책 연계율 개선 가능"
     }
   ],
@@ -117,13 +119,15 @@
     "available": true,
     "week": "latest",
     "genspark_total": 128,
-    "claude_only_count": 25,
+    "claude_only_count": 23,
     "genspark_only_count": 128,
     "genspark_only_sources": {
       "": 128
     },
     "missing_sectors_in_claude": [
-      "Waste Water"
+      "Waste Water",
+      "Oil & Gas",
+      "Smart City"
     ],
     "policy_rate_comparison": {
       "claude": 0.0,
@@ -134,7 +138,7 @@
       {
         "priority": "HIGH",
         "type": "missing_sector",
-        "message": "Genspark 수집 섹터 중 Claude 미수집: ['Waste Water']",
+        "message": "Genspark 수집 섹터 중 Claude 미수집: ['Waste Water', 'Oil & Gas', 'Smart City']",
         "action": "news_collector.py SECTOR_KEYWORDS에 해당 섹터 키워드 보강 필요"
       },
       {
