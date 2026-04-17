@@ -199,14 +199,7 @@ def run_batch():
             sen = translate_text(summary[:300], 'en') if summary else ''
             svi = translate_text(summary[:300], 'vi') if summary else ''
 
-            # [v5.6] MYMEMORY WARNING 감지 — 경고 메시지 저장 방지
-            def _is_warning(v):
-                if not v: return False
-                u = str(v).upper()
-                return (u.startswith('MYMEMORY WARNING') or
-                        u.startswith('PLEASE SELECT') or
-                        u.startswith('YOU USED ALL AVAILABLE'))
-
+            # 번역 경고/오번역 감지 — 전역 _is_warning() 사용
             if any(_is_warning(v) for v in [tko, ten, tvi] if v):
                 api_limit = True
                 print(f"  [{i+1}/{len(batch)}] SKIP (API limit) {title[:40]}")
