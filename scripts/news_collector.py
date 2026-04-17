@@ -909,6 +909,15 @@ NEWSDATA_SPECIALIST_QUERIES = [
     {'source': 'Da Nang News',          'domain': 'baodanang.vn',    'q': 'infrastructure OR "khu cong nghiep" OR "nuoc thai" OR "giao thong"',              'language': 'vi'},
     {'source': 'Bao Dau Tu',            'domain': 'baodautu.vn',     'q': 'infrastructure OR "khu cong nghiep" OR "nang luong" OR "giao thong"',             'language': 'vi'},
     {'source': 'PetroTimes',            'domain': 'petrotimes.vn',   'q': 'oil OR gas OR LNG OR petroleum OR "dau khi" OR petrovietnam',                     'language': 'vi'},
+    # ── Waste Water 전용 보완 쿼리 (weekly collection 7일치) ──────────────
+    {'source': 'Waste Water Weekly',
+     'domain': '',
+     'q': 'Vietnam (wastewater OR sewage OR "nuoc thai" OR WWTP OR "sewage treatment plant" OR "wastewater treatment plant")',
+     'language': 'en,vi'},
+    {'source': 'Waste Water Projects',
+     'domain': '',
+     'q': 'Vietnam ("Yen Xa" OR "Binh Hung" OR "Nhon Trach wastewater" OR "Tham Luong" OR "Gia Lam WWTP" OR "Hanoi wastewater" OR "HCMC wastewater")',
+     'language': 'en,vi'},
 ]
 
 
