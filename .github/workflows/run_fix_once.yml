@@ -1,0 +1,84 @@
+# ============================================================
+# 불량 번역 일괄 수정 — 1회성 수동 실행 전용 워크플로우
+# .github/workflows/run_fix_once.yml
+#
+# 사용법: GitHub Actions → "Fix Bad Translations" → Run workflow
+# 실행 후 자동 삭제해도 됨 (재사용 불필요)
+# ============================================================
+
+name: Fix Bad Translations (1회성)
+
+on:
+  workflow_dispatch:
+    inputs:
+      date_from:
+        description: '시작 날짜 (기본: 2026-04-12)'
+        required: false
+        default: '2026-04-12'
+      date_to:
+        description: '종료 날짜 (기본: 2026-04-16)'
+        required: false
+        default: '2026-04-16'
+      dry_run:
+        description: 'Dry run (탐지만, 수정 없음): true / false'
+        required: false
+        default: 'false'
+
+jobs:
+  fix:
+    name: 불량 번역 초기화 + 재번역
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install openpyxl requests deep-translator deepl
+
+      - name: Step 1 — 불량 번역 탐지 및 초기화
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+        run: |
+          DRY_FLAG=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            DRY_FLAG="--dry-run"
+          fi
+          python3 scripts/fix_bad_translations.py \
+            --date-from "${{ github.event.inputs.date_from }}" \
+            --date-to   "${{ github.event.inputs.date_to }}" \
+            $DRY_FLAG
+
+      - name: Step 2 — 즉시 재번역 (40건)
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        env:
+          EXCEL_PATH:    data/database/Vietnam_Infra_News_Database_Final.xlsx
+          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+          BATCH_SIZE:    '40'
+        run: |
+          python3 scripts/batch_translate.py
+
+      - name: Step 3 — Commit and push
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name  "github-actions[bot]"
+          git add data/database/Vietnam_Infra_News_Database_Final.xlsx
+          if git diff --staged --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "Fix bad translations $(date '+%Y-%m-%d') + retranslate 40건"
+            git push
+            echo "✓ Push 완료"
+          fi
