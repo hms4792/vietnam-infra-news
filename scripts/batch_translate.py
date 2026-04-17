@@ -20,7 +20,7 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 from pathlib import Path
 
 EXCEL_PATH    = os.environ.get('EXCEL_PATH', 'data/database/Vietnam_Infra_News_Database_Final.xlsx')
-BATCH_SIZE    = int(os.environ.get('BATCH_SIZE', 20))
+BATCH_SIZE    = int(os.environ.get('BATCH_SIZE', 40))  # 14주→7주 단축
 DEEPL_API_KEY = os.environ.get('DEEPL_API_KEY', '').strip()
 
 # DeepL 언어 코드 매핑
@@ -55,14 +55,23 @@ def _try_deepl(text, target_lang):
 
 
 def _is_warning(v):
-    """MyMemory 경고 메시지 여부 확인"""
+    """MyMemory 경고 메시지 / 오번역 패턴 감지"""
     if not v:
         return False
     u = str(v).upper()
-    return ('MYMEMORY WARNING' in u or
-            'PLEASE SELECT'   in u or
-            'YOU USED ALL'    in u or
-            'INVALID'         in u)
+    # MyMemory API 경고 메시지
+    if any(k in u for k in ('MYMEMORY WARNING', 'PLEASE SELECT',
+                             'YOU USED ALL', 'INVALID', 'QUERY LENGTH')):
+        return True
+    # 반복 패턴 감지 — "베트남, 베트남, 베트남..." 형태
+    parts = [p.strip() for p in str(v).split(',')]
+    if len(parts) >= 3 and len(set(parts[:3])) == 1 and parts[0]:
+        return True
+    # 단어 반복 감지 — "Vietnam Vietnam Vietnam" 형태
+    words = str(v).split()
+    if len(words) >= 4 and len(set(words[:4])) == 1:
+        return True
+    return False
 
 
 def translate_text(text, target_lang='ko'):
@@ -144,6 +153,10 @@ def run_batch():
     for r in range(2, ws.max_row + 1):
         title = ws.cell(r, title_col).value
         tko   = ws.cell(r, title_ko_col).value
+        # 오번역 감지 (반복 패턴) — 공란 처리하여 재번역 대상 포함
+        if tko and _is_warning(tko):
+            ws.cell(r, title_ko_col).value = ''
+            tko = ''
         if title and (not tko or str(tko).strip() == ''):
             empty_rows.append(r)
 
