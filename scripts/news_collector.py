@@ -669,17 +669,26 @@ def translate_text(text, target_lang='ko'):
 
 
 def translate_articles(articles):
+    """
+    번역 우선순위:
+      [1순위] 마스터플랜 매핑 기사 → 즉시 번역 (정책 배지 표시 핵심)
+      [2순위] 비매핑 기사 → 원문 저장(공란) → batch_translate 소급
+    DeepL Free 한도(16,667자/일) 내 유지 목적.
+    """
     if not articles:
         return articles
 
-    log(f"Translating {len(articles)} articles (ko/en/vi)...")
+    mapped   = [a for a in articles if a.get('matched_plans')]
+    unmapped = [a for a in articles if not a.get('matched_plans')]
 
-    for i, art in enumerate(articles):
+    log(f"Translating {len(articles)}건: 매핑={len(mapped)}건(즉시) / 비매핑={len(unmapped)}건(batch 소급)")
+
+    # ── 1순위: 매핑 기사 즉시 번역 ──────────────────────────────
+    for i, art in enumerate(mapped):
         title   = art.get('title', '') or ''
         summary = art.get('summary', '') or ''
         is_en   = is_english_text(title)
         is_vi   = is_vietnamese_text(title)
-
         try:
             art['title_ko']   = translate_text(title, 'ko')
             art['title_en']   = title if is_en else translate_text(title, 'en')
@@ -695,13 +704,23 @@ def translate_articles(articles):
             art.setdefault('summary_ko', '')
             art.setdefault('summary_en', summary)
             art.setdefault('summary_vi', '')
-
         if (i + 1) % 3 == 0:
-            time.sleep(0.5)
-        if (i + 1) % 10 == 0:
-            log(f"  Translated {i+1}/{len(articles)}")
+            time.sleep(0.3)
 
-    log(f"Translation complete: {len(articles)} articles")
+    # ── 2순위: 비매핑 기사 → 원문 저장 (batch_translate 소급 대상) ──
+    for art in unmapped:
+        title   = art.get('title', '') or ''
+        summary = art.get('summary', '') or ''
+        is_en   = is_english_text(title)
+        is_vi   = is_vietnamese_text(title)
+        art['title_ko']   = ''                          # 공란 → batch 대상
+        art['title_en']   = title if is_en else ''
+        art['title_vi']   = title if is_vi else ''
+        art['summary_ko'] = ''
+        art['summary_en'] = summary if is_en else ''
+        art['summary_vi'] = summary if is_vi else ''
+
+    log(f"Translation complete: 즉시={len(mapped)}건 / batch대기={len(unmapped)}건")
     return articles
 
 
