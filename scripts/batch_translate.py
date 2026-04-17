@@ -25,14 +25,22 @@ DEEPL_API_KEY = os.environ.get('DEEPL_API_KEY', '').strip()
 
 # DeepL 언어 코드 매핑
 _DEEPL_LANG = {'ko': 'KO', 'en': 'EN-US', 'vi': 'VI'}
-_deepl_ok   = True  # 한도 초과 시 False
+_deepl_ok       = True   # 월 한도 초과 시 False
+_deepl_day_chars = 0     # 일일 사용량 추적 (Free: 16,667자/일)
+DEEPL_DAY_LIMIT  = 16000 # 여유분 667자 확보
 
 
 def _try_deepl(text, target_lang):
-    """DeepL API Free 번역. 실패/한도초과 시 '' 반환."""
-    global _deepl_ok
+    """DeepL API Free 번역. 실패/한도초과 시 '' 반환.
+    일 16,000자 소프트 한도 도달 시 MyMemory/Google로 자동 전환.
+    """
+    global _deepl_ok, _deepl_day_chars
     if not DEEPL_API_KEY or not _deepl_ok:
         return ''
+    # 일 사용량 소프트 한도 체크 (16,667자/일 중 16,000자)
+    text_len = len(str(text)[:500])
+    if _deepl_day_chars + text_len > DEEPL_DAY_LIMIT:
+        return ''  # 한도 근접 → MyMemory/Google 폴백
     import requests
     try:
         resp = requests.post(
@@ -49,7 +57,10 @@ def _try_deepl(text, target_lang):
         if resp.status_code != 200:
             return ''
         result = resp.json().get('translations', [{}])[0].get('text', '')
-        return result if result and result != text else ''
+        if result and result != text:
+            _deepl_day_chars += text_len  # 성공 시 사용량 누적
+            return result
+        return ''
     except Exception:
         return ''
 
@@ -119,6 +130,9 @@ def translate_text(text, target_lang='ko'):
 def run_batch():
     import openpyxl
     from openpyxl.styles import PatternFill
+    # 실행 시작 시 DeepL 일 사용량 리셋
+    global _deepl_day_chars
+    _deepl_day_chars = 0
 
     ep = Path(EXCEL_PATH)
     if not ep.exists():
@@ -176,6 +190,7 @@ def run_batch():
 
     total_empty = len(empty_rows)
     batch       = empty_rows[:BATCH_SIZE]
+    print(f"[DeepL 일 사용량] {_deepl_day_chars:,}자 / {DEEPL_DAY_LIMIT:,}자 (한도)")
     print(f"번역 미완료: {total_empty}건 (2025년 이후: {len(priority)}건) | 이번 배치: {len(batch)}건")
 
     translated = 0
