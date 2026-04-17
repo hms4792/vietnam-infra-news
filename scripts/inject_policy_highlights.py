@@ -57,22 +57,59 @@ def load_policy_map():
 def inject_policy_flags(html_content, policy_map):
     """
     BACKEND_DATA JSON 배열에서 각 기사의 url을 찾아
-    policy_highlight 필드 추가
+    policy_highlight 필드 추가.
+
+    JSON 추출: regex 대신 문자열 인덱싱 방식으로 대용량·특수문자 안정 처리
     """
-    pattern = re.compile(r'/\*__BACKEND_DATA__\*/(\[.*?\])', re.DOTALL)
-    match = pattern.search(html_content)
-    if not match:
+    MARKER = "/*__BACKEND_DATA__*/"
+    marker_idx = html_content.find(MARKER)
+    if marker_idx < 0:
         print("  [SKIP] BACKEND_DATA 플레이스홀더 없음")
         return html_content, 0
 
-    try:
-        articles = json.loads(match.group(1))
-    except json.JSONDecodeError as e:
-        print(f"  [WARN] BACKEND_DATA JSON 파싱 실패: {e}")
-        print(f"  [INFO] policy_highlighted_articles.json으로 URL 기반 직접 매핑 시도")
-        # ── Fallback: URL 기반으로 policy_map과 직접 비교 ──────────────
-        # BACKEND_DATA 파싱 없이 docs/index.html의 URL 패턴에서 정책 배지 JS 삽입
-        articles = None  # fallback 모드
+    # 마커 직후 '[' 위치에서 JSON 배열 끝 ']' 까지 직접 슬라이싱
+    json_start = html_content.find("[", marker_idx)
+    if json_start < 0:
+        print("  [SKIP] BACKEND_DATA 배열 시작 없음")
+        return html_content, 0
+
+    # 중첩 배열/객체를 고려한 괄호 카운팅으로 안전하게 끝 위치 탐색
+    depth = 0
+    json_end = -1
+    in_str = False
+    escape = False
+    for i, ch in enumerate(html_content[json_start:], json_start):
+        if escape:
+            escape = False
+            continue
+        if ch == '\\':
+            escape = True
+            continue
+        if ch == '"' and not escape:
+            in_str = not in_str
+            continue
+        if in_str:
+            continue
+        if ch == '[' or ch == '{':
+            depth += 1
+        elif ch == ']' or ch == '}':
+            depth -= 1
+            if depth == 0:
+                json_end = i + 1
+                break
+
+    if json_end < 0:
+        print("  [WARN] BACKEND_DATA JSON 끝 위치 탐색 실패 → fallback")
+        articles = None
+    else:
+        json_str = html_content[json_start:json_end]
+        try:
+            articles = json.loads(json_str)
+            print(f"  [OK] BACKEND_DATA {len(articles)}건 파싱 성공")
+        except json.JSONDecodeError as e:
+            print(f"  [WARN] BACKEND_DATA JSON 파싱 실패: {e}")
+            print(f"  [INFO] URL 기반 fallback으로 전환")
+            articles = None  # fallback 모드
 
     # Fallback: articles 파싱 실패 시 JS 주입 방식으로 대체
     if articles is None:
