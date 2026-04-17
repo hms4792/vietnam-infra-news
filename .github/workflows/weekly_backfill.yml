@@ -1,12 +1,25 @@
 # ============================================================
-# Vietnam Infrastructure News — 주간 백필 파이프라인
+# Vietnam Infrastructure News — 수동 소급 수집 파이프라인
 # .github/workflows/weekly_backfill.yml
 #
-# 스케줄: 매주 수·일 KST 10:00 (UTC 01:00)
-# 역할: NewsData.io Latest API로 7섹터 기사 보완 수집
+# ★ 자동 실행 없음 — 수동(workflow_dispatch)으로만 실행
+#
+# 사용 목적:
+#   과거 특정 기간의 누락 기사를 소급 수집할 때 사용
+#   예) 파이프라인 중단 기간, AI 수집 오류 기간 복구
+#
+# 실행 방법:
+#   GitHub → Actions → "수동 소급 수집" → Run workflow
+#   → backfill_from: 시작일 (예: 2025-01-01)
+#   → backfill_to:   종료일 (예: 2025-06-30)
+#   ※ 날짜 비워두면 NewsData /latest (최신 기사) 수집
+#
+# 대상 기간:
+#   backfill_from ~ backfill_to 지정 시 해당 기간 소급
+#   미지정 시 최신 기사 (daily/weekly와 중복 가능)
 # ============================================================
 
-name: Weekly Backfill
+name: 수동 소급 수집 (과거 누락 기간 지정 가능)
 
 on:
   # ── 자동 스케줄 비활성화 ──────────────────────────────────────────────
@@ -33,7 +46,7 @@ concurrency:
 
 jobs:
   backfill:
-    name: 주간 백필 수집
+    name: 소급 수집 (backfill_from ~ backfill_to)
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -91,6 +104,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Weekly backfill $(date '+%Y-%m-%d') UTC"
+            git commit -m "수동 소급 수집 $(date '+%Y-%m-%d') (from=$BACKFILL_FROM to=$BACKFILL_TO)"
             git push
           fi
