@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-04-16T12:00:41.114126+00:00",
-  "total_articles": 23,
+  "generated_at": "2026-04-18T13:59:53.760786+00:00",
+  "total_articles": 43,
   "quality_grade": "D",
   "targets_met": {
-    "province_unclassified_le_25pct": false,
+    "province_unclassified_le_25pct": true,
     "specialist_media_ge_30pct": false,
     "all_7_sectors_covered": false,
     "policy_alignment_ge_30pct": false
   },
   "metrics": {
-    "province_unclassified_rate": 0.391,
+    "province_unclassified_rate": 0.047,
     "specialist_media_ratio": 0.0,
     "sector_coverage": {
       "covered": [
@@ -26,66 +26,66 @@
       "ratio": 0.571
     },
     "area_distribution": {
-      "Urban Development": 8,
-      "Energy Develop.": 8,
-      "Environment": 7
+      "Urban Development": 13,
+      "Energy Develop.": 14,
+      "Environment": 16
     },
     "policy_alignment": {
-      "matched_ratio": 0.217,
-      "high_relevance_ratio": 0.174,
+      "matched_ratio": 0.116,
+      "high_relevance_ratio": 0.047,
       "matched_count": 5,
-      "high_relevance_count": 4,
+      "high_relevance_count": 2,
       "matched_articles": [
         {
-          "title": "Việt Nam sustains growth with focus on productivity, energy ",
+          "title": "Gia Lai attracts $190 million to four renewable energy proje",
+          "sector": "Power",
+          "province": "Gia Lai",
+          "doc_id": "VN-PWR-PDP8",
+          "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
+          "relevance": "high",
+          "url": "https://vietnamnews.vn/economy/1779668/gia-lai-attracts-190-million-to-four-renewable-energy-projects.html"
+        },
+        {
+          "title": "Viet Nam and Norway sign green strategic partnership, promot",
           "sector": "Power",
           "province": "Vietnam",
           "doc_id": "VN-PWR-PDP8",
           "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
           "relevance": "high",
-          "url": "https://vietnamnews.vn/economy/1779537/viet-nam-sustains-growth-with-focus-on-productivity-energy-transition-adb.html"
+          "url": "https://en.nhandan.vn/viet-nam-and-norway-sign-green-strategic-partnership-promoting-sustainable-development-cooperation-post161217.html"
         },
         {
-          "title": "EVN Việt Nam cảnh báo: 5 thiết bị tắt rồi vẫn \"chạy ngầm\" 24",
+          "title": "Sau đảo Lại Sơn, Điện lực miền Nam sẽ kéo lưới điện quốc gia",
           "sector": "Power",
-          "province": "Vietnam",
+          "province": "An Giang",
           "doc_id": "VN-PWR-PDP8",
           "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
-          "relevance": "high",
-          "url": "https://cafebiz.vn/evn-viet-nam-canh-bao-5-thiet-bi-tat-roi-van-chay-ngam-24-7-nhieu-nha-bi-ton-dien-oan-176260416170618231.chn"
-        },
-        {
-          "title": "EVN Việt Nam hướng dẫn: Làm điều này trước khi ngủ có thể gi",
-          "sector": "Power",
-          "province": "Vietnam",
-          "doc_id": "VN-PWR-PDP8",
-          "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
-          "relevance": "high",
-          "url": "https://cafebiz.vn/evn-viet-nam-huong-dan-lam-dieu-nay-truoc-khi-ngu-co-the-giup-giam-tien-dien-moi-thang-176260416170443507.chn"
-        },
-        {
-          "title": "Việt Nam đẩy mạnh chuyển đổi năng lượng xanh với nhiên liệu ",
-          "sector": "Solid Waste",
-          "province": "Vietnam",
-          "doc_id": "VN-CARBON-2050",
-          "plan_name": "Vietnam Carbon Neutrality Roadmap 2050",
           "relevance": "medium",
-          "url": "https://www.vietnamplus.vn/viet-nam-day-manh-chuyen-doi-nang-luong-xanh-voi-nhien-lieu-ben-vung-post1105200.vnp"
+          "url": "https://thanhnien.vn/sau-dao-lai-son-dien-luc-mien-nam-se-keo-luoi-dien-quoc-gia-ra-nam-du-185260417172544362.htm"
         },
         {
-          "title": "Gạo phát thải thấp: 'Mắt xích' quan trọng trên hành trình Ne",
-          "sector": "Solid Waste",
-          "province": "Vietnam",
-          "doc_id": "VN-ENV-IND-1894",
-          "plan_name": "Vietnam Environmental Industry Development Programme (Decision 1894/QĐ-TTg)",
-          "relevance": "high",
-          "url": "https://www.vietnamplus.vn/gao-phat-thai-thap-mat-xich-quan-trong-tren-hanh-trinh-net-zero-post1105279.vnp"
+          "title": "EVNSPC tăng cường kiểm tra, đôn đốc các dự án điện cho Phú Q",
+          "sector": "Power",
+          "province": "Kien Giang",
+          "doc_id": "VN-PWR-PDP8",
+          "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
+          "relevance": "medium",
+          "url": "https://thanhnien.vn/evnspc-tang-cuong-kiem-tra-don-doc-cac-du-an-dien-cho-phu-quoc-va-apec-2027-185260417162241979.htm"
+        },
+        {
+          "title": "EVNSPC đóng điện, vận hành Trạm biến áp 110kV Lại Sơn",
+          "sector": "Power",
+          "province": "An Giang",
+          "doc_id": "VN-PWR-PDP8",
+          "plan_name": "Vietnam National Power Development Plan VIII (PDP8) 2021-2030, Vision 2050",
+          "relevance": "medium",
+          "url": "https://baoxaydung.vn/evnspc-dong-dien-van-hanh-tram-bien-ap-110kv-lai-son-192260417162153693.htm"
         }
       ]
     },
     "policy_highlight_count": 5,
     "collector_flags": {
-      "vietnam_ratio": 0.391,
+      "vietnam_ratio": 0.047,
       "missing_provinces": []
     }
   },
@@ -111,7 +111,7 @@
     {
       "priority": "LOW",
       "metric": "policy_alignment",
-      "current": 0.217,
+      "current": 0.116,
       "action": "knowledge_index.json 키워드 보강으로 정책 연계율 개선 가능"
     }
   ],
@@ -119,15 +119,15 @@
     "available": true,
     "week": "latest",
     "genspark_total": 128,
-    "claude_only_count": 23,
+    "claude_only_count": 43,
     "genspark_only_count": 128,
     "genspark_only_sources": {
       "": 128
     },
     "missing_sectors_in_claude": [
+      "Smart City",
       "Waste Water",
-      "Oil & Gas",
-      "Smart City"
+      "Oil & Gas"
     ],
     "policy_rate_comparison": {
       "claude": 0.0,
@@ -138,7 +138,7 @@
       {
         "priority": "HIGH",
         "type": "missing_sector",
-        "message": "Genspark 수집 섹터 중 Claude 미수집: ['Waste Water', 'Oil & Gas', 'Smart City']",
+        "message": "Genspark 수집 섹터 중 Claude 미수집: ['Smart City', 'Waste Water', 'Oil & Gas']",
         "action": "news_collector.py SECTOR_KEYWORDS에 해당 섹터 키워드 보강 필요"
       },
       {
