@@ -25,7 +25,9 @@ BASE_DIR           = Path(__file__).parent.parent
 AGENT_OUT          = BASE_DIR / "data" / "agent_output"
 SHARED_DOCS        = BASE_DIR / "docs" / "shared"
 COLLECTOR_OUT      = AGENT_OUT / "collector_output.json"
-QUALITY_REPORT     = AGENT_OUT / "quality_report.json"
+QUALITY_REPORT        = AGENT_OUT / "quality_report.json"
+QUALITY_REPORT_DAILY  = AGENT_OUT / "quality_report_daily.json"
+QUALITY_REPORT_WEEKLY = AGENT_OUT / "quality_report_weekly.json"
 GENSPARK_OUTPUT    = SHARED_DOCS / "genspark_output.json"
 POLICY_HIGHLIGHTED = AGENT_OUT / "policy_highlighted_articles.json"
 
@@ -415,16 +417,33 @@ def generate_recommendations(metrics):
 # ============================================================
 
 def save_report(report):
+    import os as _os
     AGENT_OUT.mkdir(parents=True, exist_ok=True)
+
+    mode = _os.environ.get("REPORT_MODE", "daily").lower()
+    report["report_mode"] = mode
+
+    # 공통 파일 (기존 호환)
     with open(QUALITY_REPORT, "w", encoding="utf-8") as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
-    print(f"[OK] quality_report.json 저장 완료")
+    print("[OK] quality_report.json 저장 (" + mode + " 모드)")
+
+    # 모드별 전용 파일
+    if mode == "weekly":
+        mode_file = QUALITY_REPORT_WEEKLY
+    else:
+        mode_file = QUALITY_REPORT_DAILY
+    with open(mode_file, "w", encoding="utf-8") as f:
+        json.dump(report, f, ensure_ascii=False, indent=2)
+    print("[OK] quality_report_" + mode + ".json 저장")
+
     try:
         SHARED_DOCS.mkdir(parents=True, exist_ok=True)
         shutil.copy2(QUALITY_REPORT, SHARED_DOCS / "quality_report.json")
-        print(f"[OK] docs/shared/quality_report.json 업데이트")
+        shutil.copy2(mode_file,      SHARED_DOCS / ("quality_report_" + mode + ".json"))
+        print("[OK] docs/shared/quality_report*.json 업데이트")
     except Exception as e:
-        print(f"[WARN] shared 복사 실패: {e}")
+        print("[WARN] shared 복사 실패: " + str(e))
 
 
 def _count_area(articles):
