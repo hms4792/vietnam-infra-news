@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-19T11:34:58.511848+00:00",
-  "total_articles": 11,
+  "generated_at": "2026-04-20T12:05:40.399248+00:00",
+  "total_articles": 12,
   "quality_grade": "D",
   "targets_met": {
     "province_unclassified_le_25pct": false,
@@ -9,25 +9,26 @@
     "policy_alignment_ge_30pct": false
   },
   "metrics": {
-    "province_unclassified_rate": 0.273,
+    "province_unclassified_rate": 0.333,
     "specialist_media_ratio": 0.0,
     "sector_coverage": {
       "covered": [
-        "Industrial Parks",
+        "Oil & Gas",
+        "Power",
+        "Smart City",
         "Solid Waste",
         "Water Supply/Drainage"
       ],
       "missing": [
         "Waste Water",
-        "Power",
-        "Oil & Gas",
-        "Smart City"
+        "Industrial Parks"
       ],
-      "ratio": 0.429
+      "ratio": 0.714
     },
     "area_distribution": {
-      "Environment": 7,
-      "Urban Development": 4
+      "Urban Development": 8,
+      "Energy Develop.": 2,
+      "Environment": 2
     },
     "policy_alignment": {
       "matched_ratio": 0.0,
@@ -38,7 +39,7 @@
     },
     "policy_highlight_count": 0,
     "collector_flags": {
-      "vietnam_ratio": 0.273,
+      "vietnam_ratio": 0.333,
       "missing_provinces": []
     }
   },
@@ -56,11 +57,9 @@
       "metric": "sector_coverage",
       "missing": [
         "Waste Water",
-        "Power",
-        "Oil & Gas",
-        "Smart City"
+        "Industrial Parks"
       ],
-      "action": "Waste Water, Power, Oil & Gas, Smart City 섹터 RSS/키워드 보강 필요"
+      "action": "Waste Water, Industrial Parks 섹터 RSS/키워드 보강 필요"
     },
     {
       "priority": "LOW",
@@ -73,16 +72,14 @@
     "available": true,
     "week": "latest",
     "genspark_total": 128,
-    "claude_only_count": 11,
+    "claude_only_count": 12,
     "genspark_only_count": 128,
     "genspark_only_sources": {
       "": 128
     },
     "missing_sectors_in_claude": [
-      "Power",
       "Waste Water",
-      "Oil & Gas",
-      "Smart City"
+      "Industrial Parks"
     ],
     "policy_rate_comparison": {
       "claude": 0.0,
@@ -93,7 +90,7 @@
       {
         "priority": "HIGH",
         "type": "missing_sector",
-        "message": "Genspark 수집 섹터 중 Claude 미수집: ['Power', 'Waste Water', 'Oil & Gas', 'Smart City']",
+        "message": "Genspark 수집 섹터 중 Claude 미수집: ['Waste Water', 'Industrial Parks']",
         "action": "news_collector.py SECTOR_KEYWORDS에 해당 섹터 키워드 보강 필요"
       },
       {
@@ -103,5 +100,6 @@
         "action": "RSS_FEEDS 또는 specialist_crawler 대상에 추가 검토"
       }
     ]
-  }
+  },
+  "report_mode": "daily"
 }
