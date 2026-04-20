@@ -648,13 +648,17 @@ def translate_text(text, target_lang='ko'):
         return text or ''
     src = 'en' if is_english_text(text) else 'vi'
     try:
-        url = (f"https://api.mymemory.translated.net/get"
-               f"?q={requests.utils.quote(text[:500])}"
-               f"&langpair={src}|{target_lang}")
-        r = requests.get(url, timeout=10)
+        mm_url = (
+            "https://api.mymemory.translated.net/get"
+            "?q=" + requests.utils.quote(text[:500]) +
+            "&langpair=" + src + "|" + target_lang
+        )
+        r = requests.get(mm_url, timeout=10)
         data = r.json()
         result = data.get('responseData', {}).get('translatedText', '')
-        if result and result != text and 'INVALID' not in result.upper():
+        warn_kws = ('INVALID', 'MYMEMORY WARNING', 'PLEASE SELECT',
+                    'YOU USED ALL', 'QUERY LENGTH')
+        if result and result != text and not any(k in result.upper() for k in warn_kws):
             return result
     except Exception:
         pass
@@ -668,18 +672,55 @@ def translate_text(text, target_lang='ko'):
     return text
 
 
+def _load_policy_keywords():
+    """knowledge_index.json에서 정책 키워드 로드 (번역 우선순위 판단용)"""
+    import json as _json
+    from pathlib import Path as _Path
+    candidates = [
+        _Path(__file__).parent.parent / "docs"  / "shared" / "knowledge_index.json",
+        _Path(__file__).parent.parent / "data"  / "shared" / "knowledge_index.json",
+        _Path(__file__).parent.parent / "data"  / "agent_output" / "knowledge_index.json",
+    ]
+    for p in candidates:
+        if p.exists():
+            try:
+                data = _json.loads(p.read_text(encoding='utf-8'))
+                plans = data.get('masterplans', {})
+                kws = []
+                for plan in plans.values():
+                    kws.extend([k.lower() for k in plan.get('keywords_en', [])])
+                    kws.extend([k.lower() for k in plan.get('keywords_vi', [])])
+                return set(kws)
+            except Exception:
+                pass
+    return set()
+
+
+def _is_policy_related(article, policy_keywords):
+    """제목+요약에 정책 키워드 포함 여부 — translate 시점 즉석 판단"""
+    if not policy_keywords:
+        return True   # 키워드 없으면 전체 번역
+    text = (
+        (article.get('title', '') or '') + ' ' +
+        (article.get('summary', '') or '')
+    ).lower()
+    return any(kw in text for kw in policy_keywords)
+
+
 def translate_articles(articles):
     """
     번역 우선순위:
-      [1순위] 마스터플랜 매핑 기사 → 즉시 번역 (정책 배지 표시 핵심)
-      [2순위] 비매핑 기사 → 원문 저장(공란) → batch_translate 소급
+      [1순위] 정책 키워드 포함 기사 → 즉시 번역
+              (knowledge_index 기반 즉석 판단 — SA-6 실행 전 시점에도 작동)
+      [2순위] 비정책 기사 → 원문 저장(공란) → batch_translate 소급
     DeepL Free 한도(16,667자/일) 내 유지 목적.
     """
     if not articles:
         return articles
 
-    mapped   = [a for a in articles if a.get('matched_plans')]
-    unmapped = [a for a in articles if not a.get('matched_plans')]
+    policy_keywords = _load_policy_keywords()
+    mapped   = [a for a in articles if _is_policy_related(a, policy_keywords)]
+    unmapped = [a for a in articles if not _is_policy_related(a, policy_keywords)]
 
     log(f"Translating {len(articles)}건: 매핑={len(mapped)}건(즉시) / 비매핑={len(unmapped)}건(batch 소급)")
 
