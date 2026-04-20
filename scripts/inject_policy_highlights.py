@@ -155,75 +155,77 @@ def inject_policy_flags(html_content, policy_map):
 
 DASHBOARD_JS_PATCH = """
 <script>
-/* policy_highlight 대시보드 로직 v1.0 */
+/* Vietnam Infra News — 정책연계 기사 노란색 하이라이트 v2.0 */
 (function() {
-  var _origRender = window._renderArticles || null;
+  /* BACKEND_DATA에서 policy_highlight=true 기사 URL 세트 구성 */
+  function getPolicyUrls() {
+    if (typeof BACKEND_DATA === 'undefined' || !Array.isArray(BACKEND_DATA)) return new Set();
+    return new Set(
+      BACKEND_DATA
+        .filter(function(a) { return a.policy_highlight === true; })
+        .map(function(a) { return a.url || ''; })
+        .filter(Boolean)
+    );
+  }
 
-  function applyPolicyUI() {
+  /* 기사 카드/행에 노란색 하이라이트 + 배지 적용 */
+  function applyHighlight(el, art) {
+    el.style.background = '#FFFDE7';
+    el.style.borderLeft = '3px solid #F9A825';
+    if (!el.querySelector('.policy-badge')) {
+      var badge = document.createElement('span');
+      badge.className = 'policy-badge';
+      badge.textContent = art.policy_doc_id || 'Policy';
+      badge.title = art.policy_plan_name || '';
+      badge.style.cssText = 'background:#F9A825;color:#5D4037;padding:1px 6px;'
+        + 'border-radius:3px;font-size:10px;font-weight:500;margin-left:6px;'
+        + 'vertical-align:middle;display:inline-block;';
+      var titleEl = el.querySelector('h3,h4,.article-title,.title,td:first-child');
+      if (titleEl) titleEl.appendChild(badge);
+    }
+  }
+
+  /* DOM에서 링크 href 또는 data-url로 기사 매핑 후 하이라이트 */
+  function runHighlight() {
     if (typeof BACKEND_DATA === 'undefined') return;
-
-    /* 홈 탭 "오늘 수집" 섹션: 정책 연계 기사만 표시 */
-    var todaySection = document.getElementById('today-articles');
-    if (todaySection) {
-      var cards = todaySection.querySelectorAll('[data-url]');
-      cards.forEach(function(card) {
-        var url = card.getAttribute('data-url');
-        var art = BACKEND_DATA.find(function(a) { return a.url === url; });
-        if (art && !art.policy_highlight) {
-          card.style.display = 'none';
-        } else if (art && art.policy_highlight) {
-          card.style.background = '#FFFDE7';
-          card.style.borderLeft = '3px solid #F9A825';
-          var badge = document.createElement('span');
-          badge.textContent = art.policy_doc_id || 'Policy';
-          badge.title = art.policy_plan_name || '';
-          badge.style.cssText = 'background:#F9A825;color:#5D4037;padding:1px 6px;'
-            + 'border-radius:3px;font-size:10px;font-weight:500;margin-left:6px;'
-            + 'vertical-align:middle';
-          var titleEl = card.querySelector('.article-title, h3, .card-title, a');
-          if (titleEl) titleEl.appendChild(badge);
-        }
-      });
-    }
-
-    /* Database 탭: 전체 표시 + 정책 연계 기사 노란색 배지 */
-    var dbSection = document.getElementById('db-articles') || document.getElementById('all-articles');
-    if (dbSection) {
-      dbSection.querySelectorAll('[data-url]').forEach(function(card) {
-        var url = card.getAttribute('data-url');
-        var art = BACKEND_DATA.find(function(a) { return a.url === url; });
-        if (art && art.policy_highlight && !card.querySelector('.policy-badge')) {
-          card.style.borderLeft = '3px solid #F9A825';
-          var badge = document.createElement('span');
-          badge.className = 'policy-badge';
-          badge.textContent = art.policy_doc_id || 'Policy';
-          badge.style.cssText = 'background:#F9A825;color:#5D4037;padding:1px 6px;'
-            + 'border-radius:3px;font-size:10px;font-weight:500;margin-left:6px';
-          var titleEl = card.querySelector('.article-title, h3, .card-title, a');
-          if (titleEl) titleEl.appendChild(badge);
-        }
-      });
-    }
-  }
-
-  /* DOM 렌더링 완료 후 실행 */
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(applyPolicyUI, 500);
+    var policyMap = {};
+    BACKEND_DATA.forEach(function(a) {
+      if (a.policy_highlight && a.url) policyMap[a.url] = a;
     });
-  } else {
-    setTimeout(applyPolicyUI, 500);
+
+    /* a[href] 기반 */
+    document.querySelectorAll('a[href]').forEach(function(a) {
+      var art = policyMap[a.href];
+      if (!art) return;
+      var card = a.closest('tr,li,.card,.article-card,.article-item,div[class*="article"]');
+      if (card) applyHighlight(card, art);
+    });
+
+    /* data-url 기반 (있는 경우) */
+    document.querySelectorAll('[data-url]').forEach(function(el) {
+      var art = policyMap[el.getAttribute('data-url')];
+      if (art) applyHighlight(el, art);
+    });
   }
 
-  /* MutationObserver로 동적 렌더링도 감지 */
-  var observer = new MutationObserver(function() {
-    applyPolicyUI();
-  });
-  document.addEventListener('DOMContentLoaded', function() {
+  /* 초기 실행 + 동적 렌더링 대응 (MutationObserver) */
+  function init() {
+    runHighlight();
+    var observer = new MutationObserver(function(mutations) {
+      var relevant = mutations.some(function(m) { return m.addedNodes.length > 0; });
+      if (relevant) runHighlight();
+    });
     observer.observe(document.body, { childList: true, subtree: true });
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
 </script>"""
+
 
 
 def inject_js_patch(html_content):
