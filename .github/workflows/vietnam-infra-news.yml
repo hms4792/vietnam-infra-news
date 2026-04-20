@@ -82,7 +82,7 @@ jobs:
             echo "specialist_crawler.py not found, skipping"
           fi
 
-      - name: Batch translate (20건 소급)
+      - name: Batch translate (40건 소급 — 매핑 우선)
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
@@ -95,6 +95,8 @@ jobs:
           fi
 
       - name: Run Quality Context Agent SA-6 (정책 매핑 + 노란색 플래그)
+        env:
+          REPORT_MODE: weekly
         run: |
           python3 scripts/quality_context_agent.py
           echo "=== 정책 연계 기사 하이라이트 플래그 생성 완료 ==="
@@ -122,6 +124,7 @@ jobs:
           git add data/vietnam_infrastructure_news.db || true
           git add docs/index.html
           git add data/agent_output/ || true
+          git add docs/shared/quality_report_weekly.json || true
           if git diff --staged --quiet; then
             echo "No changes"
           else
