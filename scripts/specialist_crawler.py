@@ -76,11 +76,21 @@ HEADERS = {
         'AppleWebKit/537.36 (KHTML, like Gecko) '
         'Chrome/124.0.0.0 Safari/537.36'
     ),
-    'Accept': 'text/html,application/xhtml+xml,*/*;q=0.8',
-    'Accept-Language': 'en-US,en;q=0.9',
+    'Accept':          'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.9,vi;q=0.8',
     'Accept-Encoding': 'gzip, deflate, br',
-    'Connection': 'keep-alive',
+    'Connection':      'keep-alive',
+    'Cache-Control':   'no-cache',
+    'Pragma':          'no-cache',
+    'Upgrade-Insecure-Requests': '1',
+    'Sec-Fetch-Dest':  'document',
+    'Sec-Fetch-Mode':  'navigate',
+    'Sec-Fetch-Site':  'none',
 }
+# theinvestor 전용 헤더 (Referer 포함)
+INVESTOR_HEADERS = {**HEADERS, 'Referer': 'https://theinvestor.vn/'}
+# vir 전용 헤더
+VIR_HEADERS      = {**HEADERS, 'Referer': 'https://vir.com.vn/'}
 DELAY        = 2.0   # 요청 간 딜레이 (초)
 MAX_PAGES    = 8     # 카테고리당 최대 페이지
 TIMEOUT      = 20    # 요청 타임아웃 (초)
@@ -91,12 +101,25 @@ def log(msg):
     print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - {msg}")
 
 
-def fetch_page(url):
-    """HTML 페이지 가져오기"""
+def fetch_page(url, site_headers=None):
+    """HTML 페이지 가져오기 (사이트별 헤더 지원)"""
+    hdrs = site_headers or HEADERS
     try:
-        r = requests.get(url, headers=HEADERS, timeout=TIMEOUT, allow_redirects=True)
+        r = requests.get(url, headers=hdrs, timeout=TIMEOUT,
+                         allow_redirects=True, verify=True)
         if r.status_code == 200:
             return r.text
+        if r.status_code in (403, 500, 503):
+            # 재시도: User-Agent 변경
+            import time as _time
+            _time.sleep(3)
+            hdrs2 = {**hdrs, 'User-Agent':
+                     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) '
+                     'AppleWebKit/605.1.15 (KHTML, like Gecko) '
+                     'Version/17.0 Safari/605.1.15'}
+            r2 = requests.get(url, headers=hdrs2, timeout=TIMEOUT, allow_redirects=True)
+            if r2.status_code == 200:
+                return r2.text
         log(f"  [HTTP {r.status_code}] {url}")
         return None
     except Exception as e:
@@ -164,7 +187,11 @@ INVESTOR_CATEGORIES = [
 ]
 
 # 기사 URL 패턴: /기사제목-d숫자.html (검색에서 확인)
-INVESTOR_ARTICLE_RE = re.compile(r'/[a-z0-9-]+-d\d+\.html$')
+# theinvestor 기사 URL 패턴 (완화: d+숫자 or 숫자만)
+INVESTOR_ARTICLE_RE = re.compile(
+    r'/[a-z0-9][a-z0-9-]*(?:-d\d+|-\d{4,})\.html$|'   # -d123456.html 또는 -20241231.html
+    r'/[a-z0-9][a-z0-9-]*\.html$'                         # 일반 .html (폴백)
+)
 
 
 def _get_investor_article_links(html, base_url):
@@ -241,7 +268,7 @@ def scrape_theinvestor(from_date_dt, existing_urls, dry_run=False):
         for page in range(1, MAX_PAGES + 1):
             # 페이지네이션: ?page=N 시도
             page_url = cat_url if page == 1 else f"{cat_url}?page={page}"
-            html = fetch_page(page_url)
+            html = fetch_page(page_url, INVESTOR_HEADERS)
             if not html:
                 break
 
@@ -394,7 +421,7 @@ def scrape_vir(from_date_dt, existing_urls, dry_run=False):
         for page in range(1, MAX_PAGES + 1):
             # vir 페이지네이션: ?start=N
             page_url = cat_url if page == 1 else f"{cat_url}?start={page * 10}"
-            html = fetch_page(page_url)
+            html = fetch_page(page_url, INVESTOR_HEADERS)
             if not html:
                 break
 
