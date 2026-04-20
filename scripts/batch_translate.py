@@ -99,15 +99,23 @@ def translate_text(text, target_lang='ko'):
     if result:
         return result
 
-    # 2순위: MyMemory
+    # 2순위: MyMemory (langpair 명시 — auto 사용 금지)
     try:
+        # 원문 언어 감지: 영어 비율로 판단
+        ascii_cnt = sum(1 for c in str(text)[:200] if c.isascii() and c.isalpha())
+        total_cnt = max(sum(1 for c in str(text)[:200] if c.isalpha()), 1)
+        src_lang  = 'en' if ascii_cnt / total_cnt > 0.6 else 'vi'
+        if src_lang == target_lang:
+            src_lang = 'en' if target_lang == 'vi' else 'vi'
+
         url = (
             "https://api.mymemory.translated.net/get"
             "?q=" + requests.utils.quote(str(text)[:500]) +
-            "&langpair=auto|" + target_lang
+            "&langpair=" + src_lang + "|" + target_lang
         )
         r      = requests.get(url, timeout=10)
-        result = r.json().get('responseData', {}).get('translatedText', '')
+        data   = r.json()
+        result = data.get('responseData', {}).get('translatedText', '')
         if result and not _is_warning(result) and result != text:
             return result
     except Exception:
