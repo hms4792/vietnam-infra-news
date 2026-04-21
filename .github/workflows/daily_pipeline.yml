@@ -1,17 +1,25 @@
 # ============================================================
 # Vietnam Infrastructure News — 일일 수집 파이프라인
-# .github/workflows/daily_pipeline.yml
+# 파일 경로: .github/workflows/daily_pipeline.yml
 #
 # 스케줄: 매일 KST 20:00 (UTC 11:00)
-# v5.9: SA-6 실행 순서 변경 (Excel 업데이트 전으로 이동)
-#       → policy_highlighted_articles.json 생성 후 Excel에 노란색 반영
+# 버전: v6.0
+# 변경사항: SA-6(quality_context_agent.py) v2.0 업그레이드
+#           → SA-7 맥락 분류 + Policy Sentinel(정책·법령 기사 포착) 통합
+#
+# ★ 영구 제약 (절대 변경 금지):
+#   [1] 번역: Google Translate (MyMemory + deep-translator). Anthropic API 금지
+#   [2] 대시보드: templates/dashboard_template.html → docs/index.html
+#   [4] 이메일: EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_ADDRESS 등 금지)
+#   [8] 배포: main 브랜치 /docs 폴더 (gh-pages 브랜치 절대 금지)
+#  [12] yml 내 python3 -c "..." 인라인 코드 금지
 # ============================================================
 
-name: Daily Pipeline v5.9
+name: Daily Pipeline v6.0
 
 on:
   schedule:
-    - cron: '0 11 * * *'
+    - cron: '0 11 * * *'   # UTC 11:00 = KST 20:00, 매일 실행 (휴일 포함)
   workflow_dispatch:
     inputs:
       hours_back:
@@ -30,28 +38,34 @@ jobs:
     timeout-minutes: 30
 
     steps:
+      # ── 1. 레포지토리 체크아웃 ─────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # ── 2. Python 환경 설정 ───────────────────────────────
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
+      # ── 3. 의존성 설치 ────────────────────────────────────
+      # deep-translator: MyMemory API 번역용 [제약 1]
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install requests openpyxl feedparser beautifulsoup4 lxml deep-translator deepl
+          pip install requests openpyxl feedparser beautifulsoup4 lxml deep-translator
 
+      # ── 4. Excel 파일 존재 확인 ───────────────────────────
       - name: Check Excel file
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
         run: |
           python3 scripts/check_excel.py
 
+      # ── 5. 뉴스 수집 ─────────────────────────────────────
       - name: Collect news
         env:
           HOURS_BACK: ${{ github.event.inputs.hours_back || '24' }}
@@ -59,75 +73,62 @@ jobs:
           DB_PATH: data/vietnam_infrastructure_news.db
           LANGUAGE_FILTER: all
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
-          DEEPL_API_KEY:    ${{ secrets.DEEPL_API_KEY }}
         run: |
           echo "=== News Collection (hours_back=$HOURS_BACK) ==="
-          python3 scripts/news_collector.py --hours-back $HOURS_BACK --agent-mode
+          python3 scripts/news_collector.py --hours-back $HOURS_BACK
 
-      - name: Batch translate (40건 소급 — 매핑 우선)
+      # ── 6. 번역 (소급 20건) ──────────────────────────────
+      - name: Batch translate (backlog 20 articles)
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          DB_PATH: data/vietnam_infrastructure_news.db
-          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
         run: |
-          if [ -f scripts/batch_translate.py ]; then
-            python3 scripts/batch_translate.py
-          else
-            echo "batch_translate.py not found, skipping"
-          fi
+          python3 scripts/batch_translate.py || echo "Batch translate skipped"
 
-      - name: Absorb Genspark Output (Genspark 산출물 흡수 — 참고용)
-        run: |
-          if [ -f scripts/absorb_genspark.py ]; then
-            python3 scripts/absorb_genspark.py
-          else
-            echo "absorb_genspark.py 없음 — 건너뜀"
-          fi
-
-      - name: Run Quality Context Agent SA-6 (정책 매핑 + 노란색 플래그 생성)
+      # ── 7. SA-7 + Policy Sentinel 분류 (v2.0) ────────────
+      # SA7_MATCH: 프로젝트·시설 관련 기사
+      # POLICY_MATCH: 정책·법령 관련 기사 (Decree/Circular/Resolution 등)
+      # SA7+POLICY: 둘 다 해당하는 기사
+      # knowledge_index v2.3: 25개 플랜, Policy Sentinel 71개 신호어
+      - name: SA-7 Context classification (SA-7 + Policy Sentinel v2.0)
         env:
-          REPORT_MODE: daily
+          KNOWLEDGE_INDEX_PATH: docs/shared/knowledge_index_v2.3.json
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
         run: |
-          python3 scripts/quality_context_agent.py
-          echo "=== 정책 연계 기사 하이라이트 플래그 생성 완료 ==="
+          python3 scripts/quality_context_agent.py --mode all || echo "SA-7 classification skipped"
 
-      - name: Update Excel with policy highlights (SA-4)
+      # ── 8. Excel Database 업데이트 ───────────────────────
+      # ExcelUpdater.update_all(articles) 메서드 사용 [제약]
+      - name: Update Excel Database
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
           DB_PATH: data/vietnam_infrastructure_news.db
         run: |
           python3 scripts/run_excel_updater.py
 
+      # ── 9. Dashboard 생성 ────────────────────────────────
+      # templates/dashboard_template.html → docs/index.html [제약 2]
       - name: Build dashboard
         env:
           EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
         run: |
-          echo "=== Dashboard Build ==="
           python3 scripts/build_dashboard.py
-          echo "index.html size: $(wc -c < docs/index.html) bytes"
 
-      - name: Inject policy highlights into dashboard
-        run: |
-          python3 scripts/inject_policy_highlights.py
-          echo "=== Policy highlight injection 완료 ==="
-
-      - name: Commit and push
+      # ── 10. 변경사항 Commit & Push ────────────────────────
+      - name: Commit and push changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add data/database/Vietnam_Infra_News_Database_Final.xlsx
-          git add data/vietnam_infrastructure_news.db || true
-          git add docs/index.html
-          git add data/agent_output/ || true
-          git add docs/shared/quality_report_daily.json || true
+          git add -A
           if git diff --staged --quiet; then
-            echo "No changes"
+            echo "No changes to commit"
           else
             git commit -m "Daily update $(date '+%Y-%m-%d') KST"
             git push
             echo "Pushed successfully"
           fi
 
+      # ── 11. 이메일 알림 ──────────────────────────────────
+      # EMAIL_USERNAME / EMAIL_PASSWORD [제약 4]
       - name: Send email notification
         if: always()
         env:
@@ -138,16 +139,28 @@ jobs:
           if [ -f scripts/send_email.py ]; then
             python3 scripts/send_email.py || echo "Email skipped"
           else
-            echo "send_email.py not found"
+            echo "send_email.py not found, skipping"
           fi
 
+      # ── 12. Genspark 공유 파일 내보내기 ──────────────────
+      # docs/shared/에 knowledge_index_v2.3.json 등 공유 파일 배포
       - name: Export shared files for Genspark
-        run: python3 scripts/export_shared.py
+        run: |
+          if [ -f scripts/export_shared.py ]; then
+            python3 scripts/export_shared.py || echo "Export shared skipped"
+          else
+            echo "export_shared.py not found, skipping"
+          fi
 
+      # ── 13. 공유 파일 Commit & Push ──────────────────────
       - name: Commit and push shared files
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add docs/shared/
-          git diff --cached --quiet || git commit -m "Daily shared export $(date +%Y-%m-%d)"
-          git push
+          git add docs/shared/ || echo "No shared files to add"
+          if git diff --cached --quiet; then
+            echo "No shared changes to commit"
+          else
+            git commit -m "Daily shared export $(date '+%Y-%m-%d')"
+            git push
+          fi
