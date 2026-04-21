@@ -748,20 +748,30 @@ def translate_articles(articles):
         if (i + 1) % 3 == 0:
             time.sleep(0.3)
 
-    # ── 2순위: 비매핑 기사 → 원문 저장 (batch_translate 소급 대상) ──
-    for art in unmapped:
+    # ── 2순위: 비매핑 기사 → 제목 즉시 번역 / 요약만 batch 소급 ──
+    # 이유: 제목 미번역 시 대시보드 한국어 모드에서 베트남어 원문 표시됨
+    for i, art in enumerate(unmapped):
         title   = art.get('title', '') or ''
         summary = art.get('summary', '') or ''
         is_en   = is_english_text(title)
         is_vi   = is_vietnamese_text(title)
-        art['title_ko']   = ''                          # 공란 → batch 대상
-        art['title_en']   = title if is_en else ''
-        art['title_vi']   = title if is_vi else ''
+        try:
+            # 제목 3언어 즉시 번역
+            art['title_ko'] = translate_text(title, 'ko')
+            art['title_en'] = title if is_en else translate_text(title, 'en')
+            art['title_vi'] = title if is_vi else translate_text(title, 'vi')
+        except Exception:
+            art['title_ko'] = ''
+            art['title_en'] = title if is_en else ''
+            art['title_vi'] = title if is_vi else ''
+        # 요약은 공란 → batch_translate 소급 번역
         art['summary_ko'] = ''
         art['summary_en'] = summary if is_en else ''
         art['summary_vi'] = summary if is_vi else ''
+        if (i + 1) % 5 == 0:
+            time.sleep(0.3)
 
-    log(f"Translation complete: 즉시={len(mapped)}건 / batch대기={len(unmapped)}건")
+    log(f"Translation complete: 매핑={len(mapped)}건(전체) / 비매핑={len(unmapped)}건(제목즉시+요약batch)")
     return articles
 
 
