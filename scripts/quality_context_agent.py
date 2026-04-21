@@ -1,560 +1,565 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-quality_context_agent.py  (SA-6)  v3.0
-========================================
-Claude Code Agent Team — Sub-Agent 6
-역할:
-  1. 수집 품질 분석 + Master Plan 정책 연계율 계산
-  2. Genspark 결과 피드백 반영 → 다음 수집 개선 권고
-  3. 정책 매핑된 기사에 policy_highlight 플래그 → 노란색 표시
+quality_context_agent.py  v2.0
+SA-7 맥락 기반 + Policy Sentinel 통합 뉴스 분류 에이전트
 
-[v3.0 변경 2026-04-12]
-  - genspark_output.json 읽기 → 누락 소스/섹터 자동 파악
-  - policy_highlight 플래그 추가 → Excel 노란색 / 대시보드 뱃지
-  - genspark_feedback 섹션을 quality_report.json에 추가
+변경사항 (v2.0):
+  - Policy Sentinel 레이어 추가
+    · Gate P1: 공통 정책 신호어 (59개) 탐지
+    · Gate P2: 플랜 특화 앵커어 (22개 플랜 × 평균 13개) 매칭
+    · 태그: POLICY_MATCH (SA7_MATCH와 독립)
+  - knowledge_index.json에서 sentinel 정의 자동 로드
+  - 결과 태그: SA7_MATCH | POLICY_MATCH | SA7+POLICY | NONE
+
+실행:
+  python3 scripts/quality_context_agent.py
+  python3 scripts/quality_context_agent.py --dry-run
+  python3 scripts/quality_context_agent.py --mode policy   # Policy Sentinel만
+  python3 scripts/quality_context_agent.py --mode sa7      # SA-7만
+  python3 scripts/quality_context_agent.py --mode all      # 전체 (기본값)
 """
 
-import json
-import shutil
-from datetime import datetime
+import os, sys, re, json, logging, argparse
 from pathlib import Path
+from datetime import datetime
+from collections import defaultdict, Counter
+from typing import Optional
 
-# ── 경로 ────────────────────────────────────────────────────
-BASE_DIR           = Path(__file__).parent.parent
-AGENT_OUT          = BASE_DIR / "data" / "agent_output"
-SHARED_DOCS        = BASE_DIR / "docs" / "shared"
-COLLECTOR_OUT      = AGENT_OUT / "collector_output.json"
-QUALITY_REPORT        = AGENT_OUT / "quality_report.json"
-QUALITY_REPORT_DAILY  = AGENT_OUT / "quality_report_daily.json"
-QUALITY_REPORT_WEEKLY = AGENT_OUT / "quality_report_weekly.json"
-GENSPARK_OUTPUT    = SHARED_DOCS / "genspark_output.json"
-POLICY_HIGHLIGHTED = AGENT_OUT / "policy_highlighted_articles.json"
+# ── 경로 설정 ─────────────────────────────────────────────
+import os as _os
+BASE_DIR    = Path(__file__).parent.parent
+DATA_DIR    = BASE_DIR / 'data'
+DOCS_DIR    = BASE_DIR / 'docs'
+SHARED_DIR  = DOCS_DIR / 'shared'
 
-KNOWLEDGE_INDEX_PATHS = [
-    SHARED_DOCS / "knowledge_index.json",
-    BASE_DIR / "data" / "shared" / "knowledge_index.json",
-    AGENT_OUT / "knowledge_index.json",
-]
+# knowledge_index: 환경변수 우선, 없으면 기본 경로
+_ki_env = _os.environ.get('KNOWLEDGE_INDEX_PATH', '')
+KI_PATH = Path(_ki_env) if _ki_env else SHARED_DIR / 'knowledge_index_v2.3.json'
 
-SPECIALIST_SOURCES = {
-    "The Investor", "Vietnam Investment Review", "Hanoi Times",
-    "VIR", "PV-Tech", "Offshore Energy", "Energy Monitor",
-    "Nikkei Asia", "Vietnam Energy", "PetroTimes",
-    "Tap chi Nang luong", "Moi truong & Cuoc song",
+# Excel DB: 환경변수 EXCEL_PATH 우선 (GitHub Actions에서 주입)
+_excel_env = _os.environ.get('EXCEL_PATH', '')
+if _excel_env:
+    DB_PATH = BASE_DIR / _excel_env
+else:
+    # fallback: 여러 경로 순서대로 탐색
+    for _p in [
+        DATA_DIR / 'database' / 'Vietnam_Infra_News_Database_Final.xlsx',
+        DATA_DIR / 'news_database.xlsx',
+        BASE_DIR / 'news_database.xlsx',
+    ]:
+        if _p.exists():
+            DB_PATH = _p
+            break
+    else:
+        DB_PATH = DATA_DIR / 'news_database.xlsx'  # 기본값
+
+REPORT_PATH = DATA_DIR / 'context_quality_report.json'
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    datefmt='%H:%M:%S'
+)
+log = logging.getLogger(__name__)
+
+
+# ════════════════════════════════════════════════════════════
+# 1. knowledge_index 로드
+# ════════════════════════════════════════════════════════════
+def load_knowledge_index(path: Path) -> dict:
+    """knowledge_index.json 로드 — policy_sentinel 포함"""
+    if not path.exists():
+        # fallback: 동일 디렉토리에서 탐색
+        for p in [BASE_DIR / 'data' / 'shared' / 'knowledge_index_v2.3.json',
+                  DATA_DIR / 'knowledge_index.json']:
+            if p.exists():
+                path = p
+                break
+        else:
+            log.warning("knowledge_index.json 없음 — 기본 설정 사용")
+            return {}
+
+    with open(path, 'r', encoding='utf-8') as f:
+        ki = json.load(f)
+    log.info(f"knowledge_index v{ki.get('version','?')} 로드: "
+             f"{ki.get('total_masterplans','?')}개 플랜")
+    return ki
+
+
+# ════════════════════════════════════════════════════════════
+# 2. SA-7 스코어링 엔진 (기존)
+# ════════════════════════════════════════════════════════════
+# 플랜별 섹터 허용 목록
+PLAN_SECTOR_OK = {
+    "VN-WW-2030":            ["Waste Water","Water Supply","Water Supply/Drain","Water Supply/Drainage"],
+    "VN-SWM-NATIONAL-2030":  ["Solid Waste"],
+    "VN-ENV-IND-1894":       ["Solid Waste","Waste Water","Water Supply","Industrial Parks"],
+    "VN-WAT-RESOURCES":      ["Water Supply","Water Supply/Drain","Water Supply/Drainage"],
+    "VN-WAT-URBAN":          ["Water Supply","Water Supply/Drain","Water Supply/Drainage"],
+    "VN-WAT-RURAL":          ["Water Supply","Water Supply/Drain","Water Supply/Drainage"],
+    "VN-PWR-PDP8":           ["Power"],
+    "VN-PWR-PDP8-RENEWABLE": ["Power"],
+    "VN-PWR-PDP8-LNG":       ["Power","Oil & Gas"],
+    "VN-PWR-PDP8-NUCLEAR":   ["Power"],
+    "VN-PWR-PDP8-COAL":      ["Power"],
+    "VN-PWR-PDP8-GRID":      ["Power"],
+    "VN-PWR-PDP8-HYDROGEN":  ["Power"],
+    "VN-OG-2030":            ["Oil & Gas"],
+    "VN-TRAN-2055":          ["Transport","Smart City"],
+    "VN-URB-METRO-2030":     ["Transport","Smart City"],
+    "VN-SC-2030":            ["Smart City","Transport","Industrial Parks"],
+    "VN-IP-NORTH-2030":      ["Industrial Parks","Smart City"],
+    "VN-MEKONG-DELTA-2030":  ["Transport","Water Supply","Solid Waste","Power"],
+    "VN-RED-RIVER-2030":     ["Industrial Parks","Smart City","Transport","Water Supply"],
+    "HN-URBAN-INFRA":        ["Transport","Smart City"],
+    "HN-URBAN-NORTH":        ["Smart City","Industrial Parks","Transport"],
+    "HN-URBAN-WEST":         ["Smart City","Industrial Parks"],
+    "HN-URBAN-SOUTH":        ["Transport","Industrial Parks"],
+    "HN-URBAN-EAST":         ["Transport","Smart City","Industrial Parks"],
 }
 
-ALL_SECTORS = [
-    "Waste Water", "Water Supply/Drainage", "Solid Waste",
-    "Power", "Oil & Gas", "Industrial Parks", "Smart City",
-]
+# 플랜별 SA-7 판정 기준
+SA7_RULES = {
+    "VN-WW-2030": {
+        "must_any": ["wastewater","wwtp","sewage","thoát nước","nước thải","폐수","하수",
+                     "treatment plant","yen xa","to lich","lu river","nhat tan wwtp"],
+        "boost":    ["270,000","jica","oda","jfe","tekken","hanoi wastewater",
+                     "ho chi minh wwtp","thu duc wwtp"],
+        "occ_hard": ["drinking water","tap water","water supply network","reservoir",
+                     "irrigation","dam","flood","drought"],
+        "threshold": 36,
+    },
+    "VN-SWM-NATIONAL-2030": {
+        "must_any": ["solid waste","waste-to-energy","wte","incineration","landfill",
+                     "rác thải","고형폐기물","쓰레기","소각","매립",
+                     "soc son","nam son","can tho wte"],
+        "boost":    ["4000 ton","5000 ton","90mw","75mw","epr","extended producer"],
+        "occ_hard": ["wastewater","sewage","water pollution","effluent"],
+        "threshold": 36,
+    },
+    "VN-ENV-IND-1894": {
+        "must_any": ["environmental industry","công nghiệp môi trường","1894",
+                     "environmental technology","pollution control equipment",
+                     "environmental equipment"],
+        "boost":    ["decision 1894","1894/qd-ttg","환경산업"],
+        "occ_hard": [],
+        "threshold": 36,
+    },
+    "VN-WAT-RESOURCES": {
+        "must_any": ["water resource","river basin","saltwater intrusion","drought",
+                     "수자원","tài nguyên nước","mekong water","red river water"],
+        "boost":    ["mekong","red river","climate","flood control","reservoir"],
+        "occ_hard": ["water supply plant","tap water","wwtp","wastewater"],
+        "threshold": 36,
+    },
+    "VN-WAT-URBAN": {
+        "must_any": ["water supply plant","water treatment plant","cấp nước",
+                     "상수도","정수장","water tariff","water service"],
+        "boost":    ["adb water","ndf water","tu liem water","binh duong water"],
+        "occ_hard": ["wastewater","sewage","irrigation","dam"],
+        "threshold": 36,
+    },
+    "VN-PWR-PDP8": {
+        "must_any": ["pdp8","power development plan","quy hoạch điện",
+                     "전력개발계획","electricity law","evn capacity"],
+        "boost":    ["decision 768","decision 500","180gw","236gw"],
+        "occ_hard": [],
+        "threshold": 30,
+    },
+    "VN-PWR-PDP8-RENEWABLE": {
+        "must_any": ["offshore wind","solar farm","solar capacity","wind farm",
+                     "renewable energy","재생에너지","태양광","풍력",
+                     "điện gió","điện mặt trời","floating solar","dppa"],
+        "boost":    ["decree 58","decree 57","gw offshore","rooftop solar"],
+        "occ_hard": ["coal","lng","nuclear","oil","gas field"],
+        "threshold": 36,
+    },
+    "VN-PWR-PDP8-LNG": {
+        "must_any": ["lng","nhon trach","quang trach lng","hai phong lng",
+                     "thai binh lng","lng power plant","lng terminal",
+                     "imported lng","lng regasification"],
+        "boost":    ["decree 100","decree 56","65% offtake","pv gas"],
+        "occ_hard": ["offshore wind","solar","renewable"],
+        "threshold": 36,
+    },
+    "VN-PWR-PDP8-NUCLEAR": {
+        "must_any": ["nuclear","원자력","hạt nhân","ninh thuan",
+                     "resolution 70","smr","atomic energy"],
+        "boost":    ["rosatom","edf nuclear","2035 nuclear"],
+        "occ_hard": [],
+        "threshold": 36,
+    },
+    "VN-PWR-PDP8-COAL": {
+        "must_any": ["coal phase","coal retirement","coal decommission",
+                     "jetp","탈석탄","phaseout coal","coal-to-gas"],
+        "boost":    ["just energy transition","2030 coal"],
+        "occ_hard": [],
+        "threshold": 36,
+    },
+    "VN-PWR-PDP8-GRID": {
+        "must_any": ["500kv","transmission line","smart grid","substation",
+                     "송전망","변전소","lưới điện","grid expansion",
+                     "bess","battery storage","grid storage"],
+        "boost":    ["18 billion grid","evn transmission"],
+        "occ_hard": [],
+        "threshold": 36,
+    },
+    "VN-PWR-PDP8-HYDROGEN": {
+        "must_any": ["hydrogen","ammonia fuel","green hydrogen","blue hydrogen",
+                     "수소","hydro energy export"],
+        "boost":    [],
+        "occ_hard": [],
+        "threshold": 36,
+    },
+    "VN-OG-2030": {
+        "must_any": ["crude oil","oil field","petrovietnam","pvn","pvgas",
+                     "정유","원유","dầu thô","oil refinery","lng supply chain"],
+        "boost":    ["bach ho","dung quat","nghi son"],
+        "occ_hard": ["renewable","offshore wind","solar"],
+        "threshold": 36,
+    },
+    "VN-TRAN-2055": {
+        "must_any": ["expressway","highway","airport terminal","seaport berth",
+                     "고속도로","공항","항만","교량","ring road","bridge construction",
+                     "long thanh","cat linh","lach huyen","north south railway"],
+        "boost":    ["ring road 4","long thanh airport","lach huyen phase"],
+        "occ_hard": ["metro line","urban rail","urban railway"],
+        "threshold": 36,
+    },
+    "VN-URB-METRO-2030": {
+        "must_any": ["metro line","urban rail","urban railway","subway",
+                     "메트로","도시철도","đường sắt đô thị","ben thanh"],
+        "boost":    ["metro line 1","metro line 2","metro line 3"],
+        "occ_hard": ["expressway","highway","seaport"],
+        "threshold": 36,
+    },
+    "VN-SC-2030": {
+        "must_any": ["smart city","digital city","e-government","iot infrastructure",
+                     "스마트시티","thành phố thông minh","urban digital",
+                     "brg smart city","da nang smart","binh duong smart"],
+        "boost":    ["5g network","ai traffic","digital twin"],
+        "occ_hard": [],
+        "threshold": 36,
+    },
+    "VN-IP-NORTH-2030": {
+        "must_any": ["industrial park","vsip","khu công nghiệp","산업단지",
+                     "industrial zone fdi","deep c","thang long ip"],
+        "boost":    ["vsip thai binh","vsip binh duong","deep c hai phong"],
+        "occ_hard": ["smart city","metro","expressway"],
+        "threshold": 36,
+    },
+    "VN-MEKONG-DELTA-2030": {
+        "must_any": ["mekong delta","đồng bằng sông cửu long","메콩델타",
+                     "can tho","an giang","dong thap","ca mau"],
+        "boost":    ["saltwater intrusion","mekong flood","mekong transport"],
+        "occ_hard": [],
+        "threshold": 36,
+    },
+    "VN-RED-RIVER-2030": {
+        "must_any": ["red river delta","đồng bằng sông hồng","홍강델타",
+                     "hai phong port","quang ninh","ha long bay development"],
+        "boost":    ["red river bridge","halong bay","lach huyen"],
+        "occ_hard": [],
+        "threshold": 36,
+    },
+    "HN-URBAN-INFRA": {
+        "must_any": ["hanoi ring road","hanoi metro","to lich river",
+                     "red river hanoi","하노이 링로드","하노이 메트로",
+                     "ring road 4 hanoi","ring road 3.5","hanoi bridge"],
+        "boost":    ["decision 1668","hanoi 2045","hanoi master plan"],
+        "occ_hard": [],
+        "threshold": 30,
+    },
+    "HN-URBAN-NORTH": {
+        "must_any": ["dong anh","me linh","soc son","brg smart city",
+                     "co loa","noi bai expansion","north hanoi"],
+        "boost":    ["4.2 billion","sumitomo","nhat tan","north hanoi smart city"],
+        "occ_hard": [],
+        "threshold": 30,
+    },
+    "HN-URBAN-WEST": {
+        "must_any": ["hoa lac","xuan mai","son tay hanoi","ba vi development",
+                     "tien xuan","hoa lac hi-tech","west hanoi"],
+        "boost":    ["460ha","silicon valley","hoa lac expansion","van cao hoa lac"],
+        "occ_hard": [],
+        "threshold": 30,
+    },
+    "HN-URBAN-SOUTH": {
+        "must_any": ["gia binh airport","phu xuyen","southern hanoi",
+                     "hanoi second airport","south hanoi logistics"],
+        "boost":    ["gia binh","phu xuyen urban","nam son logistics"],
+        "occ_hard": [],
+        "threshold": 30,
+    },
+    "HN-URBAN-EAST": {
+        "must_any": ["gia lam","long bien","eastern hanoi","red river new city",
+                     "hong river hanoi","vinh tuy bridge","east hanoi"],
+        "boost":    ["long bien urban","gia lam district","east hanoi bridge"],
+        "occ_hard": [],
+        "threshold": 30,
+    },
+}
+
+# 부모-자식 플랜 계층 (자식 매칭 시 부모도 자동 포함)
+PLAN_HIERARCHY = {
+    "HN-URBAN-NORTH":        "HN-URBAN-INFRA",
+    "HN-URBAN-WEST":         "HN-URBAN-INFRA",
+    "HN-URBAN-SOUTH":        "HN-URBAN-INFRA",
+    "HN-URBAN-EAST":         "HN-URBAN-INFRA",
+    "VN-PWR-PDP8-RENEWABLE": "VN-PWR-PDP8",
+    "VN-PWR-PDP8-LNG":       "VN-PWR-PDP8",
+    "VN-PWR-PDP8-NUCLEAR":   "VN-PWR-PDP8",
+    "VN-PWR-PDP8-COAL":      "VN-PWR-PDP8",
+    "VN-PWR-PDP8-GRID":      "VN-PWR-PDP8",
+    "VN-PWR-PDP8-HYDROGEN":  "VN-PWR-PDP8",
+}
 
 
-# ============================================================
-# 1. 데이터 로드
-# ============================================================
-
-def load_knowledge_index():
-    for path in KNOWLEDGE_INDEX_PATHS:
-        if path.exists():
-            try:
-                with open(path, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-                # ── 구조 정규화 ──────────────────────────────────
-                # knowledge_index.json은 {"masterplans": {id: {...}, ...}} 구조
-                # quality_context_agent는 [{...}, {...}] 리스트 형태로 사용
-                if isinstance(data, dict) and "masterplans" in data:
-                    plans = list(data["masterplans"].values())
-                elif isinstance(data, list):
-                    plans = data
-                else:
-                    plans = list(data.values()) if isinstance(data, dict) else []
-                print(f"  [knowledge_index] {len(plans)}개 마스터플랜 로드: {path.name}")
-                return plans
-            except Exception as e:
-                print(f"  [WARN] knowledge_index 로드 실패 ({path}): {e}")
-    print("  [WARN] knowledge_index.json 없음")
-    return []
-
-
-def load_genspark_output():
-    """Genspark 피드백 로드 — 없으면 None 반환
-    genspark_output.json은 기사 list 직접 반환 구조:
-      [{id, title, sector, matched_plans, summary_ko, ...}, ...]
+def score_sa7(text: str, sector: str, plan_id: str) -> tuple[int, list, list]:
     """
-    if not GENSPARK_OUTPUT.exists():
-        print("  [INFO] genspark_output.json 없음 — 피드백 없이 진행")
-        return None
-    try:
-        with open(GENSPARK_OUTPUT, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        # ── 구조 정규화 ──────────────────────────────────────────
-        # list 직접 반환 구조 (현재 Genspark Claw 방식)
-        if isinstance(data, list):
-            print(f"  [genspark] 기사 로드: {len(data)}건 (list 구조)")
-            return {
-                "articles": data,
-                "week": "latest",
-                "total_collected": len(data),
-                "matching_summary": {},
-                "quality_summary": {},
+    SA-7 점수 계산
+    Returns: (score, must_hits, boost_hits)
+    """
+    rules = SA7_RULES.get(plan_id)
+    if not rules:
+        return 0, [], []
+
+    if sector not in PLAN_SECTOR_OK.get(plan_id, []):
+        return -1, [], []  # 섹터 불일치
+
+    t = text.lower()
+
+    # occ_hard 제외어 → 즉시 탈락
+    if any(e in t for e in rules.get('occ_hard', [])):
+        return 0, [], []
+
+    must_hits = [m for m in rules['must_any'] if m.lower() in t]
+    boost_hits = [b for b in rules.get('boost', []) if b.lower() in t]
+
+    if not must_hits:
+        return 0, [], []
+
+    score = len(must_hits) * 18 + len(boost_hits) * 8
+    return score, must_hits, boost_hits
+
+
+# ════════════════════════════════════════════════════════════
+# 3. Policy Sentinel 엔진 (신규)
+# ════════════════════════════════════════════════════════════
+def build_policy_sentinel(ki: dict) -> dict:
+    """knowledge_index에서 policy_sentinel 규칙 로드"""
+    ps = ki.get('policy_sentinel', {})
+    return {
+        'signals': ps.get('_common_policy_signals', []),
+        'plans':   ps.get('plans', {}),
+    }
+
+
+def score_policy(text: str, sector: str, plan_id: str,
+                 sentinel: dict) -> tuple[int, list, list]:
+    """
+    Policy Sentinel 점수 계산
+    Returns: (score, signal_hits, anchor_hits)
+    Score 체계:
+      0점:  탈락
+      20점: 신호어만 (섹터 일치)
+      40점: 신호어 + 앵커어 1개
+      60점: 신호어 + 앵커어 2개 이상
+    """
+    if sector not in PLAN_SECTOR_OK.get(plan_id, []):
+        return 0, [], []
+
+    t = text.lower()
+    signals = sentinel.get('signals', [])
+    plan_rules = sentinel.get('plans', {}).get(plan_id, {})
+
+    # Gate P1: 공통 신호어
+    sig_hits = [s for s in signals if s.lower() in t]
+    if not sig_hits:
+        return 0, [], []
+
+    # Gate P2: 플랜 앵커어
+    anchors = plan_rules.get('plan_anchor', [])
+    anchor_hits = [a for a in anchors if a.lower() in t]
+    if not anchor_hits:
+        return 0, [], []  # 앵커 없으면 탈락 (광범위 방지 핵심)
+
+    # 제외어 확인
+    excl = plan_rules.get('policy_excl', [])
+    if any(e.lower() in t for e in excl):
+        return 0, [], []
+
+    score = 40 + min(len(anchor_hits) - 1, 1) * 20  # 40 or 60
+    return score, sig_hits[:3], anchor_hits[:3]
+
+
+# ════════════════════════════════════════════════════════════
+# 4. 통합 분류기
+# ════════════════════════════════════════════════════════════
+def classify_article(title: str, summary: str, sector: str,
+                     sentinel: dict) -> dict:
+    """
+    기사를 SA-7 + Policy Sentinel 두 경로로 동시 평가
+    Returns classification dict
+    """
+    text = (str(title) + ' ' + str(summary)).lower()
+
+    sa7_matches = {}
+    policy_matches = {}
+
+    for plan_id in SA7_RULES:
+        # SA-7 경로
+        score, must_h, boost_h = score_sa7(text, sector, plan_id)
+        threshold = SA7_RULES[plan_id].get('threshold', 36)
+        if score >= threshold:
+            sa7_matches[plan_id] = {
+                'score': score, 'must': must_h, 'boost': boost_h,
+                'grade': 'HIGH' if score >= 65 else 'MEDIUM'
             }
-        # dict 구조 (이전 방식 호환)
-        elif isinstance(data, dict):
-            week  = data.get("week", "unknown")
-            total = data.get("total_collected", len(data.get("articles", [])))
-            print(f"  [genspark] 피드백 로드: {week} | {total}건")
-            return data
-        else:
-            print(f"  [WARN] genspark_output.json 형식 불명: {type(data)}")
-            return None
-    except Exception as e:
-        print(f"  [WARN] genspark_output.json 로드 실패: {e}")
-        return None
 
+    for plan_id in sentinel.get('plans', {}):
+        # Policy Sentinel 경로
+        p_score, sig_h, anc_h = score_policy(text, sector, plan_id, sentinel)
+        if p_score >= 40:
+            policy_matches[plan_id] = {
+                'score': p_score, 'signals': sig_h, 'anchors': anc_h,
+                'grade': 'HIGH' if p_score >= 60 else 'MEDIUM'
+            }
 
-# ============================================================
-# 2. 정책 매핑
-# ============================================================
+    # 부모 플랜 자동 포함
+    for child, parent in PLAN_HIERARCHY.items():
+        if child in sa7_matches and parent not in sa7_matches:
+            sa7_matches[parent] = {'score': 28, 'must': ['(child)'], 'boost': [],
+                                    'grade': 'MEDIUM', 'auto_parent': True}
+        if child in policy_matches and parent not in policy_matches:
+            policy_matches[parent] = {'score': 20, 'signals': ['(child)'], 'anchors': [],
+                                       'grade': 'MEDIUM', 'auto_parent': True}
 
-def match_article_to_policy(article, knowledge_index):
-    if not knowledge_index:
-        return {"matched": False, "doc_id": None, "relevance": None}
+    # 태그 결정
+    has_sa7    = bool(sa7_matches)
+    has_policy = bool(policy_matches)
 
-    title   = (article.get("title", "") or "").lower()
-    summary = (article.get("summary", "") or "").lower()
-    text    = f"{title} {summary}"
-    art_sector   = article.get("sector", "")
-    art_province = article.get("province", "")
-
-    best_match, best_score = None, 0
-
-    for doc in knowledge_index:
-        if art_sector not in doc.get("sectors", []):
-            continue
-        score = 10
-        kw_en = [k.lower() for k in doc.get("keywords_en", [])]
-        kw_vi = [k.lower() for k in doc.get("keywords_vi", [])]
-        matched_kw = sum(1 for kw in kw_en + kw_vi if kw in text)
-        if matched_kw == 0:
-            continue
-        score += matched_kw * 3
-        doc_provinces = [p.lower() for p in doc.get("provinces", [])]
-        if art_province and art_province.lower() in doc_provinces:
-            score += 5
-        if score > best_score:
-            best_score, best_match = score, doc
-
-    if best_match and best_score >= 13:
-        doc_provinces = [p.lower() for p in best_match.get("provinces", [])]
-        relevance = (
-            "high" if art_province and art_province.lower() in doc_provinces
-            else "medium"
-        )
-        return {
-            "matched":   True,
-            "doc_id":    best_match.get("doc_id") or best_match.get("id", ""),
-            "relevance": relevance,
-            "score":     best_score,
-            "plan_name": best_match.get("title") or best_match.get("name_en") or best_match.get("name_ko", ""),
-        }
-    return {"matched": False, "doc_id": None, "relevance": None}
-
-
-def calculate_policy_alignment(articles, knowledge_index):
-    if not articles or not knowledge_index:
-        return {
-            "matched_ratio": 0.0, "high_relevance_ratio": 0.0,
-            "matched_count": 0, "high_relevance_count": 0,
-            "matched_articles": [],
-        }
-    matched, high_rel = [], []
-    for art in articles:
-        result = match_article_to_policy(art, knowledge_index)
-        if result["matched"]:
-            matched.append({
-                "title":     art.get("title", "")[:60],
-                "sector":    art.get("sector", ""),
-                "province":  art.get("province", ""),
-                "doc_id":    result["doc_id"],
-                "plan_name": result.get("plan_name", ""),
-                "relevance": result["relevance"],
-                "url":       art.get("url", ""),
-            })
-            if result["relevance"] == "high":
-                high_rel.append(result["doc_id"])
-
-    total = len(articles)
-    return {
-        "matched_ratio":        round(len(matched) / total, 3) if total else 0.0,
-        "high_relevance_ratio": round(len(high_rel) / total, 3) if total else 0.0,
-        "matched_count":        len(matched),
-        "high_relevance_count": len(high_rel),
-        "matched_articles":     matched[:20],
-    }
-
-
-# ============================================================
-# 3. 정책 하이라이트 플래그 + JSON 저장
-# ============================================================
-
-def tag_policy_highlights(articles, knowledge_index):
-    """
-    매핑된 기사에 policy_highlight=True 플래그 추가.
-    → Excel 업데이터가 이 플래그를 읽어 노란색 처리
-    → 대시보드가 이 플래그로 뱃지 표시
-    반환: (플래그 추가된 articles, 하이라이트 건수)
-    """
-    tagged = []
-    highlight_count = 0
-    for art in articles:
-        result = match_article_to_policy(art, knowledge_index)
-        if result["matched"]:
-            art = dict(art)          # 원본 훼손 방지
-            art["policy_highlight"] = True
-            art["policy_doc_id"]    = result["doc_id"]
-            art["policy_plan_name"] = result.get("plan_name", "")
-            art["policy_relevance"] = result["relevance"]
-            highlight_count += 1
-        else:
-            art = dict(art)
-            art["policy_highlight"] = False
-            art["policy_doc_id"]    = None
-            art["policy_plan_name"] = ""
-            art["policy_relevance"] = None
-        tagged.append(art)
-    return tagged, highlight_count
-
-
-def save_policy_highlighted(tagged_articles, highlight_count):
-    """policy_highlighted_articles.json 저장 — Excel 업데이터가 읽음"""
-    AGENT_OUT.mkdir(parents=True, exist_ok=True)
-    data = {
-        "generated_at":    datetime.utcnow().isoformat() + "Z",
-        "total_articles":  len(tagged_articles),
-        "highlight_count": highlight_count,
-        "highlight_ratio": round(highlight_count / max(len(tagged_articles), 1), 3),
-        "articles":        tagged_articles,
-    }
-    with open(POLICY_HIGHLIGHTED, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    print(f"  [OK] policy_highlighted_articles.json 저장 ({highlight_count}건 하이라이트)")
-    # docs/shared/에도 복사
-    try:
-        SHARED_DOCS.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(POLICY_HIGHLIGHTED, SHARED_DOCS / "policy_highlighted_articles.json")
-        print(f"  [OK] docs/shared/policy_highlighted_articles.json 배포")
-    except Exception as e:
-        print(f"  [WARN] shared 복사 실패: {e}")
-
-
-# ============================================================
-# 4. Genspark 피드백 분석 → 개선 권고
-# ============================================================
-
-def analyze_genspark_feedback(claude_articles, genspark_data):
-    """
-    Genspark 결과와 비교하여 Claude 개선 권고 생성
-    반환: feedback dict
-    """
-    if not genspark_data:
-        return {"available": False}
-
-    gs_articles  = genspark_data.get("articles", [])
-    gs_week      = genspark_data.get("week", "")
-    gs_matching  = genspark_data.get("matching_summary", {})
-    gs_quality   = genspark_data.get("quality_summary", {})
-
-    # Claude URL 집합
-    claude_urls = {a.get("url", "") for a in claude_articles}
-
-    # Genspark만 수집한 기사 (Claude 미수집)
-    gs_only = [a for a in gs_articles if a.get("url", "") not in claude_urls]
-
-    # Genspark만 수집 소스 파악
-    gs_only_sources = {}
-    for a in gs_only:
-        src = a.get("source", "unknown")
-        gs_only_sources[src] = gs_only_sources.get(src, 0) + 1
-
-    # Genspark가 커버한 섹터 중 Claude 미수집
-    claude_sectors = {a.get("sector", "") for a in claude_articles}
-    gs_sectors     = {a.get("sector", "") for a in gs_articles}
-    gs_only_sectors = list(gs_sectors - claude_sectors - {""})
-
-    # 정책 연계율 비교
-    claude_policy_rate = 0.0   # 현재 실행에서 계산됨
-    gs_policy_rate     = gs_matching.get("matched_ratio", 0.0)
-    if isinstance(gs_policy_rate, str):
-        gs_policy_rate = float(gs_policy_rate.replace("%", "")) / 100
-
-    # 개선 권고 생성
-    improvements = []
-
-    if gs_only_sectors:
-        improvements.append({
-            "priority": "HIGH",
-            "type":     "missing_sector",
-            "message":  f"Genspark 수집 섹터 중 Claude 미수집: {gs_only_sectors}",
-            "action":   f"news_collector.py SECTOR_KEYWORDS에 해당 섹터 키워드 보강 필요",
-        })
-
-    top_gs_sources = sorted(gs_only_sources.items(), key=lambda x: -x[1])[:5]
-    if top_gs_sources:
-        source_names = [s for s, _ in top_gs_sources]
-        improvements.append({
-            "priority": "MEDIUM",
-            "type":     "missing_source",
-            "message":  f"Genspark만 수집한 소스 상위 5개: {source_names}",
-            "action":   "RSS_FEEDS 또는 specialist_crawler 대상에 추가 검토",
-        })
-
-    if gs_policy_rate > claude_policy_rate + 0.1:
-        improvements.append({
-            "priority": "MEDIUM",
-            "type":     "policy_gap",
-            "message":  f"정책연계율 차이: Claude {claude_policy_rate:.1%} vs Genspark {gs_policy_rate:.1%}",
-            "action":   "knowledge_index.json 키워드 보완 또는 SA-6 매칭 임계값 조정",
-        })
-
-    print(f"\n  [Genspark 피드백] 주차: {gs_week}")
-    print(f"    Genspark 수집: {len(gs_articles)}건 | Claude 미수집: {len(gs_only)}건")
-    print(f"    미수집 섹터: {gs_only_sectors}")
-    print(f"    정책연계: Claude {claude_policy_rate:.1%} → Genspark {gs_policy_rate:.1%}")
-    for imp in improvements:
-        print(f"    [{imp['priority']}] {imp['message']}")
-
-    return {
-        "available":           True,
-        "week":                gs_week,
-        "genspark_total":      len(gs_articles),
-        "claude_only_count":   len(claude_urls) - len(claude_urls & {a.get("url","") for a in gs_articles}),
-        "genspark_only_count": len(gs_only),
-        "genspark_only_sources": dict(top_gs_sources),
-        "missing_sectors_in_claude": gs_only_sectors,
-        "policy_rate_comparison": {
-            "claude":   claude_policy_rate,
-            "genspark": gs_policy_rate,
-            "gap":      round(gs_policy_rate - claude_policy_rate, 3),
-        },
-        "improvement_recommendations": improvements,
-    }
-
-
-# ============================================================
-# 5. 품질 분석
-# ============================================================
-
-def analyze_quality(articles, knowledge_index):
-    total = len(articles)
-    print(f"[SA-6] 분석 대상 기사: {total}건")
-
-    unclassified = sum(
-        1 for a in articles
-        if not a.get("province") or a.get("province") in ("Vietnam", "")
-    )
-    province_rate = round(unclassified / total, 3) if total else 0.0
-
-    specialist_cnt = sum(1 for a in articles if a.get("source", "") in SPECIALIST_SOURCES)
-    specialist_ratio = round(specialist_cnt / total, 3) if total else 0.0
-
-    covered_sectors = set(a.get("sector", "") for a in articles if a.get("sector", "") in ALL_SECTORS)
-    missing_sectors = [s for s in ALL_SECTORS if s not in covered_sectors]
-    sector_ratio    = round(len(covered_sectors) / len(ALL_SECTORS), 3)
-
-    policy = calculate_policy_alignment(articles, knowledge_index)
-    grade  = _calc_grade(province_rate, specialist_ratio, sector_ratio, policy["matched_ratio"])
-
-    return {
-        "province_unclassified_rate": province_rate,
-        "specialist_media_ratio":     specialist_ratio,
-        "specialist_count":           specialist_cnt,
-        "sector_coverage": {
-            "covered": sorted(list(covered_sectors)),
-            "missing": missing_sectors,
-            "ratio":   sector_ratio,
-        },
-        "policy_alignment": policy,
-        "grade":            grade,
-    }
-
-
-def _calc_grade(province_rate, specialist_ratio, sector_ratio, policy_ratio):
-    score = 0
-    if province_rate    <= 0.25: score += 1
-    if specialist_ratio >= 0.30: score += 1
-    if sector_ratio     >= 1.0:  score += 1
-    if policy_ratio     >= 0.30: score += 1
-    return {4: "A", 3: "B", 2: "C"}.get(score, "D")
-
-
-def generate_recommendations(metrics):
-    recs = []
-    if metrics["specialist_media_ratio"] < 0.30:
-        recs.append({
-            "priority": "HIGH", "metric": "specialist_media_ratio",
-            "current": metrics["specialist_media_ratio"], "target": 0.3,
-            "action": "전문 RSS 소스 추가 또는 specialist_crawler 정상화 필요",
-        })
-    missing = metrics["sector_coverage"]["missing"]
-    if missing:
-        recs.append({
-            "priority": "MEDIUM", "metric": "sector_coverage",
-            "missing": missing,
-            "action": f"{', '.join(missing)} 섹터 RSS/키워드 보강 필요",
-        })
-    if metrics["policy_alignment"]["matched_ratio"] < 0.30:
-        recs.append({
-            "priority": "LOW", "metric": "policy_alignment",
-            "current": metrics["policy_alignment"]["matched_ratio"],
-            "action": "knowledge_index.json 키워드 보강으로 정책 연계율 개선 가능",
-        })
-    return recs
-
-
-# ============================================================
-# 6. 리포트 저장
-# ============================================================
-
-def save_report(report):
-    import os as _os
-    AGENT_OUT.mkdir(parents=True, exist_ok=True)
-
-    mode = _os.environ.get("REPORT_MODE", "daily").lower()
-    report["report_mode"] = mode
-
-    # 공통 파일 (기존 호환)
-    with open(QUALITY_REPORT, "w", encoding="utf-8") as f:
-        json.dump(report, f, ensure_ascii=False, indent=2)
-    print("[OK] quality_report.json 저장 (" + mode + " 모드)")
-
-    # 모드별 전용 파일
-    if mode == "weekly":
-        mode_file = QUALITY_REPORT_WEEKLY
+    if has_sa7 and has_policy:
+        tag = 'SA7+POLICY'
+    elif has_sa7:
+        tag = 'SA7_MATCH'
+    elif has_policy:
+        tag = 'POLICY_MATCH'
     else:
-        mode_file = QUALITY_REPORT_DAILY
-    with open(mode_file, "w", encoding="utf-8") as f:
-        json.dump(report, f, ensure_ascii=False, indent=2)
-    print("[OK] quality_report_" + mode + ".json 저장")
+        tag = 'NONE'
 
-    try:
-        SHARED_DOCS.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(QUALITY_REPORT, SHARED_DOCS / "quality_report.json")
-        shutil.copy2(mode_file,      SHARED_DOCS / ("quality_report_" + mode + ".json"))
-        print("[OK] docs/shared/quality_report*.json 업데이트")
-    except Exception as e:
-        print("[WARN] shared 복사 실패: " + str(e))
+    best_sa7_score = max((v['score'] for v in sa7_matches.values()), default=0)
+    best_pol_score = max((v['score'] for v in policy_matches.values()), default=0)
 
-
-def _count_area(articles):
-    counts = {}
-    for a in articles:
-        area = a.get("area", "Other") or "Other"
-        counts[area] = counts.get(area, 0) + 1
-    return counts
-
-
-def _calc_vietnam_ratio(articles):
-    if not articles:
-        return 0.0
-    vn = sum(1 for a in articles
-             if a.get("province", "") in ("Vietnam", "") or not a.get("province"))
-    return round(vn / len(articles), 3)
-
-
-# ============================================================
-# 7. MAIN
-# ============================================================
-
-def main():
-    # ① collector_output.json 로드
-    articles = []
-    if COLLECTOR_OUT.exists():
-        try:
-            with open(COLLECTOR_OUT, "r", encoding="utf-8") as f:
-                data = json.load(f)
-            articles = data.get("articles", [])
-        except Exception as e:
-            print(f"[WARN] collector_output.json 로드 실패: {e}")
-
-    # ② knowledge_index.json 로드
-    knowledge_index = load_knowledge_index()
-
-    # ③ Genspark 피드백 로드
-    genspark_data = load_genspark_output()
-
-    # ④ 품질 분석
-    metrics = analyze_quality(articles, knowledge_index)
-    recommendations = generate_recommendations(metrics)
-
-    # ⑤ 정책 하이라이트 플래그 추가 + 저장 (노란색 표시용)
-    tagged_articles, highlight_count = tag_policy_highlights(articles, knowledge_index)
-    save_policy_highlighted(tagged_articles, highlight_count)
-
-    # ⑥ Genspark 피드백 분석
-    gs_feedback = analyze_genspark_feedback(articles, genspark_data)
-
-    # ⑦ 출력
-    grade = metrics["grade"]
-    print()
-    print("=" * 55)
-    print(f"  품질 등급: {grade}")
-    print(f"  Province 미분류율:  {metrics['province_unclassified_rate']:.1%}"
-          f"  (목표 ≤25%: {'OK' if metrics['province_unclassified_rate'] <= 0.25 else 'NG'})")
-    print(f"  전문미디어 비율:    {metrics['specialist_media_ratio']:.1%}"
-          f"  (목표 ≥30%: {'OK' if metrics['specialist_media_ratio'] >= 0.30 else 'NG'})")
-    print(f"  섹터 커버리지:      {len(metrics['sector_coverage']['covered'])}/7"
-          f"  (미커버: {metrics['sector_coverage']['missing']})")
-    print(f"  정책 연계율:        {metrics['policy_alignment']['matched_ratio']:.1%}"
-          f"  ({metrics['policy_alignment']['matched_count']}건 / "
-          f"고연관 {metrics['policy_alignment']['high_relevance_count']}건)")
-    print(f"  정책 하이라이트:    {highlight_count}건 (노란색 표시 대상)")
-    print("=" * 55)
-
-    if metrics["policy_alignment"]["matched_articles"]:
-        print("\n  정책 연계 기사 (노란색 표시):")
-        for m in metrics["policy_alignment"]["matched_articles"][:5]:
-            print(f"    [{m['doc_id']}|{m['relevance']}]"
-                  f" [{m['sector']}|{m['province']}] {m['title']}")
-
-    if recommendations:
-        print(f"\n  자체 권고사항 {len(recommendations)}건:")
-        for r in recommendations:
-            print(f"  [{r['priority']}] {r['action']}")
-
-    # ⑧ quality_report.json 저장
-    report = {
-        "generated_at":   datetime.utcnow().isoformat() + "+00:00",
-        "total_articles": len(articles),
-        "quality_grade":  grade,
-        "targets_met": {
-            "province_unclassified_le_25pct":
-                metrics["province_unclassified_rate"] <= 0.25,
-            "specialist_media_ge_30pct":
-                metrics["specialist_media_ratio"] >= 0.30,
-            "all_7_sectors_covered":
-                len(metrics["sector_coverage"]["missing"]) == 0,
-            "policy_alignment_ge_30pct":
-                metrics["policy_alignment"]["matched_ratio"] >= 0.30,
-        },
-        "metrics": {
-            "province_unclassified_rate":  metrics["province_unclassified_rate"],
-            "specialist_media_ratio":      metrics["specialist_media_ratio"],
-            "sector_coverage":             metrics["sector_coverage"],
-            "area_distribution":           _count_area(articles),
-            "policy_alignment":            metrics["policy_alignment"],
-            "policy_highlight_count":      highlight_count,
-            "collector_flags": {
-                "vietnam_ratio":    _calc_vietnam_ratio(articles),
-                "missing_provinces": [],
-            },
-        },
-        "knowledge_index_loaded": len(knowledge_index),
-        "recommendations":        recommendations,
-        "genspark_feedback":      gs_feedback,   # ← Genspark 비교 결과 추가
+    return {
+        'tag':             tag,
+        'sa7_plans':       list(sa7_matches.keys()),
+        'sa7_best_score':  best_sa7_score,
+        'sa7_details':     sa7_matches,
+        'policy_plans':    list(policy_matches.keys()),
+        'policy_best_score': best_pol_score,
+        'policy_details':  policy_matches,
+        'is_context':      tag != 'NONE',
     }
-    save_report(report)
 
 
-if __name__ == "__main__":
-    main()
+# ════════════════════════════════════════════════════════════
+# 5. 메인 실행 함수
+# ════════════════════════════════════════════════════════════
+def run_quality_context_agent(mode: str = 'all', dry_run: bool = False):
+    """Daily 파이프라인 실행 진입점"""
+    log.info(f"quality_context_agent v2.0 시작 | mode={mode} | dry_run={dry_run}")
+
+    # knowledge_index 로드
+    ki = load_knowledge_index(KI_PATH)
+    sentinel = build_policy_sentinel(ki)
+    log.info(f"Policy Sentinel 로드: {len(sentinel['signals'])}개 신호어, "
+             f"{len(sentinel['plans'])}개 플랜")
+
+    # Excel DB 로드
+    if not DB_PATH.exists():
+        log.error(f"DB 없음: {DB_PATH}")
+        sys.exit(1)
+
+    import openpyxl
+    wb = openpyxl.load_workbook(DB_PATH)
+    ws = wb['News Database']
+
+    headers = [cell.value for cell in ws[1]]
+    title_col   = headers.index('News Title') + 1 if 'News Title' in headers else 4
+    summary_col = headers.index('summary_en') + 1 if 'summary_en' in headers else None
+    sector_col  = headers.index('Business Sector') + 1 if 'Business Sector' in headers else 2
+    # QC 컬럼 위치 (없으면 생성)
+    if 'QC' not in headers:
+        ws.cell(1, len(headers)+1, 'QC')
+        qc_col = len(headers) + 1
+    else:
+        qc_col = headers.index('QC') + 1
+
+    stats = Counter()
+    plan_policy_cnt = Counter()
+    plan_sa7_cnt    = Counter()
+
+    for row in ws.iter_rows(min_row=2):
+        title   = str(row[title_col - 1].value or '')
+        summary = str(row[summary_col - 1].value or '') if summary_col else ''
+        sector  = str(row[sector_col - 1].value or '')
+
+        result = classify_article(title, summary, sector, sentinel)
+
+        # 통계 집계
+        stats[result['tag']] += 1
+        for p in result['sa7_plans']:
+            plan_sa7_cnt[p] += 1
+        for p in result['policy_plans']:
+            plan_policy_cnt[p] += 1
+
+        # QC 컬럼 업데이트 (dry_run이 아닐 때)
+        if not dry_run and result['is_context']:
+            tag_str = result['tag']
+            if result['sa7_plans']:
+                tag_str += f" | SA7:{','.join(result['sa7_plans'][:2])}"
+            if result['policy_plans']:
+                tag_str += f" | POL:{','.join(result['policy_plans'][:2])}"
+            row[qc_col - 1].value = tag_str
+
+    # 보고서 저장
+    report = {
+        'run_at': datetime.now().isoformat(),
+        'mode': mode,
+        'dry_run': dry_run,
+        'stats': dict(stats),
+        'plan_sa7_count': dict(plan_sa7_cnt.most_common(30)),
+        'plan_policy_count': dict(plan_policy_cnt.most_common(30)),
+    }
+    if not dry_run:
+        wb.save(DB_PATH)
+        with open(REPORT_PATH, 'w', encoding='utf-8') as f:
+            json.dump(report, f, ensure_ascii=False, indent=2)
+
+    # 결과 출력
+    total = sum(stats.values())
+    log.info(f"분류 완료: {total}건")
+    log.info(f"  SA7_MATCH:    {stats.get('SA7_MATCH', 0)}건")
+    log.info(f"  POLICY_MATCH: {stats.get('POLICY_MATCH', 0)}건")
+    log.info(f"  SA7+POLICY:   {stats.get('SA7+POLICY', 0)}건")
+    log.info(f"  NONE:         {stats.get('NONE', 0)}건")
+
+    if plan_policy_cnt:
+        log.info("Policy 매칭 상위 플랜:")
+        for pid, cnt in plan_policy_cnt.most_common(5):
+            log.info(f"    {pid}: {cnt}건")
+
+    return report
+
+
+# ════════════════════════════════════════════════════════════
+# 6. CLI 진입점
+# ════════════════════════════════════════════════════════════
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='SA-7 + Policy Sentinel 분류 에이전트')
+    parser.add_argument('--mode', choices=['all','sa7','policy'], default='all')
+    parser.add_argument('--dry-run', action='store_true', help='DB 쓰기 없이 테스트')
+    args = parser.parse_args()
+    run_quality_context_agent(mode=args.mode, dry_run=args.dry_run)
