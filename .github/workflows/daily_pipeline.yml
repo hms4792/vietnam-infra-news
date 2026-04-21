@@ -76,6 +76,14 @@ jobs:
             echo "batch_translate.py not found, skipping"
           fi
 
+      - name: Absorb Genspark Output (Genspark 산출물 흡수 — 참고용)
+        run: |
+          if [ -f scripts/absorb_genspark.py ]; then
+            python3 scripts/absorb_genspark.py
+          else
+            echo "absorb_genspark.py 없음 — 건너뜀"
+          fi
+
       - name: Run Quality Context Agent SA-6 (정책 매핑 + 노란색 플래그 생성)
         env:
           REPORT_MODE: daily
