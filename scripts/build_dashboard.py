@@ -1,175 +1,158 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-build_dashboard.py
-==================
-dashboard_updater.py 우회 — Excel 직접 읽기 → docs/index.html 재빌드
+build_dashboard.py — v7.1
+Excel → docs/index.html 재생성 (독립 실행 가능)
 
-[메모리항목2] templates/dashboard_template.html → docs/index.html
-             /*__BACKEND_DATA__*/[] 플레이스홀더에 주입
+열 매핑 (v7 News Database):
+  row[0]=No  row[1]=Date  row[2]=Title(En/Vi)  row[3]=Tit_ko
+  row[4]=Source  row[5]=Src_Type  row[6]=Province  row[7]=Plan_ID
+  row[8]=Grade  row[9]=URL  row[10]=sum_ko  row[11]=sum_en  row[12]=sum_vi
+
+BACKEND_DATA 구조 (변경 금지):
+  {id, title:{ko,en,vi}, summary:{ko,en,vi},
+   sector, area, province, source, date, url}
+
+area 값 (변경 금지):
+  'Environment' / 'Energy Develop.' / 'Urban Develop.'
 """
 
-import json, os, sys, re
+import os, sys, json, re, logging
 from datetime import datetime
-from pathlib import Path
 
-try:
-    import openpyxl
-except ImportError:
-    print("ERROR: openpyxl not installed")
-    sys.exit(1)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
+logger = logging.getLogger('build_dashboard')
 
-EXCEL_PATH    = Path(os.environ.get('EXCEL_PATH',
-                    'data/database/Vietnam_Infra_News_Database_Final.xlsx'))
-TEMPLATE_PATH = Path('templates/dashboard_template.html')
-OUTPUT_PATH   = Path('docs/index.html')
-PLACEHOLDER   = '/*__BACKEND_DATA__*/[]'
+BASE_DIR      = os.path.dirname(os.path.abspath(__file__))
+EXCEL_PATH    = os.path.join(BASE_DIR, 'data', 'database',
+                             'Vietnam_Infra_News_Database_Final.xlsx')
+TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates', 'dashboard_template.html')
+OUTPUT_PATH   = os.path.join(BASE_DIR, 'docs', 'index.html')
 
-SECTOR_TO_AREA = {
-    'Waste Water':'Environment','Water Supply/Drainage':'Environment',
-    'Solid Waste':'Environment','Power':'Energy Develop.',
-    'Oil & Gas':'Energy Develop.','Transport':'Urban Develop.',
-    'Industrial Parks':'Urban Develop.','Smart City':'Urban Develop.',
-    'Construction':'Urban Develop.','Urban Development':'Urban Develop.',
-}
+ENV_SECTORS    = {'Waste Water', 'Water Supply/Drainage', 'Solid Waste', 'Environment'}
+ENERGY_SECTORS = {'Power', 'Oil & Gas'}
 
-def normalize_area(area_val, sector_val):
-    a = str(area_val or '').lower()
-    if 'environ' in a: return 'Environment'
-    if 'energy'  in a: return 'Energy Develop.'
-    if 'urban'   in a: return 'Urban Develop.'
-    return SECTOR_TO_AREA.get(str(sector_val or ''), 'Urban Develop.')
+# plan_id → sector 추론 (DB에 sector 컬럼 없는 경우 fallback)
+def _plan_to_sector(plan: str) -> str:
+    p = plan.upper()
+    if 'WW' in p or 'WASTEWATER' in p: return 'Waste Water'
+    if 'SWM' in p or 'SOLID' in p:     return 'Solid Waste'
+    if 'WAT' in p:                      return 'Water Supply/Drainage'
+    if 'PDP8' in p or 'RENEW' in p or 'LNG' in p or 'NUCLEAR' in p: return 'Power'
+    if 'OG' in p or 'OIL' in p:        return 'Oil & Gas'
+    if 'IP' in p or 'INDUST' in p:     return 'Industrial Parks'
+    if 'SC' in p or 'SMART' in p or 'METRO' in p or 'TRAN' in p: return 'Transport'
+    return 'Environment'
 
-def clean(v):
-    if v is None: return ''
-    s = str(v).strip()
-    # JSON 안전: 줄바꿈·탭 등 제어문자 공백으로 치환
-    s = re.sub(r'[\x00-\x1f\x7f]', ' ', s)
-    # 연속 공백 정리
-    s = re.sub(r'  +', ' ', s).strip()
-    return s
+def _area(sector: str) -> str:
+    if sector in ENV_SECTORS:    return 'Environment'
+    if sector in ENERGY_SECTORS: return 'Energy Develop.'
+    return 'Urban Develop.'
 
-def load_articles():
-    if not EXCEL_PATH.exists():
-        print(f"ERROR: Excel 파일 없음: {EXCEL_PATH}")
-        sys.exit(1)
+def _clean(val) -> str:
+    if val is None: return ''
+    s = re.sub(r'[\x00-\x1f\x7f]', ' ', str(val))
+    return re.sub(r'\s+', ' ', s).strip()
 
-    print(f"Excel 읽기: {EXCEL_PATH} ({EXCEL_PATH.stat().st_size:,} bytes)")
-    wb = openpyxl.load_workbook(EXCEL_PATH, read_only=True, data_only=True)
-    ws = wb['News Database'] if 'News Database' in wb.sheetnames else wb.active
 
-    # 헤더 인덱스 매핑
-    header_row = next(ws.iter_rows(min_row=1, max_row=1, values_only=True))
-    col = {}
-    for i, h in enumerate(header_row):
-        if h:
-            col[str(h).strip().lower().replace(' ','').replace('_','')] = i
-
-    def get(row, *keys):
-        for k in keys:
-            k2 = k.lower().replace(' ','').replace('_','')
-            if k2 in col and col[k2] < len(row):
-                v = row[col[k2]]
-                if v is not None:
-                    s = clean(v)
-                    if s:
-                        return s
-        return ''
-
+def load_articles(excel_path: str) -> list:
+    """
+    News Database 시트 로드.
+    v7 열 순서: A=No B=Date C=Title D=Tit_ko E=Source F=Src_Type
+                G=Province H=Plan_ID I=Grade J=URL K=sum_ko L=sum_en M=sum_vi
+    """
+    from openpyxl import load_workbook
+    wb = load_workbook(excel_path, read_only=True, data_only=True)
+    ws = wb['News Database']
     articles = []
-    for row in ws.iter_rows(min_row=2, values_only=True):
-        title_raw = get(row, 'News Title', 'title', 'NewTitle')
-        if not title_raw:
+    for idx, row in enumerate(ws.iter_rows(min_row=2, values_only=True), 1):
+        title_en = _clean(row[2] if len(row) > 2 else None)  # C열
+        if not title_en:
             continue
 
-        date_raw = row[col.get('date', 4)] if 'date' in col else None
-        if hasattr(date_raw, 'strftime'):
-            date_str = date_raw.strftime('%Y-%m-%d')
-        else:
-            date_str = clean(date_raw)[:10] if date_raw else ''
-
-        area_val   = get(row, 'Area')
-        sector_val = get(row, 'Business Sector', 'Sector')
-
-        title_ko = get(row, 'title_ko')
-        title_en = get(row, 'title_en')
-        title_vi = get(row, 'title_vi')
-        sum_ko   = get(row, 'summary_ko')
-        sum_en   = get(row, 'summary_en')
-        sum_vi   = get(row, 'summary_vi')
-        raw_sum  = get(row, 'Short Summary', 'summary')
+        date_val = _clean(row[1] if len(row) > 1 else None)  # B열 Date
+        plan_id  = _clean(row[7] if len(row) > 7 else None)  # H열 Plan_ID
+        sector   = _plan_to_sector(plan_id) if plan_id else 'Environment'
 
         articles.append({
-            'id':       len(articles) + 1,
-            'title':    {
-                'ko': title_ko or title_raw,
-                'en': title_en or title_raw,
-                'vi': title_vi or title_raw,
+            'id'     : idx,
+            'title'  : {
+                'ko': _clean(row[3]  if len(row) > 3  else None),   # D: Tit_ko
+                'en': title_en,                                       # C: Title
+                'vi': _clean(row[2]  if len(row) > 2  else None),   # C: 동일 (vi 없으면 en)
             },
-            'summary':  {
-                'ko': sum_ko or raw_sum,
-                'en': sum_en or raw_sum,
-                'vi': sum_vi or raw_sum,
+            'summary': {
+                'ko': _clean(row[10] if len(row) > 10 else None),   # K: sum_ko
+                'en': _clean(row[11] if len(row) > 11 else None),   # L: sum_en
+                'vi': _clean(row[12] if len(row) > 12 else None),   # M: sum_vi
             },
-            'sector':   sector_val,
-            'area':     normalize_area(area_val, sector_val),
-            'province': get(row, 'Province') or 'Vietnam',
-            'source':   get(row, 'Source'),
-            'date':     date_str,
-            'url':      get(row, 'Link', 'URL', 'url'),
+            'sector'  : sector,
+            'area'    : _area(sector),     # 'Environment'/'Energy Develop.'/'Urban Develop.'
+            'province': _clean(row[6]  if len(row) > 6  else None), # G: Province
+            'source'  : _clean(row[4]  if len(row) > 4  else None), # E: Source
+            'date'    : date_val,                                      # B: Date
+            'url'     : _clean(row[9]  if len(row) > 9  else None), # J: URL
         })
 
     wb.close()
+
+    # 날짜 내림차순 정렬 (영구 제약)
+    articles.sort(key=lambda x: x.get('date', '') or '', reverse=True)
+    logger.info(f"Excel 로드: {len(articles)}건")
     return articles
 
 
-def build():
-    articles = load_articles()
-    total    = len(articles)
-    print(f"  총 {total}건 로드")
-    if total == 0:
-        print("ERROR: 기사 없음"); sys.exit(1)
+def build_dashboard(excel_path: str = EXCEL_PATH,
+                    template_path: str = TEMPLATE_PATH,
+                    output_path: str = OUTPUT_PATH):
+    """
+    Dashboard 재생성.
+    templates/dashboard_template.html 의
+    /*__BACKEND_DATA__*/[] 플레이스홀더에 JSON 주입 → docs/index.html
+    """
+    logger.info("Dashboard 재생성 시작")
 
-    articles.sort(key=lambda a: a.get('date','') or '', reverse=True)
-    latest = articles[0]['date'] if articles else ''
-    trans  = sum(1 for a in articles
-                 if a['title'].get('ko') != a['title'].get('en'))
-    print(f"  최신: {latest}")
-    print(f"  번역: {trans}건 ({trans/total:.1%})")
+    articles = load_articles(excel_path)
+    if not articles:
+        logger.error("기사 없음"); sys.exit(1)
 
-    # JSON 직렬화
-    json_str     = json.dumps(articles, ensure_ascii=False, separators=(',',':'))
-    backend_data = '/*__BACKEND_DATA__*/' + json_str
-
-    # 검증
+    # JSON 직렬화 + 검증
     try:
-        json.loads(json_str)
-        print(f"  JSON 검증 [OK] ({len(json_str):,} bytes)")
-    except json.JSONDecodeError as e:
-        print(f"  JSON 검증 [ERROR] {e}")
-        sys.exit(1)
+        json_str = json.dumps(articles, ensure_ascii=False)
+        json.loads(json_str)   # 유효성 검증
+    except (json.JSONDecodeError, ValueError):
+        logger.warning("JSON 오류 — ASCII 모드로 재시도")
+        json_str = json.dumps(articles, ensure_ascii=True)
 
-    if not TEMPLATE_PATH.exists():
-        print(f"ERROR: 템플릿 없음: {TEMPLATE_PATH}"); sys.exit(1)
-
-    print(f"\n템플릿 읽기: {TEMPLATE_PATH}")
-    with open(TEMPLATE_PATH, 'r', encoding='utf-8') as f:
+    # 템플릿 로드
+    if not os.path.exists(template_path):
+        logger.error(f"템플릿 없음: {template_path}"); sys.exit(1)
+    with open(template_path, 'r', encoding='utf-8') as f:
         html = f.read()
 
+    # 플레이스홀더 주입
+    PLACEHOLDER = '/*__BACKEND_DATA__*/[]'
     if PLACEHOLDER not in html:
-        print(f"ERROR: 플레이스홀더 없음: '{PLACEHOLDER}'"); sys.exit(1)
+        logger.error(f"플레이스홀더 없음: {PLACEHOLDER}"); sys.exit(1)
+    html = html.replace(PLACEHOLDER, json_str)
 
-    html_out = html.replace(PLACEHOLDER, backend_data)
+    # 메타 업데이트
+    now = datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')
+    html = html.replace('{{UPDATE_TIME}}', now)
+    html = html.replace('{{ARTICLE_COUNT}}', str(len(articles)))
 
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
-        f.write(html_out)
+    # 저장
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(html)
 
-    size = OUTPUT_PATH.stat().st_size
-    print(f"\n[OK] 저장 완료: {OUTPUT_PATH} ({size:,} bytes)")
-    print(f"   기사: {total}건 | 최신: {latest}")
-    print(f"   빌드: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    kb = os.path.getsize(output_path) / 1024
+    logger.info(f"저장 완료: {output_path} ({kb:.1f} KB) | {len(articles)}건")
 
 
 if __name__ == '__main__':
-    build()
+    import argparse
+    p = argparse.ArgumentParser()
+    p.add_argument('--excel',    default=EXCEL_PATH)
+    p.add_argument('--template', default=TEMPLATE_PATH)
+    p.add_argument('--output',   default=OUTPUT_PATH)
+    a = p.parse_args()
+    build_dashboard(a.excel, a.template, a.output)
