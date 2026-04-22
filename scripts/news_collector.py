@@ -408,26 +408,58 @@ def translate_articles(articles: list[dict]) -> list[dict]:
 def init_database() -> sqlite3.Connection:
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS articles (
-            id         INTEGER PRIMARY KEY AUTOINCREMENT,
-            url_hash   TEXT UNIQUE,
-            title      TEXT,
-            url        TEXT,
-            date       TEXT,
-            source     TEXT,
-            src_type   TEXT DEFAULT "NewsData.io",
-            sector     TEXT,
-            province   TEXT,
-            summary    TEXT,
-            title_ko   TEXT,
-            title_vi   TEXT,
-            sum_ko     TEXT,
-            sum_vi     TEXT,
-            created_at TEXT DEFAULT (datetime("now"))
-        )
-    ''')
-    conn.commit()
+
+    # 기존 테이블 존재 여부 확인
+    cur = conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='articles'"
+    )
+    table_exists = cur.fetchone() is not None
+
+    if not table_exists:
+        # 신규 생성 — created_at DEFAULT 없이 (Python에서 직접 입력)
+        conn.execute('''
+            CREATE TABLE articles (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                url_hash    TEXT UNIQUE,
+                title       TEXT,
+                url         TEXT,
+                date        TEXT,
+                source      TEXT,
+                src_type    TEXT,
+                sector      TEXT,
+                province    TEXT,
+                summary     TEXT,
+                title_ko    TEXT,
+                title_vi    TEXT,
+                sum_ko      TEXT,
+                sum_vi      TEXT,
+                created_at  TEXT
+            )
+        ''')
+        conn.commit()
+        log("SQLite DB 초기화 완료")
+    else:
+        # 기존 테이블 — 누락 컬럼만 ALTER TABLE로 추가
+        existing_cols = [
+            row[1] for row in conn.execute("PRAGMA table_info(articles)")
+        ]
+        add_cols = {
+            'src_type'  : 'TEXT',
+            'title_vi'  : 'TEXT',
+            'sum_vi'    : 'TEXT',
+            'created_at': 'TEXT',
+        }
+        for col, col_def in add_cols.items():
+            if col not in existing_cols:
+                try:
+                    conn.execute(
+                        f"ALTER TABLE articles ADD COLUMN {col} {col_def}"
+                    )
+                    conn.commit()
+                    log(f"  DB 컬럼 추가: {col}")
+                except Exception:
+                    pass
+
     return conn
 
 
@@ -438,29 +470,34 @@ def get_existing_hashes(conn: sqlite3.Connection) -> set:
 
 def save_article(conn: sqlite3.Connection, article: dict) -> bool:
     url_hash = generate_url_hash(article.get('url', ''))
+    now_str  = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
     try:
         conn.execute(
             '''INSERT OR IGNORE INTO articles
                (url_hash, title, url, date, source, src_type,
-                sector, province, summary, title_ko, title_vi, sum_ko, sum_vi)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)''',
-            (url_hash,
-             article.get('title_en', '') or article.get('title', ''),
-             article.get('url', ''),
-             article.get('date', '') or article.get('published_date', ''),
-             article.get('source', ''),
-             article.get('src_type', 'NewsData.io'),
-             article.get('sector', ''),
-             article.get('province', ''),
-             article.get('sum_en', '') or article.get('summary', ''),
-             article.get('title_ko', ''),
-             article.get('title_vi', ''),
-             article.get('sum_ko', ''),
-             article.get('sum_vi', ''))
+                sector, province, summary,
+                title_ko, title_vi, sum_ko, sum_vi, created_at)
+               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
+            (
+                url_hash,
+                article.get('title_en', '') or article.get('title', ''),
+                article.get('url', ''),
+                article.get('date', '') or article.get('published_date', ''),
+                article.get('source', ''),
+                article.get('src_type', 'NewsData.io'),
+                article.get('sector', ''),
+                article.get('province', ''),
+                article.get('sum_en', '') or article.get('summary', ''),
+                article.get('title_ko', ''),
+                article.get('title_vi', ''),
+                article.get('sum_ko', ''),
+                article.get('sum_vi', ''),
+                now_str,
+            )
         )
         conn.commit()
         return True
-    except sqlite3.Error:
+    except Exception:
         return False
 
 
