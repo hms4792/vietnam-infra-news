@@ -1,166 +1,97 @@
-# ============================================================
-# Vietnam Infrastructure News — 일일 수집 파이프라인
-# 파일 경로: .github/workflows/daily_pipeline.yml
+# daily_pipeline.yml — v7.1
+# 매일 KST 20:00 (= UTC 11:00) 자동 실행
 #
-# 스케줄: 매일 KST 20:00 (UTC 11:00)
-# 버전: v6.0
-# 변경사항: SA-6(quality_context_agent.py) v2.0 업그레이드
-#           → SA-7 맥락 분류 + Policy Sentinel(정책·법령 기사 포착) 통합
-#
-# ★ 영구 제약 (절대 변경 금지):
-#   [1] 번역: Google Translate (MyMemory + deep-translator). Anthropic API 금지
-#   [2] 대시보드: templates/dashboard_template.html → docs/index.html
-#   [4] 이메일: EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_ADDRESS 등 금지)
-#   [8] 배포: main 브랜치 /docs 폴더 (gh-pages 브랜치 절대 금지)
-#  [12] yml 내 python3 -c "..." 인라인 코드 금지
-# ============================================================
+# 영구 제약:
+#   - YAML 내 inline python3 -c "..." 절대 금지 → 별도 .py 파일만 사용
+#   - GitHub Pages: main 브랜치 /docs 폴더 (gh-pages 금지)
+#   - 이메일 시크릿: EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_* 없음)
+#   - 번역: Google Translate (Anthropic API 절대 금지)
+#   - 대상 파일: data/database/Vietnam_Infra_News_Database_Final.xlsx
 
-name: Daily Pipeline v6.0
+name: Daily Vietnam Infra News Pipeline v7.1
 
 on:
   schedule:
-    - cron: '0 11 * * *'   # UTC 11:00 = KST 20:00, 매일 실행 (휴일 포함)
+    - cron: '0 11 * * *'   # 매일 UTC 11:00 = KST 20:00
   workflow_dispatch:
     inputs:
       hours_back:
-        description: '수집 시간 범위 (기본 24)'
+        description: '수집 기간 (시간, 기본 24)'
         required: false
         default: '24'
 
-concurrency:
-  group: news-collection
-  cancel-in-progress: false
-
 jobs:
-  daily:
-    name: 일일 수집 및 대시보드 업데이트
+  pipeline:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
-      # ── 1. 레포지토리 체크아웃 ─────────────────────────────
-      - name: Checkout repository
+      # 1. 코드 체크아웃
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
-      # ── 2. Python 환경 설정 ───────────────────────────────
+      # 2. Python 설정
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      # ── 3. 의존성 설치 ────────────────────────────────────
-      # deep-translator: MyMemory API 번역용 [제약 1]
+      # 3. 패키지 설치
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install requests openpyxl feedparser beautifulsoup4 lxml deep-translator
+          pip install feedparser requests beautifulsoup4 \
+                      pandas openpyxl deep-translator lxml
 
-      # ── 4. Excel 파일 존재 확인 ───────────────────────────
-      - name: Check Excel file
+      # 4. 환경변수 검증 (별도 .py 파일 — inline python 금지)
+      - name: Validate environment
+        run: python3 scripts/validate_env.py
         env:
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-        run: |
-          python3 scripts/check_excel.py
-
-      # ── 5. 뉴스 수집 ─────────────────────────────────────
-      - name: Collect news
-        env:
-          HOURS_BACK: ${{ github.event.inputs.hours_back || '24' }}
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          DB_PATH: data/vietnam_infrastructure_news.db
-          LANGUAGE_FILTER: all
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
-        run: |
-          echo "=== News Collection (hours_back=$HOURS_BACK) ==="
-          python3 scripts/news_collector.py --hours-back $HOURS_BACK
+          EMAIL_USERNAME:   ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
 
-      # ── 6. 번역 (소급 20건) ──────────────────────────────
-      - name: Batch translate (backlog 20 articles)
+      # 5. 파이프라인 실행 (Step1→2→3→4)
+      - name: Run pipeline
+        run: python3 scripts/main.py --hours ${{ github.event.inputs.hours_back || '24' }}
         env:
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-        run: |
-          python3 scripts/batch_translate.py || echo "Batch translate skipped"
+          NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
+          EMAIL_USERNAME:   ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
 
-      # ── 7. SA-7 + Policy Sentinel 분류 (v2.0) ────────────
-      # SA7_MATCH: 프로젝트·시설 관련 기사
-      # POLICY_MATCH: 정책·법령 관련 기사 (Decree/Circular/Resolution 등)
-      # SA7+POLICY: 둘 다 해당하는 기사
-      # knowledge_index v2.3: 25개 플랜, Policy Sentinel 71개 신호어
-      - name: SA-7 Context classification (SA-7 + Policy Sentinel v2.0)
-        env:
-          KNOWLEDGE_INDEX_PATH: docs/shared/knowledge_index_v2.3.json
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-        run: |
-          python3 scripts/quality_context_agent.py --mode all || echo "SA-7 classification skipped"
+      # 6. Dashboard 재생성 (Step4 실패 시 백업)
+      - name: Rebuild dashboard (failsafe)
+        if: always()
+        run: python3 scripts/build_dashboard.py
+        continue-on-error: true
 
-      # ── 8. Excel Database 업데이트 ───────────────────────
-      # ExcelUpdater.update_all(articles) 메서드 사용 [제약]
-      - name: Update Excel Database
-        env:
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          DB_PATH: data/vietnam_infrastructure_news.db
+      # 7. Git 커밋 & 푸시
+      - name: Commit and push
         run: |
-          python3 scripts/run_excel_updater.py
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # ── 9. Dashboard 생성 ────────────────────────────────
-      # templates/dashboard_template.html → docs/index.html [제약 2]
-      - name: Build dashboard
-        env:
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-        run: |
-          python3 scripts/build_dashboard.py
+          git add data/database/Vietnam_Infra_News_Database_Final.xlsx
+          git add docs/index.html
+          git add data/shared/ || true
 
-      # ── 10. 변경사항 Commit & Push ────────────────────────
-      - name: Commit and push changes
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add -A
           if git diff --staged --quiet; then
-            echo "No changes to commit"
+            echo "변경사항 없음 — 커밋 건너뜀"
           else
-            git commit -m "Daily update $(date '+%Y-%m-%d') KST"
-            git push
-            echo "Pushed successfully"
+            DATE_KST=$(TZ='Asia/Seoul' date '+%Y-%m-%d %H:%M KST')
+            git commit -m "Daily update: ${DATE_KST}"
+            git push origin main
           fi
 
-      # ── 11. 이메일 알림 ──────────────────────────────────
-      # EMAIL_USERNAME / EMAIL_PASSWORD [제약 4]
-      - name: Send email notification
-        if: always()
+      # 8. 이메일 알림
+      - name: Send notification
+        if: success()
+        run: python3 scripts/send_email.py
         env:
           EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-        run: |
-          if [ -f scripts/send_email.py ]; then
-            python3 scripts/send_email.py || echo "Email skipped"
-          else
-            echo "send_email.py not found, skipping"
-          fi
-
-      # ── 12. Genspark 공유 파일 내보내기 ──────────────────
-      # docs/shared/에 knowledge_index_v2.3.json 등 공유 파일 배포
-      - name: Export shared files for Genspark
-        run: |
-          if [ -f scripts/export_shared.py ]; then
-            python3 scripts/export_shared.py || echo "Export shared skipped"
-          else
-            echo "export_shared.py not found, skipping"
-          fi
-
-      # ── 13. 공유 파일 Commit & Push ──────────────────────
-      - name: Commit and push shared files
-        run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add docs/shared/ || echo "No shared files to add"
-          if git diff --cached --quiet; then
-            echo "No shared changes to commit"
-          else
-            git commit -m "Daily shared export $(date '+%Y-%m-%d')"
-            git push
-          fi
+        continue-on-error: true
