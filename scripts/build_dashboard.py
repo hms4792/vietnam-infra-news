@@ -21,7 +21,10 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s')
 logger = logging.getLogger('build_dashboard')
 
-BASE_DIR      = os.path.dirname(os.path.abspath(__file__))
+# build_dashboard.py 위치: scripts/build_dashboard.py
+# ROOT_DIR: 저장소 루트 (scripts/ 상위)
+SCRIPTS_DIR   = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR      = os.path.dirname(SCRIPTS_DIR)   # 저장소 루트
 EXCEL_PATH    = os.path.join(BASE_DIR, 'data', 'database',
                              'Vietnam_Infra_News_Database_Final.xlsx')
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates', 'dashboard_template.html')
