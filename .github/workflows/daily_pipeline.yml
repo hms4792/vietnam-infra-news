@@ -1,14 +1,17 @@
-# daily_pipeline.yml — v7.1
+# daily_pipeline.yml — v7.2
 # 매일 KST 20:00 (= UTC 11:00) 자동 실행
 #
+# 변경사항 (v7.2):
+#   - SA-7 맥락 매핑 스텝 추가: python3 scripts/quality_context_agent.py
+#     (이슈2 해결: Matched_Plan 0건 / 이메일 "정책연계 0건" 문제)
+#   - Commit 대상에 docs/shared/ 추가 (Genspark 공유 파일)
+#
 # 영구 제약:
-#   - YAML 내 inline python3 -c "..." 절대 금지 → 별도 .py 파일만 사용
-#   - GitHub Pages: main 브랜치 /docs 폴더 (gh-pages 금지)
-#   - 이메일 시크릿: EMAIL_USERNAME / EMAIL_PASSWORD (GMAIL_* 없음)
-#   - 번역: Google Translate (Anthropic API 절대 금지)
-#   - 대상 파일: data/database/Vietnam_Infra_News_Database_Final.xlsx
+#   - YAML inline python3 -c "..." 절대 금지
+#   - GitHub Pages: main 브랜치 /docs (gh-pages 금지)
+#   - 이메일 시크릿: EMAIL_USERNAME / EMAIL_PASSWORD
 
-name: Daily Vietnam Infra News Pipeline v7.1
+name: Daily Vietnam Infra News Pipeline v7.2
 
 on:
   schedule:
@@ -23,31 +26,27 @@ on:
 jobs:
   pipeline:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
 
     steps:
-      # 1. 코드 체크아웃
       - name: Checkout
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      # 2. Python 설정
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      # 3. 패키지 설치
       - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install feedparser requests beautifulsoup4 \
                       pandas openpyxl deep-translator lxml
 
-      # 4. 환경변수 검증 (별도 .py 파일 — inline python 금지)
       - name: Validate environment
         run: python3 scripts/validate_env.py
         env:
@@ -55,7 +54,6 @@ jobs:
           EMAIL_USERNAME:   ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
 
-      # 5. 파이프라인 실행 (Step1→2→3→4)
       - name: Run pipeline
         run: python3 scripts/main.py --hours ${{ github.event.inputs.hours_back || '24' }}
         env:
@@ -63,22 +61,31 @@ jobs:
           EMAIL_USERNAME:   ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
 
-      # 6. Dashboard 재생성 (Step4 실패 시 백업)
       - name: Rebuild dashboard (failsafe)
         if: always()
         run: python3 scripts/build_dashboard.py
         continue-on-error: true
 
-      # 7. Git 커밋 & 푸시
+      # ── 이슈2 해결: SA-7 맥락 매핑 ──────────────────────
+      # quality_context_agent.py → docs/shared/knowledge_index.json 읽어
+      # 기사↔마스터플랜 매핑 → Matched_Plan 업데이트 + quality_report.json 생성
+      # 이메일 제목 "정책연계 N건" 정상화
+      - name: SA-7 context matching
+        run: python3 scripts/quality_context_agent.py
+        continue-on-error: true
+
+      - name: Export shared files for Genspark
+        run: python3 scripts/export_shared.py
+        continue-on-error: true
+
       - name: Commit and push
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
           git add data/database/Vietnam_Infra_News_Database_Final.xlsx
           git add docs/index.html
-          git add data/shared/ || true
-
+          git add docs/shared/ || true
+          git add data/shared/  || true
           if git diff --staged --quiet; then
             echo "변경사항 없음 — 커밋 건너뜀"
           else
@@ -87,7 +94,6 @@ jobs:
             git push origin main
           fi
 
-      # 8. 이메일 알림
       - name: Send notification
         if: success()
         run: python3 scripts/send_email.py
