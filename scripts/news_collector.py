@@ -1,239 +1,233 @@
 # -*- coding: utf-8 -*-
 """
-news_collector.py
-베트남 인프라 뉴스 수집기 — RSS + NewsData.io + GNews
+news_collector.py — v8.0 (엄격 필터링)
 
-변경사항 (이번 수정):
-  ① RSS_FEEDS에서 영구 폐쇄 소스 6개 완전 제거:
-     - theinvestor.vn/feed      (404 폐쇄)
-     - vir.com.vn/rss/news.aspx (410 Gone)
-     - constructionvietnam.net  (폐쇄)
-     - monre.gov.vn/rss         (봇 차단)
-     - ictvietnam.vn/feed       (봇 차단)
-     - moitruong.com.vn/feed    (봇 차단)
-  ② 위 사이트들은 specialist_crawler.py (Jina.ai fallback 포함)가 담당
+핵심 변경사항:
+  ① is_infra_related(): must_have 키워드 기반 엄격 필터 — 인프라 아니면 즉시 제외
+  ② is_vietnam_related(): 도메인+키워드 복합 판단
+  ③ HIGH_FP_SOURCES: 오탐률 높은 소스 추가 필터 적용
+  ④ NOISE_PATTERNS: 명백한 비인프라 패턴 즉시 제외
+  ⑤ SQLite created_at: Python datetime 직접 삽입 (DEFAULT 제거)
+  ⑥ 번역 대상 축소: 인프라 확정 기사만 번역 → 번역 로드 대폭 감소
 
 영구 제약:
-  - 번역: Google Translate (MyMemory → deep-translator fallback)
-  - Anthropic API: GitHub Actions 연결 오류 → 절대 금지
+  - 번역: Google Translate만 (Anthropic API 절대 금지)
   - date fallback: article.get('date') or article.get('published_date')
-  - NewsData.io: /api/1/latest, country=vn, language=en/vi, q 파라미터만
-    (domain, from_date, category+domain → 422 오류, 절대 금지)
-  - 전문미디어 크롤링: specialist_crawler.py 위임 (weekly_backfill.yml)
+  - NewsData.io: /api/1/latest, country=vn, q 파라미터만 (domain/from_date 금지)
 """
 
-import os
-import re
-import sys
-import time
-import sqlite3
-import hashlib
-import logging
-import urllib.request
-import urllib.parse
+import os, re, sys, time, sqlite3, hashlib, logging, urllib.request, urllib.parse
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional
 
 try:
-    import feedparser
-    HAS_FEEDPARSER = True
-except ImportError:
-    HAS_FEEDPARSER = False
-
+    import feedparser; HAS_FP=True
+except: HAS_FP=False
 try:
-    import requests
-    HAS_REQUESTS = True
-except ImportError:
-    HAS_REQUESTS = False
+    import requests as req_lib; HAS_REQ=True
+except: HAS_REQ=False
 
-# ── 경로 ─────────────────────────────────────────────────
-ROOT_DIR   = Path(__file__).parent.parent
-DB_PATH    = str(ROOT_DIR / 'data' / 'vietnam_infra_news.db')
-EXCEL_PATH = str(ROOT_DIR / 'data' / 'database' / 'Vietnam_Infra_News_Database_Final.xlsx')
+SCRIPTS_DIR = Path(__file__).parent
+ROOT_DIR    = SCRIPTS_DIR.parent
+DB_PATH     = str(ROOT_DIR/'data'/'vietnam_infra_news.db')
+EXCEL_PATH  = str(ROOT_DIR/'data'/'database'/'Vietnam_Infra_News_Database_Final.xlsx')
 
-# ── 로깅 ─────────────────────────────────────────────────
-logging.basicConfig(
-    level   = logging.INFO,
-    format  = '%(asctime)s - %(message)s',
-    datefmt = '%Y-%m-%d %H:%M:%S',
-)
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S')
+logger = logging.getLogger('news_collector')
+def log(m): logger.info(m)
 
-def log(msg): logger.info(msg)
-
-# ── 수집 설정 ────────────────────────────────────────────
-HOURS_BACK             = int(os.environ.get('HOURS_BACK', 24))
-LANGUAGE_FILTER        = True
-MIN_CLASSIFY_THRESHOLD = 1
-GNEWS_API_KEY          = os.environ.get('GNEWS_API_KEY', '')
-ENABLE_GNEWS           = bool(GNEWS_API_KEY)
-
-# ── 섹터 분류 키워드 ──────────────────────────────────────
-SECTOR_KEYWORDS = {
-    'Waste Water': [
-        'wastewater', 'sewage', 'wwtp', 'nước thải', 'thoát nước',
-        'wastewater treatment', 'effluent', 'water treatment plant',
-        'hệ thống thoát nước', 'xử lý nước thải',
-    ],
-    'Water Supply/Drainage': [
-        'water supply', 'clean water', 'drinking water', 'cấp nước',
-        'nước sạch', 'drainage', 'water pipe', 'water network',
-        'đường ống nước', 'hệ thống cấp nước',
-    ],
-    'Solid Waste': [
-        'solid waste', 'waste management', 'rác thải', 'chất thải',
-        'landfill', 'recycling', 'waste-to-energy', 'tái chế',
-        'xử lý chất thải', 'bãi rác', 'đốt rác',
-    ],
-    'Power': [
-        'electricity', 'power plant', 'renewable energy', 'solar',
-        'wind power', 'pdp8', 'evn', 'nuclear power', 'power grid',
-        'điện', 'năng lượng tái tạo', 'điện gió', 'điện mặt trời',
-        'quy hoạch điện', 'lưới điện', 'nhà máy điện',
-    ],
-    'Oil & Gas': [
-        'lng', 'petroleum', 'petrovietnam', 'oil', 'gas pipeline',
-        'offshore', 'dầu khí', 'khí thiên nhiên', 'đường ống khí',
-        'pvn', 'pv gas', 'lng terminal',
-    ],
-    'Industrial Parks': [
-        'industrial park', 'industrial zone', 'khu công nghiệp',
-        'vsip', 'fdi', 'eco-industrial', 'khu kinh tế',
-        'khu chế xuất', 'factory', 'manufacturing',
-    ],
-    'Smart City': [
-        'smart city', 'metro', 'digital infrastructure', 'iot',
-        'thành phố thông minh', 'chuyển đổi số', 'e-government',
-        'đường sắt đô thị', 'tuyến metro', 'digital',
-    ],
-    'Transport': [
-        'expressway', 'highway', 'airport', 'port', 'railway',
-        'cao tốc', 'cảng biển', 'sân bay', 'giao thông',
-        'north-south', 'metro line', 'long thanh',
-    ],
-    'Environment': [
-        'environment', 'emission', 'carbon', 'esg', 'sustainability',
-        'môi trường', 'khí thải', 'phát thải', 'ô nhiễm',
-        'mekong', 'ecosystem', 'climate',
-    ],
-}
-
-# 섹터 우선순위 (Environment > Energy > Urban)
-SECTOR_PRIORITY = [
-    'Waste Water', 'Water Supply/Drainage', 'Solid Waste', 'Environment',
-    'Power', 'Oil & Gas',
-    'Industrial Parks', 'Smart City', 'Transport',
-]
-
-# ── Province 키워드 ────────────────────────────────────
-PROVINCE_KEYWORDS = {
-    'Hanoi'              : ['hanoi', 'ha noi', 'hà nội'],
-    'Ho Chi Minh City'   : ['ho chi minh', 'hcmc', 'saigon', 'sài gòn', 'tp.hcm'],
-    'Da Nang'            : ['da nang', 'đà nẵng', 'danang'],
-    'Hai Phong'          : ['hai phong', 'hải phòng'],
-    'Can Tho'            : ['can tho', 'cần thơ'],
-    'Binh Duong'         : ['binh duong', 'bình dương'],
-    'Dong Nai'           : ['dong nai', 'đồng nai'],
-    'Ba Ria-Vung Tau'    : ['vung tau', 'vũng tàu', 'ba ria', 'bà rịa'],
-    'Quang Ninh'         : ['quang ninh', 'quảng ninh', 'ha long', 'hạ long'],
-    'Long An'            : ['long an'],
-    'Nghe An'            : ['nghe an', 'nghệ an'],
-    'Khanh Hoa'          : ['khanh hoa', 'khánh hòa', 'nha trang'],
-    'Quang Nam'          : ['quang nam', 'quảng nam'],
-    'Binh Dinh'          : ['binh dinh', 'bình định'],
-    'Thua Thien Hue'     : ['hue', 'huế', 'thua thien'],
-    'Lam Dong'           : ['lam dong', 'lâm đồng', 'da lat', 'đà lạt'],
-    'Bac Ninh'           : ['bac ninh', 'bắc ninh'],
-    'Hung Yen'           : ['hung yen', 'hưng yên'],
-    'National Level'     : ['vietnam', 'viet nam', 'việt nam', 'national', 'toàn quốc'],
-}
-
-# ════════════════════════════════════════════════════════
-# RSS 피드 목록 (검증된 정상 소스만, 2026-04-07 기준)
-#
-# ❌ 영구 폐쇄 — 아래 소스 절대 재추가 금지:
-#   theinvestor.vn/feed     → 404
-#   vir.com.vn/rss          → 410 Gone
-#   constructionvietnam.net → 폐쇄
-#   monre.gov.vn/rss        → 봇 차단
-#   ictvietnam.vn/feed      → 봇 차단
-#   moitruong.com.vn/feed   → 봇 차단
-#   vea.gov.vn              → 봇 차단
-#   mic.gov.vn/rss          → 봇 차단
-#   smartcity.mobi          → 폐쇄
-#   baotintuc.vn            → 봇 차단
-#   hanoimoi.vn             → 봇 차단
-# ════════════════════════════════════════════════════════
-RSS_FEEDS = {
-    # ── 검증 완료 (2026-04-07) ───────────────────────────
-    'Hanoi Times'        : 'https://hanoitimes.vn/rss/home.rss',
-    'PV Tech'            : 'https://pv-tech.org/feed/',
-    'Energy Monitor'     : 'https://energymonitor.ai/rss',
-    'Nikkei Asia'        : 'https://asia.nikkei.com/rss/feed/nar',
-    'Moitruong Net'      : 'https://moitruong.net.vn/rss/home.rss',
-    'Vietnamnet Tech'    : 'https://vietnamnet.vn/rss/cong-nghe.rss',
-
-    # ── 추가 베트남 미디어 ────────────────────────────────
-    'VietnamPlus'        : 'https://www.vietnamplus.vn/rss/kinhte-311.rss',
-    'Bao Xay Dung'       : 'https://baoxaydung.com.vn/rss/home.rss',
-    'Tuoi Tre'           : 'https://tuoitre.vn/rss/tin-moi-nhat.rss',
-    'VnExpress Kinh Doanh': 'https://vnexpress.net/rss/kinh-doanh.rss',
-    'Dantri Kinh Te'     : 'https://dantri.com.vn/rss/kinh-doanh.rss',
-    'Thanh Nien Kinh Te' : 'https://thanhnien.vn/rss/kinh-te.rss',
-    'SGGP English'       : 'https://en.sggp.org.vn/rss/home.rss',
-    'Bao Tai Nguyen'     : 'https://baotainguyenmoitruong.vn/rss/tin-tuc.rss',
-
-    # ── 환경/에너지 전문 ─────────────────────────────────
-    'Offshore Energy'    : 'https://offshore-energy.biz/feed/',
-    'Solar Quarter'      : 'https://solarquarter.com/feed/',
-    'Vietnam Energy'     : 'https://vietnamenergy.vn/rss/home.rss',
-    'Nhan Dan English'   : 'https://en.nhandan.vn/rss/home.rss',
-}
-
-# ── NewsData.io 설정 ────────────────────────────────────
-# 중요: /api/1/latest 엔드포인트만
-# 허용 파라미터: country=vn + language=en/vi + q
-# 금지: domain, from_date, category+domain → 422 오류
+HOURS_BACK = int(os.environ.get('HOURS_BACK', 24))
+GNEWS_API_KEY = os.environ.get('GNEWS_API_KEY','')
 NEWSDATA_ENDPOINT = 'https://newsdata.io/api/1/latest'
 
+# ════════════════════════════════════════════════════════
+# 핵심: 인프라 must_have 키워드 (이것 없으면 무조건 제외)
+# ════════════════════════════════════════════════════════
+INFRA_MUST_HAVE = {
+    'Waste Water':           ['wastewater','sewage','wwtp','effluent',
+                              'water treatment plant','nước thải','thoát nước',
+                              'xử lý nước thải','hệ thống thoát nước'],
+    'Water Supply/Drainage': ['water supply','clean water','drinking water',
+                              'cấp nước','nước sạch','water pipe','nhà máy nước',
+                              'water network','water infrastructure'],
+    'Solid Waste':           ['solid waste','rác thải rắn','bãi rác',
+                              'waste-to-energy','landfill','recycling',
+                              'tái chế','đốt rác','chất thải rắn',
+                              'waste management','waste treatment',
+                              'rác sinh hoạt','thu gom rác','plastic waste'],
+    'Power':                 ['power plant','renewable energy','solar farm',
+                              'wind farm','wind power','pdp8','nuclear power',
+                              'power grid','evn','electricity generation',
+                              'nhà máy điện','điện gió','điện mặt trời',
+                              'năng lượng tái tạo','lưới điện','quy hoạch điện',
+                              'offshore wind','hydropower','transmission line',
+                              'coal power plant','substation','jetp'],
+    'Oil & Gas':             ['lng terminal','gas pipeline','petrovietnam',
+                              'pvn','pv gas','pvep','petroleum',
+                              'offshore drilling','oil field','dầu khí',
+                              'đường ống khí','natural gas','refinery',
+                              'lng power plant','gas-fired power'],
+    'Industrial Parks':      ['industrial park','industrial zone',
+                              'khu công nghiệp','vsip','eco-industrial',
+                              'khu kinh tế','khu chế xuất','becamex',
+                              'amata','deep-c','hi-tech park'],
+    'Smart City':            ['smart city','metro line','urban railway',
+                              'tuyến metro','đường sắt đô thị',
+                              'thành phố thông minh','e-government'],
+    'Transport':             ['long thanh airport','north-south expressway',
+                              'sân bay long thành','cao tốc bắc nam',
+                              'seaport expansion','deep-water port',
+                              'cảng nước sâu','port capacity expansion',
+                              'bridge construction project',
+                              'logistics infrastructure'],
+}
+ALL_INFRA_KW = [kw for kws in INFRA_MUST_HAVE.values() for kw in kws]
+
+# 베트남 관련 필수 키워드
+VN_KEYWORDS = ['vietnam','viet nam','việt nam','hanoi','hà nội',
+               'ho chi minh','hcmc','tp.hcm','mekong','evn',
+               'petrovietnam','pvn','haiphong','hải phòng',
+               'da nang','đà nẵng','quang ninh','binh duong',
+               'dong nai','can tho','long an','gia lai','ninh thuan',
+               '.vn','vn/']
+
+# 베트남 도메인 (자동 통과)
+VN_DOMAINS = ['hanoitimes.vn','vietnamplus.vn','nhandan.vn','sggp.org.vn',
+              'baoxaydung.com.vn','moitruong.net.vn','vietnamnet.vn',
+              'tuoitre.vn','thanhnien.vn','vnexpress.net','cafebiz.vn',
+              'theinvestor.vn','vir.com.vn','vietnamenergy.vn']
+
+# 오탐률 높은 소스 — 추가 필터 필요
+HIGH_FP_SOURCES = {
+    'www.offshore-energy.biz': 'vn_strict',   # 베트남 언급 없으면 제외
+    'Bao Binh Dinh':           'infra_strict', # 인프라 키워드 2개+
+    'Bao Ha Tinh':             'infra_strict',
+    'VnExpress - Thoi su':     'infra_only',   # 인프라만
+    'CafeBiz':                 'infra_only',
+    'Tuoi Tre News':           'infra_only',
+    'Tuoi Tre - Kinh doanh':   'infra_only',
+    'Dan Tri - Kinh doanh':    'infra_only',
+    'Nhan Dan English':        'infra_strict', # 엄격한 인프라
+    'SGGP':                    'infra_only',
+    'Bao Xay Dung':            'infra_only',
+}
+
+# 명백한 오탐 패턴 (즉시 제외)
+NOISE_PATTERNS = [
+    r'không khí lạnh|mưa (diện rộng|lớn|giông)|nắng nóng kỉ lục',
+    r'bắt giữ.*đối tượng|khởi tố.*chém|xông vào nhà|tử vong|rabies|whitmore',
+    r'tình nguyện viên.*dọn dẹp|giải thưởng.*doanh nhân|festival.*văn hóa',
+    r'pahalgam|terror attack|pm modi|horoscope|zodiac|astrology|dental',
+    r'vn-index.*tăng|vn-index.*giảm|chứng khoán|cổ phiếu|giá vàng|sjc gold',
+    r'u17|youth olympic|football.*ranked|women.*football.*ranked',
+    r'opera|ballet|art exhibition|book industry|reading culture',
+    r'carlsberg|booking\.com|mixue|kedarnath|azerbaijan electronics',
+    r'podcast|điểm tin trưa|bản tin chiều|infographic.*vn-index',
+    r'india will never bow|blood and water|bid farewell to oil.*iran',
+    r'daily horoscope|stars say|star reading|weekly horoscope',
+]
+
+# 섹터 우선순위
+SECTOR_ORDER = ['Waste Water','Water Supply/Drainage','Solid Waste','Power',
+                'Oil & Gas','Industrial Parks','Smart City','Transport']
+
+# 검증된 RSS 피드 (오탐 제거)
+RSS_FEEDS = {
+    # 인프라 전문 — 오탐 낮음
+    'PV Tech'          : 'https://pv-tech.org/feed/',
+    'Energy Monitor'   : 'https://energymonitor.ai/rss',
+    'Nikkei Asia'      : 'https://asia.nikkei.com/rss/feed/nar',
+    'Moitruong Net'    : 'https://moitruong.net.vn/rss/home.rss',
+    # 베트남 일반 (필터 통과 필요)
+    'Hanoi Times'      : 'https://hanoitimes.vn/rss/home.rss',
+    'Vietnamnet Tech'  : 'https://vietnamnet.vn/rss/cong-nghe.rss',
+    # 제거: VnExpress-Thoi su, Bao Ha Tinh, Bao Binh Dinh, CafeBiz 등 — 오탐 과다
+    # 제거: Solar Quarter, Nhan Dan English — 비베트남 국제기사 혼입
+}
+
+# NewsData.io 인프라 전용 쿼리
 NEWSDATA_QUERIES = [
-    # 환경 인프라
-    {'q': 'Vietnam wastewater treatment infrastructure',  'language': 'en'},
-    {'q': 'Vietnam water supply drainage',                'language': 'en'},
-    {'q': 'Vietnam solid waste recycling',                'language': 'en'},
-    # 에너지
-    {'q': 'Vietnam renewable energy solar wind power PDP8', 'language': 'en'},
-    {'q': 'Vietnam LNG gas pipeline petroleum',           'language': 'en'},
-    {'q': 'Vietnam EVN electricity grid nuclear',         'language': 'en'},
-    # 도시/산업
-    {'q': 'Vietnam industrial park FDI investment',       'language': 'en'},
-    {'q': 'Vietnam smart city metro digital infrastructure', 'language': 'en'},
-    {'q': 'Vietnam expressway airport port transport',    'language': 'en'},
-    # 베트남어
-    {'q': 'nước thải xử lý môi trường hạ tầng',           'language': 'vi'},
-    {'q': 'năng lượng tái tạo điện mặt trời gió PDP8',    'language': 'vi'},
-    {'q': 'khu công nghiệp đầu tư FDI',                   'language': 'vi'},
+    {'q':'Vietnam wastewater treatment WWTP sewage infrastructure','language':'en'},
+    {'q':'Vietnam water supply clean water infrastructure investment','language':'en'},
+    {'q':'Vietnam solid waste management recycling waste-to-energy','language':'en'},
+    {'q':'Vietnam power plant renewable energy PDP8 EVN solar wind','language':'en'},
+    {'q':'Vietnam LNG gas pipeline PetroVietnam offshore energy','language':'en'},
+    {'q':'Vietnam industrial park FDI khu cong nghiep VSIP','language':'en'},
+    {'q':'Vietnam smart city metro urban railway infrastructure','language':'en'},
+    {'q':'Vietnam expressway Long Thanh airport seaport transport','language':'en'},
+    {'q':'nước thải xử lý môi trường hạ tầng khu công nghiệp','language':'vi'},
+    {'q':'năng lượng tái tạo điện gió điện mặt trời PDP8 EVN','language':'vi'},
 ]
 
-# 전문미디어 NewsData 보완 쿼리 (domain 파라미터 없이 q에 포함)
-NEWSDATA_SPECIALIST_QUERIES = [
-    {'source': 'The Investor',             'domain': 'theinvestor.vn',
-     'q': 'infrastructure OR "industrial park" OR wastewater OR "power plant" OR "oil gas"',
-     'language': 'en'},
-    {'source': 'Vietnam Investment Review','domain': 'vir.com.vn',
-     'q': 'investment OR energy OR infrastructure OR industrial OR environment',
-     'language': 'en'},
-    {'source': 'Nhan Dan',                 'domain': 'en.nhandan.vn',
-     'q': 'Vietnam infrastructure energy environment investment',
-     'language': 'en'},
-]
+# ════════════════════════════════════════════════════════
+# 필터 함수들
+# ════════════════════════════════════════════════════════
+def is_infra_related(title: str, sum_en: str = '') -> bool:
+    """인프라 must_have 키워드 1개 이상 포함 여부 — 핵심 게이트"""
+    text = (title + ' ' + sum_en).lower()
+    return any(kw in text for kw in ALL_INFRA_KW)
 
-# GNews 쿼리 (GNEWS_API_KEY 있을 때)
-GNEWS_QUERY       = 'Vietnam infrastructure energy environment'
-GNEWS_ENV_QUERY   = 'Vietnam wastewater water supply solid waste'
-GNEWS_NORTH_QUERY = 'Vietnam industrial park smart city transport'
+def is_vietnam_related(title: str, url: str = '', sum_en: str = '') -> bool:
+    """베트남 관련 여부 — 도메인 우선, 키워드 차선"""
+    # 도메인 체크
+    url_lower = url.lower()
+    if any(d in url_lower for d in VN_DOMAINS): return True
+    if '.vn/' in url_lower or url_lower.endswith('.vn'): return True
+    # 키워드 체크
+    text = (title + ' ' + sum_en).lower()
+    return any(kw in text for kw in VN_KEYWORDS)
 
+def has_noise_pattern(title: str) -> bool:
+    """명백한 오탐 패턴 즉시 제외"""
+    t = title.lower()
+    return any(re.search(p, t) for p in NOISE_PATTERNS)
+
+def passes_source_filter(title: str, sum_en: str, source: str) -> bool:
+    """오탐률 높은 소스 추가 필터"""
+    if source not in HIGH_FP_SOURCES: return True
+    rule = HIGH_FP_SOURCES[source]
+    text = (title + ' ' + sum_en).lower()
+    if rule == 'infra_only':
+        return is_infra_related(title, sum_en)
+    elif rule == 'infra_strict':
+        count = sum(1 for kw in ALL_INFRA_KW if kw in text)
+        return count >= 2
+    elif rule == 'vn_strict':
+        return is_vietnam_related(title, '', sum_en)
+    return True
+
+def classify_sector(title: str, sum_en: str = '') -> str:
+    text = (title + ' ' + sum_en).lower()
+    for s in SECTOR_ORDER:
+        if any(kw in text for kw in INFRA_MUST_HAVE[s]): return s
+    return 'Environment'
+
+def area_from_sector(s: str) -> str:
+    if s in {'Waste Water','Water Supply/Drainage','Solid Waste','Environment'}: return 'Environment'
+    if s in {'Power','Oil & Gas'}: return 'Energy Develop.'
+    return 'Urban Develop.'
+
+def should_collect(article: dict) -> bool:
+    """
+    수집 여부 최종 판단 — 3단계 게이트
+    Gate1: 노이즈 패턴 → False
+    Gate2: 인프라 키워드 없음 → False
+    Gate3: 베트남 관련 없음 → False
+    Gate4: 소스 필터 → False
+    """
+    title  = article.get('title','') or article.get('title_en','')
+    sum_en = article.get('sum_en','') or article.get('summary','')
+    url    = article.get('url','')
+    source = article.get('source','')
+
+    if has_noise_pattern(title):             return False
+    if not is_infra_related(title, sum_en):  return False
+    if not is_vietnam_related(title, url, sum_en): return False
+    if not passes_source_filter(title, sum_en, source): return False
+    return True
 
 # ════════════════════════════════════════════════════════
 # 유틸리티
@@ -241,681 +235,258 @@ GNEWS_NORTH_QUERY = 'Vietnam industrial park smart city transport'
 def generate_url_hash(url: str) -> str:
     return hashlib.md5(url.strip().encode()).hexdigest()
 
-
 def clean_html(text: str) -> str:
-    if not text:
-        return ''
-    text = re.sub(r'<[^>]+>', ' ', text)
-    text = re.sub(r'&[a-z]+;', ' ', text)
-    return re.sub(r'\s+', ' ', text).strip()
-
-
-def is_english_text(text: str) -> bool:
-    if not text:
-        return False
-    ascii_count = sum(1 for c in text if ord(c) < 128)
-    return ascii_count / max(len(text), 1) > 0.8
-
-
-def is_vietnamese_text(text: str) -> bool:
-    vi_chars = 'àáảãạăắặằẵặâấầẩẫậèéẻẽẹêếềểễệìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵđ'
-    return any(c in vi_chars for c in text.lower())
-
-
-def passes_language_filter(text: str) -> bool:
-    """영문 또는 베트남어 기사만 통과"""
-    if not LANGUAGE_FILTER:
-        return True
-    return is_english_text(text) or is_vietnamese_text(text)
-
-
-def is_vietnam_related(text: str) -> bool:
-    """베트남 관련 기사 여부"""
-    vn_kws = ['vietnam', 'viet nam', 'việt nam', 'hanoi', 'ho chi minh',
-              'hcmc', 'mekong', 'evn', 'petrovietnam', 'vnm', 'vn']
-    text_lower = text.lower()
-    return any(kw in text_lower for kw in vn_kws)
-
-
-def should_exclude(title: str, summary: str = '') -> bool:
-    """제외 패턴"""
-    exclude_patterns = [
-        r'^\[pdf\]', r'^\[video\]', r'^\[infographic\]',
-        r'week in review', r'daily briefing',
-        r'advertisement', r'sponsored',
-    ]
-    text = (title + ' ' + summary).lower()
-    return any(re.search(p, text) for p in exclude_patterns)
-
-
-def extract_province(text: str) -> str:
-    """본문에서 Province 추출"""
-    text_lower = text.lower()
-    for prov, kws in PROVINCE_KEYWORDS.items():
-        if any(kw in text_lower for kw in kws):
-            return prov
-    return 'National Level'
-
-
-def classify_sector(title: str, summary: str = '') -> str:
-    """
-    섹터 분류 — 우선순위 기반
-    환경 인프라 > 에너지 > 도시개발
-    """
-    text = (title + ' ' + summary).lower()
-    for sector in SECTOR_PRIORITY:
-        kws = SECTOR_KEYWORDS.get(sector, [])
-        if any(kw in text for kw in kws):
-            return sector
-    return 'Environment'
-
-
-def area_fill(sector: str) -> str:
-    """섹터 → Area (BACKEND_DATA 구조 준수)"""
-    env_s    = {'Waste Water', 'Water Supply/Drainage', 'Solid Waste', 'Environment'}
-    energy_s = {'Power', 'Oil & Gas'}
-    if sector in env_s:    return 'Environment'
-    if sector in energy_s: return 'Energy Develop.'
-    return 'Urban Develop.'
-
+    if not text: return ''
+    text = re.sub(r'<[^>]+>',' ',text)
+    text = re.sub(r'&[a-z]+;',' ',text)
+    return re.sub(r'\s+',' ',text).strip()
 
 def parse_date(date_str: str) -> Optional[datetime]:
-    """다양한 날짜 형식 파싱"""
-    if not date_str:
-        return None
-    fmts = [
-        '%a, %d %b %Y %H:%M:%S %z', '%a, %d %b %Y %H:%M:%S %Z',
-        '%Y-%m-%dT%H:%M:%S%z', '%Y-%m-%dT%H:%M:%SZ',
-        '%Y-%m-%d %H:%M:%S', '%Y-%m-%d',
-        '%d/%m/%Y', '%B %d, %Y', '%b %d, %Y',
-    ]
+    if not date_str: return None
+    fmts=['%a, %d %b %Y %H:%M:%S %z','%a, %d %b %Y %H:%M:%S %Z',
+          '%Y-%m-%dT%H:%M:%S%z','%Y-%m-%dT%H:%M:%SZ',
+          '%Y-%m-%d %H:%M:%S','%Y-%m-%d','%d/%m/%Y','%B %d, %Y']
     for fmt in fmts:
         try:
-            dt = datetime.strptime(date_str.strip()[:len(fmt)+5], fmt)
+            dt=datetime.strptime(date_str.strip()[:len(fmt)+5],fmt)
             return dt.replace(tzinfo=None)
-        except (ValueError, TypeError):
-            continue
+        except: continue
     return None
 
+def extract_province(text: str) -> str:
+    t=text.lower()
+    PROV={'Hanoi':['hanoi','hà nội','ha noi'],'Ho Chi Minh City':['ho chi minh','hcmc','tp.hcm','sài gòn'],
+          'Da Nang':['da nang','đà nẵng'],'Hai Phong':['hai phong','hải phòng'],
+          'Can Tho':['can tho','cần thơ'],'Binh Duong':['binh duong','bình dương'],
+          'Dong Nai':['dong nai','đồng nai'],'Quang Ninh':['quang ninh','quảng ninh','ha long'],
+          'Ba Ria-Vung Tau':['vung tau','vũng tàu','ba ria'],'Long An':['long an'],
+          'Gia Lai':['gia lai'],'Ninh Thuan':['ninh thuan','ninh thuận'],
+          'National Level':['vietnam','viet nam','việt nam','national','toàn quốc']}
+    for prov,kws in PROV.items():
+        if any(kw in t for kw in kws): return prov
+    return 'National Level'
 
-# ════════════════════════════════════════════════════════
-# 번역 (Google Translate — MyMemory + deep-translator)
-# Anthropic API 절대 금지
-# ════════════════════════════════════════════════════════
-def translate_text(text: str, target: str = 'ko') -> str:
-    """
-    번역 메인 함수
-    1차: MyMemory API (무료)
-    2차: deep-translator (Google Translate 백엔드)
-    """
-    if not text or len(text.strip()) < 3:
-        return text
-
-    # 1차: MyMemory
+def translate_text(text: str, target: str='ko') -> str:
+    if not text or len(text.strip())<3: return text
     try:
-        params = urllib.parse.urlencode({
-            'q': text[:400], 'langpair': f'en|{target}'
-        })
-        url = f'https://api.mymemory.translated.net/get?{params}'
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=8) as r:
-            import json
-            data = json.loads(r.read())
-            result = data.get('responseData', {}).get('translatedText', '')
-            if result and 'MYMEMORY WARNING' not in result and result != text:
+        params=urllib.parse.urlencode({'q':text[:400],'langpair':f'en|{target}'})
+        url=f'https://api.mymemory.translated.net/get?{params}'
+        req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+        with urllib.request.urlopen(req,timeout=8) as r:
+            import json; data=json.loads(r.read())
+            result=data.get('responseData',{}).get('translatedText','')
+            if result and 'MYMEMORY WARNING' not in result and result!=text:
                 return result.strip()
-    except Exception:
-        pass
-
-    time.sleep(0.5)
-
-    # 2차: deep-translator
+    except: pass
+    time.sleep(0.3)
     try:
         from deep_translator import GoogleTranslator
-        result = GoogleTranslator(source='auto', target=target).translate(text[:400])
-        if result and result != text:
-            return result.strip()
-    except Exception:
-        pass
-
+        result=GoogleTranslator(source='auto',target=target).translate(text[:400])
+        if result and result!=text: return result.strip()
+    except: pass
     return text
 
-
-def translate_articles(articles: list[dict]) -> list[dict]:
-    """기사 목록 3개국어 번역"""
-    for a in articles:
-        title = a.get('title', '') or a.get('title_en', '')
-        summary = a.get('summary', '') or a.get('sum_en', '')
-
-        if not a.get('title_ko'):
-            a['title_ko'] = translate_text(title, 'ko')
-            time.sleep(0.3)
-        if not a.get('title_vi'):
-            a['title_vi'] = translate_text(title, 'vi')
-            time.sleep(0.3)
-        if not a.get('sum_ko') and summary:
-            a['sum_ko'] = translate_text(summary[:300], 'ko')
-            time.sleep(0.3)
-        if not a.get('sum_vi') and summary:
-            a['sum_vi'] = translate_text(summary[:300], 'vi')
-            time.sleep(0.3)
-    return articles
-
-
 # ════════════════════════════════════════════════════════
-# DB 초기화
+# DB
 # ════════════════════════════════════════════════════════
 def init_database() -> sqlite3.Connection:
-    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    conn = sqlite3.connect(DB_PATH)
-
-    # 기존 테이블 존재 여부 확인
-    cur = conn.execute(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='articles'"
-    )
-    table_exists = cur.fetchone() is not None
-
-    if not table_exists:
-        # 신규 생성 — created_at DEFAULT 없이 (Python에서 직접 입력)
-        conn.execute('''
-            CREATE TABLE articles (
-                id          INTEGER PRIMARY KEY AUTOINCREMENT,
-                url_hash    TEXT UNIQUE,
-                title       TEXT,
-                url         TEXT,
-                date        TEXT,
-                source      TEXT,
-                src_type    TEXT,
-                sector      TEXT,
-                province    TEXT,
-                summary     TEXT,
-                title_ko    TEXT,
-                title_vi    TEXT,
-                sum_ko      TEXT,
-                sum_vi      TEXT,
-                created_at  TEXT
-            )
-        ''')
-        conn.commit()
-        log("SQLite DB 초기화 완료")
+    os.makedirs(os.path.dirname(DB_PATH),exist_ok=True)
+    conn=sqlite3.connect(DB_PATH)
+    cur=conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='articles'")
+    if not cur.fetchone():
+        conn.execute('''CREATE TABLE articles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            url_hash TEXT UNIQUE, title TEXT, url TEXT, date TEXT,
+            source TEXT, src_type TEXT, sector TEXT, province TEXT,
+            summary TEXT, title_ko TEXT, title_vi TEXT,
+            sum_ko TEXT, sum_vi TEXT, created_at TEXT)''')
+        conn.commit(); log("SQLite DB 초기화 완료")
     else:
-        # 기존 테이블 — 누락 컬럼만 ALTER TABLE로 추가
-        existing_cols = [
-            row[1] for row in conn.execute("PRAGMA table_info(articles)")
-        ]
-        add_cols = {
-            'src_type'  : 'TEXT',
-            'title_vi'  : 'TEXT',
-            'sum_vi'    : 'TEXT',
-            'created_at': 'TEXT',
-        }
-        for col, col_def in add_cols.items():
-            if col not in existing_cols:
-                try:
-                    conn.execute(
-                        f"ALTER TABLE articles ADD COLUMN {col} {col_def}"
-                    )
-                    conn.commit()
-                    log(f"  DB 컬럼 추가: {col}")
-                except Exception:
-                    pass
-
+        existing=[r[1] for r in conn.execute("PRAGMA table_info(articles)")]
+        for col,cdef in {'src_type':'TEXT','title_vi':'TEXT','sum_vi':'TEXT','created_at':'TEXT'}.items():
+            if col not in existing:
+                try: conn.execute(f"ALTER TABLE articles ADD COLUMN {col} {cdef}"); conn.commit()
+                except: pass
     return conn
 
+def get_existing_hashes(conn) -> set:
+    return {r[0] for r in conn.execute("SELECT url_hash FROM articles")}
 
-def get_existing_hashes(conn: sqlite3.Connection) -> set:
-    rows = conn.execute('SELECT url_hash FROM articles').fetchall()
-    return {r[0] for r in rows}
-
-
-def save_article(conn: sqlite3.Connection, article: dict) -> bool:
-    url_hash = generate_url_hash(article.get('url', ''))
-    now_str  = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
+def save_article(conn, article: dict) -> bool:
+    url_hash=generate_url_hash(article.get('url',''))
+    now=datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
     try:
-        conn.execute(
-            '''INSERT OR IGNORE INTO articles
-               (url_hash, title, url, date, source, src_type,
-                sector, province, summary,
-                title_ko, title_vi, sum_ko, sum_vi, created_at)
-               VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
-            (
-                url_hash,
-                article.get('title_en', '') or article.get('title', ''),
-                article.get('url', ''),
-                article.get('date', '') or article.get('published_date', ''),
-                article.get('source', ''),
-                article.get('src_type', 'NewsData.io'),
-                article.get('sector', ''),
-                article.get('province', ''),
-                article.get('sum_en', '') or article.get('summary', ''),
-                article.get('title_ko', ''),
-                article.get('title_vi', ''),
-                article.get('sum_ko', ''),
-                article.get('sum_vi', ''),
-                now_str,
-            )
-        )
-        conn.commit()
-        return True
-    except Exception:
-        return False
-
+        conn.execute('''INSERT OR IGNORE INTO articles
+            (url_hash,title,url,date,source,src_type,sector,province,
+             summary,title_ko,title_vi,sum_ko,sum_vi,created_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)''',
+            (url_hash,
+             article.get('title_en','') or article.get('title',''),
+             article.get('url',''),
+             article.get('date','') or article.get('published_date',''),
+             article.get('source',''),article.get('src_type','NewsData.io'),
+             article.get('sector',''),article.get('province',''),
+             article.get('sum_en','') or article.get('summary',''),
+             article.get('title_ko',''),article.get('title_vi',''),
+             article.get('sum_ko',''),article.get('sum_vi',''),now))
+        conn.commit(); return True
+    except: return False
 
 # ════════════════════════════════════════════════════════
-# RSS 수집
+# 수집 함수
 # ════════════════════════════════════════════════════════
-def fetch_rss(url: str, source_name: str, cutoff: datetime,
-              existing: set) -> list[dict]:
-    """RSS 피드 수집"""
-    articles = []
-
+def fetch_rss(url: str, source_name: str, cutoff: datetime, existing: set) -> list:
+    articles=[]
     try:
-        if HAS_FEEDPARSER:
-            feed = feedparser.parse(url)
-            entries = feed.entries
+        if HAS_FP:
+            feed=feedparser.parse(url); entries=feed.entries
         else:
-            req = urllib.request.Request(
-                url,
-                headers={'User-Agent': 'Mozilla/5.0', 'Accept': 'application/rss+xml'}
-            )
-            with urllib.request.urlopen(req, timeout=20) as r:
-                content = r.read()
-            import xml.etree.ElementTree as ET
-            root = ET.fromstring(content)
-            entries = []  # 간단한 fallback
-
+            req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+            with urllib.request.urlopen(req,timeout=20) as r: content=r.read()
+            return []  # feedparser 없으면 스킵
         for entry in entries:
-            # 날짜 파싱
-            pub_raw = getattr(entry, 'published', '') or getattr(entry, 'updated', '')
-            pub_dt  = parse_date(pub_raw)
-            if pub_dt and pub_dt < cutoff:
-                continue
-
-            title = clean_html(getattr(entry, 'title', '') or '')
-            url_a = getattr(entry, 'link', '') or ''
-            summ  = clean_html(
-                getattr(entry, 'summary', '') or
-                getattr(entry, 'description', '') or ''
-            )[:500]
-
-            if not title or len(title) < 10:
-                continue
-            if should_exclude(title, summ):
-                continue
-            if not is_vietnam_related(title + ' ' + summ):
-                continue
-
-            url_hash = generate_url_hash(url_a)
-            if url_hash in existing:
-                continue
-
-            date_str = pub_dt.strftime('%Y-%m-%d') if pub_dt else datetime.now().strftime('%Y-%m-%d')
-            sector   = classify_sector(title, summ)
-            province = extract_province(title + ' ' + summ)
-
+            pub_raw=getattr(entry,'published','') or getattr(entry,'updated','')
+            pub_dt=parse_date(pub_raw)
+            if pub_dt and pub_dt<cutoff: continue
+            title=clean_html(getattr(entry,'title','') or '')
+            url_a=getattr(entry,'link','') or ''
+            summ=clean_html(getattr(entry,'summary','') or getattr(entry,'description','') or '')[:500]
+            if not title or len(title)<10: continue
+            # 핵심 게이트
+            a={'title':title,'sum_en':summ,'url':url_a,'source':source_name}
+            if not should_collect(a): continue
+            url_hash=generate_url_hash(url_a)
+            if url_hash in existing: continue
+            date_str=pub_dt.strftime('%Y-%m-%d') if pub_dt else datetime.now().strftime('%Y-%m-%d')
+            sector=classify_sector(title,summ)
             articles.append({
-                'title_en'      : title,
-                'title'         : title,
-                'source'        : source_name,
-                'src_type'      : 'RSS',
-                'date'          : date_str,
-                'published_date': date_str,
-                'province'      : province,
-                'plan'          : '',
-                'sector'        : sector,
-                'area'          : area_fill(sector),
-                'sum_en'        : summ,
-                'summary'       : summ,
-                'url'           : url_a,
-                'title_ko'      : '',
-                'title_vi'      : '',
-                'sum_ko'        : '',
-                'sum_vi'        : '',
-                'grade'         : '',
+                'title_en':title,'title':title,'source':source_name,'src_type':'RSS',
+                'date':date_str,'published_date':date_str,'province':extract_province(title+' '+summ),
+                'plan':'','sector':sector,'area':area_from_sector(sector),
+                'sum_en':summ,'summary':summ,'url':url_a,
+                'title_ko':'','title_vi':'','sum_ko':'','sum_vi':'','grade':'',
             })
             existing.add(url_hash)
-
     except Exception as e:
         log(f"  RSS 오류 [{source_name}]: {e}")
-
     return articles
 
-
-# ════════════════════════════════════════════════════════
-# NewsData.io 수집
-# ════════════════════════════════════════════════════════
-def _call_newsdata(params: dict, api_key: str) -> list[dict]:
-    """
-    NewsData.io API 호출
-    - 엔드포인트: /api/1/latest (고정)
-    - 422 발생 시 category 파라미터 제거 후 재시도
-    """
-    params['apikey'] = api_key
-    url = NEWSDATA_ENDPOINT + '?' + urllib.parse.urlencode(params)
-
-    try:
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=15) as r:
-            import json
-            return json.loads(r.read()).get('results', [])
-    except urllib.error.HTTPError as e:
-        if e.code == 422:
-            # 422: category 파라미터 제거 후 재시도
-            params.pop('category', None)
-            url2 = NEWSDATA_ENDPOINT + '?' + urllib.parse.urlencode(params)
-            try:
-                req2 = urllib.request.Request(url2, headers={'User-Agent': 'Mozilla/5.0'})
-                with urllib.request.urlopen(req2, timeout=15) as r2:
-                    import json
-                    return json.loads(r2.read()).get('results', [])
-            except Exception:
-                return []
-        return []
-    except Exception as e:
-        log(f"  NewsData.io 오류: {e}")
-        return []
-
-
-def _parse_result(item: dict, source_override: str = '') -> dict:
-    """NewsData.io 응답 아이템 → 기사 dict 변환"""
-    title = item.get('title', '').strip()
-    url_a = item.get('link', '').strip()
-
-    # source: 빈 문자열 처리 (or 연산자 사용 — dict.get() default는 빈문자열 통과)
-    raw_src = (item.get('source_id') or
-               item.get('source_name') or
-               source_override or
-               urllib.parse.urlparse(url_a).netloc.replace('www.', ''))
-
-    pub_raw  = item.get('pubDate', '') or item.get('publishedAt', '')
-    pub_dt   = parse_date(pub_raw)
-    date_str = pub_dt.strftime('%Y-%m-%d') if pub_dt else datetime.now().strftime('%Y-%m-%d')
-    summ     = clean_html(item.get('description', '') or item.get('content', ''))[:500]
-    sector   = classify_sector(title, summ)
-    province = extract_province(title + ' ' + summ)
-
-    return {
-        'title_en'      : title,
-        'title'         : title,
-        'source'        : raw_src,
-        'src_type'      : 'NewsData.io',
-        'date'          : date_str,
-        'published_date': date_str,
-        'province'      : province,
-        'plan'          : '',
-        'sector'        : sector,
-        'area'          : area_fill(sector),
-        'sum_en'        : summ,
-        'summary'       : summ,
-        'url'           : url_a,
-        'title_ko'      : '',
-        'title_vi'      : '',
-        'sum_ko'        : '',
-        'sum_vi'        : '',
-        'grade'         : '',
-    }
-
-
-def fetch_newsdata(api_key: str, cutoff: datetime, existing: set) -> list[dict]:
-    """NewsData.io 전체 쿼리 실행"""
-    if not api_key:
-        return []
-
-    articles = []
+def fetch_newsdata(api_key: str, cutoff: datetime, existing: set) -> list:
+    if not api_key: return []
+    articles=[]
     for q_cfg in NEWSDATA_QUERIES:
-        params = {
-            'country' : 'vn',
-            'language': q_cfg['language'],
-            'q'       : q_cfg['q'],
-            # domain, from_date, category+domain → 422 오류 → 절대 사용 금지
-        }
-        results = _call_newsdata(params, api_key)
-        for item in results:
-            title = item.get('title', '').strip()
-            url_a = item.get('link', '').strip()
-            if not title or not url_a:
-                continue
-            if should_exclude(title):
-                continue
-            if not is_vietnam_related(title):
-                continue
-            url_hash = generate_url_hash(url_a)
-            if url_hash in existing:
-                continue
-            a = _parse_result(item)
-            pub_dt = parse_date(item.get('pubDate', ''))
-            if pub_dt and pub_dt < cutoff:
-                continue
-            articles.append(a)
-            existing.add(url_hash)
-        time.sleep(0.5)
-
-    # 전문미디어 보완 쿼리
-    for q_cfg in NEWSDATA_SPECIALIST_QUERIES:
-        params = {
-            'country' : 'vn',
-            'language': q_cfg.get('language', 'en'),
-            'q'       : q_cfg['q'],
-        }
-        results = _call_newsdata(params, api_key)
-        for item in results:
-            title = item.get('title', '').strip()
-            url_a = item.get('link', '').strip()
-            if not title or not url_a:
-                continue
-            url_hash = generate_url_hash(url_a)
-            if url_hash in existing:
-                continue
-            a = _parse_result(item, source_override=q_cfg.get('source', ''))
-            a['src_type'] = 'Specialist Crawler'  # 전문미디어 출처로 분류
-            articles.append(a)
-            existing.add(url_hash)
-        time.sleep(0.5)
-
-    return articles
-
-
-# ════════════════════════════════════════════════════════
-# GNews 수집 (API키 있을 때)
-# ════════════════════════════════════════════════════════
-def fetch_gnews(api_key: str, query: str, cutoff: datetime,
-                existing: set) -> list[dict]:
-    if not api_key:
-        return []
-    articles = []
-    try:
-        params = urllib.parse.urlencode({
-            'q'      : query,
-            'lang'   : 'en',
-            'country': 'vn',
-            'max'    : 10,
-            'apikey' : api_key,
-        })
-        url = f'https://gnews.io/api/v4/search?{params}'
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=15) as r:
+        params={'country':'vn','language':q_cfg['language'],'q':q_cfg['q'],'apikey':api_key}
+        url=NEWSDATA_ENDPOINT+'?'+urllib.parse.urlencode(params)
+        try:
             import json
-            data = json.loads(r.read())
-        for item in data.get('articles', []):
-            title = item.get('title', '').strip()
-            url_a = item.get('url', '').strip()
-            if not title or not url_a:
-                continue
-            url_hash = generate_url_hash(url_a)
-            if url_hash in existing:
-                continue
-            pub_raw = item.get('publishedAt', '')
-            pub_dt  = parse_date(pub_raw)
-            if pub_dt and pub_dt < cutoff:
-                continue
-            date_str = pub_dt.strftime('%Y-%m-%d') if pub_dt else datetime.now().strftime('%Y-%m-%d')
-            summ     = item.get('description', '')[:500]
-            sector   = classify_sector(title, summ)
-            province = extract_province(title + ' ' + summ)
-            articles.append({
-                'title_en'      : title,
-                'title'         : title,
-                'source'        : item.get('source', {}).get('name', 'GNews'),
-                'src_type'      : 'GNews',
-                'date'          : date_str,
-                'published_date': date_str,
-                'province'      : province,
-                'plan'          : '',
-                'sector'        : sector,
-                'area'          : area_fill(sector),
-                'sum_en'        : summ,
-                'summary'       : summ,
-                'url'           : url_a,
-                'title_ko'      : '', 'title_vi': '',
-                'sum_ko'        : '', 'sum_vi'  : '',
-                'grade'         : '',
-            })
-            existing.add(url_hash)
-    except Exception as e:
-        log(f"  GNews 오류: {e}")
+            req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+            with urllib.request.urlopen(req,timeout=15) as r:
+                results=json.loads(r.read()).get('results',[])
+            for item in results:
+                title=(item.get('title','') or '').strip()
+                url_a=(item.get('link','') or '').strip()
+                if not title or not url_a: continue
+                summ=clean_html(item.get('description','') or '')[:500]
+                # 핵심 게이트
+                raw_src=(item.get('source_id') or item.get('source_name') or
+                         urllib.parse.urlparse(url_a).netloc.replace('www.',''))
+                a={'title':title,'sum_en':summ,'url':url_a,'source':raw_src}
+                if not should_collect(a): continue
+                url_hash=generate_url_hash(url_a)
+                if url_hash in existing: continue
+                pub_dt=parse_date(item.get('pubDate',''))
+                if pub_dt and pub_dt<cutoff: continue
+                date_str=pub_dt.strftime('%Y-%m-%d') if pub_dt else datetime.now().strftime('%Y-%m-%d')
+                sector=classify_sector(title,summ)
+                articles.append({
+                    'title_en':title,'title':title,'source':raw_src,'src_type':'NewsData.io',
+                    'date':date_str,'published_date':date_str,'province':extract_province(title+' '+summ),
+                    'plan':'','sector':sector,'area':area_from_sector(sector),
+                    'sum_en':summ,'summary':summ,'url':url_a,
+                    'title_ko':'','title_vi':'','sum_ko':'','sum_vi':'','grade':'',
+                })
+                existing.add(url_hash)
+        except urllib.error.HTTPError as e:
+            if e.code==422:
+                log(f"  NewsData 422 — 쿼리 조정 필요: {q_cfg['q'][:40]}")
+            else: log(f"  NewsData HTTP {e.code}")
+        except Exception as e: log(f"  NewsData 오류: {e}")
+        time.sleep(0.3)
     return articles
-
 
 # ════════════════════════════════════════════════════════
 # 메인 수집 함수
 # ════════════════════════════════════════════════════════
-def collect_news(hours_back: int = None) -> list[dict]:
-    """
-    메인 수집 함수 (Step1에서 호출)
+def collect_news(hours_back: int=None) -> list:
+    if hours_back is None: hours_back=HOURS_BACK
+    cutoff=datetime.utcnow()-timedelta(hours=hours_back)
+    log(f"수집 시작: 최근 {hours_back}시간 | 엄격 인프라 필터 적용")
 
-    수집 순서:
-      1. RSS 피드 (검증된 소스만, 폐쇄 소스 제외)
-      2. NewsData.io API
-      3. GNews API (키 있을 때)
-
-    전문미디어(theinvestor.vn, vir.com.vn)는
-    specialist_crawler.py (weekly_backfill.yml)에서 별도 처리
-
-    Returns:
-        articles: list[dict] — date/published_date 키 보장
-    """
-    if hours_back is None:
-        hours_back = HOURS_BACK
-
-    cutoff = datetime.utcnow() - timedelta(hours=hours_back)
-    log(f"수집 시작: 최근 {hours_back}시간 (UTC {cutoff.strftime('%Y-%m-%d %H:%M')} 이후)")
-
-    # DB 초기화 및 기존 URL 로드
-    conn     = init_database()
-    existing = get_existing_hashes(conn)
+    conn=init_database()
+    existing=get_existing_hashes(conn)
     log(f"기존 URL {len(existing)}개 로드")
 
-    all_articles = []
-    stats        = {}
+    all_articles=[]; stats={}
 
-    # ── 1. RSS 수집 ──────────────────────────────────────
+    # ── RSS
     log(f"[1] RSS 수집 ({len(RSS_FEEDS)}개 소스)...")
-    rss_articles = []
-    for name, feed_url in RSS_FEEDS.items():
-        arts = fetch_rss(feed_url, name, cutoff, existing)
-        rss_articles.extend(arts)
-        if arts:
-            log(f"  {name}: {len(arts)}건")
+    rss_arts=[]
+    for name,feed_url in RSS_FEEDS.items():
+        arts=fetch_rss(feed_url,name,cutoff,existing)
+        rss_arts.extend(arts)
+        if arts: log(f"  {name}: {len(arts)}건")
         time.sleep(0.5)
-    all_articles.extend(rss_articles)
-    stats['RSS'] = len(rss_articles)
-    log(f"  RSS 합계: {len(rss_articles)}건")
+    all_articles.extend(rss_arts)
+    stats['RSS']=len(rss_arts)
+    log(f"  RSS 합계: {len(rss_arts)}건")
 
-    # ── 2. NewsData.io 수집 ───────────────────────────────
-    newsdata_key = os.environ.get('NEWSDATA_API_KEY', '')
-    if newsdata_key:
-        log(f"[2] NewsData.io 수집...")
-        nd_articles = fetch_newsdata(newsdata_key, cutoff, existing)
-        all_articles.extend(nd_articles)
-        stats['NewsData.io'] = len(nd_articles)
-        log(f"  NewsData.io: {len(nd_articles)}건")
+    # ── NewsData.io
+    nk=os.environ.get('NEWSDATA_API_KEY','')
+    if nk:
+        log(f"[2] NewsData.io 수집 (인프라 전용 쿼리)...")
+        nd_arts=fetch_newsdata(nk,cutoff,existing)
+        all_articles.extend(nd_arts)
+        stats['NewsData.io']=len(nd_arts)
+        log(f"  NewsData.io: {len(nd_arts)}건")
     else:
-        log("[2] NewsData.io: NEWSDATA_API_KEY 미설정 → 건너뜀")
-        stats['NewsData.io'] = 0
+        stats['NewsData.io']=0
 
-    # ── 3. GNews 수집 ─────────────────────────────────────
-    if ENABLE_GNEWS:
-        log(f"[3] GNews 수집...")
-        gn_arts = fetch_gnews(GNEWS_API_KEY, GNEWS_QUERY, cutoff, existing)
-        gn_arts += fetch_gnews(GNEWS_API_KEY, GNEWS_ENV_QUERY, cutoff, existing)
-        all_articles.extend(gn_arts)
-        stats['GNews'] = len(gn_arts)
-        log(f"  GNews: {len(gn_arts)}건")
-    else:
-        stats['GNews'] = 0
-
-    # ── 중복 제거 (URL 기준) ──────────────────────────────
-    seen = set()
-    unique = []
+    # ── 중복 제거
+    seen=set(); unique=[]
     for a in all_articles:
-        url = a.get('url', '')
-        if url and url not in seen:
-            seen.add(url)
-            unique.append(a)
+        u=a.get('url','')
+        if u and u not in seen:
+            seen.add(u); unique.append(a)
     log(f"중복 제거: {len(all_articles)} → {len(unique)}건")
 
-    # ── date fallback 보정 (영구 제약) ───────────────────
+    # date fallback
     for a in unique:
         if not a.get('date'):
-            a['date'] = a.get('published_date', '')
+            a['date']=a.get('published_date','')
 
-    # ── 섹터/Province 분류 ────────────────────────────────
-    for a in unique:
-        if not a.get('sector'):
-            a['sector'] = classify_sector(
-                a.get('title_en', '') or a.get('title', ''),
-                a.get('sum_en', '') or a.get('summary', '')
-            )
-        if not a.get('province'):
-            a['province'] = extract_province(
-                a.get('title_en', '') or a.get('title', '')
-            )
-        if not a.get('area'):
-            a['area'] = area_fill(a['sector'])
-
-    # ── SQLite 저장 ───────────────────────────────────────
-    saved_db = 0
-    for a in unique:
-        if save_article(conn, a):
-            saved_db += 1
+    # SQLite 저장
+    saved=sum(1 for a in unique if save_article(conn,a))
     conn.close()
-    log(f"SQLite 저장: {saved_db}건")
-
-    # 통계 출력
-    log(f"수집 완료: RSS={stats['RSS']} NewsData={stats['NewsData.io']} GNews={stats['GNews']}")
-    log(f"  (전문미디어는 weekly_backfill.yml → specialist_crawler.py 담당)")
+    log(f"SQLite 저장: {saved}건")
+    log(f"수집 완료: RSS={stats['RSS']} NewsData={stats.get('NewsData.io',0)}")
+    log(f"  (전문미디어: weekly_backfill.yml → specialist_crawler.py)")
 
     return unique
 
-
-# ════════════════════════════════════════════════════════
-# Excel 업데이트 (ExcelUpdater 위임)
-# ════════════════════════════════════════════════════════
-def update_excel_database(articles: list[dict]) -> dict:
-    """
-    ExcelUpdater.update_all() 호출
-    직접 Excel 쓰기 금지 — excel_updater.py 위임
-    """
-    if not articles:
-        return {}
+def update_excel_database(articles: list) -> dict:
+    if not articles: return {}
     try:
-        scripts_dir = Path(__file__).parent
-        sys.path.insert(0, str(scripts_dir))
+        sys.path.insert(0,str(SCRIPTS_DIR))
         from excel_updater import ExcelUpdater
-        updater = ExcelUpdater(EXCEL_PATH)
+        updater=ExcelUpdater(EXCEL_PATH)
         return updater.update_all(articles)
-    except ImportError:
-        log("ExcelUpdater 없음 → Excel 업데이트 건너뜀")
-        return {}
     except Exception as e:
-        log(f"Excel 업데이트 오류: {e}")
-        return {}
+        log(f"Excel 업데이트 오류: {e}"); return {}
 
-
-if __name__ == '__main__':
+if __name__=='__main__':
     import argparse
-    parser = argparse.ArgumentParser(description='베트남 인프라 뉴스 수집기')
-    parser.add_argument('--hours', type=int, default=24, help='수집 기간(시간)')
-    args = parser.parse_args()
-    articles = collect_news(hours_back=args.hours)
-    log(f"수집 완료: {len(articles)}건")
+    p=argparse.ArgumentParser()
+    p.add_argument('--hours',type=int,default=24)
+    a=p.parse_args()
+    arts=collect_news(hours_back=a.hours)
+    log(f"수집 완료: {len(arts)}건")
