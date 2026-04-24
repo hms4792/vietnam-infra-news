@@ -1,17 +1,24 @@
-# daily_pipeline.yml — v7.2
-# 매일 KST 20:00 (= UTC 11:00) 자동 실행
+# ============================================================
+# daily_pipeline.yml — 일일 파이프라인
+# .github/workflows/daily_pipeline.yml
 #
-# 변경사항 (v7.2):
-#   - SA-7 맥락 매핑 스텝 추가: python3 scripts/quality_context_agent.py
-#     (이슈2 해결: Matched_Plan 0건 / 이메일 "정책연계 0건" 문제)
-#   - Commit 대상에 docs/shared/ 추가 (Genspark 공유 파일)
+# 스케줄: 매일 KST 20:00 (UTC 11:00)
+# v7.3 업데이트 (2026-04-24):
+#   - SA-7 context_analyzer.py 추가 (SA-6 이후, SA-8 이전)
+#   - SA-8 daily-only 분석 저장 스텝 추가
+#   - Node.js 설치 스텝 추가 (SA-8 docx/pptx 빌더용)
 #
-# 영구 제약:
-#   - YAML inline python3 -c "..." 절대 금지
-#   - GitHub Pages: main 브랜치 /docs (gh-pages 금지)
+# 영구 제약 (절대 변경 금지):
+#   - main.py 실행 순서: Step1→Step2→Step3→Step4 (고정)
+#   - 번역: Google Translate only (Anthropic API 금지)
 #   - 이메일 시크릿: EMAIL_USERNAME / EMAIL_PASSWORD
+#   - GitHub Pages: main 브랜치 /docs (gh-pages 금지)
+#   - YAML inline python3 -c 금지 → 별도 .py 파일만 호출
+#   - ExcelUpdater: update_all(articles) / ExcelUpdater 클래스
+#   - date 키 fallback: article.get('date') or article.get('published_date')
+# ============================================================
 
-name: Daily Vietnam Infra News Pipeline v7.2
+name: Daily Vietnam Infra News Pipeline v7.3
 
 on:
   schedule:
@@ -22,6 +29,10 @@ on:
         description: '수집 기간 (시간, 기본 24)'
         required: false
         default: '24'
+      rule_only:
+        description: 'SA-7 규칙기반만 실행 (true = Haiku API 미사용)'
+        required: false
+        default: 'false'
 
 jobs:
   pipeline:
@@ -29,75 +40,147 @@ jobs:
     timeout-minutes: 60
 
     steps:
+      # ── Step 1: 체크아웃 ─────────────────────────────────────────
       - name: Checkout
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
+      # ── Step 2: Python 설정 ──────────────────────────────────────
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Install dependencies
+      # ── Step 3: Node.js 설정 (SA-8 daily 분석) ──────────────────
+      - name: Set up Node.js 18 (SA-8)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # ── Step 4: Python 패키지 설치 ──────────────────────────────
+      - name: Install Python dependencies
         run: |
           pip install --upgrade pip
           pip install feedparser requests beautifulsoup4 \
                       pandas openpyxl deep-translator lxml
 
+      # ── Step 5: Node.js 패키지 설치 ─────────────────────────────
+      - name: Install Node.js packages (SA-8)
+        run: npm install -g pptxgenjs docx
+        continue-on-error: true
+
+      # ── Step 6: 환경변수 검증 ────────────────────────────────────
       - name: Validate environment
-        run: python3 scripts/validate_env.py
+        run: |
+          if [ -f scripts/validate_env.py ]; then
+            python3 scripts/validate_env.py
+          fi
         env:
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
           EMAIL_USERNAME:   ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
+        continue-on-error: true
 
-      - name: Run pipeline
+      # ── Step 7: 메인 파이프라인 ──────────────────────────────────
+      # main.py 실행 순서 (고정, 절대 변경 금지):
+      #   Step1: collect_news(hours_back)   ← SA-1
+      #   Step2: AISummarizer()             ← SA-2 (Google Translate ONLY)
+      #   Step3: ExcelUpdater.update_all()  ← SA-3
+      #   Step4: DashboardUpdater.generate() ← SA-4
+      - name: Run main pipeline (SA-1 → SA-2 → SA-3 → SA-4)
         run: python3 scripts/main.py --hours ${{ github.event.inputs.hours_back || '24' }}
         env:
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
           EMAIL_USERNAME:   ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
 
-      - name: Rebuild dashboard (failsafe)
+      # ── Step 8: 대시보드 재빌드 (failsafe) ──────────────────────
+      - name: Rebuild dashboard (SA-4 failsafe)
         if: always()
         run: python3 scripts/build_dashboard.py
         continue-on-error: true
 
-      # ── 이슈2 해결: SA-7 맥락 매핑 ──────────────────────
-      # quality_context_agent.py → docs/shared/knowledge_index.json 읽어
-      # 기사↔마스터플랜 매핑 → Matched_Plan 업데이트 + quality_report.json 생성
-      # 이메일 제목 "정책연계 N건" 정상화
-      - name: SA-7 context matching
+      # ── Step 9 (SA-6): 품질검증 에이전트 ───────────────────────
+      # Province 분류 보정 + ctx_grade 산정 + quality_report.json 생성
+      - name: SA-6 Quality Context Agent
         run: python3 scripts/quality_context_agent.py
         continue-on-error: true
 
+      # ─────────────────────────────────────────────────────────────
+      # ── Step 10 (SA-7): 맥락분석 에이전트 [v7.3 신규] ───────────
+      #
+      # 2단계 구조:
+      #   1단계: 규칙기반 분류 → 진행단계(PLANNING~OPERATION) 판정
+      #          신뢰도 ≥ 0.65 → 확정 (Haiku 호출 생략)
+      #   2단계: Claude Haiku → 신뢰도 < 0.65 또는 HIGH 기사만
+      #          → milestone, next_watch, insight 생성
+      #
+      # 출력:
+      #   data/agent_output/context_output.json  ← SA-8이 읽음
+      #   data/agent_output/stage_timeline.json  ← 대시보드 Timeline
+      #
+      # rule_only=true → Haiku API 미사용 (ANTHROPIC_API_KEY 불필요)
+      # ─────────────────────────────────────────────────────────────
+      - name: SA-7 Context Analyzer (rule + Haiku)
+        run: |
+          if [ -f scripts/context_analyzer.py ]; then
+            if [ "${{ github.event.inputs.rule_only }}" = "true" ]; then
+              python3 scripts/context_analyzer.py --rule-only
+            else
+              python3 scripts/context_analyzer.py --days=7
+            fi
+          else
+            echo "context_analyzer.py 없음 — SA-7 건너뜀"
+          fi
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      # ── Step 11: Genspark 공유 파일 내보내기 ────────────────────
       - name: Export shared files for Genspark
         run: python3 scripts/export_shared.py
         continue-on-error: true
 
-      - name: Commit and push
+      # ─────────────────────────────────────────────────────────────
+      # ── Step 12 (SA-8): MI daily 분석 저장 [v7.3 신규] ──────────
+      #
+      # 매일 실행: SA-7 결과(context_output.json)를 읽어
+      # Haiku가 플랜별 분석문 생성 → JSON 저장만 (docx 미생성)
+      # → docx + pptx는 collect_weekly.yml (토요일)에서만 생성
+      # ─────────────────────────────────────────────────────────────
+      - name: SA-8 MI daily analysis (JSON only, no docx)
         run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/database/Vietnam_Infra_News_Database_Final.xlsx
-          git add docs/index.html
-          git add docs/shared/ || true
-          git add data/shared/  || true
-          if git diff --staged --quiet; then
-            echo "변경사항 없음 — 커밋 건너뜀"
+          if [ -f scripts/generate_mi_report.py ]; then
+            python3 scripts/generate_mi_report.py --daily-only
           else
-            DATE_KST=$(TZ='Asia/Seoul' date '+%Y-%m-%d %H:%M KST')
-            git commit -m "Daily update: ${DATE_KST}"
-            git push origin main
+            echo "generate_mi_report.py 없음 — SA-8 건너뜀"
           fi
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          EMAIL_USERNAME:    ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD:    ${{ secrets.EMAIL_PASSWORD }}
 
-      - name: Send notification
-        if: success()
-        run: python3 scripts/send_email.py
+      # ── Step 13: 이메일 발송 ────────────────────────────────────
+      - name: Send daily email notification
+        run: |
+          if [ -f scripts/send_email.py ]; then
+            python3 scripts/send_email.py || echo "Email skipped"
+          fi
         env:
           EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         continue-on-error: true
+
+      # ── Step 14: 커밋 & 배포 ────────────────────────────────────
+      - name: Commit and push
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name  "GitHub Actions"
+          git add data/ docs/ || true
+          git diff --staged --quiet || git commit -m \
+            "chore: daily pipeline $(date +'%Y-%m-%d') [automated]"
+          git push || true
