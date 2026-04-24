@@ -57,8 +57,11 @@ DOCS_DIR      = BASE_DIR / 'docs'
 AGENT_OUT_DIR = DATA_DIR / 'agent_output'
 SHARED_DIR    = DATA_DIR / 'shared'
 
-EXCEL_PATH    = DATA_DIR / 'news_database.xlsx'
-KI_PATH       = SHARED_DIR / 'knowledge_index.json'
+EXCEL_PATH    = DATA_DIR / 'database' / 'Vietnam_Infra_News_Database_Final.xlsx'
+# knowledge_index 탐색 경로 (docs/shared 우선 — Genspark 공유 실제 경로)
+KI_PATH       = BASE_DIR / 'docs' / 'shared' / 'knowledge_index.json'
+KI_PATH_ALT   = SHARED_DIR / 'knowledge_index.json'
+KI_PATH_L1    = SHARED_DIR / 'layer1_data.json'
 KPI_SNAP_PATH = AGENT_OUT_DIR / 'kpi_snapshot_weekly.json'
 JS_BUILDER    = SCRIPTS_DIR / 'build_mi_report_sa8.js'
 
@@ -161,11 +164,19 @@ def load_knowledge_index() -> dict:
     
     knowledge_index가 없으면 최소한의 기본 구조 반환.
     """
-    if not KI_PATH.exists():
-        log.warning(f"knowledge_index.json 없음: {KI_PATH} — 기본 플랜 구조 사용")
+    # 순서대로 탐색: docs/shared → data/shared → layer1_data
+    ki_file = None
+    for candidate in [KI_PATH, KI_PATH_ALT, KI_PATH_L1]:
+        if candidate.exists():
+            ki_file = candidate
+            break
+
+    if not ki_file:
+        log.warning(f"knowledge_index.json 없음 — 기본 플랜 구조 사용")
         return _default_knowledge_index()
 
-    with open(KI_PATH, 'r', encoding='utf-8') as f:
+    log.info(f"knowledge_index 로드: {ki_file}")
+    with open(ki_file, 'r', encoding='utf-8') as f:
         ki = json.load(f)
 
     plans = ki.get('masterplans', {})
