@@ -3,10 +3,21 @@
 # .github/workflows/daily_pipeline.yml
 #
 # 스케줄: 매일 KST 20:00 (UTC 11:00)
-# v7.3 업데이트 (2026-04-24):
-#   - SA-7 context_analyzer.py 추가 (SA-6 이후, SA-8 이전)
-#   - SA-8 daily-only 분석 저장 스텝 추가
-#   - Node.js 설치 스텝 추가 (SA-8 docx/pptx 빌더용)
+#
+# v7.4 업데이트 (2026-04-24):
+#   - SA-7 context_analyzer.py (맥락분석, 규칙+Haiku 2단계)
+#   - Stage Timeline Builder (SA-7 결과 → Excel 누적 기록)
+#   - SA-8 daily-only 분석 저장 (docx는 주간에만)
+#   - Node.js 18 설치 (SA-8 빌더용)
+#
+# 실행 순서 (고정):
+#   SA-1 수집 → SA-2 번역 → SA-3 Excel → SA-4 대시보드
+#   → SA-6 품질검증
+#   → SA-7 맥락분석 (규칙+Haiku)
+#   → Timeline 기록 (Excel Stage Timeline 시트 누적)
+#   → Genspark 공유 export
+#   → SA-8 daily JSON 저장
+#   → 이메일 → 커밋
 #
 # 영구 제약 (절대 변경 금지):
 #   - main.py 실행 순서: Step1→Step2→Step3→Step4 (고정)
@@ -14,15 +25,16 @@
 #   - 이메일 시크릿: EMAIL_USERNAME / EMAIL_PASSWORD
 #   - GitHub Pages: main 브랜치 /docs (gh-pages 금지)
 #   - YAML inline python3 -c 금지 → 별도 .py 파일만 호출
-#   - ExcelUpdater: update_all(articles) / ExcelUpdater 클래스
+#   - ExcelUpdater: update_all(articles) 메서드 사용
 #   - date 키 fallback: article.get('date') or article.get('published_date')
+#   - ExcelUpdater 클래스 / NewsCollector 클래스 없음
 # ============================================================
 
-name: Daily Vietnam Infra News Pipeline v7.3
+name: Daily Vietnam Infra News Pipeline v7.4
 
 on:
   schedule:
-    - cron: '0 11 * * *'   # 매일 UTC 11:00 = KST 20:00
+    - cron: '0 11 * * *'    # 매일 UTC 11:00 = KST 20:00
   workflow_dispatch:
     inputs:
       hours_back:
@@ -40,6 +52,7 @@ jobs:
     timeout-minutes: 60
 
     steps:
+
       # ── Step 1: 체크아웃 ─────────────────────────────────────────
       - name: Checkout
         uses: actions/checkout@v4
@@ -47,15 +60,15 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
-      # ── Step 2: Python 설정 ──────────────────────────────────────
+      # ── Step 2: Python 3.11 설정 ─────────────────────────────────
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      # ── Step 3: Node.js 설정 (SA-8 daily 분석) ──────────────────
-      - name: Set up Node.js 18 (SA-8)
+      # ── Step 3: Node.js 18 설정 (SA-8 docx/pptx 빌더용) ──────────
+      - name: Set up Node.js 18
         uses: actions/setup-node@v3
         with:
           node-version: '18'
@@ -67,8 +80,8 @@ jobs:
           pip install feedparser requests beautifulsoup4 \
                       pandas openpyxl deep-translator lxml
 
-      # ── Step 5: Node.js 패키지 설치 ─────────────────────────────
-      - name: Install Node.js packages (SA-8)
+      # ── Step 5: Node.js 패키지 설치 (SA-8용) ─────────────────────
+      - name: Install Node.js packages
         run: npm install -g pptxgenjs docx
         continue-on-error: true
 
@@ -77,6 +90,8 @@ jobs:
         run: |
           if [ -f scripts/validate_env.py ]; then
             python3 scripts/validate_env.py
+          else
+            echo "validate_env.py 없음 — 건너뜀"
           fi
         env:
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
@@ -85,44 +100,43 @@ jobs:
         continue-on-error: true
 
       # ── Step 7: 메인 파이프라인 ──────────────────────────────────
-      # main.py 실행 순서 (고정, 절대 변경 금지):
-      #   Step1: collect_news(hours_back)   ← SA-1
-      #   Step2: AISummarizer()             ← SA-2 (Google Translate ONLY)
-      #   Step3: ExcelUpdater.update_all()  ← SA-3
-      #   Step4: DashboardUpdater.generate() ← SA-4
+      # 실행 순서 절대 변경 금지:
+      #   Step1: collect_news(hours_back)    ← SA-1 뉴스 수집
+      #   Step2: AISummarizer()              ← SA-2 번역 (Google Translate ONLY)
+      #   Step3: ExcelUpdater.update_all()   ← SA-3 Excel DB 업데이트
+      #   Step4: DashboardUpdater.generate() ← SA-4 대시보드 빌드
       - name: Run main pipeline (SA-1 → SA-2 → SA-3 → SA-4)
-        run: python3 scripts/main.py --hours ${{ github.event.inputs.hours_back || '24' }}
+        run: |
+          python3 scripts/main.py --hours ${{ github.event.inputs.hours_back || '24' }}
         env:
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
           EMAIL_USERNAME:   ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
 
-      # ── Step 8: 대시보드 재빌드 (failsafe) ──────────────────────
+      # ── Step 8: 대시보드 재빌드 (SA-4 failsafe) ──────────────────
       - name: Rebuild dashboard (SA-4 failsafe)
         if: always()
         run: python3 scripts/build_dashboard.py
         continue-on-error: true
 
       # ── Step 9 (SA-6): 품질검증 에이전트 ───────────────────────
-      # Province 분류 보정 + ctx_grade 산정 + quality_report.json 생성
+      # Province 재분류 + ctx_grade 산정 + quality_report.json 생성
       - name: SA-6 Quality Context Agent
         run: python3 scripts/quality_context_agent.py
         continue-on-error: true
 
       # ─────────────────────────────────────────────────────────────
-      # ── Step 10 (SA-7): 맥락분석 에이전트 [v7.3 신규] ───────────
+      # ── Step 10 (SA-7): 맥락분석 에이전트 ──────────────────────
       #
-      # 2단계 구조:
-      #   1단계: 규칙기반 분류 → 진행단계(PLANNING~OPERATION) 판정
-      #          신뢰도 ≥ 0.65 → 확정 (Haiku 호출 생략)
-      #   2단계: Claude Haiku → 신뢰도 < 0.65 또는 HIGH 기사만
-      #          → milestone, next_watch, insight 생성
+      # 2단계 분류:
+      #   1단계: 규칙기반 (무료) — 신뢰도 ≥ 0.65 → 즉시 확정
+      #   2단계: Claude Haiku — 신뢰도 < 0.65 또는 HIGH 기사만
       #
-      # 출력:
-      #   data/agent_output/context_output.json  ← SA-8이 읽음
-      #   data/agent_output/stage_timeline.json  ← 대시보드 Timeline
+      # 출력 파일:
+      #   data/agent_output/context_output.json  ← SA-8 + Timeline이 읽음
+      #   data/agent_output/stage_timeline.json  ← Timeline Builder가 읽음
       #
-      # rule_only=true → Haiku API 미사용 (ANTHROPIC_API_KEY 불필요)
+      # rule_only=true → Haiku API 미사용 (5월 1일 이전 권장)
       # ─────────────────────────────────────────────────────────────
       - name: SA-7 Context Analyzer (rule + Haiku)
         run: |
@@ -139,17 +153,40 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
-      # ── Step 11: Genspark 공유 파일 내보내기 ────────────────────
+      # ─────────────────────────────────────────────────────────────
+      # ── Step 11: Stage Timeline 기록 (SA-7 결과 → Excel) ─────────
+      #
+      # SA-7이 생성한 context_output.json + stage_timeline.json을 읽어
+      # Excel "Stage Timeline" 시트에 누적 기록합니다.
+      #
+      # 기록 내용:
+      #   플랜ID | 날짜 | 진행단계 | 마일스톤 | 다음관찰 | 인사이트 | 기사제목
+      #
+      # 중복 방지: (플랜ID, 날짜, 단계) 동일하면 재기록 안 함
+      # 초기화: python3 scripts/build_timeline.py --reset (주의: 데이터 삭제)
+      # ─────────────────────────────────────────────────────────────
+      - name: Stage Timeline 기록 (SA-7 → Excel 누적)
+        run: |
+          if [ -f scripts/build_timeline.py ]; then
+            python3 scripts/build_timeline.py
+          else
+            echo "build_timeline.py 없음 — Timeline 기록 건너뜀"
+          fi
+        continue-on-error: true
+
+      # ── Step 12: Genspark 공유 파일 내보내기 ─────────────────────
       - name: Export shared files for Genspark
         run: python3 scripts/export_shared.py
         continue-on-error: true
 
       # ─────────────────────────────────────────────────────────────
-      # ── Step 12 (SA-8): MI daily 분석 저장 [v7.3 신규] ──────────
+      # ── Step 13 (SA-8): MI daily 분석 저장 ──────────────────────
       #
-      # 매일 실행: SA-7 결과(context_output.json)를 읽어
-      # Haiku가 플랜별 분석문 생성 → JSON 저장만 (docx 미생성)
+      # 매일 실행: SA-7 context_output.json을 읽어
+      # Haiku가 플랜별 분석문 생성 → JSON만 저장 (docx 미생성)
       # → docx + pptx는 collect_weekly.yml (토요일)에서만 생성
+      #
+      # ANTHROPIC_API_KEY 없으면 dry-run 모드 자동 전환 (파이프라인 중단 없음)
       # ─────────────────────────────────────────────────────────────
       - name: SA-8 MI daily analysis (JSON only, no docx)
         run: |
@@ -164,18 +201,20 @@ jobs:
           EMAIL_USERNAME:    ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:    ${{ secrets.EMAIL_PASSWORD }}
 
-      # ── Step 13: 이메일 발송 ────────────────────────────────────
+      # ── Step 14: 이메일 발송 ─────────────────────────────────────
       - name: Send daily email notification
         run: |
           if [ -f scripts/send_email.py ]; then
             python3 scripts/send_email.py || echo "Email skipped"
+          else
+            echo "send_email.py 없음 — 건너뜀"
           fi
         env:
           EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         continue-on-error: true
 
-      # ── Step 14: 커밋 & 배포 ────────────────────────────────────
+      # ── Step 15: 커밋 & 배포 ────────────────────────────────────
       - name: Commit and push
         run: |
           git config user.email "actions@github.com"
