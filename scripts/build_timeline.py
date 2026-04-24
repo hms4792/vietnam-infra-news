@@ -55,7 +55,7 @@ BASE_DIR      = Path(__file__).parent.parent
 DATA_DIR      = BASE_DIR / 'data'
 AGENT_OUT_DIR = DATA_DIR / 'agent_output'
 
-EXCEL_PATH    = DATA_DIR / 'news_database.xlsx'
+EXCEL_PATH    = DATA_DIR / 'database' / 'Vietnam_Infra_News_Database_Final.xlsx'
 CONTEXT_OUT   = AGENT_OUT_DIR / 'context_output.json'
 TIMELINE_OUT  = AGENT_OUT_DIR / 'stage_timeline.json'
 
