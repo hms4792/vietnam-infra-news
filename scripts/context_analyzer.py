@@ -53,13 +53,13 @@ BASE_DIR      = Path(__file__).parent.parent
 DATA_DIR      = BASE_DIR / 'data'
 SHARED_DIR    = DATA_DIR / 'shared'
 AGENT_OUT_DIR = DATA_DIR / 'agent_output'
-EXCEL_PATH    = DATA_DIR / 'news_database.xlsx'
+EXCEL_PATH    = DATA_DIR / 'database' / 'Vietnam_Infra_News_Database_Final.xlsx'
 
 # knowledge_index 탐색 경로 (v2.3 기준)
 KI_PATHS = [
-    BASE_DIR / 'docs'  / 'shared' / 'knowledge_index.json',
-    SHARED_DIR / 'knowledge_index.json',
-    SHARED_DIR / 'layer1_data.json',        # Layer1 standalone fallback
+    BASE_DIR / 'docs'  / 'shared' / 'knowledge_index.json',   # 실제 경로 (Genspark 공유)
+    DATA_DIR / 'shared' / 'knowledge_index.json',
+    DATA_DIR / 'shared' / 'layer1_data.json',
     AGENT_OUT_DIR / 'knowledge_index.json',
 ]
 
