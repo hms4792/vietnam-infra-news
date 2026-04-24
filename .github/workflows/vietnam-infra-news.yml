@@ -1,28 +1,39 @@
 # ============================================================
-# Vietnam Infrastructure News — 주간 수집 파이프라인
-# .github/workflows/vietnam-infra-news.yml
+# collect_weekly.yml — 주간 수집 파이프라인
+# .github/workflows/collect_weekly.yml
 #
 # 스케줄: 매주 토요일 KST 22:00 (UTC 13:00)
-# 역할: 7일치 수집 + 전문미디어 크롤러 + 정책 매핑 + 노란색 표시
+# 역할: 7일치 수집 + 전문미디어 크롤러 + SA-8 MI 보고서 + PPT 생성
 #
-# v5.9 업데이트 (2026-04-12):
-#   - SA-6 실행 순서 변경: Excel 업데이트 전으로 이동 (daily_pipeline과 동일)
-#   - run_excel_updater.py 스텝 추가 (기존 누락)
-#   - policy_highlighted_articles.json → Excel 노란색 반영
-#   - export_shared.py → Genspark 공유 (23:30 실행 전 준비)
+# v6.0 업데이트 (2026-04-24):
+#   - SA-8 MI 보고서 생성 스텝 추가 (generate_mi_report.py)
+#   - SA-8 PPT 보고서 생성 스텝 추가 (build_mi_ppt.js)
+#   - Node.js 18 설치 스텝 추가 (docx/pptx 빌더용)
+#   - docx + pptx → docs/reports/ 커밋 후 GitHub Pages 배포
+#   - 이메일 첨부 발송 (--send-email 옵션)
+#
+# 영구 제약 (절대 변경 금지):
+#   - 이메일 시크릿: EMAIL_USERNAME / EMAIL_PASSWORD
+#   - GitHub Pages: main 브랜치 /docs (gh-pages 금지)
+#   - YAML inline python3 -c 금지 → 별도 .py 파일만 호출
+#   - Anthropic API: 번역 금지, SA-8 분석에만 사용
 # ============================================================
 
-name: Weekly Collection v5.9
+name: Weekly Collection v6.0
 
 on:
   schedule:
-    - cron: '0 13 * * 6'   # 매주 토요일 KST 22:00 (UTC 13:00)
+    - cron: '0 13 * * 6'    # 매주 토요일 KST 22:00 (UTC 13:00)
   workflow_dispatch:
     inputs:
       hours_back:
         description: '소급 수집 시간 (기본 168=7일)'
         required: false
         default: '168'
+      skip_sa8:
+        description: 'SA-8 MI 보고서 생성 건너뜀 (true/false)'
+        required: false
+        default: 'false'
 
 concurrency:
   group: weekly-collection
@@ -30,129 +41,141 @@ concurrency:
 
 jobs:
   weekly:
-    name: 주간 수집 및 전문미디어 크롤링
+    name: 주간 수집 + SA-8 MI 보고서
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 75
 
     steps:
+      # ── Step 1: 체크아웃 ────────────────────────────────────────
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
+      # ── Step 2: Python 설정 ──────────────────────────────────────
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Install dependencies
+      # ── Step 3: Node.js 설정 (SA-8 docx/pptx 빌더) ─────────────
+      - name: Set up Node.js 18 (SA-8 builder)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # ── Step 4: Python 패키지 설치 ──────────────────────────────
+      - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install requests openpyxl feedparser beautifulsoup4 lxml deep-translator deepl
+          pip install requests openpyxl feedparser beautifulsoup4 \
+                      lxml deep-translator
 
-      - name: Check Excel file
-        env:
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+      # ── Step 5: Node.js 패키지 설치 (SA-8) ─────────────────────
+      - name: Install Node.js dependencies (SA-8)
         run: |
-          python3 scripts/check_excel.py
+          npm install -g pptxgenjs docx
+        continue-on-error: true
 
-      - name: Collect news (7-day lookback)
+      # ── Step 6: SA-1 뉴스 수집 (168시간 = 7일) ──────────────────
+      # main.py Step1→2→3→4 고정 순서 실행
+      # Step1: collect_news(hours_back=168)
+      # Step2: AISummarizer (Google Translate only)
+      # Step3: ExcelUpdater.update_all()
+      # Step4: DashboardUpdater.generate()
+      - name: SA-1 News collection (168h) + SA-2 Translate + SA-3 Excel + SA-4 Dashboard
         env:
-          HOURS_BACK: ${{ github.event.inputs.hours_back || '168' }}
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          DB_PATH: data/vietnam_infrastructure_news.db
-          LANGUAGE_FILTER: all
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
-          DEEPL_API_KEY:    ${{ secrets.DEEPL_API_KEY }}
+          EMAIL_USERNAME:   ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
         run: |
-          echo "=== Weekly News Collection (hours_back=$HOURS_BACK) ==="
-          python3 scripts/news_collector.py --hours-back $HOURS_BACK --agent-mode
+          python3 scripts/main.py --hours ${{ github.event.inputs.hours_back || '168' }}
 
-      - name: Specialist crawler (theinvestor / vir)
-        env:
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          DB_PATH: data/vietnam_infrastructure_news.db
-          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+      # ── Step 7: SA-9 전문미디어 크롤링 (Jina.ai) ───────────────
+      - name: SA-9 Specialist crawler (Jina.ai)
         run: |
           if [ -f scripts/specialist_crawler.py ]; then
-            echo "=== Specialist Media Crawl ==="
-            python3 scripts/specialist_crawler.py --from-date 2026-04-05
+            python3 scripts/specialist_crawler.py
           else
-            echo "specialist_crawler.py not found, skipping"
+            echo "specialist_crawler.py 없음 — 건너뜀"
           fi
+        continue-on-error: true
 
-      - name: Batch translate (40건 소급 — 매핑 우선)
-        env:
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          DB_PATH: data/vietnam_infrastructure_news.db
-          DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
-        run: |
-          if [ -f scripts/batch_translate.py ]; then
-            python3 scripts/batch_translate.py
-          else
-            echo "batch_translate.py not found, skipping"
-          fi
+      # ── Step 8: SA-6 품질검증 (Province 분류 + 등급) ────────────
+      - name: SA-6 Quality Context Agent
+        run: python3 scripts/quality_context_agent.py
+        continue-on-error: true
 
-      - name: Run Quality Context Agent SA-6 (정책 매핑 + 노란색 플래그)
-        env:
-          REPORT_MODE: weekly
-        run: |
-          python3 scripts/quality_context_agent.py
-          echo "=== 정책 연계 기사 하이라이트 플래그 생성 완료 ==="
+      # ── Step 9: SA-4 대시보드 재빌드 ───────────────────────────
+      - name: SA-4 Rebuild dashboard
+        run: python3 scripts/build_dashboard.py
+        continue-on-error: true
 
-      - name: Update Excel with policy highlights
-        env:
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-          DB_PATH: data/vietnam_infrastructure_news.db
-        run: |
-          python3 scripts/run_excel_updater.py
-
-      - name: Build dashboard
-        env:
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-        run: |
-          echo "=== Dashboard Build ==="
-          python3 scripts/build_dashboard.py
-          echo "index.html size: $(wc -c < docs/index.html) bytes"
-
-      - name: Commit and push
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add data/database/Vietnam_Infra_News_Database_Final.xlsx
-          git add data/vietnam_infrastructure_news.db || true
-          git add docs/index.html
-          git add data/agent_output/ || true
-          git add docs/shared/quality_report_weekly.json || true
-          if git diff --staged --quiet; then
-            echo "No changes"
-          else
-            git commit -m "Weekly update $(date '+%Y-%m-%d') KST"
-            git push
-            echo "Pushed successfully"
-          fi
-
-      - name: Send email notification
-        if: always()
-        env:
-          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
-          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-        run: |
-          if [ -f scripts/send_email.py ]; then
-            python3 scripts/send_email.py || echo "Email skipped"
-          else
-            echo "send_email.py not found"
-          fi
-
+      # ── Step 10: Genspark 공유 파일 내보내기 ────────────────────
       - name: Export shared files for Genspark
         run: python3 scripts/export_shared.py
+        continue-on-error: true
 
-      - name: Commit and push shared files
+      # ─────────────────────────────────────────────────────────────
+      # ── [SA-8 신규] MI 주간 보고서 생성 ──────────────────────────
+      # generate_mi_report.py:
+      #   - knowledge_index.json Layer1 (사업개요/KPI/프로젝트) 로드
+      #   - Excel DB 최신 7일 기사 추출
+      #   - Claude Haiku API → 플랜별 분석문 생성
+      #   - docs/VN_Infra_MI_Weekly_Report_YYYYMMDD.docx 생성
+      #   - --send-email: 이메일 첨부 발송
+      # ─────────────────────────────────────────────────────────────
+      - name: SA-8 MI Report (docx) — Haiku AI analysis
+        if: ${{ github.event.inputs.skip_sa8 != 'true' }}
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          EMAIL_USERNAME:    ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD:    ${{ secrets.EMAIL_PASSWORD }}
         run: |
-          git config user.name "github-actions"
+          if [ -f scripts/generate_mi_report.py ]; then
+            python3 scripts/generate_mi_report.py --send-email
+          else
+            echo "generate_mi_report.py 없음 — SA-8 건너뜀"
+          fi
+        continue-on-error: true
+
+      # ── [SA-8 신규] PPT 보고서 생성 ─────────────────────────────
+      - name: SA-8 MI Report (pptx) — Visual deck
+        if: ${{ github.event.inputs.skip_sa8 != 'true' }}
+        run: |
+          if [ -f scripts/build_mi_ppt.js ]; then
+            node scripts/build_mi_ppt.js
+          else
+            echo "build_mi_ppt.js 없음 — PPT 생성 건너뜀"
+          fi
+        continue-on-error: true
+
+      # ── Step 11: 보고서 파일 docs/reports/ 이동 ─────────────────
+      - name: Move reports to docs/reports/
+        run: |
+          mkdir -p docs/reports
+          # docx 이동
+          DOCX=$(ls VN_Infra_MI_Weekly_Report_*.docx 2>/dev/null | tail -1)
+          if [ -n "$DOCX" ]; then
+            mv "$DOCX" docs/reports/
+            echo "docx 이동: $DOCX"
+          fi
+          # pptx 이동
+          PPTX=$(ls VN_Infra_MI_Weekly_Report_*.pptx 2>/dev/null | tail -1)
+          if [ -n "$PPTX" ]; then
+            mv "$PPTX" docs/reports/
+            echo "pptx 이동: $PPTX"
+          fi
+        continue-on-error: true
+
+      # ── Step 12: 전체 커밋 & 푸시 ──────────────────────────────
+      - name: Commit and push all changes
+        run: |
           git config user.email "actions@github.com"
-          git add docs/shared/
-          git diff --cached --quiet || git commit -m "Weekly shared export $(date +%Y-%m-%d)"
-          git push
+          git config user.name  "GitHub Actions"
+          git add data/ docs/ || true
+          git diff --staged --quiet || git commit -m \
+            "chore: weekly pipeline $(date +'%Y-%m-%d') — SA-8 MI report [automated]"
+          git push || true
