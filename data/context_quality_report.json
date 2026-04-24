@@ -1,36 +1,10 @@
 {
-  "run_at": "2026-04-21T12:02:15.715332",
+  "run_at": "2026-04-24T11:56:09.128173",
   "mode": "all",
   "dry_run": false,
   "stats": {
-    "NONE": 2708,
-    "SA7_MATCH": 125,
-    "POLICY_MATCH": 9,
-    "SA7+POLICY": 2
+    "NONE": 735
   },
-  "plan_sa7_count": {
-    "VN-PWR-PDP8": 43,
-    "VN-WW-2030": 34,
-    "VN-PWR-PDP8-LNG": 28,
-    "VN-OG-2030": 13,
-    "VN-IP-NORTH-2030": 11,
-    "VN-SWM-NATIONAL-2030": 9,
-    "VN-URB-METRO-2030": 6,
-    "VN-PWR-PDP8-RENEWABLE": 6,
-    "VN-WAT-RESOURCES": 5,
-    "VN-TRAN-2055": 4,
-    "VN-PWR-PDP8-GRID": 4,
-    "VN-PWR-PDP8-NUCLEAR": 4,
-    "VN-MEKONG-DELTA-2030": 1,
-    "HN-URBAN-WEST": 1,
-    "HN-URBAN-INFRA": 1,
-    "VN-PWR-PDP8-HYDROGEN": 1
-  },
-  "plan_policy_count": {
-    "VN-PWR-PDP8": 9,
-    "VN-PWR-PDP8-RENEWABLE": 3,
-    "VN-PWR-PDP8-LNG": 3,
-    "VN-WW-2030": 1,
-    "VN-SWM-NATIONAL-2030": 1
-  }
+  "plan_sa7_count": {},
+  "plan_policy_count": {}
 }
