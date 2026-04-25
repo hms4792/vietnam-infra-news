@@ -135,7 +135,7 @@ def load_matched_articles() -> tuple[list[dict], dict]:
             'plan_id':   ci(['plan_id', 'matched_plan']),
             'date':      ci(['date']),
             'title_ko':  ci(['title_ko']),
-            'title_en':  ci(['title_en', 'title', 'news_title']),
+            'title_en':  ci(['title_en', 'title_(en/vi)', 'title', 'news_title']),
             'title_vi':  ci(['title_vi']),
             'summary_ko': ci(['summary_ko']),
             'summary_en': ci(['summary_en', 'short_summary']),
