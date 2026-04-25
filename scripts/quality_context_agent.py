@@ -199,7 +199,7 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
 
     C = {
         'date':       col(['date']),
-        'title_en':   col(['title', 'news_title', 'title_en']),
+        'title_en':   col(['title_en', 'title_(en/vi)', 'title', 'news_title']),
         'title_ko':   col(['tit_ko', 'title_ko']),
         'summary_en': col(['short_summary', 'summary_en', 'sum_en']),
         'summary_ko': col(['sum_ko', 'summary_ko']),
