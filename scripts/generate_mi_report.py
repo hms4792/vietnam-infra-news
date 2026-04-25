@@ -243,7 +243,7 @@ def extract_weekly_articles(days_back: int = 7) -> list[dict]:
         'area':       col_idx(['area']),
         'province':   col_idx(['province']),
         'title_ko':   col_idx(['title_ko']),
-        'title_en':   col(['title_en', 'title_(en/vi)', 'title', 'news_title']),
+        'title_en':   col_idx(['title_en', 'title_(en/vi)', 'title', 'news_title']),
         'summary_ko': col_idx(['summary_ko']),
         'summary_en': col_idx(['summary_en', 'short_summary']),
         'source':     col_idx(['source']),
