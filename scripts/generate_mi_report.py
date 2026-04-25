@@ -447,12 +447,19 @@ def generate_plan_analysis(
         }
 
     if dry_run or not api_key:
-        # API 없이 구조만 반환
+        # ── v3.1: API 없으면 이전 논평 재사용 (DRY-RUN 텍스트 금지) ──
+        # prev_analysis는 caller(main)에서 주입 — 없으면 '' 유지
+        prev = getattr(generate_plan_analysis, '_prev_analyses', {}).get(plan_id, {})
+        prev_news = prev.get('news_analysis', '')
+        prev_ins  = prev.get('insight', '')
         return {
-            'news_analysis':  f"[DRY-RUN] {len(articles)}건 기사 분석 예정. API 키 필요.",
-            'insight':        '[DRY-RUN] Expert Insight 자리.',
+            # 이전 논평이 있으면 재사용, 없으면 중립적 안내문
+            'news_analysis':  prev_news if prev_news else f"이번 주 수집 기사 {len(articles)}건. AI 분석은 API 재활성화 후 업데이트됩니다.",
+            'insight':        prev_ins  if prev_ins  else '',
             'kpi_status':     '',
             'articles_used':  len(articles),
+            # ★ v3.2: 새 AI 논평 여부 플래그 (False = 이전 논평 재사용)
+            'analysis_is_new': False,
         }
 
     # ── 시스템 프롬프트 (Layer 1 고정 데이터 포함) ─────────────────────
@@ -538,10 +545,12 @@ KPI 목표:
         news_analysis = raw[:400]
 
     return {
-        'news_analysis': news_analysis,
-        'insight':       insight,
-        'kpi_status':    '',
-        'articles_used': len(sorted_arts),
+        'news_analysis':   news_analysis,
+        'insight':         insight,
+        'kpi_status':      '',
+        'articles_used':   len(sorted_arts),
+        # ★ v3.2: 새 AI 논평 여부 플래그 (True = 이번 주 새로 생성)
+        'analysis_is_new': True,
     }
 
 
@@ -631,10 +640,12 @@ def assemble_report_payload(
             'key_projects':  plan_data.get('key_projects', []),    # 주요 프로젝트 목록
 
             # ── Layer 2: AI 동적 데이터 ───────────────────────────────
-            'articles':       arts[:8],                             # 최신 기사 카드
-            'news_analysis':  analysis.get('news_analysis', ''),   # AI 분석문
-            'insight':        analysis.get('insight', ''),          # Expert Insight
-            'articles_used':  analysis.get('articles_used', 0),
+            'articles':         arts[:8],                             # 최신 기사 카드
+            'news_analysis':    analysis.get('news_analysis', ''),   # AI 분석문
+            'insight':          analysis.get('insight', ''),          # Expert Insight
+            'articles_used':    analysis.get('articles_used', 0),
+            # ★ v3.2: 새 AI 논평 여부 → JS 빌더에서 노란색 하이라이트 처리
+            'analysis_is_new':  analysis.get('analysis_is_new', False),
 
             # ── KPI 변동 (노란색 하이라이트) ─────────────────────────
             'kpi_changes':    changes,
@@ -646,14 +657,19 @@ def assemble_report_payload(
             'next_watch':     next_watch,
         })
 
+    # exec_summary_is_new: plan_sections 중 하나라도 analysis_is_new=True이면 True
+    any_new = any(s.get('analysis_is_new', False) for s in plan_sections)
+
     return {
-        'report_date':     today,
-        'report_week':     week_label,
-        'total_articles':  len(all_articles),
-        'plan_count':      len(plan_sections),
+        'report_date':       today,
+        'report_week':       week_label,
+        'total_articles':    len(all_articles),
+        'plan_count':        len(plan_sections),
         'executive_summary': exec_summary,
         'kpi_changes_count': sum(len(v) for v in kpi_changes.values()),
-        'plan_sections':   plan_sections,
+        'plan_sections':     plan_sections,
+        # ★ v3.2: Executive Summary도 새로 생성됐는지 여부
+        'exec_summary_is_new': any_new,
     }
 
 
@@ -661,12 +677,29 @@ def run_js_builder(payload: dict, output_path: Path) -> bool:
     """
     Node.js docx 빌더 호출.
     페이로드를 임시 JSON으로 저장 후 환경변수로 경로 전달.
+    v3.2: EXEC_SUMMARY_IS_NEW 값을 JS 소스에 동적 교체
     """
     AGENT_OUT_DIR.mkdir(parents=True, exist_ok=True)
     tmp_json = AGENT_OUT_DIR / 'sa8_report_payload.json'
 
     with open(tmp_json, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
+
+    # ── v3.2: JS 파일의 EXEC_SUMMARY_IS_NEW 값 동적 교체 ──────────────
+    # exec_summary_is_new: 이번 주 Executive Summary가 새로 생성됐는지 여부
+    is_new_exec = payload.get('exec_summary_is_new', False)
+    if JS_BUILDER.exists():
+        js_src = JS_BUILDER.read_text(encoding='utf-8')
+        js_src = js_src.replace(
+            'const EXEC_SUMMARY_IS_NEW = false;  // Python이 동적으로 교체',
+            f'const EXEC_SUMMARY_IS_NEW = {str(is_new_exec).lower()};  // Python 자동 설정'
+        )
+        # 임시 JS 파일에 저장 후 빌더로 사용
+        tmp_js = AGENT_OUT_DIR / 'build_mi_report_tmp.js'
+        tmp_js.write_text(js_src, encoding='utf-8')
+        actual_builder = tmp_js
+    else:
+        actual_builder = JS_BUILDER
 
     if not JS_BUILDER.exists():
         log.error(f"JS 빌더 없음: {JS_BUILDER}")
@@ -676,7 +709,8 @@ def run_js_builder(payload: dict, output_path: Path) -> bool:
     env['SA8_DATA_FILE']   = str(tmp_json)
     env['SA8_OUTPUT_PATH'] = str(output_path)
 
-    log.info(f"Node.js 빌더 호출: {JS_BUILDER.name}")
+    builder_to_use = actual_builder if 'actual_builder' in dir() else JS_BUILDER
+    log.info(f"Node.js 빌더 호출: {builder_to_use.name} (exec_is_new={is_new_exec})")
     result = subprocess.run(
         ['node', str(JS_BUILDER)],
         capture_output=True, text=True, timeout=180, env=env
@@ -730,6 +764,67 @@ def send_email(report_path: Path) -> bool:
         return False
 
 
+
+# ══════════════════════════════════════════════════════════════════════════
+#  v3.1 신규: 이전 보고서 페이로드 로드 (AI 논평 보존용)
+# ══════════════════════════════════════════════════════════════════════════
+def load_previous_report_payload() -> dict | None:
+    """
+    직전 주 sa8_report_payload.json을 로드.
+    API 차단 시 이전 AI 논평(news_analysis, insight, exec_summary)을
+    그대로 재사용하기 위함.
+
+    탐색 순서:
+      1. data/agent_output/sa8_report_payload.json  (가장 최근 페이로드)
+      2. data/agent_output/mi_daily_*.json           (최근 daily 파일)
+    """
+    # 1순위: 직전 주간 페이로드
+    payload_path = AGENT_OUT_DIR / 'sa8_report_payload.json'
+    if payload_path.exists():
+        try:
+            with open(payload_path, encoding='utf-8') as f:
+                data = json.load(f)
+            log.info(f"이전 보고서 페이로드 로드: {payload_path.name}")
+            return data
+        except Exception as e:
+            log.warning(f"이전 페이로드 로드 실패: {e}")
+
+    # 2순위: 가장 최근 daily JSON
+    import glob
+    daily_files = sorted(
+        glob.glob(str(AGENT_OUT_DIR / 'mi_daily_*.json')),
+        reverse=True
+    )
+    if daily_files:
+        try:
+            with open(daily_files[0], encoding='utf-8') as f:
+                data = json.load(f)
+            log.info(f"이전 daily 페이로드 로드: {Path(daily_files[0]).name}")
+            return data
+        except Exception as e:
+            log.warning(f"daily 페이로드 로드 실패: {e}")
+
+    log.info("이전 보고서 없음 — 최초 실행으로 처리")
+    return None
+
+
+def get_previous_plan_analysis(prev_payload: dict | None, plan_id: str) -> dict:
+    """
+    이전 보고서에서 특정 plan_id의 AI 논평을 추출.
+    없으면 빈 dict 반환.
+    """
+    if not prev_payload:
+        return {}
+    for section in prev_payload.get('plan_sections', []):
+        if section.get('plan_id') == plan_id:
+            return {
+                'news_analysis': section.get('news_analysis', ''),
+                'insight':       section.get('insight', ''),
+                'kpi_status':    section.get('kpi_status', ''),
+                'articles_used': section.get('articles_used', 0),
+            }
+    return {}
+
 # ══════════════════════════════════════════════════════════════════════════
 #  main()
 # ══════════════════════════════════════════════════════════════════════════
@@ -749,9 +844,29 @@ def main():
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
 
     log.info("=" * 65)
-    log.info(f"SA-8 MI Report Generator v3.0 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    log.info(f"SA-8 MI Report Generator v3.2 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     log.info(f"모드: {'DRY-RUN' if dry_run else 'LIVE'} | AI 모델: {HAIKU_MODEL}")
     log.info("=" * 65)
+
+    # ── Step 0: v3.1 이전 보고서 로드 (AI 논평 보존) ───────────────────
+    prev_payload = load_previous_report_payload()
+    if dry_run and prev_payload:
+        log.info("API 차단 중 → 이전 AI 논평 보존 모드 활성화")
+        prev_exec_summary = prev_payload.get('executive_summary', '')
+    else:
+        prev_exec_summary = ''
+
+    # 이전 논평을 함수 속성으로 주입 (클로저 대신 간단한 방법)
+    generate_plan_analysis._prev_analyses = {}
+    if prev_payload:
+        for sec in prev_payload.get('plan_sections', []):
+            pid = sec.get('plan_id', '')
+            if pid:
+                generate_plan_analysis._prev_analyses[pid] = {
+                    'news_analysis': sec.get('news_analysis', ''),
+                    'insight':       sec.get('insight', ''),
+                }
+    generate_executive_summary._prev_exec = prev_exec_summary
 
     # ── Step 1: Layer 1 고정 데이터 로드 ────────────────────────────────
     plans = load_knowledge_index()
@@ -776,7 +891,10 @@ def main():
     total_plans = len(plans)
     for i, (plan_id, plan_data) in enumerate(plans.items(), 1):
         arts = grouped_arts.get(plan_id, [])
-        log.info(f"  [{i}/{total_plans}] {plan_id}: {len(arts)}건 기사 → Haiku 분석 중...")
+        if dry_run:
+            log.info(f"  [{i}/{total_plans}] {plan_id}: {len(arts)}건 기사 → 이전 논평 재사용")
+        else:
+            log.info(f"  [{i}/{total_plans}] {plan_id}: {len(arts)}건 기사 → Haiku 분석 중...")
 
         analyses[plan_id] = generate_plan_analysis(
             plan_id     = plan_id,
@@ -825,7 +943,12 @@ def main():
     log.info(f"✅ SA-8 완료")
     log.info(f"   출력: {output_path}")
     log.info(f"   기사: {len(all_articles)}건 | 플랜: {len(plans)}개")
-    log.info(f"   AI 분석: {'LIVE (Haiku)' if not dry_run else 'DRY-RUN'}")
+    if dry_run and prev_payload:
+        log.info("   AI 분석: 이전 논평 보존 (API 비활성 — 기존 인사이트 유지)")
+    elif dry_run:
+        log.info("   AI 분석: 비활성 (이전 논평 없음 — 빈칸 처리)")
+    else:
+        log.info("   AI 분석: LIVE (Claude Haiku)")
     log.info(f"   KPI 변동: {len(kpi_changes)}개 플랜 (노란색 표시)")
     log.info("━" * 65)
 
