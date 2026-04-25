@@ -438,14 +438,14 @@ def load_articles_from_excel(days_back: int = 7) -> list[dict]:
         'sector':     ci(['business_sector', 'sector']),
         'area':       ci(['area']),
         'province':   ci(['province']),
-        'title_ko':   ci(['title_ko']),
+        'title_ko':   ci(['title_ko', 'tit_ko']),
         'title_en':   ci(['title_en', 'title_(en/vi)', 'title', 'news_title']),
-        'summary_ko': ci(['summary_ko']),
-        'summary_en': ci(['summary_en', 'short_summary']),
+        'summary_ko': ci(['summary_ko', 'sum_ko']),
+        'summary_en': ci(['summary_en', 'short_summary', 'sum_en']),
         'source':     ci(['source']),
         'url':        ci(['link', 'url']),
-        'ctx_grade':  ci(['ctx_grade']),
-        'ctx_plans':  ci(['ctx_plans']),
+        'ctx_grade':  ci(['ctx_grade', 'grade']),
+        'ctx_plans':  ci(['ctx_plans', 'plan_id']),
     }
 
     cutoff   = (datetime.now() - timedelta(days=days_back)).strftime('%Y-%m-%d')
