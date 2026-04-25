@@ -19,7 +19,7 @@
 #   - Anthropic API: 번역 금지, SA-8 분석에만 사용
 # ============================================================
 
-name: Weekly Collection v6.0
+name: Weekly Collection v6.1
 
 on:
   schedule:
@@ -149,6 +149,18 @@ jobs:
             node scripts/build_mi_ppt.js
           else
             echo "build_mi_ppt.js 없음 — PPT 생성 건너뜀"
+          fi
+        continue-on-error: true
+
+      # ── [v6.1 신규] MI Dashboard 데이터 빌드 ───────────────────────
+      # 주간 보고서 생성 후 Dashboard JSON 업데이트
+      # → mi_dashboard.html의 보고서 다운로드 섹션에 새 파일 자동 반영
+      - name: MI Dashboard 데이터 빌드 (주간 — 보고서 포함)
+        run: |
+          if [ -f scripts/build_mi_dashboard_data.py ]; then
+            python3 scripts/build_mi_dashboard_data.py
+          else
+            echo "build_mi_dashboard_data.py 없음 — 건너뜀"
           fi
         continue-on-error: true
 
