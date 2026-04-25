@@ -1,0 +1,246 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-04-14 09:47 KST",
+  "history": [
+    {
+      "updated_at": "2026-04-14 09:43 KST",
+      "rejected_count": 97,
+      "block_domains": {},
+      "per_plan_conflict_patterns": {
+        "VN-EV-2030": {},
+        "VN-PWR-PDP8": {},
+        "VN-REN-NPP-2050": {},
+        "VN-GAS-PDP8": {
+          "ev": 10
+        },
+        "VN-TRAN-2055": {},
+        "VN-CARBON-2050": {},
+        "VN-WAT-2050": {},
+        "VN-ENV-IND-1894": {
+          "ev": 3,
+          "wastewater treatment": 1
+        },
+        "VN-WW-2030": {
+          "water supply": 2,
+          "industrial waste": 1
+        },
+        "VN-WS-NORTH-2030": {},
+        "VN-SC-2030": {}
+      },
+      "frequent_noise_words": {
+        "vietnam": 71,
+        "power": 26,
+        "development": 16,
+        "plan": 13,
+        "energy": 13,
+        "city": 10,
+        "smart": 9,
+        "water": 8,
+        "wastewater": 6,
+        "national": 5,
+        "viii": 5,
+        "plants": 5,
+        "urban": 5,
+        "growth": 5,
+        "construction": 5,
+        "global": 5,
+        "minh": 5,
+        "industrial": 5,
+        "treatment": 5,
+        "youtube": 4
+      },
+      "rejected_titles_sample": [
+        "Vietnam Pushes Rooftop Solar and Energy Saving to Secure Power ...",
+        "Vietnam set for US$115bil mega urban projects",
+        "Ho Chi Minh City targets global Top 50 smart cities by 2030",
+        "Mekong Flood and Drought Forecast Channel on 13 January 2026",
+        "EVN steps up investment in battery storage to support growing ...",
+        "analyzing the public voice on electric vehicles and the rise of VinFast",
+        "Vietnam pushes EV shift as energy security risks mount",
+        "Vietnam's green horizon: A 2025-2030 plan for ...",
+        "Vietnam eyes to begin high-speed rail construction in 2026",
+        "Reporting on Vietnam's Pathways to Net Zero",
+        "Vietnam moves to cement LNG supply chain as power demand surges",
+        "National Power Development Plan VIII (PDP-8) - Vntpa",
+        "Forum highlights role of clean water, sanitation in building modern ...",
+        "Fulfilling climate commitments at COP26: Vietnam's comprehensive ...",
+        "Wastewater Treatment Market Growth Opportunities at Vietnam ...",
+        "From boom to balance in Vietnam's clean energy transition - IEEFA",
+        "Plugging nuclear energy safely into Vietnam's grid - RMIT University",
+        "Satellite cities to be centres of real estate development for ...",
+        "The wastewater treatment market is wide open - Vietnam Water Week",
+        "The electric vehicle transition as a green window of opportunity ...",
+        "Largest regional wastewater treatment facility to open in HCM City ...",
+        "Vietnam's Power Development Plan 8 (PDP8) - Speeda ASEAN",
+        "Ho Chi Minh City And Hanoi Redefine Urban Futures",
+        "Vietnam's Smart City Asia 2026: Digital Transformation and Climate ...",
+        "Ho Chi Minh City aims to become a global smart city",
+        "Vietnam LNG Power Project Eyes Green Pivot on Soaring Gas Prices",
+        "Vietnam commissions its first LNG-fired power project, and one of ...",
+        "Gusty growth: Vietnam's remarkable wind energy story - Eco-Business",
+        "CFM Invests in CA Water to Advance Clean Water Supply in Vietnam",
+        "ℹ The Mekong Flood and Drought Forecast ...",
+        "Vietnam's Eight National Power Development Plan (PDP8)",
+        "Vietnam highway developments continue | Global Highways",
+        "Decree 29/2026: Vietnam Operationalizes Its First Carbon Trading ...",
+        "VinFast's breakout year: Vietnamese EV maker nearly doubles sales ...",
+        "Vietnam to build 2,000km of new expressways between 2026-2030",
+        "vietnam energy week 2026",
+        "Vietnam's Eighth National Power Development Plan (PDP VIII) - PwC",
+        "Vietnam awards $974 million LNG power plant construction contract ...",
+        "Vietnam's latest power development plan focuses on expanding ...",
+        "Vietnam inaugurates USD1.4 billion LNG power plants in energy ...",
+        "Study Reveals Water and Air Pollution Risks in Vietnam",
+        "Achieving net-zero emissions by 2050 is a political mission of Vietnam",
+        "Current status of industrial waste management in Vietnam",
+        "Vietnam Infrastructure Spotlight March 2026 - Freshfields",
+        "Vietnam's Infrastructure Breakthrough: A Strategic Pillar for Growth",
+        "Foreign investors threaten legal action against Vietnam over ...",
+        "Bloomberg Businessweek Vietnam 02.2026 Featured Issue ...",
+        "[PDF] World Bank Document",
+        "Vietnam To Set Up Industrial Environmental Index",
+        "Vietnam Revised Power Development Plan VIII"
+      ]
+    },
+    {
+      "updated_at": "2026-04-14 09:47 KST",
+      "rejected_count": 89,
+      "block_domains": {
+        "www.trade.gov": 3,
+        "www.youtube.com": 7,
+        "blogs.duanemorris.com": 3,
+        "en.vietnamplus.vn": 4,
+        "www.facebook.com": 3,
+        "www.linkedin.com": 3
+      },
+      "per_plan_conflict_patterns": {
+        "VN-PWR-PDP8": {},
+        "VN-EV-2030": {
+          "power development plan": 8,
+          "pdp8": 4,
+          "nuclear power": 3
+        },
+        "VN-REN-NPP-2050": {},
+        "VN-TRAN-2055": {
+          "metro line": 1
+        },
+        "VN-CARBON-2050": {},
+        "VN-WAT-2050": {},
+        "VN-ENV-IND-1894": {},
+        "VN-WW-2030": {
+          "water supply": 1
+        },
+        "VN-WS-NORTH-2030": {}
+      },
+      "frequent_noise_words": {
+        "vietnam": 66,
+        "power": 19,
+        "development": 16,
+        "plan": 13,
+        "energy": 13,
+        "water": 8,
+        "viii": 7,
+        "national": 6,
+        "smart": 6,
+        "mekong": 6,
+        "city": 6,
+        "wastewater": 6,
+        "treatment": 6,
+        "urban": 5,
+        "growth": 5,
+        "flood": 5,
+        "drought": 5,
+        "youtube": 4,
+        "clean": 4,
+        "construction": 4
+      },
+      "rejected_titles_sample": [
+        "Vietnam Approves Power Development Plan for Cleaner Fuels",
+        "Vietnam pushes EV shift as energy security risks mount",
+        "Vingroup Extends Emergency Support Program for Electric Vehicle ...",
+        "Vietnam inaugurates USD1.4 billion LNG power plants in energy ...",
+        "Smart Grids for Renewable Energy and Energy Efficiency - ESP",
+        "Viet Nam - Policies & action | Climate Action Tracker",
+        "Vietnam moves to cement LNG supply chain as power demand surges",
+        "Vietnam's Power Development Plan 8 (PDP8) - Speeda ASEAN",
+        "Current status of industrial waste management in Vietnam",
+        "EVN steps up investment in battery storage to support growing ...",
+        "Completion of the Largest Sewage Treatment Plant in Hanoi, Vietnam",
+        "ENVIRONMENTAL IMPACT OF INDUSTRIALIZATION",
+        "Gusty growth: Vietnam's remarkable wind energy story - Eco-Business",
+        "vietnam energy week 2026",
+        "Vietnam highway developments continue | Global Highways",
+        "Ho Chi Minh City outlines roadmap of new urban development",
+        "Cushman & Wakefield Spotlights Vietnam's Next Urban ...",
+        "Vietnam's green horizon: A 2025-2030 plan for ...",
+        "Vietnam's Eighth National Power Development Plan (PDP VIII) - PwC",
+        "Foreign investors threaten legal action against Vietnam over ...",
+        "Vietnam: Power Sector Snapshot - Norton Rose Fulbright",
+        "[PDF] Development of Vietnam Smart Grid Roadmap for period up to year ...",
+        "Vietnam to build $1.1B bridge to connect key Mekong Delta ...",
+        "Mekong Flood and Drought Forecast Channel on 13 January 2026",
+        "Vietnam's latest power development plan focuses on expanding ...",
+        "From boom to balance in Vietnam's clean energy transition - IEEFA",
+        "Vietnam to build 2,000km of new expressways between 2026-2030",
+        "Mekong Delta races to respond to peak flood levels",
+        "VIETNAM-RESOLUTION 70-NQ/TW-2025 FACILITATES CAPITAL ...",
+        "CONSTRUCTION BEGINS ON CENTRALIZED WASTEWATER ...",
+        "Bloomberg Businessweek Vietnam 02.2026 Featured Issue ...",
+        "ℹ The Mekong Flood and Drought Forecast ...",
+        "Vietnam's National Power Development Plan For LNG Power Plants",
+        "An alternative to urban solar energy | Vietnam Today - YouTube",
+        "The Kingdom of the Netherlands in Vietnam's Post - LinkedIn",
+        "[PDF] Cumulative impact dams and climate change on the hydrology of the ...",
+        "National Power Development Plan VIII (PDP-8) - Vntpa",
+        "Vietnam targets January 2026 agreement with Russia to revive ...",
+        "Plugging nuclear energy safely into Vietnam's grid - RMIT University",
+        "Green Hydrogen: A Pathway to Vietnam's Energy Security - MDPI",
+        "Vietnam's Eight National Power Development Plan (PDP8)",
+        "Vietnam plans bridge link upgrade | Global Highways",
+        "Ho Chi Minh City targets global Top 50 smart cities by 2030",
+        "Drought and salinity expected near average levels this dry season",
+        "Achieving net-zero emissions by 2050 is a political mission of Vietnam",
+        "Vietnam Revised Power Development Plan VIII",
+        "Vietnam Infrastructure Spotlight March 2026 - Freshfields",
+        "Vietnam-based energy company seeks smart-grid and power ...",
+        "Reporting on Vietnam's Pathways to Net Zero",
+        "Vietnam set for US$115bil mega urban projects"
+      ]
+    }
+  ],
+  "cumulative_block_domains": {
+    "www.youtube.com": 7,
+    "en.vietnamplus.vn": 4,
+    "www.trade.gov": 3,
+    "blogs.duanemorris.com": 3,
+    "www.facebook.com": 3,
+    "www.linkedin.com": 3
+  },
+  "cumulative_plan_conflicts": {
+    "VN-EV-2030": {
+      "power development plan": 8,
+      "pdp8": 4,
+      "nuclear power": 3
+    },
+    "VN-PWR-PDP8": {},
+    "VN-REN-NPP-2050": {},
+    "VN-GAS-PDP8": {
+      "ev": 10
+    },
+    "VN-TRAN-2055": {
+      "metro line": 1
+    },
+    "VN-CARBON-2050": {},
+    "VN-WAT-2050": {},
+    "VN-ENV-IND-1894": {
+      "ev": 3,
+      "wastewater treatment": 1
+    },
+    "VN-WW-2030": {
+      "water supply": 3,
+      "industrial waste": 1
+    },
+    "VN-WS-NORTH-2030": {},
+    "VN-SC-2030": {}
+  }
+}

@@ -1,0 +1,652 @@
+"""
+Agent Pipeline - Vietnam Infrastructure News
+Agent 1: News Collection  — gsk search (35개 쿼리)
+Agent 2: Smart Classification — 키워드 + gsk summarize 기반
+Agent 3: KB Matching (12 master plans) — 키워드 스코어링
+Agent 4: Multilingual Summary — gsk summarize (KR/EN/VN)
+Agent 5: Quality Control — 14개 항목
+
+※ Anthropic API 불필요 — gsk CLI만 사용
+"""
+
+import os
+import json
+import time
+import hashlib
+import subprocess
+import re
+from datetime import datetime, timezone
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'), override=True)
+
+# ──────────────────────────────────────────────────────────────
+# gsk 래퍼
+# ──────────────────────────────────────────────────────────────
+
+_GSK_COUNTER = 0  # 호출 인덱스 (임시 파일명 고유화)
+
+def _gsk(args: list, timeout: int = 35) -> dict:
+    """gsk CLI 호출 → JSON 파싱 결과 반환. 실패/타임아웃 시 {}
+    tmux 세션을 통해 TTY 환경에서 실행 → gsk stdout flush 문제 해결.
+    """
+    global _GSK_COUNTER
+    import shlex
+    _GSK_COUNTER += 1
+    out_file = f"/tmp/_gsk_out_{_GSK_COUNTER}.json"
+    done_file = f"/tmp/_gsk_done_{_GSK_COUNTER}.txt"
+
+    # 임시 파일 초기화
+    for f in [out_file, done_file]:
+        try: os.unlink(f)
+        except: pass
+
+    inner = "gsk " + " ".join(shlex.quote(a) for a in args)
+    cmd = f"{inner} > {shlex.quote(out_file)} 2>/dev/null; echo done > {shlex.quote(done_file)}"
+
+    # tmux 세션에 명령 전송
+    sess = "gsk_agent_pipeline"
+    subprocess.run(f"tmux new-session -d -s {sess} 2>/dev/null || true", shell=True)
+    subprocess.run(f"tmux send-keys -t {sess} {shlex.quote(cmd)} Enter", shell=True)
+
+    # done_file 생성될 때까지 대기
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        if os.path.exists(done_file):
+            break
+        time.sleep(0.5)
+    else:
+        return {}  # timeout
+
+    try:
+        raw = open(out_file, encoding="utf-8", errors="ignore").read().strip()
+        # ANSI escape 제거
+        raw = re.sub(r'\x1b\[[0-9;]*[a-zA-Z]', '', raw)
+        m = re.search(r'\{.*\}', raw, re.DOTALL)
+        if m:
+            return json.loads(m.group())
+    except Exception:
+        pass
+    finally:
+        for f in [out_file, done_file]:
+            try: os.unlink(f)
+            except: pass
+    return {}
+
+
+def gsk_search(query: str) -> list:
+    """gsk search → organic_results 리스트 반환"""
+    data = _gsk(["search", query]) or {}
+    return (data.get("data") or {}).get("organic_results", [])
+
+
+def gsk_crawl(url: str) -> str:
+    """gsk crawl → 기사 본문 텍스트 반환"""
+    data = _gsk(["crawl", url], timeout=30) or {}
+    return (data.get("data") or {}).get("result", "")
+
+
+def gsk_summarize(url_or_text: str, question: str) -> str:
+    """
+    gsk summarize로 질문에 대한 답 생성.
+    url이면 URL로, 아니면 임시 파일 경로로 전달.
+    """
+    import tempfile
+    if url_or_text.startswith("http"):
+        data = _gsk(["summarize", url_or_text, "--question", question], timeout=60)
+    else:
+        # 텍스트를 임시 파일로 저장 후 전달
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt',
+                                         delete=False, encoding='utf-8') as f:
+            f.write(url_or_text)
+            tmp_path = f.name
+        data = _gsk(["summarize", tmp_path, "--question", question], timeout=60)
+        try:
+            os.unlink(tmp_path)
+        except:
+            pass
+    return data.get("data", {}).get("result", "")
+
+
+# ──────────────────────────────────────────────────────────────
+# 공통 설정
+# ──────────────────────────────────────────────────────────────
+
+# 12 마스터플랜 정의
+MASTERPLANS = [
+    {
+        "id": "VN-PWR-PDP8",
+        "name_ko": "베트남 제8차 전력개발계획",
+        "keywords": ["power development", "electricity", "solar", "wind", "renewable energy",
+                     "power plant", "grid", "PDP8", "điện", "năng lượng tái tạo", "nhà máy điện",
+                     "전력", "발전소", "태양광", "풍력", "신재생에너지", "PDP 8", "power development plan"],
+        "threshold": 2,
+    },
+    {
+        "id": "VN-ENV-IND-1894",
+        "name_ko": "베트남 환경산업 발전 프로그램 (Decision 1894)",
+        "keywords": ["environment", "pollution", "waste treatment", "industrial zone",
+                     "Decision 1894", "môi trường", "ô nhiễm", "xử lý chất thải",
+                     "환경", "오염", "폐기물", "산업단지", "eco industrial", "green industry"],
+        "threshold": 2,
+    },
+    {
+        "id": "VN-TRAN-2055",
+        "name_ko": "베트남 교통인프라 마스터플랜 2055",
+        "keywords": ["highway", "road", "bridge", "expressway", "transport infrastructure",
+                     "đường cao tốc", "cầu", "giao thông", "hạ tầng",
+                     "고속도로", "교량", "도로", "교통", "인프라", "expressway", "national road"],
+        "threshold": 2,
+    },
+    {
+        "id": "VN-URB-METRO-2030",
+        "name_ko": "베트남 도시철도·메트로 개발계획 2030",
+        "keywords": ["metro", "urban rail", "subway", "MRT", "city railway", "tàu điện ngầm",
+                     "đường sắt đô thị", "urban transit",
+                     "지하철", "도시철도", "메트로", "경전철"],
+        "threshold": 2,
+    },
+    {
+        "id": "VN-GAS-PDP8",
+        "name_ko": "베트남 가스 인프라 개발계획 (PDP8 연계)",
+        "keywords": ["LNG", "gas pipeline", "natural gas", "gas terminal", "khí đốt",
+                     "đường ống khí", "LNG terminal", "regasification",
+                     "가스", "LNG", "가스 파이프라인", "천연가스", "가스터미널"],
+        "threshold": 2,
+    },
+    {
+        "id": "VN-WAT-2050",
+        "name_ko": "베트남 수자원 개발 마스터플랜 2050",
+        "keywords": ["water supply", "irrigation", "dam", "reservoir", "flood control", "drought",
+                     "thủy lợi", "đập", "hồ chứa", "lũ lụt", "hạn hán", "nước sạch",
+                     "수자원", "댐", "저수지", "홍수", "가뭄", "상수도", "mekong"],
+        "threshold": 2,
+    },
+    {
+        "id": "VN-REN-NPP-2050",
+        "name_ko": "베트남 원자력·신에너지 개발계획 2050",
+        "keywords": ["nuclear", "nuclear power", "NPP", "atom", "năng lượng hạt nhân",
+                     "nhà máy điện hạt nhân", "hydrogen", "green hydrogen", "ammonia",
+                     "원자력", "핵발전", "수소", "그린수소", "암모니아"],
+        "threshold": 2,
+    },
+    {
+        "id": "VN-COAL-RETIRE",
+        "name_ko": "베트남 석탄화력 단계적 폐지 계획",
+        "keywords": ["coal", "coal plant", "coal retirement", "just energy transition",
+                     "JET-P", "nhiệt điện than", "đóng cửa nhà máy than", "coal phase",
+                     "석탄", "석탄발전", "에너지전환", "탈석탄", "JETP"],
+        "threshold": 2,
+    },
+    {
+        "id": "VN-GRID-SMART",
+        "name_ko": "베트남 스마트그리드 고도화 계획",
+        "keywords": ["smart grid", "transmission line", "power grid", "substation", "500kV",
+                     "lưới điện thông minh", "đường dây truyền tải", "trạm biến áp",
+                     "스마트그리드", "송전망", "변전소", "전력망", "송전선"],
+        "threshold": 2,
+    },
+    {
+        "id": "VN-EV-2030",
+        "name_ko": "베트남 전기차·친환경 모빌리티 2030",
+        "keywords": ["electric vehicle", "EV", "charging station", "e-mobility", "VinFast",
+                     "xe điện", "trạm sạc", "phương tiện điện", "electric bus",
+                     "전기차", "EV", "충전소", "친환경차", "전기버스"],
+        "threshold": 2,
+    },
+    {
+        "id": "VN-CARBON-2050",
+        "name_ko": "베트남 탄소중립 2050 로드맵",
+        "keywords": ["carbon neutral", "net zero", "carbon emission", "CO2", "climate",
+                     "greenhouse gas", "trung hòa carbon", "phát thải carbon", "carbon credit",
+                     "탄소중립", "넷제로", "탄소배출", "기후변화", "온실가스", "탄소크레딧"],
+        "threshold": 2,
+    },
+    {
+        "id": "VN-LNG-HUB",
+        "name_ko": "베트남 LNG 허브 개발 전략",
+        "keywords": ["LNG hub", "LNG import", "regasification", "FSRU", "floating storage",
+                     "nhập khẩu LNG", "tái hóa khí", "kho cảng LNG", "LNG barge",
+                     "LNG허브", "LNG수입", "재기화", "LNG터미널", "부유식"],
+        "threshold": 2,
+    },
+]
+
+# 섹터 분류
+SECTORS = {
+    "Power & Energy": ["power", "energy", "electricity", "solar", "wind", "coal", "gas", "nuclear",
+                       "renewable", "hydropower", "điện", "năng lượng", "전력", "에너지", "발전"],
+    "Transport & Infrastructure": ["highway", "road", "bridge", "port", "airport", "railway",
+                                   "expressway", "giao thông", "đường", "cầu", "cảng",
+                                   "교통", "도로", "교량", "항만", "공항", "철도"],
+    "Environment & Climate": ["environment", "climate", "pollution", "carbon", "emission",
+                               "waste", "green", "môi trường", "khí hậu", "ô nhiễm",
+                               "환경", "기후", "탄소", "오염", "폐기물"],
+    "Urban Development": ["urban", "city", "metro", "smart city", "housing", "real estate",
+                          "construction", "đô thị", "thành phố", "도시", "메트로", "건설"],
+    "Water Resources": ["water", "irrigation", "dam", "flood", "drought", "reservoir",
+                        "nước", "thủy lợi", "đập", "lũ", "수자원", "댐", "홍수"],
+    "Industry & Manufacturing": ["industrial", "factory", "manufacturing", "steel", "cement",
+                                 "công nghiệp", "nhà máy", "산업", "제조", "공장"],
+    "Finance & Investment": ["investment", "FDI", "funding", "loan", "bond", "finance",
+                             "đầu tư", "tài chính", "투자", "금융", "펀딩"],
+}
+
+AREA_MAP = {
+    "Environment": ["environment", "pollution", "climate", "carbon", "waste", "môi trường", "환경", "기후"],
+    "Energy Develop.": ["power", "energy", "electricity", "gas", "solar", "wind", "coal", "nuclear",
+                        "điện", "năng lượng", "에너지", "전력"],
+    "Urban Develop.": ["urban", "city", "infrastructure", "transport", "road", "bridge", "metro",
+                       "đô thị", "hạ tầng", "giao thông", "도시", "인프라", "교통"],
+}
+
+PROVINCES = [
+    "Hanoi", "Ho Chi Minh City", "Da Nang", "Hai Phong", "Can Tho",
+    "An Giang", "Ba Ria-Vung Tau", "Bac Giang", "Bac Kan", "Bac Lieu",
+    "Bac Ninh", "Ben Tre", "Binh Dinh", "Binh Duong", "Binh Phuoc",
+    "Binh Thuan", "Ca Mau", "Cao Bang", "Dak Lak", "Dak Nong",
+    "Dien Bien", "Dong Nai", "Dong Thap", "Gia Lai", "Ha Giang",
+    "Ha Nam", "Ha Tinh", "Hai Duong", "Hau Giang", "Hoa Binh",
+    "Hung Yen", "Khanh Hoa", "Kien Giang", "Kon Tum", "Lai Chau",
+    "Lam Dong", "Lang Son", "Lao Cai", "Long An", "Nam Dinh",
+    "Nghe An", "Ninh Binh", "Ninh Thuan", "Phu Tho", "Phu Yen",
+    "Quang Binh", "Quang Nam", "Quang Ngai", "Quang Ninh", "Quang Tri",
+    "Soc Trang", "Son La", "Tay Ninh", "Thai Binh", "Thai Nguyen",
+    "Thanh Hoa", "Thua Thien-Hue", "Tien Giang", "Tra Vinh", "Tuyen Quang",
+    "Vinh Long", "Vinh Phuc", "Yen Bai",
+]
+
+# 15개 검색 쿼리
+SEARCH_QUERIES = [
+    "vietnam power development plan PDP8 2026",
+    "vietnam renewable energy solar wind 2026",
+    "vietnam electricity coal LNG gas 2026",
+    "vietnam smart grid transmission nuclear hydrogen 2026",
+    "vietnam highway expressway bridge construction 2026",
+    "vietnam metro urban rail high speed railway 2026",
+    "vietnam port airport infrastructure investment 2026",
+    "vietnam carbon neutral net zero climate environment 2026",
+    "vietnam water dam flood mekong irrigation 2026",
+    "vietnam urban smart city real estate development 2026",
+    "vietnam electric vehicle EV VinFast energy transition 2026",
+    "vietnam industrial zone environment pollution waste 2026",
+    "vietnam infrastructure investment news 2026",
+    "vietnam energy news vir.com.vn 2026",
+]
+
+
+# ──────────────────────────────────────────────────────────────
+# Agent 1: 뉴스 수집 (gsk search + crawl)
+# ──────────────────────────────────────────────────────────────
+
+def _is_relevant(title: str, snippet: str) -> bool:
+    """베트남 인프라 관련 여부 필터"""
+    infra_kws = [
+        "vietnam", "viet nam", "việt nam", "hanoi", "ho chi minh",
+        "energy", "power", "electricity", "solar", "wind", "coal", "gas", "LNG",
+        "transport", "highway", "road", "bridge", "port", "metro", "railway",
+        "infrastructure", "environment", "carbon", "climate", "renewable",
+        "investment", "FDI", "urban", "construction", "water", "dam",
+        "전력", "에너지", "교통", "인프라", "환경", "투자",
+    ]
+    text = (title + " " + snippet).lower()
+    return any(kw.lower() in text for kw in infra_kws)
+
+
+def run_agent1_collection() -> list[dict]:
+    """Agent 1: 35개 검색 쿼리로 뉴스 수집"""
+    print(f"  [Agent 1] gsk search 기반 뉴스 수집 ({len(SEARCH_QUERIES)}개 쿼리)...")
+    all_articles = []
+    seen_urls = set()
+
+    for i, query in enumerate(SEARCH_QUERIES, 1):
+        print(f"    [{i:02d}/{len(SEARCH_QUERIES)}] {query[:50]}...", end=" ", flush=True)
+        results = gsk_search(query)
+        new_count = 0
+        if not results:
+            print("+0 (skip)")
+            time.sleep(1.0)
+            continue
+
+        for r in results:
+            url = r.get("link", "")
+            title = r.get("title", "")
+            snippet = r.get("snippet", "")
+            date = r.get("date", datetime.now(timezone.utc).strftime("%Y-%m-%d"))
+
+            if not url or not title:
+                continue
+            uid = hashlib.md5(url.encode()).hexdigest()
+            if uid in seen_urls:
+                continue
+            if not _is_relevant(title, snippet):
+                continue
+
+            seen_urls.add(uid)
+            all_articles.append({
+                "id": uid,
+                "title": title,
+                "url": url,
+                "published_date": date,
+                "content": snippet,  # 일단 snippet; crawl로 보강
+                "source": r.get("source", url.split("/")[2] if "/" in url else url),
+                "lang": "en",
+            })
+            new_count += 1
+
+        print(f"+{new_count}")
+        time.sleep(0.5)
+
+    # 크롤링 없이 snippet 그대로 사용 (속도 우선)
+    # gsk summarize가 Agent 4에서 URL 기반으로 내용을 직접 처리함
+
+    print(f"  [Agent 1] 완료: {len(all_articles)}개 기사 수집")
+    return all_articles
+
+
+# ──────────────────────────────────────────────────────────────
+# Agent 2: 스마트 분류 (키워드 기반)
+# ──────────────────────────────────────────────────────────────
+
+def _classify_sector(text: str) -> tuple[str, float]:
+    text_lower = text.lower()
+    scores = {s: sum(1 for kw in kws if kw.lower() in text_lower)
+              for s, kws in SECTORS.items()}
+    best = max(scores, key=scores.get)
+    total = sum(scores.values()) or 1
+    confidence = round(scores[best] / total * 100, 1)
+    return (best if scores[best] > 0 else "Other", confidence)
+
+
+def _classify_area(text: str) -> str:
+    text_lower = text.lower()
+    scores = {area: sum(1 for kw in kws if kw.lower() in text_lower)
+              for area, kws in AREA_MAP.items()}
+    best = max(scores, key=scores.get)
+    return best if scores[best] > 0 else "Urban Develop."
+
+
+def _classify_province(text: str) -> str:
+    text_lower = text.lower()
+    province_variants = {
+        "Ho Chi Minh City": ["ho chi minh", "hcmc", "saigon", "tp.hcm", "tp hcm"],
+        "Hanoi": ["hanoi", "hà nội", "ha noi"],
+        "Da Nang": ["da nang", "đà nẵng", "danang"],
+        "Hai Phong": ["hai phong", "hải phòng", "haiphong"],
+        "Quang Ninh": ["quang ninh", "quảng ninh"],
+        "Binh Duong": ["binh duong", "bình dương"],
+        "Dong Nai": ["dong nai", "đồng nai"],
+        "Ba Ria-Vung Tau": ["ba ria", "vung tau", "vũng tàu", "bà rịa"],
+        "Can Tho": ["can tho", "cần thơ"],
+    }
+    for province, variants in province_variants.items():
+        if any(v in text_lower for v in variants):
+            return province
+    for province in PROVINCES:
+        if province.lower() in text_lower:
+            return province
+    return "National / Unspecified"
+
+
+def run_agent2_classification(articles: list[dict]) -> list[dict]:
+    """Agent 2: 키워드 기반 섹터/Area/Province 분류"""
+    print(f"  [Agent 2] 분류 시작 ({len(articles)}개)...")
+    for art in articles:
+        text = art["title"] + " " + art.get("content", "")
+        art["sector"], art["confidence"] = _classify_sector(text)
+        art["area"] = _classify_area(text)
+        art["province"] = _classify_province(text)
+    print(f"  [Agent 2] 완료")
+    return articles
+
+
+# ──────────────────────────────────────────────────────────────
+# Agent 3: Knowledge Base 매칭 (키워드 스코어링)
+# ──────────────────────────────────────────────────────────────
+
+def run_agent3_kb_matching(articles: list[dict]) -> list[dict]:
+    """Agent 3: 12개 마스터플랜 키워드 매칭"""
+    print(f"  [Agent 3] KB 매칭 시작 ({len(articles)}개)...")
+    for art in articles:
+        text = (art["title"] + " " + art.get("content", "")).lower()
+        matched = []
+        best_score = 0
+        policy_context = None
+
+        for plan in MASTERPLANS:
+            score = sum(1 for kw in plan["keywords"] if kw.lower() in text)
+            if score >= plan["threshold"]:
+                matched.append(plan["id"])
+                if score > best_score:
+                    best_score = score
+                    policy_context = {
+                        "plan_id": plan["id"],
+                        "plan_name": plan["name_ko"],
+                        "score": score,
+                    }
+
+        art["matched_plans"] = matched
+        art["policy_context"] = policy_context
+
+    matched_count = sum(1 for a in articles if a["matched_plans"])
+    print(f"  [Agent 3] 완료: {matched_count}/{len(articles)}개 매칭")
+    return articles
+
+
+# ──────────────────────────────────────────────────────────────
+# Agent 4: 다국어 요약 (gsk summarize)
+# ──────────────────────────────────────────────────────────────
+
+def _parse_3lang(raw: str, title: str) -> tuple:
+    """gsk summarize 응답에서 KO/EN/VI 추출"""
+    import re as _re
+    answer_m = _re.search(r'answer:\s*(.*?)(?:\n\nSource:|\Z)', raw, _re.DOTALL)
+    text = answer_m.group(1).strip() if answer_m else raw
+    ko_m = _re.search(r'KO:\s*(.+?)(?=\nEN:|\Z)', text, _re.DOTALL)
+    en_m = _re.search(r'EN:\s*(.+?)(?=\nVI:|\Z)', text, _re.DOTALL)
+    vi_m = _re.search(r'VI:\s*(.+?)(?:\n|\Z)', text, _re.DOTALL)
+    ko = ko_m.group(1).strip() if ko_m else title
+    en = en_m.group(1).strip() if en_m else title
+    vi = vi_m.group(1).strip() if vi_m else title
+    return ko, en, vi
+def _summarize_3lang_gsk(article: dict) -> dict:
+    """gsk summarize 1회 호출로 KO/EN/VI 3개국어 요약 동시 생성.
+    기존 3회 → 1회로 줄여 품질 유지 + 호출 수 67% 감소.
+    """
+    import shlex as _shlex
+    title   = article.get("title", "")
+    url     = article.get("url", "")
+    sector  = article.get("sector", "")
+    plans   = ", ".join(article.get("matched_plans", [])) or "N/A"
+    source  = url if url.startswith("http") else title
+
+    question = (
+        f"Summarize this Vietnam infrastructure news in THREE languages.\n"
+        f"Sector: {sector}, Related plans: {plans}\n\n"
+        f"Format EXACTLY as:\n"
+        f"KO: [2-3 sentences in Korean]\n"
+        f"EN: [2-3 sentences in English]\n"
+        f"VI: [2-3 câu tiếng Việt]"
+    )
+    inner = f"gsk summarize {_shlex.quote(source)} --question {_shlex.quote(question)}"
+    cmd   = f"script -q -c {_shlex.quote(inner)} /dev/null"
+
+    try:
+        r = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE,
+                           stderr=subprocess.DEVNULL, timeout=40)
+        raw = r.stdout.decode("utf-8", errors="ignore")
+        raw = re.sub(r'\x1b\[[0-9;]*[a-zA-Z]', '', raw)
+        # JSON 안의 result 텍스트 추출
+        m = re.search(r'\{.*\}', raw, re.DOTALL)
+        text = ""
+        if m:
+            d = json.loads(m.group())
+            text = d.get("data", {}).get("result", "") or str(d.get("data", ""))
+        ko, en, vi = _parse_3lang(text or raw, title)
+    except Exception:
+        ko = en = vi = title
+
+    article["summary_ko"] = ko
+    article["summary_en"] = en
+    article["summary_vi"] = vi
+    return article
+
+
+def run_agent4_summarization(articles: list[dict]) -> list[dict]:
+    """Agent 4: gsk summarize 1회/기사 → KO/EN/VI 동시 생성
+    - 기존 3회 호출 대비 67% 감소, 품질 동일
+    - tmux 기반 _gsk()와 동일한 TTY 환경 사용
+    """
+    print(f"  [Agent 4] 3개국어 요약 시작 ({len(articles)}개, gsk 1회/기사)...")
+    for i, art in enumerate(articles, 1):
+        if i % 10 == 0 or i == 1:
+            print(f"    진행: {i}/{len(articles)}")
+        articles[i - 1] = _summarize_3lang_gsk(art)
+        time.sleep(1.5)   # gsk rate limit 방지
+    print(f"  [Agent 4] 완료 (gsk 호출: {len(articles)}회)")
+    return articles
+
+
+# ──────────────────────────────────────────────────────────────
+# Agent 5: QC (14개 항목)
+# ──────────────────────────────────────────────────────────────
+
+def run_agent5_qc(articles: list[dict]) -> tuple[list[dict], dict]:
+    """Agent 5: 14개 항목 품질 검사"""
+    print(f"  [Agent 5] QC 시작 ({len(articles)}개)...")
+    from collections import Counter
+
+    valid_sectors = set(SECTORS.keys()) | {"Other"}
+    valid_areas = {"Environment", "Energy Develop.", "Urban Develop."}
+    seen_titles = {}
+    issues_log = []
+
+    for art in articles:
+        issues = []
+
+        if not art.get("title"):
+            issues.append("QC01: Title missing")
+        if not art.get("url", "").startswith("http"):
+            issues.append("QC02: Invalid URL")
+        if art.get("sector") not in valid_sectors:
+            issues.append("QC03: Invalid sector")
+        if art.get("area") not in valid_areas:
+            issues.append("QC04: Invalid area")
+        if not art.get("province"):
+            issues.append("QC05: Province missing")
+        if len(art.get("summary_ko", "")) < 20:
+            issues.append("QC06: Summary too short")
+
+        title_key = art.get("title", "").lower()[:50]
+        if title_key in seen_titles:
+            issues.append("QC11: Duplicate title")
+        else:
+            seen_titles[title_key] = True
+
+        art["qc_issues"] = issues
+        art["qc_status"] = "PASS" if not issues else "FAIL"
+        if issues:
+            issues_log.append({"title": art.get("title", "")[:50], "issues": issues})
+
+    total = len(articles)
+    passed = sum(1 for a in articles if a["qc_status"] == "PASS")
+    qc_rate = passed / total * 100 if total else 0
+
+    pro_sources_kws = ["vir.com.vn", "nikkei", "bloomberg", "reuters", "spglobal",
+                       "woodmac", "adb.org", "worldbank", "freshfields"]
+    pro_count = sum(1 for a in articles
+                    if any(kw in a.get("url", "").lower() for kw in pro_sources_kws))
+    pro_ratio = pro_count / total * 100 if total else 0
+
+    sector_counts = Counter(a.get("sector") for a in articles)
+    max_sector_ratio = max(sector_counts.values()) / total * 100 if total else 0
+
+    pdp8_count = sum(1 for a in articles if "VN-PWR-PDP8" in a.get("matched_plans", []))
+    d1894_count = sum(1 for a in articles if "VN-ENV-IND-1894" in a.get("matched_plans", []))
+    unclassified = sum(1 for a in articles if a.get("province") in ["National / Unspecified", ""])
+    unclassified_ratio = unclassified / total * 100 if total else 0
+    integrity_ok = all(a.get("id") and a.get("title") and a.get("url") for a in articles)
+
+    qc_report = {
+        "total": total,
+        "passed": passed,
+        "failed": total - passed,
+        "qc_rate": round(qc_rate, 1),
+        "qc07_pro_media_ratio": round(pro_ratio, 1),
+        "qc07_pass": pro_ratio >= 30,
+        "qc08_sector_balance": round(max_sector_ratio, 1),
+        "qc08_pass": max_sector_ratio < 60,
+        "qc09_pdp8_count": pdp8_count,
+        "qc09_pass": pdp8_count >= 5,
+        "qc10_d1894_count": d1894_count,
+        "qc10_pass": d1894_count >= 3,
+        "qc12_unclassified_province_ratio": round(unclassified_ratio, 1),
+        "qc12_pass": unclassified_ratio <= 25,
+        "qc13_pass_rate_ok": qc_rate >= 95,
+        "qc14_integrity_ok": integrity_ok,
+        "sector_distribution": dict(sector_counts),
+        "issues_log": issues_log[:20],
+        "recommendations": [],
+    }
+
+    if not qc_report["qc07_pass"]:
+        qc_report["recommendations"].append(f"전문 미디어 소스 비율 증가 필요 (현재 {pro_ratio:.0f}%)")
+    if not qc_report["qc08_pass"]:
+        qc_report["recommendations"].append("섹터 다양성 확보 필요")
+    if not qc_report["qc09_pass"]:
+        qc_report["recommendations"].append(f"PDP8 관련 기사 추가 수집 필요 (현재 {pdp8_count}건)")
+    if not qc_report["qc10_pass"]:
+        qc_report["recommendations"].append(f"Decision 1894 관련 기사 추가 필요 (현재 {d1894_count}건)")
+    if not qc_report["qc12_pass"]:
+        qc_report["recommendations"].append(f"Province 미분류 비율 감소 필요 (현재 {unclassified_ratio:.0f}%)")
+
+    print(f"  [Agent 5] QC 완료: 통과 {passed}/{total} ({qc_rate:.1f}%)")
+    return articles, qc_report
+
+
+# ──────────────────────────────────────────────────────────────
+# 전체 파이프라인 실행
+# ──────────────────────────────────────────────────────────────
+
+def run_pipeline(output_dir: str = ".") -> tuple[list[dict], dict]:
+    """
+    Agent 1~5 순서대로 실행.
+    gsk CLI 기반 — Anthropic API 불필요.
+    """
+    start = datetime.now()
+    print(f"\n{'='*60}")
+    print(f"Agent Pipeline 시작 (gsk 기반): {start.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"{'='*60}")
+
+    articles = run_agent1_collection()
+
+    if not articles:
+        print("  ⚠ 수집된 기사 없음 — 파이프라인 중단")
+        return [], {}
+
+    articles = run_agent2_classification(articles)
+    articles = run_agent3_kb_matching(articles)
+    articles = run_agent4_summarization(articles)
+    articles, qc_report = run_agent5_qc(articles)
+
+    # 저장
+    output_path = os.path.join(output_dir, "processed_articles.json")
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(articles, f, ensure_ascii=False, indent=2)
+    print(f"\n  ✓ processed_articles.json 저장 ({len(articles)}개)")
+
+    qc_path = os.path.join(output_dir, "qc_report.json")
+    with open(qc_path, "w", encoding="utf-8") as f:
+        json.dump(qc_report, f, ensure_ascii=False, indent=2)
+    print(f"  ✓ qc_report.json 저장")
+
+    elapsed = (datetime.now() - start).seconds
+    print(f"  ⏱ 총 소요: {elapsed // 60}분 {elapsed % 60}초")
+    return articles, qc_report
+
+
+if __name__ == "__main__":
+    articles, qc = run_pipeline(output_dir=".")
+    print(f"\n결과: {len(articles)}개 기사, QC 통과율 {qc.get('qc_rate', 0)}%")
+    print(f"PDP8 매칭: {qc.get('qc09_pdp8_count', 0)}건, D1894: {qc.get('qc10_d1894_count', 0)}건")
+    print(f"섹터 분포: {qc.get('sector_distribution', {})}")

@@ -1,0 +1,40 @@
+================================================================================
+🚀 Vietnam Infrastructure News Pipeline - COMPLETE VERSION
+Started at: 2026-04-18 23:30:07 KST
+================================================================================
+
+[STEP 1-4] Running Agents 1-5 (Collector → QC)...
+
+============================================================
+Agent Pipeline 시작 (gsk 기반): 2026-04-18 23:30:07
+수집 범위: 최근 7일
+============================================================
+  [Agent 1] gsk search 기반 뉴스 수집 (21개 쿼리)
+  [Agent 1] 수집 범위: 2026-04-11 ~ 오늘 (7일)
+    [01/21] vietnam power development plan PDP8 2026... +0 (skip)
+    [02/21] vietnam renewable energy solar wind 2026... +0 (skip)
+    [03/21] vietnam electricity coal LNG gas 2026... +0 (skip)
+    [04/21] vietnam smart grid transmission nuclear hydrogen 2... +0 (skip)
+    [05/21] vietnam highway expressway bridge construction 202... +0 (skip)
+    [06/21] vietnam metro urban rail high speed railway 2026... +0 (skip)
+    [07/21] vietnam port airport infrastructure investment 202... +0 (skip)
+    [08/21] vietnam carbon neutral net zero climate environmen... +0 (skip)
+    [09/21] vietnam water dam flood mekong irrigation 2026... +0 (skip)
+    [10/21] vietnam urban smart city real estate development 2... +0 (skip)
+    [11/21] vietnam electric vehicle EV VinFast energy transit... +0 (skip)
+    [12/21] vietnam industrial zone environment pollution wast... +0 (skip)
+    [13/21] vietnam infrastructure investment news 2026... +0 (skip)
+    [14/21] vietnam energy news vir.com.vn 2026... +0 (skip)
+    [15/21] vietnam wastewater treatment WWTP sewage 2026... +0 (skip)
+    [16/21] vietnam water supply clean water infrastructure 20... +0 (skip)
+    [17/21] vietnam smart city digital transformation IoT 2026... +0 (skip)
+    [18/21] site:theinvestor.vn vietnam infrastructure 2026... +0 (skip)
+    [19/21] site:vietnamenergy.vn power energy 2026... +0 (skip)
+    [20/21] vietnam oil gas petroleum exploration 2026... +0 (skip)
+    [21/21] vietnam hanoi urban development construction 2026... +0 (skip)
+  [Agent 1] 완료: 0개 수집, 0개 날짜 외 제외, 0개 정부·연구기관 면제 포함
+  [Agent 1] 완료: 0개 기사 수집
+  ⚠ 수집된 기사 없음 — 파이프라인 중단
+
+❌ PIPELINE FAILED: 'qc_rate'
+PIPELINE_DONE
