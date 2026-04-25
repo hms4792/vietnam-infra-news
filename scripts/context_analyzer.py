@@ -439,7 +439,7 @@ def load_articles_from_excel(days_back: int = 7) -> list[dict]:
         'area':       ci(['area']),
         'province':   ci(['province']),
         'title_ko':   ci(['title_ko']),
-        'title_en':   ci(['title_en', 'title', 'news_title']),
+        'title_en':   col(['title_en', 'title_(en/vi)', 'title', 'news_title']),
         'summary_ko': ci(['summary_ko']),
         'summary_en': ci(['summary_en', 'short_summary']),
         'source':     ci(['source']),
