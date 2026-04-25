@@ -1,7 +1,12 @@
 """
-news_collector.py  — v8.1
+news_collector.py  — v8.2
 ==========================
 베트남 인프라 뉴스 수집기
+
+v8.2 변경사항 (2026-04-25):
+  - NEWSDATA_MASTER_QUERIES에 한-베 협력 쿼리 4개 추가
+  - _infer_sector_from_title() 신규 추가 (plan_id 없어도 sector 추론)
+  - SECTOR_KEYWORDS에 'Korea Vietnam' 관련 키워드 추가
 
 v8.1 변경사항 (2026-04-24):
   - NEWSDATA_QUERIES: 섹터 14개 + 마스터플랜 16개 + Province 3그룹 완전 반영
@@ -113,6 +118,15 @@ SECTOR_KEYWORDS = {
         'cao tốc', 'sân bay', 'cảng biển', 'ring road',
         'long thanh', 'metro', 'brt',
     ],
+    # ── v8.2: 양자협력 키워드 (한-베 정상회담 등) ──────────────────────
+    'Bilateral': [
+        'korea vietnam cooperation', 'korea vietnam summit',
+        'south korea vietnam', 'korea-vietnam', 'rok vietnam',
+        'hàn quốc việt nam', 'korea mou vietnam',
+        'korea invest vietnam', 'vietnam korea energy',
+        'vietnam korea nuclear', 'vietnam korea environment',
+        'bilateral infrastructure', 'bilateral cooperation vietnam',
+    ],
 }
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -140,6 +154,47 @@ VIETNAM_KEYWORDS = [
     'mekong', 'haiphong', 'hải phòng', 'danang', 'đà nẵng',
 ]
 
+
+
+# ══════════════════════════════════════════════════════════════════════════
+#  v8.2 신규: 제목 기반 sector 추론 (plan_id 없어도 올바른 sector 분류)
+# ══════════════════════════════════════════════════════════════════════════
+def _infer_sector_from_title(title: str, summary: str = '') -> str:
+    """
+    기사 제목·요약에서 sector 직접 추론.
+    build_dashboard.py의 _plan_to_sector() 대체 용도.
+    plan_id가 없는 기사도 올바른 sector로 분류.
+    """
+    text = (title + ' ' + summary).lower()
+
+    # 우선순위 순서로 검사
+    rules = [
+        ('Power',                  ['nuclear power', 'offshore wind', 'solar power', 'pdp8',
+                                    'renewable energy', 'lng power', 'wind farm', 'power plant',
+                                    'electricity grid', 'bess', 'battery storage', 'dppa',
+                                    'điện gió', 'điện mặt trời', 'năng lượng tái tạo']),
+        ('Oil & Gas',              ['oil gas', 'petroleum', 'petrovietnam', 'lng terminal',
+                                    'crude oil', 'natural gas', 'offshore oil', 'dầu khí']),
+        ('Waste Water',            ['wastewater', 'sewage', 'wwtp', 'nước thải', 'treatment plant']),
+        ('Solid Waste',            ['solid waste', 'waste-to-energy', 'wte', 'landfill',
+                                    'incineration', 'rác thải', 'chất thải rắn', 'đốt rác']),
+        ('Water Supply/Drainage',  ['water supply', 'clean water', 'drinking water',
+                                    'cấp nước', 'nước sạch', 'water pipe']),
+        ('Industrial Parks',       ['industrial park', 'industrial zone', 'vsip', 'fdi investment',
+                                    'khu công nghiệp', 'semiconductor factory', 'samsung factory']),
+        ('Transport',              ['expressway', 'airport', 'metro rail', 'ring road',
+                                    'long thanh', 'cao tốc', 'sân bay', 'urban rail']),
+        ('Smart City',             ['smart city', 'digital city', 'thành phố thông minh',
+                                    'data center', 'ict infrastructure']),
+        ('Bilateral',              ['korea vietnam', 'south korea vietnam', 'hàn quốc việt nam',
+                                    'korea-vietnam', 'bilateral cooperation']),
+    ]
+
+    for sector, keywords in rules:
+        if any(kw in text for kw in keywords):
+            return sector
+
+    return 'General'   # 기본값을 'Environment'에서 'General'로 변경
 
 # ══════════════════════════════════════════════════════════════════════════
 #  1단계: should_collect() — 4단계 품질 게이트
@@ -176,6 +231,13 @@ def should_collect(title: str, summary: str = '', source: str = '') -> tuple[boo
         if any(kw.lower() in text for kw in keywords):
             has_sector = True
             break
+
+    # v8.2: 한-베 협력 키워드도 섹터 관련으로 인정
+    if not has_sector:
+        bilateral_kw = ['korea vietnam', 'south korea vietnam', 'rok vietnam',
+                        'hàn quốc việt nam', 'korea-vietnam mou', 'bilateral infrastructure']
+        if any(kw in text for kw in bilateral_kw):
+            has_sector = True
 
     if not has_sector:
         return False, 'NO_SECTOR_MATCH'
@@ -342,6 +404,16 @@ NEWSDATA_MASTER_QUERIES = [
      'language': 'en', 'plan_id': 'VN-ENV-IND-1894', 'sector': 'Industrial Parks'},
     {'q': '"khu công nghiệp xanh" OR "công nghệ môi trường" Việt Nam 2026',
      'language': 'vi', 'plan_id': 'VN-ENV-IND-1894', 'sector': 'Industrial Parks'},
+
+    # ── v8.2: 한-베 양자협력 쿼리 (정상회담·MOU·에너지·환경) ──────────
+    {'q': 'Korea Vietnam cooperation energy infrastructure MOU 2026',
+     'language': 'en', 'plan_id': '', 'sector': 'Bilateral', 'label': 'KR-VN-EN'},
+    {'q': 'South Korea Vietnam nuclear power plant LNG offshore wind cooperation',
+     'language': 'en', 'plan_id': '', 'sector': 'Power', 'label': 'KR-VN-ENERGY'},
+    {'q': 'Korea Vietnam summit bilateral agreement environment infrastructure',
+     'language': 'en', 'plan_id': '', 'sector': 'Bilateral', 'label': 'KR-VN-SUMMIT'},
+    {'q': 'hàn quốc việt nam hợp tác năng lượng hạ tầng môi trường 2026',
+     'language': 'vi', 'plan_id': '', 'sector': 'Bilateral', 'label': 'KR-VN-VI'},
 ]
 
 # ── 방법1-C: Province × 섹터 교차 쿼리 ──────────────────────────────────
@@ -501,6 +573,9 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list[dict]:
         if not ok:
             return None
 
+        # v8.2: sector가 비어있으면 제목에서 직접 추론
+        inferred_sector = sector if sector else _infer_sector_from_title(title, desc)
+
         return {
             'title':          title,
             'summary':        desc,
@@ -508,7 +583,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list[dict]:
             'source':         source,
             'date':           pub_date,
             'published_date': pub_date,
-            'sector':         sector,
+            'sector':         inferred_sector,
             'province':       province,
             'plan_id':        plan_id,
             'collector':      'newsdata_io',
