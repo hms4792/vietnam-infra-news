@@ -30,7 +30,7 @@
 #   - ExcelUpdater 클래스 / NewsCollector 클래스 없음
 # ============================================================
 
-name: Daily Vietnam Infra News Pipeline v7.4
+name: Daily Vietnam Infra News Pipeline v7.5
 
 on:
   schedule:
@@ -201,7 +201,24 @@ jobs:
           EMAIL_USERNAME:    ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:    ${{ secrets.EMAIL_PASSWORD }}
 
-      # ── Step 14: 이메일 발송 ─────────────────────────────────────
+      # ─────────────────────────────────────────────────────────────
+      # ── Step 14 [v7.5 신규]: MI Dashboard 데이터 빌드 ─────────────
+      #
+      # build_mi_dashboard_data.py:
+      #   Excel Matched_Plan + SA-7 context_output + SA-8 분석
+      #   → docs/shared/mi_dashboard_data.json 생성
+      #   mi_dashboard.html이 fetch로 이 파일을 읽어 자동 업데이트
+      # ─────────────────────────────────────────────────────────────
+      - name: MI Dashboard 데이터 빌드 (mi_dashboard_data.json)
+        run: |
+          if [ -f scripts/build_mi_dashboard_data.py ]; then
+            python3 scripts/build_mi_dashboard_data.py
+          else
+            echo "build_mi_dashboard_data.py 없음 — 건너뜀"
+          fi
+        continue-on-error: true
+
+      # ── Step 15: 이메일 발송 ─────────────────────────────────────
       - name: Send daily email notification
         run: |
           if [ -f scripts/send_email.py ]; then
