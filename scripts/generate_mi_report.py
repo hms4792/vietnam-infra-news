@@ -834,7 +834,7 @@ def main():
     daily_only = '--daily-only' in sys.argv   # SA-7 결과 JSON만 저장, docx 미생성
     days_back  = 7
 
-    api_key = os.getenv('ANTHROPIC_API_KEY', '')
+    api_key = os.getenv('ANTHROPIC_API_KEY', '').strip()
     if not api_key and not dry_run:
         log.warning("ANTHROPIC_API_KEY 없음 — AI 분석 건너뜀 (dry-run 모드로 전환)")
         dry_run = True
