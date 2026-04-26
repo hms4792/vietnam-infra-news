@@ -284,7 +284,7 @@ function CHANGE_BANNER(text) {
 
 const REPORT_DATE  = '2026년 4월 24일';
 // ★ v3.2: true면 이번 주 새 AI 논평 생성됨 → 청록 하이라이트
-const EXEC_SUMMARY_IS_NEW = false;  // Python 자동 설정
+const EXEC_SUMMARY_IS_NEW = true;  // Python 자동 설정
 const REPORT_WEEK  = '2026-W17';
 const TOTAL_ARTS   = 157;
 const PLAN_COUNT   = 12;

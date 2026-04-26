@@ -1,6 +1,23 @@
 {
-  "generated_at": "2026-04-26 01:20",
+  "generated_at": "2026-04-26 09:02",
   "plans": {
+    "VN-PWR-PDP8-NUCLEAR": {
+      "plan_id": "VN-PWR-PDP8-NUCLEAR",
+      "title_ko": "PDP8 원전 재개",
+      "sector": "",
+      "area": "",
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
+      "stage_history": [],
+      "next_watch": "",
+      "latest_insight": "",
+      "latest_article_date": "2026-04-25",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
     "VN-IP-NORTH-2030": {
       "plan_id": "VN-IP-NORTH-2030",
       "title_ko": "북부 베트남 산업단지 개발 계획 2030",
@@ -29,17 +46,17 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-04-21",
+          "date": "2026-04-25",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "VnExpress English - News",
-          "title_ko": "리조트 해안으로 가는 $ 1.67 B 고속도로를 이용할 수 있는 베트남 롱탄 공항"
+          "source": "vietnamplus",
+          "title_ko": "Dong Thap은 공업 지대, 클러스터의 환경 규제를 강화합니다"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-04-21",
-      "article_count": 2,
+      "latest_article_date": "2026-04-25",
+      "article_count": 5,
       "haiku_count": 0,
       "kpi_targets": []
     },
