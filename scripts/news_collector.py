@@ -414,6 +414,29 @@ NEWSDATA_MASTER_QUERIES = [
      'language': 'en', 'plan_id': '', 'sector': 'Bilateral', 'label': 'KR-VN-SUMMIT'},
     {'q': 'hàn quốc việt nam hợp tác năng lượng hạ tầng môi trường 2026',
      'language': 'vi', 'plan_id': '', 'sector': 'Bilateral', 'label': 'KR-VN-VI'},
+
+    # ── v8.3: theinvestor.vn 핵심 프로젝트 타겟 쿼리 ────────────────────
+    # (theinvestor.vn RSS 폐쇄 후 NewsData.io로 해당 사이트 기사 간접 수집)
+    {'q': '"Ca Na" OR "Lien Chieu" OR "Can Gio port" Vietnam infrastructure',
+     'language': 'en', 'plan_id': 'VN-TRAN-2055', 'sector': 'Transport', 'label': 'PROJ-PORT'},
+    {'q': '"Ring Road 4" OR "Vanh dai 4" Ho Chi Minh City 2026',
+     'language': 'en', 'plan_id': 'VN-TRAN-2055', 'sector': 'Transport', 'label': 'PROJ-RR4'},
+    {'q': '"Ninh Thuan" nuclear power plant Russia Vietnam 2026',
+     'language': 'en', 'plan_id': 'VN-PWR-PDP8-NUCLEAR', 'sector': 'Power', 'label': 'PROJ-NUCLEAR'},
+    {'q': 'EVN PVN "offshore wind" Vietnam 2026 MW survey',
+     'language': 'en', 'plan_id': 'VN-PWR-PDP8-RENEWABLE', 'sector': 'Power', 'label': 'EVN-PVN-WIND'},
+    {'q': 'Vietnam "BOT" OR "PPP" infrastructure concession 2026',
+     'language': 'en', 'plan_id': '', 'sector': 'Transport', 'label': 'BOT-PPP'},
+    {'q': '"VSIP" OR "Stavian" OR "Amata" Vietnam industrial park FDI 2026',
+     'language': 'en', 'plan_id': 'VN-IP-NORTH-2030', 'sector': 'Industrial Parks', 'label': 'IP-SPECIFIC'},
+    {'q': 'Vietnam "green bond" OR "sustainable finance" infrastructure 2026',
+     'language': 'en', 'plan_id': '', 'sector': 'Industrial Parks', 'label': 'GREEN-FIN'},
+    {'q': '"Decision 768" OR "PDP VIII" Vietnam power revised offshore wind',
+     'language': 'en', 'plan_id': 'VN-PWR-PDP8', 'sector': 'Power', 'label': 'PDP8-768'},
+    {'q': '"cảng Liên Chiểu" OR "cảng Cần Giờ" OR "cảng Long Thành" hạ tầng',
+     'language': 'vi', 'plan_id': 'VN-TRAN-2055', 'sector': 'Transport', 'label': 'VN-PORT'},
+    {'q': '"điện hạt nhân" "Ninh Thuận" Nga Việt Nam 2026',
+     'language': 'vi', 'plan_id': 'VN-PWR-PDP8-NUCLEAR', 'sector': 'Power', 'label': 'VN-NUCLEAR'},
 ]
 
 # ── 방법1-C: Province × 섹터 교차 쿼리 ──────────────────────────────────
