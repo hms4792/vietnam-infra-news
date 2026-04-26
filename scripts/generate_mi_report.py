@@ -941,12 +941,41 @@ def main():
     success = run_js_builder(payload, output_path)
 
     if not success:
-        log.error("보고서 생성 실패")
-        sys.exit(1)
+        log.warning("신규 docx 생성 실패 — 이전 보고서 보존 확인 중...")
+        # ★ v3.1: 생성 실패 시 이전 보고서가 있으면 계속 진행 (크래시 금지)
+        reports_dir = DOCS_DIR.parent / 'docs' / 'reports'
+        if not reports_dir.exists():
+            reports_dir = DOCS_DIR / 'reports'
+        prev_files = sorted(reports_dir.glob('VN_Infra_MI_Weekly_Report_*.docx'),
+                            reverse=True)
+        if prev_files:
+            log.info(f"이전 보고서 유지: {prev_files[0].name} — 파이프라인 계속")
+        else:
+            log.warning("이전 보고서도 없음 — pptx만 발송 시도")
+        # sys.exit(1) 제거: docx 실패가 전체 파이프라인을 중단시키지 않음
 
     # ── Step 6: 이메일 발송 (선택) ──────────────────────────────────────
+    # ★ v3.1: 파일 존재 확인 후 발송 (없으면 이전 보고서 탐색)
     if send_mail:
-        send_email(output_path)
+        email_target = None
+        if output_path.exists():
+            email_target = output_path
+            log.info(f"이메일 첨부: {output_path.name}")
+        else:
+            # 이전 보고서 탐색 (docs/reports/ 폴더에서 최신 파일)
+            reports_dir = DOCS_DIR.parent / 'docs' / 'reports'
+            if not reports_dir.exists():
+                reports_dir = DOCS_DIR / 'reports'
+            prev_files = sorted(reports_dir.glob('VN_Infra_MI_Weekly_Report_*.docx'),
+                                reverse=True)
+            if prev_files:
+                email_target = prev_files[0]
+                log.info(f"신규 docx 없음 — 이전 보고서 첨부: {email_target.name}")
+            else:
+                log.warning("발송 가능한 보고서 없음 — 이메일 건너뜀")
+
+        if email_target and email_target.exists():
+            send_email(email_target)
 
     # ── 결과 요약 ───────────────────────────────────────────────────────
     log.info("")
