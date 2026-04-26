@@ -1,23 +1,18 @@
 """
-quality_context_agent.py — v3.0 (2026-04-26 수정)
+quality_context_agent.py — v3.1 (2026-04-26 수정)
 ====================================================
 SA-6: 품질검증 + 정책매핑 에이전트
 
-수정 내역 (v2.0 → v2.1):
-  1. [BUG FIX] 매칭 대상 필드 수정
-     - v2.0: title_ko(한국어)를 영어 키워드와 비교 → 항상 0건
-     - v2.1: title_en(영어) AND title_ko(한국어) 모두 검사
-  2. [BUG FIX] Excel 컬럼 읽기 헤더 기반으로 변경
-     - v2.0: 인덱스 기반 (row[7] 등) → 컬럼 순서 변경 시 오류
-     - v2.1: 헤더 이름 기반 → 순서 무관하게 안정적 동작
-  3. [BUG FIX] keywords_vi(베트남어) 키워드도 추가 검사
-     - 베트남어 기사가 섞인 경우 vi 키워드로도 매칭
-  4. [NEW] Matched_Plan 시트에 매칭 결과 직접 기록
-     - plan_id, ctx_grade, ctx_stage 컬럼 업데이트
-  5. [NEW] 매칭 통계 상세 로그 추가
+수정 내역 (v3.0 → v3.1):
+  [BUG FIX] run_matching() col() 함수 — title_en 후보 목록 보완
+    - v3.0: col(['title', 'news_title', 'title_en'])
+              → excel_updater.py v3.0의 헤더 'Title (En/Vi)' 미매칭
+    - v3.1: col(['title_(en/vi)', 'title', 'news_title', 'title_en']) 추가
+              → 'title_(en/vi)' 후보 추가로 v3.0 헤더 정상 매칭
 
-EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
-KI_PATH:    docs/shared/knowledge_index.json (우선)
+  변경된 코드: 1줄 (run_matching() 함수 내 C 딕셔너리 title_en 항목)
+
+  ※ 나머지 전체 코드는 GitHub 원본 v3.0과 완전 동일
 """
 
 import json
@@ -213,7 +208,8 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
 
     C = {
         'date':       col(['date']),
-        'title_en':   col(['title', 'news_title', 'title_en']),
+        # ★ v3.1 수정: 'title_(en/vi)' 후보 추가 (excel_updater v3.0 헤더 대응)
+        'title_en':   col(['title_(en/vi)', 'title', 'news_title', 'title_en']),
         'title_ko':   col(['tit_ko', 'title_ko']),
         'summary_en': col(['short_summary', 'summary_en', 'sum_en']),
         'summary_ko': col(['sum_ko', 'summary_ko']),
@@ -328,10 +324,10 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
     # 매칭된 기사 Matched_Plan 시트에 기록
     for row_num, pid, grade, score in matched_rows:
         orig_row = list(ws.iter_rows(min_row=row_num, max_row=row_num, values_only=True))[0]
-        date_v  = str(orig_row[C['date']] or '')[:10]
-        t_en    = str(orig_row[C['title_en']] or '')
-        t_ko    = str(orig_row[C['title_ko']] or '')
-        src     = str(orig_row[C['source']]   or '')
+        date_v  = str(orig_row[C['date']] if C['date'] >= 0 else '')[:10]
+        t_en    = str(orig_row[C['title_en']] if C['title_en'] >= 0 else '')
+        t_ko    = str(orig_row[C['title_ko']] if C['title_ko'] >= 0 else '')
+        src     = str(orig_row[C['source']]   if C['source']   >= 0 else '')
         ws_mp.append([pid, date_v, t_en, t_ko, grade, round(score, 1), src])
 
     wb.close()
@@ -365,8 +361,6 @@ def save_report(stats: dict):
     with open(out, 'w', encoding='utf-8') as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     log.info(f"quality_report.json 저장: {out}")
-
-
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -522,7 +516,7 @@ def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
     """
     [v3.0 핵심] 방법 A + 방법 B 통합 실행.
     기존 키워드 매핑 후 미매핑 기사를 Haiku로 보완.
-    
+
     영구 원칙:
       - 이 함수는 절대 제거하지 않음
       - 키워드 매핑과 상호 보완 관계 (대체 아님)
@@ -564,7 +558,7 @@ def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
     }
 
     cutoff = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
-    
+
     # 대상 기사 수집
     candidates_a = []  # 방법 A: 미매핑 기사
     candidates_b = []  # 방법 B: 요약 짧은 기사
@@ -655,12 +649,13 @@ def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
     log.info(f"  [방법 B] Jina 보강: {enriched}건 요약 갱신")
     return {'haiku_classified': classified, 'jina_enriched': enriched}
 
+
 # ══════════════════════════════════════════════════════════════════════════
 # 메인
 # ══════════════════════════════════════════════════════════════════════════
 def main():
     log.info("=" * 58)
-    log.info(f"quality_context_agent v3.0 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    log.info(f"quality_context_agent v3.1 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     log.info("=" * 58)
 
     plans       = load_ki()
@@ -677,7 +672,7 @@ def main():
     haiku_stats = run_haiku_enhancement(plans, api_key)
 
     log.info("━" * 58)
-    log.info(f"SA-6 v3.0 완료: {stats.get('matched', 0)}건 키워드매핑 / {stats.get('total', 0)}건 전체")
+    log.info(f"SA-6 v3.1 완료: {stats.get('matched', 0)}건 키워드매핑 / {stats.get('total', 0)}건 전체")
     log.info(f"  키워드 매핑률: {round(stats.get('matched',0)/max(stats.get('total',1),1)*100,1)}%")
     log.info(f"  Haiku 추가분류: {haiku_stats['haiku_classified']}건")
     log.info(f"  Jina 요약보강: {haiku_stats['jina_enriched']}건")
