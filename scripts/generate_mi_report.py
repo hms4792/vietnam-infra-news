@@ -209,6 +209,16 @@ def _default_knowledge_index() -> dict:
 # ══════════════════════════════════════════════════════════════════════════
 #  [STEP 2] Excel DB에서 최신 기사 추출 (Layer 2 입력)
 # ══════════════════════════════════════════════════════════════════════════
+def _sector_to_area(sector: str) -> str:
+    """src_type(섹터)에서 area를 계산 — build_dashboard와 동일 로직."""
+    ENV = {'Waste Water', 'Water Supply/Drainage', 'Solid Waste', 'Environment'}
+    ENG = {'Power', 'Oil & Gas'}
+    if sector in ENV: return 'Environment'
+    if sector in ENG: return 'Energy Develop.'
+    if sector: return 'Urban Develop.'
+    return 'Environment'
+
+
 def extract_weekly_articles(days_back: int = 7) -> list[dict]:
     """
     Excel DB → 최근 N일 기사 추출.
@@ -239,17 +249,17 @@ def extract_weekly_articles(days_back: int = 7) -> list[dict]:
 
     ci = {
         'date':       col_idx(['date']),
-        'sector':     col_idx(['business_sector', 'sector']),
-        'area':       col_idx(['area']),
+        'sector':     col_idx(['business_sector', 'sector', 'src_type']),   # src_type 별칭 추가
+        'area':       col_idx(['area']),                                      # area 없으면 None
         'province':   col_idx(['province']),
-        'title_ko':   col_idx(['title_ko']),
+        'title_ko':   col_idx(['title_ko', 'tit_ko']),                       # tit_ko 별칭 추가
         'title_en':   col_idx(['title_en', 'title_(en/vi)', 'title', 'news_title']),
-        'summary_ko': col_idx(['summary_ko']),
-        'summary_en': col_idx(['summary_en', 'short_summary']),
+        'summary_ko': col_idx(['summary_ko', 'sum_ko']),                     # sum_ko 별칭
+        'summary_en': col_idx(['summary_en', 'short_summary', 'sum_en']),    # sum_en 별칭
         'source':     col_idx(['source']),
         'url':        col_idx(['link', 'url']),
-        'ctx_grade':  col_idx(['ctx_grade']),
-        'ctx_plans':  col_idx(['ctx_plans']),
+        'ctx_grade':  col_idx(['ctx_grade', 'grade']),                       # grade 별칭
+        'ctx_plans':  col_idx(['ctx_plans', 'plan_id']),                     # plan_id 별칭
     }
 
     cutoff   = (datetime.now() - timedelta(days=days_back)).strftime('%Y-%m-%d')
@@ -268,7 +278,8 @@ def extract_weekly_articles(days_back: int = 7) -> list[dict]:
         articles.append({
             'date':       date_val,
             'sector':     str(row[ci['sector']]    if ci['sector']    is not None else ''),
-            'area':       str(row[ci['area']]      if ci['area']      is not None else ''),
+            'area':       (str(row[ci['area']] if ci['area'] is not None else '')
+                           or _sector_to_area(str(row[ci['sector']] if ci['sector'] is not None else ''))),
             'province':   str(row[ci['province']]  if ci['province']  is not None else ''),
             'title_ko':   title_ko,
             'title_en':   str(row[ci['title_en']]  if ci['title_en']  is not None else ''),
@@ -834,7 +845,7 @@ def main():
     daily_only = '--daily-only' in sys.argv   # SA-7 결과 JSON만 저장, docx 미생성
     days_back  = 7
 
-    api_key = os.getenv('ANTHROPIC_API_KEY', '').strip()
+    api_key = os.getenv('ANTHROPIC_API_KEY', '')
     if not api_key and not dry_run:
         log.warning("ANTHROPIC_API_KEY 없음 — AI 분석 건너뜀 (dry-run 모드로 전환)")
         dry_run = True
