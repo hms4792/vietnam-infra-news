@@ -60,7 +60,7 @@ def _clean(val) -> str:
 def load_articles(excel_path: str) -> list:
     """
     News Database 시트 로드.
-    v7.2: plan_id(row[7]), grade(row[8]) 추가
+    v7.3: src_type 섹터 매핑 수정 + plan_id(row[7]), grade(row[8]) 추가
     """
     from openpyxl import load_workbook
     wb = load_workbook(excel_path, read_only=True, data_only=True)
@@ -76,7 +76,17 @@ def load_articles(excel_path: str) -> list:
         date_val = _clean(row[1] if len(row) > 1 else None)
         plan_id  = _clean(row[7] if len(row) > 7 else None)   # H열 Plan_ID
         grade    = _clean(row[8] if len(row) > 8 else None)   # I열 Grade
-        sector   = _plan_to_sector(plan_id) if plan_id else 'Environment'
+        src_type = _clean(row[5] if len(row) > 5 else None)  # F열 Src_Type(실제 섹터)
+        if plan_id:
+            sector = _plan_to_sector(plan_id)  # plan_id 있으면 plan 기반 섹터
+        elif src_type and src_type in {
+            'Waste Water', 'Water Supply/Drainage', 'Solid Waste',
+            'Power', 'Oil & Gas', 'Transport', 'Industrial Parks',
+            'Smart City', 'Construction', 'Environment',
+        }:
+            sector = src_type  # src_type이 유효한 섹터면 직접 사용
+        else:
+            sector = 'Environment'  # 최후 기본값
 
         if plan_id:
             matched_count += 1
