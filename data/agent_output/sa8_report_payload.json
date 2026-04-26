@@ -1,5 +1,5 @@
 {
-  "report_date": "2026-04-25",
+  "report_date": "2026-04-26",
   "report_week": "2026-W17",
   "total_articles": 0,
   "plan_count": 21,
@@ -282,9 +282,17 @@
       "analysis_is_new": false,
       "kpi_changes": [],
       "has_kpi_change": false,
-      "current_stage": "UNKNOWN",
-      "stage_history": [],
-      "next_watch": ""
+      "current_stage": "PLANNING",
+      "stage_history": [
+        {
+          "date": "2026-04-21",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "VnExpress English - News",
+          "title_ko": "리조트 해안으로 가는 $ 1.67 B 고속도로를 이용할 수 있는 베트남 롱탄 공항"
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인"
     },
     {
       "plan_id": "VN-MEKONG-DELTA-2030",
@@ -322,9 +330,17 @@
       "analysis_is_new": false,
       "kpi_changes": [],
       "has_kpi_change": false,
-      "current_stage": "UNKNOWN",
-      "stage_history": [],
-      "next_watch": ""
+      "current_stage": "CONSTRUCTION",
+      "stage_history": [
+        {
+          "date": "2026-04-21",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "SGGP News English",
+          "title_ko": "하노이와 호치민시, 30개의 도시 철도 노선 건설"
+        }
+      ],
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부"
     },
     {
       "plan_id": "VN-SC-2030",
