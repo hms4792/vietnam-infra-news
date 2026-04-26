@@ -6,6 +6,9 @@
 # 역할: 7일치 수집 + SA-6 품질검증 + SA-7 맥락분석 +
 #        SA-8 MI 보고서(docx) + SA-8 PPT + 이메일 발송
 #
+# v6.4 수정사항 (2026-04-26):
+#   - Step 14/15 순서 교체: 보고서 이동 → MI Dashboard 빌드 순서로 수정
+#     (이전: 빌드 후 이동 → 스캔 항상 0개 / 수정: 이동 후 빌드 → 정상 스캔)
 # v6.3 수정사항 (2026-04-26):
 #   - git push 충돌 수정: git pull --rebase origin main 추가
 #   - SA-7 context_analyzer.py 스텝 추가 (누락 복구)
@@ -20,7 +23,7 @@
 #   - Anthropic API: 번역 금지, SA-7/SA-8 분석에만 사용
 # ============================================================
 
-name: Weekly Collection v6.3
+name: Weekly Collection v6.4
 
 on:
   schedule:
@@ -172,17 +175,9 @@ jobs:
           fi
         continue-on-error: true
 
-      # ── Step 14: MI Dashboard 데이터 빌드 ───────────────────────
-      - name: MI Dashboard 데이터 빌드
-        run: |
-          if [ -f scripts/build_mi_dashboard_data.py ]; then
-            python3 scripts/build_mi_dashboard_data.py
-          else
-            echo "build_mi_dashboard_data.py 없음 — 건너뜀"
-          fi
-        continue-on-error: true
-
-      # ── Step 15: 보고서 파일 docs/reports/ 이동 ─────────────────
+      # ── Step 14: 보고서 파일 docs/reports/ 이동 ─────────────────
+      # ★ v6.4: Step 15(이동) → Step 14로 앞당김
+      #   (MI Dashboard 빌드가 파일 이동 후 스캔해야 0개 방지)
       - name: Move reports to docs/reports/
         run: |
           mkdir -p docs/reports
@@ -193,6 +188,8 @@ jobs:
           if [ -n "$DOCX" ]; then
             mv "$DOCX" docs/reports/ 2>/dev/null || true
             echo "docx 이동: $DOCX"
+          else
+            echo "신규 docx 없음 — 이전 파일 유지"
           fi
           PPTX=$(ls docs/VN_Infra_MI_Weekly_Report_*.pptx 2>/dev/null | tail -1)
           if [ -z "$PPTX" ]; then
@@ -201,6 +198,21 @@ jobs:
           if [ -n "$PPTX" ]; then
             mv "$PPTX" docs/reports/ 2>/dev/null || true
             echo "pptx 이동: $PPTX"
+          else
+            echo "신규 pptx 없음 — 이전 파일 유지"
+          fi
+          echo "현재 docs/reports/ 보고서 목록:"
+          ls docs/reports/VN_Infra_MI_Weekly_Report_*.* 2>/dev/null || echo "  (없음)"
+        continue-on-error: true
+
+      # ── Step 15: MI Dashboard 데이터 빌드 ───────────────────────
+      # ★ v6.4: 파일 이동(Step 14) 후 실행해야 보고서 스캔이 정상 동작
+      - name: MI Dashboard 데이터 빌드
+        run: |
+          if [ -f scripts/build_mi_dashboard_data.py ]; then
+            python3 scripts/build_mi_dashboard_data.py
+          else
+            echo "build_mi_dashboard_data.py 없음 — 건너뜀"
           fi
         continue-on-error: true
 
