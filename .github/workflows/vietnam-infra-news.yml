@@ -6,7 +6,7 @@
 # 역할: 7일치 수집 + SA-6 품질검증 + SA-7 맥락분석 +
 #        SA-8 MI 보고서(docx) + SA-8 PPT + 이메일 발송
 #
-# v6.2 수정사항 (2026-04-26):
+# v6.3 수정사항 (2026-04-26):
 #   - git push 충돌 수정: git pull --rebase origin main 추가
 #   - SA-7 context_analyzer.py 스텝 추가 (누락 복구)
 #   - Node.js 패키지: cd scripts && npm install (로컬 설치)
@@ -20,7 +20,7 @@
 #   - Anthropic API: 번역 금지, SA-7/SA-8 분석에만 사용
 # ============================================================
 
-name: Weekly Collection v6.2
+name: Weekly Collection v6.3
 
 on:
   schedule:
@@ -98,16 +98,6 @@ jobs:
           EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
         run: |
           python3 scripts/main.py --hours ${{ github.event.inputs.hours_back || '168' }}
-
-      # ── Step 7: SA-5 전문미디어 크롤러 ─────────────────────────
-      - name: SA-5 Specialist crawler (theinvestor / vir.com.vn)
-        run: |
-          if [ -f scripts/specialist_crawler.py ]; then
-            python3 scripts/specialist_crawler.py
-          else
-            echo "specialist_crawler.py 없음 — 건너뜀"
-          fi
-        continue-on-error: true
 
       # ── Step 8: SA-6 품질검증 + 정책매핑 ───────────────────────
       - name: SA-6 Quality Context Agent (정책 매핑)
