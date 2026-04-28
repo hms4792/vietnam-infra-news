@@ -85,10 +85,10 @@ def main(hours_back: int = 24):
         sys.exit(1)
 
     try:
+        # ExcelUpdater.update_all() 은 통계 dict를 반환하지 않고, 엑셀 시트만 갱신합니다.
         updater = ExcelUpdater(EXCEL_PATH)   # ExcelManager 아님
-        stats   = updater.update_all(articles)  # update() 아님
-        for k, v in stats.items():
-            logger.info(f'  [{k}] {v}')
+        updater.update_all(articles)         # update() 아님, 반환값 사용 안 함
+        logger.info('  Excel 업데이트 완료')
     except Exception as e:
         logger.error(f'Step 3 실패: {e}')
         sys.exit(1)
