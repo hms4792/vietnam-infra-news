@@ -27,7 +27,7 @@ name: Weekly Collection v6.4
 
 on:
   schedule:
-    - cron: '0 13 * * 6'    # 매주 토요일 KST 22:00 (UTC 13:00)
+    - cron: '0 1 * * 6'    # 매주 토요일 KST 10:00 (UTC 01:00)
   workflow_dispatch:
     inputs:
       hours_back:
