@@ -2,7 +2,7 @@
 # collect_weekly.yml — 주간 수집 파이프라인
 # .github/workflows/collect_weekly.yml
 #
-# 스케줄: 매주 토요일 KST 22:00 (UTC 13:00)
+# 스케줄: 매주 토요일 KST 10:00 (UTC 01:00)
 # 역할: 7일치 수집 + SA-6 품질검증 + SA-7 맥락분석 +
 #        SA-8 MI 보고서(docx) + SA-8 PPT + 이메일 발송
 #
