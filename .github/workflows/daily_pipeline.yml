@@ -34,7 +34,7 @@ name: Daily Vietnam Infra News Pipeline v7.5
 
 on:
   schedule:
-    - cron: '0 11 * * *'    # 매일 UTC 11:00 = KST 20:00
+    - cron: '0 11 * * 1-5'    # 매일 UTC 11:00 = KST 20:00
   workflow_dispatch:
     inputs:
       hours_back:
