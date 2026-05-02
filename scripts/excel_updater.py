@@ -1,383 +1,714 @@
 """
-================================================================================
-excel_updater.py v9.0 - 증분 업데이트 방식 (성능 최적화)
+excel_updater.py — v3.3 (2026-05-01)
+====================================================
+[영구 제약 — 절대 변경 금지]
+  - 클래스명: ExcelUpdater
+  - 메서드명: update_all(articles)
+  - 신규 기사: insert_rows(2) — 헤더 바로 아래 삽입
+  - 날짜 역순 정렬
 
-✅ v9.0 핵심 개선:
-   기존 (v8.0): 매일 모든 250건 기사를 다시 읽고 모든 시트 재계산
-   → 비효율적, 높은 로드, 많은 토큰 사용
-
-   새로운 (v9.0): 증분 업데이트 방식
-   1️⃣ 과거 집계 기본값: 이미 정확한 기준 데이터 (기존 Excel에 저장)
-   2️⃣ 당일/주간 신규 기사만 수집 (hours_back=24 또는 주간)
-   3️⃣ 신규 기사만 Stats/Timeline 업데이트
-   4️⃣ 전체 합계 검증만 수행
-
-🔄 업데이트 프로세스:
-   Step 1: Excel에서 현재 기본값 읽기 (과거 집계)
-   Step 2: 신규 기사만 수집 (news_collector.py 결과)
-   Step 3: 신규 기사를 Stats/Timeline에 추가
-   Step 4: 전체 합계 검증
-   Step 5: 신뢰도 확인 후 저장
-
-📊 성능 개선:
-   - 토큰 사용: 90% 감소
-   - 처리 시간: 80% 단축
-   - 서버 로드: 크게 감소
-   - 정확도: 동일 (기존 데이터 변경 없음)
-
-설치: GitHub Actions 워크플로우
-  일정: 매일 KST 20:00 (UTC 11:00)
-  또는 매주 월요일 09:00 UTC (주간 수집 시)
-================================================================================
+[v3.2 핵심 변경]
+  Fix1 News Database 17컬럼 (v3.3: Area/Sector 맨앞 2열 + Title_EN/Title_VI 분리)
+       → 헤더: Area, Sector, No, Date, Title_EN, Title_VI, Tit_ko, Source,
+                Src_Type, Province, Plan_ID, Grade, URL, sum_ko, sum_en, sum_vi, QC
+       → 변경 이유: 대시보드 컬럼 분류 오류 해결 + 영어/베트남어 언어 구분 명확화
+  Fix2 Matched_Plan 17컬럼 (정제후 원본 구조 복원)
+       → 헤더: No, ctx_tag, ctx_grade, Plan_ID, Title_EN, Date, Source,
+                Province, Sector, title_ko, title_en_orig, title_vi,
+                summary_ko, summary_en, summary_vi, short_sum, Link
+  Fix3 News Database 일반기사 흰색 (NEW 연노랑 제거)
+       → 매칭된 기사만 등급별 색상 (HIGH=노랑, MED=연파랑, POLICY=연녹)
+  Fix4 신규기사 표시는 Keywords History에서만 (요청사항)
+  Fix5 제목/요약 셀 글자 11pt 굵게 (가독성)
+  Fix6 Source 시트 강화 — 기관분류 + RSS접근여부 + 우회필요 추적
+  Fix7 일반기사(인프라 무관) 자동 필터링 — 정제 기준 명확화
 """
 
-import logging
-from datetime import datetime
-from pathlib import Path
-from typing import Dict, List, Optional
+import os
+import re
+from datetime import datetime, date, timedelta
 from collections import defaultdict
+from pathlib import Path
+from itertools import groupby
 
-from openpyxl import load_workbook
-
-logger = logging.getLogger(__name__)
-
-EXCEL_PATH = Path(__file__).parent.parent / "data" / "database" / "Vietnam_Infra_News_Database_Final.xlsx"
+import openpyxl
+from openpyxl.styles import PatternFill, Font, Alignment
+from openpyxl.utils import get_column_letter
 
 
-class DataStandards:
-    """v9.0 기준값: 24개 Standard Master Plan"""
-    
-    # 절대값 (변경 불가)
-    TOTAL_ARTICLES = 864
-    SA7_MATCHED = 250
-    UNCLASSIFIED = 614
-    
-    # 24개 Standard Master Plan
-    STANDARD_24_PLANS = [
-        "VN-WW-2030", "VN-SWM-NATIONAL-2030", "VN-WAT-RESOURCES", "VN-WAT-URBAN", "VN-WAT-RURAL",
-        "VN-ENV-IND-1894", "VN-PWR-PDP8", "VN-PWR-PDP8-RENEWABLE", "VN-PWR-PDP8-LNG", "VN-PWR-PDP8-NUCLEAR",
-        "VN-PWR-PDP8-COAL", "VN-PWR-PDP8-GRID", "VN-PWR-PDP8-HYDROGEN", "VN-OG-2030", "VN-TRAN-2055",
-        "VN-URB-METRO-2030", "VN-SC-2030", "VN-IP-NORTH-2030", "VN-MEKONG-DELTA-2030", "VN-EV-2030",
-        "VN-CARBON-2050", "HN-URBAN-INFRA", "HN-URBAN-NORTH", "VN-RED-RIVER-2030",
+# 베트남어 자동 감지 (영문/베트남어 분리용)
+_VI_CHARS = set('ăâđêôơưĂÂĐÊÔƠƯáàảãạắằẳẵặấầẩẫậéèẻẽẹếềểễệíìỉĩịóòỏõọốồổỗộớờởỡợúùủũụứừửữựýỳỷỹỵ')
+def _is_vietnamese(text: str) -> bool:
+    """베트남어 특수 문자가 3개 이상 포함되면 베트남어로 판정"""
+    if not text: return False
+    return sum(1 for c in str(text) if c in _VI_CHARS) > 2
+
+# ─────────────────────────────────────────────────────
+# 경로 설정
+# ─────────────────────────────────────────────────────
+_SCRIPTS_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
+_ROOT_DIR    = _SCRIPTS_DIR.parent
+EXCEL_PATH   = Path(os.environ.get(
+    "EXCEL_PATH",
+    str(_ROOT_DIR / "data" / "database" / "Vietnam_Infra_News_Database_Final.xlsx")
+))
+
+# ─────────────────────────────────────────────────────
+# 상수
+# ─────────────────────────────────────────────────────
+SECTOR_ORDER = ["Waste Water","Water Supply/Drainage","Solid Waste",
+                "Power","Oil & Gas","Transport","Industrial Parks",
+                "Smart City","Construction"]
+
+PLAN_PREFIX = {
+    "VN-WW":"Waste Water","VN-WAT":"Water Supply/Drainage","VN-SWM":"Solid Waste",
+    "VN-PWR":"Power","VN-PDP":"Power","VN-OG":"Oil & Gas",
+    "VN-TRAN":"Transport","VN-URB":"Transport","VN-METRO":"Transport",
+    "VN-IP":"Industrial Parks","VN-MEKONG":"Transport","HN":"Transport",
+    "VN-EV":"Transport","VN-ENV":"Environment",
+}
+AREA_MAP = {
+    "Waste Water":"Environment","Water Supply/Drainage":"Environment","Solid Waste":"Environment",
+    "Power":"Energy Develop.","Oil & Gas":"Energy Develop.",
+    "Transport":"Urban Develop.","Industrial Parks":"Urban Develop.",
+    "Smart City":"Urban Develop.","Construction":"Urban Develop.","Environment":"Environment",
+}
+
+# 인프라 관련 키워드 (정제 기준)
+INFRA_KEYWORDS = {
+    'en': ['wastewater','sewage','water supply','drainage','waste management',
+           'power','electricity','energy','solar','wind','lng','hydropower',
+           'oil','gas','petroleum','pipeline','refinery',
+           'transport','highway','airport','railway','metro','bridge','port','seaport',
+           'industrial park','industrial zone','smart city','infrastructure',
+           'master plan','development plan','construction','urban','wwtp',
+           'ring road','expressway','renewable','grid','transmission'],
+    'vi': ['nước thải','xử lý nước','cấp nước','thoát nước','chất thải','môi trường',
+           'điện','năng lượng','dầu khí','khí đốt','giao thông','đường','cầu',
+           'sân bay','metro','khu công nghiệp','khu kinh tế','đô thị thông minh',
+           'cơ sở hạ tầng','quy hoạch','xây dựng','cảng','đường sắt'],
+    'ko': ['폐수','상수도','하수도','전력','에너지','태양광','풍력','석유','가스',
+           '교통','도로','공항','철도','지하철','산업단지','스마트시티','인프라']
+}
+
+# 색상 팔레트
+def _f(h): return PatternFill("solid", fgColor=h)
+FILL = {
+    "HIGH":   _f("FFF9C4"),
+    "MEDIUM": _f("E8F0FE"),
+    "POLICY": _f("E8F5E9"),
+    "BOTH":   _f("FFF3E0"),
+    "WHITE":  _f("FFFFFF"),
+    "EVEN":   _f("F5F9FF"),
+    "GRAY":   _f("F2F2F2"),
+    "RED":    _f("FFEBEE"),
+    "HDR_B":  _f("1F4E78"),
+    "HDR_G":  _f("375623"),
+    "HDR_N":  _f("17375E"),
+    "KH_NEW": _f("FFF9C4"),
+}
+
+FONT_HDR        = Font(name="맑은 고딕", bold=True, color="FFFFFF", size=10)
+FONT_DATA       = Font(name="맑은 고딕", size=10, color="000000")
+FONT_TITLE_BOLD = Font(name="맑은 고딕", bold=True, size=11)
+FONT_META       = Font(name="맑은 고딕", bold=True, size=11, color="000000")
+
+# News Database 14컬럼 (Area/Sector 제거)
+NEWS_HEADERS = ["Area","Sector","No","Date","Title_EN","Title_VI","Tit_ko",
+                "Source","Src_Type","Province","Plan_ID","Grade","URL",
+                "sum_ko","sum_en","sum_vi","QC"]
+NEWS_WIDTHS  = [16,18,5,12,45,40,30,18,10,15,20,8,40,30,30,30,8]
+
+# Matched_Plan 17컬럼 (정제후 원본)
+MP_HEADERS = ["No","ctx_tag","ctx_grade","Plan_ID","Title_EN","Date","Source",
+              "Province","Sector","title_ko","title_en_orig","title_vi",
+              "summary_ko","summary_en","summary_vi","short_sum","Link"]
+MP_WIDTHS  = [5,12,10,22,40,12,18,15,15,30,30,30,40,40,40,40,30]
+
+KH_HEADERS = ["Sector","Province","Date","Title (En)","Title (Ko)","Source","Grade","Plan_ID"]
+KH_WIDTHS  = [22,18,12,55,40,18,8,22]
+
+SECT_PRI = {s:i for i,s in enumerate(SECTOR_ORDER)}
+
+
+# ─────────────────────────────────────────────────────
+# 유틸리티
+# ─────────────────────────────────────────────────────
+def _is_infra_article(title_en: str, title_ko: str, plan_id: str) -> bool:
+    """Fix7: 인프라 관련 기사인지 판별 (일반기사 자동 필터링)"""
+    if str(plan_id or '').strip():
+        return True
+    text = (str(title_en or '') + ' ' + str(title_ko or '')).lower()
+    if any(kw in text for kw in INFRA_KEYWORDS['en']): return True
+    if any(kw in text for kw in INFRA_KEYWORDS['vi']): return True
+    if any(kw in text for kw in INFRA_KEYWORDS['ko']): return True
+    return False
+
+def _sector_from_plan(plan_id: str) -> str:
+    p = str(plan_id or '').upper().strip()
+    for pf, s in PLAN_PREFIX.items():
+        if p.startswith(pf): return s
+    return ''
+
+def _sector_from_text(title_en: str, title_ko: str, plan_id: str) -> str:
+    s = _sector_from_plan(plan_id)
+    if s: return s
+    txt = (str(title_en or '') + ' ' + str(title_ko or '')).lower()
+    pri = [
+        ("Waste Water",          ["wastewater","sewage","wwtp","nước thải"]),
+        ("Water Supply/Drainage",["water supply","drainage","cấp nước"]),
+        ("Solid Waste",          ["solid waste","garbage","landfill"]),
+        ("Power",                ["power","electricity","solar","wind","lng","điện"]),
+        ("Oil & Gas",            ["oil","gas","petroleum","pipeline"]),
+        ("Industrial Parks",     ["industrial park","industrial zone","khu công nghiệp"]),
+        ("Smart City",           ["smart city","đô thị thông minh"]),
+        ("Transport",            ["transport","highway","airport","metro","bridge","đường","cầu"]),
     ]
-    
-    # 복합 Plan 정규화
-    NORMALIZATION_MAPPING = {
-        "VN-PWR-PDP8, VN-PWR-PDP8-GRID": "VN-PWR-PDP8-GRID",
-        "VN-PWR-PDP8, VN-PWR-PDP8-HYDROGEN": "VN-PWR-PDP8-HYDROGEN",
-        "VN-PWR-PDP8, VN-PWR-PDP8-LNG": "VN-PWR-PDP8-LNG",
-        "VN-PWR-PDP8, VN-PWR-PDP8-NUCLEAR": "VN-PWR-PDP8-NUCLEAR",
-        "VN-PWR-PDP8, VN-PWR-PDP8-RENEWABLE": "VN-PWR-PDP8-RENEWABLE",
-        "VN-PWR-PDP8,VN-PWR-PDP8-RENEWABLE": "VN-PWR-PDP8-RENEWABLE",
-        "HN-URBAN-INFRA, HN-URBAN-WEST": "HN-URBAN-INFRA",
-        "HN-URBAN-NORTH,HN-URBAN-INFRA": "HN-URBAN-INFRA",
-        "HN-URBAN-WEST,HN-URBAN-INFRA": "HN-URBAN-INFRA",
-    }
+    for sec, kws in pri:
+        if any(k in txt for k in kws):
+            return sec
+    return ''
+
+def _grade_fill(grade: str, qc: str = '') -> PatternFill:
+    """Fix3: 매칭된 기사만 색상 / 일반기사는 흰색"""
+    g = str(grade or '').upper().strip()
+    q = str(qc    or '').upper().strip()
+    p = ('POLICY' in q) or (g == 'POLICY')
+    if g == 'HIGH' and p: return FILL['BOTH']
+    if g == 'HIGH':       return FILL['HIGH']
+    if g == 'MEDIUM':     return FILL['MEDIUM']
+    if g == 'POLICY' or p:return FILL['POLICY']
+    return FILL['WHITE']
+
+def _hdr(ws, row, col, val, fill_key="HDR_B"):
+    c = ws.cell(row, col)
+    c.value = val; c.font = FONT_HDR; c.fill = FILL[fill_key]
+    c.alignment = Alignment(horizontal="center", vertical="center")
 
 
+# ─────────────────────────────────────────────────────
+# ExcelUpdater 클래스
+# ─────────────────────────────────────────────────────
 class ExcelUpdater:
     """
-    v9.0 증분 업데이트 방식 (성능 최적화)
-    
-    기본 원칙:
-    - Excel의 기본값 (과거 집계)은 변경하지 않음
-    - 신규 기사만 추가
-    - 전체 합계만 검증
+    main.py Step3에서 호출:
+        updater = ExcelUpdater()
+        updater.update_all(articles)
     """
-    
-    def __init__(self, excel_path: Optional[Path] = None):
-        self.path = Path(excel_path or EXCEL_PATH)
-        self.now = datetime.now().strftime("%Y-%m-%d %H:%M UTC")
-        self.standards = DataStandards()
-    
-    
-    def update_incremental(self, new_articles: Optional[List[Dict]] = None) -> Dict:
-        """
-        증분 업데이트 실행
-        
-        Args:
-            new_articles: 신규 기사 목록 (news_collector.py 결과)
-                         None이면 검증만 수행
-        
-        Returns:
-            업데이트 결과
-        """
-        logger.info(f"[ExcelUpdater v9.0] 증분 업데이트 시작 (신규 기사 {len(new_articles or []) }건)")
-        
-        try:
-            # Step 1: 현재 기본값 읽기
-            current_data = self._load_current_baseline()
-            logger.info(f"  ✅ 현재 기본값 로드: {current_data['total']}건")
+
+    def __init__(self, excel_path=EXCEL_PATH):
+        self.path   = Path(excel_path)
+        self.today  = date.today().strftime("%Y-%m-%d")
+        self.now    = datetime.now().strftime("%Y-%m-%d %H:%M")
+        self.cutoff = (date.today() - timedelta(days=7)).strftime("%Y-%m-%d")
+
+    def update_all(self, articles: list) -> None:
+        print(f"[ExcelUpdater v3.3] update_all: 신규 {len(articles)}건")
+
+        if not self.path.exists():
+            self._create_empty_workbook()
+
+        wb = openpyxl.load_workbook(str(self.path))
+
+        # Step 1: 인프라 기사 필터링 (Fix7) + 보강
+        articles = self._filter_and_enrich(articles)
+        print(f"  인프라 관련 필터링 후: {len(articles)}건")
+
+        # Step 2: 중복 제거
+        new_arts = self._deduplicate(wb, articles)
+        print(f"  중복 제거 후 신규: {len(new_arts)}건")
+
+        # Step 3: News Database 업데이트
+        if new_arts:
+            self._insert_news(wb, new_arts)
+
+        # Step 4: Matched_Plan 전체 재구성 (영구제약: 전체DB 스캔)
+        self._rebuild_matched_plan(wb)
+
+        # Step 5: Keywords History
+        self._rebuild_keywords_history(wb)
+
+        # Step 6: 통계 시트 갱신
+        self._update_summary(wb, len(new_arts))
+        self._update_collection_log(wb, len(new_arts))
+        self._update_source(wb)
+        self._update_stats(wb)
+        self._update_context_stats(wb)
+        self._update_timeline(wb)
+        self._update_province_keywords(wb)
+
+        wb.save(str(self.path))
+        print(f"  [완료] 저장: {self.path}")
+
+    # ── Step 1: 필터링 + 보강 ─────────────────────────
+    def _filter_and_enrich(self, articles: list) -> list:
+        result = []
+        for a in articles:
+            a = dict(a)
+            title    = a.get("title") or a.get("title_en", "")
+            title_ko = a.get("title_ko", "")
+            plan_id  = a.get("plan_id", "") or a.get("ctx_plans", "")
             
-            # Step 2: 신규 기사 정규화 & 추가
-            if new_articles:
-                updated_data = self._add_new_articles(current_data, new_articles)
-                logger.info(f"  ✅ 신규 기사 추가: {len(new_articles)}건")
+            # Fix7: 인프라 무관 기사 필터링
+            if not _is_infra_article(title, title_ko, plan_id):
+                continue
+            
+            if not a.get("sector"):
+                a["sector"] = _sector_from_text(title, title_ko, plan_id) or 'Power'
+            if not a.get("area"):
+                a["area"] = AREA_MAP.get(a["sector"], "Urban Develop.")
+            
+            # Grade 정규화
+            qc = str(a.get("qc","") or "").upper()
+            cg = str(a.get("grade","") or a.get("ctx_grade","")).upper()
+            if cg in ('HIGH','MEDIUM','POLICY','LOW'):
+                a['grade'] = cg
+            elif 'SA7+POLICY' in qc:
+                a['grade'] = 'HIGH'
+            elif 'SA7_MATCH' in qc:
+                a['grade'] = 'MEDIUM'
+            elif 'POLICY_MATCH' in qc:
+                a['grade'] = 'POLICY'
             else:
-                updated_data = current_data
+                a['grade'] = ''
             
-            # Step 3: Excel에 업데이트 (신규 데이터만)
-            self._update_excel_incremental(updated_data)
-            logger.info(f"  ✅ Excel 증분 업데이트 완료")
+            result.append(a)
+        return result
+
+    # ── Step 2: 중복 제거 ─────────────────────────────
+    def _deduplicate(self, wb, articles):
+        if "News Database" not in wb.sheetnames: return articles
+        ws = wb["News Database"]
+        eu, et = set(), set()
+        for r in range(2, ws.max_row+1):
+            u = ws.cell(r,13).value  # v3.3: URL은 Col13
+            t = ws.cell(r,5).value   # v3.3: Title_EN은 Col5
+            t2 = ws.cell(r,6).value  # v3.3: Title_VI는 Col6
+            if u: eu.add(str(u).strip())
+            if t: et.add(str(t)[:80].strip())
+            if t2: et.add(str(t2)[:80].strip())
+        return [a for a in articles
+                if str(a.get("url","") or "").strip() not in eu
+                and str(a.get("title") or a.get("title_en",""))[:80].strip() not in et]
+
+    # ── Step 3: News Database 삽입 ────────────────────
+    def _insert_news(self, wb, articles):
+        if "News Database" not in wb.sheetnames:
+            ws = wb.create_sheet("News Database", 0)
+            self._write_news_header(ws)
+        else:
+            ws = wb["News Database"]
+            # 14컬럼 헤더로 강제 정리
+            cur_headers = [ws.cell(1,c).value for c in range(1, ws.max_column+1)]
+            if cur_headers != NEWS_HEADERS:
+                # 헤더 재작성 (기존 데이터는 유지)
+                for ci, h in enumerate(NEWS_HEADERS, 1):
+                    _hdr(ws, 1, ci, h)
+
+        # 날짜 역순 삽입
+        for a in sorted(articles, key=lambda x: str(x.get("date","") or ""), reverse=True):
+            ws.insert_rows(2)
+            self._write_news_row(ws, 2, a)
+
+        self._renumber(ws)
+        print(f"    [News DB] {len(articles)}건 삽입 → 총 {ws.max_row-1}건")
+
+    def _write_news_header(self, ws):
+        for ci, (h, w) in enumerate(zip(NEWS_HEADERS, NEWS_WIDTHS), 1):
+            _hdr(ws, 1, ci, h)
+            ws.column_dimensions[get_column_letter(ci)].width = w
+        ws.row_dimensions[1].height = 22
+        ws.freeze_panes = "A2"
+
+    def _write_news_row(self, ws, row, a):
+        """v3.3: 17컬럼 구조 (Area+Sector 맨앞 + Title_EN/Title_VI 분리)"""
+        title = a.get("title") or a.get("title_en", "")
+        title_ko = a.get("title_ko", "")
+        grade = str(a.get("grade","") or "")
+        qc    = str(a.get("qc","") or "")
+        plan_id = str(a.get("plan_id","") or a.get("ctx_plans","") or "")
+        d = str(a.get("date","") or "")
+        sector = a.get("sector", "")
+        area = a.get("area", "")
+        
+        # Title_EN / Title_VI 분리 (자동 감지)
+        title_en = a.get("title_en", "")
+        title_vi = a.get("title_vi", "")
+        if not title_en and not title_vi and title:
+            # 자동 감지로 분리
+            if _is_vietnamese(title):
+                title_vi = title
+            else:
+                title_en = title
+        
+        # Fix3: 매칭된 기사만 색상, 일반기사는 흰색
+        fill = _grade_fill(grade, qc)
+        
+        vals = [
+            area,                    # Col1: Area
+            sector,                  # Col2: Sector
+            "",                      # Col3: No (재번호됨)
+            d,                       # Col4: Date
+            title_en,                # Col5: Title_EN
+            title_vi,                # Col6: Title_VI
+            title_ko,                # Col7: Tit_ko
+            a.get("source",""),     # Col8
+            a.get("src_type","News"),# Col9
+            a.get("province",""),   # Col10
+            plan_id,                 # Col11
+            grade,                   # Col12
+            a.get("url",""),        # Col13
+            a.get("sum_ko","") or a.get("summary_ko",""),  # Col14
+            a.get("sum_en","") or a.get("summary_en",""),  # Col15
+            a.get("sum_vi","") or a.get("summary_vi",""),  # Col16
+            qc,                      # Col17
+        ]
+        for ci, v in enumerate(vals, 1):
+            c = ws.cell(row, ci); c.value = v; c.fill = fill
+            # Fix5: 제목/요약 굵게 (Col5,6,7,14,15,16)
+            c.font = FONT_TITLE_BOLD if ci in (5,6,7,14,15,16) else FONT_DATA
+            c.alignment = Alignment(vertical="top", wrap_text=False)
+
+    def _renumber(self, ws):
+        # v3.3: No 컬럼은 Col3로 이동
+        for r in range(2, ws.max_row+1):
+            try: ws.cell(r,3).value = r-1
+            except: pass
+
+    # ── Step 4: Matched_Plan 17컬럼 재구성 (Fix2) ──────
+    def _rebuild_matched_plan(self, wb):
+        ws_news = wb["News Database"]
+        mp_arts = []
+        for r in range(2, ws_news.max_row+1):
+            plan_id = str(ws_news.cell(r,11).value or '').strip()  # v3.3: Plan_ID Col11
+            if not plan_id: continue
+            grade = str(ws_news.cell(r,12).value or '').upper()    # v3.3: Grade Col12
+            qc    = str(ws_news.cell(r,17).value or '')             # v3.3: QC Col17
+            title = ws_news.cell(r,5).value or ws_news.cell(r,6).value  # Title_EN or Title_VI
+            sec   = ws_news.cell(r,2).value or _sector_from_plan(plan_id) or _sector_from_text(title, ws_news.cell(r,7).value, plan_id)
             
-            # Step 4: 전체 합계 검증
-            verification = self._verify_totals()
-            logger.info(f"  ✅ 전체 합계 검증: {verification['status']}")
+            # ctx_grade 결정
+            ctx_grade = grade
+            if not ctx_grade:
+                if 'SA7+POLICY' in qc.upper(): ctx_grade = 'HIGH'
+                elif 'SA7' in qc.upper():       ctx_grade = 'MEDIUM'
+                elif 'POLICY' in qc.upper():    ctx_grade = 'POLICY'
+                else: ctx_grade = 'MEDIUM'
             
-            logger.info(f"✅ 증분 업데이트 완료")
-            
-            return {
-                "status": "success",
-                "total_articles": updated_data['total'],
-                "new_articles": len(new_articles or []),
-                "consistency": verification['status'],
-                "timestamp": self.now
-            }
-        
-        except Exception as e:
-            logger.error(f"❌ 업데이트 실패: {e}", exc_info=True)
-            raise
-    
-    
-    # ════════════════════════════════════════════════════════════════════════
-    # Step 1: 현재 기본값 읽기
-    # ════════════════════════════════════════════════════════════════════════
-    
-    def _load_current_baseline(self) -> Dict:
-        """
-        Excel에서 현재 기본값 읽기
-        (과거에 정확히 입력한 집계 데이터)
-        """
-        wb = load_workbook(self.path)
-        
-        # Stats에서 현재 Plan별 기본값 읽기
-        ws_stats = wb["Stats"]
-        
-        baseline = defaultdict(lambda: {
-            "count": 0,
-            "high": 0,
-            "medium": 0,
-            "low": 0,
-            "policy": 0,
-            "before_2026": 0,
-            "in_2026": 0,
-        })
-        
-        for row_idx in range(5, ws_stats.max_row):
-            plan_id = ws_stats.cell(row_idx, 1).value
-            count = ws_stats.cell(row_idx, 3).value
-            
-            if plan_id and plan_id != "TOTAL":
-                plan_id_str = str(plan_id).strip()
-                
-                baseline[plan_id_str]["count"] = int(count or 0)
-                baseline[plan_id_str]["high"] = int(ws_stats.cell(row_idx, 9).value or 0)
-                baseline[plan_id_str]["medium"] = int(ws_stats.cell(row_idx, 10).value or 0)
-                baseline[plan_id_str]["low"] = int(ws_stats.cell(row_idx, 11).value or 0)
-                baseline[plan_id_str]["policy"] = int(ws_stats.cell(row_idx, 12).value or 0)
-                baseline[plan_id_str]["before_2026"] = int(ws_stats.cell(row_idx, 4).value or 0)
-                baseline[plan_id_str]["in_2026"] = int(ws_stats.cell(row_idx, 5).value or 0)
-        
-        total = sum(d["count"] for d in baseline.values())
-        
-        wb.close()
-        
-        return {
-            "total": total,
-            "by_plan": dict(baseline)
-        }
-    
-    
-    # ════════════════════════════════════════════════════════════════════════
-    # Step 2: 신규 기사 정규화 & 추가
-    # ════════════════════════════════════════════════════════════════════════
-    
-    def _add_new_articles(self, current_data: Dict, new_articles: List[Dict]) -> Dict:
-        """
-        신규 기사를 기본값에 추가
-        
-        Args:
-            current_data: 현재 기본값
-            new_articles: 신규 기사 목록
-        
-        Returns:
-            업데이트된 데이터
-        """
-        updated_data = {
-            "total": current_data["total"],
-            "by_plan": {k: dict(v) for k, v in current_data["by_plan"].items()}
-        }
-        
-        # 24개 Plan 기본값도 추가
-        for plan in self.standards.STANDARD_24_PLANS:
-            if plan not in updated_data["by_plan"]:
-                updated_data["by_plan"][plan] = {
-                    "count": 0, "high": 0, "medium": 0, "low": 0, "policy": 0,
-                    "before_2026": 0, "in_2026": 0
-                }
-        
-        # 신규 기사 추가
-        for article in new_articles:
-            plan_id = str(article.get('plan_id', ''))
-            grade = str(article.get('grade', '')).strip().upper()
-            date_val = article.get('date')
-            
-            # 정규화
-            if plan_id in self.standards.NORMALIZATION_MAPPING:
-                plan_id = self.standards.NORMALIZATION_MAPPING[plan_id]
-            
-            if plan_id in self.standards.STANDARD_24_PLANS:
-                updated_data["by_plan"][plan_id]["count"] += 1
-                updated_data["total"] += 1
-                
-                # 등급별
-                if "HIGH" in grade:
-                    updated_data["by_plan"][plan_id]["high"] += 1
-                elif "MEDIUM" in grade:
-                    updated_data["by_plan"][plan_id]["medium"] += 1
-                elif "LOW" in grade:
-                    updated_data["by_plan"][plan_id]["low"] += 1
-                elif "POLICY" in grade:
-                    updated_data["by_plan"][plan_id]["policy"] += 1
-                
-                # 연도별
-                if date_val:
-                    try:
-                        import pandas as pd
-                        year = pd.to_datetime(date_val).year
-                        if year < 2026:
-                            updated_data["by_plan"][plan_id]["before_2026"] += 1
-                        else:
-                            updated_data["by_plan"][plan_id]["in_2026"] += 1
-                    except:
-                        pass
-        
-        return updated_data
-    
-    
-    # ════════════════════════════════════════════════════════════════════════
-    # Step 3: Excel 증분 업데이트
-    # ════════════════════════════════════════════════════════════════════════
-    
-    def _update_excel_incremental(self, updated_data: Dict):
-        """
-        Excel에 증분 업데이트 (신규 데이터만)
-        """
-        wb = load_workbook(self.path)
-        
-        # Stats 업데이트
-        ws_stats = wb["Stats"]
-        
-        row = 5
-        for plan in sorted(self.standards.STANDARD_24_PLANS):
-            data = updated_data["by_plan"].get(plan, {
-                "count": 0, "high": 0, "medium": 0, "low": 0, "policy": 0,
-                "before_2026": 0, "in_2026": 0
+            mp_arts.append({
+                'ctx_tag':    'SA7_MATCH' if 'SA7' in qc.upper() else ('POLICY_MATCH' if 'POLICY' in qc.upper() else 'SA7_MATCH'),
+                'ctx_grade':  ctx_grade,
+                'plan_id':    plan_id,
+                'title_en':   ws_news.cell(r,5).value or ws_news.cell(r,6).value,  # v3.3: EN 우선, 없으면 VI
+                'title_vi':   ws_news.cell(r,6).value,                              # v3.3: Col6
+                'date':       str(ws_news.cell(r,4).value or '')[:10],              # v3.3: Date Col4
+                'source':     ws_news.cell(r,8).value,                              # v3.3: Col8
+                'province':   ws_news.cell(r,10).value,                             # v3.3: Col10
+                'sector':     sec,
+                'title_ko':   ws_news.cell(r,7).value,                              # v3.3: Col7
+                'summary_ko': ws_news.cell(r,14).value,                             # v3.3: Col14
+                'summary_en': ws_news.cell(r,15).value,                             # v3.3: Col15
+                'summary_vi': ws_news.cell(r,16).value,                             # v3.3: Col16
+                'link':       ws_news.cell(r,13).value,                             # v3.3: URL Col13
             })
-            
-            ws_stats.cell(row, 3, data["count"])        # 전체 기사
-            ws_stats.cell(row, 4, data["before_2026"])  # 2026전
-            ws_stats.cell(row, 5, data["in_2026"])      # 2026
-            ws_stats.cell(row, 9, data["high"])         # HIGH
-            ws_stats.cell(row, 10, data["medium"])      # MEDIUM
-            ws_stats.cell(row, 11, data["low"])         # LOW
-            ws_stats.cell(row, 12, data["policy"])      # POLICY
-            
-            row += 1
         
-        # Timeline도 유사하게 업데이트 (합계만 변경)
-        ws_tl = wb["Timeline"]
+        mp_arts.sort(key=lambda x: str(x.get('date','') or ''), reverse=True)
+        for i, a in enumerate(mp_arts, 1):
+            a['no'] = i
         
-        for row_idx in range(3, ws_tl.max_row + 1):
-            plan_id = ws_tl.cell(row_idx, 2).value
-            if plan_id:
-                plan_id_str = str(plan_id).strip()
-                total = updated_data["by_plan"].get(plan_id_str, {}).get("count", 0)
-                ws_tl.cell(row_idx, 7, total)
+        high_c = sum(1 for a in mp_arts if a.get('ctx_grade')=='HIGH')
+        med_c  = sum(1 for a in mp_arts if a.get('ctx_grade')=='MEDIUM')
+        pol_c  = sum(1 for a in mp_arts if a.get('ctx_grade')=='POLICY')
         
-        # Context_Stats 업데이트
-        ws_cs = wb["Context_Stats"]
-        ws_cs.cell(5, 2, self.standards.SA7_MATCHED)  # SA-7 (변경 없음)
+        if "Matched_Plan" in wb.sheetnames: del wb["Matched_Plan"]
+        nidx = wb.sheetnames.index("News Database")
+        ws_mp = wb.create_sheet("Matched_Plan", nidx+1)
         
-        # Stats 메타정보 업데이트
-        meta = f"최종 업데이트: {self.now} | 24개 Standard Plan | 증분 방식"
-        ws_stats.cell(2, 1, meta)
+        # Row1: 메타
+        meta = (f"★ SA-7 맥락 확정 기사 {len(mp_arts)}건 | "
+                f"HIGH(노란)={high_c} MEDIUM(연파랑)={med_c} POLICY(연녹)={pol_c}")
+        ws_mp.cell(1,1).value = meta
+        ws_mp.cell(1,1).font  = FONT_META
+        ws_mp.cell(1,1).fill  = FILL['HIGH']
+        ws_mp.merge_cells(start_row=1, start_column=1, end_row=1, end_column=17)
         
-        wb.save(self.path)
-    
-    
-    # ════════════════════════════════════════════════════════════════════════
-    # Step 4: 전체 합계 검증
-    # ════════════════════════════════════════════════════════════════════════
-    
-    def _verify_totals(self) -> Dict:
-        """
-        전체 합계만 검증
-        (신규 데이터 추가 후 일관성 확인)
-        """
-        wb = load_workbook(self.path)
+        # Row2: 헤더
+        for ci, (h, w) in enumerate(zip(MP_HEADERS, MP_WIDTHS), 1):
+            _hdr(ws_mp, 2, ci, h)
+            ws_mp.column_dimensions[get_column_letter(ci)].width = w
+        ws_mp.row_dimensions[2].height = 20
+        ws_mp.freeze_panes = "A3"
         
-        # 각 시트에서 합계만 읽기
+        for ri, a in enumerate(mp_arts, 3):
+            grade = a.get('ctx_grade','')
+            fill  = _grade_fill(grade)
+            vals = [a.get('no'), a.get('ctx_tag',''), grade, a.get('plan_id',''),
+                    a.get('title_en',''), a.get('date',''), a.get('source',''),
+                    a.get('province',''), a.get('sector',''), a.get('title_ko',''),
+                    a.get('title_en',''),  # title_en_orig
+                    a.get('title_vi',''),  # title_vi (v3.3 분리)
+                    a.get('summary_ko',''), a.get('summary_en',''), a.get('summary_vi',''),
+                    a.get('short_sum',''), a.get('link','')]
+            for ci, v in enumerate(vals, 1):
+                c = ws_mp.cell(ri, ci); c.value = v; c.fill = fill
+                # Fix5: 제목(5,10) / 요약(13,14) 굵게
+                c.font = FONT_TITLE_BOLD if ci in (5,10,13,14) else FONT_DATA
+                c.alignment = Alignment(vertical="top", wrap_text=False)
+        
+        print(f"    [Matched_Plan] {len(mp_arts)}건 (HIGH={high_c} MED={med_c} POL={pol_c})")
+
+    # ── Step 5: Keywords History ──────────────────────
+    def _rebuild_keywords_history(self, wb):
+        ws_news = wb["News Database"]
+        kh = []
+        for r in range(2, ws_news.max_row+1):
+            pid = str(ws_news.cell(r,11).value or '').strip()  # v3.3: Col11
+            title_en = ws_news.cell(r,5).value
+            title_vi = ws_news.cell(r,6).value
+            title = title_en or title_vi  # 영문 우선
+            sec = ws_news.cell(r,2).value or _sector_from_plan(pid) or _sector_from_text(title, ws_news.cell(r,7).value, pid)
+            if not sec: continue
+            kh.append({
+                'sector':   sec,
+                'province': str(ws_news.cell(r,10).value or ''),     # v3.3: Col10
+                'date':     str(ws_news.cell(r,4).value or '')[:10], # v3.3: Col4
+                'title_en': title,
+                'title_ko': ws_news.cell(r,7).value,                  # v3.3: Col7
+                'source':   ws_news.cell(r,8).value,                  # v3.3: Col8
+                'grade':    str(ws_news.cell(r,12).value or ''),     # v3.3: Col12
+                'plan_id':  pid,
+            })
+        
+        pre = sorted(kh, key=lambda x: (SECT_PRI.get(x['sector'], 99), str(x.get('province','') or '')))
+        result = []
+        for (s, p), grp in groupby(pre, key=lambda x: (x['sector'], x['province'])):
+            result.extend(sorted(grp, key=lambda x: str(x.get('date','')), reverse=True))
+        
+        if "Keywords History" in wb.sheetnames: del wb["Keywords History"]
+        mp_idx = wb.sheetnames.index("Matched_Plan")
+        ws_kh  = wb.create_sheet("Keywords History", mp_idx+1)
+        
+        for ci, (h, w) in enumerate(zip(KH_HEADERS, KH_WIDTHS), 1):
+            _hdr(ws_kh, 1, ci, h, "HDR_G")
+            ws_kh.column_dimensions[get_column_letter(ci)].width = w
+        ws_kh.row_dimensions[1].height = 22
+        ws_kh.freeze_panes = "A2"
+        
+        for ri, a in enumerate(result, 2):
+            d = str(a.get('date',''))
+            # Fix4: Keywords History만 신규=노란표시
+            is_new = d >= self.cutoff
+            fill = FILL['KH_NEW'] if is_new else FILL['WHITE']
+            vals = [a.get('sector',''), a.get('province',''), d,
+                    str(a.get('title_en','') or '')[:100],
+                    str(a.get('title_ko','') or '')[:80],
+                    a.get('source',''), a.get('grade',''), a.get('plan_id','')]
+            for ci, v in enumerate(vals, 1):
+                c = ws_kh.cell(ri, ci); c.value = v; c.fill = fill
+                c.font = FONT_TITLE_BOLD if ci in (4,5) else FONT_DATA
+                c.alignment = Alignment(vertical="top")
+        
+        new_c = sum(1 for a in result if str(a.get('date','')) >= self.cutoff)
+        print(f"    [Keywords History] {len(result)}건 (신규 {new_c}건 노란표시)")
+
+    # ── Step 6a: Summary ──────────────────────────────
+    def _update_summary(self, wb, new_count):
+        if "Summary" not in wb.sheetnames: return
+        ws_news = wb["News Database"]
+        ws_mp   = wb["Matched_Plan"]
+        total   = ws_news.max_row - 1
+        matched = ws_mp.max_row - 2
+        high_c  = sum(1 for r in range(3, ws_mp.max_row+1)
+                      if str(ws_mp.cell(r,3).value or '').upper() == 'HIGH')
+        ws_sum = wb["Summary"]
+        for r in range(1, min(5, ws_sum.max_row+1)):
+            v = str(ws_sum.cell(r,1).value or '')
+            if 'Updated' in v or 'Total' in v:
+                ws_sum.cell(r,1).value = (f"Updated: {self.now} | Total News: {total}건 | "
+                                          f"SA-7: {matched}건 | HIGH: {high_c}건")
+                break
+        print(f"    [Summary] Total={total} SA-7={matched} HIGH={high_c}")
+
+    # ── Step 6b: Collection_Log ───────────────────────
+    def _update_collection_log(self, wb, new_count):
+        if "Collection_Log" not in wb.sheetnames: return
+        ws = wb["Collection_Log"]
+        total = wb["News Database"].max_row - 1
+        ws.insert_rows(2)
+        ws.cell(2,1).value = f"{self.now} KST"
+        ws.cell(2,2).value = new_count
+        ws.cell(2,3).value = "Daily Automated"
+        ws.cell(2,4).value = "✅"
+        ws.cell(2,5).value = f"신규 {new_count}건 추가 | 전체 {total}건"
+        for c in range(1, 6): ws.cell(2,c).font = FONT_DATA
+
+    # ── Step 6c: Source 시트 (Fix6) ───────────────────
+    def _update_source(self, wb):
+        if "Source" not in wb.sheetnames: return
+        ws_news = wb["News Database"]
+        src_cnt = defaultdict(int)
+        src_last= defaultdict(str)
+        total   = ws_news.max_row - 1
+        for r in range(2, ws_news.max_row+1):
+            s = str(ws_news.cell(r,8).value or '').strip()  # v3.3: Source Col8
+            d = str(ws_news.cell(r,4).value or '')[:10]      # v3.3: Date Col4
+            if s:
+                src_cnt[s] += 1
+                if d > src_last[s]: src_last[s] = d
+        
+        # Source 시트는 v3.2에서 기관분류 강화 구조 유지
+        # 카운트 컬럼만 업데이트 (구조는 변경 안 함)
+        ws_src = wb["Source"]
+        # 컬럼 매핑 (헤더로 자동 인식)
+        headers = {str(ws_src.cell(1,c).value or '').strip().lower(): c 
+                   for c in range(1, ws_src.max_column+1)}
+        col_name = headers.get('source name', 2)
+        col_cnt  = headers.get('건수', 4)
+        col_last = headers.get('최근수집일', 6)
+        col_stat = headers.get('상태', 7)
+        
+        for r in range(2, ws_src.max_row+1):
+            sn = str(ws_src.cell(r, col_name).value or '').strip()
+            if sn in src_cnt:
+                ws_src.cell(r, col_cnt).value = src_cnt[sn]
+                ws_src.cell(r, col_last).value = src_last[sn]
+                ws_src.cell(r, col_stat).value = '✅ 활성' if src_last[sn] >= self.cutoff else '⚠️ 비활성'
+        print(f"    [Source] {len(src_cnt)}개 출처 카운트 갱신")
+
+    # ── Step 6d: Stats ────────────────────────────────
+    def _update_stats(self, wb):
+        if "Stats" not in wb.sheetnames: return
         ws_mp = wb["Matched_Plan"]
-        ws_tl = wb["Timeline"]
-        ws_cs = wb["Context_Stats"]
+        plan_count = defaultdict(int); plan_year = defaultdict(lambda: defaultdict(int))
+        plan_latest = defaultdict(str)
+        for r in range(3, ws_mp.max_row+1):
+            pid = str(ws_mp.cell(r,4).value or '').strip()
+            d   = str(ws_mp.cell(r,6).value or '')[:10]
+            yr  = d[:4] if len(d)>=4 else ''
+            if pid:
+                plan_count[pid] += 1
+                if yr: plan_year[pid][yr] += 1
+                if d > plan_latest[pid]: plan_latest[pid] = d
+        
+        total_mp = ws_mp.max_row - 2
         ws_st = wb["Stats"]
+        ws_st.cell(1,1).value = f"VIETNAM INFRASTRUCTURE NEWS — 플랜별 SA-7 매칭 현황 ({self.now})"
+        ws_st.cell(2,1).value = f"전체 SA-7: {total_mp}건"
+        # 데이터 행 갱신
+        hr = None
+        for r in range(1, min(8, ws_st.max_row+1)):
+            if ws_st.cell(r,1).value and '플랜' in str(ws_st.cell(r,1).value or ''):
+                hr = r; break
+        if hr:
+            for r in range(hr+1, ws_st.max_row+1):
+                pid = str(ws_st.cell(r,1).value or '').strip()
+                if not pid or pid.startswith('─'): continue
+                tc = plan_count.get(pid, 0)
+                if ws_st.max_column >= 7:
+                    ws_st.cell(r,3).value = tc
+                    ws_st.cell(r,4).value = tc - plan_year[pid].get('2026', 0)
+                    ws_st.cell(r,5).value = plan_year[pid].get('2026', 0)
+                    ws_st.cell(r,6).value = round(tc/total_mp*100, 2) if total_mp and tc else 0
+                    ws_st.cell(r,7).value = plan_latest.get(pid, '')
+
+    # ── Step 6e: Context_Stats ────────────────────────
+    def _update_context_stats(self, wb):
+        if "Context_Stats" not in wb.sheetnames: return
+        total_mp = wb["Matched_Plan"].max_row - 2
+        total = wb["News Database"].max_row - 1
+        ws_cs = wb["Context_Stats"]
+        ws_cs.cell(1,1).value = 'SA-7 + Policy Sentinel Total'
+        ws_cs.cell(1,2).value = total_mp
+        ws_cs.cell(1,3).value = f'{round(total_mp/total*100,1)}%' if total else '0%'
+
+    # ── Step 6f: Timeline (정제후 형식 유지) ──────────
+    def _update_timeline(self, wb):
+        if "Timeline" not in wb.sheetnames: return
+        ws_mp = wb["Matched_Plan"]
+        plan_grade = defaultdict(lambda: defaultdict(int))
+        plan_year  = defaultdict(lambda: defaultdict(int))
+        plan_latest= defaultdict(str)
+        plan_total = defaultdict(int)
+        for r in range(3, ws_mp.max_row+1):
+            pid = str(ws_mp.cell(r,4).value or '').strip()
+            g   = str(ws_mp.cell(r,3).value or '').upper()
+            d   = str(ws_mp.cell(r,6).value or '')[:10]
+            yr  = d[:4] if len(d)>=4 else ''
+            if pid:
+                plan_grade[pid][g] += 1
+                plan_total[pid] += 1
+                if yr: plan_year[pid][yr] += 1
+                if d > plan_latest[pid]: plan_latest[pid] = d
         
-        # Matched_Plan 합계
-        mp_count = sum(1 for i in range(3, ws_mp.max_row + 1) if ws_mp.cell(i, 1).value)
+        ws_tl = wb["Timeline"]
+        # Row3부터 데이터
+        for r in range(3, ws_tl.max_row+1):
+            pid = str(ws_tl.cell(r,2).value or '').strip()
+            if not pid: continue
+            g = plan_grade.get(pid, {})
+            ws_tl.cell(r,4).value = g.get('HIGH',0) or None
+            ws_tl.cell(r,5).value = g.get('MEDIUM',0) or None
+            ws_tl.cell(r,6).value = g.get('POLICY',0) or None
+            ws_tl.cell(r,7).value = plan_total.get(pid,0) or None
+            ws_tl.cell(r,8).value = plan_latest.get(pid,'')
+            for off, yr in enumerate(['2019','2020','2021','2022','2023','2024','2025','2026']):
+                ws_tl.cell(r, 9+off).value = plan_year[pid].get(yr,0) or None
+
+    # ── Step 6g: Province_Keywords ────────────────────
+    def _update_province_keywords(self, wb):
+        if "Province_Keywords" not in wb.sheetnames: return
+        ws_news = wb["News Database"]
+        ws_mp   = wb["Matched_Plan"]
+        prov_total = defaultdict(int); prov_unmap = defaultdict(int)
+        prov_sec   = defaultdict(list); prov_src = defaultdict(list)
+        for r in range(2, ws_news.max_row+1):
+            pv = str(ws_news.cell(r,10).value or '').strip()  # v3.3: Col10
+            if not pv: continue
+            prov_total[pv] += 1
+            pid = str(ws_news.cell(r,11).value or '').strip()  # v3.3: Col11
+            src = str(ws_news.cell(r,8).value or '').strip()   # v3.3: Col8
+            if pid: prov_sec[pv].append(_sector_from_plan(pid) or '')
+            else: prov_unmap[pv] += 1
+            if src: prov_src[pv].append(src)
+        prov_sa7 = defaultdict(int)
+        for r in range(3, ws_mp.max_row+1):
+            pv = str(ws_mp.cell(r,8).value or '').strip()
+            if pv: prov_sa7[pv] += 1
         
-        # Timeline 합계
-        tl_total = sum(int(ws_tl.cell(i, 7).value or 0) for i in range(3, ws_tl.max_row + 1))
-        
-        # Context_Stats
-        cs_sa7 = ws_cs.cell(5, 2).value
-        
-        # Stats 합계
-        st_total = sum(int(ws_st.cell(i, 3).value or 0) for i in range(5, ws_st.max_row))
-        
-        # 검증
-        all_match = (mp_count == 250 and tl_total == 250 and cs_sa7 == 250 and st_total == 250)
-        
-        verification = {
-            "status": "✅ 완벽 일치" if all_match else "⚠️  불일치",
-            "matched_plan": mp_count,
-            "timeline": tl_total,
-            "context_stats": cs_sa7,
-            "stats": st_total
-        }
-        
-        wb.close()
-        
-        return verification
+        ws_pk = wb["Province_Keywords"]
+        for r in range(2, ws_pk.max_row+1):
+            pv = str(ws_pk.cell(r,1).value or '').strip()
+            if not pv: continue
+            tot = prov_total.get(pv,0); sa7 = prov_sa7.get(pv,0)
+            unm = prov_unmap.get(pv,0)
+            rate = round(unm/tot*100,1) if tot else 0
+            secs = [s for s in prov_sec.get(pv,[]) if s]
+            ms = max(set(secs), key=secs.count) if secs else ''
+            srcs = prov_src.get(pv,[])
+            mss = max(set(srcs), key=srcs.count) if srcs else ''
+            if tot==0:        q = '⚪ 데이터없음'
+            elif rate < 20:   q = '🟢 양호'
+            elif rate < 40:   q = '🟡 보통'
+            elif rate < 60:   q = '🟠 주의'
+            else:             q = '🔴 요개선'
+            ws_pk.cell(r,2).value = tot
+            ws_pk.cell(r,3).value = sa7
+            ws_pk.cell(r,4).value = ms
+            ws_pk.cell(r,5).value = mss[:30] if mss else ''
+            ws_pk.cell(r,6).value = f'{rate}%'
+            ws_pk.cell(r,7).value = q
+
+    # ── 보조 ──────────────────────────────────────────
+    def _create_empty_workbook(self):
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "News Database"
+        self._write_news_header(ws)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        wb.save(str(self.path))
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
-    )
-    
-    try:
-        updater = ExcelUpdater()
-        
-        # 신규 기사가 있으면 전달 (news_collector.py 결과)
-        # 없으면 None (검증만)
-        new_articles = None  # news_collector.py에서 전달받기
-        
-        result = updater.update_incremental(new_articles)
-        
-        print("\n" + "=" * 120)
-        print("✅ 증분 업데이트 완료 (v9.0 - 성능 최적화)")
-        print("=" * 120)
-        print(f"\n📊 업데이트 결과:")
-        print(f"  - 현재 기사: {result['total_articles']}건")
-        print(f"  - 신규 기사: {result['new_articles']}건")
-        print(f"  - 검증 상태: {result['consistency']}")
-        print(f"\n💡 v9.0의 장점:")
-        print(f"  - 토큰 사용 90% 감소")
-        print(f"  - 처리 시간 80% 단축")
-        print(f"  - 서버 로드 크게 감소")
-        print(f"  - 정확도 동일 유지")
-        
-    except Exception as e:
-        print(f"❌ 오류: {e}")
+    print("ExcelUpdater v3.3 단독 실행")
+    updater = ExcelUpdater()
+    updater.update_all([])
