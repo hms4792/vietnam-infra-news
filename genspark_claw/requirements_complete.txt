@@ -1,0 +1,29 @@
+# Claude AI
+anthropic==0.25.0
+
+# Web Scraping & Requests
+requests==2.31.0
+beautifulsoup4==4.12.3
+selenium==4.18.1
+
+# Data Processing
+pandas==2.2.0
+openpyxl==3.1.2
+
+# Document Generation
+python-docx==1.1.0
+
+# GitHub Integration
+PyGithub==2.2.0
+
+# Utilities
+python-dotenv==1.0.1
+pytz==2024.1
+loguru==0.7.2
+
+# Visualization (for dashboard)
+matplotlib==3.8.0
+wordcloud==1.9.3
+
+# Email
+# (no additional packages needed, using built-in smtplib)

@@ -1,0 +1,39 @@
+{
+  "total": 129,
+  "passed": 128,
+  "failed": 1,
+  "qc_rate": 99.2,
+  "qc07_pro_media_ratio": 14.7,
+  "qc07_pass": false,
+  "qc08_sector_balance": 40.3,
+  "qc08_pass": true,
+  "qc09_pdp8_count": 19,
+  "qc09_pass": true,
+  "qc10_d1894_count": 5,
+  "qc10_pass": true,
+  "qc12_unclassified_province_ratio": 82.2,
+  "qc12_pass": false,
+  "qc13_pass_rate_ok": true,
+  "qc14_integrity_ok": true,
+  "sector_distribution": {
+    "Power & Energy": 52,
+    "Transport & Infrastructure": 24,
+    "Urban Development": 18,
+    "Other": 8,
+    "Finance & Investment": 4,
+    "Environment & Climate": 18,
+    "Water Resources": 5
+  },
+  "issues_log": [
+    {
+      "title": "Vietnam's Infrastructure Breakthrough: A Strategic",
+      "issues": [
+        "QC11: Duplicate title"
+      ]
+    }
+  ],
+  "recommendations": [
+    "전문 미디어 소스 비율 증가 필요 (현재 15%)",
+    "Province 미분류 비율 감소 필요 (현재 82%)"
+  ]
+}

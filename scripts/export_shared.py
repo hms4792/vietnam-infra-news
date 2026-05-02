@@ -5,9 +5,12 @@ from datetime import datetime, timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 AGENT_OUTPUT_DIR = os.path.join(BASE_DIR, "data", "agent_output")
-SHARED_DATA_DIR = os.path.join(BASE_DIR, "data", "shared")
-SHARED_DOCS_DIR = os.path.join(BASE_DIR, "docs", "shared")
-DB_PATH = os.path.join(BASE_DIR, "data", "database", "Vietnam_Infra_News_Database_Final.xlsx")
+SHARED_DATA_DIR  = os.path.join(BASE_DIR, "data", "shared")
+SHARED_DOCS_DIR  = os.path.join(BASE_DIR, "docs", "shared")
+SCRIPTS_DIR      = os.path.join(BASE_DIR, "scripts")
+DOCS_DIR         = os.path.join(BASE_DIR, "docs")
+DB_PATH = os.path.join(BASE_DIR, "data", "database",
+                        "Vietnam_Infra_News_Database_Final.xlsx")
 
 SECTORS = [
     "Waste Water", "Water Supply/Drainage", "Solid Waste",
@@ -48,15 +51,17 @@ def generate_weekly_digest():
         ws = wb.active
 
         headers = [cell.value for cell in next(ws.iter_rows(min_row=1, max_row=1))]
-        date_col = next((i for i, h in enumerate(headers) if h and "date" in str(h).lower()), None)
-        sector_col = next((i for i, h in enumerate(headers) if h and "sector" in str(h).lower()), None)
+        date_col   = next((i for i, h in enumerate(headers)
+                           if h and "date"   in str(h).lower()), None)
+        sector_col = next((i for i, h in enumerate(headers)
+                           if h and "sector" in str(h).lower()), None)
 
         cutoff = today - timedelta(days=7)
         sector_counts = {s: 0 for s in SECTORS}
 
         for row in ws.iter_rows(min_row=2, values_only=True):
             try:
-                row_date = row[date_col] if date_col is not None else None
+                row_date   = row[date_col]   if date_col   is not None else None
                 row_sector = row[sector_col] if sector_col is not None else None
 
                 if isinstance(row_date, str):
@@ -98,6 +103,30 @@ def generate_weekly_digest():
     return True
 
 
+def export_rss_status():
+    """
+    RSS_SOURCE_STATUS.md를 docs/shared/로 내보내기
+    Claude Code + Genspark 에이전트 공유용 지식 문서
+    [추가 2026-04-07] RSS 영구 폐쇄 소스 / 대체 소스 / NewsData 제약 정보 포함
+    """
+    # 탐색 우선순위: scripts/ → docs/ → 프로젝트 루트
+    candidates = [
+        os.path.join(SCRIPTS_DIR,  "RSS_SOURCE_STATUS.md"),
+        os.path.join(DOCS_DIR,     "RSS_SOURCE_STATUS.md"),
+        os.path.join(BASE_DIR,     "RSS_SOURCE_STATUS.md"),
+        os.path.join(SHARED_DATA_DIR, "RSS_SOURCE_STATUS.md"),
+    ]
+    for src in candidates:
+        if os.path.exists(src):
+            dst = os.path.join(SHARED_DOCS_DIR, "RSS_SOURCE_STATUS.md")
+            shutil.copy2(src, dst)
+            print(f"  [OK] RSS_SOURCE_STATUS.md -> docs/shared/")
+            return True
+
+    print(f"  [SKIP] RSS_SOURCE_STATUS.md 없음 — scripts/ 또는 루트에 파일 배치 필요")
+    return False
+
+
 def main():
     ensure_shared_docs_dir()
     count = 0
@@ -105,7 +134,7 @@ def main():
     # 1. collector_output.json
     try:
         src = os.path.join(AGENT_OUTPUT_DIR, "collector_output.json")
-        dst = os.path.join(SHARED_DOCS_DIR, "collector_output.json")
+        dst = os.path.join(SHARED_DOCS_DIR,  "collector_output.json")
         if copy_if_exists(src, dst):
             count += 1
     except Exception as e:
@@ -114,13 +143,13 @@ def main():
     # 2. quality_report.json
     try:
         src = os.path.join(AGENT_OUTPUT_DIR, "quality_report.json")
-        dst = os.path.join(SHARED_DOCS_DIR, "quality_report.json")
+        dst = os.path.join(SHARED_DOCS_DIR,  "quality_report.json")
         if copy_if_exists(src, dst):
             count += 1
     except Exception as e:
         print(f"  [ERROR] quality_report.json: {e}")
 
-    # 3. MASTER_RULES.json (항상 실행)
+    # 3. MASTER_RULES.json
     try:
         src = os.path.join(SHARED_DATA_DIR, "MASTER_RULES.json")
         dst = os.path.join(SHARED_DOCS_DIR, "MASTER_RULES.json")
@@ -129,25 +158,32 @@ def main():
     except Exception as e:
         print(f"  [ERROR] MASTER_RULES.json: {e}")
 
-    # 4. 토요일이면 weekly_digest.md 생성
+    # 4. RSS_SOURCE_STATUS.md — Claude + Genspark 공유 지식 문서
+    try:
+        if export_rss_status():
+            count += 1
+    except Exception as e:
+        print(f"  [ERROR] RSS_SOURCE_STATUS.md: {e}")
+
+    # 5. 토요일이면 weekly_digest.md 생성
     try:
         if datetime.now().weekday() == 5:
             print("  [INFO] 오늘은 토요일 — weekly_digest.md 생성 중...")
             if generate_weekly_digest():
                 count += 1
         else:
-            print(f"  [SKIP] weekly_digest.md (오늘은 토요일 아님: weekday={datetime.now().weekday()})")
+            print(f"  [SKIP] weekly_digest.md"
+                  f" (오늘은 토요일 아님: weekday={datetime.now().weekday()})")
     except Exception as e:
         print(f"  [ERROR] weekly_digest.md: {e}")
 
     print(f"\nExport 완료: {count}개 파일 처리됨")
 
-    # 5. Google Drive 동기화 (GDRIVE_FOLDER_ID 설정 시에만)
+    # 6. Google Drive 동기화 (GDRIVE_FOLDER_ID 설정 시에만)
     if os.environ.get("GDRIVE_FOLDER_ID"):
         try:
             import sys
-            scripts_dir = os.path.dirname(os.path.abspath(__file__))
-            sys.path.insert(0, scripts_dir)
+            sys.path.insert(0, SCRIPTS_DIR)
             import gdrive_upload
             print("\n[Google Drive 동기화]")
             gdrive_upload.main()

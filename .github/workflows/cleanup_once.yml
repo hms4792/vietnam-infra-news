@@ -1,0 +1,33 @@
+name: Cleanup WARNING Data (1회 실행)
+on:
+  workflow_dispatch:  # 수동 실행만
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install openpyxl
+
+      - name: Run cleanup
+        run: python3 scripts/cleanup_warnings.py
+        env:
+          EXCEL_PATH: data/database/Vietnam_Infra_News_Database_Final.xlsx
+
+      - name: Rebuild dashboard
+        run: python3 scripts/build_dashboard.py
+
+      - name: Commit result
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add -A
+          git commit -m "Cleanup: remove MYMEMORY WARNING from Excel" || echo "No changes"
+          git push

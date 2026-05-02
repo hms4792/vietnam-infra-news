@@ -1,0 +1,50 @@
+# ============================================================
+# Vietnam Infrastructure News — RSS 소스 테스트 (1회 실행)
+# .github/workflows/test_rss_once.yml
+#
+# 역할: 새 RSS 소스 후보 50개를 GitHub Actions에서 직접 테스트
+# 실행: 수동(workflow_dispatch)만
+# 결과: data/agent_output/rss_test_result.json 에 저장
+# ============================================================
+
+name: RSS Source Test (1회 실행)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test_rss:
+    name: RSS 소스 후보 테스트
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests feedparser
+
+      - name: Run RSS source test
+        run: python3 scripts/test_rss_sources.py
+
+      - name: Commit result
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/agent_output/rss_test_result.json || true
+          if git diff --staged --quiet; then
+            echo "No changes"
+          else
+            git commit -m "RSS test result $(date '+%Y-%m-%d')"
+            git push
+          fi

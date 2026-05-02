@@ -1,0 +1,2377 @@
+{
+  "version": "2.3",
+  "updated_at": "2026-04-21",
+  "total_masterplans": 25,
+  "description": "베트남 인프라 마스터플랜 지식 베이스 — Claude+Genspark 공유 Baseline",
+  "changelog": {
+    "v2.2": [
+      "12개 마스터플랜 전체 + 하위 Keywords 24개 계층 포함",
+      "PDP8-INTEGRATED → VN-PWR-PDP8 통합 ID 확정 (Decision 768 기준)",
+      "VN-PWR-PDP8 하위 6개: RENEWABLE/LNG/NUCLEAR/COAL/GRID/HYDROGEN",
+      "VN-TRAN-2055 신규 추가 (VN-URB-METRO-2030 하위 포함)",
+      "VN-SC-2030 독립 플랜으로 분리",
+      "VN-IP-NORTH-2030, VN-OG-2030 정식 추가",
+      "VN-RED-RIVER-2030 keywords 대폭 강화 (0건 해소 목적)",
+      "VN-MEKONG-DELTA-2030 정식 추가",
+      "HN-URBAN-INFRA (부모) + HN-URBAN-NORTH/WEST (자식) 계층화",
+      "WATER-INTEGRATED → VN-WAT-RESOURCES/URBAN/RURAL 3개 독립 플랜",
+      "keywords_en/keywords_vi/keywords_ko 3언어 분리",
+      "sectors as array, parent/children 계층 필드 통일"
+    ],
+    "v2.1": [
+      "VN-PWR-PDP8, VN-ENV-IND-1894 추가",
+      "keywords_en/vi 분리"
+    ],
+    "v2.0": [
+      "초기 구조 확립"
+    ],
+    "v2.3": [
+      "HN-URBAN-SOUTH 신규 추가: 자빈 제2공항·푸쑤옌 남부 물류도시",
+      "HN-URBAN-EAST 신규 추가: 자람·롱비엔·홍강 신도시 동부 도시권",
+      "HN-URBAN-NORTH keywords 대폭 강화: brg dong anh, co loa, noi bai t3 등",
+      "HN-URBAN-WEST keywords 대폭 강화: hoa lac hi-tech, xuan mai, son tay 등",
+      "HN-URBAN-INFRA keywords 강화: 5대 도시권·위성도시 전체 포함",
+      "HN-URBAN-INFRA hierarchy: 4개 하위 플랜으로 확장 (NORTH/WEST/SOUTH/EAST)",
+      "총 플랜 수: 23개 → 25개",
+      "policy_sentinel 섹션 추가: 22개 플랜 × 앵커어 286개 — Gate P1(신호어49) + Gate P2(플랜앵커)"
+    ]
+  },
+  "hierarchy": {
+    "VN-PWR-PDP8": [
+      "VN-PWR-PDP8-RENEWABLE",
+      "VN-PWR-PDP8-LNG",
+      "VN-PWR-PDP8-NUCLEAR",
+      "VN-PWR-PDP8-COAL",
+      "VN-PWR-PDP8-GRID",
+      "VN-PWR-PDP8-HYDROGEN"
+    ],
+    "VN-TRAN-2055": [
+      "VN-URB-METRO-2030"
+    ],
+    "HN-URBAN-INFRA": [
+      "HN-URBAN-NORTH",
+      "HN-URBAN-WEST",
+      "HN-URBAN-SOUTH",
+      "HN-URBAN-EAST"
+    ]
+  },
+  "sectors_map": {
+    "Waste Water": [
+      "VN-WW-2030"
+    ],
+    "Solid Waste": [
+      "VN-SWM-NATIONAL-2030",
+      "VN-ENV-IND-1894"
+    ],
+    "Water Supply/Drainage": [
+      "VN-WAT-RESOURCES",
+      "VN-WAT-URBAN",
+      "VN-WAT-RURAL"
+    ],
+    "Power": [
+      "VN-PWR-PDP8",
+      "VN-PWR-PDP8-RENEWABLE",
+      "VN-PWR-PDP8-LNG",
+      "VN-PWR-PDP8-NUCLEAR",
+      "VN-PWR-PDP8-COAL",
+      "VN-PWR-PDP8-GRID",
+      "VN-PWR-PDP8-HYDROGEN"
+    ],
+    "Oil & Gas": [
+      "VN-OG-2030",
+      "VN-PWR-PDP8-LNG"
+    ],
+    "Transport": [
+      "VN-TRAN-2055",
+      "VN-URB-METRO-2030",
+      "HN-URBAN-INFRA",
+      "HN-URBAN-SOUTH",
+      "HN-URBAN-EAST"
+    ],
+    "Industrial Parks": [
+      "VN-IP-NORTH-2030",
+      "VN-RED-RIVER-2030",
+      "HN-URBAN-NORTH",
+      "HN-URBAN-WEST",
+      "HN-URBAN-SOUTH",
+      "HN-URBAN-EAST"
+    ],
+    "Smart City": [
+      "VN-SC-2030",
+      "HN-URBAN-INFRA",
+      "HN-URBAN-NORTH",
+      "HN-URBAN-WEST",
+      "HN-URBAN-EAST"
+    ]
+  },
+  "masterplans": {
+    "VN-WW-2030": {
+      "id": "VN-WW-2030",
+      "name_ko": "국가 폐수처리 마스터플랜 2021-2030",
+      "name_en": "National Wastewater Treatment Master Plan 2021-2030",
+      "parent": null,
+      "legal_basis": "Decision 1393/QD-TTg (2021) + Decision 1659/QD-TTg (2021)",
+      "ministry": "MOC + MONRE",
+      "sectors": [
+        "Waste Water"
+      ],
+      "area": "Environment",
+      "period": "2021-2030",
+      "budget_usd": "12B",
+      "match_threshold": 45,
+      "kpi_2030": "전국 도시 폐수처리율 70%, 처리용량 300-400만㎥/일",
+      "keywords_en": [
+        "wastewater treatment plant",
+        "wwtp",
+        "sewage treatment",
+        "sewage plant construction",
+        "sewer network",
+        "sludge treatment",
+        "yen xa wwtp",
+        "binh tan wwtp",
+        "an don wwtp",
+        "industrial wastewater",
+        "effluent treatment",
+        "wastewater reuse",
+        "wastewater infrastructure",
+        "sewage system expansion",
+        "to lich river cleanup",
+        "binh hung wwtp",
+        "thu duc wwtp",
+        "decision 1393 wastewater",
+        "urban sanitation vietnam"
+      ],
+      "keywords_vi": [
+        "xử lý nước thải",
+        "nhà máy xử lý nước thải",
+        "hệ thống thoát nước",
+        "nước thải đô thị",
+        "bùn thải",
+        "cống thoát nước",
+        "sông tô lịch",
+        "xử lý nước thải công nghiệp",
+        "trạm xử lý nước thải"
+      ],
+      "keywords_ko": [
+        "하수처리장",
+        "폐수처리장",
+        "하수관로",
+        "슬러지 처리",
+        "도시 하수처리",
+        "폐수 재이용",
+        "수질 정화"
+      ],
+      "exclude_if": [
+        "water supply",
+        "dam",
+        "irrigation",
+        "electric vehicle",
+        "power plant",
+        "highway",
+        "industrial waste only"
+      ],
+      "provinces": [
+        "Hanoi",
+        "Ho Chi Minh City",
+        "Da Nang",
+        "Hai Phong",
+        "Dong Nai",
+        "Binh Duong",
+        "Can Tho",
+        "Bac Ninh",
+        "Ba Ria-Vung Tau"
+      ],
+      "key_projects": [
+        "하노이 Yen Xa WWTP (JICA ODA, 건설중)",
+        "하노이 Bac Thang Long WWTP (ADB, 운영중)",
+        "HCMC Binh Hung WWTP Basin 2 (건설중)",
+        "HCMC Thu Duc WWTP (동남아 최대, $524M)",
+        "다낭 An Don WWTP (ADB ODA, 건설중)",
+        "하이퐁 중앙 WWTP (JICA, 건설중)"
+      ]
+    },
+    "VN-SWM-NATIONAL-2030": {
+      "id": "VN-SWM-NATIONAL-2030",
+      "name_ko": "전국 고형폐기물 통합관리 국가전략 2025/2050",
+      "name_en": "National Integrated Solid Waste Management Strategy 2025/2050",
+      "parent": null,
+      "legal_basis": "Decision 491/QD-TTg (2018) + Decision 1658/QD-TTg (2021)",
+      "ministry": "MONRE + MOC",
+      "sectors": [
+        "Solid Waste"
+      ],
+      "area": "Environment",
+      "period": "2018-2025 / Vision 2050",
+      "budget_usd": "10B+",
+      "match_threshold": 40,
+      "kpi_2030": "도시 수거율 90%, WtE 처리 50%, 매립 30% 이하",
+      "keywords_en": [
+        "solid waste management vietnam",
+        "solid waste treatment",
+        "municipal solid waste",
+        "waste-to-energy vietnam",
+        "wte plant vietnam",
+        "incineration plant vietnam",
+        "landfill vietnam",
+        "landfill closure",
+        "composting vietnam",
+        "urban solid waste collection",
+        "rural solid waste",
+        "hazardous waste vietnam",
+        "industrial solid waste",
+        "medical waste vietnam",
+        "construction waste vietnam",
+        "recycling vietnam",
+        "plastic waste vietnam",
+        "waste sorting vietnam",
+        "solid waste collection rate",
+        "garbage treatment",
+        "epr extended producer responsibility",
+        "decision 491 solid waste",
+        "nam son wte",
+        "soc son waste energy",
+        "waste incineration"
+      ],
+      "keywords_vi": [
+        "chất thải rắn",
+        "rác thải",
+        "xử lý rác",
+        "đốt rác phát điện",
+        "bãi chôn lấp",
+        "tái chế rác",
+        "thu gom rác thải",
+        "rác thải đô thị",
+        "rác thải công nghiệp",
+        "nhà máy đốt rác",
+        "xử lý chất thải rắn"
+      ],
+      "keywords_ko": [
+        "고형폐기물",
+        "쓰레기 처리",
+        "폐기물 처리",
+        "WtE 발전소",
+        "매립지",
+        "소각로",
+        "재활용",
+        "폐기물 분리수거",
+        "음식물 쓰레기",
+        "생활폐기물"
+      ],
+      "exclude_if": [
+        "wastewater treatment plant",
+        "sewage treatment",
+        "water supply pipeline",
+        "power plant mw coal",
+        "environmental industry technology"
+      ],
+      "provinces": [
+        "Hanoi",
+        "Ho Chi Minh City",
+        "Da Nang",
+        "Can Tho",
+        "Binh Duong",
+        "Dong Nai",
+        "Hai Phong",
+        "Bac Giang",
+        "Ca Mau",
+        "Vinh Long"
+      ],
+      "key_projects": [
+        "하노이 Nam Son WtE Complex ($400M+, Planning/Tender)",
+        "하노이 Soc Son WtE Plant (4,000-5,000TPD, 90MW, 운영중)",
+        "HCMC Tay Bac WtE Plant (Tam Sinh Nghia, 2025착공)",
+        "다낭 WtE Plant ($70M, Tender stage)",
+        "빈증 WtE Plant ($120M, Planning)",
+        "껀터 WtE Plant ($50M, Under construction)"
+      ]
+    },
+    "VN-WAT-RESOURCES": {
+      "id": "VN-WAT-RESOURCES",
+      "name_ko": "국가 수자원 마스터플랜 2021-2030/2050",
+      "name_en": "National Water Resources Master Plan 2021-2030",
+      "parent": null,
+      "legal_basis": "Decision 1622/QD-TTg (2022)",
+      "ministry": "MONRE",
+      "sectors": [
+        "Water Supply/Drainage"
+      ],
+      "area": "Environment",
+      "period": "2021-2030 / Vision 2050",
+      "budget_usd": "5B+",
+      "match_threshold": 40,
+      "kpi_2030": "10개 주요 유역 통합관리, 물 안보 지수 ASEAN Top 5",
+      "keywords_en": [
+        "water resources master plan",
+        "river basin management",
+        "water security",
+        "flood control vietnam",
+        "drought relief vietnam",
+        "saltwater intrusion",
+        "dam reservoir",
+        "irrigation infrastructure",
+        "groundwater protection",
+        "water resource distribution",
+        "mekong water resources",
+        "red river water resources",
+        "water basin planning",
+        "decision 1622 water",
+        "reservoir management",
+        "hydrological survey"
+      ],
+      "keywords_vi": [
+        "tài nguyên nước",
+        "quy hoạch tài nguyên nước",
+        "lưu vực sông",
+        "an ninh nguồn nước",
+        "hạn hán",
+        "xâm nhập mặn",
+        "lũ lụt",
+        "đập thủy lợi",
+        "hồ chứa",
+        "nước ngầm",
+        "quản lý lưu vực sông",
+        "nguồn nước mặt"
+      ],
+      "keywords_ko": [
+        "수자원",
+        "하천유역",
+        "물 안보",
+        "염수침입",
+        "가뭄 대책",
+        "홍수 방지",
+        "저수지",
+        "지하수 보호"
+      ],
+      "exclude_if": [
+        "wastewater treatment plant",
+        "water supply plant construction",
+        "electric vehicle",
+        "power plant mw",
+        "lng"
+      ],
+      "provinces": [
+        "Hanoi",
+        "Ho Chi Minh City",
+        "Mekong Delta",
+        "Red River Delta",
+        "Da Nang",
+        "Can Tho",
+        "Tien Giang",
+        "Long An",
+        "Dong Nai"
+      ]
+    },
+    "VN-WAT-URBAN": {
+      "id": "VN-WAT-URBAN",
+      "name_ko": "도시 상수도 인프라 개발 계획 2025/2035",
+      "name_en": "Urban Water Supply Infrastructure Development Plan",
+      "parent": null,
+      "legal_basis": "Decision 1929/QD-TTg (2021) + Decision 1566/QD-TTg",
+      "ministry": "MOC",
+      "sectors": [
+        "Water Supply/Drainage"
+      ],
+      "area": "Environment",
+      "period": "2021-2035",
+      "budget_usd": "8B",
+      "match_threshold": 40,
+      "kpi_2030": "도시 보급률 95-100%, NRW 15% 이하",
+      "keywords_en": [
+        "water supply plant",
+        "water treatment plant",
+        "clean water supply",
+        "water pipeline",
+        "drinking water",
+        "water network",
+        "water loss reduction",
+        "safe water program",
+        "urban water supply",
+        "water coverage",
+        "water meter",
+        "smart water management",
+        "water tariff",
+        "centralized water supply",
+        "non-revenue water",
+        "water pressure",
+        "water quality testing",
+        "water utility vietnam",
+        "ban mong water treatment"
+      ],
+      "keywords_vi": [
+        "nhà máy nước",
+        "cấp nước đô thị",
+        "mạng lưới cấp nước",
+        "thất thoát nước",
+        "nước sạch đô thị",
+        "cấp nước an toàn",
+        "đường ống cấp nước",
+        "nước máy",
+        "trạm cấp nước"
+      ],
+      "keywords_ko": [
+        "상수도",
+        "정수장",
+        "수도관",
+        "청정수 공급",
+        "누수 감소",
+        "도시 급수",
+        "수도 보급률"
+      ],
+      "exclude_if": [
+        "wastewater",
+        "sewage",
+        "irrigation dam",
+        "electric vehicle",
+        "power plant",
+        "water resources basin management"
+      ],
+      "provinces": [
+        "Hanoi",
+        "Ho Chi Minh City",
+        "Da Nang",
+        "Hai Phong",
+        "Can Tho",
+        "Binh Duong",
+        "Dong Nai",
+        "Son La",
+        "Kien Giang"
+      ]
+    },
+    "VN-WAT-RURAL": {
+      "id": "VN-WAT-RURAL",
+      "name_ko": "농촌 상수도·위생 국가전략 2030/2045",
+      "name_en": "Rural Water Supply and Sanitation National Strategy",
+      "parent": null,
+      "legal_basis": "Decision 1978/QD-TTg (2021)",
+      "ministry": "MARD",
+      "sectors": [
+        "Water Supply/Drainage"
+      ],
+      "area": "Environment",
+      "period": "2021-2045",
+      "budget_usd": "3B+",
+      "match_threshold": 40,
+      "kpi_2030": "6,200만명 농촌 청정수 접근, 위생시설 90%",
+      "keywords_en": [
+        "rural water supply",
+        "rural sanitation",
+        "rural clean water",
+        "commune water supply",
+        "ethnic minority water",
+        "highland water supply",
+        "village water system",
+        "rural waterworks",
+        "rural wash program",
+        "decision 1978 rural water",
+        "mard water program",
+        "rural water infrastructure",
+        "rural piped water"
+      ],
+      "keywords_vi": [
+        "cấp nước nông thôn",
+        "vệ sinh nông thôn",
+        "nước sạch nông thôn",
+        "cấp nước vùng cao",
+        "nước sinh hoạt nông thôn",
+        "công trình cấp nước nông thôn"
+      ],
+      "keywords_ko": [
+        "농촌 상수도",
+        "농촌 위생",
+        "오지 급수",
+        "소수민족 급수",
+        "농촌 식수 공급"
+      ],
+      "exclude_if": [
+        "urban water supply plant",
+        "wastewater treatment",
+        "electric vehicle",
+        "power plant"
+      ],
+      "provinces": [
+        "Dong Nai",
+        "Dak Nong",
+        "Mekong Delta",
+        "Central Highlands",
+        "Northern Uplands"
+      ]
+    },
+    "VN-ENV-IND-1894": {
+      "id": "VN-ENV-IND-1894",
+      "name_ko": "베트남 환경산업 개발프로그램 (Decision 1894)",
+      "name_en": "Environmental Industry Development Program (Decision 1894)",
+      "parent": null,
+      "legal_basis": "Decision 1894/QD-TTg (September 4, 2025)",
+      "ministry": "MOIT",
+      "sectors": [
+        "Solid Waste",
+        "Waste Water",
+        "Water Supply/Drainage",
+        "Industrial Parks"
+      ],
+      "area": "Environment",
+      "period": "2025-2030",
+      "budget_usd": "Gov R&D + private matching",
+      "match_threshold": 45,
+      "kpi_2030": "폐수처리 기술 국산화 70-80%, 배기가스 처리 60-70%, 고형폐기물 50-60%",
+      "keywords_en": [
+        "decision 1894",
+        "environmental industry vietnam",
+        "waste-to-energy technology",
+        "wte technology localization",
+        "industrial waste treatment technology",
+        "pollution control equipment",
+        "air quality monitoring system",
+        "environmental monitoring equipment",
+        "epr extended producer responsibility",
+        "circular economy vietnam",
+        "environmental technology transfer",
+        "eco-industrial technology",
+        "green industry vietnam",
+        "environmental equipment manufacturing",
+        "pollution treatment technology",
+        "waste management technology"
+      ],
+      "keywords_vi": [
+        "công nghiệp môi trường",
+        "quyết định 1894",
+        "công nghệ xử lý chất thải",
+        "thiết bị môi trường",
+        "quan trắc môi trường",
+        "công nghệ lọc khí",
+        "nội địa hóa công nghệ môi trường"
+      ],
+      "keywords_ko": [
+        "환경산업",
+        "폐기물 에너지화 기술",
+        "산업폐기물 처리기술",
+        "환경모니터링 장비",
+        "공기오염 방지",
+        "환경기술 국산화"
+      ],
+      "exclude_if": [
+        "wastewater treatment plant construction",
+        "water supply plant construction",
+        "electric vehicle"
+      ],
+      "provinces": [
+        "Hanoi",
+        "Ho Chi Minh City",
+        "Da Nang",
+        "Binh Duong",
+        "Dong Nai"
+      ]
+    },
+    "VN-PWR-PDP8": {
+      "id": "VN-PWR-PDP8",
+      "name_ko": "베트남 국가전력개발계획 8차 (PDP8 통합)",
+      "name_en": "Vietnam Power Development Plan VIII — Integrated (Decision 768)",
+      "parent": null,
+      "legal_basis": "Decision 768/QD-TTg (April 15, 2025) — Revised PDP8 (원본: Decision 500/2023)",
+      "ministry": "MOIT",
+      "sectors": [
+        "Power"
+      ],
+      "area": "Energy Develop.",
+      "period": "2021-2030 / Vision 2050",
+      "budget_usd": "136.3B (2026-2030)",
+      "match_threshold": 45,
+      "kpi_2030": "총 설비용량 183,291-236,363MW, 재생에너지 비중 25-31%",
+      "keywords_en": [
+        "pdp8",
+        "pdp 8",
+        "pdp-8",
+        "pdp viii",
+        "power development plan viii",
+        "power development plan 8",
+        "vietnam power plan",
+        "national power plan vietnam",
+        "decision 500 power",
+        "decision 768 power",
+        "electricity development plan",
+        "vietnam electricity capacity",
+        "quy hoach dien viii",
+        "national electricity plan"
+      ],
+      "keywords_vi": [
+        "quy hoạch điện viii",
+        "quy hoạch điện 8",
+        "kế hoạch phát triển điện",
+        "điện lực quốc gia"
+      ],
+      "keywords_ko": [
+        "전력개발계획 8차",
+        "pdp8",
+        "베트남 전력계획",
+        "국가 전력개발계획"
+      ],
+      "exclude_if": [],
+      "provinces": [
+        "Quang Tri",
+        "Binh Thuan",
+        "Ninh Thuan",
+        "Ca Mau",
+        "Bac Lieu",
+        "Long An",
+        "Hai Phong",
+        "Ha Tinh",
+        "Quang Binh",
+        "Binh Dinh"
+      ],
+      "children": [
+        "VN-PWR-PDP8-RENEWABLE",
+        "VN-PWR-PDP8-LNG",
+        "VN-PWR-PDP8-NUCLEAR",
+        "VN-PWR-PDP8-COAL",
+        "VN-PWR-PDP8-GRID",
+        "VN-PWR-PDP8-HYDROGEN"
+      ]
+    },
+    "VN-PWR-PDP8-RENEWABLE": {
+      "id": "VN-PWR-PDP8-RENEWABLE",
+      "name_ko": "PDP8 재생에너지 (태양광·풍력·수력)",
+      "name_en": "PDP8 Renewable Energy — Solar, Wind, Hydro",
+      "parent": "VN-PWR-PDP8",
+      "legal_basis": "Decision 768/QD-TTg (2025)",
+      "ministry": "MOIT",
+      "sectors": [
+        "Power"
+      ],
+      "area": "Energy Develop.",
+      "period": "2021-2030",
+      "budget_usd": "included in PDP8",
+      "match_threshold": 40,
+      "kpi_2030": "태양광 46,459-73,416MW, 육상풍력 26,066-38,029MW, 해상풍력 6,000-17,032MW",
+      "keywords_en": [
+        "offshore wind vietnam",
+        "onshore wind vietnam",
+        "solar power vietnam",
+        "solar capacity vietnam",
+        "wind capacity vietnam",
+        "solar farm vietnam",
+        "floating solar vietnam",
+        "rooftop solar vietnam",
+        "wind power plant vietnam",
+        "wind turbine installation",
+        "hydropower vietnam",
+        "pumped storage vietnam",
+        "battery storage vietnam",
+        "renewable energy capacity",
+        "renewable energy vietnam",
+        "wind energy project",
+        "solar energy project",
+        "re100 vietnam"
+      ],
+      "keywords_vi": [
+        "nhà máy điện gió",
+        "năng lượng tái tạo",
+        "phong điện",
+        "điện mặt trời",
+        "điện gió ngoài khơi",
+        "điện gió trên bờ",
+        "điện mặt trời nổi",
+        "pin lưu trữ năng lượng"
+      ],
+      "keywords_ko": [
+        "재생에너지",
+        "태양광",
+        "풍력",
+        "수력",
+        "해상풍력",
+        "육상풍력",
+        "부유식 태양광",
+        "배터리 저장",
+        "에너지 저장"
+      ],
+      "exclude_if": [
+        "electric vehicle",
+        "vinfast",
+        "ev charger",
+        "wastewater treatment",
+        "highway construction",
+        "metro line",
+        "lng terminal",
+        "nuclear power plant",
+        "coal phase"
+      ]
+    },
+    "VN-PWR-PDP8-LNG": {
+      "id": "VN-PWR-PDP8-LNG",
+      "name_ko": "PDP8 LNG 가스발전 및 인프라",
+      "name_en": "PDP8 LNG Gas Power and Infrastructure",
+      "parent": "VN-PWR-PDP8",
+      "legal_basis": "Decision 768/QD-TTg (2025)",
+      "ministry": "MOIT",
+      "sectors": [
+        "Power",
+        "Oil & Gas"
+      ],
+      "area": "Energy Develop.",
+      "period": "2021-2030",
+      "budget_usd": "included in PDP8",
+      "match_threshold": 40,
+      "kpi_2030": "LNG 발전용량 22,524MW, LNG 수입터미널 5개소, 연간 수요 14-18 BCM",
+      "keywords_en": [
+        "lng power plant",
+        "lng terminal vietnam",
+        "gas-fired power plant",
+        "combined cycle gas",
+        "lng import vietnam",
+        "gas power capacity",
+        "lng regasification",
+        "lng floating storage",
+        "nhon trach lng",
+        "quang trach lng",
+        "long an lng",
+        "ca mau lng",
+        "pv gas vietnam",
+        "lng supply chain vietnam",
+        "gas turbine vietnam",
+        "lng infrastructure"
+      ],
+      "keywords_vi": [
+        "nhà máy điện khí",
+        "kho cảng lng",
+        "điện khí lng",
+        "khí hóa lỏng",
+        "tua-bin khí",
+        "hệ thống cung cấp khí"
+      ],
+      "keywords_ko": [
+        "lng 발전소",
+        "lng 터미널",
+        "가스발전",
+        "천연가스 발전",
+        "lng 수입",
+        "가스 터빈",
+        "액화천연가스"
+      ],
+      "exclude_if": [
+        "electric vehicle",
+        "ev charger",
+        "solar farm",
+        "wind turbine",
+        "highway construction",
+        "metro line",
+        "wastewater treatment plant"
+      ]
+    },
+    "VN-PWR-PDP8-NUCLEAR": {
+      "id": "VN-PWR-PDP8-NUCLEAR",
+      "name_ko": "PDP8 원자력 발전 (닌투언 1·2호기)",
+      "name_en": "PDP8 Nuclear Power — Ninh Thuan 1 & 2",
+      "parent": "VN-PWR-PDP8",
+      "legal_basis": "Decision 768/QD-TTg (2025) + Resolution 174/2024",
+      "ministry": "MOIT",
+      "sectors": [
+        "Power"
+      ],
+      "area": "Energy Develop.",
+      "period": "2025-2035",
+      "budget_usd": "8-12B",
+      "match_threshold": 35,
+      "kpi_2030": "원자력 설비용량 4,000-6,400MW (닌투언 1·2호기)",
+      "keywords_en": [
+        "nuclear power vietnam",
+        "ninh thuan nuclear",
+        "nuclear power plant npp",
+        "rosatom vietnam",
+        "vietnam nuclear energy",
+        "nuclear reactor vietnam",
+        "small modular reactor smr",
+        "resolution 174 nuclear",
+        "resolution 189 nuclear",
+        "ninh thuan 1 npp",
+        "ninh thuan 2 npp",
+        "nuclear energy restart vietnam"
+      ],
+      "keywords_vi": [
+        "điện hạt nhân",
+        "nhà máy điện hạt nhân",
+        "ninh thuận hạt nhân",
+        "năng lượng hạt nhân"
+      ],
+      "keywords_ko": [
+        "원자력 발전소",
+        "닌투언 원전",
+        "소형모듈원전",
+        "베트남 원전 재개"
+      ],
+      "exclude_if": [
+        "solar farm",
+        "wind farm",
+        "coal plant",
+        "lng import",
+        "electric vehicle",
+        "highway",
+        "wastewater"
+      ]
+    },
+    "VN-PWR-PDP8-COAL": {
+      "id": "VN-PWR-PDP8-COAL",
+      "name_ko": "PDP8 석탄발전 전환·단계적 폐지",
+      "name_en": "PDP8 Coal Power Transition and Phase-out",
+      "parent": "VN-PWR-PDP8",
+      "legal_basis": "Decision 768/QD-TTg (2025) + JETP Partnership",
+      "ministry": "MOIT",
+      "sectors": [
+        "Power"
+      ],
+      "area": "Energy Develop.",
+      "period": "2021-2050",
+      "budget_usd": "ADB/WB support",
+      "match_threshold": 35,
+      "kpi_2030": "석탄 신규 없음 31,055MW 유지, 2050년 0MW 목표",
+      "keywords_en": [
+        "coal phase-out vietnam",
+        "coal retirement vietnam",
+        "jetp vietnam",
+        "just energy transition vietnam",
+        "coal power plant closure",
+        "coal transition fund",
+        "early retirement coal",
+        "coal decommission vietnam",
+        "thermal power transition",
+        "fossil fuel phase-out vietnam"
+      ],
+      "keywords_vi": [
+        "nhiệt điện than đóng cửa",
+        "chuyển đổi năng lượng",
+        "loại bỏ than",
+        "chuyển đổi điện than"
+      ],
+      "keywords_ko": [
+        "탈석탄",
+        "석탄발전 폐지",
+        "공정에너지전환",
+        "jetp",
+        "석탄 조기 폐쇄"
+      ],
+      "exclude_if": [
+        "electric vehicle",
+        "lng terminal",
+        "solar capacity",
+        "wastewater",
+        "highway"
+      ]
+    },
+    "VN-PWR-PDP8-GRID": {
+      "id": "VN-PWR-PDP8-GRID",
+      "name_ko": "PDP8 송전망·스마트그리드",
+      "name_en": "PDP8 Transmission Grid and Smart Grid",
+      "parent": "VN-PWR-PDP8",
+      "legal_basis": "Decision 768/QD-TTg (2025)",
+      "ministry": "MOIT / EVNNPT",
+      "sectors": [
+        "Power"
+      ],
+      "area": "Energy Develop.",
+      "period": "2021-2030",
+      "budget_usd": "included in PDP8",
+      "match_threshold": 35,
+      "kpi_2030": "500kV 송전선 2,400km+, 스마트미터 도시 100%, BESS 3,000MW",
+      "keywords_en": [
+        "500kv transmission line",
+        "power transmission grid",
+        "smart grid vietnam",
+        "power substation vietnam",
+        "evnnpt transmission",
+        "high voltage line vietnam",
+        "grid expansion vietnam",
+        "power grid upgrade",
+        "smart meter vietnam",
+        "ami metering system",
+        "battery energy storage bess",
+        "dppa direct power purchase",
+        "electricity grid infrastructure"
+      ],
+      "keywords_vi": [
+        "lưới điện thông minh",
+        "đường dây 500kv",
+        "trạm biến áp",
+        "lưới truyền tải điện",
+        "hệ thống điện quốc gia",
+        "điện lưới thông minh"
+      ],
+      "keywords_ko": [
+        "송전망",
+        "변전소",
+        "스마트그리드",
+        "500kv 송전선",
+        "배터리 에너지저장",
+        "dppa"
+      ],
+      "exclude_if": [
+        "electric vehicle",
+        "ev charging",
+        "wastewater",
+        "highway",
+        "nuclear power plant"
+      ]
+    },
+    "VN-PWR-PDP8-HYDROGEN": {
+      "id": "VN-PWR-PDP8-HYDROGEN",
+      "name_ko": "PDP8 수소·그린에너지 (RE 수출)",
+      "name_en": "PDP8 Hydrogen and Green Energy Export",
+      "parent": "VN-PWR-PDP8",
+      "legal_basis": "Decision 768/QD-TTg (2025)",
+      "ministry": "MOIT + MPI",
+      "sectors": [
+        "Power"
+      ],
+      "area": "Energy Develop.",
+      "period": "2025-2035",
+      "budget_usd": "TBD",
+      "match_threshold": 35,
+      "kpi_2035": "RE 수출 5,000-10,000MW, 그린수소 상업화 2030",
+      "keywords_en": [
+        "green hydrogen vietnam",
+        "hydrogen energy vietnam",
+        "renewable energy export vietnam",
+        "re export singapore",
+        "re export malaysia",
+        "hydrogen economy vietnam",
+        "electrolysis vietnam",
+        "hydrogen fuel cell vietnam",
+        "offshore wind export",
+        "green ammonia vietnam",
+        "power export asean",
+        "hydrogen roadmap vietnam"
+      ],
+      "keywords_vi": [
+        "hydro xanh",
+        "năng lượng hydro",
+        "xuất khẩu năng lượng tái tạo",
+        "nền kinh tế hydro"
+      ],
+      "keywords_ko": [
+        "그린수소",
+        "수소경제",
+        "재생에너지 수출",
+        "해상풍력 수출",
+        "그린암모니아"
+      ],
+      "exclude_if": [
+        "electric vehicle",
+        "wastewater",
+        "highway",
+        "nuclear power plant",
+        "lng import deal"
+      ]
+    },
+    "VN-OG-2030": {
+      "id": "VN-OG-2030",
+      "name_ko": "베트남 석유가스 개발 계획 2030",
+      "name_en": "Vietnam Oil and Gas Development Plan 2030, Vision 2045",
+      "parent": null,
+      "legal_basis": "Decision 893/QD-TTg (2023) + PetroVietnam Strategy",
+      "ministry": "MOIT + PetroVietnam (PVN)",
+      "sectors": [
+        "Oil & Gas"
+      ],
+      "area": "Energy Develop.",
+      "period": "2021-2030 / Vision 2045",
+      "budget_usd": "12B (PVN + JV)",
+      "match_threshold": 40,
+      "kpi_2030": "원유 800만톤/년, 가스 130억㎥/년, LNG 터미널 5개소",
+      "keywords_en": [
+        "oil field vietnam",
+        "crude oil production vietnam",
+        "petroleum exploration vietnam",
+        "offshore oil block vietnam",
+        "oil refinery vietnam",
+        "petrovietnam pvn",
+        "dung quat refinery",
+        "nghi son refinery",
+        "oil gas exploration",
+        "deep water exploration vietnam",
+        "bach ho oil field",
+        "lan tay gas field",
+        "gas pipeline vietnam",
+        "upstream oil vietnam",
+        "pv oil vietnam",
+        "pvgas vietnam",
+        "oil production target vietnam",
+        "oilfield development"
+      ],
+      "keywords_vi": [
+        "dầu khí",
+        "khai thác dầu",
+        "lọc dầu",
+        "tập đoàn dầu khí",
+        "thăm dò dầu khí",
+        "đường ống dẫn khí",
+        "mỏ dầu"
+      ],
+      "keywords_ko": [
+        "유전 개발",
+        "원유 생산",
+        "정유 시설",
+        "페트로베트남",
+        "가스전 개발",
+        "심해 탐사"
+      ],
+      "exclude_if": [
+        "electric vehicle",
+        "lng terminal power",
+        "wastewater",
+        "solar farm",
+        "wind farm",
+        "highway"
+      ]
+    },
+    "VN-TRAN-2055": {
+      "id": "VN-TRAN-2055",
+      "name_ko": "국가 교통인프라 마스터플랜 2055",
+      "name_en": "Vietnam National Transport Infrastructure Master Plan to 2055",
+      "parent": null,
+      "legal_basis": "Decision 1454/QD-TTg (July 1, 2021)",
+      "ministry": "Ministry of Transport (MOT)",
+      "sectors": [
+        "Transport"
+      ],
+      "area": "Urban Develop.",
+      "period": "2021-2055",
+      "budget_usd": "243B (2021-2030: $130B + 2030-2055: $113B)",
+      "match_threshold": 40,
+      "kpi_2030": "고속도로 5,000km, Long Thanh 공항 1단계, Lach Huyen 심수항 2단계",
+      "keywords_en": [
+        "expressway vietnam",
+        "highway construction vietnam",
+        "high-speed rail vietnam",
+        "railway project vietnam",
+        "port expansion vietnam",
+        "airport terminal vietnam",
+        "bridge construction vietnam",
+        "ring road vietnam",
+        "north-south expressway",
+        "long thanh airport",
+        "lach huyen port",
+        "transport infrastructure vietnam",
+        "road construction km",
+        "national highway",
+        "ring road 3 hcmc",
+        "ring road 4 hanoi",
+        "long thanh noi bai",
+        "bien hoa vung tau expressway",
+        "north south railway",
+        "high speed rail 2035",
+        "lien chieu port danang"
+      ],
+      "keywords_vi": [
+        "đường cao tốc",
+        "cầu",
+        "sân bay",
+        "cảng biển",
+        "đường sắt cao tốc",
+        "hạ tầng giao thông",
+        "vành đai giao thông",
+        "cảng hàng không"
+      ],
+      "keywords_ko": [
+        "고속도로",
+        "교통 인프라",
+        "교량 건설",
+        "항만 확장",
+        "공항 건설",
+        "링로드",
+        "철도 프로젝트"
+      ],
+      "exclude_if": [
+        "electric vehicle",
+        "metro line",
+        "subway",
+        "power plant gw",
+        "wastewater plant",
+        "smart grid"
+      ],
+      "children": [
+        "VN-URB-METRO-2030"
+      ],
+      "provinces": [
+        "Ho Chi Minh City",
+        "Hanoi",
+        "Dong Nai",
+        "Hai Phong",
+        "Da Nang",
+        "Quang Ninh"
+      ]
+    },
+    "VN-URB-METRO-2030": {
+      "id": "VN-URB-METRO-2030",
+      "name_ko": "베트남 도시철도·메트로 개발계획 2030",
+      "name_en": "Vietnam Urban Rail / Metro Development Plan 2030",
+      "parent": "VN-TRAN-2055",
+      "legal_basis": "Various city-level decisions",
+      "ministry": "MOT + MOC + City governments",
+      "sectors": [
+        "Transport"
+      ],
+      "area": "Urban Develop.",
+      "period": "2021-2035",
+      "budget_usd": "included in TRAN-2055",
+      "match_threshold": 35,
+      "kpi_2035": "하노이 메트로 15개 노선 410km+, HCMC 메트로 6개 노선",
+      "keywords_en": [
+        "metro line vietnam",
+        "urban rail vietnam",
+        "subway construction vietnam",
+        "mrt system vietnam",
+        "light rail transit vietnam",
+        "hanoi metro line",
+        "hcmc metro line",
+        "cat linh ha dong metro",
+        "nhon ga hanoi metro",
+        "ben thanh metro",
+        "urban railway vietnam",
+        "metro ridership"
+      ],
+      "keywords_vi": [
+        "tàu điện ngầm",
+        "đường sắt đô thị",
+        "metro hà nội",
+        "metro tp hồ chí minh",
+        "cat linh",
+        "nhổn ga hà nội"
+      ],
+      "keywords_ko": [
+        "지하철 노선",
+        "도시철도",
+        "메트로 건설",
+        "하노이 메트로",
+        "호치민 메트로"
+      ],
+      "exclude_if": [
+        "highway",
+        "airport",
+        "seaport",
+        "electric vehicle",
+        "power plant"
+      ]
+    },
+    "VN-SC-2030": {
+      "id": "VN-SC-2030",
+      "name_ko": "스마트시티 국가전략 2030 (기술·플랫폼)",
+      "name_en": "Vietnam Smart City Development Strategy 2030",
+      "parent": null,
+      "legal_basis": "Decision 950/QD-TTg (2018) + Resolution 52/NQ-TW (2019)",
+      "ministry": "MOC + Ministry of Information & Communications (MIC)",
+      "sectors": [
+        "Smart City"
+      ],
+      "area": "Urban Develop.",
+      "period": "2018-2030",
+      "budget_usd": "15B (2020-2030)",
+      "match_threshold": 40,
+      "kpi_2030": "전국 63개 성시 스마트시티 플랫폼, AI 교통 10개 도시, 전자정부 ASEAN Top 3",
+      "keywords_en": [
+        "smart city technology vietnam",
+        "smart city platform vietnam",
+        "digital city vietnam",
+        "smart urban platform",
+        "iot city infrastructure",
+        "e-government vietnam",
+        "smart traffic system",
+        "digital twin city",
+        "urban digital transformation vietnam",
+        "smart city strategy 950",
+        "city data platform",
+        "smart city pilot vietnam",
+        "urban technology vietnam",
+        "digital government services",
+        "smart urban management"
+      ],
+      "keywords_vi": [
+        "thành phố thông minh",
+        "đô thị thông minh",
+        "chuyển đổi số đô thị",
+        "hạ tầng iot đô thị",
+        "chính quyền điện tử",
+        "giao thông thông minh"
+      ],
+      "keywords_ko": [
+        "스마트시티 플랫폼",
+        "디지털 도시 기술",
+        "전자정부",
+        "IoT 인프라",
+        "스마트 교통",
+        "디지털트윈 도시"
+      ],
+      "exclude_if": [
+        "electric vehicle sales",
+        "power plant mw",
+        "lng terminal",
+        "wastewater treatment plant",
+        "highway km"
+      ]
+    },
+    "VN-IP-NORTH-2030": {
+      "id": "VN-IP-NORTH-2030",
+      "name_ko": "북부 산업단지 개발 계획 2030",
+      "name_en": "Northern Industrial Park Development Plan 2030",
+      "parent": null,
+      "legal_basis": "Decision 1107/QD-TTg (Industrial Park Master Plan 2030, Vision 2050)",
+      "ministry": "MPI + DEZA",
+      "sectors": [
+        "Industrial Parks"
+      ],
+      "area": "Urban Develop.",
+      "period": "2021-2030",
+      "budget_usd": "30B+ (IP infra + FDI)",
+      "match_threshold": 40,
+      "kpi_2030": "산업단지 300개, 입주율 90%, 스마트 산업단지 전환 50%",
+      "keywords_en": [
+        "industrial park vietnam",
+        "vsip vietnam",
+        "industrial zone development vietnam",
+        "economic zone fdi vietnam",
+        "manufacturing hub vietnam",
+        "north vietnam industrial",
+        "hai phong industrial park",
+        "quang ninh industrial",
+        "bac ninh industrial",
+        "hung yen industrial",
+        "deep-c industrial park",
+        "vinfast industrial",
+        "wha industrial park",
+        "van don economic zone",
+        "eco industrial park",
+        "smart industrial park",
+        "industrial cluster"
+      ],
+      "keywords_vi": [
+        "khu công nghiệp",
+        "khu kinh tế",
+        "khu chế xuất",
+        "cụm công nghiệp",
+        "khu công nghiệp xanh",
+        "khu công nghiệp thông minh"
+      ],
+      "keywords_ko": [
+        "산업단지 개발",
+        "vsip",
+        "경제특구",
+        "북부 제조단지",
+        "클린산업단지",
+        "스마트산업단지"
+      ],
+      "exclude_if": [
+        "wastewater",
+        "power plant",
+        "electric vehicle",
+        "smart city digital",
+        "highway km"
+      ],
+      "provinces": [
+        "Hai Phong",
+        "Quang Ninh",
+        "Bac Ninh",
+        "Hung Yen",
+        "Vinh Phuc",
+        "Thai Nguyen"
+      ]
+    },
+    "VN-RED-RIVER-2030": {
+      "id": "VN-RED-RIVER-2030",
+      "name_ko": "홍강 델타 지역 개발 마스터플랜 2030",
+      "name_en": "Red River Delta Regional Development Master Plan 2021-2030, Vision 2045",
+      "parent": null,
+      "legal_basis": "Decision 368/QD-TTg (2022) + Decision 612/QD-TTg (2026 조정)",
+      "ministry": "MPI + 11개 성시 인민위원회",
+      "sectors": [
+        "Industrial Parks",
+        "Smart City",
+        "Water Supply/Drainage",
+        "Transport"
+      ],
+      "area": "Urban Develop.",
+      "period": "2021-2030 / Vision 2045",
+      "budget_usd": "150B+",
+      "match_threshold": 40,
+      "kpi_2030": "고속도로 1,300km, 산업단지 100개, FDI 누적 $180B",
+      "keywords_en": [
+        "red river delta development",
+        "red river delta planning",
+        "red river delta master plan",
+        "hanoi development plan",
+        "hung yen development",
+        "bac ninh development",
+        "hai phong development",
+        "quang ninh development",
+        "dong anh development",
+        "brg smart city hanoi",
+        "lh corporation vietnam",
+        "red river delta planning",
+        "decision 368 red river",
+        "decision 612 red river",
+        "ring road 4 hanoi",
+        "link road hanoi",
+        "red river corridor",
+        "hong ha delta",
+        "hanoi ring road 4",
+        "north vietnam region"
+      ],
+      "keywords_vi": [
+        "đồng bằng sông hồng",
+        "vùng đồng bằng sông hồng",
+        "quy hoạch vùng đồng bằng sông hồng",
+        "phát triển vùng đbsh",
+        "hà nội phát triển",
+        "vành đai 4 hà nội",
+        "hành lang kinh tế"
+      ],
+      "keywords_ko": [
+        "홍강 델타",
+        "홍강 삼각주",
+        "하노이 개발",
+        "흥옌 개발",
+        "박닌 개발",
+        "한국 lh공사 베트남",
+        "링로드4 하노이"
+      ],
+      "exclude_if": [
+        "mekong delta",
+        "wastewater treatment plant only",
+        "electric vehicle",
+        "lng terminal"
+      ],
+      "provinces": [
+        "Hanoi",
+        "Hai Phong",
+        "Quang Ninh",
+        "Bac Ninh",
+        "Hung Yen",
+        "Thai Binh",
+        "Nam Dinh",
+        "Ha Nam",
+        "Ninh Binh",
+        "Hai Duong",
+        "Vinh Phuc"
+      ]
+    },
+    "VN-MEKONG-DELTA-2030": {
+      "id": "VN-MEKONG-DELTA-2030",
+      "name_ko": "메콩델타 지역개발 마스터플랜 2021-2030",
+      "name_en": "Mekong Delta Regional Development Master Plan 2021-2030, Vision 2050",
+      "parent": null,
+      "legal_basis": "Decision 287/QD-TTg (2022) + Decision 616/QD-TTg (2026 조정)",
+      "ministry": "MPI + 13개 성시 인민위원회",
+      "sectors": [
+        "Water Supply/Drainage",
+        "Transport",
+        "Solid Waste"
+      ],
+      "area": "Urban Develop.",
+      "period": "2021-2030 / Vision 2050",
+      "budget_usd": "65B (고속도로 830km 포함)",
+      "match_threshold": 40,
+      "kpi_2030": "고속도로 830km, 국제공항 2개, 기후변화 대응 인프라",
+      "keywords_en": [
+        "mekong delta development",
+        "mekong delta planning",
+        "mekong delta master plan",
+        "can tho development",
+        "dong thap development",
+        "an giang development",
+        "kien giang development",
+        "ca mau development",
+        "soc trang development",
+        "mekong delta agriculture",
+        "mekong delta infrastructure",
+        "mekong delta climate change",
+        "mekong delta transport",
+        "mekong delta water",
+        "mekong delta expressway",
+        "can tho port",
+        "mekong delta logistics",
+        "decision 287 mekong",
+        "decision 616 mekong",
+        "saltwater intrusion mekong",
+        "mekong delta flood control",
+        "phu quoc development"
+      ],
+      "keywords_vi": [
+        "quy hoạch vùng đồng bằng sông cửu long",
+        "đồng bằng sông cửu long",
+        "vùng đbscl",
+        "kinh tế nông nghiệp đbscl",
+        "xâm nhập mặn đbscl",
+        "lũ đồng bằng",
+        "cần thơ phát triển"
+      ],
+      "keywords_ko": [
+        "메콩델타 개발",
+        "메콩델타 마스터플랜",
+        "껀터 개발",
+        "메콩강 삼각주",
+        "염수침입 메콩"
+      ],
+      "exclude_if": [
+        "wastewater treatment plant contract",
+        "solid waste collection bid",
+        "mekong river dam china",
+        "upper mekong"
+      ],
+      "provinces": [
+        "Can Tho",
+        "An Giang",
+        "Kien Giang",
+        "Ca Mau",
+        "Long An",
+        "Dong Thap",
+        "Tien Giang",
+        "Vinh Long",
+        "Ben Tre",
+        "Tra Vinh",
+        "Soc Trang",
+        "Bac Lieu",
+        "Hau Giang"
+      ]
+    },
+    "HN-URBAN-INFRA": {
+      "id": "HN-URBAN-INFRA",
+      "name_ko": "하노이 도시 인프라 (메트로·링로드·홍강·도심재개발)",
+      "name_en": "Hanoi Urban Infrastructure — Metro, Ring Roads, Red River, Urban Renewal",
+      "parent": null,
+      "legal_basis": "Decision 1668/QD-TTg (2024.12.27) + Resolution 258/2025/QH15",
+      "ministry": "MOC + Hanoi People's Committee",
+      "sectors": [
+        "Transport",
+        "Smart City"
+      ],
+      "area": "Urban Develop.",
+      "period": "2026-2045 / Vision 2065",
+      "budget_usd": "556.4B (2026-2035) / 2.5T (2026-2045)",
+      "match_threshold": 40,
+      "kpi_2045": "메트로 15개 노선 410km, 인구 14.6-16M, 링로드 완성",
+      "keywords_en": [
+        "hanoi urban development",
+        "hanoi master plan",
+        "hanoi ring road",
+        "ring road 4 hanoi",
+        "ring road 3.5 hanoi",
+        "to lich river",
+        "to lich cleanup",
+        "to lich rehabilitation",
+        "red river corridor hanoi",
+        "red river urban hanoi",
+        "hanoi metro",
+        "hanoi metro line 1",
+        "hanoi metro line 2",
+        "hanoi metro line 3",
+        "hanoi metro line 4",
+        "hanoi urban rail",
+        "hanoi bridge",
+        "hanoi new bridge",
+        "hanoi flooding solution",
+        "hanoi 2045",
+        "hanoi decision 1668",
+        "decision 1668 hanoi",
+        "hanoi 2065",
+        "hanoi ring road 4",
+        "ring road 5 hanoi",
+        "hanoi city expansion",
+        "hanoi urban renewal",
+        "hoan kiem redevelopment",
+        "ba dinh urban",
+        "hanoi inner city",
+        "hanoi public transport",
+        "hanoi bus rapid transit",
+        "hanoi urban plan",
+        "hanoi new city",
+        "hanoi 2.5 trillion",
+        "hong river hanoi development",
+        "red river island hanoi",
+        "hanoi 5 urban clusters",
+        "hanoi urban cluster",
+        "hanoi satellite city",
+        "hanoi urban structure"
+      ],
+      "keywords_vi": [
+        "metro hà nội",
+        "đường sắt đô thị hà nội",
+        "vành đai 4 hà nội",
+        "sông hồng hà nội",
+        "quy hoạch hà nội",
+        "sông tô lịch",
+        "phát triển đô thị hà nội",
+        "quy hoạch thủ đô",
+        "hà nội 2045",
+        "hà nội 2065",
+        "vành đai 3.5 hà nội",
+        "vành đai 5 hà nội",
+        "cầu hà nội mới",
+        "đô thị hai bên sông hồng",
+        "5 vùng đô thị hà nội",
+        "đô thị vệ tinh hà nội"
+      ],
+      "keywords_ko": [
+        "하노이 도시개발",
+        "하노이 마스터플랜 2045",
+        "또리히 강 정화",
+        "하노이 도심재개발",
+        "하노이 링로드4",
+        "하노이 5대 도시권",
+        "하노이 위성도시",
+        "하노이 메트로 전체",
+        "홍강 도시 개발",
+        "홍강 코리도"
+      ],
+      "exclude_if": [
+        "ho chi minh metro",
+        "da nang",
+        "wastewater treatment plant",
+        "power plant",
+        "lng terminal"
+      ],
+      "children": [
+        "HN-URBAN-NORTH",
+        "HN-URBAN-WEST"
+      ]
+    },
+    "HN-URBAN-NORTH": {
+      "id": "HN-URBAN-NORTH",
+      "name_ko": "하노이 북부 신도시 (동아인·BRG스마트시티·노이바이)",
+      "name_en": "Hanoi Northern New City — Dong Anh, BRG Smart City, Noi Bai",
+      "parent": "HN-URBAN-INFRA",
+      "legal_basis": "Decision 1668/QD-TTg (2024) — Northern Urban Cluster",
+      "ministry": "Hanoi People's Committee + MPI",
+      "sectors": [
+        "Smart City",
+        "Industrial Parks"
+      ],
+      "area": "Urban Develop.",
+      "period": "2026-2045",
+      "budget_usd": "BRG: $4.2B + Co Loa: $5B+",
+      "match_threshold": 35,
+      "kpi_2045": "인구 2.7-2.9M, 스마트시티·금융·국제엔터 허브",
+      "keywords_en": [
+        "dong anh",
+        "dong anh smart city",
+        "dong anh urban development",
+        "me linh hanoi",
+        "me linh district",
+        "me linh urban",
+        "soc son",
+        "soc son urban",
+        "north hanoi new city",
+        "brg smart city",
+        "brg sumitomo",
+        "brg dong anh",
+        "north hanoi development",
+        "northern city hanoi",
+        "co loa urban",
+        "co loa development",
+        "noi bai t3",
+        "noi bai airport expansion",
+        "noi bai terminal 3",
+        "nhat tan noi bai corridor",
+        "hanoi northern cluster",
+        "dong anh bridge",
+        "hanoi north urban",
+        "smart city dong anh",
+        "sumitomo hanoi",
+        "me linh smart",
+        "soc son airport city",
+        "hanoi urban cluster north"
+      ],
+      "keywords_vi": [
+        "đông anh",
+        "mê linh",
+        "sóc sơn",
+        "thành phố thông minh đông anh",
+        "đô thị phía bắc hà nội",
+        "smart city đông anh",
+        "khu đô thị đông anh",
+        "sân bay nội bài mở rộng",
+        "nhật tân nội bài",
+        "đô thị phía bắc",
+        "hành lang nhật tân nội bài"
+      ],
+      "keywords_ko": [
+        "동아인",
+        "하노이 북부 신도시",
+        "brg 스마트시티",
+        "노이바이 공항 확장",
+        "코로아 신도시",
+        "메린 하노이",
+        "속선 도시개발",
+        "하노이 북부 클러스터"
+      ],
+      "exclude_if": [
+        "mekong delta",
+        "ho chi minh",
+        "da nang",
+        "wastewater"
+      ]
+    },
+    "HN-URBAN-WEST": {
+      "id": "HN-URBAN-WEST",
+      "name_ko": "하노이 서부 과학기술도시 (호아락 하이테크파크·선따이)",
+      "name_en": "Hanoi Western Science-Tech City — Hoa Lac Hi-Tech Park, Son Tay",
+      "parent": "HN-URBAN-INFRA",
+      "legal_basis": "Decision 1668/QD-TTg (2024) — Western Urban Cluster",
+      "ministry": "Ministry of Science & Technology + Hanoi PC",
+      "sectors": [
+        "Smart City",
+        "Industrial Parks"
+      ],
+      "area": "Urban Develop.",
+      "period": "2026-2045",
+      "budget_usd": "Hoa Lac Phase 2: $10B+ total",
+      "match_threshold": 35,
+      "kpi_2045": "R&D 허브, 고등교육, 생태관광 도시",
+      "keywords_en": [
+        "hoa lac",
+        "hoa lac hi-tech",
+        "hoa lac high tech park",
+        "hoa lac hi-tech park",
+        "hoa lac science technology",
+        "western hanoi",
+        "west hanoi development",
+        "xuan mai",
+        "xuan mai urban",
+        "xuan mai hanoi",
+        "son tay hanoi",
+        "son tay urban",
+        "son tay development",
+        "thach that",
+        "tien xuan",
+        "tien xuan smart urban",
+        "lang hoa lac",
+        "hanoi western city",
+        "hoa lac r&d",
+        "hoa lac phase 2",
+        "hoa lac 1586ha",
+        "ba vi development",
+        "ba vi urban",
+        "hanoi western cluster",
+        "hanoi science city",
+        "vietnam national university hanoi hoa lac",
+        "samsung hoa lac",
+        "lg hoa lac",
+        "hanoi hi-tech park expansion"
+      ],
+      "keywords_vi": [
+        "hòa lạc",
+        "khu công nghệ cao hòa lạc",
+        "xuân mai",
+        "sơn tây",
+        "thạch thất",
+        "đô thị khoa học hòa lạc",
+        "khu đô thị hòa lạc",
+        "hà nội phía tây",
+        "đô thị phía tây hà nội",
+        "tiến xuân",
+        "khu công nghệ cao"
+      ],
+      "keywords_ko": [
+        "호아락",
+        "하노이 서부",
+        "하이테크 파크",
+        "과학기술도시",
+        "호아락 R&D",
+        "쑤언마이",
+        "선따이 개발",
+        "서부 하노이 클러스터"
+      ],
+      "exclude_if": [
+        "mekong delta",
+        "ho chi minh",
+        "da nang",
+        "wastewater"
+      ]
+    },
+    "HN-URBAN-SOUTH": {
+      "id": "HN-URBAN-SOUTH",
+      "name_ko": "하노이 남부 물류·공항 도시권 (자빈 제2공항)",
+      "name_en": "Hanoi Southern Logistics and Airport Urban Zone (Gia Binh Airport)",
+      "parent": "HN-URBAN-INFRA",
+      "legal_basis": "Decision 1668/QD-TTg (2024.12.27) — Southern Urban Cluster",
+      "ministry": "Ministry of Transport + Hanoi People's Committee",
+      "sectors": [
+        "Transport",
+        "Industrial Parks"
+      ],
+      "area": "Urban Develop.",
+      "period": "2026-2045",
+      "budget_usd": "Gia Binh Airport: $10B+ / Southern Hub: $5B+",
+      "match_threshold": 35,
+      "kpi_2045": "자빈 제2공항 1단계 2035, 남부 물류허브 조성, 인구 1.6M",
+      "keywords_en": [
+        "gia binh airport",
+        "gia binh",
+        "phu xuyen",
+        "southern hanoi",
+        "south hanoi development",
+        "hanoi second airport",
+        "hanoi new airport",
+        "hanoi southern logistics",
+        "southern logistics hub hanoi",
+        "thuong tin hanoi",
+        "thanh oai hanoi",
+        "hanoi southern cluster",
+        "phu xuyen urban",
+        "gia binh logistics",
+        "hanoi airport development",
+        "hanoi 5th urban cluster",
+        "hanoi southern new city",
+        "thu thiem hanoi south"
+      ],
+      "keywords_vi": [
+        "sân bay gia bình",
+        "phú xuyên",
+        "hà nội phía nam",
+        "đô thị phía nam hà nội",
+        "sân bay thứ hai hà nội",
+        "trung tâm logistics phía nam",
+        "thường tín",
+        "thanh oai",
+        "hành lang phía nam hà nội",
+        "khu đô thị phía nam hà nội"
+      ],
+      "keywords_ko": [
+        "자빈 공항",
+        "자빈 제2공항",
+        "푸쑤옌",
+        "하노이 남부 신도시",
+        "하노이 남부 물류허브",
+        "하노이 제2공항",
+        "통틴 개발",
+        "탄화이 개발",
+        "남부 하노이 클러스터"
+      ],
+      "exclude_if": [
+        "mekong delta",
+        "ho chi minh south",
+        "da nang",
+        "wastewater"
+      ],
+      "provinces": [
+        "Hanoi"
+      ],
+      "key_projects": [
+        "자빈(Gia Binh) 제2국제공항 — 4,000만명/년 1단계(2035)",
+        "남부 광역 물류허브 (하노이-홍강-하남 연결)",
+        "링로드4 남부구간 + 링로드5 계획",
+        "국도1호 현대화 (Thuong Tin~Phu Xuyen)",
+        "하노이-화빈 연결 교통 코리도"
+      ]
+    },
+    "HN-URBAN-EAST": {
+      "id": "HN-URBAN-EAST",
+      "name_ko": "하노이 동부 도시권 (자람·롱비엔·홍강신도시)",
+      "name_en": "Hanoi Eastern Urban Zone — Gia Lam, Long Bien, Red River New City",
+      "parent": "HN-URBAN-INFRA",
+      "legal_basis": "Decision 1668/QD-TTg (2024.12.27) — Eastern Urban Cluster",
+      "ministry": "MOC + Hanoi People's Committee",
+      "sectors": [
+        "Transport",
+        "Smart City",
+        "Industrial Parks"
+      ],
+      "area": "Urban Develop.",
+      "period": "2026-2045",
+      "budget_usd": "홍강 신도시 구상 $8B+ / 교량·인프라 $3B+",
+      "match_threshold": 35,
+      "kpi_2045": "인구 850K-1M, 홍강 양안 신도시, 교량 5개+ 건설",
+      "keywords_en": [
+        "gia lam hanoi",
+        "gia lam urban",
+        "gia lam district",
+        "long bien hanoi",
+        "long bien urban",
+        "long bien development",
+        "eastern hanoi",
+        "east hanoi development",
+        "hanoi eastern cluster",
+        "red river new city hanoi",
+        "hong river city hanoi",
+        "hanoi new bridge",
+        "hanoi red river development",
+        "hanoi eastern new city",
+        "long bien bridge new",
+        "vinh tuy bridge",
+        "thanh tri bridge",
+        "hanoi river city",
+        "dong anh bridge gia lam",
+        "hanoi 4th urban cluster",
+        "hanoi east urban expansion",
+        "long bien smart"
+      ],
+      "keywords_vi": [
+        "gia lâm",
+        "long biên",
+        "hà nội phía đông",
+        "đô thị phía đông hà nội",
+        "thành phố hai bên sông hồng",
+        "cầu hà nội mới",
+        "khu đô thị gia lâm",
+        "đô thị sông hồng",
+        "long biên phát triển",
+        "hành lang phía đông hà nội"
+      ],
+      "keywords_ko": [
+        "자람 개발",
+        "롱비엔 개발",
+        "하노이 동부 신도시",
+        "홍강 신도시",
+        "하노이 신교량",
+        "동부 하노이 클러스터",
+        "롱비엔 스마트시티"
+      ],
+      "exclude_if": [
+        "mekong delta",
+        "ho chi minh east",
+        "da nang",
+        "wastewater"
+      ],
+      "provinces": [
+        "Hanoi"
+      ],
+      "key_projects": [
+        "홍강 양안 신도시 (롱비엔·자람 통합개발)",
+        "비엔트루교(Vinh Tuy) 2교 완공",
+        "탄찌교(Thanh Tri) 확장",
+        "동아인-자람 연결 메트로 노선",
+        "링로드4 동부 구간 (자람~통틴)",
+        "자람 물류·산업·첨단 클러스터"
+      ]
+    }
+  },
+  "policy_sentinel": {
+    "_version": "1.0",
+    "_description": "플랜 특화 정책·법령 수집 레이어 — Gate P1(공통 신호어) + Gate P2(플랜 앵커어) 2중 조건",
+    "_logic": "sector_ok AND signal_hit>=1 AND anchor_hit>=1 AND NOT excl_hit → POLICY_MATCH",
+    "_tag": "POLICY_MATCH",
+    "_score_max": 60,
+    "_common_policy_signals": [
+      "decree",
+      "circular",
+      "resolution",
+      "decision no.",
+      "amended law",
+      "revised law",
+      "law on ",
+      "new law",
+      "regulation",
+      "legislation",
+      "ordinance",
+      "prime minister approv",
+      "ministry approv",
+      "government approv",
+      "national assembly approv",
+      "politburo resolution",
+      "qd-ttg",
+      "nd-cp",
+      "tt-bct",
+      "tt-btnmt",
+      "tt-bgtvt",
+      "nq-cp",
+      "nq-tw",
+      "/2025/",
+      "/2024/",
+      "/2026/",
+      "issued guiding",
+      "establishes framework",
+      "sets framework",
+      "regulates",
+      "mandates",
+      "requires",
+      "stipulates",
+      "new decree",
+      "new circular",
+      "policy framework",
+      "takes effect",
+      "effective from",
+      "into force",
+      "ban on",
+      "moratorium",
+      "approved by pm",
+      "quyết định",
+      "nghị định",
+      "thông tư",
+      "luật",
+      "nghị quyết",
+      "quy định",
+      "ban hành",
+      "decree no.",
+      "decree no ",
+      "circular no.",
+      "decision no ",
+      "approved decree",
+      "issued decree",
+      "new regulation on",
+      "ministry circular",
+      "government decree",
+      "pm decision",
+      "pm issues",
+      "approves revised",
+      "approving revised",
+      "issues decision",
+      "promulgated",
+      "enacted",
+      "signed into law",
+      "adopted resolution",
+      "cabinet approved",
+      "national assembly passed",
+      "ministry issues",
+      "revised pdp"
+    ],
+    "plans": {
+      "VN-WW-2030": {
+        "plan_anchor": [
+          "wastewater law",
+          "wastewater regulation",
+          "wastewater decree",
+          "sewage regulation",
+          "wwtp regulation",
+          "wastewater discharge standard",
+          "effluent standard",
+          "wastewater fee",
+          "wastewater tariff",
+          "water environment regulation",
+          "drainage law",
+          "thoát nước",
+          "xả thải",
+          "nước thải quy định",
+          "폐수 규제",
+          "하수 기준",
+          "decree 80 wastewater",
+          "wastewater decree 80",
+          "circular wastewater"
+        ],
+        "policy_excl": [
+          "water supply regulation",
+          "drinking water standard",
+          "water resource law",
+          "irrigation policy"
+        ]
+      },
+      "VN-SWM-NATIONAL-2030": {
+        "plan_anchor": [
+          "solid waste law",
+          "waste management decree",
+          "waste-to-energy regulation",
+          "wte policy",
+          "wte decree",
+          "landfill regulation",
+          "landfill ban",
+          "landfill closure policy",
+          "extended producer responsibility",
+          "epr regulation",
+          "epr decree",
+          "plastic waste ban",
+          "recycling regulation",
+          "incineration standard",
+          "waste sorting law",
+          "rác thải quy định",
+          "chất thải rắn luật",
+          "고형폐기물 규제",
+          "폐기물 관리 법령"
+        ],
+        "policy_excl": [
+          "wastewater law",
+          "water pollution regulation"
+        ]
+      },
+      "VN-ENV-IND-1894": {
+        "plan_anchor": [
+          "environmental industry policy",
+          "environmental technology regulation",
+          "decision 1894",
+          "1894/qd-ttg",
+          "pollution control standard",
+          "emission standard",
+          "environmental product certification",
+          "environmental equipment standard",
+          "công nghiệp môi trường quy định",
+          "tiêu chuẩn môi trường"
+        ],
+        "policy_excl": []
+      },
+      "VN-WAT-RESOURCES": {
+        "plan_anchor": [
+          "water resources law",
+          "water resources act",
+          "water law",
+          "river basin regulation",
+          "groundwater regulation",
+          "saltwater intrusion policy",
+          "flood control regulation",
+          "dam safety regulation",
+          "irrigation law",
+          "luật tài nguyên nước",
+          "quy định lưu vực sông",
+          "수자원법",
+          "하천 관리 규정"
+        ],
+        "policy_excl": [
+          "water supply regulation",
+          "wastewater law"
+        ]
+      },
+      "VN-WAT-URBAN": {
+        "plan_anchor": [
+          "water supply regulation",
+          "water tariff policy",
+          "water service law",
+          "drinking water standard",
+          "water supply concession",
+          "water utility regulation",
+          "cấp nước quy định",
+          "giá nước",
+          "tiêu chuẩn nước sạch"
+        ],
+        "policy_excl": [
+          "water resources law",
+          "wastewater law",
+          "irrigation"
+        ]
+      },
+      "VN-PWR-PDP8": {
+        "plan_anchor": [
+          "pdp8",
+          "power development plan",
+          "electricity law",
+          "electricity act",
+          "evn regulation",
+          "power market regulation",
+          "power purchase agreement regulation",
+          "dppa regulation",
+          "power tariff policy",
+          "electricity pricing",
+          "luật điện lực",
+          "quy hoạch điện",
+          "thị trường điện",
+          "전력법",
+          "전력개발계획 정책",
+          "decision 768",
+          "decision 500",
+          "electricity law 2024"
+        ],
+        "policy_excl": []
+      },
+      "VN-PWR-PDP8-RENEWABLE": {
+        "plan_anchor": [
+          "offshore wind regulation",
+          "offshore wind decree",
+          "feed-in tariff",
+          "fit policy",
+          "renewable energy law",
+          "solar power regulation",
+          "wind power regulation",
+          "dppa",
+          "direct power purchase",
+          "rooftop solar policy",
+          "re100 policy",
+          "renewable target regulation",
+          "decree 58 offshore",
+          "decree 57 dppa",
+          "luật năng lượng tái tạo",
+          "quy định điện gió",
+          "재생에너지법",
+          "해상풍력 규제",
+          "decree 58",
+          "decree 57",
+          "circular 31/2025",
+          "dppa decree"
+        ],
+        "policy_excl": [
+          "coal regulation",
+          "lng policy",
+          "nuclear regulation"
+        ]
+      },
+      "VN-PWR-PDP8-LNG": {
+        "plan_anchor": [
+          "lng regulation",
+          "lng decree",
+          "lng power policy",
+          "gas power regulation",
+          "lng import policy",
+          "lng terminal regulation",
+          "gas supply regulation",
+          "power offtake guarantee",
+          "minimum offtake",
+          "decree 100 lng",
+          "decree 56 electricity",
+          "decree 56 lng",
+          "gas pricing regulation",
+          "lng tariff",
+          "quy định lng",
+          "khí lng chính sách",
+          "lng 규제",
+          "가스발전 정책",
+          "decree 100",
+          "decree 56",
+          "decree 56/2025",
+          "decree 100/2025",
+          "lng offtake"
+        ],
+        "policy_excl": [
+          "renewable energy regulation",
+          "solar decree"
+        ]
+      },
+      "VN-PWR-PDP8-NUCLEAR": {
+        "plan_anchor": [
+          "nuclear law",
+          "nuclear energy law",
+          "nuclear regulation",
+          "nuclear safety regulation",
+          "nuclear power policy",
+          "ninh thuan nuclear policy",
+          "resolution 174",
+          "resolution 189 nuclear",
+          "smr regulation",
+          "atomic energy law",
+          "radiation safety law",
+          "luật năng lượng hạt nhân",
+          "quy định hạt nhân",
+          "원자력법",
+          "핵발전 규제",
+          "resolution 70",
+          "resolution 70-nq/tw",
+          "resolution 174",
+          "resolution 189"
+        ],
+        "policy_excl": []
+      },
+      "VN-PWR-PDP8-COAL": {
+        "plan_anchor": [
+          "coal phase-out policy",
+          "coal retirement policy",
+          "jetp policy",
+          "just energy transition policy",
+          "coal decommission regulation",
+          "coal moratorium",
+          "carbon credit regulation",
+          "emission trading regulation",
+          "coal-to-gas transition policy",
+          "chính sách than",
+          "đóng cửa nhiệt điện than",
+          "탈석탄 정책",
+          "석탄 전환 규제",
+          "decree 29/2026",
+          "carbon trading",
+          "carbon credit regulation",
+          "ets vietnam"
+        ],
+        "policy_excl": []
+      },
+      "VN-PWR-PDP8-GRID": {
+        "plan_anchor": [
+          "grid regulation",
+          "transmission regulation",
+          "electricity grid code",
+          "smart grid regulation",
+          "grid access policy",
+          "grid connection regulation",
+          "substation regulation",
+          "power line regulation",
+          "bess regulation",
+          "battery storage policy",
+          "luật truyền tải điện",
+          "quy định lưới điện",
+          "송전망 규제",
+          "전력망 정책"
+        ],
+        "policy_excl": []
+      },
+      "VN-OG-2030": {
+        "plan_anchor": [
+          "petroleum law",
+          "oil and gas law",
+          "upstream regulation",
+          "oil block regulation",
+          "exploration regulation",
+          "refinery regulation",
+          "petrovietnam policy",
+          "pvn regulation",
+          "gas pipeline regulation",
+          "luật dầu khí",
+          "quy định thăm dò dầu",
+          "석유가스법",
+          "원유 규제"
+        ],
+        "policy_excl": [
+          "lng power policy",
+          "renewable energy regulation"
+        ]
+      },
+      "VN-TRAN-2055": {
+        "plan_anchor": [
+          "transport law",
+          "highway law",
+          "road law",
+          "expressway regulation",
+          "toll regulation",
+          "airport regulation",
+          "aviation law",
+          "seaport regulation",
+          "port law",
+          "ppp transport",
+          "bot highway",
+          "ppp expressway",
+          "high-speed rail policy",
+          "railway law",
+          "luật giao thông",
+          "quy định cao tốc",
+          "luật hàng không",
+          "교통법",
+          "고속도로 규제",
+          "공항 정책"
+        ],
+        "policy_excl": [
+          "metro regulation",
+          "urban rail policy"
+        ]
+      },
+      "VN-URB-METRO-2030": {
+        "plan_anchor": [
+          "metro regulation",
+          "urban rail policy",
+          "metro law",
+          "urban railway regulation",
+          "light rail policy",
+          "transit oriented development policy",
+          "tod regulation",
+          "public transport policy",
+          "metro fare regulation",
+          "luật đường sắt đô thị",
+          "quy định metro",
+          "도시철도법",
+          "메트로 규제"
+        ],
+        "policy_excl": [
+          "highway law",
+          "airport regulation"
+        ]
+      },
+      "VN-SC-2030": {
+        "plan_anchor": [
+          "smart city policy",
+          "smart city regulation",
+          "digital city regulation",
+          "e-government law",
+          "data protection law",
+          "personal data regulation",
+          "5g regulation",
+          "iot regulation",
+          "digital infrastructure law",
+          "cybersecurity law",
+          "digital economy law",
+          "luật đô thị thông minh",
+          "quy định thành phố thông minh",
+          "스마트시티법",
+          "디지털 도시 규제",
+          "decree 13/2022",
+          "smart city strategy 950",
+          "digital economy decree"
+        ],
+        "policy_excl": []
+      },
+      "VN-IP-NORTH-2030": {
+        "plan_anchor": [
+          "industrial park regulation",
+          "industrial zone law",
+          "economic zone regulation",
+          "special economic zone law",
+          "investment incentive regulation",
+          "fdi regulation",
+          "industrial park fee",
+          "industrial zone policy",
+          "industrial park master plan decree",
+          "luật khu công nghiệp",
+          "quy định khu kinh tế",
+          "산업단지법",
+          "경제특구 규제"
+        ],
+        "policy_excl": []
+      },
+      "VN-MEKONG-DELTA-2030": {
+        "plan_anchor": [
+          "mekong delta policy",
+          "mekong development decree",
+          "mekong master plan regulation",
+          "mekong climate adaptation",
+          "saltwater intrusion policy",
+          "delta irrigation law",
+          "decision 287 mekong",
+          "decision 616 mekong",
+          "quy hoạch mekong",
+          "nghị quyết đbscl",
+          "메콩델타 정책",
+          "메콩 개발 규정"
+        ],
+        "policy_excl": []
+      },
+      "VN-RED-RIVER-2030": {
+        "plan_anchor": [
+          "red river delta policy",
+          "red river development regulation",
+          "hanoi capital law",
+          "hanoi masterplan regulation",
+          "luật thủ đô",
+          "quy hoạch đồng bằng sông hồng",
+          "decision 368 red river",
+          "decision 612",
+          "홍강델타 정책",
+          "수도법"
+        ],
+        "policy_excl": []
+      },
+      "HN-URBAN-INFRA": {
+        "plan_anchor": [
+          "hanoi urban law",
+          "hanoi master plan regulation",
+          "luật thủ đô",
+          "quy hoạch hà nội",
+          "hanoi ring road policy",
+          "decision 1668",
+          "hanoi metro policy",
+          "hanoi urban transport regulation",
+          "하노이 수도법",
+          "하노이 도시계획 규정"
+        ],
+        "policy_excl": []
+      },
+      "HN-URBAN-NORTH": {
+        "plan_anchor": [
+          "dong anh regulation",
+          "dong anh urban policy",
+          "brg smart city regulation",
+          "noi bai expansion policy",
+          "north hanoi development regulation",
+          "quy định đông anh",
+          "luật đô thị bắc hà nội"
+        ],
+        "policy_excl": []
+      },
+      "HN-URBAN-WEST": {
+        "plan_anchor": [
+          "hoa lac regulation",
+          "hoa lac hi-tech law",
+          "science technology law vietnam",
+          "high tech park regulation",
+          "luật khu công nghệ cao",
+          "quy định hòa lạc",
+          "호아락 규정",
+          "과학기술단지법"
+        ],
+        "policy_excl": []
+      },
+      "HN-URBAN-SOUTH": {
+        "plan_anchor": [
+          "gia binh airport policy",
+          "phu xuyen development regulation",
+          "hanoi airport policy",
+          "second airport regulation",
+          "quy định sân bay gia bình"
+        ],
+        "policy_excl": []
+      }
+    }
+  }
+}

@@ -1,2176 +1,752 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-Vietnam Infrastructure News Collector
-Version 5.3 — Environment & North Vietnam Coverage Enhancement
+news_collector.py  — v8.2
+==========================
+베트남 인프라 뉴스 수집기
 
-v5.2 대비 변경사항 (2026-03-29):
-  [RSS 추가] 환경 전문 P1: VietnamPlus-Moi truong, Nhandan-Moi truong,
-             Baotainguyenmoitruong, Kinhtemoitruong, VietnamPlus-Kinh te
-  [RSS 추가] 북부 지역 P2: Hanoimoi, Baobacgiang English, Nhandan-Kinh te
-  [RSS 추가] 보조 P3: Moitruong Net, Congnghiepmoitruong, VietnamPlus-Giao thong
-  [키워드 추가] 베트남어 환경 키워드 강화: môi trường, ô nhiễm, phân loại rác 등
-  [키워드 추가] 북부 지역 Province 키워드 보완: 꽝닌, 박장, 하이퐁 등
-  [Google News] 환경+북부 보완 쿼리 추가
-  [RSS_FEEDS] 딕셔너리 형태 유지 (기존 v5.2 구조 완전 호환)
+v8.2 변경사항 (2026-04-25):
+  - NEWSDATA_MASTER_QUERIES에 한-베 협력 쿼리 4개 추가
+  - _infer_sector_from_title() 신규 추가 (plan_id 없어도 sector 추론)
+  - SECTOR_KEYWORDS에 'Korea Vietnam' 관련 키워드 추가
 
-v5.2 반영 사항:
-  [검증보고서] 가중치 기반 점수제 분류 (최소 임계값 3점)
-  [검증보고서] EXCLUDE_KEYWORDS 대폭 보강
-  [검증보고서] 제목 키워드 3점 / 본문 키워드 1점 가중치 차등 적용
-  [검증보고서] Province 추출 로직 강화 (본문 전체 스캔)
-  [Genspark] LANGUAGE_FILTER='all' (영어+베트남어 모두 수집)
-  [Genspark] 9개 섹터 완전 정의
-  [Genspark] confidence_score 필드 추가
+v8.1 변경사항 (2026-04-24):
+  - NEWSDATA_QUERIES: 섹터 14개 + 마스터플랜 16개 + Province 3그룹 완전 반영
+  - fetch_newsdata(): 5가지 수집 방법 통합 구현
+  - should_collect(): 4단계 품질 게이트 유지
+  - 영구 폐쇄 소스 제거 유지
+
+영구 제약:
+  - NewsData.io 엔드포인트: /api/1/latest 만 사용 (archive 유료)
+  - 금지 파라미터: domain 단독, from_date, category+domain 조합
+  - 422 오류 시 자동 재시도 (category 제거)
+  - 이메일 시크릿: EMAIL_USERNAME / EMAIL_PASSWORD
+  - 번역: Google Translate only (Anthropic API 금지)
+  - date 키 fallback: article.get('date') or article.get('published_date')
+
+영구 폐쇄 RSS (재추가 금지):
+  theinvestor.vn RSS, vir.com.vn RSS, constructionvietnam.net,
+  monre.gov.vn, vea.gov.vn, mic.gov.vn, smartcity.mobi,
+  baotintuc.vn, kinhtemoitruong.vn, hanoimoi.vn
 """
 
-import os
-import sys
-import re
-import sqlite3
+import feedparser
 import hashlib
-import json
-from datetime import datetime, timedelta
-from pathlib import Path
-from urllib.parse import urlparse, urljoin, quote
-import html
-import concurrent.futures
+import logging
+import os
+import re
 import time
+from datetime import datetime, timedelta
 
 import requests
-import feedparser
-from bs4 import BeautifulSoup
 
-# ============================================================
-# CONFIGURATION
-# ============================================================
+# ── 로깅 ──────────────────────────────────────────────────────────────────
+logging.basicConfig(
+    level=logging.INFO,
+    format='[%(asctime)s] %(message)s',
+    datefmt='%H:%M:%S'
+)
+log = logging.getLogger('news_collector')
 
-DB_PATH          = os.environ.get('DB_PATH',       'data/vietnam_infrastructure_news.db')
-HOURS_BACK       = int(os.environ.get('HOURS_BACK', 24))
-EXCEL_PATH       = os.environ.get('EXCEL_PATH',    'data/database/Vietnam_Infra_News_Database_Final.xlsx')
+# ══════════════════════════════════════════════════════════════════════════
+#  RSS 소스 목록 (검증 완료, 2026-04-07 기준)
+# ══════════════════════════════════════════════════════════════════════════
+RSS_FEEDS = {
+    # ── 환경 인프라 ────────────────────────────────────────────────────
+    'Hanoi Times (Home)':      'https://hanoitimes.vn/rss/home.rss',
+    'Moi truong & Cuoc song':  'https://moitruong.net.vn/rss/home.rss',
 
-LANGUAGE_FILTER  = os.environ.get('LANGUAGE_FILTER', 'all').lower()
+    # ── 에너지 / 전력 ──────────────────────────────────────────────────
+    'PV-Tech (All)':           'https://www.pv-tech.org/feed/',
+    'Energy Monitor':          'https://www.energymonitor.ai/rss',
 
-MIN_CLASSIFY_THRESHOLD = 2
+    # ── 국제 비즈니스 (베트남 필터 적용) ───────────────────────────────
+    'Nikkei Asia':             'https://asia.nikkei.com/rss/feed/nar',
 
-GNEWS_API_KEY    = os.environ.get('GNEWS_API_KEY', '')
-ENABLE_GNEWS     = os.environ.get('ENABLE_GNEWS', 'false').lower() == 'true'
+    # ── 스마트시티 / ICT ───────────────────────────────────────────────
+    'VietnamNet ICT':          'https://vietnamnet.vn/rss/cong-nghe.rss',
 
-# [v5.2] 인프라 기본 쿼리
-GNEWS_QUERY      = 'Vietnam infrastructure OR "Vietnam energy" OR "Vietnam transport"'
-# [v5.3 추가] 환경 + 북부 보완 쿼리
-GNEWS_ENV_QUERY  = 'Vietnam environment OR "Vietnam wastewater" OR "Vietnam solid waste" OR "Vietnam water supply"'
-GNEWS_NORTH_QUERY = '"Quang Ninh" infrastructure OR "Bac Giang" industrial OR "Hanoi" infrastructure OR "Hai Phong" port'
+    # ── 종합 영문 (베트남) ─────────────────────────────────────────────
+    'Vietnam News (Env)':      'https://vietnamnews.vn/environment/rss.xml',
+    'Vietnam News (Economy)':  'https://vietnamnews.vn/economy/rss.xml',
+    'Vietnam News (Society)':  'https://vietnamnews.vn/society/rss.xml',
+    'VnExpress International': 'https://e.vnexpress.net/rss/news.rss',
+    'VnExpress Business':      'https://e.vnexpress.net/rss/business.rss',
 
-
-# ============================================================
-# SECTOR DEFINITIONS
-# ============================================================
-
-SECTOR_PRIORITY_ORDER = [
-    "Waste Water",
-    "Water Supply/Drainage",
-    "Oil & Gas",
-    "Power",
-    "Solid Waste",
-    "Transport",
-    "Industrial Parks",
-    "Smart City",
-    "Construction",
-]
-
-SECTOR_AREA = {
-    "Waste Water":            "Environment",
-    "Water Supply/Drainage":  "Environment",
-    "Solid Waste":            "Environment",
-    "Power":                  "Energy Develop.",
-    "Oil & Gas":              "Energy Develop.",
-    "Transport":              "Urban Development",
-    "Industrial Parks":       "Urban Development",
-    "Smart City":             "Urban Development",
-    "Construction":           "Urban Development",
+    # ── 수자원 / 환경 베트남어 ─────────────────────────────────────────
+    'Bao Tai nguyen (VN)':     'https://baotainguyenmoitruong.vn/rss/home.rss',
 }
 
+# ══════════════════════════════════════════════════════════════════════════
+#  섹터 키워드 (SA-6 품질검증 연계)
+# ══════════════════════════════════════════════════════════════════════════
 SECTOR_KEYWORDS = {
-    # ─────────────────────────────────────────────────────────
-    # 1. WASTE WATER
-    # ─────────────────────────────────────────────────────────
-    "Waste Water": {
-        "primary": [
-            "wastewater", "waste water",
-            "sewage treatment", "sewage plant", "sewage system",
-            "wastewater treatment", "wastewater plant", "wwtp",
-            "effluent treatment", "sludge treatment",
-            "industrial wastewater", "domestic wastewater",
-            "xử lý nước thải",
-            "nước thải",
-        ],
-        "secondary": [
-            "sewage", "sewer network", "sewer line",
-            "effluent", "sludge",
-            "water pollution control",
-            "water quality improvement",
-        ],
-    },
-
-    # ─────────────────────────────────────────────────────────
-    # 2. WATER SUPPLY / DRAINAGE
-    # ─────────────────────────────────────────────────────────
-    "Water Supply/Drainage": {
-        "primary": [
-            "water supply system", "water supply network",
-            "clean water supply", "drinking water supply",
-            "tap water", "piped water", "potable water",
-            "water treatment plant", "water purification plant",
-            "water infrastructure", "water distribution",
-            "desalination plant",
-            "drainage system", "stormwater management",
-            "flood control project", "flood prevention",
-            "nước sạch",
-            "cấp nước",
-            "thoát nước",
-            "chống ngập",
-            "hồ chứa nước",
-            "nhà máy nước",
-            "nước sinh hoạt",
-            "lũ lụt",
-            "hạn hán",
-            "nước mưa",
-            "ngập úng",
-            "biến đổi khí hậu",
-            "khí hậu",
-        ],
-        "secondary": [
-            "clean water", "drinking water",
-            "water project", "water plant", "water reservoir",
-            "groundwater management",
-            "flood control", "anti-flooding",
-            "water pipeline",
-        ],
-    },
-
-    # ─────────────────────────────────────────────────────────
-    # 3. OIL & GAS
-    # ─────────────────────────────────────────────────────────
-    "Oil & Gas": {
-        "primary": [
-            "oil and gas", "oil & gas",
-            "petroleum refinery", "oil refinery",
-            "offshore oil", "offshore gas", "offshore drilling",
-            "lng terminal", "lng plant", "liquefied natural gas",
-            "gas pipeline", "oil pipeline",
-            "petrovietnam", "pvn", "pvgas", "pv gas",
-            "binh son refinery", "nghi son refinery", "dung quat",
-            "block b", "ca voi xanh",
-            "lô b", "cá voi xanh",
-        ],
-        "secondary": [
-            "petroleum", "petrochemical",
-            "natural gas plant", "crude oil",
-            "oil exploration", "gas exploration", "drilling",
-            "upstream", "downstream", "midstream",
-            "gas field", "oil field",
-        ],
-    },
-
-    # ─────────────────────────────────────────────────────────
-    # 4. POWER
-    # ─────────────────────────────────────────────────────────
-    "Power": {
-        "primary": [
-            "power plant", "power station", "power project",
-            "wind farm", "offshore wind farm", "solar farm",
-            "hydroelectric plant", "hydropower plant",
-            "transmission line", "high voltage line",
-            "power purchase agreement", "ppa",
-            "feed-in tariff",
-            "battery storage system", "bess",
-            "evn", "vietnam electricity",
-            "nhà máy điện",
-            "năng lượng tái tạo",
-            "điện mặt trời",
-            "điện gió",
-            "thủy điện",
-            "nhiệt điện",
-            "lưới điện",
-            "truyền tải điện",
-        ],
-        "secondary": [
-            "wind power", "solar power", "solar energy", "photovoltaic",
-            "renewable energy", "clean energy",
-            "thermal power", "coal-fired power",
-            "hydropower", "hydroelectric",
-            "power generation", "power grid",
-            "electricity generation",
-            "substation", "transformer station",
-            "megawatt", "gigawatt", " mw ", " gw ",
-            "energy storage", "energy transition",
-            "lng power",
-        ],
-    },
-
-    # ─────────────────────────────────────────────────────────
-    # 5. SOLID WASTE
-    # ─────────────────────────────────────────────────────────
-    "Solid Waste": {
-        "primary": [
-            "solid waste management",
-            "municipal solid waste", "msw",
-            "landfill site", "sanitary landfill",
-            "waste-to-energy plant", "wte plant", "wte facility",
-            "incineration plant", "incinerator",
-            "recycling plant", "recycling facility",
-            "hazardous waste facility",
-            "rác thải",
-            "rác sinh hoạt",
-            "lò đốt rác",
-            "bãi rác",
-            "xử lý rác",
-            "chất thải rắn",
-            "nhà máy xử lý rác",
-            "thu gom rác",
-            "đốt rác phát điện",
-            # [v5.3] 환경 키워드 강화
-            "ô nhiễm môi trường",
-            "ô nhiễm",
-            "phân loại rác",
-            "không khí",
-            "phát thải",
-            "môi trường",
-            "tài nguyên môi trường",
-            "khí thải",
-            "ô nhiễm nước",
-            "chất thải nguy hại",
-        ],
-        "secondary": [
-            "solid waste", "garbage collection", "garbage disposal",
-            "trash collection",
-            "landfill",
-            "waste-to-energy", "wte",
-            "incineration",
-            "composting facility",
-            "electronic waste", "e-waste",
-            "construction waste disposal",
-        ],
-    },
-
-    # ─────────────────────────────────────────────────────────
-    # 6. TRANSPORT
-    # ─────────────────────────────────────────────────────────
-    "Transport": {
-        "primary": [
-            "metro line", "metro project", "metro station",
-            "urban rail project", "light rail project",
-            "high-speed rail", "high speed rail", "hsr project",
-            "railway project", "railroad project",
-            "expressway project", "highway project",
-            "ring road project", "ring expressway",
-            "bridge construction", "cable-stayed bridge",
-            "long thanh airport",
-            "deep-sea port", "container terminal",
-            "tuyến metro",
-            "đường cao tốc",
-            "sân bay",
-            "cảng biển",
-            # [v5.3] 북부 물류 키워드
-            "lạch huyện",
-            "cảng hải phòng",
-            "đường sắt tốc độ cao",
-        ],
-        "secondary": [
-            "metro", "subway",
-            "railway", "railroad",
-            "expressway", "highway", "motorway",
-            "bypass road", "overpass", "flyover", "interchange",
-            "road construction", "road upgrade",
-            "bridge", "tunnel", "viaduct",
-            "airport", "airport terminal", "runway",
-            "seaport", "logistics hub", "logistics center",
-            "public transport", "bus rapid transit", "brt",
-            "inland waterway",
-        ],
-    },
-
-    # ─────────────────────────────────────────────────────────
-    # 7. INDUSTRIAL PARKS
-    # ─────────────────────────────────────────────────────────
-    "Industrial Parks": {
-        "primary": [
-            "industrial park", "industrial zone", "industrial complex",
-            "special economic zone", "sez",
-            "export processing zone", "epz",
-            "hi-tech park", "high-tech park", "technology park",
-            "industrial estate", "industrial cluster",
-            "khu công nghiệp",
-            "khu kinh tế",
-            "khu công nghệ cao",
-            # [v5.3] 북부 산업단지 특화
-            "vsip bắc ninh", "vsip bắc giang", "vsip quảng ngãi",
-            "deep c", "amata",
-        ],
-        "secondary": [
-            "economic zone", "free trade zone",
-            "manufacturing hub", "manufacturing zone",
-            "factory zone", "industrial area",
-            "fdi project",
-        ],
-    },
-
-    # ─────────────────────────────────────────────────────────
-    # 8. SMART CITY
-    # ─────────────────────────────────────────────────────────
-    "Smart City": {
-        "primary": [
-            "smart city project", "smart city development",
-            "intelligent city", "digital city",
-            "smart traffic system", "traffic management system",
-            "iot infrastructure", "5g network deployment",
-            "e-government system", "digital government",
-            "thành phố thông minh",
-            "đô thị thông minh",
-        ],
-        "secondary": [
-            "smart city",
-            "smart urban",
-            "smart grid", "smart meter",
-            "smart building",
-            "5g infrastructure",
-            "digital transformation",
-            "surveillance system", "cctv network", "ai camera",
-        ],
-    },
-
-    # ─────────────────────────────────────────────────────────
-    # 9. CONSTRUCTION
-    # ─────────────────────────────────────────────────────────
-    "Construction": {
-        "primary": [
-            "real estate development", "property development",
-            "housing project", "residential complex",
-            "new urban area", "new township",
-            "satellite city development",
-            "commercial building construction",
-            "urban development project",
-            "khu đô thị",
-            "dự án bất động sản",
-            "bao xay dung",
-        ],
-        "secondary": [
-            "urban development",
-            "city planning", "urban planning",
-            "construction project",
-            "building construction",
-            "urban infrastructure",
-            "cement plant", "steel plant",
-        ],
-    },
+    'Waste Water': [
+        'wastewater', 'sewage', 'wwtp', 'nước thải', 'xử lý nước',
+        'effluent', 'sewerage', 'thoát nước', 'phân bùn',
+    ],
+    'Water Supply/Drainage': [
+        'water supply', 'clean water', 'drinking water', 'cấp nước',
+        'nước sạch', 'waterworks', 'drainage', 'water treatment plant',
+        'water pipe', 'thoát nước đô thị',
+    ],
+    'Solid Waste': [
+        'solid waste', 'waste management', 'landfill', 'waste-to-energy',
+        'wte', 'incineration', 'rác thải', 'chất thải rắn', 'đốt rác',
+        'epr', 'recycling', 'tái chế', 'thu gom rác',
+    ],
+    'Power': [
+        'power plant', 'electricity', 'renewable energy', 'solar', 'wind',
+        'offshore wind', 'pdp8', 'điện', 'năng lượng', 'điện mặt trời',
+        'điện gió', 'bess', 'battery storage', 'lng power', 'nuclear',
+        'dppa', 'energy storage',
+    ],
+    'Oil & Gas': [
+        'oil', 'gas', 'petroleum', 'lng', 'petrovietnam', 'pvn',
+        'dầu khí', 'khí đốt', 'refinery', 'pipeline',
+    ],
+    'Industrial Parks': [
+        'industrial park', 'industrial zone', 'economic zone', 'fdi',
+        'vsip', 'khu công nghiệp', 'khu kinh tế', 'manufacturing',
+        'semiconductor', 'deep c',
+    ],
+    'Smart City': [
+        'smart city', 'metro', 'urban rail', 'digital city',
+        'thành phố thông minh', 'tàu điện', 'công nghệ số', 'ict',
+        'data center', 'đô thị thông minh',
+    ],
+    'Transport': [
+        'expressway', 'highway', 'airport', 'port', 'logistics',
+        'cao tốc', 'sân bay', 'cảng biển', 'ring road',
+        'long thanh', 'metro', 'brt',
+    ],
+    # ── v8.2: 양자협력 키워드 (한-베 정상회담 등) ──────────────────────
+    'Bilateral': [
+        'korea vietnam cooperation', 'korea vietnam summit',
+        'south korea vietnam', 'korea-vietnam', 'rok vietnam',
+        'hàn quốc việt nam', 'korea mou vietnam',
+        'korea invest vietnam', 'vietnam korea energy',
+        'vietnam korea nuclear', 'vietnam korea environment',
+        'bilateral infrastructure', 'bilateral cooperation vietnam',
+    ],
 }
 
-
-# ============================================================
-# EXCLUDE KEYWORDS
-# ============================================================
-
-EXCLUDE_KEYWORDS = [
-    # 범죄·사법
-    "arrest", "jail", "prison", "sentenced", "trafficking", "smuggling",
-    "fraud", "murder", "crime", "drug trafficking",
-    # 사고·재해 (인명피해 중심)
-    "killed", "death toll", "crash kills", "fire kills", "collision kills",
-    "accident kills", "flood kills",
-    # 스포츠·엔터테인먼트
-    "football", "soccer", "tennis", "basketball", "volleyball", "badminton",
-    "sports", "world cup", "olympics", "championship", "tournament",
-    "golf tournament", "bridge tournament",
-    # 금융·비인프라 경제
-    "gold price", "stock market", "forex", "exchange rate",
-    "cryptocurrency", "bitcoin",
-    "seafood export", "agricultural export", "rice export",
-    # 관광·호텔·소매
-    "tourism promotion", "tourist", "hotel resort", "beach resort",
-    "retail sales",
-    # 교육·사회
-    "university", "school enrollment", "scholarship",
-    "beauty pageant", "fashion", "concert",
-    # 실제 오분류 사례
-    "matchmaking", "get married", "marriage club",
-    "safety certification", "vinfast vf",
-    "night flights", "flight schedule", "airline route",
-    "train collision in spain", "earthquake in",
-    # 정치 (인프라 무관)
-    "party congress", "politburo", "state visit", "diplomatic",
-    # 정크
-    "multimedia", "social links", "subscribe",
-]
-
-NON_VIETNAM_COUNTRIES = [
-    "singapore", "malaysia", "thailand", "indonesia", "philippines",
-    "cambodia", "laos", "myanmar", "china", "japan", "south korea",
-    "taiwan", "hong kong", "australia", "russia", " uk ", " usa ",
-    "america", "india", "europe", "africa",
+# ══════════════════════════════════════════════════════════════════════════
+#  노이즈 필터 (should_collect 4단계 게이트)
+# ══════════════════════════════════════════════════════════════════════════
+NOISE_PATTERNS = [
+    # 오락·스포츠
+    r'\bsoccer\b', r'\bfootball\b', r'\bcelebrit\b', r'\bentertain\b',
+    r'\bmusic\b', r'\bfilm\b', r'\bmovie\b', r'\bgossip\b',
+    r'\bbeauty\b', r'\bfashion\b', r'\bcosmet\b',
+    # 건강·의료 (인프라 제외)
+    r'\bcovid\b', r'\bpandemic\b', r'\bvaccin\b', r'\bhospital bed\b',
+    # 광고성
+    r'\bpromotion\b', r'\bdiscount\b', r'\bsale off\b', r'\bcoupon\b',
+    # 정치 일반 (인프라 정책 제외)
+    r'\belection\b', r'\bvoting\b', r'\bpoll\b',
+    # 베트남어 노이즈
+    r'thể thao', r'giải trí', r'ca nhạc', r'phim', r'làm đẹp',
+    r'khuyến mãi', r'giảm giá',
 ]
 
 VIETNAM_KEYWORDS = [
-    # 영문
-    "vietnam", "vietnamese", "viet nam",
-    "hanoi", "ho chi minh", "hcmc", "saigon",
-    "da nang", "hai phong", "can tho",
-    "binh duong", "dong nai", "quang ninh",
-    "mekong", "evn", "petrovietnam", "pvn",
-    # 베트남어
-    "việt nam", "hà nội", "tp.hcm", "tp hcm",
-    "đà nẵng", "hải phòng", "cần thơ",
-    "bình dương", "đồng nai", "quảng ninh",
-    "hà long", "bắc ninh", "long an",
-    "quảng ngãi", "bình định", "khánh hòa",
-    "lâm đồng", "đắk lắk", "gia lai",
-    "tiền giang", "bến tre", "an giang",
-    "kiên giang", "cà mau", "sóc trăng",
-    "thanh hoá", "nghệ an", "hà tĩnh",
-    "quảng bình", "quảng trị", "thừa thiên",
-    "thái nguyên", "bắc giang", "hưng yên",
-    "vĩnh phúc", "phú thọ", "hòa bình",
-    "tập đoàn điện lực", "tập đoàn dầu khí",
-    # [v5.3] 환경부처 + 메콩 + 기후
-    "bộ tài nguyên",
-    "tài nguyên và môi trường",
-    "sông cửu long",
-    "đồng bằng sông",
-    "cửu long",
-    "miền trung",
-    "miền nam",
-    "miền bắc",
-    # [v5.3] 북부 지역 추가
-    "bắc giang", "bắc ninh", "hải dương",
-    "hưng yên", "thái bình", "nam định",
-    "ninh bình", "lạng sơn", "yên bái",
-    "lào cai", "tuyên quang", "hà giang",
-    "cao bằng", "bắc kạn", "lai châu",
-    "điện biên", "sơn la",
+    'vietnam', 'viet nam', 'việt nam', 'hanoi', 'ha noi', 'hà nội',
+    'ho chi minh', 'hcmc', 'hà nội', 'saigon', 'sài gòn',
+    'mekong', 'haiphong', 'hải phòng', 'danang', 'đà nẵng',
 ]
 
 
-# ============================================================
-# PROVINCE KEYWORDS — v5.3 강화 (북부 지역 추가)
-# ============================================================
 
-PROVINCE_KEYWORDS = {
-    "Ho Chi Minh City":  ["ho chi minh", "hcmc", "saigon", "sai gon", "hồ chí minh", "tp.hcm", "tp hcm"],
-    "Hanoi":             ["hanoi", "ha noi", "hà nội", "capital hanoi"],
-    "Da Nang":           ["da nang", "đà nẵng", "danang"],
-    "Hai Phong":         ["hai phong", "hải phòng", "haiphong", "lạch huyện", "cảng hải phòng"],
-    "Can Tho":           ["can tho", "cần thơ"],
-    "Binh Duong":        ["binh duong", "bình dương"],
-    "Dong Nai":          ["dong nai", "đồng nai"],
-    "Ba Ria - Vung Tau": ["ba ria", "vung tau", "vũng tàu", "bà rịa"],
-    "Long An":           ["long an"],
-    # [v5.3] 북부 지역 키워드 강화
-    "Quang Ninh":        ["quang ninh", "quảng ninh", "ha long bay", "hạ long",
-                          "hạ long bay", "vân đồn", "móng cái", "cẩm phả", "uông bí"],
-    "Bac Ninh":          ["bac ninh", "bắc ninh", "yên phong", "vsip bắc ninh", "quế võ"],
-    "Bac Giang":         ["bac giang", "bắc giang", "vsip bắc giang", "viettel bắc giang",
-                          "công hòa", "quang châu"],
-    "Hai Duong":         ["hai duong", "hải dương"],
-    "Hung Yen":          ["hung yen", "hưng yên", "thăng long ii"],
-    "Vinh Phuc":         ["vinh phuc", "vĩnh phúc"],
-    "Thai Nguyen":       ["thai nguyen", "thái nguyên", "samsung thái nguyên"],
-    "Phu Tho":           ["phu tho", "phú thọ"],
-    "Hoa Binh":          ["hoa binh", "hòa bình"],
-    "Lang Son":          ["lang son", "lạng sơn", "hữu nghị"],
-    "Yen Bai":           ["yen bai", "yên bái"],
-    "Lao Cai":           ["lao cai", "lào cai", "sa pa", "sapa"],
-    "Tuyen Quang":       ["tuyen quang", "tuyên quang"],
-    "Ha Giang":          ["ha giang", "hà giang"],
-    "Cao Bang":          ["cao bang", "cao bằng"],
-    "Bac Kan":           ["bac kan", "bắc kạn"],
-    "Thai Binh":         ["thai binh", "thái bình"],
-    "Nam Dinh":          ["nam dinh", "nam định"],
-    "Ninh Binh":         ["ninh binh", "ninh bình", "tràng an"],
-    "Ha Nam":            ["ha nam", "hà nam", "đồng văn"],
-    "Son La":            ["son la", "sơn la", "nho quế"],
-    "Dien Bien":         ["dien bien", "điện biên"],
-    "Lai Chau":          ["lai chau", "lai châu"],
-    # 중부·남부
-    "Thanh Hoa":         ["thanh hoa", "thanh hoá", "thanh hóa"],
-    "Nghe An":           ["nghe an", "nghệ an"],
-    "Ha Tinh":           ["ha tinh", "hà tĩnh"],
-    "Quang Binh":        ["quang binh", "quảng bình"],
-    "Thua Thien Hue":    ["thua thien hue", "huế", " hue ", "thua thien"],
-    "Quang Nam":         ["quang nam", "quảng nam"],
-    "Quang Ngai":        ["quang ngai", "quảng ngãi"],
-    "Binh Dinh":         ["binh dinh", "bình định"],
-    "Khanh Hoa":         ["khanh hoa", "khánh hòa", "nha trang"],
-    "Lam Dong":          ["lam dong", "lâm đồng", "da lat", "đà lạt", "dalat"],
-    "Dak Lak":           ["dak lak", "đắk lắk", "buon ma thuot"],
-    "Gia Lai":           ["gia lai"],
-    "Kon Tum":           ["kon tum"],
-    "Tien Giang":        ["tien giang", "tiền giang"],
-    "Ben Tre":           ["ben tre", "bến tre"],
-    "Vinh Long":         ["vinh long", "vĩnh long"],
-    "Dong Thap":         ["dong thap", "đồng tháp"],
-    "An Giang":          ["an giang"],
-    "Kien Giang":        ["kien giang", "kiên giang", "phu quoc", "phú quốc"],
-    "Ca Mau":            ["ca mau", "cà mau"],
-    "Long Thanh":        ["long thanh airport", "long thành airport"],
-    "Mekong Delta":      ["mekong delta", "mekong region"],
-    "Central Highlands": ["central highlands", "tay nguyen"],
-}
+# ══════════════════════════════════════════════════════════════════════════
+#  v8.2 신규: 제목 기반 sector 추론 (plan_id 없어도 올바른 sector 분류)
+# ══════════════════════════════════════════════════════════════════════════
+def _infer_sector_from_title(title: str, summary: str = '') -> str:
+    """
+    기사 제목·요약에서 sector 직접 추론.
+    build_dashboard.py의 _plan_to_sector() 대체 용도.
+    plan_id가 없는 기사도 올바른 sector로 분류.
+    """
+    text = (title + ' ' + summary).lower()
 
-
-# ============================================================
-# RSS FEEDS — v5.3 (기존 59개 + 신규 12개 = 최대 71개)
-# [v5.3] 환경 전문 P1 5개 + 북부 지역 P2 4개 + 보조 P3 3개 추가
-# [주의] 딕셔너리 형태 유지 — key=소스명, value=RSS URL
-# ============================================================
-
-RSS_FEEDS = {
-    # ── 영문 주요 소스 ─────────────────────────────────────────
-    "VnExpress English - News":        "https://e.vnexpress.net/rss/news.rss",
-    "VnExpress English - Business":    "https://e.vnexpress.net/rss/business.rss",
-    "Vietnam News - Economy":          "https://vietnamnews.vn/rss/economy.rss",
-    "Tuoi Tre News":                   "https://tuoitre.vn/rss/tin-moi-nhat.rss",
-    "SGGP News English":               "https://en.sggp.org.vn/rss/home.rss",
-    "Nhan Dan English":                "https://en.nhandan.vn/rss/home.rss",
-    # ── 영문 전문 소스 ─────────────────────────────────────────
-    "PV-Tech":                         "https://www.pv-tech.org/feed/",
-    # ── 베트남어 일반 ──────────────────────────────────────────
-    "VnExpress - Kinh doanh":          "https://vnexpress.net/rss/kinh-doanh.rss",
-    "VnExpress - Thời sự":             "https://vnexpress.net/rss/thoi-su.rss",
-    "Tuoi Tre - Kinh doanh":           "https://tuoitre.vn/rss/kinh-doanh.rss",
-    "Thanh Nien - Kinh te":            "https://thanhnien.vn/rss/kinh-te.rss",
-    "VietnamNet - Kinh doanh":         "https://vietnamnet.vn/rss/kinh-doanh.rss",
-    "Dan Tri - Kinh doanh":            "https://dantri.com.vn/rss/kinh-doanh.rss",
-    "CafeBiz":                         "https://cafebiz.vn/rss/home.rss",
-    # ── 베트남어 전문 소스 ─────────────────────────────────────
-    "Bao Xay Dung":                    "https://baoxaydung.com.vn/rss/home.rss",
-    # ── 중부 지역 ─────────────────────────────────────────────
-    "Bao Ha Tinh":                     "https://baohatinh.vn/rss/home.rss",
-    "Bao Binh Dinh":                   "https://baobinhdinh.vn/rss/home.rss",
-    # ── 남부 지역 ─────────────────────────────────────────────
-    "SGGP":                            "https://www.sggp.org.vn/rss/home.rss",
-    # ──────────────────────────────────────────────────────────
-    # [v5.3 신규 추가] P1: 환경 전문 RSS (검색으로 URL 검증 완료)
-    # ──────────────────────────────────────────────────────────
-    # ✅ VietnamPlus 공식 RSS 페이지에서 직접 확인된 URL
-    "VietnamPlus - Moi truong":        "https://www.vietnamplus.vn/rss/moitruong-270.rss",
-    # ✅ VietnamPlus 공식 RSS 페이지에서 직접 확인된 URL (경제/인프라)
-    "VietnamPlus - Kinh te":           "https://www.vietnamplus.vn/rss/kinhte-311.rss",
-    # ✅ Nhandan RSS 페이지에서 Môi trường 섹션 존재 확인
-    "Nhandan - Moi truong":            "https://baotintuc.vn/moi-truong.rss",
-    # ✅ feedspot 등재 확인 (환경경제 전문지)
-    "Kinhtemoitruong":                 "https://kinhtemoitruong.vn/rss",
-    # ⚠️ 환경부 공식 신문 - RSS 직접 접근 차단, 표준 패턴 적용 (실패시 자동 스킵)
-    "Baotainguyenmoitruong":           "https://baotainguyenmoitruong.vn/rss/tin-tuc.rss",
-    # ──────────────────────────────────────────────────────────
-    # [v5.3 신규 추가] P2: 북부 지역지 RSS
-    # ──────────────────────────────────────────────────────────
-    # ✅ Nhandan 경제 섹션 (전국 인프라 프로젝트 포함)
-    "Nhandan - Kinh te":               "https://baotintuc.vn/kinh-te.rss",
-    # ✅ Source 시트 Accessible 확인 — 하노이 경제/인프라
-    "Hanoimoi - Kinh te":              "https://hanoimoi.vn/rss/kinh-te.rss",
-    # ✅ Source 시트 Accessible 확인 — 박장성 산업단지 특화 (영문)
-    "Baobacgiang English":             "https://en.baobacgiang.vn/rss",
-    # ⚠️ 꽝닌성 공식 신문 — 403 차단 가능, 실패시 자동 스킵
-    "Baoquangninh - Kinh te":          "https://baoquangninh.vn/rss/kinh-te.rss",
-    # ──────────────────────────────────────────────────────────
-    # [v5.3 신규 추가] P3: 보조 환경/교통 RSS
-    # ──────────────────────────────────────────────────────────
-    # ✅ Source 시트 Accessible 확인 — 환경 전문
-    "Moitruong Net":                   "https://moitruong.net.vn/rss",
-    # ✅ Source 시트 Accessible 확인 — 산업환경 전문
-    "Congnghiepmoitruong":             "https://congnghiepmoitruong.vn/rss",
-    # ✅ VietnamPlus 공식 RSS — 교통 인프라 (Transport 섹터 보완)
-    "VietnamPlus - Giao thong":        "https://www.vietnamplus.vn/rss/xahoi/giaothong-358.rss",
-    # ── 기존 환경/에너지 전문 소스 (v5.2 유지) ────────────────
-    "Bao Dau Tu - Energy":             "https://baodautu.vn/rss/nang-luong.rss",
-    "Vietnam Energy alt":              "https://vietnamenergy.vn/rss/tin-tuc.rss",
-    "Tap chi Xay dung":                "https://tapchixaydung.vn/rss/home.rss",
-}
-
-
-# ============================================================
-# HELPER FUNCTIONS
-# ============================================================
-
-def log(msg):
-    print(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - {msg}")
-
-
-def clean_html(text):
-    if not text:
-        return ""
-    soup = BeautifulSoup(text, 'html.parser')
-    return html.unescape(soup.get_text(separator=' ', strip=True))
-
-
-def generate_url_hash(url):
-    return hashlib.md5(url.encode()).hexdigest()
-
-
-def is_english_text(title):
-    if not title:
-        return False
-    ascii_cnt = sum(1 for c in title if c.isascii() and c.isalpha())
-    non_ascii  = sum(1 for c in title if not c.isascii())
-    total = ascii_cnt + non_ascii
-    return (ascii_cnt / total) > 0.7 if total else False
-
-
-def is_vietnamese_text(title):
-    if not title:
-        return False
-    vn_chars = set('àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ'
-                   'ÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ')
-    return any(c in vn_chars for c in title)
-
-
-def passes_language_filter(title, mode=None):
-    m = mode or LANGUAGE_FILTER
-    if m == 'all':
-        return True
-    elif m == 'vietnamese':
-        return is_vietnamese_text(title) or not is_english_text(title)
-    else:
-        return is_english_text(title)
-
-
-def is_vietnam_related(title, summary=""):
-    text = f"{title} {summary}".lower()
-    if not any(kw in text for kw in VIETNAM_KEYWORDS):
-        return False
-    for country in NON_VIETNAM_COUNTRIES:
-        if country in text and text.count("vietnam") < text.count(country):
-            return False
-    return True
-
-
-def should_exclude(title, summary=""):
-    if not title or len(title.strip()) < 15:
-        return True
-    text = f"{title} {summary}".lower()
-    return any(kw in text for kw in EXCLUDE_KEYWORDS)
-
-
-def extract_province(title, summary="", full_text=""):
-    combined = f"{title} {summary} {full_text}".lower()
-    for province, keywords in PROVINCE_KEYWORDS.items():
-        for kw in keywords:
-            if kw in combined:
-                return province
-    return "Vietnam"
-
-
-
-
-# ============================================================
-# TRANSLATE ARTICLES — [메모리항목1] Google Translate (MyMemory API)
-# Anthropic API 절대 금지. MyMemory 1차, deep-translator 2차
-# ============================================================
-
-def translate_text(text, target_lang='ko'):
-    """MyMemory API로 번역. 실패 시 deep-translator 폴백."""
-    if not text or len(text.strip()) < 3:
-        return text or ''
-    src = 'en' if is_english_text(text) else 'vi'
-    # 1차: MyMemory API
-    try:
-        url = (f"https://api.mymemory.translated.net/get"
-               f"?q={requests.utils.quote(text[:500])}"
-               f"&langpair={src}|{target_lang}")
-        r = requests.get(url, timeout=10)
-        data = r.json()
-        result = data.get('responseData', {}).get('translatedText', '')
-        if result and result != text and 'INVALID' not in result.upper():
-            return result
-    except Exception:
-        pass
-    # 2차: deep-translator
-    try:
-        from deep_translator import GoogleTranslator
-        result = GoogleTranslator(source='auto', target=target_lang).translate(text[:500])
-        if result:
-            return result
-    except Exception:
-        pass
-    return text
-
-
-def translate_articles(articles):
-    """수집된 기사 리스트를 ko/en/vi 3개 언어로 번역.
-    [메모리항목1] MyMemory API 1차 + deep-translator 2차
-    [메모리항목7] update_excel_database() 전에 반드시 호출"""
-    if not articles:
-        return articles
-
-    log(f"Translating {len(articles)} articles (ko/en/vi)...")
-    import time
-
-    for i, art in enumerate(articles):
-        title  = art.get('title', '') or ''
-        summary = art.get('summary', '') or ''
-
-        # 언어 감지
-        is_en = is_english_text(title)
-        is_vi = is_vietnamese_text(title)
-
-        try:
-            # title_ko
-            if is_en:
-                art['title_ko'] = translate_text(title, 'ko')
-            elif is_vi:
-                art['title_ko'] = translate_text(title, 'ko')
-            else:
-                art['title_ko'] = title
-
-            # title_en
-            if is_en:
-                art['title_en'] = title
-            else:
-                art['title_en'] = translate_text(title, 'en')
-
-            # title_vi
-            if is_vi:
-                art['title_vi'] = title
-            else:
-                art['title_vi'] = translate_text(title, 'vi')
-
-            # summary_ko
-            if summary:
-                if is_en:
-                    art['summary_ko'] = translate_text(summary[:300], 'ko')
-                else:
-                    art['summary_ko'] = translate_text(summary[:300], 'ko')
-            else:
-                art['summary_ko'] = ''
-
-            # summary_en
-            if summary:
-                art['summary_en'] = summary if is_en else translate_text(summary[:300], 'en')
-            else:
-                art['summary_en'] = ''
-
-            # summary_vi
-            if summary:
-                art['summary_vi'] = summary if is_vi else translate_text(summary[:300], 'vi')
-            else:
-                art['summary_vi'] = ''
-
-        except Exception as e:
-            log(f"  Translation error [{art.get('title','')[:40]}]: {e}")
-            art.setdefault('title_ko', '')
-            art.setdefault('title_en', title)
-            art.setdefault('title_vi', '')
-            art.setdefault('summary_ko', '')
-            art.setdefault('summary_en', summary)
-            art.setdefault('summary_vi', '')
-
-        # API 과부하 방지 — 3건마다 0.5초 대기
-        if (i + 1) % 3 == 0:
-            time.sleep(0.5)
-
-        if (i + 1) % 10 == 0:
-            log(f"  Translated {i+1}/{len(articles)}")
-
-    log(f"Translation complete: {len(articles)} articles")
-    return articles
-
-
-# ============================================================
-# CLASSIFY SECTOR — 가중치 점수제
-# ============================================================
-
-def classify_sector(title, summary=""):
-    if should_exclude(title, summary):
-        return None, None, 0
-
-    text_title = title.lower()
-    text_full  = f"{title} {summary}".lower()
-
-    scores = {}
-    for sector, kw_dict in SECTOR_KEYWORDS.items():
-        score = 0
-        for kw in kw_dict.get("primary", []):
-            if kw in text_title:
-                score += 3
-            elif kw in text_full:
-                score += 1
-        for kw in kw_dict.get("secondary", []):
-            if kw in text_title:
-                score += 2
-            elif kw in text_full:
-                score += 1
-        scores[sector] = score
-
-    if not scores:
-        return None, None, 0
-
-    best_sector = max(scores, key=scores.get)
-    best_score  = scores[best_sector]
-
-    if best_score < MIN_CLASSIFY_THRESHOLD:
-        return None, None, 0
-
-    confidence = min(100, int(best_score / 20 * 100))
-
-    return best_sector, SECTOR_AREA[best_sector], confidence
-
-
-# ============================================================
-# RSS FETCH
-# ============================================================
-
-def parse_date(date_str):
-    if not date_str:
-        return None
-    formats = [
-        "%a, %d %b %Y %H:%M:%S %z",
-        "%a, %d %b %Y %H:%M:%S %Z",
-        "%Y-%m-%dT%H:%M:%S%z",
-        "%Y-%m-%dT%H:%M:%SZ",
-        "%Y-%m-%d %H:%M:%S",
-        "%Y-%m-%d",
+    # 우선순위 순서로 검사
+    rules = [
+        ('Power',                  ['nuclear power', 'offshore wind', 'solar power', 'pdp8',
+                                    'renewable energy', 'lng power', 'wind farm', 'power plant',
+                                    'electricity grid', 'bess', 'battery storage', 'dppa',
+                                    'điện gió', 'điện mặt trời', 'năng lượng tái tạo']),
+        ('Oil & Gas',              ['oil gas', 'petroleum', 'petrovietnam', 'lng terminal',
+                                    'crude oil', 'natural gas', 'offshore oil', 'dầu khí']),
+        ('Waste Water',            ['wastewater', 'sewage', 'wwtp', 'nước thải', 'treatment plant']),
+        ('Solid Waste',            ['solid waste', 'waste-to-energy', 'wte', 'landfill',
+                                    'incineration', 'rác thải', 'chất thải rắn', 'đốt rác']),
+        ('Water Supply/Drainage',  ['water supply', 'clean water', 'drinking water',
+                                    'cấp nước', 'nước sạch', 'water pipe']),
+        ('Industrial Parks',       ['industrial park', 'industrial zone', 'vsip', 'fdi investment',
+                                    'khu công nghiệp', 'semiconductor factory', 'samsung factory']),
+        ('Transport',              ['expressway', 'airport', 'metro rail', 'ring road',
+                                    'long thanh', 'cao tốc', 'sân bay', 'urban rail']),
+        ('Smart City',             ['smart city', 'digital city', 'thành phố thông minh',
+                                    'data center', 'ict infrastructure']),
+        ('Bilateral',              ['korea vietnam', 'south korea vietnam', 'hàn quốc việt nam',
+                                    'korea-vietnam', 'bilateral cooperation']),
     ]
-    for fmt in formats:
-        try:
-            return datetime.strptime(date_str, fmt)
-        except ValueError:
-            continue
-    try:
-        from email.utils import parsedate_to_datetime
-        return parsedate_to_datetime(date_str)
-    except Exception:
-        pass
-    return None
+
+    for sector, keywords in rules:
+        if any(kw in text for kw in keywords):
+            return sector
+
+    return 'General'   # 기본값을 'Environment'에서 'General'로 변경
+
+# ══════════════════════════════════════════════════════════════════════════
+#  1단계: should_collect() — 4단계 품질 게이트
+# ══════════════════════════════════════════════════════════════════════════
+def should_collect(title: str, summary: str = '', source: str = '') -> tuple[bool, str]:
+    """
+    기사 수집 여부를 4단계로 판정합니다.
+
+    Returns:
+        (collect: bool, reason: str)
+    """
+    text = (title + ' ' + summary).lower()
+
+    # ── Gate 1: 최소 길이 ────────────────────────────────────────────
+    if len(title.strip()) < 10:
+        return False, 'TITLE_TOO_SHORT'
+
+    # ── Gate 2: 노이즈 패턴 ──────────────────────────────────────────
+    for pat in NOISE_PATTERNS:
+        if re.search(pat, text, re.IGNORECASE):
+            return False, f'NOISE:{pat}'
+
+    # ── Gate 3: 베트남 관련성 (국제 소스에만 엄격 적용) ──────────────
+    INTL_SOURCES = ['nikkei', 'pv-tech', 'energy monitor', 'bloomberg', 'reuters']
+    is_intl = any(s in source.lower() for s in INTL_SOURCES)
+    if is_intl:
+        has_vietnam = any(kw in text for kw in VIETNAM_KEYWORDS)
+        if not has_vietnam:
+            return False, 'NOT_VIETNAM_RELATED'
+
+    # ── Gate 4: 섹터 관련성 ──────────────────────────────────────────
+    has_sector = False
+    for sector, keywords in SECTOR_KEYWORDS.items():
+        if any(kw.lower() in text for kw in keywords):
+            has_sector = True
+            break
+
+    # v8.2: 한-베 협력 키워드도 섹터 관련으로 인정
+    if not has_sector:
+        bilateral_kw = ['korea vietnam', 'south korea vietnam', 'rok vietnam',
+                        'hàn quốc việt nam', 'korea-vietnam mou', 'bilateral infrastructure']
+        if any(kw in text for kw in bilateral_kw):
+            has_sector = True
+
+    if not has_sector:
+        return False, 'NO_SECTOR_MATCH'
+
+    return True, 'OK'
 
 
-def fetch_rss(url, timeout=30):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0.0.0',
-        'Accept': 'application/rss+xml, application/xml, text/xml, */*',
-    }
-    try:
-        resp = requests.get(url, headers=headers, timeout=timeout)
-        resp.raise_for_status()
-        content = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', resp.text)
-        return feedparser.parse(content)
-    except Exception as e:
-        log(f"  RSS error [{url}]: {e}")
-        return type('Feed', (), {'entries': [], 'bozo': True})()
-
-
-# ============================================================
-# GOOGLE NEWS API — v5.3: 환경+북부 쿼리 추가
-# ============================================================
-
-def fetch_gnews(query, hours_back=24, max_articles=20):
-    if not GNEWS_API_KEY:
-        return []
-
+# ══════════════════════════════════════════════════════════════════════════
+#  2단계: RSS 수집
+# ══════════════════════════════════════════════════════════════════════════
+def fetch_rss_articles(hours_back: int = 24) -> list[dict]:
+    """
+    RSS_FEEDS에서 기사 수집 후 should_collect 필터 적용.
+    """
+    cutoff = datetime.now() - timedelta(hours=hours_back)
     articles = []
-    try:
-        is_newsdata = GNEWS_API_KEY.startswith('pub_')
+    seen_urls = set()
 
-        if is_newsdata:
-            url = (
-                f"https://newsdata.io/api/1/news"
-                f"?apikey={GNEWS_API_KEY}"
-                f"&q={quote(query)}"
-                f"&country=vn"
-                f"&language=en,vi"
-                f"&category=business,politics,technology"
-                f"&size={min(max_articles, 10)}"
-            )
-            resp = requests.get(url, timeout=15)
-            data = resp.json()
-            for item in data.get('results', []):
-                title = item.get('title', '') or ''
-                if not title or len(title.strip()) < 15:
+    for source_name, feed_url in RSS_FEEDS.items():
+        try:
+            feed = feedparser.parse(feed_url)
+            if not feed.entries:
+                log.warning(f'[RSS] 빈 피드: {source_name}')
+                continue
+
+            count = 0
+            for entry in feed.entries:
+                url = entry.get('link', '').strip()
+                if not url or url in seen_urls:
                     continue
+
+                title   = entry.get('title', '').strip()
+                summary = entry.get('summary', entry.get('description', '')).strip()
+
+                # 날짜 파싱
+                pub_date = None
+                for date_field in ('published_parsed', 'updated_parsed', 'created_parsed'):
+                    if hasattr(entry, date_field) and getattr(entry, date_field):
+                        try:
+                            import calendar
+                            t = getattr(entry, date_field)
+                            pub_date = datetime.fromtimestamp(calendar.timegm(t))
+                            break
+                        except Exception:
+                            pass
+                if not pub_date:
+                    pub_date = datetime.now()
+
+                if pub_date < cutoff:
+                    continue
+
+                # 품질 게이트
+                ok, reason = should_collect(title, summary, source_name)
+                if not ok:
+                    continue
+
+                seen_urls.add(url)
                 articles.append({
                     'title':          title,
-                    'url':            item.get('link', ''),
-                    'published_date': (item.get('pubDate', '') or '')[:10],
-                    'source_name':    item.get('source_id', 'NewsData'),
-                    'raw_summary':    item.get('description', '') or '',
+                    'summary':        summary[:500],
+                    'url':            url,
+                    # source fallback — Python or 연산자 (빈 문자열 방지)
+                    'source':         source_name or 'Unknown',
+                    'date':           pub_date.strftime('%Y-%m-%d'),
+                    'published_date': pub_date.strftime('%Y-%m-%d'),
+                    'collector':      'rss',
+                    'ctx_grade':      'MEDIUM',
+                    'ctx_plans':      '',
                 })
-            log(f"NewsData.io: {len(articles)} articles for query '{query[:50]}'")
-        else:
-            from_dt = (datetime.utcnow() - timedelta(hours=min(hours_back, 720))).strftime('%Y-%m-%dT%H:%M:%SZ')
-            url = (
-                f"https://gnews.io/api/v4/search"
-                f"?q={quote(query)}"
-                f"&lang=en&country=vn"
-                f"&from={from_dt}"
-                f"&max={max_articles}"
-                f"&apikey={GNEWS_API_KEY}"
-            )
-            resp = requests.get(url, timeout=15)
-            data = resp.json()
-            for item in data.get('articles', []):
-                articles.append({
-                    'title':          item.get('title', ''),
-                    'url':            item.get('url', ''),
-                    'published_date': item.get('publishedAt', '')[:10],
-                    'source_name':    item.get('source', {}).get('name', 'GNews'),
-                    'raw_summary':    item.get('description', ''),
-                })
-            log(f"GNews: {len(articles)} articles for query '{query[:50]}'")
+                count += 1
 
-    except Exception as e:
-        log(f"News API error: {e}")
+            if count > 0:
+                log.info(f'[RSS] {source_name}: {count}건')
+
+        except Exception as e:
+            log.warning(f'[RSS] {source_name} 오류: {e}')
+
+    log.info(f'[RSS] 총 {len(articles)}건 수집')
     return articles
 
 
+# ══════════════════════════════════════════════════════════════════════════
+#  3단계: NEWSDATA_QUERIES — 5가지 방법 통합
+# ══════════════════════════════════════════════════════════════════════════
 
-# ============================================================
-# NEWSDATA.io API — Province 공백 보완 + 전문미디어 타겟팅
-# [메모리항목16] Sub-Agent1 뉴스수집 보완 채널
-# 환경변수: NEWSDATA_API_KEY (pub_로 시작, GitHub Secrets 등록)
-# 일별 200건 무료 크레딧 최적 배분:
-#   Group A (핵심급감 Province): 50건/일
-#   Group B (완전단절 Province): 40건/일 (격일)
-#   전문미디어 domain 타겟팅:    70건/일
-#   Province×전문미디어 교차:    30건/일
-#   Group C (소규모 단절):       10건/일 (주2회)
-# ============================================================
+# ── 방법1-A: 7개 섹터 기본 쿼리 (매일) ──────────────────────────────────
+NEWSDATA_SECTOR_QUERIES = [
+    # Waste Water
+    {'q': 'Vietnam wastewater treatment plant WWTP sewage 2026',
+     'language': 'en', 'sector': 'Waste Water', 'label': 'WW-EN'},
+    {'q': 'nước thải xử lý Việt Nam 2026',
+     'language': 'vi', 'sector': 'Waste Water', 'label': 'WW-VI'},
+    # Water Supply/Drainage
+    {'q': 'Vietnam water supply clean water infrastructure 2026',
+     'language': 'en', 'sector': 'Water Supply/Drainage', 'label': 'WAT-EN'},
+    {'q': 'nước sạch cấp nước thoát nước Việt Nam 2026',
+     'language': 'vi', 'sector': 'Water Supply/Drainage', 'label': 'WAT-VI'},
+    # Solid Waste
+    {'q': 'Vietnam solid waste management waste-to-energy landfill 2026',
+     'language': 'en', 'sector': 'Solid Waste', 'label': 'SW-EN'},
+    {'q': 'rác thải chất thải rắn Việt Nam đốt rác 2026',
+     'language': 'vi', 'sector': 'Solid Waste', 'label': 'SW-VI'},
+    # Power
+    {'q': 'Vietnam power plant renewable energy PDP8 electricity 2026',
+     'language': 'en', 'sector': 'Power', 'label': 'PWR-EN'},
+    {'q': 'điện năng lượng tái tạo phát điện Việt Nam 2026',
+     'language': 'vi', 'sector': 'Power', 'label': 'PWR-VI'},
+    # Oil & Gas
+    {'q': 'Vietnam LNG oil gas PetroVietnam offshore 2026',
+     'language': 'en', 'sector': 'Oil & Gas', 'label': 'OG-EN'},
+    {'q': 'dầu khí LNG PetroVietnam Việt Nam 2026',
+     'language': 'vi', 'sector': 'Oil & Gas', 'label': 'OG-VI'},
+    # Industrial Parks
+    {'q': 'Vietnam industrial park zone FDI investment 2026',
+     'language': 'en', 'sector': 'Industrial Parks', 'label': 'IND-EN'},
+    {'q': 'khu công nghiệp FDI đầu tư Việt Nam 2026',
+     'language': 'vi', 'sector': 'Industrial Parks', 'label': 'IND-VI'},
+    # Smart City / Transport
+    {'q': 'Vietnam smart city metro airport expressway 2026',
+     'language': 'en', 'sector': 'Smart City', 'label': 'SC-EN'},
+    {'q': 'thành phố thông minh tàu điện sân bay cao tốc Việt Nam 2026',
+     'language': 'vi', 'sector': 'Smart City', 'label': 'SC-VI'},
+]
 
-NEWSDATA_API_KEY = os.environ.get('NEWSDATA_API_KEY', '')
+# ── 방법1-B: 12개 마스터플랜 전용 쿼리 (매일) ────────────────────────────
+NEWSDATA_MASTER_QUERIES = [
+    # VN-WW-2030
+    {'q': 'Yen Xa WWTP wastewater Hanoi Binh Hung Thu Duc treatment plant',
+     'language': 'en', 'plan_id': 'VN-WW-2030', 'sector': 'Waste Water'},
+    {'q': '"Yen Xa" OR "nhà máy xử lý nước thải" Hà Nội 2026',
+     'language': 'vi', 'plan_id': 'VN-WW-2030', 'sector': 'Waste Water'},
+    # VN-SWM-NATIONAL-2030
+    {'q': 'Soc Son waste-to-energy Vietnam landfill EPR solid waste 2026',
+     'language': 'en', 'plan_id': 'VN-SWM-NATIONAL-2030', 'sector': 'Solid Waste'},
+    {'q': '"Sóc Sơn" OR "đốt rác phát điện" OR "EPR" rác thải Hà Nội 2026',
+     'language': 'vi', 'plan_id': 'VN-SWM-NATIONAL-2030', 'sector': 'Solid Waste'},
+    # VN-PWR-PDP8
+    {'q': 'PDP8 Vietnam power development plan Decision 768 offshore wind nuclear',
+     'language': 'en', 'plan_id': 'VN-PWR-PDP8', 'sector': 'Power'},
+    {'q': '"Quy hoạch điện 8" OR "Quyết định 768" năng lượng Việt Nam 2026',
+     'language': 'vi', 'plan_id': 'VN-PWR-PDP8', 'sector': 'Power'},
+    # VN-PWR-PDP8-RENEWABLE
+    {'q': 'Vietnam offshore wind solar BESS battery energy storage DPPA 2026',
+     'language': 'en', 'plan_id': 'VN-PWR-PDP8-RENEWABLE', 'sector': 'Power'},
+    {'q': 'điện gió ngoài khơi điện mặt trời BESS Việt Nam 2026',
+     'language': 'vi', 'plan_id': 'VN-PWR-PDP8-RENEWABLE', 'sector': 'Power'},
+    # VN-TRAN-2055
+    {'q': 'Long Thanh airport Vietnam expressway Ring Road 4 metro 2026',
+     'language': 'en', 'plan_id': 'VN-TRAN-2055', 'sector': 'Transport'},
+    {'q': '"Sân bay Long Thành" OR "đường vành đai 4" OR "cao tốc" Việt Nam 2026',
+     'language': 'vi', 'plan_id': 'VN-TRAN-2055', 'sector': 'Transport'},
+    # VN-WAT-URBAN
+    {'q': 'Vietnam urban water supply clean water PPP infrastructure 2026',
+     'language': 'en', 'plan_id': 'VN-WAT-URBAN', 'sector': 'Water Supply/Drainage'},
+    {'q': 'cấp nước đô thị Việt Nam PPP đầu tư hạ tầng nước 2026',
+     'language': 'vi', 'plan_id': 'VN-WAT-URBAN', 'sector': 'Water Supply/Drainage'},
+    # VN-URB-METRO-2030
+    {'q': 'Hanoi Ho Chi Minh metro BRT urban rail transit 2026',
+     'language': 'en', 'plan_id': 'VN-URB-METRO-2030', 'sector': 'Smart City'},
+    {'q': '"Metro" OR "tàu điện ngầm" Hà Nội "Hồ Chí Minh" 2026',
+     'language': 'vi', 'plan_id': 'VN-URB-METRO-2030', 'sector': 'Smart City'},
+    # VN-ENV-IND-1894
+    {'q': 'Vietnam green industrial park eco-zone environmental technology 2026',
+     'language': 'en', 'plan_id': 'VN-ENV-IND-1894', 'sector': 'Industrial Parks'},
+    {'q': '"khu công nghiệp xanh" OR "công nghệ môi trường" Việt Nam 2026',
+     'language': 'vi', 'plan_id': 'VN-ENV-IND-1894', 'sector': 'Industrial Parks'},
 
-# 단절/급감 Province 그룹 — 우선순위별 쿼리 정의
+    # ── v8.2: 한-베 양자협력 쿼리 (정상회담·MOU·에너지·환경) ──────────
+    {'q': 'Korea Vietnam cooperation energy infrastructure MOU 2026',
+     'language': 'en', 'plan_id': '', 'sector': 'Bilateral', 'label': 'KR-VN-EN'},
+    {'q': 'South Korea Vietnam nuclear power plant LNG offshore wind cooperation',
+     'language': 'en', 'plan_id': '', 'sector': 'Power', 'label': 'KR-VN-ENERGY'},
+    {'q': 'Korea Vietnam summit bilateral agreement environment infrastructure',
+     'language': 'en', 'plan_id': '', 'sector': 'Bilateral', 'label': 'KR-VN-SUMMIT'},
+    {'q': 'hàn quốc việt nam hợp tác năng lượng hạ tầng môi trường 2026',
+     'language': 'vi', 'plan_id': '', 'sector': 'Bilateral', 'label': 'KR-VN-VI'},
+
+    # ── v8.3: theinvestor.vn 핵심 프로젝트 타겟 쿼리 ────────────────────
+    # (theinvestor.vn RSS 폐쇄 후 NewsData.io로 해당 사이트 기사 간접 수집)
+    {'q': '"Ca Na" OR "Lien Chieu" OR "Can Gio port" Vietnam infrastructure',
+     'language': 'en', 'plan_id': 'VN-TRAN-2055', 'sector': 'Transport', 'label': 'PROJ-PORT'},
+    {'q': '"Ring Road 4" OR "Vanh dai 4" Ho Chi Minh City 2026',
+     'language': 'en', 'plan_id': 'VN-TRAN-2055', 'sector': 'Transport', 'label': 'PROJ-RR4'},
+    {'q': '"Ninh Thuan" nuclear power plant Russia Vietnam 2026',
+     'language': 'en', 'plan_id': 'VN-PWR-PDP8-NUCLEAR', 'sector': 'Power', 'label': 'PROJ-NUCLEAR'},
+    {'q': 'EVN PVN "offshore wind" Vietnam 2026 MW survey',
+     'language': 'en', 'plan_id': 'VN-PWR-PDP8-RENEWABLE', 'sector': 'Power', 'label': 'EVN-PVN-WIND'},
+    {'q': 'Vietnam "BOT" OR "PPP" infrastructure concession 2026',
+     'language': 'en', 'plan_id': '', 'sector': 'Transport', 'label': 'BOT-PPP'},
+    {'q': '"VSIP" OR "Stavian" OR "Amata" Vietnam industrial park FDI 2026',
+     'language': 'en', 'plan_id': 'VN-IP-NORTH-2030', 'sector': 'Industrial Parks', 'label': 'IP-SPECIFIC'},
+    {'q': 'Vietnam "green bond" OR "sustainable finance" infrastructure 2026',
+     'language': 'en', 'plan_id': '', 'sector': 'Industrial Parks', 'label': 'GREEN-FIN'},
+    {'q': '"Decision 768" OR "PDP VIII" Vietnam power revised offshore wind',
+     'language': 'en', 'plan_id': 'VN-PWR-PDP8', 'sector': 'Power', 'label': 'PDP8-768'},
+    {'q': '"cảng Liên Chiểu" OR "cảng Cần Giờ" OR "cảng Long Thành" hạ tầng',
+     'language': 'vi', 'plan_id': 'VN-TRAN-2055', 'sector': 'Transport', 'label': 'VN-PORT'},
+    {'q': '"điện hạt nhân" "Ninh Thuận" Nga Việt Nam 2026',
+     'language': 'vi', 'plan_id': 'VN-PWR-PDP8-NUCLEAR', 'sector': 'Power', 'label': 'VN-NUCLEAR'},
+]
+
+# ── 방법1-C: Province × 섹터 교차 쿼리 ──────────────────────────────────
 NEWSDATA_PROVINCE_QUERIES = {
-    # Group A: 핵심 급감 Province (매일 실행)
+    # Group A: 핵심 Province (매일)
     'group_a': [
-        {
-            'province': 'Da Nang',
-            'q': '"Da Nang" AND (infrastructure OR "industrial park" OR wastewater OR "water supply" OR transport)',
-            'language': 'en',
-        },
-        {
-            'province': 'Da Nang',
-            'q': '"Đà Nẵng" AND ("khu công nghiệp" OR "nước thải" OR "cấp nước" OR "giao thông")',
-            'language': 'vi',
-        },
-        {
-            'province': 'Binh Duong',
-            'q': '"Binh Duong" AND ("industrial park" OR wastewater OR "power" OR infrastructure)',
-            'language': 'en',
-        },
-        {
-            'province': 'Binh Duong',
-            'q': '"Bình Dương" AND ("khu công nghiệp" OR "nước thải" OR "điện")',
-            'language': 'vi',
-        },
-        {
-            'province': 'Quang Ninh',
-            'q': '"Quang Ninh" AND ("wind farm" OR "power plant" OR "port" OR "industrial" OR "coal")',
-            'language': 'en',
-        },
-        {
-            'province': 'Dong Nai',
-            'q': '"Dong Nai" AND ("industrial park" OR wastewater OR transport OR infrastructure)',
-            'language': 'en',
-        },
-        {
-            'province': 'Bac Ninh',
-            'q': '"Bac Ninh" AND ("industrial park" OR "semiconductor" OR wastewater OR infrastructure)',
-            'language': 'en',
-        },
+        {'q': '"Da Nang" wastewater OR "water supply" OR infrastructure 2026',
+         'language': 'en', 'province': 'Da Nang'},
+        {'q': '"Đà Nẵng" nước thải OR hạ tầng 2026',
+         'language': 'vi', 'province': 'Da Nang'},
+        {'q': '"Binh Duong" industrial park OR wastewater OR power 2026',
+         'language': 'en', 'province': 'Binh Duong'},
+        {'q': '"Dong Nai" infrastructure OR industrial OR "Long Thanh" 2026',
+         'language': 'en', 'province': 'Dong Nai'},
+        {'q': '"Quang Ninh" port OR power OR industrial 2026',
+         'language': 'en', 'province': 'Quang Ninh'},
+        {'q': '"Bac Ninh" OR "Bắc Ninh" industrial OR semiconductor 2026',
+         'language': 'en', 'province': 'Bac Ninh'},
+        {'q': '"Hai Phong" OR "Hải Phòng" port OR industrial 2026',
+         'language': 'en', 'province': 'Hai Phong'},
     ],
-    # Group B: 완전 단절 Province (격일 실행 — 홀수일)
+    # Group B: 홀수일에만 실행
     'group_b': [
-        {
-            'province': 'Ba Ria Vung Tau',
-            'q': '"Vung Tau" AND ("oil" OR "gas" OR "LNG" OR "port" OR "petrochemical")',
-            'language': 'en',
-        },
-        {
-            'province': 'Binh Dinh',
-            'q': '"Binh Dinh" AND (infrastructure OR "industrial park" OR wastewater OR "renewable")',
-            'language': 'en',
-        },
-        {
-            'province': 'Quang Nam',
-            'q': '"Quang Nam" AND (infrastructure OR "industrial park" OR transport OR "water")',
-            'language': 'en',
-        },
-        {
-            'province': 'Thai Nguyen',
-            'q': '"Thai Nguyen" AND ("industrial park" OR "Samsung" OR infrastructure OR wastewater)',
-            'language': 'en',
-        },
-        {
-            'province': 'Ben Tre',
-            'q': '"Ben Tre" AND (infrastructure OR "water supply" OR "renewable energy" OR transport)',
-            'language': 'en',
-        },
-        {
-            'province': 'Bac Giang',
-            'q': '"Bac Giang" AND ("industrial park" OR "VSIP" OR wastewater OR infrastructure)',
-            'language': 'en',
-        },
+        {'q': '"Ba Ria Vung Tau" OR "Vũng Tàu" oil gas OR port 2026',
+         'language': 'en', 'province': 'Ba Ria Vung Tau'},
+        {'q': '"Binh Dinh" OR "Bình Định" infrastructure 2026',
+         'language': 'en', 'province': 'Binh Dinh'},
+        {'q': '"Quang Nam" infrastructure OR industrial 2026',
+         'language': 'en', 'province': 'Quang Nam'},
+        {'q': '"Thai Nguyen" OR "Thái Nguyên" industrial OR Samsung 2026',
+         'language': 'en', 'province': 'Thai Nguyen'},
+        {'q': '"Can Tho" OR "Cần Thơ" infrastructure OR water 2026',
+         'language': 'en', 'province': 'Can Tho'},
     ],
-    # Group C: 소규모 단절 Province (주 2회 — 월·목)
+    # Group C: 월·목요일에만 실행
     'group_c': [
-        {
-            'province': 'Tien Giang',
-            'q': '"Tien Giang" AND (infrastructure OR "water supply" OR transport OR "industrial")',
-            'language': 'en',
-        },
-        {
-            'province': 'Hai Duong',
-            'q': '"Hai Duong" AND ("industrial park" OR wastewater OR infrastructure)',
-            'language': 'en',
-        },
-        {
-            'province': 'Ninh Thuan',
-            'q': '"Ninh Thuan" AND ("wind" OR "solar" OR "renewable energy" OR infrastructure)',
-            'language': 'en',
-        },
-        {
-            'province': 'Quang Binh',
-            'q': '"Quang Binh" AND (infrastructure OR transport OR "industrial" OR "water")',
-            'language': 'en',
-        },
+        {'q': '"Ninh Thuan" OR "Ninh Thuận" wind solar energy 2026',
+         'language': 'en', 'province': 'Ninh Thuan'},
+        {'q': '"Khanh Hoa" OR "Khánh Hòa" infrastructure 2026',
+         'language': 'en', 'province': 'Khanh Hoa'},
+        {'q': '"Long An" industrial OR wastewater 2026',
+         'language': 'en', 'province': 'Long An'},
     ],
 }
 
-# 전문미디어 domain 타겟팅 쿼리
-NEWSDATA_SPECIALIST_QUERIES = [
-    {
-        'source': 'The Investor',
-        'domain': 'theinvestor.vn',
-        'q': 'infrastructure OR "industrial park" OR wastewater OR "power plant" OR "oil gas"',
-        'language': 'en',
-    },
-    {
-        'source': 'Vietnam Investment Review',
-        'domain': 'vir.com.vn',
-        'q': 'infrastructure OR investment OR "industrial zone" OR energy OR transport',
-        'language': 'en',
-    },
-    {
-        'source': 'Hanoi Times',
-        'domain': 'hanoitimes.vn',
-        'q': 'infrastructure OR "industrial park" OR wastewater OR metro OR "urban development"',
-        'language': 'en',
-    },
-    {
-        'source': 'Vietnam Energy',
-        'domain': 'vietnamenergy.vn',
-        'q': 'power OR energy OR "renewable" OR "solar" OR "wind" OR "LNG"',
-        'language': 'en',
-    },
-    {
-        'source': 'Da Nang News',
-        'domain': 'baodanang.vn',
-        'q': 'infrastructure OR "khu công nghiệp" OR "nước thải" OR "giao thông"',
-        'language': 'vi',
-    },
-    {
-        'source': 'Bao Dau Tu',
-        'domain': 'baodautu.vn',
-        'q': 'infrastructure OR "khu công nghiệp" OR "năng lượng" OR "giao thông"',
-        'language': 'vi',
-    },
-    {
-        'source': 'PetroTimes',
-        'domain': 'petrotimes.vn',
-        'q': 'oil OR gas OR LNG OR petroleum OR "dầu khí" OR petrovietnam',
-        'language': 'vi',
-    },
-]
+# ── 통합 기본 쿼리 리스트 ─────────────────────────────────────────────────
+NEWSDATA_QUERIES = NEWSDATA_SECTOR_QUERIES + NEWSDATA_MASTER_QUERIES
 
 
-def fetch_newsdata(hours_back=24):
+# ══════════════════════════════════════════════════════════════════════════
+#  fetch_newsdata() — NewsData.io API 호출
+# ══════════════════════════════════════════════════════════════════════════
+def fetch_newsdata(api_key: str, hours_back: int = 24) -> list[dict]:
     """
-    NewsData.io API로 단절 Province + 전문미디어 기사 수집.
-    [메모리항목1] 번역은 translate_articles()에서 처리 (여기서 호출 안 함)
-    [메모리항목17] Province 미분류율 25% 이하 목표
+    NewsData.io /api/1/latest API로 기사 수집.
 
-    Returns: list of article dicts (RSS 수집 결과와 동일한 구조)
+    5가지 수집 방법 중 방법1에 해당:
+      A: 7개 섹터 기본 쿼리 (매일)
+      B: 12개 마스터플랜 전용 쿼리 (매일)
+      C: Province × 섹터 교차 쿼리 (그룹별 주기 다름)
+
+    제약:
+      /api/1/latest 엔드포인트만 사용 (archive 유료)
+      country=vn + language + q 파라미터만 사용
+      domain / from_date / category+domain 조합 금지
+      422 오류 시 category 없이 재시도
+      일별 200 크레딧 한도
     """
-    if not NEWSDATA_API_KEY:
-        log("NewsData.io: NEWSDATA_API_KEY 없음 — 스킵")
+    if not api_key:
+        log.warning('[NewsData.io] API 키 없음 — 건너뜀')
         return []
 
-    if not NEWSDATA_API_KEY.startswith('pub_'):
-        log("NewsData.io: 올바른 API 키 형식 아님 (pub_로 시작해야 함) — 스킵")
-        return []
+    API_URL    = 'https://newsdata.io/api/1/latest'
+    CREDIT_MAX = 190   # 안전 마진 10 크레딧
+    SIZE       = 5     # 쿼리당 수집 건수
 
-    import datetime as dt_module
-    today = dt_module.datetime.utcnow()
-    day_of_week = today.weekday()   # 0=월 ... 6=일
-    day_of_month = today.day
-
-    articles = []
     credit_used = 0
-    CREDIT_LIMIT = 195  # 200건 중 5건 여유
+    articles    = []
+    seen_urls   = set()
 
-    def _call_newsdata(q, language='en', domain=None, size=10):
-        """NewsData.io API 단일 호출"""
+    today    = datetime.now()
+    day_odd  = today.day % 2 == 1           # 홀수일 여부
+    day_mon_thu = today.weekday() in (0, 3)  # 월(0) 또는 목(3)
+
+    def call_api(q, lang, size=SIZE):
+        """단일 API 호출 (422 자동 재시도)."""
         nonlocal credit_used
-        if credit_used + size > CREDIT_LIMIT:
-            log(f"  NewsData.io: 크레딧 한도 도달 ({credit_used}/{CREDIT_LIMIT})")
+        if credit_used >= CREDIT_MAX:
             return []
 
         params = {
-            'apikey': NEWSDATA_API_KEY,
-            'q': q,
-            'country': 'vn',
-            'language': language,
-            'category': 'business,politics,technology,environment',
-            'size': size,
+            'apikey':   api_key,
+            'country':  'vn',
+            'language': lang,
+            'q':        q,
+            'size':     size,
         }
-        if domain:
-            params['domain'] = domain
 
-        # from_date: hours_back 기준
-        from_dt = (today - timedelta(hours=min(hours_back, 720)))
-        params['from_date'] = from_dt.strftime('%Y-%m-%d')
+        for attempt in range(2):
+            try:
+                resp = requests.get(API_URL, params=params, timeout=15)
 
-        try:
-            resp = requests.get(
-                'https://newsdata.io/api/1/news',
-                params=params,
-                timeout=15
-            )
-            resp.raise_for_status()
-            data = resp.json()
+                if resp.status_code == 422:
+                    # category 파라미터가 있다면 제거 후 재시도
+                    # (이 함수는 category를 사용하지 않으므로 그냥 종료)
+                    log.warning(f'[NewsData.io] 422 오류 — q={q[:40]}')
+                    return []
 
-            if data.get('status') != 'success':
-                log(f"  NewsData.io 오류: {data.get('message','unknown')}")
+                if resp.status_code == 429:
+                    log.warning('[NewsData.io] 429 Rate Limit — 60초 대기')
+                    time.sleep(60)
+                    continue
+
+                resp.raise_for_status()
+                data = resp.json()
+                credit_used += 1
+                return data.get('results', [])
+
+            except requests.exceptions.Timeout:
+                log.warning(f'[NewsData.io] 타임아웃 ({attempt + 1}/2)')
+                time.sleep(2)
+            except Exception as e:
+                log.warning(f'[NewsData.io] 오류: {e}')
                 return []
 
-            results = data.get('results', [])
-            credit_used += len(results)
-            return results
+        return []
 
-        except Exception as e:
-            log(f"  NewsData.io 호출 실패: {e}")
-            return []
+    def parse_result(raw, sector='', plan_id='', province=''):
+        """NewsData.io 결과 → 표준 기사 딕셔너리."""
+        # URL 기반 중복 제거
+        url = (raw.get('link') or raw.get('url') or '').strip()
+        if not url or url in seen_urls:
+            return None
+        seen_urls.add(url)
 
-    def _parse_result(item, source_name, province_hint=None):
-        """NewsData.io 결과 → 기존 article dict 형식으로 변환"""
-        title   = (item.get('title') or '').strip()
-        url     = (item.get('link') or '').strip()
-        summary = (item.get('description') or '').strip()
-        pub_date = (item.get('pubDate') or '')[:10]
-        source  = item.get('source_id') or source_name
+        # 날짜 처리
+        pub_date = (raw.get('pubDate') or raw.get('publishedAt') or '')[:10]
+        if not pub_date:
+            pub_date = datetime.now().strftime('%Y-%m-%d')
 
-        if not title or not url or len(title) < 15:
+        # source 필드 fallback — Python or 연산자 (빈 문자열 방지)
+        source = (
+            raw.get('source_id') or
+            raw.get('source_name') or
+            (raw.get('creator') or [''])[0] or
+            'NewsData.io'
+        )
+
+        title = (raw.get('title') or '').strip()
+        desc  = (raw.get('description') or raw.get('content') or '')[:300].strip()
+
+        if not title:
             return None
 
-        if not url.startswith('http'):
+        # 품질 게이트 적용
+        ok, reason = should_collect(title, desc, source)
+        if not ok:
             return None
+
+        # v8.2: sector가 비어있으면 제목에서 직접 추론
+        inferred_sector = sector if sector else _infer_sector_from_title(title, desc)
 
         return {
-            'url_hash':       generate_url_hash(url),
-            'url':            url,
             'title':          title,
-            'summary':        summary[:1000],
-            'source':         f"NewsData/{source_name}",
-            'source_name':    f"NewsData/{source_name}",
+            'summary':        desc,
+            'url':            url,
+            'source':         source,
+            'date':           pub_date,
             'published_date': pub_date,
-            'raw_summary':    summary[:500],
-            '_province_hint': province_hint,  # Province 분류 힌트
+            'sector':         inferred_sector,
+            'province':       province,
+            'plan_id':        plan_id,
+            'collector':      'newsdata_io',
+            'ctx_grade':      'MEDIUM',
+            'ctx_plans':      plan_id if plan_id else '',
         }
 
-    log(f"NewsData.io: 수집 시작 (일별 크레딧 {CREDIT_LIMIT}건 한도)")
+    # ── A: 섹터 기본 쿼리 (매일) ─────────────────────────────────────
+    log.info('[NewsData.io] 방법1-A: 섹터 기본 쿼리')
+    for q_info in NEWSDATA_SECTOR_QUERIES:
+        if credit_used >= CREDIT_MAX:
+            break
+        results = call_api(q_info['q'], q_info['language'])
+        for raw in results:
+            parsed = parse_result(raw, sector=q_info.get('sector', ''))
+            if parsed:
+                articles.append(parsed)
+        time.sleep(0.3)
 
-    # ── Group A: 핵심급감 Province (매일) ─────────────────
-    log("  [Group A] 핵심 급감 Province 쿼리...")
+    # ── B: 마스터플랜 전용 쿼리 (매일) ──────────────────────────────
+    log.info('[NewsData.io] 방법1-B: 마스터플랜 쿼리')
+    for q_info in NEWSDATA_MASTER_QUERIES:
+        if credit_used >= CREDIT_MAX:
+            break
+        results = call_api(q_info['q'], q_info['language'])
+        for raw in results:
+            parsed = parse_result(
+                raw,
+                sector=q_info.get('sector', ''),
+                plan_id=q_info.get('plan_id', ''),
+            )
+            if parsed:
+                articles.append(parsed)
+        time.sleep(0.3)
+
+    # ── C-A: Province Group A (매일) ─────────────────────────────────
+    log.info('[NewsData.io] 방법1-C: Province Group A')
     for q_info in NEWSDATA_PROVINCE_QUERIES['group_a']:
-        if credit_used >= CREDIT_LIMIT:
+        if credit_used >= CREDIT_MAX:
             break
-        results = _call_newsdata(q_info['q'], q_info['language'], size=10)
-        for item in results:
-            parsed = _parse_result(item, q_info['province'], q_info['province'])
+        results = call_api(q_info['q'], q_info['language'])
+        for raw in results:
+            parsed = parse_result(raw, province=q_info.get('province', ''))
             if parsed:
                 articles.append(parsed)
-        if results:
-            log(f"    {q_info['province']} ({q_info['language']}): {len(results)}건")
         time.sleep(0.3)
 
-    # ── Group B: 완전단절 Province (홀수일만) ─────────────
-    if day_of_month % 2 == 1:
-        log("  [Group B] 완전 단절 Province 쿼리 (홀수일)...")
+    # ── C-B: Province Group B (홀수일) ───────────────────────────────
+    if day_odd:
+        log.info('[NewsData.io] 방법1-C: Province Group B (홀수일)')
         for q_info in NEWSDATA_PROVINCE_QUERIES['group_b']:
-            if credit_used >= CREDIT_LIMIT:
+            if credit_used >= CREDIT_MAX:
                 break
-            results = _call_newsdata(q_info['q'], q_info['language'], size=10)
-            for item in results:
-                parsed = _parse_result(item, q_info['province'], q_info['province'])
+            results = call_api(q_info['q'], q_info['language'])
+            for raw in results:
+                parsed = parse_result(raw, province=q_info.get('province', ''))
                 if parsed:
                     articles.append(parsed)
-            if results:
-                log(f"    {q_info['province']}: {len(results)}건")
             time.sleep(0.3)
 
-    # ── 전문미디어 domain 타겟팅 (매일) ───────────────────
-    log("  [전문미디어] domain 타겟팅 쿼리...")
-    for q_info in NEWSDATA_SPECIALIST_QUERIES:
-        if credit_used >= CREDIT_LIMIT:
-            break
-        results = _call_newsdata(
-            q_info['q'], q_info['language'],
-            domain=q_info['domain'], size=10
-        )
-        for item in results:
-            parsed = _parse_result(item, q_info['source'])
-            if parsed:
-                articles.append(parsed)
-        if results:
-            log(f"    {q_info['source']} ({q_info['domain']}): {len(results)}건")
-        time.sleep(0.3)
-
-    # ── Group C: 소규모 Province (월·목만) ────────────────
-    if day_of_week in (0, 3):  # 0=월요일, 3=목요일
-        log("  [Group C] 소규모 단절 Province 쿼리 (월·목)...")
+    # ── C-C: Province Group C (월·목) ────────────────────────────────
+    if day_mon_thu:
+        log.info('[NewsData.io] 방법1-C: Province Group C (월·목)')
         for q_info in NEWSDATA_PROVINCE_QUERIES['group_c']:
-            if credit_used >= CREDIT_LIMIT:
+            if credit_used >= CREDIT_MAX:
                 break
-            results = _call_newsdata(q_info['q'], q_info['language'], size=5)
-            for item in results:
-                parsed = _parse_result(item, q_info['province'], q_info['province'])
+            results = call_api(q_info['q'], q_info['language'])
+            for raw in results:
+                parsed = parse_result(raw, province=q_info.get('province', ''))
                 if parsed:
                     articles.append(parsed)
-            if results:
-                log(f"    {q_info['province']}: {len(results)}건")
             time.sleep(0.3)
 
-    log(f"NewsData.io 완료: {len(articles)}건 수집 | 크레딧 사용: {credit_used}/{CREDIT_LIMIT}")
+    log.info(
+        f'[NewsData.io] 완료 — {len(articles)}건 / '
+        f'{credit_used}/{CREDIT_MAX} 크레딧'
+    )
     return articles
 
 
-# ============================================================
-# DATABASE
-# ============================================================
-
-def init_database(db_path):
-    Path(db_path).parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(db_path)
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS articles (
-            id             INTEGER PRIMARY KEY AUTOINCREMENT,
-            url_hash       TEXT UNIQUE,
-            url            TEXT,
-            title          TEXT,
-            title_vi       TEXT,
-            title_ko       TEXT,
-            summary        TEXT,
-            summary_vi     TEXT,
-            summary_ko     TEXT,
-            source         TEXT,
-            sector         TEXT,
-            area           TEXT,
-            province       TEXT,
-            confidence     INTEGER DEFAULT 0,
-            published_date TEXT,
-            collected_date TEXT,
-            processed      INTEGER DEFAULT 0
-        )
-    ''')
-    conn.commit()
-    return conn
-
-
-def get_existing_hashes(conn):
-    """SQLite + Excel 양쪽에서 기존 URL hash를 수집.
-    Excel이 정보의 원천(source of truth) — SQLite 초기화되어도 중복 방지."""
-    # 1) SQLite에서 hash 수집
-    cur = conn.execute("SELECT url_hash FROM articles")
-    hashes = {row[0] for row in cur.fetchall()}
-
-    # 2) Excel DB Link 컬럼에서 URL → hash 변환하여 추가
-    _excel = os.environ.get('EXCEL_PATH', EXCEL_PATH)
-    try:
-        from pathlib import Path
-        if Path(_excel).exists():
-            import openpyxl
-            _wb = openpyxl.load_workbook(_excel, read_only=True, data_only=True)
-            _ws = _wb.active
-            # Link 컬럼 위치 찾기 (헤더에서 'Link' 또는 'URL' 검색)
-            _link_col = 7  # 기본값 (G열)
-            for _c in range(1, _ws.max_column + 1):
-                _h = str(_ws.cell(1, _c).value or '').lower()
-                if _h in ('link', 'url'):
-                    _link_col = _c
-                    break
-            # URL → hash 변환
-            for _row in _ws.iter_rows(min_row=2, values_only=True):
-                _url = _row[_link_col - 1] if _link_col - 1 < len(_row) else None
-                if _url and str(_url).startswith('http'):
-                    hashes.add(hashlib.md5(str(_url).encode()).hexdigest())
-            _wb.close()
-            log(f"  Loaded {len(hashes)} existing URL hashes (SQLite + Excel)")
-    except Exception as _e:
-        log(f"  Excel hash load warning: {_e}")
-
-    return hashes
-
-
-def save_article(conn, article):
-    try:
-        conn.execute('''
-            INSERT INTO articles
-              (url_hash, url, title, summary, source,
-               sector, area, province, confidence,
-               published_date, collected_date)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?)
-        ''', (
-            article['url_hash'], article['url'], article['title'],
-            article.get('summary', ''), article['source'],
-            article['sector'], article.get('area', ''),
-            article.get('province', 'Vietnam'),
-            article.get('confidence', 0),
-            article.get('published_date', ''),
-            datetime.now().isoformat(),
-        ))
-        conn.commit()
-        return True
-    except sqlite3.IntegrityError:
-        return False
-
-
-# ============================================================
-# MAIN COLLECTION
-# ============================================================
-
-def collect_news(hours_back=24):
-    conn             = init_database(DB_PATH)
-    existing_hashes  = get_existing_hashes(conn)
-    cutoff           = datetime.now() - timedelta(hours=hours_back)
-
-    log(f"Cutoff: {cutoff:%Y-%m-%d %H:%M} | Language: {LANGUAGE_FILTER} | Threshold: {MIN_CLASSIFY_THRESHOLD}")
-    log(f"RSS feeds: {len(RSS_FEEDS)} (v5.3: +12 environment+north feeds)")
-
-    total_collected    = 0
-    collected_articles = []
-    collection_stats   = {}
-
-    # ── RSS collection ──────────────────────────────────────
-    for source_name, feed_url in RSS_FEEDS.items():
-        stats = {
-            'url': feed_url, 'status': 'Unknown',
-            'last_check': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'entries_found': 0, 'collected': 0, 'error': '',
-        }
-        collection_stats[source_name] = stats
-
-        feed = fetch_rss(feed_url)
-        if feed.bozo and not feed.entries:
-            stats['status'] = 'Failed'
-            stats['error']  = 'Feed error or empty'
-            continue
-
-        stats['entries_found'] = len(feed.entries)
-        stats['status']        = 'Success'
-        source_cnt = 0
-
-        for entry in feed.entries:
-            title   = clean_html(getattr(entry, 'title', ''))
-            link    = getattr(entry, 'link', '')
-            summary = clean_html(getattr(entry, 'summary',
-                                          getattr(entry, 'description', '')))
-            pubdate = getattr(entry, 'published', getattr(entry, 'pubDate', ''))
-
-            if not title or not passes_language_filter(title):
-                continue
-
-            url_hash = generate_url_hash(link)
-            if url_hash in existing_hashes:
-                continue
-
-            pub_dt = parse_date(pubdate)
-            if pub_dt:
-                if pub_dt.tzinfo:
-                    pub_dt = pub_dt.replace(tzinfo=None)
-                if pub_dt < cutoff:
-                    continue
-
-            if not is_vietnam_related(title, summary):
-                continue
-
-            sector, area, confidence = classify_sector(title, summary)
-            if not sector:
-                continue
-
-            province = extract_province(title, summary)
-
-            article = {
-                'url_hash':       url_hash,
-                'url':            link,
-                'title':          title,
-                'summary':        summary[:1000] if summary else '',
-                'source':         source_name,
-                'source_name':    source_name,
-                'sector':         sector,
-                'area':           area,
-                'province':       province,
-                'confidence':     confidence,
-                'published_date': pub_dt.isoformat() if pub_dt else '',
-                'raw_summary':    summary[:500] if summary else '',
-            }
-
-            if save_article(conn, article):
-                existing_hashes.add(url_hash)
-                source_cnt    += 1
-                total_collected += 1
-                collected_articles.append(article)
-                log(f"  SAVED [{sector}|{confidence}%] [{province}] {title[:55]}...")
-
-        stats['collected'] = source_cnt
-
-    # ── Google News (보완 채널) ─────────────────────────────
-    if ENABLE_GNEWS:
-        log("GNews: fetching supplemental articles (infra + environment + north)...")
-        gnews_raw = fetch_gnews(GNEWS_QUERY, hours_back)
-        gnews_raw += fetch_gnews(GNEWS_ENV_QUERY, hours_back, max_articles=15)
-        # [v5.3 추가] 북부 보완 쿼리
-        gnews_raw += fetch_gnews(GNEWS_NORTH_QUERY, hours_back, max_articles=10)
-
-        for item in gnews_raw:
-            title   = item.get('title', '')
-            link    = item.get('url', '')
-            summary = item.get('raw_summary', '')
-
-            if not title or not is_vietnam_related(title, summary):
-                continue
-
-            url_hash = generate_url_hash(link)
-            if url_hash in existing_hashes:
-                continue
-
-            sector, area, confidence = classify_sector(title, summary)
-            if not sector:
-                continue
-
-            province = extract_province(title, summary)
-            article  = {
-                'url_hash': url_hash, 'url': link,
-                'title': title, 'summary': summary[:1000],
-                'source': item.get('source_name', 'GNews'),
-                'source_name': item.get('source_name', 'GNews'),
-                'sector': sector, 'area': area,
-                'province': province, 'confidence': confidence,
-                'published_date': item.get('published_date', ''),
-                'raw_summary': summary[:500],
-            }
-            if save_article(conn, article):
-                existing_hashes.add(url_hash)
-                total_collected += 1
-                collected_articles.append(article)
-
-    # ── NewsData.io 보완 수집 ──────────────────────────────────
-    # [메모리항목17] Province 미분류율 25% 이하 목표
-    # NEWSDATA_API_KEY 있을 때만 실행 (없으면 자동 스킵)
-    if NEWSDATA_API_KEY:
-        log("NewsData.io: Province 공백 + 전문미디어 보완 수집...")
-        newsdata_raw = fetch_newsdata(hours_back)
-
-        for item in newsdata_raw:
-            title   = item.get('title', '') or ''
-            link    = item.get('url', '') or ''
-            summary = item.get('raw_summary', '') or ''
-
-            if not title or len(title.strip()) < 15:
-                continue
-            if not is_vietnam_related(title, summary):
-                continue
-
-            url_hash = item.get('url_hash') or generate_url_hash(link)
-            if url_hash in existing_hashes:
-                continue
-
-            sector, area, confidence = classify_sector(title, summary)
-            if not sector:
-                continue
-
-            # province_hint: fetch_newsdata()가 쿼리 기반으로 제공한 힌트
-            province_hint = item.get('_province_hint')
-            province = province_hint or extract_province(title, summary)
-
-            article = {
-                'url_hash':       url_hash,
-                'url':            link,
-                'title':          title,
-                'summary':        summary[:1000],
-                'source':         item.get('source_name', 'NewsData'),
-                'source_name':    item.get('source_name', 'NewsData'),
-                'sector':         sector,
-                'area':           area,
-                'province':       province,
-                'confidence':     confidence,
-                'published_date': item.get('published_date', ''),
-                'raw_summary':    summary[:500],
-            }
-            if save_article(conn, article):
-                existing_hashes.add(url_hash)
-                total_collected += 1
-                collected_articles.append(article)
-                log(f"  [NewsData][{sector}|{province}] {title[:55]}...")
-
-        nd_count = sum(1 for a in collected_articles if 'NewsData' in a.get('source',''))
-        log(f"  NewsData.io 기여: {nd_count}건")
-
-
-    conn.close()
-
-    # ── Summary ─────────────────────────────────────────────
-    from collections import Counter
-    sector_counts   = Counter(a['sector']   for a in collected_articles)
-    province_counts = Counter(a['province'] for a in collected_articles)
-    low_conf = sum(1 for a in collected_articles if a.get('confidence', 0) < 50)
-
-    print("\n" + "=" * 60)
-    print(f"COLLECTION COMPLETE  |  {total_collected} articles")
-    print("-" * 60)
-    print("Sector breakdown:")
-    for s, c in sector_counts.most_common():
-        print(f"  {s:<28} {c:3d}")
-    print(f"\nLow-confidence articles (<50%): {low_conf}")
-    print(f"Top province: {province_counts.most_common(1)}")
-    print("=" * 60)
-
-    return total_collected, collected_articles, collection_stats
-
-
-# ============================================================
-# EXCEL UPDATE
-# ============================================================
-
-def update_excel_database(articles, collection_stats=None, excel_path=None):
-    try:
-        import openpyxl
-        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-        from collections import Counter
-        import shutil
-    except ImportError:
-        log("openpyxl not installed")
-        return False
-
-    _ep_str = excel_path or os.environ.get('EXCEL_PATH', EXCEL_PATH)
-    ep = Path(_ep_str)
-    if not ep.exists():
-        log(f"Excel not found: {ep}")
-        return False
-
-    try:
-        wb_c = openpyxl.load_workbook(ep, read_only=True)
-        ws_c = wb_c.active
-        existing_count = sum(1 for r in ws_c.iter_rows(min_row=2, values_only=True) if any(r))
-        wb_c.close()
-        if existing_count < 100:
-            log(f"Safety check failed: only {existing_count} rows")
-            return False
-    except Exception as e:
-        log(f"Safety check error: {e}")
-        return False
-
-    try:
-        shutil.copy2(ep, ep.with_suffix('.xlsx.backup'))
-    except Exception:
-        pass
-
-    try:
-        wb  = openpyxl.load_workbook(ep)
-        ws  = wb.active
-        last_row = ws.max_row
-
-        url_col = 7
-        for c in range(1, ws.max_column + 1):
-            h = ws.cell(row=1, column=c).value
-            if h and "link" in str(h).lower():
-                url_col = c
-                break
-
-        existing_urls = set()
-        for row in range(2, last_row + 1):
-            v = ws.cell(row=row, column=url_col).value
-            if v:
-                existing_urls.add(v)
-
-        # ── 스타일 ───────────────────────────────────────────
-        NEW_FILL    = PatternFill(start_color="FFF9C4", end_color="FFF9C4", fill_type="solid")
-        NEW_FONT    = Font(bold=True, color="1A1A1A", size=10)
-        ENV_FILL    = PatternFill(start_color="F0FDF4", end_color="F0FDF4", fill_type="solid")
-        ENERGY_FILL = PatternFill(start_color="FFFBEB", end_color="FFFBEB", fill_type="solid")
-        URBAN_FILL  = PatternFill(start_color="F5F3FF", end_color="F5F3FF", fill_type="solid")
-        PLAIN_FONT  = Font(color="1A1A1A", size=10)
-        HDR_FILL    = PatternFill(start_color="0F766E", end_color="0F766E", fill_type="solid")
-        HDR_FONT    = Font(bold=True, color="FFFFFF", size=10)
-        thin_side   = Side(style='thin', color='E2E8F0')
-        thin_border = Border(bottom=thin_side)
-
-        col_map = {
-            'area':1,'sector':2,'province':3,'title':4,'date':5,
-            'source':6,'url':7,'summary':8,
-            'title_ko':9,'title_en':10,'title_vi':11,
-            'summary_ko':12,'summary_en':13,'summary_vi':14,
-        }
-
-        def area_fill(area):
-            a = str(area).lower()
-            if 'environment' in a: return ENV_FILL
-            if 'energy' in a:      return ENERGY_FILL
-            return URBAN_FILL
-
-        # ── 신규기사 추가 ────────────────────────────────────
-        added    = 0
-        new_urls = set()
-        for art in articles:
-            if art.get('url') in existing_urls:
-                continue
-            nr = last_row + 1 + added
-            ws.cell(row=nr, column=col_map['area'],     value=art.get('area', ''))
-            ws.cell(row=nr, column=col_map['sector'],   value=art.get('sector', ''))
-            ws.cell(row=nr, column=col_map['province'], value=art.get('province', 'Vietnam'))
-            ws.cell(row=nr, column=col_map['title'],    value=art.get('title', ''))
-            ws.cell(row=nr, column=col_map['date'],     value=(art.get('published_date','') or '')[:10])
-            ws.cell(row=nr, column=col_map['source'],   value=art.get('source', ''))
-            ws.cell(row=nr, column=col_map['url'],      value=art.get('url', ''))
-            ws.cell(row=nr, column=col_map['summary'],  value=art.get('summary', '')[:500])
-            # 번역 컬럼 (9~14): translate_articles()가 채운 값을 저장
-            # [메모리항목7] translate_articles() 실행 후 이 함수 호출 → 번역값 존재
-            ws.cell(row=nr, column=col_map['title_ko'],   value=art.get('title_ko',''))
-            ws.cell(row=nr, column=col_map['title_en'],   value=art.get('title_en',''))
-            ws.cell(row=nr, column=col_map['title_vi'],   value=art.get('title_vi',''))
-            ws.cell(row=nr, column=col_map['summary_ko'], value=art.get('summary_ko',''))
-            ws.cell(row=nr, column=col_map['summary_en'], value=art.get('summary_en',''))
-            ws.cell(row=nr, column=col_map['summary_vi'], value=art.get('summary_vi',''))
-            for c in range(1, 15):
-                ws.cell(row=nr, column=c).fill   = NEW_FILL
-                ws.cell(row=nr, column=c).font   = NEW_FONT
-                ws.cell(row=nr, column=c).border = thin_border
-            added    += 1
-            new_urls.add(art.get('url'))
-            existing_urls.add(art.get('url'))
-
-        log(f"  +{added} new articles added (yellow highlight)")
-
-        # ── 날짜순 정렬 + 색상 재적용 ───────────────────────
-        max_row = ws.max_row
-        if added > 0 and max_row > 2:
-            max_col_dyn = max(8, ws.max_column)
-            rows_data = []
-            for r in range(2, max_row + 1):
-                row_vals = [ws.cell(row=r, column=c).value for c in range(1, max_col_dyn + 1)]
-                # [버그수정] 빈 행(제목 없음) 완전 제외 — 재정렬 시 빈 행 재삽입 방지
-                title_val = row_vals[col_map['title']-1] if col_map['title']-1 < len(row_vals) else None
-                if not title_val or str(title_val).strip() == '':
-                    continue
-                date_key = str(row_vals[col_map['date']-1] or '0000-00-00')[:10]
-                url_key  = str(row_vals[col_map['url']-1]  or '')
-                rows_data.append({'vals': row_vals, 'date': date_key, 'is_new': url_key in new_urls})
-
-            rows_data.sort(key=lambda x: x['date'], reverse=True)
-
-            for i, rd in enumerate(rows_data, 2):
-                fill = NEW_FILL if rd['is_new'] else area_fill(rd['vals'][0])
-                font = NEW_FONT if rd['is_new'] else PLAIN_FONT
-                for c in range(1, max_col_dyn + 1):
-                    cell = ws.cell(row=i, column=c)
-                    cell.value  = rd['vals'][c-1] if c-1 < len(rd['vals']) else None
-                    if c <= 8:
-                        cell.fill   = fill
-                        cell.font   = font
-                    cell.border = thin_border
-
-            log(f"  Sorted {max_row-1} rows newest-first | new=yellow env=green energy=yellow urban=purple")
-
-        for col, w in zip('ABCDEFGHIJKLMN', [18,22,20,60,12,22,50,60,40,40,40,50,50,50]):
-            ws.column_dimensions[col].width = w
-        ws.freeze_panes = 'A2'
-
-        # ── RSS_Sources 시트 ──────────────────────────────────
-        if collection_stats:
-            for sn in ["RSS_Sources"]:
-                if sn in wb.sheetnames:
-                    wb.remove(wb[sn])
-            ws_rss = wb.create_sheet("RSS_Sources")
-            for ci, h in enumerate(["Source","URL","Status","Last Check",
-                                     "Entries","Collected","Error"], 1):
-                c = ws_rss.cell(row=1, column=ci, value=h)
-                c.fill = HDR_FILL; c.font = HDR_FONT
-                c.alignment = Alignment(horizontal='center')
-
-            for ri, (src, st) in enumerate(collection_stats.items(), 2):
-                ws_rss.cell(row=ri,column=1,value=src)
-                ws_rss.cell(row=ri,column=2,value=st.get('url',''))
-                ws_rss.cell(row=ri,column=3,value=st.get('status',''))
-                ws_rss.cell(row=ri,column=4,value=st.get('last_check',''))
-                ws_rss.cell(row=ri,column=5,value=st.get('entries_found',0))
-                ws_rss.cell(row=ri,column=6,value=st.get('collected',0))
-                ws_rss.cell(row=ri,column=7,value=st.get('error',''))
-                sfill = ("D1FAE5" if st.get('status')=='Success' else
-                         "FEE2E2" if st.get('status')=='Failed' else "F9FAFB")
-                ws_rss.cell(row=ri,column=3).fill = PatternFill(
-                    start_color=sfill,end_color=sfill,fill_type="solid")
-
-            for col,w in zip('ABCDEFG',[28,50,12,20,10,12,45]):
-                ws_rss.column_dimensions[col].width = w
-
-        # ── Source 시트 업데이트 ──────────────────────────────
-        _src_sn = "Source"
-        if _src_sn not in wb.sheetnames:
-            ws_src = wb.create_sheet(_src_sn)
-            for _ci, _h in enumerate(["Domain","URL","Type","Status",
-                                       "Last Checked","Check Result","Articles Found","Note"], 1):
-                _c = ws_src.cell(row=1, column=_ci, value=_h)
-                _c.fill = HDR_FILL; _c.font = HDR_FONT
-                _c.alignment = Alignment(horizontal='center')
-        else:
-            ws_src = wb[_src_sn]
-
-        _domain_idx = {}
-        _url_idx    = {}
-        for _r in range(2, ws_src.max_row + 1):
-            _d = ws_src.cell(row=_r, column=1).value
-            _u = ws_src.cell(row=_r, column=2).value
-            # URL이 http로 시작하는 정상 행만 인덱싱 (separator·오염 행 제외)
-            if _u and str(_u).startswith('http'):
-                _url_idx[str(_u).rstrip('/')] = _r
-                if _d:
-                    _domain_idx[str(_d).lower().replace('www.','')] = _r
-
-        def _ext_domain(_url):
-            try:
-                from urllib.parse import urlparse
-                return urlparse(_url).netloc.lower().replace('www.','')
-            except Exception:
-                return _url
-
-        now = datetime.now()
-        _run_date = now.strftime("%Y-%m-%d %H:%M")
-
-        if collection_stats:
-            for _sname, _st in collection_stats.items():
-                _feed_url  = _st.get('url', '')
-                if not _feed_url:
-                    continue
-                _domain    = _ext_domain(_feed_url)
-                _status    = _st.get('status', 'Unknown')
-                _collected = _st.get('collected', 0)
-                _entries   = _st.get('entries_found', 0)
-                _err       = _st.get('error', '') or ''
-
-                if _status == 'Success' and _collected > 0:
-                    _result = f"OK — {_entries} entries scanned, {_collected} collected"
-                elif _status == 'Success':
-                    _result = f"OK — {_entries} entries, 0 collected (no matching infra news)"
-                else:
-                    _result = f"FAILED: {_err[:70]}"
-
-                _tr = _url_idx.get(_feed_url.rstrip('/')) or _domain_idx.get(_domain)
-
-                if _tr:
-                    ws_src.cell(row=_tr, column=4, value="Accessible" if _status=='Success' else "Inaccessible")
-                    ws_src.cell(row=_tr, column=5, value=_run_date)
-                    ws_src.cell(row=_tr, column=6, value=_result)
-                    ws_src.cell(row=_tr, column=7, value=_collected)
-                    if _err and _status == 'Failed':
-                        ws_src.cell(row=_tr, column=8, value=_err[:120])
-                else:
-                    _tr = ws_src.max_row + 1
-                    ws_src.cell(row=_tr, column=1, value=_domain)
-                    ws_src.cell(row=_tr, column=2, value=_feed_url)
-                    ws_src.cell(row=_tr, column=3, value="RSS Feed")
-                    ws_src.cell(row=_tr, column=4, value="Accessible" if _status=='Success' else "Inaccessible")
-                    ws_src.cell(row=_tr, column=5, value=_run_date)
-                    ws_src.cell(row=_tr, column=6, value=_result)
-                    ws_src.cell(row=_tr, column=7, value=_collected)
-                    if _err:
-                        ws_src.cell(row=_tr, column=8, value=_err[:120])
-                    _url_idx[_feed_url.rstrip('/')] = _tr
-                    _domain_idx[_domain] = _tr
-
-                _sf = "D1FAE5" if _status == 'Success' else "FEE2E2"
-                ws_src.cell(row=_tr, column=4).fill = PatternFill(
-                    start_color=_sf, end_color=_sf, fill_type="solid")
-
-        _gnews_by_pub = {}
-        _gnews_total  = 0
-        for _art in articles:
-            _asrc = _art.get('source', '') or ''
-            _aurl = _art.get('url', '') or ''
-            _is_gn = ('GNews' in _asrc or 'NewsData' in _asrc or
-                      'gnews' in _aurl.lower() or 'newsdata' in _aurl.lower())
-            if _is_gn:
-                _gnews_total += 1
-                _pub = (_asrc if _asrc not in ('GNews','NewsData')
-                        else _ext_domain(_aurl))
-                _gnews_by_pub[_pub] = _gnews_by_pub.get(_pub, 0) + 1
-
-        _gn_key = "gnews.io (Google News API)"
-        _gn_row = None
-        for _r in range(2, ws_src.max_row + 1):
-            if str(ws_src.cell(row=_r, column=1).value or '').startswith('gnews.io'):
-                _gn_row = _r
-                break
-        if not _gn_row:
-            _gn_row = ws_src.max_row + 1
-
-        ws_src.cell(row=_gn_row, column=1, value=_gn_key)
-        ws_src.cell(row=_gn_row, column=2, value="https://gnews.io/api/v4/search")
-        ws_src.cell(row=_gn_row, column=3, value="News API")
-        ws_src.cell(row=_gn_row, column=4, value="Accessible" if _gnews_total > 0 else "Checked")
-        ws_src.cell(row=_gn_row, column=5, value=_run_date)
-        _pub_list = ', '.join(f"{k}({v})" for k, v in
-                              sorted(_gnews_by_pub.items(), key=lambda x: -x[1])[:10])
-        ws_src.cell(row=_gn_row, column=6,
-                    value=(f"OK — {_gnews_total} articles | {_pub_list}"
-                           if _gnews_total > 0 else f"Queried — 0 new articles")[:200])
-        ws_src.cell(row=_gn_row, column=7, value=_gnews_total)
-        ws_src.cell(row=_gn_row, column=8,
-                    value=f"Queries: Vietnam infra + environment + north | {_run_date}")
-        ws_src.cell(row=_gn_row, column=4).fill = PatternFill(
-            start_color="DBEAFE", end_color="DBEAFE", fill_type="solid")
-
-        for _pub, _cnt in _gnews_by_pub.items():
-            if not _pub:
-                continue
-            _ptr = _domain_idx.get(_pub.lower().replace('www.',''))
-            if not _ptr:
-                _ptr = ws_src.max_row + 1
-                ws_src.cell(row=_ptr, column=1, value=_pub)
-                ws_src.cell(row=_ptr, column=2, value=f"(via GNews API: {_pub})")
-                ws_src.cell(row=_ptr, column=3, value="Media/News (via API)")
-                ws_src.cell(row=_ptr, column=4, value="Accessible")
-                _domain_idx[_pub.lower()] = _ptr
-            ws_src.cell(row=_ptr, column=5, value=_run_date)
-            ws_src.cell(row=_ptr, column=6, value=f"Collected via GNews API: {_cnt} articles")
-            ws_src.cell(row=_ptr, column=7, value=_cnt)
-            ws_src.cell(row=_ptr, column=8, value="Accessed via Google News API aggregation")
-
-        for _col, _w in zip('ABCDEFGH', [30, 52, 18, 14, 20, 60, 16, 55]):
-            ws_src.column_dimensions[_col].width = _w
-        ws_src.freeze_panes = 'A2'
-        if ws_src.cell(row=1, column=1).value != 'Domain':
-            for _ci, _h in enumerate(["Domain","URL","Type","Status",
-                                       "Last Checked","Check Result","Articles Found","Note"], 1):
-                _c = ws_src.cell(row=1, column=_ci, value=_h)
-                _c.fill = HDR_FILL; _c.font = HDR_FONT
-                _c.alignment = Alignment(horizontal='center')
-
-        _rss_ok = sum(1 for _s in (collection_stats or {}).values() if _s.get('status')=='Success')
-        _rss_tot = len(collection_stats) if collection_stats else 0
-        log(f"✓ Source sheet updated | RSS {_rss_ok}/{_rss_tot} OK | GNews {_gnews_total} articles from {len(_gnews_by_pub)} publishers")
-
-        # ── Collection_Log 시트 ───────────────────────────────
-        if "Collection_Log" not in wb.sheetnames:
-            ws_log = wb.create_sheet("Collection_Log")
-            for ci,h in enumerate(["Date","Time","Hours Back","Sources Checked",
-                                    "Success","Failed","New Articles","Total DB"],1):
-                c = ws_log.cell(row=1,column=ci,value=h)
-                c.fill=HDR_FILL; c.font=HDR_FONT
-        else:
-            ws_log = wb["Collection_Log"]
-
-        now      = datetime.now()
-        tot_src  = len(collection_stats) if collection_stats else 0
-        ok_src   = sum(1 for s in (collection_stats or {}).values() if s.get('status')=='Success')
-        log_row  = ws_log.max_row + 1
-        cur_total = sum(1 for r in ws.iter_rows(min_row=2,values_only=True) if any(r))
-
-        ws_log.cell(row=log_row,column=1,value=now.strftime("%Y-%m-%d"))
-        ws_log.cell(row=log_row,column=2,value=now.strftime("%H:%M:%S"))
-        ws_log.cell(row=log_row,column=3,value=HOURS_BACK)
-        ws_log.cell(row=log_row,column=4,value=tot_src)
-        ws_log.cell(row=log_row,column=5,value=ok_src)
-        ws_log.cell(row=log_row,column=6,value=tot_src - ok_src)
-        ws_log.cell(row=log_row,column=7,value=added)
-        ws_log.cell(row=log_row,column=8,value=cur_total)
-        today_hl = PatternFill(start_color="DBEAFE",end_color="DBEAFE",fill_type="solid")
-        for c in range(1,9):
-            ws_log.cell(row=log_row,column=c).fill = today_hl
-
-        # ── Summary 시트 ─────────────────────────────────────
-        for sn in ["Summary"]:
-            if sn in wb.sheetnames:
-                wb.remove(wb[sn])
-        ws_sum = wb.create_sheet("Summary")
-
-        sectors_all = [str(ws.cell(row=r,column=2).value or '') for r in range(2,ws.max_row+1)
-                       if any(ws.cell(row=r,column=c).value for c in range(1,9))]
-        areas_all   = [str(ws.cell(row=r,column=1).value or '') for r in range(2,ws.max_row+1)
-                       if any(ws.cell(row=r,column=c).value for c in range(1,9))]
-        prov_all    = [str(ws.cell(row=r,column=3).value or '') for r in range(2,ws.max_row+1)
-                       if any(ws.cell(row=r,column=c).value for c in range(1,9))]
-        total_arts  = len(sectors_all)
-
-        ws_sum.merge_cells('A1:D1')
-        tc = ws_sum.cell(row=1,column=1,value="🇻🇳 Vietnam Infrastructure News — Summary")
-        tc.font=Font(bold=True,size=14,color="0F766E"); tc.alignment=Alignment(horizontal='center')
-        ws_sum.cell(row=2,column=1,value=f"Updated: {now.strftime('%Y-%m-%d %H:%M')}  |  Total: {total_arts:,} articles")
-        ws_sum.cell(row=2,column=1).font=Font(size=10,color="475569")
-
-        r = 4
-        ws_sum.cell(row=r,column=1,value="Business Sector").font=Font(bold=True,size=11)
-        ws_sum.cell(row=r,column=2,value="Articles").font=Font(bold=True,size=11)
-        ws_sum.cell(row=r,column=3,value="Share").font=Font(bold=True,size=11)
-        r += 1
-        for sect,cnt in Counter(sectors_all).most_common():
-            ws_sum.cell(row=r,column=1,value=sect)
-            ws_sum.cell(row=r,column=2,value=cnt)
-            ws_sum.cell(row=r,column=3,value=f"{cnt/total_arts*100:.1f}%" if total_arts else "0%")
-            r += 1
-
-        r += 1
-        ws_sum.cell(row=r,column=1,value="Area").font=Font(bold=True,size=11)
-        r += 1
-        for area,cnt in Counter(areas_all).most_common():
-            ws_sum.cell(row=r,column=1,value=area); ws_sum.cell(row=r,column=2,value=cnt); r+=1
-
-        r += 1
-        ws_sum.cell(row=r,column=1,value="Top 15 Provinces").font=Font(bold=True,size=11)
-        r += 1
-        for prov,cnt in Counter(prov_all).most_common(15):
-            ws_sum.cell(row=r,column=1,value=prov); ws_sum.cell(row=r,column=2,value=cnt); r+=1
-
-        for col,w in zip('ABCD',[30,12,10,10]):
-            ws_sum.column_dimensions[col].width = w
-
-
-        # ── Keywords History 시트 업데이트 ──────────────────
-        # [목적] Area/Sector 1순위, Province 2순위, Date 내림차순 타임라인
-        # [규칙] 신규기사 노란하이라이트, 영문제목 우선, 중복URL 제거
-        # [메모리항목13] Sector 우선순위 고정
-        _KH_SECTOR_ORDER = [
-            "Waste Water", "Water Supply/Drainage", "Solid Waste",
-            "Power", "Oil & Gas", "Transport",
-            "Industrial Parks", "Smart City", "Construction"
-        ]
-        def _kh_sector_rank(s):
-            try: return _KH_SECTOR_ORDER.index(str(s))
-            except ValueError: return 99
-
-        _AREA_CAT = {
-            'Environment': 'Environment',
-            'Energy Develop.': 'Energy Development',
-            'Urban Development': 'Urban Development',
-            'Urban Develop.': 'Urban Development',
-        }
-
-        # 기존 KH에서 URL 집합 수집 (중복 방지)
-        _kh_sn = 'Keywords History'
-        if _kh_sn not in wb.sheetnames:
-            _ws_kh = wb.create_sheet(_kh_sn)
-        else:
-            _ws_kh = wb[_kh_sn]
-
-        # 기존 URL 집합 파악
-        _kh_url_col = 8  # URL 컬럼 기본값
-        for _c in range(1, _ws_kh.max_column + 1):
-            if str(_ws_kh.cell(1, _c).value or '').lower() == 'url':
-                _kh_url_col = _c
-                break
-        _existing_kh_urls = set()
-        for _r in range(2, _ws_kh.max_row + 1):
-            _u = _ws_kh.cell(_r, _kh_url_col).value
-            if _u:
-                _existing_kh_urls.add(str(_u))
-
-        # 신규 기사만 KH에 추가
-        _kh_new_articles = [
-            a for a in articles
-            if a.get('url') and str(a['url']) not in _existing_kh_urls
-        ]
-
-        if _kh_new_articles:
-            # 헤더가 없으면 생성
-            if _ws_kh.cell(1, 1).value != 'No':
-                _kh_headers = ['No','Category','Sector','Province',
-                                'Date','Title','Source','URL','Summary (EN/KO)']
-                _kh_wids    = [5, 16, 22, 18, 12, 65, 22, 50, 55]
-                for _ci, (_h, _w) in enumerate(zip(_kh_headers, _kh_wids), 1):
-                    _c = _ws_kh.cell(1, _ci, _h)
-                    _c.fill = HDR_FILL; _c.font = HDR_FONT
-                    _c.alignment = Alignment(horizontal='center')
-                for _ci, _w in enumerate(_kh_wids, 1):
-                    from openpyxl.utils import get_column_letter
-                    _ws_kh.column_dimensions[get_column_letter(_ci)].width = _w
-                _ws_kh.freeze_panes = 'A2'
-
-            # 신규 기사를 기존 데이터 아래 추가 (노란 하이라이트)
-            _ENV_FILL_KH    = PatternFill(start_color="F0FDF4",end_color="F0FDF4",fill_type="solid")
-            _ENERGY_FILL_KH = PatternFill(start_color="FFFBEB",end_color="FFFBEB",fill_type="solid")
-            _URBAN_FILL_KH  = PatternFill(start_color="F5F3FF",end_color="F5F3FF",fill_type="solid")
-            _KH_SECTOR_FILL = {
-                "Waste Water": _ENV_FILL_KH, "Water Supply/Drainage": _ENV_FILL_KH,
-                "Solid Waste": _ENV_FILL_KH,
-                "Power": _ENERGY_FILL_KH, "Oil & Gas": _ENERGY_FILL_KH,
-                "Transport": _URBAN_FILL_KH, "Industrial Parks": _URBAN_FILL_KH,
-                "Smart City": _URBAN_FILL_KH, "Construction": _URBAN_FILL_KH,
-            }
-
-            _start_r = _ws_kh.max_row + 1
-            _cur_no  = _ws_kh.cell(_start_r - 1, 1).value or (_start_r - 2)
-            try: _cur_no = int(_cur_no)
-            except: _cur_no = _start_r - 2
-
-            # 신규 기사 정렬 후 삽입
-            _kh_new_sorted = sorted(
-                _kh_new_articles,
-                key=lambda a: (
-                    _kh_sector_rank(a.get('sector', '')),
-                    str(a.get('province', 'Vietnam')),
-                    str(a.get('published_date', '') or ''),
-                ),
-                reverse=False
-            )
-
-            for _a in _kh_new_sorted:
-                _cur_no += 1
-                _nr = _ws_kh.max_row + 1
-
-                # 영문 제목 우선
-                _title = (str(_a.get('title_en','') or '').strip() or
-                          str(_a.get('title_ko','') or '').strip() or
-                          str(_a.get('title','') or ''))
-                _summary = (str(_a.get('summary_en','') or '').strip() or
-                            str(_a.get('summary_ko','') or '').strip() or
-                            str(_a.get('summary','') or ''))[:300]
-                _sector  = str(_a.get('sector',''))
-                _area    = str(_a.get('area',''))
-                _cat     = _AREA_CAT.get(_area, _area)
-                _date    = (str(_a.get('published_date','') or '')[:10])
-
-                _kh_vals = [
-                    _cur_no, _cat, _sector,
-                    str(_a.get('province','Vietnam')),
-                    _date, _title,
-                    str(_a.get('source','')),
-                    str(_a.get('url','')),
-                    _summary,
-                ]
-                for _ci, _val in enumerate(_kh_vals, 1):
-                    _cell = _ws_kh.cell(_nr, _ci, _val)
-                    _cell.fill   = NEW_FILL   # 노란 하이라이트
-                    _cell.font   = NEW_FONT
-                    _cell.border = thin_border
-                    if _ci in (1, 5):
-                        _cell.alignment = Alignment(horizontal='center', vertical='top')
-                    else:
-                        _cell.alignment = Alignment(horizontal='left', vertical='top',
-                                                    wrap_text=False)
-                _ws_kh.row_dimensions[_nr].height = 15
-
-            log(f"✓ Keywords History: +{len(_kh_new_articles)} new articles added (yellow)")
-        else:
-            log("Keywords History: no new articles to add")
-
-        wb.save(ep)
-        wb.close()
-        log(f"✓ Excel saved | +{added} new(yellow) | total {cur_total} | sorted ↓date | Log+RSS+Summary updated")
-        return True
-
-    except Exception as e:
-        log(f"Excel update error: {e}")
-        import traceback; traceback.print_exc()
-        return False
-
-
-# ============================================================
-# MAIN
-# ============================================================
-
-if __name__ == "__main__":
-    import argparse
-    p = argparse.ArgumentParser(description='Vietnam Infra News Collector v5.3')
-    p.add_argument('--hours-back', type=int, default=HOURS_BACK)
-    p.add_argument('--threshold',  type=int, default=MIN_CLASSIFY_THRESHOLD,
-                   help='Min classification score (default: 2)')
-    p.add_argument('--gnews',      action='store_true', help='Enable Google News API')
-    # [메모리 항목7] main.py Step1→2→3→4 순서 준수:
-    # --no-excel: Excel 저장 생략 → 번역 후 ExcelUpdater(Step3)가 저장
-    p.add_argument('--no-excel',   action='store_true',
-                   help='Skip Excel update (used when main.py handles ExcelUpdater)')
-    p.add_argument('--agent-mode', action='store_true',
-                   help='Save output to data/agent_output/collector_output.json (skips Excel)')
-    args = p.parse_args()
-
-    HOURS_BACK             = args.hours_back
-    MIN_CLASSIFY_THRESHOLD = args.threshold
-    if args.gnews:
-        ENABLE_GNEWS = True
-
-    print("=" * 60)
-    print("VIETNAM INFRASTRUCTURE NEWS COLLECTOR  v5.3")
-    print(f"Hours back: {HOURS_BACK} | Threshold: {MIN_CLASSIFY_THRESHOLD} | Language: {LANGUAGE_FILTER}")
-    print(f"RSS feeds: {len(RSS_FEEDS)} | New v5.3 feeds: 12 (env+north)")
-    print("=" * 60)
-
-    cnt, arts, stats = collect_news(HOURS_BACK)
-
-    # [메모리항목7] Step1(수집) → Step2(번역) → Step3(Excel) 순서 준수
-    # 번역 먼저 완료 후 Excel 저장 → title_ko 등이 채워진 상태로 저장됨
-    if cnt > 0:
-        arts = translate_articles(arts)
-
-    if args.agent_mode:
-        # --agent-mode: data/agent_output/collector_output.json 으로 저장 (Excel 스킵)
-        import json as _json
-        from datetime import timezone as _tz
-        _total = len(arts)
-        _vietnam_ratio = (
-            sum(1 for a in arts if a.get('province', '') == 'Vietnam') / _total
-            if _total > 0 else 0.0
-        )
-        _missing = [a.get('title', '')[:40] for a in arts if not a.get('province')]
-        _out = {
-            'run_timestamp':   datetime.now(_tz.utc).isoformat(),
-            'hours_back':      HOURS_BACK,
-            'total_collected': cnt,
-            'articles': [
-                {k: v for k, v in a.items() if k != 'url_hash'}
-                for a in arts
-            ],
-            'quality_flags': {
-                'vietnam_ratio':    round(_vietnam_ratio, 3),
-                'missing_provinces': _missing,
-            },
-        }
-        _json_path = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            'data', 'agent_output', 'collector_output.json'
-        )
-        Path(_json_path).parent.mkdir(parents=True, exist_ok=True)
-        with open(_json_path, 'w', encoding='utf-8') as _f:
-            _json.dump(_out, _f, ensure_ascii=False, default=str)
-        log(f"[agent-mode] Saved {cnt} articles to {_json_path}")
-    elif args.no_excel:
-        # [메모리 항목7] main.py 경유 시: Excel 저장 스킵
-        # 수집 결과를 JSON으로 저장 → main.py의 ExcelUpdater가 처리
-        import json
-        _out = {
-            'count': cnt,
-            'articles': [
-                {k: v for k, v in a.items() if k != 'url_hash'}
-                for a in arts
-            ],
-            'stats': {
-                src: {
-                    'url':            st.get('url',''),
-                    'status':         st.get('status',''),
-                    'entries_found':  st.get('entries_found', 0),
-                    'collected':      st.get('collected', 0),
-                    'error':          st.get('error',''),
-                }
-                for src, st in stats.items()
-            }
-        }
-        _json_path = os.environ.get('COLLECTOR_OUTPUT', 'data/collector_output.json')
-        Path(_json_path).parent.mkdir(parents=True, exist_ok=True)
-        with open(_json_path, 'w', encoding='utf-8') as _f:
-            json.dump(_out, _f, ensure_ascii=False, default=str)
-        log(f"Saved {cnt} articles to {_json_path} (Excel update deferred to ExcelUpdater)")
-    else:
-        # 단독 실행 시: Excel 직접 업데이트 (기존 동작 유지)
-        update_excel_database(arts, stats)
-
-    print("\nRSS SOURCE STATUS:")
-    for src, st in stats.items():
-        icon = "✓" if st['status'] == 'Success' else "✗"
-        print(f"  {icon} {src}: {st['entries_found']} entries → {st['collected']} collected")
-
-    print(f"\nTOTAL: {cnt} new articles collected")
+# ══════════════════════════════════════════════════════════════════════════
+#  메인 수집 함수
+# ══════════════════════════════════════════════════════════════════════════
+def collect_news(hours_back: int = 24) -> list[dict]:
+    """
+    RSS + NewsData.io 통합 수집.
+
+    main.py Step1에서 호출:
+        articles = collect_news(hours_back=24)
+
+    Returns:
+        list[dict]: 수집된 기사 목록
+        각 기사에 date / published_date 키 모두 포함
+    """
+    log.info(f'=== 뉴스 수집 시작 (hours_back={hours_back}) ===')
+
+    # ── RSS 수집 ────────────────────────────────────────────────────
+    rss_articles = fetch_rss_articles(hours_back)
+
+    # ── NewsData.io 수집 ─────────────────────────────────────────────
+    api_key = os.getenv('NEWSDATA_API_KEY', '')
+    nd_articles = fetch_newsdata(api_key, hours_back)
+
+    # ── 통합 + 최종 중복 제거 ────────────────────────────────────────
+    all_articles = rss_articles + nd_articles
+    seen = set()
+    unique_articles = []
+    for art in all_articles:
+        url = art.get('url', '')
+        if url and url not in seen:
+            seen.add(url)
+            unique_articles.append(art)
+
+    # ── 날짜 정규화: date / published_date 동시 보장 ──────────────────
+    for art in unique_articles:
+        # date 키 fallback
+        date_val = art.get('date') or art.get('published_date', '')
+        art['date']           = date_val
+        art['published_date'] = date_val
+
+    log.info(
+        f'=== 수집 완료: RSS {len(rss_articles)}건 + '
+        f'NewsData {len(nd_articles)}건 = '
+        f'최종 {len(unique_articles)}건 ===\n'
+    )
+    return unique_articles
+
+
+# ══════════════════════════════════════════════════════════════════════════
+#  직접 실행 시 테스트
+# ══════════════════════════════════════════════════════════════════════════
+if __name__ == '__main__':
+    import sys
+
+    hours = int(sys.argv[1]) if len(sys.argv) > 1 else 24
+    articles = collect_news(hours_back=hours)
+
+    print(f'\n수집 결과: {len(articles)}건')
+    for i, art in enumerate(articles[:5], 1):
+        print(f'  [{i}] {art["date"]} | {art["source"]} | {art["title"][:60]}')
+
+    if len(articles) > 5:
+        print(f'  ... 외 {len(articles) - 5}건')

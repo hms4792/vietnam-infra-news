@@ -1,0 +1,1313 @@
+{
+  "_meta": {
+    "source": "1-1 베트남 환경 인프라개발 계획.pdf (2024-07-28) + 공식 마스터플랜 결정문",
+    "updated": "2026-04-14",
+    "description": "베트남 18+1 마스터플랜별 Province × Project KPI 데이터베이스"
+  },
+  "VN-WW-2030": {
+    "plan_name": "국가 폐수처리 마스터플랜 2021-2030",
+    "national_kpi": {
+      "2020_baseline": {
+        "treatment_rate": "15%",
+        "capacity_m3_day": "850,000"
+      },
+      "2025_target": {
+        "treatment_rate": "20~30%",
+        "capacity_m3_day": "1,300,000"
+      },
+      "2030_target": {
+        "treatment_rate": "70%",
+        "capacity_m3_day": "3,000,000~4,000,000"
+      },
+      "total_investment": "약 97억 달러 (2015-2030)",
+      "total_projects": 53
+    },
+    "provinces": {
+      "Hanoi": {
+        "kpi_2030": {
+          "capacity_m3_day": "1,200,000",
+          "treatment_rate": "85%"
+        },
+        "projects": [
+          {
+            "name": "옌짜(Yen Xa) WWTP",
+            "capacity": "270,000 m³/day",
+            "investment": "JICA ODA",
+            "status": "건설중",
+            "deadline": "2025"
+          },
+          {
+            "name": "박탕롱(Bac Thang Long) WWTP",
+            "capacity": "42,000 m³/day",
+            "investment": "ADB",
+            "status": "운영중"
+          },
+          {
+            "name": "낌리엔(Kim Lien) WWTP 확장",
+            "capacity": "100,000~150,000 m³/day",
+            "status": "계획"
+          },
+          {
+            "name": "또리(To Lich) 강 정화 사업",
+            "capacity": "-",
+            "status": "진행중"
+          }
+        ]
+      },
+      "Ho Chi Minh City": {
+        "kpi_2030": {
+          "capacity_m3_day": "2,100,000",
+          "treatment_rate": "80%"
+        },
+        "projects": [
+          {
+            "name": "빈헝(Binh Hung) WWTP Basin 1",
+            "capacity": "1,000,000 m³/day",
+            "status": "운영중"
+          },
+          {
+            "name": "빈헝(Binh Hung) WWTP Basin 2",
+            "capacity": "524,000 m³/day",
+            "status": "건설중"
+          },
+          {
+            "name": "빈떤(Binh Tan) WWTP 확장",
+            "capacity": "200,000 m³/day",
+            "status": "계획"
+          },
+          {
+            "name": "투득(Thu Duc) 하수관거 정비",
+            "capacity": "-",
+            "status": "진행중"
+          }
+        ]
+      },
+      "Da Nang": {
+        "kpi_2030": {
+          "capacity_m3_day": "200,000",
+          "treatment_rate": "75%"
+        },
+        "projects": [
+          {
+            "name": "안돈(An Don) WWTP",
+            "capacity": "120,000 m³/day",
+            "investment": "ADB ODA",
+            "status": "건설중"
+          },
+          {
+            "name": "호아꾸이(Hoa Khanh) 공단 WWTP",
+            "capacity": "30,000 m³/day",
+            "status": "운영중"
+          }
+        ]
+      },
+      "Dong Nai": {
+        "kpi_2030": {
+          "capacity_m3_day": "150,000"
+        },
+        "projects": [
+          {
+            "name": "비엔호아(Bien Hoa) WWTP 2단계",
+            "capacity": "100,000 m³/day",
+            "status": "계획"
+          },
+          {
+            "name": "롱빈(Long Binh) 공단 폐수처리",
+            "capacity": "50,000 m³/day",
+            "status": "운영중"
+          }
+        ]
+      },
+      "Binh Duong": {
+        "kpi_2030": {
+          "capacity_m3_day": "200,000"
+        },
+        "projects": [
+          {
+            "name": "DI An WWTP",
+            "capacity": "100,000 m³/day",
+            "status": "운영중"
+          },
+          {
+            "name": "Thu Dau Mot WWTP 확장",
+            "capacity": "100,000 m³/day",
+            "status": "계획"
+          }
+        ]
+      },
+      "Hai Phong": {
+        "kpi_2030": {
+          "capacity_m3_day": "150,000"
+        },
+        "projects": [
+          {
+            "name": "하이퐁 중앙 WWTP",
+            "capacity": "100,000 m³/day",
+            "investment": "JICA",
+            "status": "건설중"
+          }
+        ]
+      },
+      "Can Tho": {
+        "kpi_2030": {
+          "capacity_m3_day": "100,000"
+        },
+        "projects": [
+          {
+            "name": "껀터 광역 WWTP 신설",
+            "capacity": "80,000 m³/day",
+            "investment": "ADB",
+            "status": "계획"
+          }
+        ]
+      },
+      "Ba Ria-Vung Tau": {
+        "projects": [
+          {
+            "name": "바리아붕따우 WWTP (ODA)",
+            "capacity": "50,000 m³/day",
+            "investment": "ODA",
+            "status": "계획"
+          }
+        ]
+      },
+      "Bac Ninh": {
+        "projects": [
+          {
+            "name": "박닌 WWTP 신설",
+            "capacity": "30,000 m³/day",
+            "status": "계획"
+          }
+        ]
+      }
+    }
+  },
+  "VN-WAT-URBAN": {
+    "plan_name": "국가 상수도 마스터플랜 2021-2030",
+    "national_kpi": {
+      "2020_baseline": {
+        "urban_coverage": "90~95%",
+        "rural_coverage": "70%",
+        "capacity_m3_day": "9,600,000"
+      },
+      "2025_target": {
+        "urban_coverage": "100%",
+        "rural_coverage": "85~90%",
+        "capacity_m3_day": "10,000,000~11,000,000",
+        "leakage_rate": "20%↓"
+      },
+      "2030_target": {
+        "urban_coverage": "100%",
+        "rural_coverage": "95%",
+        "capacity_m3_day": "12,600,000",
+        "leakage_rate": "15%↓"
+      },
+      "total_investment": "60억 달러 (2013-2020) + 추가 투자",
+      "total_projects": 39
+    },
+    "provinces": {
+      "Hanoi": {
+        "kpi_2030": {
+          "capacity_m3_day": "2,500,000",
+          "coverage": "100%"
+        },
+        "investment": "24억 달러 (2013-2020)",
+        "projects": [
+          {
+            "name": "하노이 수도권 정수장 확장",
+            "capacity": "300,000 m³/day 추가",
+            "status": "진행중"
+          },
+          {
+            "name": "노후 상수관 교체",
+            "scope": "100km/년",
+            "status": "연간 진행"
+          },
+          {
+            "name": "북부 농촌 상수도 연결",
+            "coverage": "95% 달성 목표",
+            "status": "진행중"
+          }
+        ]
+      },
+      "Ho Chi Minh City": {
+        "kpi_2030": {
+          "capacity_m3_day": "3,600,000",
+          "coverage": "100%"
+        },
+        "investment": "20억 달러 (2013-2020)",
+        "projects": [
+          {
+            "name": "Thu Duc 정수장 확장 (SAWACO)",
+            "capacity": "300,000 m³/day 추가",
+            "status": "진행중"
+          },
+          {
+            "name": "호치민 상수도 네트워크 현대화",
+            "investment": "5억 달러",
+            "status": "진행중"
+          }
+        ]
+      },
+      "Can Tho": {
+        "kpi_2030": {
+          "coverage": "99%"
+        },
+        "projects": [
+          {
+            "name": "메콩델타 상수도 광역망",
+            "investment": "12억 달러",
+            "status": "진행중"
+          },
+          {
+            "name": "사이공-껀터 상수도 (SAWACO)",
+            "capacity": "확장중",
+            "status": "진행중"
+          }
+        ]
+      },
+      "Hung Yen": {
+        "projects": [
+          {
+            "name": "북부 소도시 상수도 연결",
+            "status": "진행중"
+          }
+        ]
+      },
+      "Hai Phong": {
+        "projects": [
+          {
+            "name": "하이퐁 광역 정수장",
+            "capacity": "200,000 m³/day",
+            "status": "운영중"
+          }
+        ]
+      }
+    }
+  },
+  "VN-ENV-IND-1894": {
+    "plan_name": "고형폐기물 관리 전략 2025-2050 (Decision 1894)",
+    "national_kpi": {
+      "2020_baseline": {
+        "collection_rate": "76%매립",
+        "incineration": "5%",
+        "recycling": "10%",
+        "annual_generation_mt": 34
+      },
+      "2025_target": {
+        "collection_rate_urban": "100%",
+        "collection_rate_rural": "90%",
+        "incineration": "15%",
+        "recycling": "20%"
+      },
+      "2030_target": {
+        "collection_rate_urban": "100%",
+        "collection_rate_rural": "90%",
+        "incineration": "30%",
+        "recycling": "40%",
+        "landfill": "30%↓",
+        "annual_generation_mt": 50
+      },
+      "2050_target": {
+        "landfill": "0%",
+        "circular_economy": "100%"
+      },
+      "total_investment": "약 200억 달러",
+      "total_projects": 88
+    },
+    "provinces": {
+      "Hanoi": {
+        "kpi_2030": {
+          "daily_generation_ton": 7500,
+          "incineration_target": "50%",
+          "recycling_target": "30%"
+        },
+        "projects": [
+          {
+            "name": "남선(Nam Son) 매립지 2단계 현대화",
+            "capacity": "4,000 톤/일",
+            "investment": "6억 달러",
+            "status": "진행중"
+          },
+          {
+            "name": "하노이 WTE 플랜트 (소각+에너지)",
+            "capacity": "2,000 톤/일 → 4,000 톤/일",
+            "status": "건설중"
+          },
+          {
+            "name": "쑤안썬(Xuan Son) 매립지 정비",
+            "status": "운영중"
+          }
+        ]
+      },
+      "Ho Chi Minh City": {
+        "kpi_2030": {
+          "daily_generation_ton": 9000,
+          "incineration_target": "50%"
+        },
+        "projects": [
+          {
+            "name": "WTE 플랜트 1호 (빈떤Binh Tan)",
+            "capacity": "2,000 톤/일",
+            "investment": "3.5억 달러",
+            "status": "건설중"
+          },
+          {
+            "name": "WTE 플랜트 2호",
+            "capacity": "2,000 톤/일",
+            "investment": "2.5억 달러",
+            "status": "계획"
+          },
+          {
+            "name": "메리닝/린짱 매립지 종료",
+            "status": "계획"
+          },
+          {
+            "name": "소각+발전 복합시설 3개소",
+            "investment": "8억 달러",
+            "status": "계획"
+          }
+        ]
+      },
+      "Da Nang": {
+        "kpi_2030": {
+          "daily_generation_ton": 1500
+        },
+        "projects": [
+          {
+            "name": "카우도(Khanh Son) 매립지 WTE 전환",
+            "capacity": "500 톤/일",
+            "status": "계획"
+          },
+          {
+            "name": "다낭 재활용 클러스터",
+            "status": "진행중"
+          }
+        ]
+      },
+      "Dong Nai": {
+        "kpi_2030": {
+          "daily_generation_ton": 2500
+        },
+        "projects": [
+          {
+            "name": "비엔호아 폐기물 복합처리단지",
+            "capacity": "1,500 톤/일",
+            "status": "건설중"
+          }
+        ]
+      },
+      "Binh Duong": {
+        "projects": [
+          {
+            "name": "빈즈엉 WTE 플랜트",
+            "capacity": "1,000 톤/일",
+            "status": "계획"
+          },
+          {
+            "name": "남빈즈엉 폐기물 처리단지",
+            "status": "운영중"
+          }
+        ]
+      },
+      "Kien Giang": {
+        "projects": [
+          {
+            "name": "낀장성 폐기물 분류 시범사업",
+            "status": "시범운영"
+          }
+        ]
+      },
+      "Binh Dinh": {
+        "projects": [
+          {
+            "name": "퀴년(Quy Nhon) 폐기물 분류 시범사업",
+            "status": "시범운영"
+          }
+        ]
+      },
+      "Can Tho": {
+        "projects": [
+          {
+            "name": "메콩델타 폐기물 관리",
+            "investment": "9억 달러",
+            "status": "계획"
+          }
+        ]
+      }
+    }
+  },
+  "VN-PDP8-RENEWABLE": {
+    "plan_name": "제8차 전력개발계획 (PDP8) 2021-2030",
+    "national_kpi": {
+      "2030_target": {
+        "total_capacity_gw": 150,
+        "renewable_share": "47%+",
+        "offshore_wind_gw": 6,
+        "solar_gw": 77,
+        "coal_share": "20%↓"
+      },
+      "2050_target": {
+        "renewable_share": "67~72%",
+        "carbon_neutral": true
+      },
+      "total_investment": "약 1,350억 달러"
+    },
+    "provinces": {
+      "Binh Thuan": {
+        "focus": "태양광·해상풍력 최대 집산지",
+        "projects": [
+          {
+            "name": "빈투안 해상풍력 단지",
+            "capacity": "3,000 MW",
+            "status": "계획/입찰"
+          },
+          {
+            "name": "Long An-Binh Thuan 송전선",
+            "status": "건설중"
+          }
+        ]
+      },
+      "Gia Lai": {
+        "focus": "중부 고원 풍력",
+        "projects": [
+          {
+            "name": "VinEnergo 기아라이 풍력 클러스터",
+            "capacity": "8억 달러 투자, 대규모",
+            "status": "MOU"
+          }
+        ]
+      },
+      "Quang Tri": {
+        "focus": "해상풍력 허브",
+        "projects": [
+          {
+            "name": "Hai Lang LNG 터미널 연계 발전",
+            "status": "계획"
+          },
+          {
+            "name": "꽝찌 해상풍력",
+            "capacity": "1,500 MW",
+            "status": "타당성조사"
+          }
+        ]
+      },
+      "Ca Mau": {
+        "focus": "LNG 복합화력",
+        "projects": [
+          {
+            "name": "카마우 LNG 복합화력",
+            "capacity": "3,150 MW",
+            "status": "건설중"
+          }
+        ]
+      },
+      "Ninh Thuan": {
+        "focus": "태양광·원자력",
+        "projects": [
+          {
+            "name": "닌투안 태양광 클러스터",
+            "capacity": "2,000 MW",
+            "status": "운영/확장"
+          }
+        ]
+      },
+      "Ba Ria-Vung Tau": {
+        "focus": "해상풍력·LNG",
+        "projects": [
+          {
+            "name": "Thi Vai LNG 터미널 연계 발전",
+            "capacity": "1,500 MW",
+            "status": "진행중"
+          }
+        ]
+      }
+    }
+  },
+  "VN-TRAN-2055": {
+    "plan_name": "국가 교통인프라 마스터플랜 2055",
+    "national_kpi": {
+      "2030_target": {
+        "expressway_km": 5000,
+        "international_airports": 15,
+        "seaport_throughput_mt": 1140
+      },
+      "total_investment": "약 2,430억 달러"
+    },
+    "provinces": {
+      "Ho Chi Minh City": {
+        "focus": "남부 교통 허브",
+        "projects": [
+          {
+            "name": "Long Thanh 국제공항 1단계",
+            "investment": "160억 달러",
+            "status": "건설중",
+            "deadline": "2026"
+          },
+          {
+            "name": "Ring Road 3 (호치민 외곽순환)",
+            "length_km": 76,
+            "status": "건설중"
+          },
+          {
+            "name": "Bien Hoa-Vung Tau 고속도로",
+            "length_km": 76,
+            "status": "건설중"
+          }
+        ]
+      },
+      "Hanoi": {
+        "focus": "북부 교통 허브",
+        "projects": [
+          {
+            "name": "Ring Road 4 (하노이 외곽순환)",
+            "length_km": 112,
+            "investment": "85억 달러",
+            "status": "건설중"
+          },
+          {
+            "name": "Noi Bai 공항 T3 터미널",
+            "status": "계획"
+          },
+          {
+            "name": "Hanoi-Hai Phong 고속도로 확장",
+            "status": "계획"
+          }
+        ]
+      },
+      "Dong Nai": {
+        "projects": [
+          {
+            "name": "Long Thanh 국제공항 연계 인프라",
+            "status": "건설중"
+          },
+          {
+            "name": "Dong Nai 신항 (Phuoc An)",
+            "status": "건설중"
+          }
+        ]
+      },
+      "Hai Phong": {
+        "focus": "북부 항만 허브",
+        "projects": [
+          {
+            "name": "Lach Huyen 심수항 2단계",
+            "investment": "20억 달러",
+            "status": "계획"
+          },
+          {
+            "name": "Nam Do Son 신항",
+            "status": "계획"
+          }
+        ]
+      },
+      "Da Nang": {
+        "projects": [
+          {
+            "name": "다낭 공항 T3 신터미널",
+            "status": "건설중"
+          },
+          {
+            "name": "Lien Chieu 항 신설",
+            "investment": "10억 달러",
+            "status": "건설중"
+          }
+        ]
+      },
+      "Quang Ninh": {
+        "projects": [
+          {
+            "name": "Van Don 공항 확장",
+            "status": "계획"
+          },
+          {
+            "name": "Ha Long-Hai Phong 고속도로",
+            "status": "운영중"
+          }
+        ]
+      }
+    }
+  },
+  "VN-PDP8-LNG": {
+    "plan_name": "가스 인프라 개발계획 (PDP8 연계)",
+    "national_kpi": {
+      "2030_target": {
+        "lng_terminals": 6,
+        "import_mtpa": 14,
+        "gas_power_gw": 23.9
+      },
+      "total_investment": "약 120억 달러"
+    },
+    "provinces": {
+      "Ba Ria-Vung Tau": {
+        "projects": [
+          {
+            "name": "Thi Vai LNG 터미널",
+            "capacity": "3 MTPA",
+            "status": "운영중"
+          },
+          {
+            "name": "Nam Con Son 2 파이프라인",
+            "status": "운영중"
+          }
+        ]
+      },
+      "Binh Thuan": {
+        "projects": [
+          {
+            "name": "Son My LNG 터미널 + 복합화력",
+            "capacity": "4,500 MW",
+            "status": "계획/입찰"
+          }
+        ]
+      },
+      "Ca Mau": {
+        "projects": [
+          {
+            "name": "Ca Mau LNG 터미널",
+            "capacity": "1 MTPA",
+            "status": "건설중",
+            "deadline": "2027"
+          },
+          {
+            "name": "Ca Mau 가스복합화력 3,150 MW",
+            "status": "건설중"
+          }
+        ]
+      },
+      "Quang Tri": {
+        "projects": [
+          {
+            "name": "Hai Lang LNG 터미널",
+            "capacity": "3 MTPA",
+            "status": "타당성조사"
+          }
+        ]
+      },
+      "Khanh Hoa": {
+        "projects": [
+          {
+            "name": "Ninh Thuan LNG 터미널",
+            "status": "계획"
+          }
+        ]
+      }
+    }
+  },
+  "VN-RED-RIVER-2030": {
+    "plan_name": "홍강 델타 지역 개발 마스터플랜 2021-2030 (Vision 2045)",
+    "decision": "Decision No. 368/QĐ-TTg (2022년 3월)",
+    "national_kpi": {
+      "2030_target": {
+        "gdp_growth": "9%+/년",
+        "urban_population": "55~60%",
+        "grdp_per_capita_usd": 12000,
+        "industrial_zone_ha": 80000,
+        "red_river_corridor_population": 300000
+      },
+      "area_description": "홍강 유역 하노이 포함 13개 성·시, 11,000ha 조닝 대상",
+      "total_investment": "약 200억 달러 (2022-2030)"
+    },
+    "provinces": {
+      "Hanoi": {
+        "focus": "홍강 도시 조닝 핵심",
+        "kpi_2030": {
+          "new_population": 85000,
+          "total_target_population": 300000
+        },
+        "projects": [
+          {
+            "name": "BRG 스마트시티 (동아인Dong Anh)",
+            "investment": "42억 달러",
+            "developer": "BRG Group",
+            "status": "Phase2 진행중",
+            "area_ha": 272
+          },
+          {
+            "name": "홍강 강변 개발 13개구 재개발",
+            "area_ha": 5400,
+            "status": "마스터플랜 승인"
+          },
+          {
+            "name": "롱비엔(Long Bien) 교량 복원",
+            "status": "계획"
+          },
+          {
+            "name": "쭉박(Truc Bach) 수변 공원",
+            "status": "진행중"
+          }
+        ]
+      },
+      "Hung Yen": {
+        "focus": "서울-인천 스타일 위성도시",
+        "projects": [
+          {
+            "name": "흥옌 스마트시티 (LH공사 한국)",
+            "developer": "흥옌성 + LH공사(한국)",
+            "status": "MOU체결"
+          },
+          {
+            "name": "클린산업단지 (TDH+LH공사)",
+            "area_ha": 139.7,
+            "developer": "TDH Ecoland + LH공사",
+            "status": "추진중"
+          }
+        ]
+      },
+      "Bac Ninh": {
+        "focus": "반도체·전자 산업 클러스터",
+        "projects": [
+          {
+            "name": "옌퐁 II-C 산업단지",
+            "area_ha": 221,
+            "investment": "9,630만 달러",
+            "developer": "Viglacera",
+            "status": "추진중"
+          },
+          {
+            "name": "박닌 하이테크 파크 확장",
+            "status": "진행중"
+          }
+        ]
+      },
+      "Hai Phong": {
+        "focus": "항만·물류 허브",
+        "projects": [
+          {
+            "name": "VSIP III 하이퐁",
+            "area_ha": 500,
+            "developer": "VSIP",
+            "status": "개발중"
+          },
+          {
+            "name": "Nam Do Son 신항 연계 산업단지",
+            "status": "계획"
+          }
+        ]
+      },
+      "Quang Ninh": {
+        "focus": "관광·경제특구",
+        "projects": [
+          {
+            "name": "WHA 광닌 산업단지",
+            "area_ha": 1200,
+            "status": "개발중"
+          },
+          {
+            "name": "Van Don 경제특구",
+            "status": "운영중"
+          }
+        ]
+      },
+      "Thai Binh": {
+        "focus": "농업·해안 개발",
+        "projects": [
+          {
+            "name": "타이빈 경제구 확장",
+            "status": "진행중"
+          }
+        ]
+      },
+      "Nam Dinh": {
+        "projects": [
+          {
+            "name": "남딘 해안 산업단지",
+            "status": "계획"
+          }
+        ]
+      }
+    }
+  },
+  "VN-SC-2030": {
+    "plan_name": "스마트시티 국가전략 2030 (Decision 950)",
+    "national_kpi": {
+      "2025_target": {
+        "smart_cities": 15,
+        "iot_coverage": "90%"
+      },
+      "2030_target": {
+        "smart_cities": 40,
+        "digital_service_rate": "80%",
+        "urban_population_m": 47
+      },
+      "total_investment": "약 250억 달러"
+    },
+    "provinces": {
+      "Ho Chi Minh City": {
+        "kpi_2030": {
+          "smart_services": "100%",
+          "gdp_contribution_pct": 30
+        },
+        "projects": [
+          {
+            "name": "투득(Thu Duc) 스마트시티 1단계",
+            "investment": "68.8억 달러(Saigon Innovation Hub)",
+            "status": "개발중"
+          },
+          {
+            "name": "투티엠(Thu Thiem) 에코스마트시티",
+            "investment": "19억 달러",
+            "developer": "Lotte Group(한국)",
+            "status": "진행중"
+          },
+          {
+            "name": "호치민 통합도시관제센터 (UOCC)",
+            "status": "운영중"
+          }
+        ]
+      },
+      "Hanoi": {
+        "projects": [
+          {
+            "name": "하노이 디지털 인프라",
+            "investment": "12억 달러",
+            "status": "진행중"
+          },
+          {
+            "name": "BRG 동아인 스마트시티",
+            "investment": "42억 달러",
+            "status": "Phase2"
+          },
+          {
+            "name": "하노이 AI 교통관제 시스템",
+            "status": "시범운영"
+          }
+        ]
+      },
+      "Da Nang": {
+        "kpi_2030": {
+          "target": "아시아 Top 50 스마트시티"
+        },
+        "projects": [
+          {
+            "name": "다낭 스마트시티 Phase 3",
+            "investment": "9,130만 달러(Phase1~3 합계)",
+            "status": "Phase2 완료"
+          },
+          {
+            "name": "다낭 AI 교통관제",
+            "status": "운영중"
+          },
+          {
+            "name": "An Don 신도시",
+            "status": "투자자 모집"
+          }
+        ]
+      },
+      "Can Tho": {
+        "projects": [
+          {
+            "name": "껀터 스마트시티 (VNPT)",
+            "status": "파일럿 운영"
+          },
+          {
+            "name": "콘크엉 신도시",
+            "investment": "2억1,070만 달러",
+            "status": "진행중"
+          }
+        ]
+      },
+      "Binh Duong": {
+        "projects": [
+          {
+            "name": "빈즈엉 신도시",
+            "area_ha": 1000,
+            "developer": "Becamex IDC",
+            "status": "운영중"
+          },
+          {
+            "name": "과학기술산업단지",
+            "area_ha": 900,
+            "status": "운영중"
+          }
+        ]
+      },
+      "Hung Yen": {
+        "projects": [
+          {
+            "name": "흥옌 스마트시티 (LH공사)",
+            "developer": "흥옌성 + LH공사(한국)",
+            "status": "추진중"
+          }
+        ]
+      }
+    }
+  },
+  "VN-IP-NORTH-2030": {
+    "plan_name": "북부 산업단지 개발 계획 2030",
+    "national_kpi": {
+      "2030_target": {
+        "fdi_usd_b": 200,
+        "industrial_zone_ha": 80000,
+        "export_usd_b": 500
+      }
+    },
+    "provinces": {
+      "Hai Phong": {
+        "focus": "물류·제조 거점",
+        "projects": [
+          {
+            "name": "VSIP III 하이퐁",
+            "area_ha": 500,
+            "status": "개발중"
+          },
+          {
+            "name": "Deep-C 산업단지 3단계",
+            "status": "개발중"
+          },
+          {
+            "name": "VinFast 공장 2단계",
+            "capacity": "50만대/년",
+            "status": "건설중"
+          }
+        ]
+      },
+      "Quang Ninh": {
+        "projects": [
+          {
+            "name": "WHA 꽝닌 산업단지",
+            "area_ha": 1200,
+            "status": "개발중"
+          },
+          {
+            "name": "Van Don 경제특구",
+            "status": "운영중"
+          }
+        ]
+      },
+      "Bac Ninh": {
+        "focus": "반도체·전자",
+        "projects": [
+          {
+            "name": "박닌 하이테크 파크",
+            "status": "운영중/확장"
+          },
+          {
+            "name": "옌퐁 II-C 산업단지",
+            "area_ha": 221,
+            "investment": "9,630만 달러",
+            "status": "추진중"
+          }
+        ]
+      },
+      "Hung Yen": {
+        "projects": [
+          {
+            "name": "EV 클러스터 (흥옌)",
+            "status": "계획"
+          },
+          {
+            "name": "클린산업단지 (TDH+LH공사)",
+            "area_ha": 139.7,
+            "status": "추진중"
+          }
+        ]
+      },
+      "Vinh Phuc": {
+        "projects": [
+          {
+            "name": "빈푹 산업단지 확장",
+            "status": "진행중"
+          }
+        ]
+      }
+    }
+  },
+  "VN-SWM-NATIONAL-2030": {
+    "_meta": {
+      "legal_basis": "Decision 491/QD-TTg, May 7, 2018 — Adjusted National Strategy on Integrated Solid Waste Management to 2025, vision to 2050",
+      "lead_ministry": "MONRE (Ministry of Natural Resources and Environment)",
+      "co_ministry": "MOC (Ministry of Construction)",
+      "replaces": "Decision 2149/QD-TTg (December 17, 2009)",
+      "linked_decisions": [
+        "Decision 450/QD-TTg 2022 (National Environmental Protection Strategy 2030-2050)"
+      ]
+    },
+    "national_kpi": {
+      "urban_waste_collection_2025": "90% of urban solid waste collected and properly disposed",
+      "rural_waste_collection_2025": "80% of rural solid waste collected and disposed",
+      "hazardous_waste_2025": "100% of industrial/commercial hazardous waste properly handled",
+      "landfill_new_2025": "New facilities: post-disposal burial rate ≤20%",
+      "urban_burial_reduction_2025": "Urban buried waste <30% of collected volume",
+      "plastic_bags_2026": "End import/production of non-biodegradable plastic bags by 2026",
+      "construction_waste_2025": "90% of urban construction waste collected; 60% reused/recycled",
+      "vision_2050": "All generated solid waste collected, reused, recycled or disposed with advanced eco-friendly technologies; minimize buried volume"
+    },
+    "key_wte_projects": [
+      {
+        "name": "Can Tho WtE Plant",
+        "province": "Can Tho",
+        "capacity_tpd": 400,
+        "capacity_mw": 15,
+        "investor": "SEEN Technologies",
+        "status": "Under construction",
+        "technology": "Incineration + power generation"
+      },
+      {
+        "name": "Hanoi Nam Son WtE",
+        "province": "Hanoi",
+        "capacity_tpd": 4000,
+        "capacity_mw": 75,
+        "investor": "Multiple (Hanoi City)",
+        "status": "Planning/Tender",
+        "technology": "Mass burn grate incineration"
+      },
+      {
+        "name": "HCMC WtE Phase 1",
+        "province": "Ho Chi Minh City",
+        "capacity_tpd": 2000,
+        "capacity_mw": 40,
+        "investor": "Various",
+        "status": "Planning",
+        "technology": "Incineration"
+      },
+      {
+        "name": "Da Nang WtE",
+        "province": "Da Nang",
+        "capacity_tpd": 650,
+        "capacity_mw": 20,
+        "investor": "Foreign consortium",
+        "status": "Tender stage",
+        "technology": "Incineration"
+      },
+      {
+        "name": "Binh Duong WtE",
+        "province": "Binh Duong",
+        "capacity_tpd": 1000,
+        "capacity_mw": 25,
+        "investor": "TBC",
+        "status": "Planning",
+        "technology": "Incineration"
+      },
+      {
+        "name": "Hai Phong WtE",
+        "province": "Hai Phong",
+        "capacity_tpd": 600,
+        "capacity_mw": 18,
+        "investor": "TBC",
+        "status": "Planning",
+        "technology": "Incineration"
+      }
+    ],
+    "provinces": {
+      "Hanoi": {
+        "kpi_2025": "All waste collected; <30% buried; WtE transition ongoing",
+        "key_challenges": "Nam Son landfill overloaded; Xuan Son landfill nearing capacity",
+        "focus": "WtE transition, landfill closure, at-source sorting",
+        "projects": [
+          {
+            "name": "Nam Son WtE Complex",
+            "capacity": "4,000 TPD / 75MW",
+            "investment": "$400M+",
+            "status": "Planning/Tender"
+          }
+        ]
+      },
+      "Ho Chi Minh City": {
+        "kpi_2025": "90%+ collection rate; reduce Da Phuoc/Phuoc Hiep landfill reliance",
+        "key_challenges": "Da Phuoc landfill odor crisis; urban sorting non-compliance",
+        "focus": "WtE, landfill closure, recycling industry",
+        "projects": [
+          {
+            "name": "HCMC WtE Phase 1",
+            "capacity": "2,000 TPD / 40MW",
+            "investment": "$200M",
+            "status": "Planning"
+          },
+          {
+            "name": "Da Phuoc Landfill Closure",
+            "capacity": "N/A",
+            "investment": "TBD",
+            "status": "Planning"
+          }
+        ]
+      },
+      "Can Tho": {
+        "kpi_2025": "Mekong Delta model WtE city",
+        "key_challenges": "Rural waste collection gaps; flood-prone waste sites",
+        "focus": "WtE pioneer in Mekong Delta",
+        "projects": [
+          {
+            "name": "Can Tho WtE Plant",
+            "capacity": "400 TPD / 15MW",
+            "investment": "$50M",
+            "status": "Under construction"
+          }
+        ]
+      },
+      "Da Nang": {
+        "kpi_2025": "Central region model; Khanh Son landfill transition",
+        "key_challenges": "Khanh Son landfill at capacity",
+        "focus": "WtE + tourism city waste management",
+        "projects": [
+          {
+            "name": "Da Nang WtE Plant",
+            "capacity": "650 TPD / 20MW",
+            "investment": "$70M",
+            "status": "Tender stage"
+          }
+        ]
+      },
+      "Binh Duong": {
+        "kpi_2025": "Industrial province — high industrial + household waste volume",
+        "key_challenges": "Industrial waste streams from 30+ industrial parks",
+        "focus": "WtE + industrial solid waste management",
+        "projects": [
+          {
+            "name": "Binh Duong WtE Plant",
+            "capacity": "1,000 TPD / 25MW",
+            "investment": "$120M",
+            "status": "Planning"
+          }
+        ]
+      }
+    }
+  },
+  "VN-MEKONG-DELTA-2030": {
+    "_meta": {
+      "legal_basis": "Decision 287/QD-TTg, February 28, 2022 — Regional Planning for the Mekong Delta 2021-2030, Vision 2050",
+      "update_2026": "Decision 616/QD-TTg, April 4, 2026 — Adjusted Mekong Delta Regional Planning",
+      "lead_ministry": "MPI (Ministry of Planning and Investment)",
+      "scope": "Can Tho City + 12 provinces: Long An, Tien Giang, Ben Tre, Dong Thap, Vinh Long, Tra Vinh, Hau Giang, An Giang, Soc Trang, Kien Giang, Bac Lieu, Ca Mau",
+      "nature": "Comprehensive regional development planning — agriculture, transport, climate adaptation, urban development, marine economy. NOT a single-sector plan."
+    },
+    "national_kpi": {
+      "gdp_growth": "~6.5%/year average; GRDP 2030 = 2–2.5x 2021 levels",
+      "economic_structure_2030": "Agriculture 20% / Industry+Construction 32% / Services 46%",
+      "transport_highways": "830 km new/upgraded expressways by 2030",
+      "transport_national_roads": "~4,000 km national roads",
+      "transport_airports": "4 airports (Can Tho international + 3 regional)",
+      "transport_seaports": "13 seaports; 11 passenger clusters; 13 freight waterway clusters",
+      "clean_water_urban_2030": "98–100% urban population with clean water access",
+      "clean_water_rural_2030": "70% rural population with piped clean water",
+      "solid_waste_urban_2030": "100% urban and industrial solid waste collected and treated",
+      "forest_cover_2030": "7.5% forest cover maintained",
+      "saltwater_intrusion": "Irrigation infrastructure adapted to 3 ecological sub-zones"
+    },
+    "three_ecological_zones": {
+      "freshwater_upstream": "Upper delta (An Giang, Dong Thap, Hau Giang, Vinh Long, Can Tho + parts) — rice, freshwater aquaculture, fruit",
+      "saltwater_coastal": "Coastal (Kien Giang, Ca Mau, Bac Lieu, Soc Trang, Tra Vinh, Ben Tre, Tien Giang, Long An coast) — saltwater/brackish aquaculture, fishing, mangrove",
+      "transitional": "Middle transition zone — brackish/fresh seasonal rotation, rice + shrimp"
+    },
+    "key_transport_projects": [
+      {
+        "name": "Can Tho - Ca Mau Expressway",
+        "length_km": 150,
+        "investment": "$3.8B",
+        "status": "Under construction 2023-2027"
+      },
+      {
+        "name": "My An - Cao Lanh Expressway",
+        "length_km": 26,
+        "investment": "$330M",
+        "status": "Under construction"
+      },
+      {
+        "name": "Cao Lanh - An Huu Expressway",
+        "length_km": 27,
+        "investment": "$350M",
+        "status": "Under construction"
+      },
+      {
+        "name": "Chau Doc - Can Tho - Soc Trang Expressway",
+        "length_km": 188,
+        "investment": "$5B",
+        "status": "Planning 2024-2028"
+      },
+      {
+        "name": "Can Tho International Airport Upgrade",
+        "investment": "$800M+",
+        "status": "Planning"
+      },
+      {
+        "name": "Tran De Seaport (Soc Trang)",
+        "investment": "$1.5B+",
+        "status": "Planning — deep water port for Mekong Delta"
+      },
+      {
+        "name": "Mekong Delta Ring Road",
+        "length_km": 1000,
+        "investment": "$10B+",
+        "status": "Long-term planning"
+      }
+    ],
+    "agricultural_hubs": [
+      {
+        "name": "Can Tho Hub",
+        "function": "Agri-logistics, R&D, processing, technology transfer — national rice + aquaculture center"
+      },
+      {
+        "name": "An Giang / Dong Thap Hub",
+        "function": "Freshwater fisheries, rice — upper delta"
+      },
+      {
+        "name": "Kien Giang / Ca Mau / Soc Trang Hub",
+        "function": "Marine fisheries, coastal aquaculture"
+      },
+      {
+        "name": "Tien Giang / Ben Tre Hub",
+        "function": "Fruit and vegetables — transition zone"
+      }
+    ],
+    "provinces": {
+      "Can Tho": {
+        "role": "Mekong Delta regional capital — comprehensive hub for agriculture, logistics, education, R&D",
+        "kpi_2030": "GRDP top performer; international airport; deep-water port access via Tran De",
+        "focus": "Agri-logistics center, processing industries, urban services",
+        "key_projects": [
+          "Can Tho Smart City",
+          "Can Tho - Ca Mau Expressway hub",
+          "Can Tho WtE Plant",
+          "Can Tho International Airport"
+        ]
+      },
+      "An Giang": {
+        "role": "Freshwater agriculture center; Cambodia border trade",
+        "kpi_2030": "Aquaculture + rice processing hub; international border gate",
+        "focus": "Agricultural value chain, cross-border trade with Cambodia",
+        "key_projects": [
+          "Tinh Bien International Border Gate upgrade",
+          "An Giang rice processing center"
+        ]
+      },
+      "Kien Giang": {
+        "role": "Marine economy + tourism (Phu Quoc)",
+        "kpi_2030": "Marine economy leadership; Phu Quoc as international tourism hub",
+        "focus": "Phu Quoc development, marine fisheries, coastal protection",
+        "key_projects": [
+          "Phu Quoc LNG power",
+          "Phu Quoc airport expansion",
+          "Ha Tien border gate"
+        ]
+      },
+      "Ca Mau": {
+        "role": "Southernmost province; LNG hub candidate; shrimp production",
+        "kpi_2030": "LNG terminal development; renewable energy (wind offshore)",
+        "focus": "Offshore wind, LNG, shrimp export, mangrove protection",
+        "key_projects": [
+          "Ca Mau LNG terminal",
+          "Ca Mau Offshore Wind",
+          "Ca Mau - Can Tho Expressway"
+        ]
+      },
+      "Long An": {
+        "role": "Gateway to HCM City; industrial spillover zone",
+        "kpi_2030": "Industrial park development; HCM City industrial overflow absorption",
+        "focus": "Industrial parks, logistics, agriculture",
+        "key_projects": [
+          "Long An Industrial Park expansion",
+          "Ho Chi Minh City - Long An expressway connection"
+        ]
+      },
+      "Dong Thap": {
+        "role": "Freshwater agriculture, lotus economy, heritage tourism",
+        "kpi_2030": "Agricultural center; heritage + eco-tourism growth",
+        "focus": "Rice, freshwater fish, lotus products, rural tourism",
+        "key_projects": [
+          "Cao Lanh - An Huu Expressway",
+          "Dong Thap agri-logistics center"
+        ]
+      }
+    }
+  }
+}

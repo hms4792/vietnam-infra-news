@@ -1,0 +1,153 @@
+{
+  "total": 157,
+  "passed": 0,
+  "failed": 157,
+  "qc_rate": 0.0,
+  "qc07_pro_media_ratio": 13.4,
+  "qc07_pass": false,
+  "qc08_sector_balance": 35.0,
+  "qc08_pass": true,
+  "qc09_pdp8_count": 19,
+  "qc09_pass": true,
+  "qc10_d1894_count": 6,
+  "qc10_pass": true,
+  "qc12_unclassified_province_ratio": 79.6,
+  "qc12_pass": false,
+  "qc13_pass_rate_ok": false,
+  "qc14_integrity_ok": true,
+  "sector_distribution": {
+    "Power": 38,
+    "Oil & Gas": 12,
+    "Smart City": 55,
+    "Industrial Parks": 14,
+    "Solid Waste": 17,
+    "Water Supply/Drainage": 11,
+    "Waste Water": 10
+  },
+  "issues_log": [
+    {
+      "title": "National Power Development Plan VIII (PDP-8) - Vnt",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Vietnam's Eighth National Power Development Plan (",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "What are the new changes to Vietnam's PDP8 - A&O S",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Vietnam's Eight National Power Development Plan (P",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Vietnam Revised Power Development Plan VIII",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Vietnam's Power Development Plan 8 (PDP8) - Speeda",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Vietnam Approves Power Development Plan for Cleane",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Vietnam's National Power Development Plan For LNG ",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Vietnam's latest power development plan focuses on",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Foreign investors threaten legal action against Vi",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "vietnam energy week 2026",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "An alternative to urban solar energy | Vietnam Tod",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Vietnam Pushes Rooftop Solar and Energy Saving to ",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Prime Minister Phạm Minh Chính has reaffirmed Việt",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Gusty growth: Vietnam's remarkable wind energy sto",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Bloomberg Businessweek Vietnam 02.2026 Featured Is",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "From boom to balance in Vietnam's clean energy tra",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Vietnam Solar Energy Market Growth and Forecast (2",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "VIETNAM - WIND ENERGY INVESTMENT GUIDE 2026 - Slid",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    },
+    {
+      "title": "Vietnam LNG Power Project Eyes Green Pivot on Soar",
+      "issues": [
+        "QC03: Invalid sector"
+      ]
+    }
+  ],
+  "recommendations": [
+    "전문 미디어 소스 비율 증가 필요 (현재 13%)",
+    "Province 미분류 비율 감소 필요 (현재 80%)"
+  ]
+}

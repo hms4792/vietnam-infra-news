@@ -1,238 +1,117 @@
 """
-Vietnam Infrastructure News Pipeline - Main Entry Point
-=======================================================
-파이프라인 실행 순서:
-  Step 1: 뉴스 수집 (news_collector.py의 collect_news() 함수 방식)
-  Step 2: Google Translate 번역/요약 (3개국어)
-  Step 3: 번역 완료 데이터를 Excel에 저장 (9개 시트)
-  Step 4: 대시보드(HTML) 생성 (dashboard_template.html 템플릿 사용)
+main.py — v7.2
+파이프라인 실행 순서 (변경 금지):
+  Step1: collect_news(hours_back)       ← scripts/news_collector.py
+  Step2: AISummarizer().process_articles() ← scripts/ai_summarizer.py
+  Step3: ExcelUpdater.update_all()      ← scripts/excel_updater.py
+  Step4: build_dashboard()              ← scripts/build_dashboard.py
+
+수정사항 (v7.2):
+  - AISummarizer().summarize() → process_articles() 로 수정
+  - BASE_DIR: scripts/ 안에 있으므로 상위 폴더(ROOT_DIR)를 별도 계산
+  - EXCEL_PATH: ROOT_DIR 기준으로 설정
 """
 
-import argparse
-import json
-import logging
 import os
 import sys
+import logging
+import argparse
 from datetime import datetime
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).parent.parent))
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(name)s - %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler('pipeline.log', encoding='utf-8')
-    ]
+    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
 )
-logger = logging.getLogger('MainPipeline')
+logger = logging.getLogger('main')
+
+# ── 경로 설정 ─────────────────────────────────────────────
+# main.py 위치: scripts/main.py
+# ROOT_DIR: 저장소 루트 (scripts/ 의 상위)
+SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR    = os.path.dirname(SCRIPTS_DIR)   # ← scripts/ 상위 = 저장소 루트
+
+EXCEL_PATH    = os.path.join(ROOT_DIR, 'data', 'database',
+                              'Vietnam_Infra_News_Database_Final.xlsx')
+TEMPLATE_PATH = os.path.join(ROOT_DIR, 'templates', 'dashboard_template.html')
+OUTPUT_PATH   = os.path.join(ROOT_DIR, 'docs', 'index.html')
+
+# scripts/ 폴더를 import 경로에 추가
+sys.path.insert(0, SCRIPTS_DIR)
+
+from news_collector  import collect_news
+from ai_summarizer   import AISummarizer
+from excel_updater   import ExcelUpdater
+from build_dashboard import build_dashboard
 
 
-# ════════════════════════════════════════════════════════════
-# STEP 1: 뉴스 수집
-# news_collector.py는 클래스가 아닌 collect_news(hours_back) 함수 방식
-# ════════════════════════════════════════════════════════════
+def main(hours_back: int = 24):
+    start = datetime.utcnow()
+    logger.info('=' * 60)
+    logger.info(f'Vietnam Infra News Pipeline v7.2 시작 (최근 {hours_back}시간)')
+    logger.info(f'EXCEL_PATH: {EXCEL_PATH}')
+    logger.info('=' * 60)
 
-def step1_collect_news(hours_back: int = 168) -> list:
-    logger.info("=" * 60)
-    logger.info(f"STEP 1: 뉴스 수집 시작 (최근 {hours_back}시간 = {hours_back//24}일)")
-    logger.info("=" * 60)
-
+    # ── Step 1: 뉴스 수집 ────────────────────────────────────
+    logger.info('[Step 1/4] 뉴스 수집...')
     try:
-        import importlib, sys as _sys
-        _sys.path.insert(0, '.')
-        import scripts.news_collector as nc
-
-        # collect_news() 함수 직접 호출 → (count, articles, stats) 반환
-        cnt, articles, stats = nc.collect_news(hours_back=hours_back)
-
-        logger.info(f"[Step1 완료] 수집 기사 수: {len(articles)}")
-        _save_raw_backup(articles)
-        return articles
-
+        articles = collect_news(hours_back=hours_back)
+        logger.info(f'  수집 완료: {len(articles)}건')
     except Exception as e:
-        logger.error(f"[Step1 실패] 뉴스 수집 오류: {e}", exc_info=True)
-        return []
+        logger.error(f'Step 1 실패: {e}')
+        sys.exit(1)
 
+    if not articles:
+        logger.warning('수집 기사 없음 — 종료')
+        return
 
-def _save_raw_backup(articles: list):
+    # ── Step 2: 번역/요약 (Google Translate) ─────────────────
+    # 메서드: process_articles() — summarize() 아님
+    logger.info('[Step 2/4] 번역/요약 (Google Translate)...')
     try:
-        backup_dir = Path("data/raw")
-        backup_dir.mkdir(parents=True, exist_ok=True)
-        ts = datetime.now().strftime('%Y%m%d_%H%M%S')
-        backup_path = backup_dir / f"raw_{ts}.json"
-        with open(backup_path, 'w', encoding='utf-8') as f:
-            json.dump(articles, f, ensure_ascii=False, indent=2)
-        logger.info(f"[Backup] 원문 백업 저장: {backup_path}")
-    except Exception as e:
-        logger.warning(f"[Backup] 원문 백업 실패 (계속 진행): {e}")
-
-
-# ════════════════════════════════════════════════════════════
-# STEP 2: Google Translate 3개국어 번역/요약
-# Anthropic API 사용 안 함 (Connection error 문제)
-# MyMemory API 1차 + deep-translator 2차 방식
-# ════════════════════════════════════════════════════════════
-
-def step2_translate_articles(raw_articles: list) -> list:
-    logger.info("=" * 60)
-    logger.info("STEP 2: Google Translate 번역 시작")
-    logger.info("=" * 60)
-
-    if not raw_articles:
-        logger.warning("[Step2] 수집된 기사 없음 - 번역 생략")
-        return []
-
-    try:
-        from scripts.ai_summarizer import AISummarizer
-
         summarizer = AISummarizer()
-        processed = summarizer.process_articles(raw_articles)
+        articles   = summarizer.process_articles(articles)  # ← process_articles
+        logger.info('  번역 완료')
+    except Exception as e:
+        logger.warning(f'번역 일부 실패 (원문 유지): {e}')
+        # 번역 실패해도 계속 진행 (기사 손실 방지)
 
-        translated = sum(
-            1 for a in processed
-            if a.get('title_en') and a['title_en'] != a.get('title', '')
+    # ── Step 3: Excel 업데이트 ───────────────────────────────
+    logger.info('[Step 3/4] Excel DB 업데이트...')
+    if not os.path.exists(EXCEL_PATH):
+        logger.error(f'Excel 없음: {EXCEL_PATH}')
+        logger.error(f'  ROOT_DIR={ROOT_DIR}')
+        logger.error(f'  존재하는지 확인: {os.path.exists(os.path.dirname(EXCEL_PATH))}')
+        sys.exit(1)
+
+    try:
+        # ExcelUpdater.update_all() 은 통계 dict를 반환하지 않고, 엑셀 시트만 갱신합니다.
+        updater = ExcelUpdater(EXCEL_PATH)   # ExcelManager 아님
+        updater.update_all(articles)         # update() 아님, 반환값 사용 안 함
+        logger.info('  Excel 업데이트 완료')
+    except Exception as e:
+        logger.error(f'Step 3 실패: {e}')
+        sys.exit(1)
+
+    # ── Step 4: Dashboard 재생성 ─────────────────────────────
+    logger.info('[Step 4/4] Dashboard 재생성...')
+    try:
+        build_dashboard(
+            excel_path    = EXCEL_PATH,
+            template_path = TEMPLATE_PATH,
+            output_path   = OUTPUT_PATH,
         )
-        logger.info(f"[Step2 완료] 번역 성공: {translated}/{len(processed)}건")
-        return processed
-
+        logger.info('  Dashboard 완료')
     except Exception as e:
-        logger.error(f"[Step2 실패] 번역 오류: {e}", exc_info=True)
-        return _fallback_no_translation(raw_articles)
+        logger.error(f'Step 4 실패 (Dashboard): {e}')
+        # Dashboard 실패는 치명적이지 않음
+
+    elapsed = (datetime.utcnow() - start).total_seconds()
+    logger.info(f'완료: {elapsed:.1f}초 | 수집 {len(articles)}건')
 
 
-def _fallback_no_translation(articles: list) -> list:
-    logger.warning("[Fallback] 번역 실패 - 원문으로 대체")
-    for a in articles:
-        title   = a.get('title', '')
-        summary = a.get('summary', '') or ''
-        a.setdefault('title_ko',   title)
-        a.setdefault('title_en',   title)
-        a.setdefault('title_vi',   title)
-        a.setdefault('summary_ko', summary)
-        a.setdefault('summary_en', summary)
-        a.setdefault('summary_vi', summary)
-    return articles
-
-
-# ════════════════════════════════════════════════════════════
-# STEP 3: Excel 9개 시트 저장
-# excel_updater.py 사용 (14컬럼 헤더 포함)
-# ════════════════════════════════════════════════════════════
-
-def step3_save_to_excel(processed_articles: list) -> bool:
-    logger.info("=" * 60)
-    logger.info("STEP 3: Excel 데이터베이스 저장")
-    logger.info("=" * 60)
-
-    if not processed_articles:
-        logger.warning("[Step3] 저장할 기사 없음")
-        return False
-
-    try:
-        from scripts.excel_updater import ExcelUpdater
-
-        EXCEL_PATH = Path("data/database/Vietnam_Infra_News_Database_Final.xlsx")
-        updater = ExcelUpdater(EXCEL_PATH)
-        result  = updater.update_all(processed_articles)
-        logger.info(f"[Step3 완료] Excel 전체 시트 업데이트")
-        return result
-
-    except Exception as e:
-        logger.error(f"[Step3 실패] Excel 저장 오류: {e}", exc_info=True)
-        return False
-
-
-# ════════════════════════════════════════════════════════════
-# STEP 4: 대시보드 HTML 생성
-# dashboard_template.html 템플릿 사용 (기존 기능 유지)
-# /*__BACKEND_DATA__*/[] 플레이스홀더에 전체 누적 기사 주입
-# ════════════════════════════════════════════════════════════
-
-def step4_build_dashboard(processed_articles: list) -> bool:
-    logger.info("=" * 60)
-    logger.info("STEP 4: 대시보드 HTML 생성")
-    logger.info("=" * 60)
-
-    try:
-        from scripts.dashboard_updater import DashboardUpdater
-
-        updater = DashboardUpdater()
-        result  = updater.generate(processed_articles)
-        logger.info(f"[Step4 완료] docs/index.html")
-        return True
-
-    except Exception as e:
-        logger.error(f"[Step4 실패] 대시보드 생성 오류: {e}", exc_info=True)
-        return False
-
-
-# ════════════════════════════════════════════════════════════
-# 메인 실행부
-# ════════════════════════════════════════════════════════════
-
-def main():
-    parser = argparse.ArgumentParser(description='Vietnam Infra News Pipeline')
-    parser.add_argument(
-        '--mode',
-        choices=['full', 'collect-only', 'dashboard-only'],
-        default='full'
-    )
-    parser.add_argument('--full', action='store_true')
-    parser.add_argument(
-        '--hours-back',
-        type=int,
-        default=168,
-        dest='hours_back'
-    )
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--hours', type=int, default=24)
     args = parser.parse_args()
-
-    if args.full:
-        args.mode = 'full'
-
-    logger.info("╔══════════════════════════════════════════════════════╗")
-    logger.info("║   Vietnam Infrastructure News Pipeline               ║")
-    logger.info(f"║   실행 시각: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}                   ║")
-    logger.info(f"║   모드:     {args.mode:<46}║")
-    logger.info(f"║   수집기간: {args.hours_back}시간 ({args.hours_back//24}일)                              ║")
-    logger.info("╚══════════════════════════════════════════════════════╝")
-
-    excel_saved        = False
-    processed_articles = []
-
-    if args.mode in ('full', 'collect-only'):
-        # Step1 → Step2 → Step3 → Step4 순서 엄수
-        raw_articles = step1_collect_news(hours_back=args.hours_back)
-
-        if args.mode == 'collect-only':
-            logger.info(f"[collect-only] 수집 완료: {len(raw_articles)}건")
-            return
-
-        processed_articles = step2_translate_articles(raw_articles)
-        excel_saved        = step3_save_to_excel(processed_articles)
-        step4_build_dashboard(processed_articles)
-
-    elif args.mode == 'dashboard-only':
-        step4_build_dashboard([])
-
-    logger.info("=" * 60)
-    logger.info("파이프라인 실행 완료")
-    logger.info(f"  처리 기사: {len(processed_articles)}건")
-    logger.info(f"  Excel 저장: {'성공' if excel_saved else '실패/생략'}")
-    logger.info("=" * 60)
-
-
-def _load_latest_raw_backup() -> list:
-    raw_dir = Path("data/raw")
-    if not raw_dir.exists():
-        return []
-    files = sorted(raw_dir.glob("raw_*.json"), reverse=True)
-    if not files:
-        return []
-    with open(files[0], encoding='utf-8') as f:
-        return json.load(f)
-
-
-if __name__ == "__main__":
-    main()
+    main(hours_back=args.hours)

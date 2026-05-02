@@ -1,0 +1,243 @@
+{
+  "_meta": {
+    "original": "Decision 500/QD-TTg, May 15, 2023 — National Power Development Plan 2021-2030, Vision 2050 (PDP8 Original)",
+    "revised": "Decision 768/QD-TTg, April 15, 2025 — Revised PDP8 (supersedes Decision 500)",
+    "implementation": "Decision 1509/QD-BCT, May 30, 2025 — MOIT Implementation Plan for Revised PDP8",
+    "signed_by": "Deputy PM Bui Thanh Son",
+    "lead_ministry": "MOIT (Ministry of Industry and Trade) — Electricity and Renewable Energy Authority (ERAV)",
+    "key_law": "Law on Electricity 2024 + Decrees 57/2025/ND-CP & 58/2025/ND-CP"
+  },
+
+  "three_pillars": [
+    "1. Ensuring national energy security (sufficient electricity for 10%/year GDP growth 2026-2030)",
+    "2. Promoting a fair energy transition (JETP-aligned, coal phase-out by 2050)",
+    "3. Developing industrial ecosystems and renewable energy services (RE industry + export)"
+  ],
+
+  "national_kpi_2030": {
+    "commercial_electricity_billion_kwh": "500.4 – 557.8",
+    "electricity_production_import_billion_kwh": "560.4 – 624.6",
+    "maximum_capacity_mw": "89,655 – 99,934",
+    "total_installed_capacity_mw": "183,291 – 236,363",
+    "renewable_share_excl_hydro_pct": "28 – 36%",
+    "ghg_emissions_million_tons": "197 – 199",
+    "rooftop_solar_self_consumed": "50% of offices + 50% of residences",
+    "inter_regional_re_centers": "2 centers established",
+    "electricity_export_by_2035_mw": "5,000 – 10,000 (Singapore, Malaysia, regional)"
+  },
+
+  "national_kpi_2050": {
+    "commercial_electricity_billion_kwh": "1,237.7 – 1,375.1",
+    "maximum_capacity_mw": "205,732 – 228,570",
+    "total_installed_capacity_mw": "774,503 – 838,681",
+    "renewable_share_excl_hydro_pct": "74 – 75%",
+    "ghg_emissions_million_tons": "27 (down from 197-199 in 2030)",
+    "coal_power_mw": "0 — complete coal phase-out by 2050"
+  },
+
+  "investment_requirements_usd_billion": {
+    "2026_2030": {"total": 136.3, "generation": 118.2, "transmission": 18.1},
+    "2031_2035": {"total": 130.0, "generation": 114.1, "transmission": 15.9},
+    "2036_2050": {"total": 569.1, "generation": 541.2, "transmission": 27.9}
+  },
+
+  "capacity_by_source_2030_mw": {
+    "onshore_nearshore_wind": {"low": 26066, "high": 38029, "pct": "14.2 – 16.1%"},
+    "offshore_wind": {"low": 6000, "high": 17032, "pct": "3.2 – 7.2%"},
+    "solar_power": {"low": 46459, "high": 73416, "pct": "25.3 – 31.1% (HIGHEST)"},
+    "hydropower": {"low": 33294, "high": 34667, "pct": "14.7 – 18.2%"},
+    "pumped_storage_hydropower": {"low": 2400, "high": 6000, "pct": "~1.6%"},
+    "battery_storage": {"low": 10000, "high": 16300, "pct": "5.5 – 6.9%"},
+    "nuclear_power": {"low": 4000, "high": 6400, "pct": "2.2 – 2.7%", "note": "Ninh Thuan 1&2, 2030-2035"},
+    "coal_thermal": {"fixed": 31055, "pct": "13.1 – 16.9%", "note": "No new coal; existing only"},
+    "domestic_gas_thermal": {"low": 10861, "high": 14930, "pct": "5.9 – 6.3%"},
+    "lng_thermal": {"fixed": 22524, "pct": "9.5 – 12.3%"},
+    "biomass_wte": {"fixed": 2270, "pct": "~1.5%"},
+    "imports_laos_china": {"low": 9360, "high": 12100, "pct": "4.0 – 5.1%"}
+  },
+
+  "sub_tracks": {
+    "VN-PDP8-RENEWABLE": {
+      "id": "VN-PDP8-RENEWABLE",
+      "name_ko": "PDP8 재생에너지 (태양광·풍력·수력)",
+      "description": "Onshore wind, offshore wind, solar, hydropower, pumped storage, battery storage, rooftop solar under Revised PDP8",
+      "kpi_2030": {
+        "onshore_wind_mw": "26,066 – 38,029",
+        "offshore_wind_mw": "6,000 – 17,032",
+        "solar_mw": "46,459 – 73,416",
+        "hydropower_mw": "33,294 – 34,667",
+        "pumped_storage_mw": "2,400 – 6,000",
+        "battery_storage_mw": "10,000 – 16,300",
+        "re_share_pct": "28 – 36% (excl. hydro)"
+      },
+      "kpi_2050": {
+        "offshore_wind_mw": "113,503 – 139,097",
+        "solar_mw": "293,088 – 295,646",
+        "re_share_pct": "74 – 75%"
+      },
+      "key_projects": [
+        "Binh Thuan / Ninh Thuan offshore wind cluster (South)",
+        "Quang Binh / Ha Tinh / Nghe An offshore wind (North-Central)",
+        "Ba Ria Vung Tau offshore wind",
+        "Mekong Delta floating solar",
+        "Central Highlands pumped storage (Bac Ai, Ninh Son)",
+        "Trung Nam solar + battery (Ninh Thuan)",
+        "RE export hubs to Singapore/Malaysia (2035)"
+      ],
+      "tracking_keywords": [
+        "offshore wind", "onshore wind", "solar farm", "solar power", "rooftop solar",
+        "floating solar", "wind power", "renewable energy", "wind turbine",
+        "hydropower", "pumped storage", "battery storage", "năng lượng tái tạo",
+        "điện gió", "điện mặt trời", "năng lượng mặt trời", "thủy điện tích năng"
+      ]
+    },
+
+    "VN-PDP8-LNG": {
+      "id": "VN-PDP8-LNG",
+      "name_ko": "PDP8 LNG 발전 & 인프라",
+      "description": "LNG-fired thermal power plants + FSRU/LNG import terminals under PDP8. 22,524MW by 2030; transition to hydrogen-blend by 2050.",
+      "kpi_2030": {
+        "lng_power_mw": 22524,
+        "domestic_gas_power_mw": "10,861 – 14,930",
+        "lng_pct_of_total": "9.5 – 12.3%"
+      },
+      "kpi_2050": {
+        "lng_with_ccs_mw": "1,887 – 2,269",
+        "lng_hydrogen_blend_mw": "18,200 – 26,123",
+        "lng_converted_hydrogen_mw": "8,576 – 11,325",
+        "note": "All LNG plants transition to H2 blend or CCS by 2050"
+      },
+      "key_projects": [
+        "Son My LNG Terminal + Power (Binh Thuan) — 3,600MW",
+        "Ca Mau LNG Terminal + Power — 1,500MW",
+        "Nhon Trach 3&4 LNG Power (Dong Nai) — 1,500MW",
+        "Quang Ninh LNG Power — 1,500MW",
+        "Hai Lang LNG Power (Quang Tri) — 1,500MW",
+        "Long Son LNG Power (Ba Ria Vung Tau) — 3,000MW",
+        "FSRU terminals: Son My, Ca Mau, Quang Ninh, Thi Vai"
+      ],
+      "tracking_keywords": [
+        "LNG", "lng terminal", "lng power", "lng plant", "FSRU", "regasification",
+        "gas-fired power", "natural gas power", "lng import",
+        "khí LNG", "cảng LNG", "điện khí", "nhà máy điện khí", "nhập khẩu LNG"
+      ]
+    },
+
+    "VN-PDP8-NUCLEAR": {
+      "id": "VN-PDP8-NUCLEAR",
+      "name_ko": "PDP8 원자력 발전 (닌투언 1·2호기)",
+      "description": "Ninh Thuan Nuclear Power Plant 1 & 2 revival under Resolution 174/2024/QH15 and Resolution 189/2025/QH15. 4,000-6,400MW by 2030-2035.",
+      "kpi_2030_2035": {
+        "nuclear_capacity_mw": "4,000 – 6,400",
+        "plants": "Ninh Thuan NPP-1 (Russia Rosatom?) + Ninh Thuan NPP-2 (Japan JAEA?)",
+        "commissioning": "2030 – 2035"
+      },
+      "kpi_2050": {
+        "additional_nuclear_mw": 8000,
+        "total_nuclear_mw": "10,500 – 14,000"
+      },
+      "legal_basis": [
+        "Resolution 174/2024/QH15 (Nov 30, 2024) — Resume nuclear power development",
+        "Resolution 189/2025/QH15 (Feb 19, 2025) — Special mechanisms for Ninh Thuan NPP investment",
+        "Directive 01/CT-TTg (Jan 3, 2025) — PM directive on electricity supply 2025-2030"
+      ],
+      "tracking_keywords": [
+        "nuclear power", "ninh thuan", "nuclear plant", "nuclear energy", "npp",
+        "SMR", "small modular reactor", "điện hạt nhân", "hạt nhân ninh thuận",
+        "원자력", "닌투언 원전", "핵발전", "소형모듈원자로"
+      ]
+    },
+
+    "VN-PDP8-COAL": {
+      "id": "VN-PDP8-COAL",
+      "name_ko": "PDP8 석탄 전환·폐지 (석탄 로드맵)",
+      "description": "Coal thermal power phase-out roadmap under PDP8/JETP. 31,055MW in 2030 → 0MW in 2050. Biomass/ammonia co-firing, retirement timeline.",
+      "kpi_2030": {
+        "coal_power_mw": 31055,
+        "coal_pct": "13.1 – 16.9%",
+        "note": "No new coal plants; existing only; conversion planning starts"
+      },
+      "kpi_2050": {
+        "coal_power_mw": 0,
+        "transition": "Biomass co-firing (plants <20yr op) or closure (plants >40yr op)"
+      },
+      "jetp_commitment": {
+        "peak_coal_power_year": "2030",
+        "full_retirement_year": "2050 (earlier for plants >40yr old)",
+        "biomass_ammonia_cofiring_mw_2050": "25,632 – 32,432"
+      },
+      "major_coal_plants": [
+        "Vung Ang 1 (1,200MW, Ha Tinh)",
+        "Vinh Tan 4 (1,200MW, Binh Thuan)",
+        "Duyen Hai 1 (1,245MW, Tra Vinh)",
+        "Quang Ninh cluster (2,400MW+)",
+        "Nghi Son 2 (1,200MW, Thanh Hoa)"
+      ],
+      "tracking_keywords": [
+        "coal phase out", "coal retirement", "coal plant closure", "jetp vietnam",
+        "coal-to-biomass", "coal ammonia co-firing", "coal transition",
+        "nhiệt điện than", "chuyển đổi than", "đóng cửa nhà máy than",
+        "석탄 폐지", "석탄 전환", "석탄발전", "바이오매스 전환", "JETP"
+      ]
+    },
+
+    "VN-PDP8-GRID": {
+      "id": "VN-PDP8-GRID",
+      "name_ko": "PDP8 송전망·스마트그리드",
+      "description": "500kV/220kV transmission grid expansion + HVDC + smart grid under PDP8. $18.1B investment 2026-2030.",
+      "kpi_2030": {
+        "500kv_new_km": 12944,
+        "500kv_upgrade_km": 1404,
+        "220kv_new_km": 15307,
+        "220kv_upgrade_km": 5483,
+        "500kv_substation_new_mva": 102900,
+        "investment_usd_billion": 18.1
+      },
+      "kpi_2031_2050": {
+        "hvdc_capacity_mw": "26,000 – 36,000",
+        "hvdc_lines_km": "3,500 – 6,600",
+        "note": "HVDC lines for North-South RE transmission"
+      },
+      "key_projects": [
+        "North-South 500kV line #3 expansion",
+        "HVDC North-South backbone (2031-2035)",
+        "EVN smart grid upgrade (automated substations)",
+        "RE integration grid in Central Vietnam",
+        "Cross-border interconnection: Laos, Cambodia, China",
+        "Direct Power Purchase Agreement (DPPA) market infrastructure"
+      ],
+      "tracking_keywords": [
+        "500kv", "220kv", "transmission line", "power grid", "smart grid",
+        "substation", "hvdc", "evn grid", "power transmission", "grid upgrade",
+        "dppa", "direct power purchase", "electricity market",
+        "đường dây 500kv", "lưới điện", "trạm biến áp", "truyền tải điện",
+        "전력망", "500kv 송전선", "스마트그리드", "변전소"
+      ]
+    },
+
+    "VN-PDP8-HYDROGEN": {
+      "id": "VN-PDP8-HYDROGEN",
+      "name_ko": "PDP8 수소·그린에너지 신산업",
+      "description": "Green hydrogen production for export + hydrogen-ready LNG plants + RE export hubs (Singapore/Malaysia). Long-term 2035-2050 vision.",
+      "kpi_2035_2050": {
+        "re_export_capacity_mw": "5,000 – 10,000 (by 2035)",
+        "hydrogen_power_mw_2050": 7030,
+        "hydrogen_ready_lng_mw_2050": "16,400 – 20,900",
+        "offshore_wind_for_new_energy_2035_mw": 15000,
+        "offshore_wind_for_new_energy_2050_mw": 240000
+      },
+      "re_export_partners": ["Singapore", "Malaysia", "Regional ASEAN partners"],
+      "inter_regional_re_centers": [
+        "Northern RE center (offshore wind + H2 production)",
+        "Southern RE center (offshore wind + solar + export cable)"
+      ],
+      "tracking_keywords": [
+        "green hydrogen", "hydrogen energy", "hydrogen power", "ammonia fuel",
+        "renewable energy export", "re export cable", "energy export singapore",
+        "new energy", "hydrogen ready", "h2 fuel",
+        "hydro điện", "năng lượng mới", "xuất khẩu điện",
+        "그린수소", "수소에너지", "전력수출", "싱가포르 에너지"
+      ]
+    }
+  }
+}

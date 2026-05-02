@@ -1,0 +1,33 @@
+{
+  "total": 44,
+  "passed": 44,
+  "failed": 0,
+  "qc_rate": 100.0,
+  "qc07_pro_media_ratio": 11.4,
+  "qc07_pass": false,
+  "qc08_sector_balance": 25.0,
+  "qc08_pass": true,
+  "qc09_pdp8_count": 16,
+  "qc09_pass": true,
+  "qc10_d1894_count": 1,
+  "qc10_pass": false,
+  "qc12_unclassified_province_ratio": 70.5,
+  "qc12_pass": false,
+  "qc13_pass_rate_ok": true,
+  "qc14_integrity_ok": true,
+  "sector_distribution": {
+    "Power": 11,
+    "Smart City": 10,
+    "Oil & Gas": 6,
+    "Solid Waste": 6,
+    "Water Supply/Drainage": 4,
+    "Waste Water": 5,
+    "Industrial Parks": 2
+  },
+  "issues_log": [],
+  "recommendations": [
+    "전문 미디어 소스 비율 증가 필요 (현재 11%)",
+    "Decision 1894 관련 기사 추가 필요 (현재 1건)",
+    "Province 미분류 비율 감소 필요 (현재 70%)"
+  ]
+}

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Vietnam Infra MI Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"맑은 고딕",Malgun Gothic,sans-serif;background:#0f1419;color:#e0e6ed;font-size:13px;line-height:1.5;height:100vh;overflow:hidden}
+
+/* Header */
+.header{background:#1a1f2e;border-bottom:1px solid #2a3142;padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.header-left{display:flex;align-items:center;gap:14px}
+.header-logo{width:36px;height:36px;background:linear-gradient(135deg,#10b981,#059669);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px}
+.header-title h1{font-size:18px;color:#fff;font-weight:600}
+.header-subtitle{font-size:11px;color:#7a8599;margin-top:2px}
+.header-right{display:flex;align-items:center;gap:12px}
+.live-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(16,185,129,0.15);color:#10b981;border-radius:20px;font-size:11px;font-weight:500}
+.live-dot{width:6px;height:6px;background:#10b981;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.lang-switch{display:flex;background:#0f1419;border:1px solid #2a3142;border-radius:6px;overflow:hidden}
+.lang-btn{padding:5px 11px;background:transparent;color:#7a8599;cursor:pointer;font-size:11px;border:none;font-weight:500}
+.lang-btn.active{background:#10b981;color:#fff}
+.header-link{color:#7a8599;font-size:12px;text-decoration:none;padding:5px 10px;border-radius:5px}
+.header-link:hover{background:rgba(255,255,255,0.05);color:#fff}
+
+/* Layout */
+.main{display:flex;height:calc(100vh - 60px)}
+.sidebar{width:300px;background:#1a1f2e;border-right:1px solid #2a3142;overflow-y:auto;flex-shrink:0}
+.content{flex:1;overflow-y:auto;padding:24px;background:#0f1419}
+
+/* Sidebar */
+.area-section{padding:14px 16px;border-bottom:1px solid #2a3142}
+.area-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;font-weight:600;color:#fff}
+.area-dot{width:8px;height:8px;border-radius:50%}
+.area-env .area-dot{background:#10b981}
+.area-eng .area-dot{background:#f59e0b}
+.area-urb .area-dot{background:#3b82f6}
+.area-count{margin-left:auto;color:#7a8599;font-size:11px}
+
+.plan-item{display:flex;align-items:center;gap:8px;padding:7px 10px;margin-bottom:3px;border-radius:6px;cursor:pointer;font-size:12px;color:#c0c8d2;transition:all 0.15s}
+.plan-item:hover{background:rgba(255,255,255,0.04);color:#fff}
+.plan-item.active{background:rgba(16,185,129,0.15);color:#10b981;border-left:2px solid #10b981}
+.plan-item.child{padding-left:24px;font-size:11px;color:#94a0ae}
+.plan-item.child::before{content:'└';margin-right:4px;color:#5a6477}
+.plan-id{font-family:monospace;font-weight:600;font-size:10.5px;color:inherit;flex-shrink:0;min-width:max-content}
+.plan-item.active .plan-id{color:#10b981}
+.plan-name-short{flex:1;color:#c0c8d2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px}
+.plan-item.active .plan-name-short{color:#fff}
+.plan-cnt{color:#5a6477;font-size:10px;flex-shrink:0;font-family:monospace}
+
+.sidebar-footer{padding:14px 16px;border-top:1px solid #2a3142;font-size:11px}
+.footer-stat{display:flex;justify-content:space-between;padding:4px 0;color:#7a8599}
+.footer-stat b{color:#10b981;font-weight:600}
+
+/* Content */
+.plan-id-badge{display:inline-block;background:rgba(59,130,246,0.15);color:#3b82f6;padding:4px 12px;border-radius:6px;font-family:monospace;font-size:12px;font-weight:600}
+.plan-title{font-size:24px;color:#fff;font-weight:600;margin-top:12px;margin-bottom:6px}
+.plan-meta{font-size:12px;color:#7a8599}
+
+.plan-status-pill{display:inline-block;padding:4px 14px;background:rgba(16,185,129,0.15);color:#10b981;border-radius:18px;font-size:11px;font-weight:500;float:right}
+.plan-mapping-count{float:right;color:#7a8599;font-size:11px;margin-top:6px;clear:right}
+
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:1px solid #2a3142;margin:24px 0 20px}
+.tab{padding:10px 18px;background:transparent;border:none;color:#7a8599;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:8px;border-bottom:2px solid transparent;font-family:inherit}
+.tab:hover{color:#fff}
+.tab.active{color:#10b981;border-bottom-color:#10b981}
+.tab-badge{background:rgba(255,255,255,0.08);padding:1px 7px;border-radius:10px;font-size:10px}
+.tab.active .tab-badge{background:rgba(16,185,129,0.2);color:#10b981}
+
+/* Tab content */
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{background:#1a1f2e;border:1px solid #2a3142;border-radius:8px;padding:18px;margin-bottom:16px}
+.card-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:12px;padding-left:10px;border-left:3px solid #10b981}
+.card-content{color:#c0c8d2;font-size:12.5px;line-height:1.7}
+
+/* KPI Table */
+.kpi-table,.proj-table{width:100%;border-collapse:collapse;font-size:11.5px}
+.kpi-table th,.proj-table th{background:#2a3142;color:#c0c8d2;padding:8px 10px;text-align:left;font-weight:600;font-size:11px;border-bottom:1px solid #3a4152}
+.kpi-table td,.proj-table td{padding:8px 10px;border-bottom:1px solid #2a3142;vertical-align:top;color:#c0c8d2}
+.kpi-table tr:hover td,.proj-table tr:hover td{background:rgba(16,185,129,0.05)}
+.kpi-target{color:#10b981;font-weight:600}
+.kpi-current{color:#7a8599}
+
+/* Articles */
+.article-item{padding:12px;background:#1a1f2e;border:1px solid #2a3142;border-radius:6px;margin-bottom:8px;display:flex;gap:12px}
+.article-item.high{border-left:3px solid #f59e0b}
+.article-item.medium{border-left:3px solid #3b82f6}
+.article-item.policy{border-left:3px solid #10b981}
+.art-date{flex-shrink:0;font-family:monospace;font-size:10.5px;color:#7a8599;width:80px}
+.art-content{flex:1;min-width:0}
+.art-title-line{font-size:13px;font-weight:600;color:#fff;line-height:1.4;margin-bottom:4px}
+.art-title-line a{color:#10b981;text-decoration:none}
+.art-title-line a:hover{text-decoration:underline}
+.art-summary{font-size:11.5px;color:#94a0ae;line-height:1.5;margin-top:4px}
+.art-meta-line{font-size:10px;color:#7a8599;margin-top:4px;display:flex;gap:10px;flex-wrap:wrap}
+.art-grade{padding:1px 7px;border-radius:3px;font-size:10px;font-weight:600}
+.art-grade.HIGH{background:#f59e0b;color:#000}
+.art-grade.MEDIUM{background:#3b82f6;color:#fff}
+.art-grade.POLICY{background:#10b981;color:#fff}
+
+/* Timeline */
+.timeline-bar{display:flex;gap:6px;align-items:flex-end;height:120px;padding:14px;background:#0f1419;border-radius:6px}
+.tl-year{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.tl-bar-wrap{flex:1;display:flex;flex-direction:column-reverse;width:100%;align-items:center}
+.tl-bar{width:100%;background:linear-gradient(to top,#3b82f6,#60a5fa);border-radius:3px 3px 0 0;min-height:3px;position:relative;transition:all 0.2s}
+.tl-year:hover .tl-bar{background:linear-gradient(to top,#10b981,#34d399)}
+.tl-count{font-size:10px;font-weight:bold;color:#10b981;position:absolute;top:-16px;left:50%;transform:translateX(-50%)}
+.tl-year-label{font-size:10px;color:#7a8599;margin-top:4px}
+
+/* Reports */
+.report-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+.report-link{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px;background:#1a1f2e;border:1px solid #2a3142;border-radius:8px;text-decoration:none;color:#fff;transition:all 0.2s;text-align:center}
+.report-link:hover{background:rgba(16,185,129,0.08);border-color:#10b981}
+.report-icon{font-size:32px}
+.report-name{font-size:13px;font-weight:600}
+.report-desc{font-size:11px;color:#7a8599}
+
+/* AI Analysis */
+.ai-list{list-style:none;padding:0}
+.ai-list li{padding:8px 0;color:#c0c8d2;font-size:12px;border-bottom:1px solid #2a3142;line-height:1.6}
+.ai-list li:last-child{border-bottom:none}
+.ai-list li::before{content:'▸';color:#f59e0b;margin-right:8px;font-weight:bold}
+
+.gap-warn{background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.3);border-radius:6px;padding:14px}
+.gap-warn-title{font-size:12px;font-weight:600;color:#ef4444;margin-bottom:10px}
+.gap-warn ul{list-style:none;padding:0}
+.gap-warn li{padding:5px 0;color:#fca5a5;font-size:11.5px}
+
+.gap-ok{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);color:#10b981;padding:14px;border-radius:6px;font-size:12px}
+
+.empty-state{padding:50px;text-align:center;color:#7a8599;font-size:13px;background:#1a1f2e;border-radius:6px}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#0f1419}
+::-webkit-scrollbar-thumb{background:#2a3142;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#3a4152}
+
+@media (max-width: 1100px){
+  .two-col{grid-template-columns:1fr}
+  .sidebar{width:240px}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">VI</div>
+    <div class="header-title">
+      <h1>Vietnam Infra MI Dashboard</h1>
+      <div class="header-subtitle">knowledge_index v3.4 · <span id="hdr-cnt">19</span> Masterplans · Claude Haiku AI</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-badge"><span class="live-dot"></span>자동 파이프라인 가동 중</div>
+    <div class="lang-switch">
+      <button class="lang-btn active" data-lang="ko" onclick="setLang('ko')">한국어</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-lang="vi" onclick="setLang('vi')">VI</button>
+    </div>
+    <a href="Vietnam_Infra_News_Database_Final.xlsx" download class="header-link">≡ 기사DB</a>
+    <a href="https://github.com/hms4792/vietnam-infra-news" target="_blank" class="header-link">⌂ GitHub</a>
+  </div>
+</div>
+
+<div class="main">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content" id="content">로딩 중...</main>
+</div>
+
+<script>
+/*__BACKEND_DATA__*/const KI=__DATA_PLACEHOLDER__;
+const PLANS = KI.plans;
+const TOTALS = KI.totals;
+let CURRENT_PID = null;
+let CURRENT_TAB = 'overview';
+let LANG = 'ko';
+
+const AREA_DEF = {
+  env: {name:'환경 인프라',  cls:'area-env'},
+  eng: {name:'에너지·전력',   cls:'area-eng'},
+  urb: {name:'도시·교통·산업',cls:'area-urb'},
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('hdr-cnt').textContent = TOTALS.masterplan_count;
+  buildSidebar();
+  // 첫 플랜 선택 (VN-WW-2030)
+  CURRENT_PID = 'VN-WW-2030';
+  selectPlan(CURRENT_PID);
+});
+
+function buildSidebar() {
+  const grouped = {env:[], eng:[], urb:[]};
+  for (const [pid, p] of Object.entries(PLANS)) {
+    if (p.group && grouped[p.group]) grouped[p.group].push(p);
+  }
+  for (const g in grouped) grouped[g].sort((a,b) => (a.order||99) - (b.order||99));
+  
+  let html = '';
+  for (const [g, plans] of Object.entries(grouped)) {
+    const def = AREA_DEF[g];
+    html += `<div class="area-section ${def.cls}">
+      <div class="area-header"><span class="area-dot"></span>${def.name}<span class="area-count">${plans.length}</span></div>`;
+    for (const p of plans) {
+      const isChild = !!p.parent;
+      const cnt = p.stats.total || 0;
+      html += `<div class="plan-item ${isChild?'child':''}" data-pid="${p.plan_id}" onclick="selectPlan('${p.plan_id}')">
+        <span class="plan-id">${p.plan_id}</span>
+        <span class="plan-name-short">${escapeHtml(p.short || p.name)}</span>
+        <span class="plan-cnt">${cnt}</span>
+      </div>`;
+    }
+    html += '</div>';
+  }
+  // Footer
+  html += `<div class="sidebar-footer">
+    <div class="footer-stat">총 기사 <b>${TOTALS.total_news}</b></div>
+    <div class="footer-stat">플랜 매핑 <b>${TOTALS.total_mapped}</b></div>
+    <div class="footer-stat">마스터플랜 <b>${TOTALS.masterplan_count}</b></div>
+    <div class="footer-stat">최종 갱신 <b>${TOTALS.today}</b></div>
+  </div>`;
+  document.getElementById('sidebar').innerHTML = html;
+}
+
+function selectPlan(pid) {
+  CURRENT_PID = pid;
+  document.querySelectorAll('.plan-item').forEach(el => 
+    el.classList.toggle('active', el.dataset.pid === pid));
+  CURRENT_TAB = 'overview';
+  renderContent();
+}
+
+function setTab(tab) {
+  CURRENT_TAB = tab;
+  renderContent();
+}
+
+function setLang(lang) {
+  LANG = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  renderContent();
+}
+
+function renderContent() {
+  const p = PLANS[CURRENT_PID];
+  if (!p) {
+    document.getElementById('content').innerHTML = '<div class="empty-state">플랜을 선택하세요</div>';
+    return;
+  }
+  
+  // 헤더
+  let html = `
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px">
+      <div style="flex:1">
+        <span class="plan-id-badge">${p.plan_id}</span>
+        <div class="plan-title">${escapeHtml(p.name || '')}</div>
+        <div class="plan-meta">${escapeHtml(p.legal || '')}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="plan-status-pill">${getStatusPill(p)}</div>
+        <div style="margin-top:8px;color:#7a8599;font-size:11px;clear:right">${p.stats.total}건 매핑 기사</div>
+      </div>
+    </div>
+  `;
+  
+  // 탭
+  html += `
+    <div class="tabs">
+      <button class="tab ${CURRENT_TAB==='overview'?'active':''}" onclick="setTab('overview')">⊞ 사업개요·KPI·프로젝트</button>
+      <button class="tab ${CURRENT_TAB==='news'?'active':''}" onclick="setTab('news')">📰 주요 기사 <span class="tab-badge">${p.stats.total}</span></button>
+      <button class="tab ${CURRENT_TAB==='reports'?'active':''}" onclick="setTab('reports')">⤓ 보고서 다운로드</button>
+      <button class="tab ${CURRENT_TAB==='excel'?'active':''}" onclick="setTab('excel')">▤ Excel DB 접근</button>
+      <button class="tab ${CURRENT_TAB==='ai'?'active':''}" onclick="setTab('ai')">⚐ AI 분석·타임라인</button>
+    </div>
+    <div class="tab-content active" id="tab-content">${renderTab(p)}</div>
+  `;
+  
+  document.getElementById('content').innerHTML = html;
+}
+
+function getStatusPill(p) {
+  const t = p.stats.total;
+  if (t >= 20) return '🟢 활발';
+  if (t >= 10) return '운영·확장';
+  if (t >= 3)  return '🟡 보통';
+  return '🔴 모니터링';
+}
+
+function renderTab(p) {
+  if (CURRENT_TAB === 'overview')  return renderOverview(p);
+  if (CURRENT_TAB === 'news')      return renderNews(p);
+  if (CURRENT_TAB === 'reports')   return renderReports(p);
+  if (CURRENT_TAB === 'excel')     return renderExcel(p);
+  if (CURRENT_TAB === 'ai')        return renderAI(p);
+  return '';
+}
+
+function renderOverview(p) {
+  const overview = p.overview || '(사업 개요 미입력 — knowledge_index 보강 필요)';
+  
+  // KPI
+  const kpiRows = (p.kpis||[]).map(k => `<tr>
+    <td>${escapeHtml(k.indicator||'')}</td>
+    <td class="kpi-target">${escapeHtml(k.target||'')}</td>
+    <td class="kpi-current">${escapeHtml(k.current||'')}</td>
+  </tr>`).join('') || '<tr><td colspan="3" style="text-align:center;padding:20px;color:#7a8599">KPI 데이터 로드 중...</td></tr>';
+  
+  // 프로젝트
+  const projRows = (p.projects||[]).slice(0,15).map(pr => `<tr>
+    <td><b style="color:#fff">${escapeHtml(pr.name||'')}</b></td>
+    <td>${escapeHtml(pr.location||'')}</td>
+    <td>${escapeHtml(pr.capacity||'')}</td>
+    <td style="color:#7a8599">${escapeHtml(pr.note||'')}</td>
+  </tr>`).join('') || '<tr><td colspan="4" style="text-align:center;padding:20px;color:#7a8599">프로젝트 데이터 로드 중...</td></tr>';
+  
+  return `
+    <div class="two-col">
+      <div>
+        <div class="card">
+          <div class="card-title">사업 개요</div>
+          <div class="card-content">${escapeHtml(overview)}</div>
+        </div>
+        <div class="card">
+          <div class="card-title">KPI 목표 및 현황</div>
+          <table class="kpi-table">
+            <thead><tr><th>지표</th><th>목표(2030)</th><th>현황(2024~2026)</th></tr></thead>
+            <tbody>${kpiRows}</tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-title">주요 프로젝트 목록</div>
+          <table class="proj-table">
+            <thead><tr><th>프로젝트명</th><th>위치</th><th>규모·용량</th><th>비고</th></tr></thead>
+            <tbody>${projRows}</tbody>
+          </table>
+        </div>
+        ${renderGapBox(p)}
+      </div>
+    </div>
+  `;
+}
+
+function renderNews(p) {
+  const arts = p.articles || [];
+  if (arts.length === 0) {
+    return '<div class="empty-state">매핑된 기사가 없습니다.<br>knowledge_index 키워드 보강이 필요합니다.</div>';
+  }
+  return arts.slice(0, 30).map(a => {
+    const cls = a.g==='HIGH'?'high':a.g==='MEDIUM'?'medium':a.g==='POLICY'?'policy':'';
+    const t = LANG==='ko' ? (a.tk||a.te) : a.te;
+    const sm = LANG==='ko' ? a.sk : '';
+    const url = a.url ? `<a href="${a.url}" target="_blank" rel="noopener">${escapeHtml(t)}</a>` : escapeHtml(t);
+    const grade = a.g ? `<span class="art-grade ${a.g}">${a.g}</span>` : '';
+    return `<div class="article-item ${cls}">
+      <div class="art-date">${a.d}</div>
+      <div class="art-content">
+        <div class="art-title-line">${url}</div>
+        ${sm?`<div class="art-summary">${escapeHtml(sm)}</div>`:''}
+        <div class="art-meta-line">${grade}<span>📡 ${escapeHtml(a.src||'')}</span>${a.pv?`<span>📍 ${escapeHtml(a.pv)}</span>`:''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderReports(p) {
+  return `
+    <div class="card">
+      <div class="card-title">📄 주간 MI 보고서 — ${TOTALS.today}</div>
+      <div style="color:#94a0ae;font-size:12px;margin-bottom:14px">19개 마스터플랜 전체에 대한 사업개요·KPI·프로젝트·AI분석·갭진단을 포함한 통합 보고서입니다.</div>
+      <div class="report-grid">
+        <a href="Vietnam_Infra_MI_Report_Weekly.docx" download class="report-link">
+          <div class="report-icon">📄</div>
+          <div class="report-name">Word 보고서</div>
+          <div class="report-desc">19개 플랜 × 6개 섹션</div>
+        </a>
+        <a href="Vietnam_Infra_MI_Report_Weekly.pptx" download class="report-link">
+          <div class="report-icon">📊</div>
+          <div class="report-name">PPT 보고서</div>
+          <div class="report-desc">시각 자료 + 갭 진단</div>
+        </a>
+        <a href="Vietnam_Infra_News_Database_Final.xlsx" download class="report-link">
+          <div class="report-icon">▦</div>
+          <div class="report-name">Excel DB</div>
+          <div class="report-desc">전체 기사 ${TOTALS.total_news}건</div>
+        </a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">자동화 일정</div>
+      <div style="color:#c0c8d2;font-size:12px;line-height:1.8">
+        • <b style="color:#10b981">Daily Pipeline</b> — 매일 KST 20:00 자동 실행 (뉴스 수집 + Excel + Dashboard 갱신)<br>
+        • <b style="color:#10b981">Weekly Report</b> — 매주 토요일 KST 18:00 자동 생성 (Word + PPT + Dashboard)<br>
+        • <b style="color:#7a8599">데이터 출처</b> — knowledge_index v3.4 (Layer 1) + Claude Haiku (Layer 2) + News DB (864건)
+      </div>
+    </div>
+  `;
+}
+
+function renderExcel(p) {
+  return `
+    <div class="card">
+      <div class="card-title">▦ Excel DB 직접 접근</div>
+      <div style="color:#c0c8d2;font-size:12.5px;line-height:1.7">
+        <b style="color:#10b981">Vietnam_Infra_News_Database_Final.xlsx</b> — 18개 시트 통합<br><br>
+        <b>주요 시트</b><br>
+        • <b>News Database</b> — ${TOTALS.total_news}건 (Area·Sector 분류 + EN/VI 분리)<br>
+        • <b>Matched_Plan</b> — ${TOTALS.total_mapped}건 (SA-7 정책 매칭 확정)<br>
+        • <b>Keywords History</b> — Sector × Province 키워드 추적<br>
+        • <b>Timeline</b> — 플랜코드별 연도별 매핑 현황<br>
+        • <b>Source</b> — 출처별 RSS·NewsData·우회 접근 추적<br>
+        • <b>Province_Keywords</b> — Province별 미분류율·품질등급<br>
+        • <b>Stats / Context_Stats</b> — SA-6/SA-7 누적 추적
+      </div>
+      <div style="margin-top:16px">
+        <a href="Vietnam_Infra_News_Database_Final.xlsx" download class="report-link" style="display:inline-flex;flex-direction:row;width:auto;padding:10px 20px">
+          <span class="report-icon" style="font-size:18px">⤓</span>
+          <span class="report-name">Excel 다운로드</span>
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+function renderAI(p) {
+  const aiList = (p.ai_analysis||[]).map(line => `<li>${escapeHtml(line)}</li>`).join('')
+    || `<li>누적 ${p.stats.total}건 매핑 | 최신 ${p.stats.latest_date||'-'} | 금주 신규 ${p.stats.this_week}건</li>`;
+  
+  // Timeline
+  const years = ['2019','2020','2021','2022','2023','2024','2025','2026'];
+  const yrDist = p.stats.year_dist || {};
+  const maxC = Math.max(...years.map(y => yrDist[y]||0), 1);
+  const tlBars = years.map(y => {
+    const c = yrDist[y] || 0;
+    const h = c > 0 ? Math.max(4, (c/maxC)*90) : 4;
+    return `<div class="tl-year">
+      <div class="tl-bar-wrap">
+        <div class="tl-bar" style="height:${h}px">${c>0?`<span class="tl-count">${c}</span>`:''}</div>
+      </div>
+      <div class="tl-year-label">${y}</div>
+    </div>`;
+  }).join('');
+  
+  return `
+    <div class="card">
+      <div class="card-title">📈 연도별 기사 Timeline (2019–2026)</div>
+      <div class="timeline-bar">${tlBars}</div>
+      <div style="margin-top:10px;color:#7a8599;font-size:11px;text-align:center">
+        누적 ${p.stats.total}건 · 최신 ${p.stats.latest_date||'-'} · 금주 신규 ${p.stats.this_week}건
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">🤖 AI 분석 (Claude Haiku)</div>
+        <ul class="ai-list">${aiList}</ul>
+      </div>
+      <div class="card">
+        <div class="card-title">🎯 데이터 수집 자체 진단</div>
+        ${renderGapBox(p, true)}
+      </div>
+    </div>
+  `;
+}
+
+function renderGapBox(p, simple=false) {
+  if (simple) {
+    if (p.gap_issues && p.gap_issues.length > 0) {
+      const issues = p.gap_issues.map(g => `<li>${escapeHtml(g)}</li>`).join('');
+      return `<div class="gap-warn"><div class="gap-warn-title">⚠ AI Self-Diagnosis</div><ul>${issues}</ul></div>`;
+    }
+    return '<div class="gap-ok">✅ 데이터 수집 양호 — 매핑 기사 충분, 최신 동향 반영</div>';
+  }
+  // overview용 - 카드로
+  if (p.gap_issues && p.gap_issues.length > 0) {
+    const issues = p.gap_issues.map(g => `<li>${escapeHtml(g)}</li>`).join('');
+    return `<div class="card"><div class="card-title">🎯 데이터 수집 진단</div><div class="gap-warn"><div class="gap-warn-title">⚠ AI Self-Diagnosis</div><ul>${issues}</ul></div></div>`;
+  }
+  return `<div class="card"><div class="card-title">🎯 데이터 수집 진단</div><div class="gap-ok">✅ 데이터 수집 양호</div></div>`;
+}
+
+function escapeHtml(t) {
+  if (t === null || t === undefined) return '';
+  return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

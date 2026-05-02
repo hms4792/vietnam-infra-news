@@ -1,32 +1,194 @@
 {
-  "shared_version": "1.0.0",
-  "last_updated": "2026-04-01",
-  "sectors": [
-    "Waste Water", "Water Supply/Drainage", "Solid Waste",
-    "Power", "Oil & Gas", "Industrial Parks", "Smart City"
-  ],
+  "version": "2.4",
+  "updated_at": "2026-04-22",
+  "description": "Vietnam Infrastructure News — 분류·수집·중복제거 마스터 규칙 (Claude + Genspark 공유)",
+
+  "sector_classification": {
+    "method": "must_have 키워드 우선순위 체계 — 엄격 적용",
+    "priority_order": [
+      "Waste Water",
+      "Water Supply/Drainage",
+      "Solid Waste",
+      "Power",
+      "Oil & Gas",
+      "Industrial Parks",
+      "Smart City",
+      "Transport",
+      "Environment"
+    ],
+    "rule": "제목+요약 텍스트에서 must_have 키워드 1개 이상 포함 → 해당 섹터 / 없으면 Environment",
+    "sectors": {
+      "Waste Water": {
+        "must_have_en": ["wastewater","sewage","wwtp","effluent","water treatment plant","wastewater network","sewer","wastewater treatment"],
+        "must_have_vi": ["nước thải","xử lý nước thải","hệ thống thoát nước","nhà máy xử lý nước"]
+      },
+      "Water Supply/Drainage": {
+        "must_have_en": ["water supply","clean water","drinking water","water pipe","water network","water plant","water meter","smart water"],
+        "must_have_vi": ["cấp nước","nước sạch","đường ống nước","hệ thống cấp nước","nhà máy nước"]
+      },
+      "Solid Waste": {
+        "must_have_en": ["solid waste","domestic waste","household waste","landfill","waste-to-energy","recycling","waste management","waste treatment","plastic waste","e-waste","medical waste"],
+        "must_have_vi": ["rác thải rắn","chất thải rắn","bãi rác","đốt rác","tái chế","thu gom rác","phân loại rác","rác sinh hoạt"]
+      },
+      "Power": {
+        "must_have_en": ["power plant","renewable energy","solar farm","wind farm","wind power","pdp8","nuclear power","power grid","evn","electricity generation","offshore wind","hydropower","transmission line","substation"],
+        "must_have_vi": ["nhà máy điện","năng lượng tái tạo","điện gió","điện mặt trời","pdp8","lưới điện","evn","quy hoạch điện","điện hạt nhân"]
+      },
+      "Oil & Gas": {
+        "must_have_en": ["lng terminal","lng power","gas pipeline","petrovietnam","petroleum","offshore drilling","oil field","pvn","pv gas","pvep","natural gas","refinery"],
+        "must_have_vi": ["cảng lng","đường ống khí","petrovietnam","dầu khí","khí thiên nhiên","pvn","lọc dầu"]
+      },
+      "Industrial Parks": {
+        "must_have_en": ["industrial park","industrial zone","eco-industrial","industrial estate","manufacturing zone","hi-tech park","export processing zone","vsip","becamex","amata","deep-c"],
+        "must_have_vi": ["khu công nghiệp","khu kinh tế","khu chế xuất","khu công nghệ cao","vsip","becamex"]
+      },
+      "Smart City": {
+        "must_have_en": ["smart city","metro line","urban railway","digital infrastructure","e-government","iot city","5g network city","smart traffic","digital transformation city"],
+        "must_have_vi": ["thành phố thông minh","tuyến metro","đường sắt đô thị","chính phủ điện tử","chuyển đổi số đô thị"]
+      },
+      "Transport": {
+        "must_have_en": ["expressway","highway project","airport expansion","seaport capacity","long thanh airport","north-south railway","port expansion","deep-water port","bridge construction","logistics center","inland waterway"],
+        "must_have_vi": ["đường cao tốc","sân bay long thành","cảng biển","cao tốc bắc nam","đường sắt bắc nam","cảng nước sâu","logistics"]
+      },
+      "Environment": {
+        "description": "위 7개 섹터 미해당 — 일반 환경 기사 (기후, 오염, 생태계 등)",
+        "must_have_en": [],
+        "must_have_vi": []
+      }
+    }
+  },
+
   "area_mapping": {
-    "Waste Water": "Environment",
-    "Water Supply/Drainage": "Environment",
-    "Solid Waste": "Environment",
-    "Power": "Energy Develop.",
-    "Oil & Gas": "Energy Develop.",
-    "Industrial Parks": "Urban Develop.",
-    "Smart City": "Urban Develop."
+    "Environment_area": ["Waste Water","Water Supply/Drainage","Solid Waste","Environment"],
+    "Energy_Develop_area": ["Power","Oil & Gas"],
+    "Urban_Develop_area": ["Industrial Parks","Smart City","Transport"],
+    "note": "BACKEND_DATA area 필드값 고정: 'Environment' / 'Energy Develop.' / 'Urban Develop.'"
   },
-  "quality_thresholds": {
-    "province_unclassified_max": 0.25,
-    "specialist_media_min": 0.30,
-    "sector_mismatch_max": 0.05
+
+  "sa7_matching": {
+    "description": "SA-7 맥락 기반 마스터플랜 매핑 규칙",
+    "tags": {
+      "SA7_MATCH": "마스터플랜과 직접 연관 확정",
+      "POLICY_MATCH": "정책 신호어 매칭 (SA-7 독립)",
+      "SA7+POLICY": "SA-7 + 정책 동시 매칭",
+      "NONE": "미매핑"
+    },
+    "grades": {
+      "HIGH": "65점 이상 — 마스터플랜 직접 연관 (구체적 프로젝트/수치 포함)",
+      "MEDIUM": "45-64점 — 간접 연관",
+      "POLICY": "정책 신호어 매칭"
+    },
+    "plan_sector_correction": {
+      "VN-URB-METRO-2030": "Smart City (Transport 아님 — 도시개발 맥락)",
+      "VN-PWR-PDP8-LNG": "Power (PDP8 맥락에서 LNG = 에너지 전환)",
+      "VN-MEKONG-DELTA-2030": "Transport",
+      "HN-URBAN-INFRA": "Smart City",
+      "HN-URBAN-WEST": "Smart City",
+      "HN-URBAN-NORTH": "Smart City"
+    }
   },
-  "specialist_sources": [
-    "The Investor", "VIR", "Vietnam Investment Review",
-    "Hanoitimes", "Nikkei Asia", "Reuters Vietnam"
-  ],
-  "province_name_mapping": {
-    "Ho Chi Minh City": ["HCMC", "TP.HCM", "Saigon"],
-    "Da Nang": ["Danang", "Đà Nẵng"],
-    "Hanoi": ["Hà Nội", "Ha Noi"]
+
+  "deduplication_rules": {
+    "description": "중복 기사 제거 기준 (2026-04-22 확정)",
+    "step1_url": "URL 완전 동일 → 제거",
+    "step2_title_date_source": "제목[:60].lower() + 날짜[:10] + 소스[:30] 동일 → 제거",
+    "step3_title_date": "제목[:60].lower() + 날짜[:10] 동일 (소스 무관) → 제거",
+    "step4_garbage": "제목 8자 미만 또는 아래 목록 → 제거",
+    "garbage_titles": ["Policies","Companies","Hanoi In Action","VIETNAM TODAY","Library","Themes","Market","Weekly","Daily Briefing","Morning Brief","KPMG"],
+    "priority_when_dup": "Matched_Plan(MP) 원본 우선 유지, Backup(BK)는 MP 미포함분만 추가"
   },
-  "shared_base_url": "https://hms4792.github.io/vietnam-infra-news/shared/"
+
+  "collection_rules": {
+    "newsdata_io": {
+      "endpoint": "/api/1/latest",
+      "allowed_params": ["country=vn","language=en|vi","q"],
+      "forbidden_params": ["domain","from_date","category+domain"],
+      "on_422": "category 파라미터 제거 후 재시도",
+      "daily_credits": 200
+    },
+    "rss_active": [
+      "https://hanoitimes.vn/rss/home.rss",
+      "https://pv-tech.org/feed/",
+      "https://energymonitor.ai/rss",
+      "https://asia.nikkei.com/rss/feed/nar",
+      "https://moitruong.net.vn/rss/home.rss",
+      "https://vietnamnet.vn/rss/cong-nghe.rss"
+    ],
+    "rss_closed_never_readd": [
+      "theinvestor.vn/feed (404)",
+      "vir.com.vn/rss/news.aspx (410 Gone)",
+      "constructionvietnam.net/feed (폐쇄)",
+      "monre.gov.vn/rss (봇차단)",
+      "ictvietnam.vn/feed (봇차단)",
+      "moitruong.com.vn/feed (봇차단)",
+      "vea.gov.vn (봇차단)",
+      "mic.gov.vn/rss (봇차단)",
+      "baotintuc.vn (봇차단)",
+      "hanoimoi.vn (봇차단)"
+    ],
+    "specialist_crawler": {
+      "targets": ["theinvestor.vn","vir.com.vn"],
+      "method": "HTML 크롤링 + Jina.ai Reader API fallback (3단계: requests→UA변경→r.jina.ai/URL)",
+      "schedule": "weekly_backfill.yml (주1회)",
+      "jina_endpoint": "https://r.jina.ai/{url}"
+    },
+    "translation": {
+      "primary": "MyMemory API (mymemory.translated.net)",
+      "fallback": "deep-translator (Google Translate backend)",
+      "forbidden": "Anthropic API (GitHub Actions 연결 오류)",
+      "languages": ["ko","en","vi"]
+    }
+  },
+
+  "path_separation": {
+    "claude_owns": ["docs/index.html","data/database/Vietnam_Infra_News_Database_Final.xlsx"],
+    "genspark_owns": ["docs/genspark/index.html","data/genspark/"],
+    "shared_zone": "docs/shared/ (양방향 교환)",
+    "excel_filename": "Vietnam_Infra_News_Database_Final.xlsx (고정, 변경 금지)"
+  },
+
+  "excel_structure": {
+    "file": "data/database/Vietnam_Infra_News_Database_Final.xlsx",
+    "sheets": {
+      "News Database": "1,354건+ 정제 DB (관리 기준) — 날짜 내림차순",
+      "Matched_Plan": "SA-7 확정 150건 — HIGH/MEDIUM/POLICY 컬러",
+      "Context_Stats": "전체 통계 (섹터/소스/플랜)",
+      "Source": "출처 전체 + 폐쇄소스 표시",
+      "RSS_Sources": "검증된 RSS 6개",
+      "Keywords": "섹터별 EN/VI 키워드",
+      "Keywords History": "섹터×Province×날짜 타임라인",
+      "Province_Keywords": "Province별 품질 등급",
+      "Collection_Log": "수집 이력",
+      "Summary": "누적 통계",
+      "News_Database_Backup": "원본 2,844건 전체 보존"
+    },
+    "column_order_v7": {
+      "News Database": "A=No B=Date C=Title(En/Vi) D=Tit_ko E=Source F=Src_Type G=Province H=Plan_ID I=Grade J=URL K=sum_ko L=sum_en M=sum_vi",
+      "Matched_Plan": "A=No B=Date C=Title(En/Vi) D=Tit_ko E=Source F=Src_Type G=Province H=Plan_ID I=Grade J=Sector K=title_vi L=sum_ko M=sum_en N=sum_vi O=URL"
+    },
+    "permanent_constraints": {
+      "insert_method": "insert_rows(2) — 최신 기사 항상 맨 위",
+      "sort": "날짜 내림차순 (reverse=True)",
+      "font": "맑은 고딕 11pt — 데이터셀 검정(000000), 헤더만 흰색 허용",
+      "wrap_text": "False — 모든 셀 한 줄",
+      "ExcelUpdater_method": "update_all(articles) — update() 아님",
+      "date_fallback": "article.get('date') or article.get('published_date')"
+    }
+  },
+
+  "current_stats": {
+    "as_of": "2026-04-22",
+    "news_database": 2811,
+    "matched_plan_sa7": 150,
+    "sa7_HIGH": 9,
+    "sa7_MEDIUM": 128,
+    "sa7_POLICY": 13,
+    "backup_original": 2844,
+    "duplicates_removed": 33,
+    "sa7_title_ko_translated": 86,
+    "sa7_sum_ko_translated": 81,
+    "active_plans": 17,
+    "active_rss": 6,
+    "total_sources": 401
+  }
 }
