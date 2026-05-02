@@ -2,7 +2,7 @@
 # daily_pipeline.yml — 일일 파이프라인
 # .github/workflows/daily_pipeline.yml
 #
-# 스케줄: 매일 KST 20:00 (UTC 11:00)
+# 스케줄: 평일만(월~금) UTC 11:00 = KST 20:00
 #
 # v7.4 업데이트 (2026-04-24):
 #   - SA-7 context_analyzer.py (맥락분석, 규칙+Haiku 2단계)
