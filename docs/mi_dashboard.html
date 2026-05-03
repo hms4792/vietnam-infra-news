@@ -167,14 +167,14 @@ body{font-family:"맑은 고딕",Malgun Gothic,sans-serif;background:#0f1419;col
       <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
       <button class="lang-btn" data-lang="vi" onclick="setLang('vi')">VI</button>
     </div>
-    <!-- ★ v7.4 수정: GitHub Pages 절대경로로 완전 수정 -->
+    <!-- ★ v7.5 수정: GitHub Pages /docs를 root로 사용 -->
     <!-- index.html로 복귀하는 버튼 (강조 스타일) -->
-    <a href="/vietnam-infra-news/docs/index.html" 
+    <a href="index.html" 
        class="header-link" 
        style="background:#10b981;color:#fff;padding:4px 10px;border-radius:4px;font-weight:600;text-decoration:none;display:inline-flex !important;visibility:visible !important;opacity:1 !important;"
        title="원본 대시보드로 복귀">← 기사DB</a>
-    <!-- Excel 다운로드 버튼 (보조 스타일) - 절대경로 -->
-    <a href="/vietnam-infra-news/docs/Vietnam_Infra_News_Database_Final.xlsx" 
+    <!-- Excel 다운로드 버튼 (보조 스타일) - GitHub Pages /docs root -->
+    <a href="Vietnam_Infra_News_Database_Final.xlsx" 
        download 
        class="header-link"
        style="color:#f59e0b;padding:5px 10px;text-decoration:none;border:1px solid #f59e0b;border-radius:5px;display:inline-flex !important;visibility:visible !important;opacity:1 !important;"
