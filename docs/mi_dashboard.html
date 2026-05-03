@@ -9,20 +9,24 @@
 body{font-family:"맑은 고딕",Malgun Gothic,sans-serif;background:#0f1419;color:#e0e6ed;font-size:13px;line-height:1.5;height:100vh;overflow:hidden}
 
 /* Header */
-.header{background:#1a1f2e;border-bottom:1px solid #2a3142;padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.header{background:#1a1f2e;border-bottom:1px solid #2a3142;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;overflow:visible}
 .header-left{display:flex;align-items:center;gap:14px}
 .header-logo{width:36px;height:36px;background:linear-gradient(135deg,#10b981,#059669);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px}
 .header-title h1{font-size:18px;color:#fff;font-weight:600}
 .header-subtitle{font-size:11px;color:#7a8599;margin-top:2px}
-.header-right{display:flex;align-items:center;gap:12px}
+.header-right{display:flex;align-items:center;gap:12px;flex-wrap:nowrap;overflow:visible !important;min-width:auto;padding-right:10px;justify-content:flex-end;flex-shrink:0;width:auto;max-width:100%}
 .live-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;background:rgba(16,185,129,0.15);color:#10b981;border-radius:20px;font-size:11px;font-weight:500}
 .live-dot{width:6px;height:6px;background:#10b981;border-radius:50%;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 .lang-switch{display:flex;background:#0f1419;border:1px solid #2a3142;border-radius:6px;overflow:hidden}
 .lang-btn{padding:5px 11px;background:transparent;color:#7a8599;cursor:pointer;font-size:11px;border:none;font-weight:500}
 .lang-btn.active{background:#10b981;color:#fff}
-.header-link{color:#7a8599;font-size:12px;text-decoration:none;padding:5px 10px;border-radius:5px}
-.header-link:hover{background:rgba(255,255,255,0.05);color:#fff}
+.header-link{color:#7a8599;font-size:11px;text-decoration:none;padding:4px 8px;border-radius:4px;white-space:nowrap;display:inline-flex !important;align-items:center;visibility:visible;opacity:1}
+/* ★ v7.3 수정: 인라인 스타일 우선 보장 */
+.header-link[style*="background"]{color:#fff!important;padding:4px 10px!important;background:#10b981!important;display:inline-flex !important;visibility:visible !important;opacity:1 !important}
+.header-link[style*="background"]:hover{background:#0d8a6f!important}
+
+.header-right > *{display:flex !important;visibility:visible !important;opacity:1 !important}
 
 /* Layout */
 .main{display:flex;height:calc(100vh - 60px)}
@@ -163,7 +167,18 @@ body{font-family:"맑은 고딕",Malgun Gothic,sans-serif;background:#0f1419;col
       <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
       <button class="lang-btn" data-lang="vi" onclick="setLang('vi')">VI</button>
     </div>
-    <a href="Vietnam_Infra_News_Database_Final.xlsx" download class="header-link">≡ 기사DB</a>
+    <!-- ★ v7.4 수정: GitHub Pages 절대경로로 완전 수정 -->
+    <!-- index.html로 복귀하는 버튼 (강조 스타일) -->
+    <a href="/vietnam-infra-news/docs/index.html" 
+       class="header-link" 
+       style="background:#10b981;color:#fff;padding:4px 10px;border-radius:4px;font-weight:600;text-decoration:none;display:inline-flex !important;visibility:visible !important;opacity:1 !important;"
+       title="원본 대시보드로 복귀">← 기사DB</a>
+    <!-- Excel 다운로드 버튼 (보조 스타일) - 절대경로 -->
+    <a href="/vietnam-infra-news/docs/Vietnam_Infra_News_Database_Final.xlsx" 
+       download 
+       class="header-link"
+       style="color:#f59e0b;padding:5px 10px;text-decoration:none;border:1px solid #f59e0b;border-radius:5px;display:inline-flex !important;visibility:visible !important;opacity:1 !important;"
+       title="최신 기사 데이터 다운로드">📥 Excel</a>
     <a href="https://github.com/hms4792/vietnam-infra-news" target="_blank" class="header-link">⌂ GitHub</a>
   </div>
 </div>
