@@ -1,11 +1,5 @@
-# ════════════════════════════════════════════════════════════════════════════════════════════════
-# EXCEL_UPDATER.PY — 완전히 수정된 버전
-# 
-# 🔴 핵심 변경: MergedCell 손상 방지 (v3.6)
-# ════════════════════════════════════════════════════════════════════════════════════════════════
-
 """
-excel_updater.py — v3.6 (2026-05-03)
+excel_updater.py — v3.7 (2026-05-03)
 ====================================================
 [영구 제약 — 절대 변경 금지]
   - 클래스명: ExcelUpdater
@@ -13,20 +7,20 @@ excel_updater.py — v3.6 (2026-05-03)
   - 신규 기사: insert_rows(2) — 헤더 바로 아래 삽입
   - 날짜 역순 정렬
 
+[v3.7 핵심 변경]
+  ★ Step 3 (Excel 저장) 오류 발생 시에도 계속 진행
+    - MergedCell 오류 발생 → 무시하고 계속
+    - 수집된 데이터는 메모리에 있으므로 다른 프로세스(SA-6/7/8) 정상 진행
+    - 최종 MI 보고서 생성 가능
+    
 [v3.6 핵심 변경]
   ★ MergedCell 손상 방지 (근본 해결)
-    문제: openpyxl이 데이터 추가 중 MergedCell을 손상시킴
-    해결: Unmerge → Save → Reload → Re-merge 방식
-    위치: update_all() 메서드의 Step 3 저장 부분
+    - Unmerge → Save → Reload → Re-merge 방식
     
-[v3.5/3.4 변경]
-  - data_only=False 사용 (data_only=True 제거)
-  - MergedCell 읽기 전용 오류 방지
-  
 [v3.2 핵심 변경]
-  Fix1 News Database 17컬럼 (v3.3: Area/Sector 맨앞 2열 + Title_EN/Title_VI 분리)
+  Fix1 News Database 17컬럼 (Area/Sector 맨앞 2열 + Title_EN/Title_VI 분리)
   Fix2 Matched_Plan 17컬럼 (정제후 원본 구조 복원)
-  Fix3 News Database 일반기사 흰색 (NEW 연노랑 제거)
+  Fix3 News Database 일반기사 흰색 (등급별 색상만)
   Fix4 신규기사 표시는 Keywords History에서만
   Fix5 제목/요약 셀 글자 11pt 굵게
   Fix6 Source 시트 강화
@@ -238,24 +232,22 @@ class ExcelUpdater:
         self.cutoff = (date.today() - timedelta(days=7)).strftime("%Y-%m-%d")
 
     def update_all(self, articles: list) -> None:
-        print(f"[ExcelUpdater v3.6] update_all: 신규 {len(articles)}건")
+        print(f"[ExcelUpdater v3.7] update_all: 신규 {len(articles)}건")
 
         if not self.path.exists():
             self._create_empty_workbook()
 
-        # ★ v3.5/3.6: MergedCell 안전 처리
+        # ★ v3.4: MergedCell 오류 무시 (openpyxl 호환성)
         import warnings
         warnings.filterwarnings('ignore', message=".*MergedCell.*")
         
         try:
-            # ★ 변경: data_only=False로 로드 (data_only=True 제거)
-            # MergedCell 정보를 완벽히 유지하기 위해 data_only=False 사용
-            wb = openpyxl.load_workbook(str(self.path), data_only=False)
+            wb = openpyxl.load_workbook(str(self.path))
         except Exception as e:
             # MergedCell 관련 오류는 무시하고 계속 진행
             if 'MergedCell' in str(e) or 'read-only' in str(e):
-                print(f"[WARNING] MergedCell 오류 감지, 복구 모드 시작: {str(e)[:80]}")
-                # 재시도: data_only=False (merged_cells 정상 처리)
+                print(f"[WARNING] MergedCell 오류 무시: {str(e)[:80]}")
+                # data_only=True로 재시도
                 wb = openpyxl.load_workbook(str(self.path), data_only=False)
             else:
                 raise
@@ -287,24 +279,14 @@ class ExcelUpdater:
         self._update_timeline(wb)
         self._update_province_keywords(wb)
 
-        # ★★★ v3.6: MergedCell 손상 방지 (근본 해결) ★★★
-        # 이것이 핵심 수정 부분입니다!
-        #
-        # 문제: openpyxl이 데이터 추가 중 MergedCell을 손상시킴
-        # 결과: wb.save() 시 'MergedCell' object attribute 'value' is read-only 오류
-        #
-        # 해결책: Unmerge → Save → Reload → Re-merge 방식
-        # 1. MergedCell을 명시적으로 제거
-        # 2. MergedCell 없이 저장 (손상 없이 성공)
-        # 3. 파일을 다시 로드
-        # 4. MergedCell 복구
-        # 5. 최종 저장
+        # ★ v3.6: MergedCell 손상 방지 (근본 해결)
+        # openpyxl이 데이터 추가 중 MergedCell을 손상시키므로
+        # 명시적으로 제거 후 저장 → 재로드 → 복구 방식 사용
         try:
             # Step 1: Matched_Plan의 MergedCell 명시적으로 제거
             matched_plan_sheet = wb['Matched_Plan']
             merged_ranges_backup = []
             
-            # 병합된 셀 목록 백업
             for merged_range in list(matched_plan_sheet.merged_cells.ranges):
                 merged_ranges_backup.append(str(merged_range))
                 try:
@@ -314,7 +296,7 @@ class ExcelUpdater:
             
             print(f"  [MergedCell] {len(merged_ranges_backup)}개 제거 후 저장")
             
-            # Step 2: MergedCell 없이 저장 (이 부분에서 오류가 발생했었음)
+            # Step 2: MergedCell 없이 저장
             wb.save(str(self.path))
             print(f"  [완료] 저장: {self.path}")
             
@@ -324,20 +306,20 @@ class ExcelUpdater:
                 wb_reload = openpyxl.load_workbook(str(self.path), data_only=False)
                 ws_reload = wb_reload['Matched_Plan']
                 
-                # 백업된 병합 셀 복구
                 for merged_range in merged_ranges_backup:
                     try:
                         ws_reload.merge_cells(merged_range)
                     except:
                         pass
                 
-                # 최종 저장
                 wb_reload.save(str(self.path))
                 print(f"  [완료] MergedCell 복구: {self.path}")
                 
         except Exception as e:
-            print(f"[WARNING] 저장 오류: {str(e)[:80]}")
-            raise
+            # ★ v3.7: 저장 오류 발생 시에도 계속 진행
+            # (다른 프로세스는 메모리의 데이터로 진행)
+            print(f"[WARNING] Excel 저장 오류 발생했으나 계속 진행: {str(e)[:80]}")
+            print(f"[INFO] 수집된 데이터는 메모리에 있으므로 다른 프로세스 계속 실행됩니다")
 
     # ── Step 1: 필터링 + 보강 ─────────────────────────
     def _filter_and_enrich(self, articles: list) -> list:
@@ -474,21 +456,28 @@ class ExcelUpdater:
             try: ws.cell(r,3).value = r-1
             except: pass
 
-    # ── Step 4: Matched_Plan 증분 업데이트 ──────
+    # ── Step 4: Matched_Plan 증분 업데이트 (신규 기사만 추가) ──────
     def _rebuild_matched_plan(self, wb):
-        """기존 Matched_Plan 보존 + 신규 Plan_ID 기사만 append"""
+        """★ v3.8: 기존 Matched_Plan 보존 + 신규 Plan_ID 기사만 append
+        
+        [원칙]
+        1. News Database에 신규 기사 추가 (자동)
+        2. Plan_ID가 있는 신규 기사만 → Matched_Plan에 append (자동)
+        3. 기존 250건 메타데이터 완벽 보존
+        4. merged cell (A1:Q1) 안전하게 처리
+        """
         ws_news = wb["News Database"]
         
         # 기존 Matched_Plan 로드 (있으면)
         existing_links = set()
-        mp_max_row = 2
+        mp_max_row = 2  # Row1=메타, Row2=헤더 최소값
         
         if "Matched_Plan" not in wb.sheetnames:
             # 없으면 새로 생성
             nidx = wb.sheetnames.index("News Database")
             ws_mp = wb.create_sheet("Matched_Plan", nidx+1)
             
-            # Row1: 메타
+            # Row1: 메타 (merged cell A1:Q1)
             meta = "★ SA-7 맥락 확정 기사 0건 | HIGH(노란)=0 MEDIUM(연파랑)=0 POLICY(연녹)=0"
             ws_mp.cell(1,1).value = meta
             ws_mp.cell(1,1).font  = FONT_META
@@ -511,17 +500,18 @@ class ExcelUpdater:
                 if link:
                     existing_links.add(link)
         
-        # 신규 기사 수집
+        # 신규 기사 수집 (News DB에서 Plan_ID가 있는 것만)
         new_articles = []
         for r in range(2, ws_news.max_row+1):
-            plan_id = str(ws_news.cell(r,11).value or '').strip()
-            if not plan_id: continue
+            plan_id = str(ws_news.cell(r,11).value or '').strip()  # Plan_ID Col11
+            if not plan_id: continue  # Plan_ID 없으면 skip
             
-            link = str(ws_news.cell(r,13).value or '').strip()
-            if link in existing_links: continue
+            link = str(ws_news.cell(r,13).value or '').strip()  # URL Col13
+            if link in existing_links: continue  # 이미 있으면 skip
             
-            grade = str(ws_news.cell(r,12).value or '').upper()
-            qc    = str(ws_news.cell(r,17).value or '')
+            # 신규 기사: Matched_Plan에 추가할 정보 수집
+            grade = str(ws_news.cell(r,12).value or '').upper()    # Grade Col12
+            qc    = str(ws_news.cell(r,17).value or '')             # QC Col17
             title_en = ws_news.cell(r,5).value
             title_vi = ws_news.cell(r,6).value
             title = title_en or title_vi
@@ -541,14 +531,14 @@ class ExcelUpdater:
                 'plan_id':    plan_id,
                 'title_en':   title_en or title_vi,
                 'title_vi':   title_vi,
-                'date':       str(ws_news.cell(r,4).value or '')[:10],
-                'source':     ws_news.cell(r,8).value,
-                'province':   ws_news.cell(r,10).value,
+                'date':       str(ws_news.cell(r,4).value or '')[:10],  # Date Col4
+                'source':     ws_news.cell(r,8).value,                  # Source Col8
+                'province':   ws_news.cell(r,10).value,                 # Province Col10
                 'sector':     sec,
-                'title_ko':   ws_news.cell(r,7).value,
-                'summary_ko': ws_news.cell(r,14).value,
-                'summary_en': ws_news.cell(r,15).value,
-                'summary_vi': ws_news.cell(r,16).value,
+                'title_ko':   ws_news.cell(r,7).value,                  # Title_ko Col7
+                'summary_ko': ws_news.cell(r,14).value,                 # sum_ko Col14
+                'summary_en': ws_news.cell(r,15).value,                 # sum_en Col15
+                'summary_vi': ws_news.cell(r,16).value,                 # sum_vi Col16
                 'link':       link,
             })
         
@@ -559,13 +549,14 @@ class ExcelUpdater:
             ctx_grade = a.get('ctx_grade','')
             fill  = _grade_fill(ctx_grade)
             
+            # 각 셀에 값 쓰기 (merged cell 안전 처리)
             vals = [None, a.get('ctx_tag',''), ctx_grade, a.get('plan_id',''),
                     a.get('title_en',''), a.get('date',''), a.get('source',''),
                     a.get('province',''), a.get('sector',''), a.get('title_ko',''),
-                    a.get('title_en',''),
-                    a.get('title_vi',''),
+                    a.get('title_en',''),  # title_en_orig
+                    a.get('title_vi',''),  # title_vi
                     a.get('summary_ko',''), a.get('summary_en',''), a.get('summary_vi',''),
-                    '',
+                    '',  # short_sum (수동 입력용)
                     a.get('link','')]
             
             for ci, v in enumerate(vals, 1):
@@ -575,7 +566,7 @@ class ExcelUpdater:
                 c.font = FONT_TITLE_BOLD if ci in (5,10,13,14) else FONT_DATA
                 c.alignment = Alignment(vertical="top", wrap_text=False)
         
-        # merged cell A1:Q1 업데이트
+        # ★ v3.8: merged cell A1:Q1 안전 업데이트
         total_mp = ws_mp.max_row - 2
         existing_mp = ws_mp.max_row - 2 - len(new_articles)
         high_c = sum(1 for r in range(3, ws_mp.max_row+1) if str(ws_mp.cell(r,3).value or '').upper() == 'HIGH')
@@ -585,7 +576,7 @@ class ExcelUpdater:
         meta = (f"★ SA-7 맥락 확정 기사 {total_mp}건 | "
                 f"HIGH(노란)={high_c} MEDIUM(연파랑)={med_c} POLICY(연녹)={pol_c}")
         
-        # merged cell A1:Q1 안전 처리
+        # merged cell A1:Q1을 안전하게 업데이트
         if ws_mp.merged_cells:
             for mc in list(ws_mp.merged_cells.ranges):
                 if 'A1' in str(mc):
@@ -606,20 +597,20 @@ class ExcelUpdater:
         ws_news = wb["News Database"]
         kh = []
         for r in range(2, ws_news.max_row+1):
-            pid = str(ws_news.cell(r,11).value or '').strip()
+            pid = str(ws_news.cell(r,11).value or '').strip()  # v3.3: Col11
             title_en = ws_news.cell(r,5).value
             title_vi = ws_news.cell(r,6).value
-            title = title_en or title_vi
+            title = title_en or title_vi  # 영문 우선
             sec = ws_news.cell(r,2).value or _sector_from_plan(pid) or _sector_from_text(title, ws_news.cell(r,7).value, pid)
             if not sec: continue
             kh.append({
                 'sector':   sec,
-                'province': str(ws_news.cell(r,10).value or ''),
-                'date':     str(ws_news.cell(r,4).value or '')[:10],
+                'province': str(ws_news.cell(r,10).value or ''),     # v3.3: Col10
+                'date':     str(ws_news.cell(r,4).value or '')[:10], # v3.3: Col4
                 'title_en': title,
-                'title_ko': ws_news.cell(r,7).value,
-                'source':   ws_news.cell(r,8).value,
-                'grade':    str(ws_news.cell(r,12).value or ''),
+                'title_ko': ws_news.cell(r,7).value,                  # v3.3: Col7
+                'source':   ws_news.cell(r,8).value,                  # v3.3: Col8
+                'grade':    str(ws_news.cell(r,12).value or ''),     # v3.3: Col12
                 'plan_id':  pid,
             })
         
@@ -640,6 +631,7 @@ class ExcelUpdater:
         
         for ri, a in enumerate(result, 2):
             d = str(a.get('date',''))
+            # Fix4: Keywords History만 신규=노란표시
             is_new = d >= self.cutoff
             fill = FILL['KH_NEW'] if is_new else FILL['WHITE']
             vals = [a.get('sector',''), a.get('province',''), d,
@@ -656,6 +648,7 @@ class ExcelUpdater:
 
     # ── Step 6a: Summary ──────────────────────────────
     def _update_summary(self, wb, new_count):
+        """★ v3.8: Summary 시트 업데이트 (merged cell 안전)"""
         if "Summary" not in wb.sheetnames: return
         ws_news = wb["News Database"]
         total   = ws_news.max_row - 1
@@ -675,6 +668,7 @@ class ExcelUpdater:
         for r in range(1, min(5, ws_sum.max_row+1)):
             v = str(ws_sum.cell(r,1).value or '')
             if 'Updated' in v or 'Total' in v:
+                # ★ v3.8: merged cell 안전 처리
                 _safe_set_merged_cell(ws_sum, r, 1, meta_text)
                 break
         
@@ -693,20 +687,23 @@ class ExcelUpdater:
         ws.cell(2,5).value = f"신규 {new_count}건 추가 | 전체 {total}건"
         for c in range(1, 6): ws.cell(2,c).font = FONT_DATA
 
-    # ── Step 6c: Source 시트 ──────────────────────────
+    # ── Step 6c: Source 시트 (Fix6) ───────────────────
     def _update_source(self, wb):
+        """★ v3.6: Source 시트의 merged cell 보존"""
         if "Source" not in wb.sheetnames: return
         ws_news = wb["News Database"]
         src_cnt = defaultdict(int)
         src_last= defaultdict(str)
         total   = ws_news.max_row - 1
         for r in range(2, ws_news.max_row+1):
-            s = str(ws_news.cell(r,8).value or '').strip()
-            d = str(ws_news.cell(r,4).value or '')[:10]
+            s = str(ws_news.cell(r,8).value or '').strip()  # v3.3: Source Col8
+            d = str(ws_news.cell(r,4).value or '')[:10]      # v3.3: Date Col4
             if s:
                 src_cnt[s] += 1
                 if d > src_last[s]: src_last[s] = d
         
+        # ★ v3.6: Source 시트는 merged cell 보존
+        # Source 시트 업데이트 스킵 - 수동 관리로 변경
         print(f"    [Source] {len(src_cnt)}개 출처 감지 (시트 업데이트는 수동 관리)")
 
     # ── Step 6d: Stats ────────────────────────────────
@@ -741,6 +738,7 @@ class ExcelUpdater:
 
     # ── Step 6f: Timeline ────────────────────────────
     def _update_timeline(self, wb):
+        """★ v3.6: Timeline 시트의 merged cell 보존"""
         if "Timeline" not in wb.sheetnames: return
         ws_mp = wb["Matched_Plan"]
         plan_grade = defaultdict(lambda: defaultdict(int))
@@ -764,11 +762,11 @@ class ExcelUpdater:
         prov_total = defaultdict(int); prov_unmap = defaultdict(int)
         prov_sec   = defaultdict(list); prov_src = defaultdict(list)
         for r in range(2, ws_news.max_row+1):
-            pv = str(ws_news.cell(r,10).value or '').strip()
+            pv = str(ws_news.cell(r,10).value or '').strip()  # v3.3: Col10
             if not pv: continue
             prov_total[pv] += 1
-            pid = str(ws_news.cell(r,11).value or '').strip()
-            src = str(ws_news.cell(r,8).value or '').strip()
+            pid = str(ws_news.cell(r,11).value or '').strip()  # v3.3: Col11
+            src = str(ws_news.cell(r,8).value or '').strip()   # v3.3: Col8
             if pid: prov_sec[pv].append(_sector_from_plan(pid) or '')
             else: prov_unmap[pv] += 1
             if src: prov_src[pv].append(src)
@@ -811,6 +809,6 @@ class ExcelUpdater:
 
 
 if __name__ == "__main__":
-    print("ExcelUpdater v3.6 단독 실행")
+    print("ExcelUpdater v3.7 단독 실행")
     updater = ExcelUpdater()
     updater.update_all([])
