@@ -1,5 +1,5 @@
 """
-quality_context_agent.py — v3.2 (2026-05-04 수정)
+quality_context_agent.py — v3.4 (2026-05-04 수정)
 ====================================================
 SA-6: 품질검증 + 정책매핑 에이전트
 
@@ -14,6 +14,51 @@ SA-6: 품질검증 + 정책매핑 에이전트
     ❌ Matched_Plan 시트 재작성/삭제/초기화
        → Matched_Plan은 ExcelUpdater 전용 (append 방식)
        → SA-6가 덮어쓰면 기존 250건+ 수동 큐레이션 자료 소멸
+
+[v3.4 핵심 개선 — 위험 보완 + Haiku 프롬프트 최적화 (2026-05-04)]
+
+  ★ 위험 보완 1: API 키 없을 때 Jina 원문 영문 오염 방지
+    기존 v3.3: API 키 없으면 영문 Jina 원문을 sum_ko에 직접 저장
+              → 대시보드 한국어 요약 카드에 영문 표시 → 사용자 혼란
+    수정 v3.4: Google Translate(무료)로 먼저 번역 후 저장
+              → API 키 없어도 sum_ko는 항상 한국어로 유지
+
+  ★ 위험 보완 2: Jina 갱신 후 대시보드 재실행 (daily_pipeline.yml)
+    기존: SA-6 이후 build_dashboard.py 재실행 없음
+         → Jina 갱신된 sum_ko가 당일 대시보드에 미반영
+    수정: SA-6 실행 직후 build_dashboard.py 추가 호출 (yml 수정)
+
+  ★ Haiku 프롬프트 최적화: 2500자 전문 활용 극대화
+    기존: "한국어 요약 200자 이내로 생성" (단순 지시)
+    수정: 5가지 필수 항목 구조화 요약 요청
+          ① 사업명/프로젝트명 ② 사업규모(금액/용량) ③ 현재단계
+          ④ 주요 발주처/시공사 ⑤ 핵심 일정/다음 이벤트
+          + 전문용어 한국어 인프라 업계 표준 사용 지시
+          + 베트남 고유명사 음역 지시 (번역 오류 최소화)
+
+[v3.3 핵심 개선 — Jina 실질 작동 강화 (2026-05-04)]
+
+  ★ 문제: Jina는 무료인데 3가지 조건 때문에 실제로 거의 작동 안 했음
+    1. sum_ko < 50자 조건 → Google Translate가 이미 번역해서 해당 기사 0건
+    2. HIGH/MEDIUM 조건 → Matched_Plan 기사도 Grade 없으면 제외
+    3. api_key 없으면 함수 전체 즉시 return → Jina 자체가 실행 안 됨
+
+  ★ 개선 1: Jina 전용 함수 분리 (API 키 불필요)
+    run_jina_enrichment_for_matched() 신규 추가
+    - ANTHROPIC_API_KEY 유무와 완전히 독립 실행
+    - Matched_Plan 시트 URL 목록을 직접 읽어 교차 매칭
+    - 대상: Matched_Plan 기사 중 최근 30일 이내 기사
+    - sum_ko 길이 < 300자 이면 Jina 본문 취득 시도
+
+  ★ 개선 2: Jina 본문 활용 2단계 전략
+    1단계 (Haiku 있을 때): Jina 본문 → Haiku → 인사이트 요약 200자
+    2단계 (Haiku 없을 때): Jina 본문 앞 300자를 직접 sum_ko에 저장
+    → Haiku 없어도 Jina만으로 요약 품질 개선 가능
+
+  ★ 개선 3: 방법 B 조건 완화
+    기존: sum_ko < 50자 AND (HIGH OR MEDIUM)
+    변경: sum_ko < 300자 AND (Plan_ID 있음 OR HIGH OR MEDIUM)
+    → Matched_Plan 연관 기사를 더 폭넓게 보완
 
 [v3.2 수정 내역]
   ★ BUG FIX: run_matching() 내 Matched_Plan 재작성 블록 완전 제거
@@ -86,6 +131,10 @@ JINA_BASE         = 'https://r.jina.ai/'
 # Haiku 처리 한도 (일 크레딧 절약)
 HAIKU_CLASSIFY_LIMIT = 50
 HAIKU_ENRICH_LIMIT   = 20
+
+# ★ v3.3: Jina 전용 설정 (API 키 불필요 — 완전 무료)
+JINA_MATCHED_LIMIT   = 30   # Matched_Plan 기사 Jina 보강 최대 30건/일
+JINA_SUMKO_THRESHOLD = 300  # sum_ko 이 길이 미만이면 Jina 보강 대상 (기존 50자 → 300자)
 
 # ── 설정 ───────────────────────────────────────────────────────────────────
 RECENT_DAYS = 90
@@ -563,7 +612,11 @@ def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
         if not plan_v and len(candidates_a) < HAIKU_CLASSIFY_LIMIT:
             candidates_a.append(art)
 
-        if (len(summ_ko) < 50 and grade_v in ('HIGH', 'MEDIUM')
+        # ★ v3.3: 조건 완화 (50자→300자, Plan_ID있는 기사도 포함)
+        # 기존: sum_ko<50자 AND HIGH/MEDIUM → 실제 해당 기사 0건
+        # 개선: sum_ko<300자 AND (Plan_ID있음 OR HIGH/MEDIUM)
+        if (len(summ_ko) < JINA_SUMKO_THRESHOLD
+                and (plan_v or grade_v in ('HIGH', 'MEDIUM'))
                 and url_v.startswith('http')
                 and len(candidates_b) < HAIKU_ENRICH_LIMIT):
             candidates_b.append(art)
@@ -652,13 +705,234 @@ def main():
     api_key = os.getenv('ANTHROPIC_API_KEY', '').strip()
     haiku_stats = run_haiku_enhancement(plans, api_key)
 
+    # ★ v3.3: Jina Matched_Plan 전용 보강 (API 키 없어도 실행)
+    jina_stats  = run_jina_enrichment_for_matched(plans, api_key)
+
     log.info("━" * 58)
-    log.info(f"SA-6 v3.2 완료: {stats.get('matched', 0)}건 키워드매핑 / {stats.get('total', 0)}건 전체")
+    log.info(f"SA-6 v3.3 완료: {stats.get('matched', 0)}건 키워드매핑 / {stats.get('total', 0)}건 전체")
     log.info(f"  키워드 매핑률: {round(stats.get('matched',0)/max(stats.get('total',1),1)*100,1)}%")
     log.info(f"  Haiku 추가분류: {haiku_stats['haiku_classified']}건")
-    log.info(f"  Jina 요약보강: {haiku_stats['jina_enriched']}건")
+    log.info(f"  Jina 요약보강(방법B): {haiku_stats['jina_enriched']}건")
+    log.info(f"  Jina Matched 전용보강: {jina_stats['jina_matched']}건 ← v3.3 신규")
     log.info("━" * 58)
 
 
 if __name__ == '__main__':
     main()
+
+
+# ══════════════════════════════════════════════════════════════════════════
+# [v3.3 신규] Jina 전용 Matched_Plan 보강 — API 키 완전 불필요
+# ══════════════════════════════════════════════════════════════════════════
+def run_jina_enrichment_for_matched(plans: dict, api_key: str = '') -> dict:
+    """
+    ★ v3.3 신규: Matched_Plan 기사 전용 Jina 보강
+    
+    [설계 원칙]
+    - ANTHROPIC_API_KEY 없어도 독립 실행 (Jina는 무료)
+    - Matched_Plan 시트 URL 목록을 직접 읽어 대상 기사 특정
+    - 대상: Matched_Plan 기사 중 최근 30일 + sum_ko < 300자
+    - 처리 전략:
+        1단계 (Haiku 있을 때): Jina 본문 → Haiku → 인사이트 요약 200자
+        2단계 (Haiku 없을 때): Jina 본문 앞 300자를 직접 sum_ko에 저장
+    - 최대 JINA_MATCHED_LIMIT(30)건/일
+
+    [효과]
+    - Google Translate의 단순 번역(description 번역)을
+      Jina 본문 기반 실질 인사이트로 교체
+    - NewsData.io Free 플랜의 "본문 없음" 약점을 Jina로 직접 보완
+    """
+    if not EXCEL_PATH.exists():
+        return {'jina_matched': 0}
+
+    log.info("[v3.3] Jina Matched_Plan 보강 시작...")
+
+    # ── Step 1: Matched_Plan URL 세트 로드 ────────────────────────────
+    try:
+        wb_r = openpyxl.load_workbook(EXCEL_PATH, read_only=True, data_only=True)
+    except Exception as e:
+        log.warning(f"  Excel 로드 실패: {e}")
+        return {'jina_matched': 0}
+
+    mp_url_set = set()
+    if 'Matched_Plan' in wb_r.sheetnames:
+        ws_mp = wb_r['Matched_Plan']
+        # Row1=메타, Row2=헤더, Row3~=데이터
+        mp_hdr = [str(c or '').strip().lower() for c in
+                  next(ws_mp.iter_rows(min_row=2, max_row=2, values_only=True))]
+        link_ci = next((i for i, h in enumerate(mp_hdr) if 'link' in h), None)
+        if link_ci is not None:
+            for row in ws_mp.iter_rows(min_row=3, values_only=True):
+                v = str(row[link_ci] or '').strip()
+                if v and v not in ('nan', 'None', ''):
+                    mp_url_set.add(v)
+    log.info(f"  Matched_Plan URL 세트: {len(mp_url_set)}건")
+
+    # ── Step 2: News DB에서 Jina 보강 대상 선정 ───────────────────────
+    if 'News Database' not in wb_r.sheetnames:
+        wb_r.close()
+        return {'jina_matched': 0}
+
+    ws_nd  = wb_r['News Database']
+    nd_hdr = [str(c.value or '').strip().lower().replace(' ', '_')
+              for c in next(ws_nd.iter_rows(min_row=1, max_row=1))]
+
+    def ci(keys):
+        for k in keys:
+            for i, h in enumerate(nd_hdr):
+                if k in h: return i
+        return None
+
+    C = {
+        'date':     ci(['date']),
+        'title_en': ci(['title_en']),
+        'title_vi': ci(['title_vi']),
+        'title_ko': ci(['tit_ko', 'title_ko']),
+        'sum_ko':   ci(['sum_ko', 'summary_ko']),
+        'sum_en':   ci(['sum_en', 'summary_en']),
+        'url':      ci(['url']),
+        'plan_id':  ci(['plan_id']),
+        'grade':    ci(['grade']),
+    }
+
+    cutoff = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+    candidates = []
+
+    for i, row in enumerate(ws_nd.iter_rows(min_row=2, values_only=True), 2):
+        if not row or not any(row): continue
+
+        def rv(k):
+            idx = C.get(k)
+            return str(row[idx] or '').strip() if idx is not None and len(row) > idx else ''
+
+        date_v  = rv('date')[:10]
+        url_v   = rv('url')
+        sumko_v = rv('sum_ko')
+        title_en = rv('title_en') or rv('title_vi')
+
+        # 조건:
+        # 1. 최근 30일 이내
+        # 2. Matched_Plan URL 세트에 있는 기사
+        # 3. sum_ko가 JINA_SUMKO_THRESHOLD(300자) 미만
+        # 4. URL이 유효
+        if (date_v >= cutoff
+                and url_v in mp_url_set
+                and len(sumko_v) < JINA_SUMKO_THRESHOLD
+                and url_v.startswith('http')
+                and title_en):
+            candidates.append({
+                'row':      i,
+                'date':     date_v,
+                'url':      url_v,
+                'title_en': title_en,
+                'title_ko': rv('title_ko'),
+                'sum_ko':   sumko_v,
+                'sum_en':   rv('sum_en'),
+                'plan_id':  rv('plan_id'),
+                'grade':    rv('grade'),
+            })
+            if len(candidates) >= JINA_MATCHED_LIMIT:
+                break
+
+    wb_r.close()
+    log.info(f"  Jina 보강 대상: {len(candidates)}건 (최근 30일 Matched_Plan 기사, sum_ko<{JINA_SUMKO_THRESHOLD}자)")
+
+    if not candidates:
+        log.info("  Jina 보강 대상 없음 — 종료")
+        return {'jina_matched': 0}
+
+    # ── Step 3: Jina 본문 취득 + 요약 생성 ───────────────────────────
+    updates = []   # (row_num, new_sumko)
+
+    for art in candidates:
+        url   = art['url']
+        body  = fetch_jina_text(url)
+
+        if not body or len(body) < 100:
+            log.debug(f"    Jina 본문 취득 실패: {url[:60]}")
+            time.sleep(0.3)
+            continue
+
+        new_sumko = ''
+
+        if api_key:
+            # ★ v3.4: Haiku 프롬프트 최적화 — 2500자 전문 활용 극대화
+            # 5가지 필수 항목 구조화 + 전문용어/고유명사 지시로 번역 오류 최소화
+            plan_ids = ', '.join(list(plans.keys())[:21])
+            system_p = (
+                "당신은 베트남 인프라 사업 전문 분석가입니다.\n"
+                "아래 기사 전문을 읽고 다음 5가지 항목을 반드시 포함해 200자 이내 한국어로 요약하세요:\n"
+                "  ① 사업명 또는 프로젝트명 (없으면 관련 정책/계획명)\n"
+                "  ② 사업규모 (예산금액·설비용량·연장거리 등 수치)\n"
+                "  ③ 현재 진행단계 (계획·승인·입찰·착공·준공·운영 중 하나)\n"
+                "  ④ 주요 기관 (발주처·시공사·투자자·정부부처)\n"
+                "  ⑤ 핵심 일정 또는 다음 이벤트\n"
+                "번역 품질 지시:\n"
+                "  - 단순 사실 나열이 아닌 사업개발 관점 인사이트 중심\n"
+                "  - 한국어 인프라·건설 업계 표준 용어 사용\n"
+                "    (예: 폐수처리장→WWTP, 발전소→전력플랜트, 입찰→tender)\n"
+                "  - 베트남 고유명사는 음역 사용 (예: Hà Nội→하노이, Đà Nẵng→다낭)\n"
+                "  - 금액은 단위 명확히 (예: 2,800억 달러→X, 28억 달러→O)\n"
+                "  - 수치 정보 우선 포함 (없으면 생략)\n"
+                f"관련 마스터플랜 ID 목록: {plan_ids}"
+            )
+            user_p = (
+                f"기사 제목: {art['title_en']}\n"
+                f"Plan_ID: {art.get('plan_id', '미지정')}\n"
+                f"기사 전문 (최대 2500자):\n{body[:2500]}\n\n"
+                "아래 JSON 형식으로만 답변 (다른 텍스트 없이):\n"
+                '{"summary_ko":"200자 이내 한국어 인사이트 요약","stage":"PLANNING/TENDERING/CONSTRUCTION/COMPLETION/OPERATION"}'
+            )
+            raw = _call_haiku(system_p, user_p, api_key)
+            if raw:
+                try:
+                    import json as _j
+                    m = re.search(r'{.*?}', raw, re.DOTALL)
+                    if m:
+                        result = _j.loads(m.group())
+                        new_sumko = result.get('summary_ko', '')
+                except Exception:
+                    pass
+
+        if not new_sumko:
+            # ★ v3.4: API 키 없거나 Haiku 실패 → Google Translate로 번역 후 저장
+            # 위험 1 보완: 영문 원문 직접 저장 → 한국어 혼용 방지
+            paragraphs = [p.strip() for p in body.split('\n') if len(p.strip()) > 50]
+            raw_body   = ' '.join(paragraphs[:3])[:500]
+            if raw_body:
+                try:
+                    from deep_translator import GoogleTranslator
+                    body_ko = GoogleTranslator(source='auto', target='ko').translate(raw_body[:500])
+                    new_sumko = f"[Jina] {body_ko[:280]}"
+                    log.debug(f"    Google Translate 번역 완료: {len(new_sumko)}자")
+                except Exception as te:
+                    # Google Translate도 실패하면 기존 sum_ko 유지 (원문 저장 안 함)
+                    log.debug(f"    번역 실패({te}) — 기존 sum_ko 유지")
+                    new_sumko = ''  # 저장하지 않음
+
+        if new_sumko:
+            updates.append((art['row'], new_sumko))
+            log.info(f"    ✓ {art['date']} {art['title_en'][:40]} → {len(new_sumko)}자")
+
+        time.sleep(0.5)  # Jina Rate limit 방지
+
+    # ── Step 4: Excel sum_ko 컬럼 업데이트 ───────────────────────────
+    if updates:
+        try:
+            wb2  = openpyxl.load_workbook(EXCEL_PATH)
+            ws2  = wb2['News Database']
+            hdr2 = [str(c.value or '').strip().lower().replace(' ', '_')
+                    for c in next(ws2.iter_rows(min_row=1, max_row=1))]
+            sumko_col = next((i+1 for i, h in enumerate(hdr2)
+                              if 'sum_ko' in h or 'summary_ko' in h), None)
+
+            if sumko_col:
+                for row_num, new_sumko in updates:
+                    ws2.cell(row=row_num, column=sumko_col, value=new_sumko)
+                wb2.save(EXCEL_PATH)
+                log.info(f"  [v3.3] Jina Matched_Plan 보강 완료: {len(updates)}건 sum_ko 갱신")
+            wb2.close()
+        except Exception as e:
+            log.warning(f"  Excel 저장 오류: {e}")
+
+    return {'jina_matched': len(updates)}
