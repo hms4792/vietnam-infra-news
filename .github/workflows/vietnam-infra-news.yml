@@ -106,6 +106,12 @@ jobs:
       - name: SA-6 Quality Context Agent (정책 매핑)
         run: python3 scripts/quality_context_agent.py
         continue-on-error: true
+        
+      - name: Rebuild Dashboard (SA-6 sum_ko 반영)
+        run: python3 scripts/build_dashboard.py
+        env:
+          EXCEL_PATH: ${{ env.EXCEL_PATH }}
+        continue-on-error: true
 
       # ── Step 9: SA-4 대시보드 재빌드 (SA-6 결과 반영) ──────────
       # build_dashboard.py v7.2: plan_id/grade 필드 포함
