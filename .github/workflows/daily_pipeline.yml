@@ -130,7 +130,12 @@ jobs:
         run: python3 scripts/quality_context_agent.py
         continue-on-error: true
 
-      # ─────────────────────────────────────────────────────────────
+      - name: Rebuild Dashboard (Jina sum_ko 반영)
+        run: python3 scripts/build_dashboard.py
+        env:
+          EXCEL_PATH: ${{ env.EXCEL_PATH }}
+        continue-on-error: true
+
       # ── Step 10 (SA-7): 맥락분석 에이전트 ──────────────────────
       #
       # 2단계 분류:
