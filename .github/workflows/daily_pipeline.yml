@@ -128,6 +128,9 @@ jobs:
       # Province 재분류 + ctx_grade 산정 + quality_report.json 생성
       - name: SA-6 Quality Context Agent
         run: python3 scripts/quality_context_agent.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          EXCEL_PATH: ${{ env.EXCEL_PATH }}
         continue-on-error: true
 
       - name: Rebuild Dashboard (Jina sum_ko 반영)
