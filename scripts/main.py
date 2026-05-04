@@ -90,8 +90,8 @@ def main(hours_back: int = 24):
         updater.update_all(articles)         # update() 아님, 반환값 사용 안 함
         logger.info('  Excel 업데이트 완료')
     except Exception as e:
-        logger.error(f'Step 3 실패: {e}')
-        sys.exit(1)
+        logger.warning(f"[Step 3 경고] Excel 업데이트 실패했으나 계속 진행: {e}")
+        logger.info("[Step 3 INFO] Step4 대시보드 생성으로 계속 진행합니다")
 
     # ── Step 4: Dashboard 재생성 ─────────────────────────────
     logger.info('[Step 4/4] Dashboard 재생성...')
