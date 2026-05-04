@@ -1,11 +1,19 @@
 """
-excel_updater.py — v3.8 (2026-05-04)
+excel_updater.py — v3.9 (2026-05-04)
 ====================================================
 [영구 제약 — 절대 변경 금지]
   - 클래스명: ExcelUpdater
   - 메서드명: update_all(articles)
   - 신규 기사: insert_rows(2) — 헤더 바로 아래 삽입
   - 날짜 역순 정렬
+
+[v3.9 핵심 수정 — Matched_Plan 과팽창 버그 수정]
+  ★ BUG FIX: URL 단일키 중복체크 → 3중 복합키 중복체크
+    - 원인: 기존 Matched_Plan에 URL(Link)이 없는 행은 existing_links에
+            등록 안 됨 → News DB 전체 Plan_ID 기사를 "신규"로 오판
+            → 250건 → 429건으로 과팽창
+    - 수정: 1순위 URL + 2순위 Plan_ID+Title_EN[:60] + 3순위 Plan_ID+Date+Source
+            3중 복합키 중 하나라도 매칭되면 중복으로 판정·skip
 
 [v3.8 핵심 수정 — 버그 2개 동시 수정]
   ★ BUG FIX 1: UnboundLocalError "cannot access local variable 'openpyxl'"
@@ -456,8 +464,24 @@ class ExcelUpdater:
 
     # ── Step 4: Matched_Plan 증분 업데이트 ──────────
     def _rebuild_matched_plan(self, wb):
+        """
+        ★ v3.9 중복 체크 강화
+        
+        [버그] v3.8까지: URL(Link) 단일키로만 중복 체크
+               → Matched_Plan의 Link 컬럼(Col17)이 비어있는 기존 행은
+                 existing_links에 등록 안 됨 → 전부 "신규"로 오판
+               → 250건 → 429건으로 과팽창 발생
+        
+        [수정] 3단계 복합키 중복 체크:
+               1순위: URL(Link) — 가장 정확한 키
+               2순위: Plan_ID + Title_EN 앞 60자 — URL 없는 기존 기사 커버
+               3순위: Plan_ID + Date + Source — 제목도 없는 엣지케이스 커버
+        """
         ws_news = wb["News Database"]
-        existing_links = set()
+        # ★ v3.9: 3중 키셋으로 변경
+        existing_links    = set()  # URL 기반 키
+        existing_plan_titles = set()  # Plan_ID+Title 복합키
+        existing_plan_dates  = set()  # Plan_ID+Date+Source 복합키
         mp_max_row = 2
         
         if "Matched_Plan" not in wb.sheetnames:
@@ -479,18 +503,40 @@ class ExcelUpdater:
             ws_mp = wb["Matched_Plan"]
             mp_max_row = ws_mp.max_row
             
+            # ★ v3.9: 기존 Matched_Plan에서 3중 키 모두 수집
+            # Col4=Plan_ID, Col5=Title_EN, Col6=Date, Col7=Source, Col17=Link
             for r in range(3, mp_max_row+1):
-                link = str(ws_mp.cell(r, 17).value or '').strip()
+                link     = str(ws_mp.cell(r, 17).value or '').strip()
+                plan_id  = str(ws_mp.cell(r, 4).value  or '').strip()
+                title_en = str(ws_mp.cell(r, 5).value  or '').strip()[:60]
+                date_val = str(ws_mp.cell(r, 6).value  or '')[:10].strip()
+                source   = str(ws_mp.cell(r, 7).value  or '').strip()
+                
                 if link:
                     existing_links.add(link)
+                if plan_id and title_en:
+                    existing_plan_titles.add(f"{plan_id}|{title_en}")
+                if plan_id and date_val and source:
+                    existing_plan_dates.add(f"{plan_id}|{date_val}|{source}")
         
         new_articles = []
         for r in range(2, ws_news.max_row+1):
             plan_id = str(ws_news.cell(r,11).value or '').strip()
             if not plan_id: continue
             
-            link = str(ws_news.cell(r,13).value or '').strip()
-            if link in existing_links: continue
+            link     = str(ws_news.cell(r,13).value or '').strip()
+            title_en_raw = str(ws_news.cell(r,5).value or ws_news.cell(r,6).value or '').strip()
+            title_key    = title_en_raw[:60]
+            date_val = str(ws_news.cell(r,4).value  or '')[:10].strip()
+            source   = str(ws_news.cell(r,8).value  or '').strip()
+            
+            # ★ v3.9: 3중 중복 체크 — 하나라도 해당하면 skip
+            if link and link in existing_links:
+                continue
+            if plan_id and title_key and f"{plan_id}|{title_key}" in existing_plan_titles:
+                continue
+            if plan_id and date_val and source and f"{plan_id}|{date_val}|{source}" in existing_plan_dates:
+                continue
             
             grade    = str(ws_news.cell(r,12).value or '').upper()
             qc       = str(ws_news.cell(r,17).value or '')
