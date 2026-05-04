@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-05-04 06:01",
+  "generated_at": "2026-05-04 12:28",
   "model": "claude-haiku-4-5-20251001",
-  "total_articles": 44,
+  "total_articles": 45,
   "haiku_used": 15,
   "stage_summary": {
-    "PLANNING": 9,
-    "TENDERING": 9,
+    "PLANNING": 11,
+    "TENDERING": 8,
     "CONSTRUCTION": 10,
     "COMPLETION": 0,
     "OPERATION": 2,
@@ -29,12 +29,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "기사 내용이 재생에너지 사업과 무관함",
-      "next_watch": "VN-PWR-PDP8-RENEWABLE 관련 공식 발표 추적 필요",
-      "insight": "제공된 기사는 Phu Tho 지역 관광 축제 관련 내용으로, 재생에너지 발전 인프라 사업과 직접적인 연관성 없음. 사업 진행상황 파악을 위해 별도의 신뢰할 수 있는 공식 출처 필요",
-      "stage_reason": "사업 관련 정보 부재로 판단 불가",
+      "milestone": "기사 내용이 재생에너지 사업과 무관",
+      "next_watch": "VN-PWR-PDP8-RENEWABLE 관련 공식 발표 추적",
+      "insight": "제공된 기사는 Phu Tho 관광·문화 행사에 관한 내용으로, 재생에너지 전력 개발사업(PDP8)과 무관한 뉴스입니다. 해당 사업의 진행단계 판단 불가능",
+      "stage_reason": "기사가 사업 마스터플랜과 전혀 관련 없음",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-27",
@@ -53,12 +53,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.2,
-      "milestone": "재정의 불가 - 재생에너지 사업 정보 부재",
-      "next_watch": "VN-PWR-PDP8-RENEWABLE 구체적 진행 현황 확인 필요",
-      "insight": "기사는 다낭의 경제 다각화 전략을 다루나, 해당 마스터플랜의 재생에너지 사업 구체적 진행상황 정보 없음",
-      "stage_reason": "마스터플랜 관련 정보 부재로 판단 불가",
+      "milestone": "기사 내용이 재정생에너지 사업과 무관",
+      "next_watch": "VN-PWR-PDP8-RENEWABLE 관련 직접 기사 모니터링",
+      "insight": "본 기사는 다낭의 관광·금융 중심 경제 정책 관련 내용으로, 신재생에너지 발전사업 진행상황과 직접적 연관성 없음",
+      "stage_reason": "재정생에너지 사업 관련 정보 부재",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-27",
@@ -82,7 +82,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -101,12 +101,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "기사와 VN-PWR-PDP8-RENEWABLE 사업 무관",
-      "next_watch": "베트남 재생에너지 사업 관련 공식 발표 모니터링",
-      "insight": "제공된 기사는 이란-미국 외교 분쟁으로 베트남 전력 인프라 사업과 무관. 사업 진행 현황 파악 불가.",
-      "stage_reason": "관련 사업 정보 부재로 단계 판단 불가",
+      "milestone": "사업 관련 정보 없음",
+      "next_watch": "VN-PWR-PDP8-RENEWABLE 사업 관련 기사 필요",
+      "insight": "제공된 기사는 이란-미국 정치 분쟁 관련 내용으로 베트남 인프라 사업과 무관함. 사업 진행 상황 판단 불가.",
+      "stage_reason": "기사와 사업 무관",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -130,7 +130,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.79)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -148,13 +148,13 @@
       "rule_stage": "UNKNOWN",
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
-      "confidence": 0.2,
-      "milestone": "기사 내용이 수산 박람회 개최로 VN-PWR-PDP8-RENEWABLE 사업과 무관",
-      "next_watch": "재생에너지 관련 공식 뉴스 확인 필요",
-      "insight": "제공된 기사는 수산업 박람회에 관한 내용으로 전력·재생에너지 사업과 직접 연관성 없음",
-      "stage_reason": "사업 관련 정보 부재로 단계 판단 불가",
+      "confidence": 0.0,
+      "milestone": "기사 내용이 수산 기술 박람회로 PDP8 재생에너지 사업과 무관",
+      "next_watch": "VN-PWR-PDP8-RENEWABLE 관련 공식 사업 진행현황 확인 필요",
+      "insight": "제공 기사가 베트남 수산업 박람회 개최 소식으로, 재생에너지 전력개발계획과 직접적 관련성 없음. 사업 진행단계 판단 불가.",
+      "stage_reason": "기사가 PDP8 재생에너지 사업과 무관함",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -178,7 +178,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -202,7 +202,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-27",
@@ -223,10 +223,10 @@
       "confidence": 0.0,
       "milestone": "기사 내용이 사업과 무관함",
       "next_watch": "VN-PWR-PDP8-LNG 관련 공식 발표 모니터링",
-      "insight": "제공된 기사는 Phu Tho 관광축제 관련 내용으로 LNG 전력 인프라 사업과 직접적 연관성 없음. 사업 진행 현황 파악 불가.",
-      "stage_reason": "기사가 사업 주제와 무관",
+      "insight": "본 기사는 Phu Tho 관광축제 관련 내용으로 LNG 발전소 사업과 직접적 연관성 없음. 사업 진행상황 판단 불가.",
+      "stage_reason": "사업 관련 정보 부재",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-27",
@@ -245,12 +245,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "관련 정보 없음",
-      "next_watch": "LNG 인프라 사업 관련 구체적 뉴스 추적 필요",
-      "insight": "기사는 다낭의 경제 다각화 전략을 다루고 있으나 VN-PWR-PDP8-LNG 사업과의 직접 연관성 없음",
-      "stage_reason": "제공 기사가 LNG 전력 인프라 사업과 무관",
+      "milestone": "제공된 기사에 LNG 인프라 사업 관련 정보 부재",
+      "next_watch": "VN-PWR-PDP8-LNG 사업의 구체적 진행상황 기사 필요",
+      "insight": "기사는 다낭의 관광·금융 허브 전환에 관한 일반적 경제 동향만 다루고 있으며 LNG 발전소 건설사업과 무관함",
+      "stage_reason": "마스터플랜과 기사 내용 불일치",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-27",
@@ -274,7 +274,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -293,12 +293,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "베트남 LNG 인프라 사업 정보 부재",
-      "next_watch": "VN-PWR-PDP8-LNG 사업 관련 기사 추적 필요",
-      "insight": "제공된 기사는 이란-미국 핵협상 관련 내용으로 베트남 LNG 전력사업과 무관함. 사업 진행상황 파악 불가",
-      "stage_reason": "기사가 사업과 무관한 지정학적 분쟁 내용",
+      "milestone": "사업 관련 정보 부재",
+      "next_watch": "베트남 LNG 사업 관련 뉴스 추적 필요",
+      "insight": "제공된 기사는 이란-미국 핵 협상 관련 내용으로 VN-PWR-PDP8-LNG 사업과 무관함. 사업 진행 상황 판단 불가.",
+      "stage_reason": "기사 내용이 사업과 무관",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -322,7 +322,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.79)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -341,12 +341,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "기사 내용이 수산 기술 박람회로 VN-PWR-PDP8-LNG 사업과 무관",
-      "next_watch": "LNG 발전소 관련 공식 발표 모니터링 필요",
-      "insight": "제공된 기사는 어업 분야 행사로 전력 인프라 사업과 직접 연계성 없음. LNG 발전 관련 진행 상황 별도 확인 필요",
-      "stage_reason": "사업 관련 정보 부재로 판단 불가",
+      "milestone": "기사가 수산 박람회 개최로 마스터플랜과 무관",
+      "next_watch": "VN-PWR-PDP8-LNG LNG 관련 공식 발표 모니터링",
+      "insight": "해당 기사는 어업 부문 박람회로 전력·에너지 인프라 사업과 관계 없음. 올바른 사업 정보 필요.",
+      "stage_reason": "제공 기사가 사업과 무관함",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -370,7 +370,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -394,7 +394,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-27",
@@ -413,12 +413,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "기사 내용이 사업과 무관",
-      "next_watch": "VN-PWR-PDP8-NUCLEAR 관련 공식 발표 모니터링",
-      "insight": "제공된 기사는 Phu Tho 지역 관광·문화 축제에 관한 내용으로, 원자력발전소 인프라 사업과 직접적 연관성이 없음",
-      "stage_reason": "기사 주제 불일치로 단계 판정 불가",
+      "milestone": "기사 내용이 핵심 사업과 무관함",
+      "next_watch": "VN-PWR-PDP8-NUCLEAR 관련 공식 발표 추적",
+      "insight": "제공된 기사는 문화관광 축제(흥왕사 유적지)에 관한 내용으로, 핵심 핵전력 발전 인프라 사업과 무관합니다. 사업 진행현황 판단 불가능.",
+      "stage_reason": "기사가 원자력발전소 사업과 무관",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-27",
@@ -437,12 +437,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "기사 내용이 핵심 인프라 사업과 무관",
-      "next_watch": "VN-PWR-PDP8-NUCLEAR 관련 공식 발표 모니터링",
-      "insight": "제공 기사는 다낭의 경제 다각화 및 관광·기술 산업 발전에 관한 내용으로, 원전 인프라 사업과의 직접적 연관성 없음",
-      "stage_reason": "마스터플랜 관련 정보 부재",
+      "milestone": "기사에 핵심 마일스톤 정보 없음",
+      "next_watch": "VN-PWR-PDP8-NUCLEAR 관련 구체적 진행 정보 필요",
+      "insight": "제공 기사는 다낭의 경제 다각화 전략에 관한 내용으로, 핵심 원자력 발전사업 마스터플랜과 직접 관련 정보 부재",
+      "stage_reason": "원자력 사업 관련 정보 없음",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-27",
@@ -466,7 +466,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -485,12 +485,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "기사 내용 부재",
-      "next_watch": "베트남 원전 사업 관련 공식 발표 모니터링",
-      "insight": "제공된 기사는 이란 핵 프로그램과 미국 외교 관련 내용으로, VN-PWR-PDP8-NUCLEAR 사업과 무관함. 베트남 원전 사업 진행 상황 파악 불가.",
-      "stage_reason": "관련 기사 부재로 판단 불가",
+      "milestone": "기사 내용이 베트남 핵전력 사업과 무관",
+      "next_watch": "VN-PWR-PDP8-NUCLEAR 관련 베트남 공식 발표 모니터링",
+      "insight": "제공 기사는 이란-미국 핵 협상 관련 정치 뉴스로, 베트남 원전 사업 진행상황 분석 불가능",
+      "stage_reason": "기사 주제가 사업과 무관함",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -514,7 +514,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.79)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -533,12 +533,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "해당 없음",
-      "next_watch": "핵심 기사 부재 - 원자력 사업 관련 정보 없음",
-      "insight": "제공 기사가 수산 기술 박람회 관련 내용으로, VN-PWR-PDP8-NUCLEAR 원자력 사업과 무관함",
-      "stage_reason": "사업 관련 기사 없음",
+      "milestone": "기사 내용이 핵심 인프라 사업과 무관",
+      "next_watch": "VN-PWR-PDP8-NUCLEAR 관련 공식 발표 모니터링",
+      "insight": "제공된 기사는 수산 기술 박람회로 원자력 발전소 건설과 관련 없음. 사업 진행 현황 파악 불가.",
+      "stage_reason": "기사가 다른 분야(수산업) 관련 내용",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -562,7 +562,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -586,7 +586,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:00"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -605,12 +605,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "기사 내용 부재로 판단 불가",
-      "next_watch": "VN-OG-2030 사업 관련 실제 기사 제공 필요",
-      "insight": "제공된 기사는 UAE의 OPEC 탈퇴 관련 일반 뉴스로, VN-OG-2030 마스터플랜과의 직접적 연관성 확인 불가. 베트남 인프라 사업 진행상황 분석 불가능.",
-      "stage_reason": "VN-OG-2030 사업 관련 정보 없음",
+      "milestone": "기사 내용 부족 - 사업 진행상황 파악 불가",
+      "next_watch": "VN-OG-2030 마스터플랜 관련 구체적 기사 필요",
+      "insight": "제공된 기사는 UAE의 OPEC 탈퇴 관련 글로벌 석유산업 뉴스로, 베트남 인프라 사업과 직접 연관 없음",
+      "stage_reason": "베트남 사업 정보 부재",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -634,7 +634,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
+    },
+    {
+      "date": "2026-05-04",
+      "province": "",
+      "sector": "Waste Water",
+      "title_ko": "폐수에 의해 \"질식\" 된 나트랑: 만 오염이 기준치를 초과하여 불법 배출 처리를 강화합니다.",
+      "title_en": "Nha Trang \"suffocated\" by wastewater: Bay pollution exceeds threshold, tightening illegal discharge treatment",
+      "summary_ko": "바다로 직접 배출되는 국내, 도시 및 양식 폐수의 상황은 나트랑 베이를 심각하게 오염시키고, 많은 지표가 표준을 훨씬 초과합니다. Bac Nha Trang 와드의 인민위원회는 수년 동안 지속된 상황에 직면하여 위반 사항을 조사, 처리하고 인프라 솔루션을 홍보하기 위한 계획을 발표했습니다.",
+      "summary_en": "The situation of domestic, urban and aquaculture wastewater discharged directly into the sea makes Nha Trang Bay seriously polluted, many indicators far exceed the norm. Facing the situation that has lasted for many years, the People's Committee of Bac Nha Trang ward has issued a plan to inspect, handle violations and promote infrastructure solutions in order to",
+      "source": "Moi truong & Cuoc song",
+      "url": "https://moitruong.net.vn/nha-trang-ngop-tho-vi-nuoc-thai-o-nhiem-vinh-vuot-nguong-siet-xu-ly-xa-thai-trai-phep-99255.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "",
+      "plan_id": "VN-WW-2030",
+      "rule_stage": "PLANNING",
+      "rule_conf": 0.998,
+      "stage": "PLANNING",
+      "confidence": 0.998,
+      "milestone": "정책·법령 발표",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "None",
@@ -658,7 +682,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-30",
@@ -682,7 +706,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-30",
@@ -706,7 +730,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-27",
@@ -730,7 +754,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-05-02",
@@ -747,14 +771,14 @@
       "plan_id": "VN-IP-NORTH-2030",
       "rule_stage": "TENDERING",
       "rule_conf": 1.0,
-      "stage": "TENDERING",
+      "stage": "PLANNING",
       "confidence": 0.75,
-      "milestone": "FDI 투자자 유치 진행 중",
-      "next_watch": "녹색산업단지 인프라 구축 계약체결 및 투자 협약 모니터링",
-      "insight": "친환경 생산 수요 증가로 산업단지 재구성 진행 중. FDI 투자자 유치 단계로 향후 실제 건설 계약 체결 및 투자금 확정이 중요.",
-      "stage_reason": "투자자 유치 단계, 구체적 계약·시공 이전 단계",
+      "milestone": "녹색산업단지 인프라 재구성 계획 수립",
+      "next_watch": "환경 인증 및 인프라 설계 기준 확정",
+      "insight": "FDI 투자자 유치 전단계로 친환경 산업단지 기준 마련 중. 제조기업 변화 요구에 대응하는 인프라 재구성이 핵심.",
+      "stage_reason": "계획·설계 단계, 구체적 투자계약 미언급",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -778,7 +802,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.94)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -802,7 +826,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -826,7 +850,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.86)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-05-03",
@@ -850,7 +874,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.79)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "None",
@@ -874,7 +898,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-27",
@@ -898,7 +922,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-27",
@@ -922,7 +946,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.79)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -942,11 +966,11 @@
       "stage": "UNKNOWN",
       "confidence": 0.0,
       "milestone": "사업 정보 부재",
-      "next_watch": "마스터플랜 기본정보 및 관련 기사 재확인 필요",
-      "insight": "제공된 기사에 VN-TRAN-2055 사업에 대한 구체적 내용이 없어 진행단계 판단 불가. 마스터플랜 개요 정보 부족으로 분석 불가능.",
-      "stage_reason": "기사 내용 부족으로 판단 근거 없음",
+      "next_watch": "마스터플랜 상세정보 및 구체적 사업 뉴스 필요",
+      "insight": "제공된 기사에 VN-TRAN-2055 사업과 관련된 구체적 내용이 없어 진행단계 판단 불가능. 추가 정보 필요.",
+      "stage_reason": "기사에 사업 관련 정보 없음",
       "haiku_used": true,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-28",
@@ -970,7 +994,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.66)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-29",
@@ -994,7 +1018,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-29",
@@ -1018,7 +1042,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-29",
@@ -1042,7 +1066,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.81)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     },
     {
       "date": "2026-04-29",
@@ -1066,7 +1090,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-04 06:01"
+      "analyzed_at": "2026-05-04 12:28"
     }
   ]
 }
