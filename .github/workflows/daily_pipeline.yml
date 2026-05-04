@@ -98,7 +98,12 @@ jobs:
           EMAIL_USERNAME:   ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
         continue-on-error: true
-
+      # main.py 실행 바로 앞에 추가
+      - name: Diagnose API Key
+        run: python3 scripts/diagnose_api_key.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    
       # ── Step 7: 메인 파이프라인 ──────────────────────────────────
       # 실행 순서 절대 변경 금지:
       #   Step1: collect_news(hours_back)    ← SA-1 뉴스 수집
