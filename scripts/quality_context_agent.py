@@ -1,18 +1,47 @@
 """
-quality_context_agent.py — v3.1 (2026-04-26 수정)
+quality_context_agent.py — v3.2 (2026-05-04 수정)
 ====================================================
 SA-6: 품질검증 + 정책매핑 에이전트
 
-수정 내역 (v3.0 → v3.1):
+═══════════════════════════════════════════════════
+[역할 재정의 — v3.2 핵심]
+  SA-6가 담당하는 것:
+    ✅ News Database의 Plan_ID / Grade 컬럼 값 업데이트
+    ✅ quality_report.json 생성
+    ✅ Haiku 맥락 보완 (API키 있을 때)
+
+  SA-6가 절대 하지 않는 것:
+    ❌ Matched_Plan 시트 재작성/삭제/초기화
+       → Matched_Plan은 ExcelUpdater 전용 (append 방식)
+       → SA-6가 덮어쓰면 기존 250건+ 수동 큐레이션 자료 소멸
+
+[v3.2 수정 내역]
+  ★ BUG FIX: run_matching() 내 Matched_Plan 재작성 블록 완전 제거
+    - 제거된 코드:
+        if 'Matched_Plan' not in wb2.sheetnames:
+            ws_mp = wb2.create_sheet('Matched_Plan')
+            ...
+        else:
+            ws_mp = wb2['Matched_Plan']
+            for r in range(ws_mp.max_row, 1, -1):   ← 기존 데이터 전체 삭제!
+                ws_mp.delete_rows(r)
+        for row_num, pid, grade, score in matched_rows:
+            ws_mp.append([...])                      ← 75건으로 덮어씀
+    - 이 코드가 매 실행마다 Matched_Plan을 초기화하여
+      기존 250건+ 수동 큐레이션 자료를 소멸시키는 버그였음
+
+  ★ 유지된 기능:
+    - News Database Plan_ID·Grade 컬럼 업데이트 (정상 동작)
+    - quality_report.json 생성
+    - Haiku 방법 A (키워드 미매핑 기사 맥락 분류)
+    - Haiku 방법 B (Jina 본문 취득 + 요약 보강)
+
+[v3.1 수정 내역]
   [BUG FIX] run_matching() col() 함수 — title_en 후보 목록 보완
     - v3.0: col(['title', 'news_title', 'title_en'])
               → excel_updater.py v3.0의 헤더 'Title (En/Vi)' 미매칭
     - v3.1: col(['title_(en/vi)', 'title', 'news_title', 'title_en']) 추가
-              → 'title_(en/vi)' 후보 추가로 v3.0 헤더 정상 매칭
-
-  변경된 코드: 1줄 (run_matching() 함수 내 C 딕셔너리 title_en 항목)
-
-  ※ 나머지 전체 코드는 GitHub 원본 v3.0과 완전 동일
+═══════════════════════════════════════════════════
 """
 
 import json
@@ -47,26 +76,25 @@ KI_PATHS = [
 ]
 
 
-# ── Anthropic / Jina 설정 (방법 A + B) ────────────────────────────────────
+# ── Anthropic / Jina 설정 ──────────────────────────────────────────────────
 # 영구 제약: Haiku 모델 고정, 번역에는 절대 사용 금지
 ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages'
 HAIKU_MODEL       = 'claude-haiku-4-5-20251001'
 HAIKU_TIMEOUT     = 30
-JINA_BASE         = 'https://r.jina.ai/'   # API키 불필요
+JINA_BASE         = 'https://r.jina.ai/'
 
 # Haiku 처리 한도 (일 크레딧 절약)
-HAIKU_CLASSIFY_LIMIT = 50   # 맥락분류 최대 50건/일
-HAIKU_ENRICH_LIMIT   = 20   # 요약보강 최대 20건/일
+HAIKU_CLASSIFY_LIMIT = 50
+HAIKU_ENRICH_LIMIT   = 20
 
 # ── 설정 ───────────────────────────────────────────────────────────────────
-RECENT_DAYS = 90        # 최근 N일 기사만 정책 매칭 대상
-MIN_SCORE   = 35        # 매핑 최소 점수 (0~100)
-GRADE_HIGH  = 65        # HIGH 기준 점수
-GRADE_MED   = 45        # MEDIUM 기준 점수
+RECENT_DAYS = 90
+MIN_SCORE   = 35
+GRADE_HIGH  = 65
+GRADE_MED   = 45
 
 # ── Province 정규화 ────────────────────────────────────────────────────────
 PROVINCE_MAP = {
-    # 영어 → 표준 영어
     'ho chi minh':   'Ho Chi Minh City',
     'hcmc':          'Ho Chi Minh City',
     'saigon':        'Ho Chi Minh City',
@@ -114,10 +142,6 @@ def load_ki() -> dict:
 # 2. 정책 키워드 딕셔너리 빌드
 # ══════════════════════════════════════════════════════════════════════════
 def build_keyword_dict(plans: dict) -> list[dict]:
-    """
-    각 플랜의 keywords_en + keywords_vi + keywords(통합) 를 모아
-    [{plan_id, keywords_en, keywords_vi, sector, area, score_base}] 반환
-    """
     result = []
     for pid, p in plans.items():
         kw_en = p.get('keywords_en', p.get('keywords', []))
@@ -141,41 +165,29 @@ def build_keyword_dict(plans: dict) -> list[dict]:
 # ══════════════════════════════════════════════════════════════════════════
 def score_article(title_en: str, title_ko: str, summary_en: str, summary_ko: str,
                   plan: dict) -> float:
-    """
-    기사 텍스트와 플랜 키워드를 비교해 0~100 점수 반환.
-    - 제목 매칭: 키워드당 25점
-    - 요약 매칭: 키워드당 10점
-    - 최대 100점 cap
-    핵심 수정: title_en + summary_en 를 영어 키워드와 비교
-              title_ko + summary_ko 를 베트남/한국어 키워드와 비교
-    """
     score = 0.0
-    # 검색 대상 텍스트 (소문자)
-    en_text  = (title_en  + ' ' + summary_en).lower()
-    ko_text  = (title_ko  + ' ' + summary_ko).lower()
+    en_text = (title_en  + ' ' + summary_en).lower()
+    ko_text = (title_ko  + ' ' + summary_ko).lower()
 
     for kw in plan['keywords_en']:
         if kw in en_text:
-            # 제목에 있으면 25점, 요약에만 있으면 10점
-            if kw in title_en.lower():
-                score += 25
-            else:
-                score += 10
+            score += 25 if kw in title_en.lower() else 10
 
     for kw in plan['keywords_vi']:
-        if kw in ko_text:  # title_ko에 베트남어 단어 포함 가능
-            if kw in title_ko.lower():
-                score += 20
-            else:
-                score += 8
+        if kw in ko_text:
+            score += 20 if kw in title_ko.lower() else 8
 
     return min(score, 100.0)
 
 
 # ══════════════════════════════════════════════════════════════════════════
-# 4. Excel 로드 + 매칭 실행 + 결과 기록
+# 4. Excel 로드 + 매칭 실행 + News DB Grade/Plan_ID 업데이트
 # ══════════════════════════════════════════════════════════════════════════
 def run_matching(plans: dict, keyword_dict: list) -> dict:
+    """
+    ★ v3.2 핵심: News Database의 Grade·Plan_ID 컬럼만 업데이트.
+                 Matched_Plan 시트는 절대 건드리지 않음.
+    """
     if not EXCEL_PATH.exists():
         log.error(f"Excel DB 없음: {EXCEL_PATH}")
         return {'error': 'excel_not_found'}
@@ -190,7 +202,7 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
 
     ws = wb['News Database']
 
-    # ── 헤더 기반 컬럼 인덱스 찾기 ────────────────────────────────────────
+    # ── 헤더 기반 컬럼 인덱스 ────────────────────────────────────────────
     headers = {}
     for cell in ws[1]:
         if cell.value:
@@ -199,7 +211,6 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
 
     log.info(f"Excel 헤더: {list(headers.keys())}")
 
-    # 컬럼 인덱스 (없으면 -1)
     def col(names):
         for n in names:
             if n in headers:
@@ -208,7 +219,6 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
 
     C = {
         'date':       col(['date']),
-        # ★ v3.1 수정: 'title_(en/vi)' 후보 추가 (excel_updater v3.0 헤더 대응)
         'title_en':   col(['title_(en/vi)', 'title', 'news_title', 'title_en']),
         'title_ko':   col(['tit_ko', 'title_ko']),
         'summary_en': col(['short_summary', 'summary_en', 'sum_en']),
@@ -223,12 +233,11 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
     cutoff = (datetime.now() - timedelta(days=RECENT_DAYS)).strftime('%Y-%m-%d')
 
     stats = {
-        'total': 0, 'matched': 0, 'high': 0, 'medium': 0, 'low_skip': 0,
+        'total': 0, 'matched': 0, 'high': 0, 'medium': 0,
         'province_fixed': 0, 'skipped_old': 0,
         'plan_counts': {},
     }
 
-    # ── 행별 처리 ─────────────────────────────────────────────────────────
     matched_rows = []  # (row_num, plan_id, grade, score)
 
     for row_num, row in enumerate(ws.iter_rows(min_row=2, values_only=True), 2):
@@ -247,7 +256,6 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
         summary_ko  = rv(C['summary_ko'])
         province    = rv(C['province'])
 
-        # 오래된 기사 스킵
         if date_val and date_val < cutoff:
             stats['skipped_old'] += 1
             continue
@@ -255,7 +263,6 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
         if not title_en and not title_ko:
             continue
 
-        # 최고 점수 플랜 찾기
         best_plan  = None
         best_score = 0.0
         for plan in keyword_dict:
@@ -266,14 +273,14 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
 
         if best_plan:
             pid   = best_plan['plan_id']
-            grade = 'HIGH' if best_score >= GRADE_HIGH else ('MEDIUM' if best_score >= GRADE_MED else 'LOW')
+            grade = ('HIGH'   if best_score >= GRADE_HIGH else
+                     'MEDIUM' if best_score >= GRADE_MED  else 'LOW')
             stats['matched'] += 1
             stats['plan_counts'][pid] = stats['plan_counts'].get(pid, 0) + 1
-            if grade == 'HIGH':   stats['high']   += 1
+            if grade == 'HIGH':     stats['high']   += 1
             elif grade == 'MEDIUM': stats['medium'] += 1
             matched_rows.append((row_num, pid, grade, best_score))
 
-        # Province 정규화
         normed = normalize_province(province)
         if normed != province:
             stats['province_fixed'] += 1
@@ -284,20 +291,20 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
     log.info(f"  오래된 기사 스킵: {stats['skipped_old']}건")
     log.info(f"  Province 정규화: {stats['province_fixed']}건")
 
-    # ── Excel Plan_ID·Grade 컬럼 업데이트 ────────────────────────────────
+    # ── ★ v3.2: News Database Grade·Plan_ID 컬럼만 업데이트 ──────────────
+    # ★ Matched_Plan 시트는 건드리지 않음 — ExcelUpdater 전용
     wb2 = openpyxl.load_workbook(EXCEL_PATH, data_only=False)
     ws2 = wb2['News Database']
 
-    # plan_id, grade 컬럼 확인 (없으면 추가)
     hdr_row = list(ws2[1])
-    existing_headers = {str(c.value or '').strip().lower(): c.column for c in hdr_row if c.value}
+    existing_headers = {str(c.value or '').strip().lower(): c.column
+                        for c in hdr_row if c.value}
 
     def ensure_col(col_name, after_col=8):
         lower = col_name.lower()
         for h, c in existing_headers.items():
             if lower in h:
                 return c
-        # 없으면 마지막 컬럼 뒤에 추가
         max_col = max(existing_headers.values()) if existing_headers else after_col
         new_col = max_col + 1
         ws2.cell(row=1, column=new_col, value=col_name)
@@ -307,33 +314,24 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
     plan_col  = ensure_col('Plan_ID')
     grade_col = ensure_col('Grade')
 
+    # News DB Plan_ID·Grade 컬럼만 기록 (기존값이 없는 행만 업데이트)
+    updated_count = 0
     for row_num, pid, grade, score in matched_rows:
-        ws2.cell(row=row_num, column=plan_col,  value=pid)
-        ws2.cell(row=row_num, column=grade_col, value=grade)
-
-    # Matched_Plan 시트 업데이트
-    if 'Matched_Plan' not in wb2.sheetnames:
-        ws_mp = wb2.create_sheet('Matched_Plan')
-        ws_mp.append(['Plan_ID', 'Date', 'Title_EN', 'Title_KO', 'Grade', 'Score', 'Source'])
-    else:
-        ws_mp = wb2['Matched_Plan']
-        # 헤더만 남기고 초기화
-        for r in range(ws_mp.max_row, 1, -1):
-            ws_mp.delete_rows(r)
-
-    # 매칭된 기사 Matched_Plan 시트에 기록
-    for row_num, pid, grade, score in matched_rows:
-        orig_row = list(ws.iter_rows(min_row=row_num, max_row=row_num, values_only=True))[0]
-        date_v  = str(orig_row[C['date']] if C['date'] >= 0 else '')[:10]
-        t_en    = str(orig_row[C['title_en']] if C['title_en'] >= 0 else '')
-        t_ko    = str(orig_row[C['title_ko']] if C['title_ko'] >= 0 else '')
-        src     = str(orig_row[C['source']]   if C['source']   >= 0 else '')
-        ws_mp.append([pid, date_v, t_en, t_ko, grade, round(score, 1), src])
+        existing_pid   = str(ws2.cell(row=row_num, column=plan_col).value  or '').strip()
+        existing_grade = str(ws2.cell(row=row_num, column=grade_col).value or '').strip()
+        # 기존에 값이 없는 경우만 업데이트 (수동 입력값 보호)
+        if not existing_pid:
+            ws2.cell(row=row_num, column=plan_col,  value=pid)
+            updated_count += 1
+        if not existing_grade:
+            ws2.cell(row=row_num, column=grade_col, value=grade)
 
     wb.close()
     wb2.save(EXCEL_PATH)
     wb2.close()
-    log.info(f"Excel 업데이트 완료: Plan_ID/Grade 컬럼 기록 + Matched_Plan 시트 {len(matched_rows)}건")
+
+    log.info(f"Excel 업데이트 완료: News DB Plan_ID/Grade {updated_count}건 기록")
+    log.info(f"  ★ Matched_Plan 시트: 변경 없음 (ExcelUpdater 전용)")
 
     return stats
 
@@ -364,11 +362,10 @@ def save_report(stats: dict):
 
 
 # ══════════════════════════════════════════════════════════════════════════
-# [v3.0 방법 A] Haiku 맥락 판단 — 키워드 미매핑 기사 보완
+# [v3.0] Haiku 맥락 판단 — 키워드 미매핑 기사 보완 (원본 유지)
 # ══════════════════════════════════════════════════════════════════════════
 
 def _call_haiku(system_prompt: str, user_prompt: str, api_key: str) -> str:
-    """Haiku API 단일 호출. 실패 시 빈 문자열 반환."""
     import requests as req
     headers = {
         'Content-Type':      'application/json',
@@ -394,19 +391,11 @@ def _call_haiku(system_prompt: str, user_prompt: str, api_key: str) -> str:
 
 
 def haiku_classify_article(article: dict, plans: dict, api_key: str) -> dict | None:
-    """
-    [방법 A] 키워드 매핑 실패 기사를 Haiku가 맥락으로 재판단.
-
-    입력: 기사 딕셔너리 + 21개 마스터플랜 ID 요약
-    출력: {'plan_id': 'VN-PWR-PDP8', 'grade': 'HIGH', 'reason': '...'}
-          실패/무관 시 None
-    """
     title_en  = article.get('title_en', '')
     title_ko  = article.get('title_ko', '')
     summ_en   = article.get('summary_en', '')[:300]
     summ_ko   = article.get('summary_ko', '')[:200]
 
-    # 21개 플랜 요약 (ID + 섹터 + 핵심 키워드 3개)
     plan_list = []
     for pid, plan in list(plans.items())[:21]:
         kw = (plan.get('keywords_en', []) or plan.get('keywords', []))[:3]
@@ -447,30 +436,18 @@ def haiku_classify_article(article: dict, plans: dict, api_key: str) -> dict | N
 
 
 def fetch_jina_text(url: str) -> str:
-    """
-    [방법 B] Jina.ai Reader API로 기사 본문 취득. API키 불필요.
-    반환: 마크다운 텍스트 (실패 시 빈 문자열)
-    """
     import requests as req
     jina_url = JINA_BASE + url.strip()
     try:
-        r = req.get(jina_url, headers={'User-Agent': 'Mozilla/5.0'},
-                    timeout=15)
+        r = req.get(jina_url, headers={'User-Agent': 'Mozilla/5.0'}, timeout=15)
         if r.status_code == 200:
-            return r.text[:3000]  # 최대 3000자
+            return r.text[:3000]
     except Exception as e:
         log.debug(f"  Jina 오류: {e}")
     return ''
 
 
 def enrich_with_jina(article: dict, plans: dict, api_key: str) -> dict | None:
-    """
-    [방법 B] Jina.ai 본문 읽기 + Haiku 재요약 + plan_id 재판단.
-
-    입력: 기사 딕셔너리
-    출력: {'summary_ko': '...200자', 'plan_id': '...', 'grade': '...'}
-          실패 시 None
-    """
     url = article.get('url', '')
     if not url or not url.startswith('http'):
         return None
@@ -521,6 +498,7 @@ def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
       - 이 함수는 절대 제거하지 않음
       - 키워드 매핑과 상호 보완 관계 (대체 아님)
       - API키 없으면 조용히 건너뜀
+      - ★ v3.2: News DB Plan_ID/Grade 컬럼만 업데이트 (Matched_Plan 불가촉)
     """
     if not api_key:
         log.info("[v3.0] ANTHROPIC_API_KEY 없음 — Haiku 보완 건너뜀 (API 키 설정 후 활성화)")
@@ -559,9 +537,8 @@ def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
 
     cutoff = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
 
-    # 대상 기사 수집
-    candidates_a = []  # 방법 A: 미매핑 기사
-    candidates_b = []  # 방법 B: 요약 짧은 기사
+    candidates_a = []
+    candidates_b = []
 
     for i, row in enumerate(ws.iter_rows(min_row=2, values_only=True), 2):
         date_v = str(row[C['date']] if C['date'] is not None else '').strip()[:10]
@@ -583,11 +560,9 @@ def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
             'summary_ko': summ_ko, 'url': url_v,
         }
 
-        # 방법 A 대상: plan_id 없는 기사
         if not plan_v and len(candidates_a) < HAIKU_CLASSIFY_LIMIT:
             candidates_a.append(art)
 
-        # 방법 B 대상: 요약이 짧은 HIGH/MEDIUM 기사
         if (len(summ_ko) < 50 and grade_v in ('HIGH', 'MEDIUM')
                 and url_v.startswith('http')
                 and len(candidates_b) < HAIKU_ENRICH_LIMIT):
@@ -595,7 +570,7 @@ def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
 
     wb.close()
 
-    # 방법 A 실행
+    # 방법 A
     classified = 0
     updates_a = []
     log.info(f"  [방법 A] 맥락분류 대상: {len(candidates_a)}건")
@@ -604,9 +579,9 @@ def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
         if result:
             updates_a.append((art['row'], result['plan_id'], result['grade']))
             classified += 1
-        time.sleep(0.2)  # Rate limit 방지
+        time.sleep(0.2)
 
-    # 방법 B 실행
+    # 방법 B
     enriched = 0
     updates_b = []
     log.info(f"  [방법 B] 요약보강 대상: {len(candidates_b)}건")
@@ -617,7 +592,7 @@ def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
             enriched += 1
         time.sleep(0.3)
 
-    # Excel 업데이트 (방법 A + B 결과 반영)
+    # ★ v3.2: News DB Plan_ID/Grade 컬럼만 업데이트 (Matched_Plan 불가촉)
     if updates_a or updates_b:
         wb2 = openpyxl.load_workbook(EXCEL_PATH)
         ws2 = wb2['News Database']
@@ -626,24 +601,31 @@ def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
                     for c in next(ws2.iter_rows(min_row=1, max_row=1))]
         plan_col  = next((i+1 for i, h in enumerate(headers2) if 'plan_id' in h), None)
         grade_col = next((i+1 for i, h in enumerate(headers2) if 'grade' in h), None)
-        sumko_col = next((i+1 for i, h in enumerate(headers2) if 'sum_ko' in h or 'summary_ko' in h), None)
+        sumko_col = next((i+1 for i, h in enumerate(headers2)
+                          if 'sum_ko' in h or 'summary_ko' in h), None)
 
         for row_num, pid, grade in updates_a:
             if plan_col:
-                ws2.cell(row=row_num, column=plan_col,  value=pid)
+                # 기존값 없는 경우만 업데이트 (수동 입력값 보호)
+                if not str(ws2.cell(row=row_num, column=plan_col).value or '').strip():
+                    ws2.cell(row=row_num, column=plan_col,  value=pid)
             if grade_col:
-                ws2.cell(row=row_num, column=grade_col, value=grade)
+                if not str(ws2.cell(row=row_num, column=grade_col).value or '').strip():
+                    ws2.cell(row=row_num, column=grade_col, value=grade)
 
         for row_num, result in updates_b:
             if sumko_col and result.get('summary_ko'):
                 ws2.cell(row=row_num, column=sumko_col, value=result['summary_ko'])
             if plan_col and result.get('plan_id') and result['plan_id'] in plans:
-                ws2.cell(row=row_num, column=plan_col, value=result['plan_id'])
+                if not str(ws2.cell(row=row_num, column=plan_col).value or '').strip():
+                    ws2.cell(row=row_num, column=plan_col, value=result['plan_id'])
             if grade_col and result.get('grade'):
-                ws2.cell(row=row_num, column=grade_col, value=result['grade'])
+                if not str(ws2.cell(row=row_num, column=grade_col).value or '').strip():
+                    ws2.cell(row=row_num, column=grade_col, value=result['grade'])
 
         wb2.save(EXCEL_PATH)
         wb2.close()
+        log.info(f"  ★ Matched_Plan 시트: 변경 없음 (ExcelUpdater 전용)")
 
     log.info(f"  [방법 A] Haiku 분류: {classified}건 추가 매핑")
     log.info(f"  [방법 B] Jina 보강: {enriched}건 요약 갱신")
@@ -655,10 +637,10 @@ def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
 # ══════════════════════════════════════════════════════════════════════════
 def main():
     log.info("=" * 58)
-    log.info(f"quality_context_agent v3.1 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    log.info(f"quality_context_agent v3.2 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     log.info("=" * 58)
 
-    plans       = load_ki()
+    plans        = load_ki()
     if not plans:
         log.error("플랜 데이터 없음 — 종료")
         return
@@ -667,12 +649,11 @@ def main():
     stats        = run_matching(plans, keyword_dict)
     save_report(stats)
 
-    # ★ [v3.0] 방법 A + B: Haiku 맥락 보완 (API키 있을 때만)
     api_key = os.getenv('ANTHROPIC_API_KEY', '').strip()
     haiku_stats = run_haiku_enhancement(plans, api_key)
 
     log.info("━" * 58)
-    log.info(f"SA-6 v3.1 완료: {stats.get('matched', 0)}건 키워드매핑 / {stats.get('total', 0)}건 전체")
+    log.info(f"SA-6 v3.2 완료: {stats.get('matched', 0)}건 키워드매핑 / {stats.get('total', 0)}건 전체")
     log.info(f"  키워드 매핑률: {round(stats.get('matched',0)/max(stats.get('total',1),1)*100,1)}%")
     log.info(f"  Haiku 추가분류: {haiku_stats['haiku_classified']}건")
     log.info(f"  Jina 요약보강: {haiku_stats['jina_enriched']}건")
