@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-04 02:12",
+  "generated_at": "2026-05-04 06:02",
   "generated_date": "2026-05-04",
   "stats": {
     "total_articles": 1017,
@@ -35,61 +35,6 @@
     }
   ],
   "plans": {
-    "VN-SWM-NATIONAL-2030": {
-      "plan_id": "VN-SWM-NATIONAL-2030",
-      "stage": "PLANNING",
-      "stage_label": {
-        "ko": "계획·승인",
-        "en": "Planning",
-        "vi": "Lập kế hoạch"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
-      "description_ko": "",
-      "decision": "Decision 491/QĐ-TTg (2018)",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "milestone": "정책·법령 발표",
-      "timeline": [
-        {
-          "date": "2026-04-27",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song"
-        }
-      ]
-    },
-    "VN-MEKONG-DELTA-2030": {
-      "plan_id": "VN-MEKONG-DELTA-2030",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "메콩 델타 인프라 개발 계획 2030",
-      "description_ko": "",
-      "decision": "Resolution 13-NQ/TW (2022)",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
     "VN-TRAN-2055": {
       "plan_id": "VN-TRAN-2055",
       "stage": "TENDERING",
@@ -133,255 +78,17 @@
         },
         {
           "date": "2026-04-28",
+          "stage": "UNKNOWN",
+          "milestone_ko": "사업 정보 부재",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-28",
           "stage": "TENDERING",
           "milestone_ko": "입찰·계약 진행",
           "source": "vietnamplus"
         }
       ]
-    },
-    "VN-PWR-PDP8-NUCLEAR": {
-      "plan_id": "VN-PWR-PDP8-NUCLEAR",
-      "stage": "CONSTRUCTION",
-      "stage_label": {
-        "ko": "건설·시공",
-        "en": "Construction",
-        "vi": "Xây dựng"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "PDP8 원전 재개",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "milestone": "착공·건설 진행 중",
-      "timeline": [
-        {
-          "date": "2026-04-28",
-          "stage": "TENDERING",
-          "milestone_ko": "입찰·계약 진행",
-          "source": "vietnamplus"
-        },
-        {
-          "date": "2026-04-28",
-          "stage": "CONSTRUCTION",
-          "milestone_ko": "착공·건설 진행 중",
-          "source": "vietnamplus"
-        },
-        {
-          "date": "2026-04-28",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "vietnamplus"
-        }
-      ]
-    },
-    "VN-PWR-PDP8-RENEWABLE": {
-      "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "stage": "CONSTRUCTION",
-      "stage_label": {
-        "ko": "건설·시공",
-        "en": "Construction",
-        "vi": "Xây dựng"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "milestone": "착공·건설 진행 중",
-      "timeline": [
-        {
-          "date": "2026-04-28",
-          "stage": "TENDERING",
-          "milestone_ko": "입찰·계약 진행",
-          "source": "vietnamplus"
-        },
-        {
-          "date": "2026-04-28",
-          "stage": "CONSTRUCTION",
-          "milestone_ko": "착공·건설 진행 중",
-          "source": "vietnamplus"
-        },
-        {
-          "date": "2026-04-28",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "vietnamplus"
-        }
-      ]
-    },
-    "VN-WW-2030": {
-      "plan_id": "VN-WW-2030",
-      "stage": "PLANNING",
-      "stage_label": {
-        "ko": "계획·승인",
-        "en": "Planning",
-        "vi": "Lập kế hoạch"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "베트남 국가 하수처리 프로그램 2030",
-      "description_ko": "",
-      "decision": "Decision 1085/QĐ-TTg (2016) + QCVN 14:2008",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "milestone": "정책·법령 발표",
-      "timeline": [
-        {
-          "date": "None",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "Unknown"
-        }
-      ]
-    },
-    "VN-WAT-RESOURCES": {
-      "plan_id": "VN-WAT-RESOURCES",
-      "stage": "PLANNING",
-      "stage_label": {
-        "ko": "계획·승인",
-        "en": "Planning",
-        "vi": "Lập kế hoạch"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "베트남 수자원 개발 전략 2030",
-      "description_ko": "",
-      "decision": "Decision 1622/QĐ-TTg (2017)",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "milestone": "정책·법령 발표",
-      "timeline": [
-        {
-          "date": "2026-04-30",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song"
-        }
-      ]
-    },
-    "VN-PWR-PDP8-GRID": {
-      "plan_id": "VN-PWR-PDP8-GRID",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "PDP8 송배전망 확충",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "HN-URBAN-WEST": {
-      "plan_id": "HN-URBAN-WEST",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "하노이 서부 도시개발 (화락 첨단기술단지)",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-PWR-PDP8-HYDROGEN": {
-      "plan_id": "VN-PWR-PDP8-HYDROGEN",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "PDP8 그린수소",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-URB-METRO-2030": {
-      "plan_id": "VN-URB-METRO-2030",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "베트남 도시철도(메트로) 개발 계획",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
     },
     "VN-EV-2030": {
       "plan_id": "VN-EV-2030",
@@ -394,140 +101,6 @@
       "confidence": 0.0,
       "haiku_used": false,
       "title_ko": "베트남 전기차·친환경 교통 전략 2030",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-OG-2030": {
-      "plan_id": "VN-OG-2030",
-      "stage": "CONSTRUCTION",
-      "stage_label": {
-        "ko": "건설·시공",
-        "en": "Construction",
-        "vi": "Xây dựng"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "베트남 석유가스 분야 전략 2030",
-      "description_ko": "",
-      "decision": "Decision 893/QĐ-TTg (2023)",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "milestone": "착공·건설 진행 중",
-      "timeline": [
-        {
-          "date": "2026-04-28",
-          "stage": "CONSTRUCTION",
-          "milestone_ko": "착공·건설 진행 중",
-          "source": "Nikkei Asia"
-        }
-      ]
-    },
-    "VN-SC-2030": {
-      "plan_id": "VN-SC-2030",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "베트남 스마트시티 개발 프로그램 2030",
-      "description_ko": "",
-      "decision": "Decision 950/QĐ-TTg (2018)",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-WAT-URBAN": {
-      "plan_id": "VN-WAT-URBAN",
-      "stage": "PLANNING",
-      "stage_label": {
-        "ko": "계획·승인",
-        "en": "Planning",
-        "vi": "Lập kế hoạch"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "도시 배수·침수 방지 마스터플랜",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "milestone": "정책·법령 발표",
-      "timeline": [
-        {
-          "date": "2026-04-30",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song"
-        }
-      ]
-    },
-    "HN-URBAN-NORTH": {
-      "plan_id": "HN-URBAN-NORTH",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "하노이 북부 도시개발 (동아인, 메린)",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "HN-URBAN-INFRA": {
-      "plan_id": "HN-URBAN-INFRA",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "하노이 도시 인프라 개발 계획 2030",
       "description_ko": "",
       "decision": "",
       "sector": "",
@@ -577,6 +150,12 @@
           "source": "nhandan_vn"
         },
         {
+          "date": "2026-05-02",
+          "stage": "TENDERING",
+          "milestone_ko": "FDI 투자자 유치 진행 중",
+          "source": "sggp_org_vn"
+        },
+        {
           "date": "2026-04-28",
           "stage": "OPERATION",
           "milestone_ko": "운영 성과 업데이트",
@@ -584,8 +163,8 @@
         }
       ]
     },
-    "VN-PWR-PDP8": {
-      "plan_id": "VN-PWR-PDP8",
+    "VN-SC-2030": {
+      "plan_id": "VN-SC-2030",
       "stage": "UNKNOWN",
       "stage_label": {
         "ko": "미확정",
@@ -594,9 +173,180 @@
       },
       "confidence": 0.0,
       "haiku_used": false,
-      "title_ko": "베트남 제8차 국가전력개발계획",
+      "title_ko": "베트남 스마트시티 개발 프로그램 2030",
       "description_ko": "",
-      "decision": "Decision 500/QĐ-TTg (2023) + Decision 768/QĐ-TTg (2024 개정)",
+      "decision": "Decision 950/QĐ-TTg (2018)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-SWM-NATIONAL-2030": {
+      "plan_id": "VN-SWM-NATIONAL-2030",
+      "stage": "PLANNING",
+      "stage_label": {
+        "ko": "계획·승인",
+        "en": "Planning",
+        "vi": "Lập kế hoạch"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
+      "description_ko": "",
+      "decision": "Decision 491/QĐ-TTg (2018)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "milestone": "정책·법령 발표",
+      "timeline": [
+        {
+          "date": "2026-04-27",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song"
+        }
+      ]
+    },
+    "HN-URBAN-INFRA": {
+      "plan_id": "HN-URBAN-INFRA",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "하노이 도시 인프라 개발 계획 2030",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-WAT-URBAN": {
+      "plan_id": "VN-WAT-URBAN",
+      "stage": "PLANNING",
+      "stage_label": {
+        "ko": "계획·승인",
+        "en": "Planning",
+        "vi": "Lập kế hoạch"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "도시 배수·침수 방지 마스터플랜",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "milestone": "정책·법령 발표",
+      "timeline": [
+        {
+          "date": "2026-04-30",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song"
+        }
+      ]
+    },
+    "VN-OG-2030": {
+      "plan_id": "VN-OG-2030",
+      "stage": "CONSTRUCTION",
+      "stage_label": {
+        "ko": "건설·시공",
+        "en": "Construction",
+        "vi": "Xây dựng"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "베트남 석유가스 분야 전략 2030",
+      "description_ko": "",
+      "decision": "Decision 893/QĐ-TTg (2023)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "milestone": "착공·건설 진행 중",
+      "timeline": [
+        {
+          "date": "2026-04-28",
+          "stage": "UNKNOWN",
+          "milestone_ko": "기사 내용 부재로 판단 불가",
+          "source": "VnExpress Business"
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "CONSTRUCTION",
+          "milestone_ko": "착공·건설 진행 중",
+          "source": "Nikkei Asia"
+        }
+      ]
+    },
+    "VN-PWR-PDP8-HYDROGEN": {
+      "plan_id": "VN-PWR-PDP8-HYDROGEN",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "PDP8 그린수소",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "HN-URBAN-WEST": {
+      "plan_id": "HN-URBAN-WEST",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "하노이 서부 도시개발 (화락 첨단기술단지)",
+      "description_ko": "",
+      "decision": "",
       "sector": "",
       "area": "",
       "kpi_targets": [],
@@ -632,6 +382,159 @@
       "milestone": "",
       "timeline": []
     },
+    "VN-WW-2030": {
+      "plan_id": "VN-WW-2030",
+      "stage": "PLANNING",
+      "stage_label": {
+        "ko": "계획·승인",
+        "en": "Planning",
+        "vi": "Lập kế hoạch"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "베트남 국가 하수처리 프로그램 2030",
+      "description_ko": "",
+      "decision": "Decision 1085/QĐ-TTg (2016) + QCVN 14:2008",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "milestone": "정책·법령 발표",
+      "timeline": [
+        {
+          "date": "None",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "Unknown"
+        }
+      ]
+    },
+    "VN-PWR-PDP8-RENEWABLE": {
+      "plan_id": "VN-PWR-PDP8-RENEWABLE",
+      "stage": "CONSTRUCTION",
+      "stage_label": {
+        "ko": "건설·시공",
+        "en": "Construction",
+        "vi": "Xây dựng"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "milestone": "착공·건설 진행 중",
+      "timeline": [
+        {
+          "date": "2026-04-28",
+          "stage": "UNKNOWN",
+          "milestone_ko": "기사와 VN-PWR-PDP8-RENEWABLE 사업 무관",
+          "source": "channelnewsasia"
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "TENDERING",
+          "milestone_ko": "입찰·계약 진행",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "UNKNOWN",
+          "milestone_ko": "기사 내용이 수산 박람회 개최로 VN-PWR-PDP8-RENEWABLE 사업과 무관",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "CONSTRUCTION",
+          "milestone_ko": "착공·건설 진행 중",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-27",
+          "stage": "UNKNOWN",
+          "milestone_ko": "기사 내용이 재생에너지 사업과 무관함",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-27",
+          "stage": "UNKNOWN",
+          "milestone_ko": "재정의 불가 - 재생에너지 사업 정보 부재",
+          "source": "vietnamplus"
+        }
+      ]
+    },
+    "VN-URB-METRO-2030": {
+      "plan_id": "VN-URB-METRO-2030",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "베트남 도시철도(메트로) 개발 계획",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-WAT-RESOURCES": {
+      "plan_id": "VN-WAT-RESOURCES",
+      "stage": "PLANNING",
+      "stage_label": {
+        "ko": "계획·승인",
+        "en": "Planning",
+        "vi": "Lập kế hoạch"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "베트남 수자원 개발 전략 2030",
+      "description_ko": "",
+      "decision": "Decision 1622/QĐ-TTg (2017)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "milestone": "정책·법령 발표",
+      "timeline": [
+        {
+          "date": "2026-04-30",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song"
+        }
+      ]
+    },
     "VN-PWR-PDP8-LNG": {
       "plan_id": "VN-PWR-PDP8-LNG",
       "stage": "CONSTRUCTION",
@@ -657,8 +560,20 @@
       "timeline": [
         {
           "date": "2026-04-28",
+          "stage": "UNKNOWN",
+          "milestone_ko": "베트남 LNG 인프라 사업 정보 부재",
+          "source": "channelnewsasia"
+        },
+        {
+          "date": "2026-04-28",
           "stage": "TENDERING",
           "milestone_ko": "입찰·계약 진행",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "UNKNOWN",
+          "milestone_ko": "기사 내용이 수산 기술 박람회로 VN-PWR-PDP8-LNG 사업과 무관",
           "source": "vietnamplus"
         },
         {
@@ -672,8 +587,183 @@
           "stage": "PLANNING",
           "milestone_ko": "정책·법령 발표",
           "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-27",
+          "stage": "UNKNOWN",
+          "milestone_ko": "기사 내용이 사업과 무관함",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-27",
+          "stage": "UNKNOWN",
+          "milestone_ko": "관련 정보 없음",
+          "source": "vietnamplus"
         }
       ]
+    },
+    "HN-URBAN-NORTH": {
+      "plan_id": "HN-URBAN-NORTH",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "하노이 북부 도시개발 (동아인, 메린)",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-MEKONG-DELTA-2030": {
+      "plan_id": "VN-MEKONG-DELTA-2030",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "메콩 델타 인프라 개발 계획 2030",
+      "description_ko": "",
+      "decision": "Resolution 13-NQ/TW (2022)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-PWR-PDP8-GRID": {
+      "plan_id": "VN-PWR-PDP8-GRID",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "PDP8 송배전망 확충",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-PWR-PDP8-NUCLEAR": {
+      "plan_id": "VN-PWR-PDP8-NUCLEAR",
+      "stage": "CONSTRUCTION",
+      "stage_label": {
+        "ko": "건설·시공",
+        "en": "Construction",
+        "vi": "Xây dựng"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "PDP8 원전 재개",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "milestone": "착공·건설 진행 중",
+      "timeline": [
+        {
+          "date": "2026-04-28",
+          "stage": "UNKNOWN",
+          "milestone_ko": "기사 내용 부재",
+          "source": "channelnewsasia"
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "TENDERING",
+          "milestone_ko": "입찰·계약 진행",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "UNKNOWN",
+          "milestone_ko": "해당 없음",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "CONSTRUCTION",
+          "milestone_ko": "착공·건설 진행 중",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-27",
+          "stage": "UNKNOWN",
+          "milestone_ko": "기사 내용이 사업과 무관",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-27",
+          "stage": "UNKNOWN",
+          "milestone_ko": "기사 내용이 핵심 인프라 사업과 무관",
+          "source": "vietnamplus"
+        }
+      ]
+    },
+    "VN-PWR-PDP8": {
+      "plan_id": "VN-PWR-PDP8",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "베트남 제8차 국가전력개발계획",
+      "description_ko": "",
+      "decision": "Decision 500/QĐ-TTg (2023) + Decision 768/QĐ-TTg (2024 개정)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
     }
   }
 }
