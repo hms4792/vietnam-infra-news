@@ -49,7 +49,7 @@ concurrency:
 
 jobs:
   weekly:
-    name: 주간 수집 + SA-6/7/8 MI 보고서
+    name: 주간 수집 + /7/8 MI 보고서
     runs-on: ubuntu-latest
     timeout-minutes: 90
 
@@ -105,6 +105,8 @@ jobs:
       # ── Step 8: SA-6 품질검증 + 정책매핑 ───────────────────────
       - name: SA-6 Quality Context Agent (정책 매핑)
         run: python3 scripts/quality_context_agent.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         continue-on-error: true
         
       - name: Rebuild Dashboard (SA-6 sum_ko 반영)
