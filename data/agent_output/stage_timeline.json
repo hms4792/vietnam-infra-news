@@ -1,6 +1,31 @@
 {
-  "generated_at": "2026-05-04 12:28",
+  "generated_at": "2026-05-05 00:19",
   "plans": {
+    "VN-PWR-PDP8": {
+      "plan_id": "VN-PWR-PDP8",
+      "title_ko": "베트남 제8차 국가전력개발계획",
+      "sector": "",
+      "area": "",
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
+      "stage_history": [
+        {
+          "date": "2026-04-30",
+          "stage": "OPERATION",
+          "milestone": "동남아시아 전력 공급 능력 한계 노출",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "더운 날씨와 전기 부족은 동남아시아에 동시에 압력을 가합니다."
+        }
+      ],
+      "next_watch": "베트남 전력망 확충 사업 추진 여부 및 일정",
+      "latest_insight": "기후변화로 인한 전력 수요 급증이 인프라 확충 필요성을 강조. 신규 발전소 건설 및 송전망 현대화 프로젝트 투자 기회 증대",
+      "latest_article_date": "2026-04-30",
+      "article_count": 1,
+      "haiku_count": 1,
+      "kpi_targets": []
+    },
     "VN-PWR-PDP8-RENEWABLE": {
       "plan_id": "VN-PWR-PDP8-RENEWABLE",
       "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
@@ -14,7 +39,7 @@
         {
           "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "사업 관련 정보 없음",
+          "milestone": "기사 내용이 베트남 인프라 사업과 무관",
           "source": "channelnewsasia",
           "title_ko": "최근의 평화 제안에 불만이 있는 트럼프는 이란이 '지도부를 파악하고 있다' 고 말한다."
         },
@@ -28,7 +53,7 @@
         {
           "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용이 수산 기술 박람회로 PDP8 재생에너지 사업과 무관",
+          "milestone": "기사 내용이 수산 박람회 개최로 VN-PWR-PDP8-RENEWABLE 사업과 무관",
           "source": "vietnamplus",
           "title_ko": "베트남, 최초의 종합 수산 기술 박람회 개최"
         },
@@ -47,22 +72,29 @@
           "title_ko": "베트남은 보다 강력하고 포괄적이며 실용적이며 효과적인 아세안-EU 협력을 지지합니다."
         },
         {
-          "date": "2026-04-27",
+          "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용이 재생에너지 사업과 무관",
-          "source": "vietnamplus",
-          "title_ko": "Phu Tho는 2026년 Hung Kings 기념일 동안 약 650만 명의 방문객에게 서비스를 제공합니다."
+          "milestone": "기사 내용 불일치",
+          "source": "VnExpress Business",
+          "title_ko": "말레이시아 두리안 농부들은 가격이 급락함에 따라 떠돌아다닌다."
         },
         {
-          "date": "2026-04-27",
+          "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용이 재정생에너지 사업과 무관",
-          "source": "vietnamplus",
-          "title_ko": "두 자릿수 성장을 달성하는 다낭의 눈 \"황금 창\""
+          "milestone": "관련 정보 없음",
+          "source": "VnExpress Business",
+          "title_ko": "Pho Shop은 연료 비용보다 가격을 인상하지만 연료가 떨어진 후에도 높은 가격을 유지합니다."
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "menafn",
+          "title_ko": "Clearsteps, 인도 최초의 엔드투엔드 AI 기반 CBSE 시험 준비 플랫폼으로 출시"
         }
       ],
-      "next_watch": "VN-PWR-PDP8-RENEWABLE 사업 관련 기사 필요",
-      "latest_insight": "제공된 기사는 이란-미국 정치 분쟁 관련 내용으로 베트남 인프라 사업과 무관함. 사업 진행 상황 판단 불가.",
+      "next_watch": "베트남 신재생에너지 사업 관련 기사 확인 필요",
+      "latest_insight": "제공된 기사는 이란-미국 정치 분쟁으로, VN-PWR-PDP8-RENEWABLE 마스터플랜과 무관한 자료입니다.",
       "latest_article_date": "2026-04-28",
       "article_count": 8,
       "haiku_count": 4,
@@ -95,7 +127,7 @@
         {
           "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "기사가 수산 박람회 개최로 마스터플랜과 무관",
+          "milestone": "기사 내용이 수산 기술 박람회로 사업과 무관",
           "source": "vietnamplus",
           "title_ko": "베트남, 최초의 종합 수산 기술 박람회 개최"
         },
@@ -114,22 +146,29 @@
           "title_ko": "베트남은 보다 강력하고 포괄적이며 실용적이며 효과적인 아세안-EU 협력을 지지합니다."
         },
         {
-          "date": "2026-04-27",
+          "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용이 사업과 무관함",
-          "source": "vietnamplus",
-          "title_ko": "Phu Tho는 2026년 Hung Kings 기념일 동안 약 650만 명의 방문객에게 서비스를 제공합니다."
+          "milestone": "기사 내용 부적합",
+          "source": "VnExpress Business",
+          "title_ko": "말레이시아 두리안 농부들은 가격이 급락함에 따라 떠돌아다닌다."
         },
         {
-          "date": "2026-04-27",
+          "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "제공된 기사에 LNG 인프라 사업 관련 정보 부재",
-          "source": "vietnamplus",
-          "title_ko": "두 자릿수 성장을 달성하는 다낭의 눈 \"황금 창\""
+          "milestone": "사업 관련 정보 없음",
+          "source": "VnExpress Business",
+          "title_ko": "Pho Shop은 연료 비용보다 가격을 인상하지만 연료가 떨어진 후에도 높은 가격을 유지합니다."
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "menafn",
+          "title_ko": "Clearsteps, 인도 최초의 엔드투엔드 AI 기반 CBSE 시험 준비 플랫폼으로 출시"
         }
       ],
-      "next_watch": "베트남 LNG 사업 관련 뉴스 추적 필요",
-      "latest_insight": "제공된 기사는 이란-미국 핵 협상 관련 내용으로 VN-PWR-PDP8-LNG 사업과 무관함. 사업 진행 상황 판단 불가.",
+      "next_watch": "베트남 LNG 인프라 사업 관련 뉴스 모니터링",
+      "latest_insight": "제공된 기사(이란 핵 협상)는 VN-PWR-PDP8-LNG 사업과 무관하여 단계 판단 불가. 베트남 전력·LNG 관련 공식 소식 필요.",
       "latest_article_date": "2026-04-28",
       "article_count": 8,
       "haiku_count": 4,
@@ -148,7 +187,7 @@
         {
           "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용이 베트남 핵전력 사업과 무관",
+          "milestone": "기사 내용이 사업과 무관함",
           "source": "channelnewsasia",
           "title_ko": "최근의 평화 제안에 불만이 있는 트럼프는 이란이 '지도부를 파악하고 있다' 고 말한다."
         },
@@ -162,7 +201,7 @@
         {
           "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용이 핵심 인프라 사업과 무관",
+          "milestone": "기사 내용이 원자력 발전소 사업과 무관",
           "source": "vietnamplus",
           "title_ko": "베트남, 최초의 종합 수산 기술 박람회 개최"
         },
@@ -181,22 +220,29 @@
           "title_ko": "베트남은 보다 강력하고 포괄적이며 실용적이며 효과적인 아세안-EU 협력을 지지합니다."
         },
         {
-          "date": "2026-04-27",
+          "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용이 핵심 사업과 무관함",
-          "source": "vietnamplus",
-          "title_ko": "Phu Tho는 2026년 Hung Kings 기념일 동안 약 650만 명의 방문객에게 서비스를 제공합니다."
+          "milestone": "해당 사항 없음",
+          "source": "VnExpress Business",
+          "title_ko": "말레이시아 두리안 농부들은 가격이 급락함에 따라 떠돌아다닌다."
         },
         {
-          "date": "2026-04-27",
+          "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "기사에 핵심 마일스톤 정보 없음",
-          "source": "vietnamplus",
-          "title_ko": "두 자릿수 성장을 달성하는 다낭의 눈 \"황금 창\""
+          "milestone": "기사 내용 분석 불가",
+          "source": "VnExpress Business",
+          "title_ko": "Pho Shop은 연료 비용보다 가격을 인상하지만 연료가 떨어진 후에도 높은 가격을 유지합니다."
+        },
+        {
+          "date": "2026-04-28",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "menafn",
+          "title_ko": "Clearsteps, 인도 최초의 엔드투엔드 AI 기반 CBSE 시험 준비 플랫폼으로 출시"
         }
       ],
-      "next_watch": "VN-PWR-PDP8-NUCLEAR 관련 베트남 공식 발표 모니터링",
-      "latest_insight": "제공 기사는 이란-미국 핵 협상 관련 정치 뉴스로, 베트남 원전 사업 진행상황 분석 불가능",
+      "next_watch": "베트남 원전 사업 관련 공식 발표 모니터링",
+      "latest_insight": "제공된 기사는 이란 핵 문제에 관한 정치 뉴스로, VN-PWR-PDP8-NUCLEAR 베트남 원전 사업과 무관함. 사업 진행 상황 판단 불가.",
       "latest_article_date": "2026-04-28",
       "article_count": 8,
       "haiku_count": 4,
@@ -215,7 +261,7 @@
         {
           "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 부족 - 사업 진행상황 파악 불가",
+          "milestone": "기사 내용 부족으로 판단 불가",
           "source": "VnExpress Business",
           "title_ko": "UAE는 OPEC과 OPEC + 를 세계 석유 생산자 그룹에 큰 타격을 남깁니다"
         },
@@ -227,8 +273,8 @@
           "title_ko": "일본 Idemitsu Kosan, 베트남 원유 4m 배럴 확보"
         }
       ],
-      "next_watch": "VN-OG-2030 마스터플랜 관련 구체적 기사 필요",
-      "latest_insight": "제공된 기사는 UAE의 OPEC 탈퇴 관련 글로벌 석유산업 뉴스로, 베트남 인프라 사업과 직접 연관 없음",
+      "next_watch": "VN-OG-2030 사업 관련 구체적 정보 필요",
+      "latest_insight": "제시된 기사는 UAE의 OPEC 탈퇴 관련 일반 뉴스로, VN-OG-2030 사업 진행현황과의 직접적 연관성 확인 불가",
       "latest_article_date": "2026-04-28",
       "article_count": 2,
       "haiku_count": 1,
@@ -255,7 +301,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -270,16 +316,16 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-04-30",
+          "date": "2026-05-04",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "하노이는 배수 시스템을 적극적으로 운영하여 4 월 30 일부터 5 월 1 일까지의 휴가 기간 동안 홍수를 예방합니다."
+          "title_ko": "수력 발전은 El Nino 2026의 위험에 처하기 전에 물을 축적하기 위해 돌진합니다."
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-04-30",
+      "latest_article_date": "2026-05-04",
       "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": []
@@ -289,29 +335,29 @@
       "title_ko": "도시 배수·침수 방지 마스터플랜",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
-          "date": "2026-04-30",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "date": "2026-05-04",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "하노이는 배수 시스템을 적극적으로 운영하여 4 월 30 일부터 5 월 1 일까지의 휴가 기간 동안 홍수를 예방합니다."
+          "title_ko": "폐수에 의해 \"질식\" 된 나트랑: 만 오염이 기준치를 초과하여 불법 배출 처리를 강화합니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-04-30",
+      "latest_article_date": "2026-05-04",
       "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": []
     },
-    "VN-SWM-NATIONAL-2030": {
-      "plan_id": "VN-SWM-NATIONAL-2030",
-      "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
+    "VN-ENV-IND-1894": {
+      "plan_id": "VN-ENV-IND-1894",
+      "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
       "sector": "",
       "area": "",
       "current_stage": "PLANNING",
@@ -320,16 +366,16 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-04-27",
+          "date": "2026-05-04",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "EPR 메커니즘은 지역 폐기물 처리를 위한 재정 자원을 개방합니다"
+          "title_ko": "2026년 5월부터 시행되는 4가지 새로운 환경 정책"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-04-27",
+      "latest_article_date": "2026-05-04",
       "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": []
@@ -353,24 +399,24 @@
         },
         {
           "date": "2026-05-03",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
           "source": "nhandan_vn",
           "title_ko": "FDI 유치 플랫폼의 포괄적인 업그레이드 필요"
         },
         {
           "date": "2026-05-02",
-          "stage": "PLANNING",
-          "milestone": "녹색산업단지 인프라 재구성 계획 수립",
+          "stage": "TENDERING",
+          "milestone": "FDI 투자자 유치 추진 중",
           "source": "sggp_org_vn",
           "title_ko": "녹색산업단지, FDI 투자자 유치"
         },
         {
           "date": "2026-04-28",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
           "source": "vietnamplus",
-          "title_ko": "중앙은행, 외국인 투자 흐름에 대한 외환 규정 개편 제안"
+          "title_ko": "베트남 외국인직접투자이익속도"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
@@ -385,17 +431,24 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
       "stage_history": [
         {
-          "date": "2026-04-29",
+          "date": "2026-05-02",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "VnExpress International",
+          "title_ko": "베트남의 $ 247M 고속도로와 바다 전망의 고가교 개통"
+        },
+        {
+          "date": "2026-05-02",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "vietnamplus",
-          "title_ko": "동나이, 주요 운송 링크를 위한 43억 달러 계획 발표"
+          "title_ko": "새로운 협력 체계를 구축하기 위한 최고 리더의 인도 방문 예정: 차장 FM"
         },
         {
           "date": "2026-04-29",
@@ -414,7 +467,7 @@
         {
           "date": "2026-04-28",
           "stage": "UNKNOWN",
-          "milestone": "사업 정보 부재",
+          "milestone": "기사에 구체적 사업 내용 없음",
           "source": "vietnamplus",
           "title_ko": "4월 28일 ☕ 오후 브리핑"
         },
@@ -426,10 +479,67 @@
           "title_ko": "일본 총리, 베트남 공식 방문"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
       "latest_insight": "",
-      "latest_article_date": "2026-04-29",
+      "latest_article_date": "2026-05-02",
       "article_count": 8,
+      "haiku_count": 1,
+      "kpi_targets": []
+    },
+    "VN-URB-METRO-2030": {
+      "plan_id": "VN-URB-METRO-2030",
+      "title_ko": "베트남 도시철도(메트로) 개발 계획",
+      "sector": "",
+      "area": "",
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
+      "stage_history": [
+        {
+          "date": "2026-05-04",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamplus",
+          "title_ko": "방콕의 녹색 도시 재생은 동남아시아 도시에 대한 모델을 제공합니다."
+        }
+      ],
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-05-04",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "HN-URBAN-INFRA": {
+      "plan_id": "HN-URBAN-INFRA",
+      "title_ko": "하노이 도시 인프라 개발 계획 2030",
+      "sector": "",
+      "area": "",
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
+      "stage_history": [
+        {
+          "date": "2026-05-04",
+          "stage": "CONSTRUCTION",
+          "milestone": "우기 전 긴급 프로젝트 완공 추진",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "하노이는 2026년 우기 전에 일련의 긴급 인프라 프로젝트의 진행을 촉진합니다"
+        },
+        {
+          "date": "2026-04-30",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "하노이는 배수 시스템을 적극적으로 운영하여 4 월 30 일부터 5 월 1 일까지의 휴가 기간 동안 홍수를 예방합니다."
+        }
+      ],
+      "next_watch": "2026년 우기(6월) 전 준공 현황 점검",
+      "latest_insight": "하노이시 다층적 인프라 현대화 추진으로 도시 기반시설 고도화 진행 중. 홍수 대비 필수 사업 진행으로 리스크 관리 강화.",
+      "latest_article_date": "2026-05-04",
+      "article_count": 2,
       "haiku_count": 1,
       "kpi_targets": []
     }
