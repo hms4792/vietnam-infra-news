@@ -537,6 +537,157 @@ def enrich_with_jina(article: dict, plans: dict, api_key: str) -> dict | None:
         pass
     return None
 
+# ══════════════════════════════════════════════════════════════════════════
+# 신규 추가: Jina 전용 보강 함수 (v3.3/v3.4)
+# ══════════════════════════════════════════════════════════════════════════
+def run_jina_enrichment_for_matched(plans: dict, api_key: str) -> dict:
+    """
+    Matched_Plan 기반 Jina 보강 (Anthropic API 키 없어도 동작)
+    - Matched_Plan 시트에서 최근 30일 이내 기사 URL을 읽어 Jina 본문을 시도
+    - sum_ko 길이 < JINA_SUMKO_THRESHOLD 인 경우 보강 대상
+    - Haiku API 키가 있으면 Haiku로 요약 생성 후 저장(우선)
+    - Haiku 키가 없거나 Haiku 실패 시 Jina 본문 앞 300자 직접 sum_ko에 저장
+    - Matched_Plan 시트는 건드리지 않음(News Database의 sum_ko 컬럼만 업데이트)
+    """
+    if not EXCEL_PATH.exists():
+        log.warning("Excel 없음 — Jina 보강 건너뜀")
+        return {'jina_enriched': 0}
+
+    try:
+        wb = openpyxl.load_workbook(EXCEL_PATH, data_only=True)
+        if 'Matched_Plan' not in wb.sheetnames or 'News Database' not in wb.sheetnames:
+            wb.close()
+            return {'jina_enriched': 0}
+
+        ws_mp = wb['Matched_Plan']
+        ws_nd = wb['News Database']
+
+        # News DB header 인덱스
+        headers = [str(c.value or '').strip().lower().replace(' ', '_')
+                   for c in next(ws_nd.iter_rows(min_row=1, max_row=1))]
+        def nd_idx(keys):
+            for k in keys:
+                for i, h in enumerate(headers):
+                    if k.lower() in h:
+                        return i
+            return None
+
+        nd_url_i = nd_idx(['link', 'url'])
+        nd_sumko_i = nd_idx(['sum_ko', 'summary_ko'])
+
+        # Matched_Plan header 인덱스
+        mp_headers = [str(c.value or '').strip().lower().replace(' ', '_') for c in next(ws_mp.iter_rows(min_row=1, max_row=1))]
+        def mp_idx(keys):
+            for k in keys:
+                for i, h in enumerate(mp_headers):
+                    if k.lower() in h:
+                        return i
+            return None
+
+        mp_url_i = mp_idx(['url', 'link'])
+        mp_rowno_i = mp_idx(['no', 'row', 'row_num'])
+
+        cutoff = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+        candidates = []
+        for r in ws_mp.iter_rows(min_row=2, values_only=True):
+            try:
+                mp_url = str(r[mp_url_i]).strip() if mp_url_i is not None else ''
+            except Exception:
+                mp_url = ''
+            if not mp_url or not mp_url.startswith('http'):
+                continue
+
+            row_no = None
+            if mp_rowno_i is not None:
+                try:
+                    row_no = int(r[mp_rowno_i])
+                except Exception:
+                    row_no = None
+
+            sumko_len = None
+            if row_no:
+                try:
+                    nd_row = list(ws_nd.iter_rows(min_row=row_no, max_row=row_no, values_only=True))[0]
+                    sumko = str(nd_row[nd_sumko_i] if nd_sumko_i is not None else '').strip()
+                    sumko_len = len(sumko)
+                except Exception:
+                    sumko_len = None
+
+            if sumko_len is None or sumko_len < JINA_SUMKO_THRESHOLD:
+                candidates.append({'row': row_no, 'url': mp_url})
+
+            if len(candidates) >= JINA_MATCHED_LIMIT:
+                break
+
+        wb.close()
+
+        enriched = 0
+        wb2 = openpyxl.load_workbook(EXCEL_PATH)
+        ws2 = wb2['News Database']
+        headers2 = [str(c.value or '').strip().lower().replace(' ', '_') for c in next(ws2.iter_rows(min_row=1, max_row=1))]
+        sumko_col = next((i+1 for i, h in enumerate(headers2) if 'sum_ko' in h or 'summary_ko' in h), None)
+        url_col = next((i for i, h in enumerate(headers2) if 'link' in h or 'url' in h), None)
+
+        for cand in candidates:
+            url = cand['url']
+            row_no = cand['row']
+            body = fetch_jina_text(url)
+            if not body:
+                continue
+
+            haiku_result = None
+            if api_key:
+                try:
+                    res = enrich_with_jina({'url': url}, plans, api_key)
+                    if res and res.get('summary_ko'):
+                        haiku_result = res.get('summary_ko')
+                except Exception:
+                    haiku_result = None
+
+            final_sumko = ''
+            if haiku_result:
+                final_sumko = haiku_result.strip()
+            else:
+                snippet = body.strip()[:300]
+                if re.search(r'[\uac00-\ud7a3]', snippet):
+                    final_sumko = snippet
+                else:
+                    try:
+                        from deep_translator import GoogleTranslator
+                        translated = GoogleTranslator(source='auto', target='ko').translate(snippet)
+                        final_sumko = translated
+                    except Exception:
+                        final_sumko = snippet
+
+            if row_no and sumko_col:
+                existing = str(ws2.cell(row=row_no, column=sumko_col).value or '').strip()
+                if not existing and final_sumko:
+                    ws2.cell(row=row_no, column=sumko_col, value=final_sumko)
+                    enriched += 1
+            else:
+                if sumko_col:
+                    for i, row in enumerate(ws2.iter_rows(min_row=2, values_only=True), start=2):
+                        try:
+                            url_cell = str(row[url_col]).strip() if url_col is not None else ''
+                        except Exception:
+                            url_cell = ''
+                        if url_cell and url_cell == url:
+                            existing = str(ws2.cell(row=i, column=sumko_col).value or '').strip()
+                            if not existing and final_sumko:
+                                ws2.cell(row=i, column=sumko_col, value=final_sumko)
+                                enriched += 1
+                            break
+
+            time.sleep(0.2)
+
+        if enriched > 0:
+            wb2.save(EXCEL_PATH)
+        wb2.close()
+        log.info(f"  [Jina 보강] 요약 갱신: {enriched}건")
+        return {'jina_enriched': enriched}
+    except Exception as e:
+        log.warning(f"run_jina_enrichment_for_matched 오류: {e}")
+        return {'jina_enriched': 0}
 
 def run_haiku_enhancement(plans: dict, api_key: str) -> dict:
     """
