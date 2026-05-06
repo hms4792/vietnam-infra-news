@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-05-06 02:39",
+  "generated_at": "2026-05-06 12:33",
   "generated_date": "2026-05-06",
   "stats": {
-    "total_articles": 1042,
-    "matched_count": 290,
+    "total_articles": 1049,
+    "matched_count": 294,
     "plan_count": 32,
     "ki_plan_count": 21,
     "report_count": 5
@@ -51,8 +51,8 @@
     }
   ],
   "plans": {
-    "VN-WAT-RURAL": {
-      "plan_id": "VN-WAT-RURAL",
+    "VN-PWR-PDP8-HYDROGEN": {
+      "plan_id": "VN-PWR-PDP8-HYDROGEN",
       "stage": "UNKNOWN",
       "stage_label": {
         "ko": "미확정",
@@ -61,7 +61,167 @@
       },
       "confidence": 0.0,
       "haiku_used": false,
-      "title_ko": "VN-WAT-RURAL",
+      "title_ko": "PDP8 그린수소",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-WW-2030": {
+      "plan_id": "VN-WW-2030",
+      "stage": "PLANNING",
+      "stage_label": {
+        "ko": "계획·승인",
+        "en": "Planning",
+        "vi": "Lập kế hoạch"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "베트남 국가 하수처리 프로그램 2030",
+      "description_ko": "",
+      "decision": "Decision 1085/QĐ-TTg (2016) + QCVN 14:2008",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "None",
+          "title_ko": "Hanoi Yen Xa WWTP begins trial operation — milestone for To Lich river cleanup",
+          "title_en": "Hanoi Yen Xa WWTP begins trial operation — milestone for To Lich river cleanup",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "HIGH",
+          "stage": "UNKNOWN",
+          "source": "Unknown",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-01",
+          "title_ko": "1/4 CONSTRUCTION PRISM: 하노이는 일련의 배수 시스템 프로젝트를 시행했습니다.",
+          "title_en": "Lăng kính xây dựng 1/4: Hà Nội triển khai đồng loạt các dự án hệ thống thoát nước",
+          "title_vi": "",
+          "summary_ko": "Nếi dung chính bān tin hôm nay: Quyết tâm hoàn thành cơ sânh dâ liệu đết đai toàn quạc trong năm 2026; Luết kinh doanh Bết đếng sạn (sâa đếi): Siết chết quy đệnh đào tạo và hành ngh ́ môi giţi; Hà Nếi",
+          "summary_en": "Nội dung chính bản tin hôm nay: Quyết tâm hoàn thành cơ sở dữ liệu đất đai toàn quốc trong năm 2026; Luật kinh doanh Bất động sản (sửa đổi): Siết chặt quy định đào tạo và hành nghề môi giới; Hà Nội tr",
+          "grade": "POLICY",
+          "stage": "UNKNOWN",
+          "source": "Bao Xay Dung",
+          "url": "https://baoxaydung.vn/lang-kinh-xay-dung-1-4-ha-noi-tri",
+          "milestone": ""
+        },
+        {
+          "date": "2025-08-20",
+          "title_ko": "하노이 옌짜 폐수처리장 준공 — 북부 베트남 최대 270,000㎥/일",
+          "title_en": "Yen Xa WWTP inaugurated — Northern Vietnam largest 270,000 m3/day",
+          "title_vi": "",
+          "summary_ko": "하노이 옌짜(Yen Xa) 폐수처리장(270,000㎥/일) 2025년 8월 19일 공식 준공. JICA ODA 지원, 총 투자 $690M. 또리히(To Lich)강 정화 핵심 시설.",
+          "summary_en": "Yen Xa Wastewater Treatment Plant (270,000 m3/day) officially inaugurated in Hanoi Aug 2025. JICA ODA funded, $690M total investment.",
+          "grade": "HIGH",
+          "stage": "UNKNOWN",
+          "source": "VietnamPlus",
+          "url": "https://en.vietnamplus.vn/largest-wastewater-treatment-",
+          "milestone": ""
+        },
+        {
+          "date": "2025-06-15",
+          "title_ko": "Thu Duc City WWTP는 동남아시아 최대의 폐수 처리장으로 거듭났습니다",
+          "title_en": "Thu Duc City WWTP becomes Southeast Asia's largest wastewater treatment plant",
+          "title_vi": "",
+          "summary_ko": "Thu Duc City에 5억 2,400만 달러를 투자하여 동남아시아 최대 규모의 WWTP를 건설 중입니다. MBBR 기술은 하루 110만m3를 처리하고 8개 구역에 걸쳐 180만 명의 주민에게 서비스를 제공합니다.",
+          "summary_en": "Southeast Asia's largest WWTP under construction in Thu Duc City with $524 million investment. Features MBBR technology, treating 1.1 million m3/day, serving 1.8 million residents across eight distric",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "trade.gov",
+          "url": "https://www.trade.gov/market-intelligence/vietnam-water",
+          "milestone": ""
+        },
+        {
+          "date": "2025-01-03",
+          "title_ko": "옌자(Yen Xa) 폐수처리장, 베트남 북부 최대 규모로 시범 가동 시작",
+          "title_en": "Yen Xa Wastewater Treatment Plant begins trial operation as Northern Vietnam's largest",
+          "title_vi": "",
+          "summary_ko": "베트남 북부 최대 규모의 Yen Xa WWTP가 시범 운영을 시작합니다. 2025년까지 하노이의 폐수 처리율 50-55% 목표에 매우 중요합니다. 시는 현재 4개의 새로운 프로젝트가 계획되어 있으며 처리율은 30%입니다.",
+          "summary_en": "Yen Xa WWTP, Northern Vietnam's largest, begins trial operation. Critical for Hanoi's target of 50-55% wastewater treatment rate by 2025. City currently at 30% treatment rate with 4 new projects plann",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "b-company.jp",
+          "url": "https://b-company.jp/trial-operation-of-northern-vietna",
+          "milestone": ""
+        },
+        {
+          "date": "2024-12-11",
+          "title_ko": "하노이는 Yen Xa 폐수 프로젝트 예산을 2억 ​​달러 이상 줄였습니다.",
+          "title_en": "Hanoi reduces Yen Xa wastewater project budget by over $200 million",
+          "title_vi": "",
+          "summary_ko": "nan",
+          "summary_en": "nan",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Vietnamnet",
+          "url": "https://vietnamnet.vn/en/hanoi-reduces-yen-xa-wastewate",
+          "milestone": ""
+        },
+        {
+          "date": "2024-12-10",
+          "title_ko": "하노이, To Lich 강 청소 및 도시 폐수 정비 추진",
+          "title_en": "Hanoi pushes To Lich river cleanup and urban wastewater overhaul",
+          "title_vi": "",
+          "summary_ko": "nan",
+          "summary_en": "nan",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Vietnam Investment Review",
+          "url": "https://vir.com.vn/hanoi-pushes-to-lich-river-cleanup-a",
+          "milestone": ""
+        },
+        {
+          "date": "2024-11-26",
+          "title_ko": "nan",
+          "title_en": "Inauguration of wastewater treatment plant at Cat Ba Amatina project",
+          "title_vi": "",
+          "summary_ko": "nan",
+          "summary_en": "nan",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Investment news",
+          "url": "https://baodautu.vn/khanh-thanh-nha-may-xu-ly-nuoc-thai",
+          "milestone": ""
+        }
+      ],
+      "article_count": 37,
+      "insight": "",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "milestone": "정책·법령 발표",
+      "timeline": [
+        {
+          "date": "None",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "Unknown"
+        }
+      ]
+    },
+    "VN-PWR-PDP8, VN-PWR-PDP8-GRID": {
+      "plan_id": "VN-PWR-PDP8, VN-PWR-PDP8-GRID",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "VN-PWR-PDP8, VN-PWR-PDP8-GRID",
       "description_ko": "",
       "decision": "",
       "sector": "",
@@ -70,53 +230,66 @@
       "key_projects": [],
       "articles": [
         {
-          "date": "2022-01-21",
-          "title_ko": "Nearly VND1.7 trln invested in rural clean water supply projects",
-          "title_en": "Nearly VND1.7 trln invested in rural clean water supply projects",
+          "date": "2026-04-13",
+          "title_ko": "베트남은 자체 축전지를 생산해 전력망 '구출'에 기여",
+          "title_en": "Việt Nam tự sản xuất pin lưu trữ, góp phần \"giải cứu\" lưới điện",
           "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
+          "summary_ko": "(Dan Tri) - 베트남에 16GW BESS가 필요할 때 3000억 VND 규모의 배터리 저장 단지가 등장하여 전력망 부하를 줄이고 \"메이드 인 베트남\" 에너지 생태계를 구축하려는 야망을 열었습니다.",
+          "summary_en": "(Dan Tri) - The 300 billion VND battery storage complex appeared just when Vietnam needed 16GW BESS, opening the way to reduce power grid load and the ambition to build a \"made in Vietnam\" energy ecos",
           "grade": "MEDIUM",
           "stage": "UNKNOWN",
-          "source": "Dong Nai News",
-          "url": "http://www.baodongnai.com.vn/english/business/202201/nearly-vnd17-trln-invested-in-rural-clean-water-supply-projects-3100087/",
+          "source": "Dan Tri - Kinh doanh",
+          "url": "https://dantri.com.vn/kinh-doanh/viet-nam-tu-san-xuat-p",
           "milestone": ""
         },
         {
-          "date": "2020-08-12",
-          "title_ko": "82 rural water supply projects operating in Dong Nai",
-          "title_en": "82 rural water supply projects operating in Dong Nai",
+          "date": "2026-04-09",
+          "title_ko": "EVN, 전력망 내 BESS 구축 추진",
+          "title_en": "EVN thúc đẩy triển khai BESS trên lưới điện",
           "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
+          "summary_ko": "베트남 전력공사(EVN)의 경영진은 배터리 에너지 저장 시스템(BESS)이 전력 시스템의 운영 및 발전에 있어 중요한 해결책 중 하나라고 밝혔다. EVN은 관련 기관들과 협력하여 산업통상자원부에 제도 및 정책상의 걸림돌을 해소해 줄 것을 요청함으로써 BESS를 대대적으로 도입할 계획이다.",
+          "summary_en": "Lãnh đạo Tập đoàn Điện lực Việt Nam (EVN) cho biết Hệ thống Pin lưu trữ (BESS) là một trong những giải pháp quan trọng trong vận hành và phát triển hệ thống điện. EVN sẽ phối hợp với các đơn vị liên q",
           "grade": "MEDIUM",
           "stage": "UNKNOWN",
-          "source": "Dong Nai News",
-          "url": "http://baodongnai.com.vn/english/society/202012/82-rural-water-supply-projects-operating-in-dong-nai-3033883/",
+          "source": "Thanh Nien - Kinh te",
+          "url": "https://thanhnien.vn/evn-thuc-day-trien-khai-bess-tren-",
           "milestone": ""
         },
         {
-          "date": "2020-05-18",
-          "title_ko": "WB-funded rural sanitation, water supply programme to continue in Dak Nong",
-          "title_en": "WB-funded rural sanitation, water supply programme to continue in Dak Nong",
+          "date": "2026-04-08",
+          "title_ko": "EVN, 전력망 기반 에너지 저장 배터리 개발 로드맵 가속화",
+          "title_en": "EVN đẩy nhanh lộ trình phát triển pin lưu trữ năng lượng trên lưới điện",
           "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
+          "summary_ko": "베트남 전력공사(EVN)는 전 세계적인 에너지 전환 과정의 필연적인 흐름에 따라 베트남 내 에너지 저장 시스템(BESS) 개발 계획을 가속화할 것이라고 밝혔다.",
+          "summary_en": "Tập đoàn Điện lực Việt Nam (EVN) cho biết sẽ đẩy nhanh lộ trình phát triển hệ thống pin lưu trữ năng lượng (BESS) tại Việt Nam, như xu thế tất yếu trong quá trình chuyển dịch năng lượng toàn cầu.",
           "grade": "MEDIUM",
           "stage": "UNKNOWN",
-          "source": "Government news",
-          "url": "http://news.chinhphu.vn/Home/WBfunded-rural-sanitation-water-supply-programme-to-continue-in-Dak-Nong/20205/40126.vgp",
+          "source": "Thanh Nien - Kinh te",
+          "url": "https://thanhnien.vn/evn-day-nhanh-lo-trinh-phat-trien-",
+          "milestone": ""
+        },
+        {
+          "date": "2024-01-18",
+          "title_ko": "nan",
+          "title_en": "EVN kicks off circuit-3 500kV transmission line sections",
+          "title_vi": "",
+          "summary_ko": "nan",
+          "summary_en": "nan",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Vietnam News",
+          "url": "https://vietnamnews.vn/economy/1639458/evn-kicks-off-ci",
           "milestone": ""
         }
       ],
-      "article_count": 3,
+      "article_count": 4,
       "insight": "",
       "next_watch": "",
       "milestone": "",
       "timeline": []
     },
-    "VN-MEKONG-DELTA-2030": {
-      "plan_id": "VN-MEKONG-DELTA-2030",
+    "HN-URBAN-NORTH": {
+      "plan_id": "HN-URBAN-NORTH",
       "stage": "UNKNOWN",
       "stage_label": {
         "ko": "미확정",
@@ -125,29 +298,15 @@
       },
       "confidence": 0.0,
       "haiku_used": false,
-      "title_ko": "메콩 델타 인프라 개발 계획 2030",
+      "title_ko": "하노이 북부 도시개발 (동아인, 메린)",
       "description_ko": "",
-      "decision": "Resolution 13-NQ/TW (2022)",
+      "decision": "",
       "sector": "",
       "area": "",
       "kpi_targets": [],
       "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-04-21",
-          "title_ko": "Can Tho Bridge는 과부하 위험에 직면해 있습니다",
-          "title_en": "Can Tho Bridge faces risk of overload",
-          "title_vi": "",
-          "summary_ko": "Can Tho No.2 교량 건설을 기다리는 동안 메콩 삼각주를 가로지르는 고속도로 복도의 교통은 기존의 Can Tho 교량에 장착 압력을 가하고 있습니다.",
-          "summary_en": "While awaiting the construction of Can Tho No.2 Bridge, traffic from expressway corridors across the Mekong Delta is placing mounting pressure on the existing Can Tho Bridge.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP News English",
-          "url": "https://en.sggp.org.vn/can-tho-bridge-faces-risk-of-ove",
-          "milestone": ""
-        }
-      ],
-      "article_count": 1,
+      "articles": [],
+      "article_count": 0,
       "insight": "",
       "next_watch": "",
       "milestone": "",
@@ -277,6 +436,1380 @@
         }
       ],
       "article_count": 9,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "HN-URBAN-INFRA": {
+      "plan_id": "HN-URBAN-INFRA",
+      "stage": "PLANNING",
+      "stage_label": {
+        "ko": "계획·승인",
+        "en": "Planning",
+        "vi": "Lập kế hoạch"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "하노이 도시 인프라 개발 계획 2030",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-05-04",
+          "title_ko": "하노이는 2026년 우기 전에 일련의 긴급 인프라 프로젝트의 진행을 촉진합니다",
+          "title_en": "Hanoi promotes the progress of a series of urgent infrastructure projects before the rainy season 2026",
+          "title_vi": "Hà Nội thúc đẩy tiến độ loạt dự án hạ tầng cấp bách trước mùa mưa 2026",
+          "summary_ko": "하노이시가 2026년 우기 전 긴급 기반시설 사업들의 진행 속도를 높이고 있습니다. 도시 인프라 현대화와 홍수 대비를 위한 다양한 프로젝트가 추진 중이며, 우기 도래 전 완공을 목표로 하고 있습니다.",
+          "summary_en": "Leaders of the Hanoi City Party Committee requested to completely handle problems in terms of premises, procedures and materials in order to ensure the progress of drainage, transport and environmenta",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Moi truong & Cuoc song",
+          "url": "https://moitruong.net.vn/ha-noi-thuc-day-tien-do-loat-du-an-ha-tang-cap-bach-truoc-mua-mua-2026-99247.html",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-30",
+          "title_ko": "하노이는 배수 시스템을 적극적으로 운영하여 4 월 30 일부터 5 월 1 일까지의 휴가 기간 동안 홍수를 예방합니다.",
+          "title_en": "Hà Nội chủ động vận hành hệ thống thoát nước, phòng ngừa úng ngập trong dịp nghỉ lễ 30/4 – 1/5",
+          "title_vi": "Hà Nội chủ động vận hành hệ thống thoát nước, phòng ngừa úng ngập trong dịp nghỉ lễ 30/4 – 1/5",
+          "summary_ko": "하노이가 4월 30일~5월 1일 휴일 기간 중 홍수 피해를 예방하기 위해 적극적으로 배수 시스템을 운영합니다. 도시 배수 인프라의 사전적 관리를 통해 침수 발생을 방지하려는 조치입니다.",
+          "summary_en": "In order to ensure the urban environment and serve people to play and travel smoothly during the holidays of April 30 and May 1, Hanoi Drainage One-Member Co., Ltd. has implemented synchronous plans t",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Moi truong & Cuoc song",
+          "url": "https://moitruong.net.vn/ha-noi-chu-dong-van-hanh-he-thong-thoat-nuoc-phong-ngua-ung-ngap-trong-dip-nghi-le-30-4-1-5-99195.html",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-05",
+          "title_ko": "하노이 링로드4 병행도로 2026년 6월 개통 목표 — 113km 업데이트",
+          "title_en": "Hanoi Ring Road 4 parallel road to open June 2026 — 113km update",
+          "title_vi": "",
+          "summary_ko": "하노이 링로드4(113km) 병행도로 2026년 6월 개통 목표. 하노이 58.2km+흥옌+박닌 구간. PPP 고속도로 2027년 예정.",
+          "summary_en": "Ring Road 4 (113km) parallel road June 2026 opening target. PPP expressway 2027. Strategic economic axis for Capital Region.",
+          "grade": "HIGH",
+          "stage": "UNKNOWN",
+          "source": "Vietnam.vn",
+          "url": "https://www.vietnam.vn/en/vanh-dai-4-vung-thu-do-thong-",
+          "milestone": ""
+        },
+        {
+          "date": "2023-06-25",
+          "title_ko": "하노이 링로드4 수도권 착공 2023년 6월 — 총 투자 $3.6B",
+          "title_en": "Hanoi Ring Road 4 Capital Region breaks ground June 2023 — $3.6B",
+          "title_vi": "",
+          "summary_ko": "링로드4 수도권(113km) 2023년 6월 25일 착공. 총 사업비 $3.6B. 국비+지방비+PPP 구성.",
+          "summary_en": "Ring Road 4 Capital Region (113km) groundbreaking Jun 25, 2023. Total $3.6B. State + local + PPP funding.",
+          "grade": "HIGH",
+          "stage": "UNKNOWN",
+          "source": "Vietnam.vn",
+          "url": "https://www.vietnam.vn/en/ngay-25-6-ha-noi-khoi-cong-du",
+          "milestone": ""
+        }
+      ],
+      "article_count": 4,
+      "insight": "",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "milestone": "정책·법령 발표",
+      "timeline": [
+        {
+          "date": "2026-05-04",
+          "stage": "CONSTRUCTION",
+          "milestone_ko": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song"
+        },
+        {
+          "date": "2026-04-30",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song"
+        }
+      ]
+    },
+    "VN-WAT-URBAN": {
+      "plan_id": "VN-WAT-URBAN",
+      "stage": "CONSTRUCTION",
+      "stage_label": {
+        "ko": "건설·시공",
+        "en": "Construction",
+        "vi": "Xây dựng"
+      },
+      "confidence": 0.695,
+      "haiku_used": false,
+      "title_ko": "도시 배수·침수 방지 마스터플랜",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-05-04",
+          "title_ko": "폐수에 의해 \"질식\" 된 나트랑: 만 오염이 기준치를 초과하여 불법 배출 처리를 강화합니다.",
+          "title_en": "Nha Trang \"suffocated\" by wastewater: Bay pollution exceeds threshold, tightening illegal discharge treatment",
+          "title_vi": "Nha Trang “ngộp thở” vì nước thải: Ô nhiễm vịnh vượt ngưỡng, siết xử lý xả thải trái phép",
+          "summary_ko": "나트랑 해만이 하수 오염으로 심각한 환경 위기를 맞고 있습니다. 오염도가 기준치를 초과했으며, 당국은 불법 배출 행위에 대한 단속을 강화하고 있습니다.",
+          "summary_en": "The situation of domestic, urban and aquaculture wastewater discharged directly into the sea makes Nha Trang Bay seriously polluted, many indicators far exceed the norm. Facing the situation that has ",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Moi truong & Cuoc song",
+          "url": "https://moitruong.net.vn/nha-trang-ngop-tho-vi-nuoc-thai-o-nhiem-vinh-vuot-nguong-siet-xu-ly-xa-thai-trai-phep-99255.html",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-08",
+          "title_ko": "하이퐁: 수천 가구가 생활용수 수질에 대해 우려하고 있다",
+          "title_en": "Hải Phòng: Hàng nghìn hộ dân lo lắng về chất lượng nước sinh hoạt",
+          "title_vi": "Hải Phòng: Hàng nghìn hộ dân lo lắng về chất lượng nước sinh hoạt",
+          "summary_ko": "빈틴(Vĩnh Thịnh) 면의 수천 가구가 둥티엔 2(Dũng Tiến 2) 정수장에서 공급되는 생활용수가 위생 기준을 충족하지 못하고, 물이 탁하며, 필터에 진흙이 낀 것처럼 더럽다고 불만을 토로했다. 칸토(Cần Thơ) 연안 지역 주민들은 깨끗한 물을 갈망하며, 밤새 물 한 방울을 기다리며 지새우고 있다. 농촌의 깨끗한 물: 현재 약 68%의 주민만",
+          "summary_en": "Hàng nghìn hộ dân tại xã Vĩnh Thịnh bày tỏ bức xúc khi nước sinh hoạt do Nhà máy nước Dũng Tiến 2 cung cấp, không đảm bảo vệ sinh, nước vẩn đục, cục lọc bẩn như bám bùn nhão. Người dân vùng ven biển C",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "VietnamPlus - Moi truong",
+          "url": "https://www.vietnamplus.vn/hai-phong-hang-nghin-ho-dan-lo-lang-ve-chat-luong-nuoc-sinh-hoat-post1103643.vnp",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-25",
+          "title_ko": "푸꾸옥 Duong Dong 2 수자원 프로젝트 착공",
+          "title_en": "Khởi công dự án Nhà máy nước Dương Đông 2 ở Phú Quốc",
+          "title_vi": "Khởi công dự án Nhà máy nước Dương Đông 2 ở Phú Quốc",
+          "summary_ko": "푸꾸옥 특별구역(안장성)의 즈엉동 2 정수장 프로젝트는 푸꾸옥 섬 주민들이 사용할 수 있는 깨끗한 물 공급을 보장하는 전략적 중요성을 갖고 있습니다.",
+          "summary_en": "Duong Dong 2 water plant project in Phu Quoc special zone (An Giang province) has strategic significance in ensuring clean water supply for people on Phu Quoc island to use.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Tuoi Tre - Kinh doanh",
+          "url": "https://tuoitre.vn/khoi-cong-du-an-nha-may-nuoc-duong-dong-2-o-phu-quoc-2026032513362488.htm",
+          "milestone": ""
+        },
+        {
+          "date": "2025-11-15",
+          "title_ko": "반몽 정수장 1단계가 가동을 시작했습니다",
+          "title_en": "Ban Mong Water Treatment Plant phase 1 begins operation",
+          "title_vi": "Nhà máy xử lý nước Ban Mong giai đoạn 1 chính thức đi vào hoạt động",
+          "summary_ko": "2,380억 동을 투자해 건설된 반몽 정수장 1단계 시설이 가동되었으며, 일일 처리 용량은 1만 m³이다. 총 설계 용량은 일일 2만 7,000 m³로, 이는 손라성에서 가장 큰 상수도 공급 프로젝트이다.",
+          "summary_en": "Ban Mong Water Treatment Plant phase 1 operational with VND 238 billion investment, 10,000 m3/day capacity. Total designed capacity 27,000 m3/day, largest water supply project in Son La province.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "vietnam.vn",
+          "url": "https://www.vietnam.vn/en/phat-trien-cap-nuoc-sinh-hoat-do-thi",
+          "milestone": ""
+        },
+        {
+          "date": "2025-06-15",
+          "title_ko": "Thu Duc City WWTP는 동남아시아 최대의 폐수 처리장으로 거듭났습니다",
+          "title_en": "Thu Duc City WWTP becomes Southeast Asia's largest wastewater treatment plant",
+          "title_vi": "Nhà máy xử lý nước thải Thành phố Thủ Đức trở thành nhà máy xử lý nước thải lớn nhất Đông Nam Á",
+          "summary_ko": "Thu Duc City에 5억 2,400만 달러를 투자하여 동남아시아 최대 규모의 WWTP를 건설 중입니다. MBBR 기술은 하루 110만m3를 처리하고 8개 구역에 걸쳐 180만 명의 주민에게 서비스를 제공합니다.",
+          "summary_en": "Southeast Asia's largest WWTP under construction in Thu Duc City with $524 million investment. Features MBBR technology, treating 1.1 million m3/day, serving 1.8 million residents across eight distric",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "trade.gov",
+          "url": "https://www.trade.gov/market-intelligence/vietnam-water-and-wastewater-management",
+          "milestone": ""
+        },
+        {
+          "date": "2025-01-03",
+          "title_ko": "옌자(Yen Xa) 폐수처리장, 베트남 북부 최대 규모로 시범 가동 시작",
+          "title_en": "Yen Xa Wastewater Treatment Plant begins trial operation as Northern Vietnam's largest",
+          "title_vi": "Nhà máy xử lý nước thải Yên Xá bắt đầu vận hành thử nghiệm lớn nhất miền Bắc Việt Nam",
+          "summary_ko": "베트남 북부 최대 규모의 Yen Xa WWTP가 시범 운영을 시작합니다. 2025년까지 하노이의 폐수 처리율 50-55% 목표에 매우 중요합니다. 시는 현재 4개의 새로운 프로젝트가 계획되어 있으며 처리율은 30%입니다.",
+          "summary_en": "Yen Xa WWTP, Northern Vietnam's largest, begins trial operation. Critical for Hanoi's target of 50-55% wastewater treatment rate by 2025. City currently at 30% treatment rate with 4 new projects plann",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "b-company.jp",
+          "url": "https://b-company.jp/trial-operation-of-northern-vietnam-largest-wastewater-treatment-plant/",
+          "milestone": ""
+        }
+      ],
+      "article_count": 6,
+      "insight": "",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "milestone": "착공·건설 진행 중",
+      "timeline": [
+        {
+          "date": "2026-05-04",
+          "stage": "CONSTRUCTION",
+          "milestone_ko": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song"
+        }
+      ]
+    },
+    "VN-SC-2030": {
+      "plan_id": "VN-SC-2030",
+      "stage": "PLANNING",
+      "stage_label": {
+        "ko": "계획·승인",
+        "en": "Planning",
+        "vi": "Lập kế hoạch"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "베트남 스마트시티 개발 프로그램 2030",
+      "description_ko": "",
+      "decision": "Decision 950/QĐ-TTg (2018)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-05-05",
+          "title_ko": "문화 관광을 재구성하는 요리, 문화유산 여권",
+          "title_en": "Culinary, heritage passports reshape cultural tourism",
+          "title_vi": "Hộ chiếu ẩm thực, di sản định hình lại du lịch văn hóa",
+          "summary_ko": "베트남 정부의 문화발전 결의(Resolution 80)에 따라 유산 보존을 일상에 녹여내는 새로운 접근이 추진 중이다. 후에시는 '후에 시티 패스포트' 앱을 개발해 유산지를 GPS로 체크인하며 디지털 스탬프를 수집하는 인터랙티브 관광 경험을 제공하고 있다.",
+          "summary_en": "The central city of Hue is among the first to forge new paths. Its “Hue Tourism Passport” began as a destination brochure in 2018 and has since evolved into the “Hue City Passport” app, with a heritag",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "vietnamplus",
+          "url": "https://en.vietnamplus.vn/culinary-heritage-passports-reshape-cultural-tourism-post342196.vnp",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-20",
+          "title_ko": "SHB는 디지털 전환을 촉진하기 위해 Huawei와 협력합니다",
+          "title_en": "SHB teams up with Huawei to boost digital transformation",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Vietnam News - Economy",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-09",
+          "title_ko": "호치민시에서 애국적 경쟁 운동이 획기적인 발전을 이끌고 있다",
+          "title_en": "Patriotic emulation movements catalyze breakthroughs in HCMC",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP News English",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-05",
+          "title_ko": "스마트 시티와 디지털 산업단지를 강화하기 위한 5G 출시 가속화",
+          "title_en": "5G rollout accelerated to power smart cities and digital industrial parks",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP News English",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-02-25",
+          "title_ko": "베트남, 디지털 경제를 위한 최초의 국가 블록체인 인프라 출시",
+          "title_en": "Vietnam launches first national blockchain infrastructure for digital economy",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP News English",
+          "url": "",
+          "milestone": ""
+        }
+      ],
+      "article_count": 5,
+      "insight": "",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "milestone": "정책·법령 발표",
+      "timeline": [
+        {
+          "date": "2026-05-05",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "vietnamplus"
+        }
+      ]
+    },
+    "HN-URBAN-INFRA, HN-URBAN-WEST": {
+      "plan_id": "HN-URBAN-INFRA, HN-URBAN-WEST",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "HN-URBAN-INFRA, HN-URBAN-WEST",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-03-13",
+          "title_ko": "베트남 우주센터 개관",
+          "title_en": "Khánh thành Trung tâm Vũ trụ Việt Nam",
+          "title_vi": "",
+          "summary_ko": "베트남 우주 센터는 직경 9.3m 안테나를 갖춘 지상 시스템과 위성 R&D 센터를 갖춘 호아락 하이테크 파크에 문을 열었습니다. 억만장자 Elon Musk의 위성 인터넷은 베트남에서 라이센스를 받았습니다. 또 다른 회사는 베트남에서 위성 인터넷을 시험하기 위한 신청서를 제출했습니다.",
+          "summary_en": "The Vietnam Space Center was inaugurated at Hoa Lac Hi-Tech Park, possessing a ground system with a 9.3m diameter antenna and a satellite R&D center. Billionaire Elon Musk's satellite Internet is lice",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Bao Ha Tinh",
+          "url": "https://baohatinh.vn/khanh-thanh-trung-tam-vu-tru-viet-",
+          "milestone": ""
+        }
+      ],
+      "article_count": 1,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "HN-URBAN-NORTH,HN-URBAN-INFRA": {
+      "plan_id": "HN-URBAN-NORTH,HN-URBAN-INFRA",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "HN-URBAN-NORTH,HN-URBAN-INFRA",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2025-08-20",
+          "title_ko": "하노이 동아인 BRG-Sumitomo 스마트시티 1단계 착공 — $4.2B 272ha",
+          "title_en": "North Hanoi BRG-Sumitomo Smart City Phase 1 breaks ground — $4.2B 272ha",
+          "title_vi": "",
+          "summary_ko": "하노이 동아인구 BRG-Sumitomo 스마트시티(272ha, $4.2B) 2025.8.19 1단계 착공. 5단계 개발, 108층 금융타워. 2032년 완공 목표.",
+          "summary_en": "BRG-Sumitomo Smart City (272ha, $4.2B) Dong Anh breaks ground Aug 2025. Phase 1 of 5-phase plan. 108-floor tower planned.",
+          "grade": "HIGH",
+          "stage": "UNKNOWN",
+          "source": "The Modulus Media",
+          "url": "https://themodulusmedia.com/north-hanoi-smart-city-proj",
+          "milestone": ""
+        },
+        {
+          "date": "2023-11-11",
+          "title_ko": "하노이, 동아인 BRG 스마트시티 프로젝트 공식 발표 — $4.2B",
+          "title_en": "Hanoi launches $4.2B BRG Dong Anh smart city project",
+          "title_vi": "",
+          "summary_ko": "하노이시, 동아인구 냣딴교 앞 272ha BRG-Sumitomo 스마트시티($4.2B) 공식 발표. 5단계 개발, 108층 금융센터 포함.",
+          "summary_en": "Hanoi officially announces 272ha BRG-Sumitomo Smart City ($4.2B) in Dong Anh. 5-phase development, 108-floor financial center.",
+          "grade": "HIGH",
+          "stage": "UNKNOWN",
+          "source": "VnExpress International",
+          "url": "https://e.vnexpress.net/news/news/hanoi-launches-4-2b-s",
+          "milestone": ""
+        }
+      ],
+      "article_count": 2,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-MEKONG-DELTA-2030": {
+      "plan_id": "VN-MEKONG-DELTA-2030",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "메콩 델타 인프라 개발 계획 2030",
+      "description_ko": "",
+      "decision": "Resolution 13-NQ/TW (2022)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-04-21",
+          "title_ko": "Can Tho Bridge는 과부하 위험에 직면해 있습니다",
+          "title_en": "Can Tho Bridge faces risk of overload",
+          "title_vi": "",
+          "summary_ko": "Can Tho No.2 교량 건설을 기다리는 동안 메콩 삼각주를 가로지르는 고속도로 복도의 교통은 기존의 Can Tho 교량에 장착 압력을 가하고 있습니다.",
+          "summary_en": "While awaiting the construction of Can Tho No.2 Bridge, traffic from expressway corridors across the Mekong Delta is placing mounting pressure on the existing Can Tho Bridge.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP News English",
+          "url": "https://en.sggp.org.vn/can-tho-bridge-faces-risk-of-ove",
+          "milestone": ""
+        }
+      ],
+      "article_count": 1,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-URB-METRO-2030": {
+      "plan_id": "VN-URB-METRO-2030",
+      "stage": "CONSTRUCTION",
+      "stage_label": {
+        "ko": "건설·시공",
+        "en": "Construction",
+        "vi": "Xây dựng"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "베트남 도시철도(메트로) 개발 계획",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-05-04",
+          "title_ko": "방콕의 녹색 도시 재생은 동남아시아 도시에 대한 모델을 제공합니다.",
+          "title_en": "Bangkok’s green urban regeneration offers a model for Southeast Asian cities",
+          "title_vi": "Tái tạo đô thị xanh của Bangkok cung cấp một mô hình cho các thành phố Đông Nam Á",
+          "summary_ko": "기사는 방콕의 녹색 도시 재생 사업이 동남아시아 도시들을 위한 모범 사례를 제시한다고 소개합니다. 베트남을 포함한 지역 도시들이 지속가능한 도시 발전을 추진하는 데 참고할 수 있는 모델을 제공합니다.",
+          "summary_en": "Today’s podcast episode takes you to Bangkok, Thailand, and its story of green urban regeneration. From revitalising green spaces and restoring canals to developing clean transportation, these experie",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "vietnamplus",
+          "url": "https://en.vietnamplus.vn/bangkoks-green-urban-regeneration-offers-a-model-for-southeast-asian-cities-post342108.vnp",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-21",
+          "title_ko": "하노이와 호치민시, 30개의 도시 철도 노선 건설",
+          "title_en": "Hanoi and Ho Chi Minh City to build 30 urban railway lines",
+          "title_vi": "",
+          "summary_ko": "베트남은 하노이와 호치민시가 국가 교통 인프라를 현대화하기 위한 광범위한 전략의 일환으로 총 30개의 지하철 노선을 건설할 계획으로 도시 철도 네트워크의 대대적인 확장을 계획하고 있습니다.",
+          "summary_en": "Vietnam plans a major expansion of its urban railway network, with Hanoi and Ho Chi Minh City set to build a total of 30 metro lines, as part of a broader strategy to modernize national transport infr",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP News English",
+          "url": "https://en.sggp.org.vn/hanoi-and-ho-chi-minh-city-to-bu",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-17",
+          "title_ko": "Long Thanh 공항에 Ben Thanh-Suoi Tien 지하철 프로젝트를 구현하기 위한 토지 취득",
+          "title_en": "Thu hồi đất triển khai Dự án metro Bến Thành-Suối Tiên đến Sân bay Long Thành",
+          "title_vi": "",
+          "summary_ko": "Dong Nai 토지기금개발센터에 따르면 Ben Thanh-Suoi Tien 지하철 노선을 지방 행정 센터와 Long Thanh 국제공항까지 연장하는 프로젝트의 총 길이는 44.6km입니다. 문제 해결",
+          "summary_en": "According to the Dong Nai Land Fund Development Center, the project extending the Ben Thanh-Suoi Tien Metro line to the Provincial Administrative Center and Long Thanh International Airport has a tota",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "VietnamPlus - Giao thong",
+          "url": "https://www.vietnamplus.vn/thu-hoi-dat-trien-khai-du-an",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-17",
+          "title_ko": "부총리는 하노이와 호치민시에 지하철역 주변의 TOD를 우선적으로 처리하도록 요청했습니다.",
+          "title_en": "Phó thủ tướng yêu cầu Hà Nội, TP HCM ưu tiên TOD quanh ga metro",
+          "title_vi": "",
+          "summary_ko": "Pham Gia Tuc 부총리는 TOD 메커니즘을 완성하고 지하철역 주변의 도시 개발을 우선시하며 하노이와 호치민시의 도시 철도 프로젝트 진행 속도를 높일 것을 요청했습니다.",
+          "summary_en": "Permanent Deputy Prime Minister Pham Gia Tuc requested to complete the TOD mechanism, prioritize urban development around metro stations, and speed up the progress of urban railway projects in Hanoi a",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "VnExpress - Thoi su",
+          "url": "https://vnexpress.net/pho-thu-tuong-yeu-cau-ha-noi-tp-h",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-14",
+          "title_ko": "HCMC, 2차 지하철 노선 건설을 위해 시내 나무 400그루 이동",
+          "title_en": "HCMC to move 400 downtown trees for 2nd metro line construction",
+          "title_vi": "",
+          "summary_ko": "호치민시는 벤탄 (Ben Thanh) 과 탐루옹 (Tham Luong) 사이의 지하철 2호선 건설을 위해 중앙의 여러 도로를 따라 400여 그루의 나무를 재배치할 예정입니다.",
+          "summary_en": "Ho Chi Minh City will relocate more than 400 trees along several roads in the center to make way for construction of metro line No. 2 between Ben Thanh and Tham Luong.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "VnExpress English - News",
+          "url": "https://e.vnexpress.net/news/news/traffic/hcmc-to-move-",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-05",
+          "title_ko": "호치민시, 지하철 2호선 건설 가속화",
+          "title_en": "Ho Chi Minh City accelerates Metro Line 2 construction",
+          "title_vi": "",
+          "summary_ko": "Ben Thanh–Tham Luong 지하철 프로젝트는 동기화 된 솔루션과 터널 보링 머신의 확장 된 사용을 통해 도시의 도시 철도 시스템에 대한 새로운 기술 표준을 설정하기 위해 빠르게 추적되고 있습니다. 호치민 국제공항 (HCMC) 에서 벤탄 수오이 티엔 (Ben Thanh–Suoi Tien) 지하철 노선을 롱탄 공항 (Long Thanh Airport",
+          "summary_en": "With synchronized solutions and expanded use of tunnel boring machines, the Ben Thanh–Tham Luong metro project is being fast-tracked to set new technological standards for the city’s urban railway sys",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP News English",
+          "url": "https://en.sggp.org.vn/ho-chi-minh-city-accelerates-met",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-04",
+          "title_ko": "호치민시 지도자들이 지하철 2호선 현장 조사를 실시합니다.",
+          "title_en": "Ho Chi Minh City’s leaders conduct field survey of Metro Line No. 2",
+          "title_vi": "",
+          "summary_ko": "4월 3일, 호치민시 인민위원회 경제 예산 위원회의 조사 대표단이 지하철 2호선 프로젝트 (벤탄 – 탐루옹) 의 S5역과 탐루옹 창고에 대한 현장 점검을 실시했습니다.",
+          "summary_en": "On April 3, a survey delegation from the Economic and Budget Committee of the Ho Chi Minh City People’s Council conducted an on-site inspection of Station S5 and the Tham Luong depot of the Metro Line",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP News English",
+          "url": "https://en.sggp.org.vn/ho-chi-minh-citys-leaders-conduc",
+          "milestone": ""
+        }
+      ],
+      "article_count": 7,
+      "insight": "",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "milestone": "착공·건설 진행 중",
+      "timeline": [
+        {
+          "date": "2026-05-05",
+          "stage": "UNKNOWN",
+          "milestone_ko": "국내 여행 수요 81% 증가 기록",
+          "source": "vir_vn"
+        },
+        {
+          "date": "2026-05-04",
+          "stage": "CONSTRUCTION",
+          "milestone_ko": "착공·건설 진행 중",
+          "source": "vietnamplus"
+        }
+      ]
+    },
+    "VN-PWR-PDP8": {
+      "plan_id": "VN-PWR-PDP8",
+      "stage": "PLANNING",
+      "stage_label": {
+        "ko": "계획·승인",
+        "en": "Planning",
+        "vi": "Lập kế hoạch"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "베트남 제8차 국가전력개발계획",
+      "description_ko": "",
+      "decision": "Decision 500/QĐ-TTg (2023) + Decision 768/QĐ-TTg (2024 개정)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-05-05",
+          "title_ko": "[동영상] El Nino 2026의 위험에 처하기 전에 수력 발전이 물을 모으기 위해 돌진합니다.",
+          "title_en": "[VIDEO] Hydropower rushes to collect water before the risk of El Nino 2026",
+          "title_vi": "[VIDEO] Thủy điện chạy đua tích nước trước nguy cơ El Nino 2026",
+          "summary_ko": "베트남 수력발전소들이 2026년 엘니뇨 현상에 대비해 저수지 물 저장에 나섰다. 가뭄 위험에 대응하기 위해 수력발전 시설들이 적극적으로 용수 확보에 진행 중이다.",
+          "summary_en": "The dry season of 2026 is forecast to be harsh when the El Nino phenomenon is likely to occur from June to August with a high probability of prolonged and increased risk of widespread water shortages.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Moi truong & Cuoc song",
+          "url": "https://moitruong.net.vn/video-thuy-dien-chay-dua-tich-nuoc-truoc-nguy-co-el-nino-2026-99294.html",
+          "milestone": ""
+        },
+        {
+          "date": "2026-05-05",
+          "title_ko": "베트남, 미국, 더 강력한 에너지 협력 모색",
+          "title_en": "Vietnam, US explore stronger energy collaboration",
+          "title_vi": "Việt Nam, Hoa Kỳ khám phá sự hợp tác năng lượng mạnh mẽ hơn",
+          "summary_ko": "베트남과 미국이 에너지 협력을 강화하기 위한 협상을 진행 중이다. 양국은 에너지 분야에서의 상호협력을 통해 전략적 파트너십을 구축하고자 한다.",
+          "summary_en": "Both sides agreed that Vietnam – US energy collaboration holds ample potential and could become a crucial pillar of economic ties. Prime Minister meets delegation of leading US businesses Quang Ninh, ",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "vietnamplus",
+          "url": "https://en.vietnamplus.vn/vietnam-us-explore-stronger-energy-collaboration-post342239.vnp",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-30",
+          "title_ko": "더운 날씨와 전기 부족은 동남아시아에 동시에 압력을 가합니다.",
+          "title_en": "Nắng nóng và thiếu điện cùng lúc gây sức ép lên Đông Nam Á",
+          "title_vi": "Nắng nóng và thiếu điện cùng lúc gây sức ép lên Đông Nam Á",
+          "summary_ko": "동남아시아가 동시에 극심한 더위와 전력 부족으로 인한 압력에 직면하고 있다. 높은 기온으로 인한 전력 수요 증가가 지역의 전력 공급 능력을 초과하면서 에너지 위기가 심화되고 있는 상황이다.",
+          "summary_en": "Workers in many Southeast Asian countries are dealing with a \"dual crisis\" when the region is simultaneously affected by prolonged heat and the risk of energy shortages in the context of complicated w",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Moi truong & Cuoc song",
+          "url": "https://moitruong.net.vn/nang-nong-va-thieu-dien-cung-luc-gay-suc-ep-len-dong-nam-a-99183.html",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-21",
+          "title_ko": "1 chiếc tủ lạnh chạy 24/7 hết bao nhiêu tiền điện: EVN Việt Nam đưa ra đáp án",
+          "title_en": "1 chiếc tủ lạnh chạy 24/7 hết bao nhiêu tiền điện: EVN Việt Nam đưa ra đáp án",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "CafeBiz",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-17",
+          "title_ko": "EVNSPC는 Lai Son 110kV 변압기 스테이션에 전력을 공급하고 운영합니다.",
+          "title_en": "EVNSPC đóng điện, vận hành Trạm biến áp 110kV Lại Sơn",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Bao Xay Dung",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-17",
+          "title_ko": "EVNSPC는 검사를 강화하고 Phu Quoc 및 APEC 2027에 대한 전력 프로젝트를 촉구합니다.",
+          "title_en": "EVNSPC tăng cường kiểm tra, đôn đốc các dự án điện cho Phú Quốc và APEC 2027",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Thanh Nien - Kinh te",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-16",
+          "title_ko": "EVN Việt Nam hướng dẫn: Làm điều này trước khi ngủ có thể giúp giảm tiền điện mỗi tháng",
+          "title_en": "EVN Việt Nam hướng dẫn: Làm điều này trước khi ngủ có thể giúp giảm tiền điện mỗi tháng",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "CafeBiz",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-16",
+          "title_ko": "EVN Việt Nam cảnh báo: 5 thiết bị tắt rồi vẫn \"chạy ngầm\" 24/7, nhiều nhà bị tốn điện oan",
+          "title_en": "EVN Việt Nam cảnh báo: 5 thiết bị tắt rồi vẫn \"chạy ngầm\" 24/7, nhiều nhà bị tốn điện oan",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "CafeBiz",
+          "url": "",
+          "milestone": ""
+        }
+      ],
+      "article_count": 52,
+      "insight": "",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "milestone": "정책·법령 발표",
+      "timeline": [
+        {
+          "date": "2026-05-06",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song"
+        },
+        {
+          "date": "2026-05-05",
+          "stage": "TENDERING",
+          "milestone_ko": "입찰·계약 진행",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-05-05",
+          "stage": "OPERATION",
+          "milestone_ko": "건기 안정적 운영 중, 하류 전력·용수 공급 보장",
+          "source": "Moi truong & Cuoc song"
+        },
+        {
+          "date": "2026-04-30",
+          "stage": "OPERATION",
+          "milestone_ko": "지역 전력 수급 위기 심화",
+          "source": "Moi truong & Cuoc song"
+        }
+      ]
+    },
+    "VN-PWR-PDP8,VN-PWR-PDP8-RENEWABLE": {
+      "plan_id": "VN-PWR-PDP8,VN-PWR-PDP8-RENEWABLE",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "VN-PWR-PDP8,VN-PWR-PDP8-RENEWABLE",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "None",
+          "title_ko": "Vietnam Revised PDP8 under Decision 768 — offshore wind solar targets raised",
+          "title_en": "Vietnam Revised PDP8 under Decision 768 — offshore wind solar targets raised",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "POLICY",
+          "stage": "UNKNOWN",
+          "source": "Unknown",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2025-04-27",
+          "title_ko": "PDP8 개정 Decision 768 — 해상풍력·태양광 목표 대폭 상향",
+          "title_en": "Vietnam Revised PDP8 Decision 768 — offshore wind solar targets raised",
+          "title_vi": "",
+          "summary_ko": "PDP8 개정(Decision 768, 2025.4): 해상풍력 3배 상향(17,032MW), 태양광 대폭 증가, BESS 300→10,000MW. 총 투자 $134.7B.",
+          "summary_en": "PDP8 revised under Decision 768 (Apr 2025): offshore wind tripled to 17,032MW, solar up, BESS 300→10,000MW. Total $134.7B.",
+          "grade": "POLICY",
+          "stage": "UNKNOWN",
+          "source": "The Shiv Energy",
+          "url": "https://the-shiv.com/vietnams-revised-power-development",
+          "milestone": ""
+        }
+      ],
+      "article_count": 2,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-PWR-PDP8, VN-PWR-PDP8-NUCLEAR": {
+      "plan_id": "VN-PWR-PDP8, VN-PWR-PDP8-NUCLEAR",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "VN-PWR-PDP8, VN-PWR-PDP8-NUCLEAR",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-04-08",
+          "title_ko": "닌투안 1호 원자력 발전소 건설 사업을 위한 묘지 이전 보상",
+          "title_en": "Compensation for the relocation of graves in connection with the Ninh Thuan 1 Nuclear Power Plant project",
+          "title_vi": "",
+          "summary_ko": "닌투안 1호 원자력 발전소 프로젝트 시행을 위해 이전해야 할 묘지는 총 566기이며, 묘지당 보상 및 지원금은 1,100만~2,400만 동이다. 칸호아: 토지 수용 시 보상, 지원 및 재정착에 관한 새로운 규정 제정; 칸호아: 주민 이주 및 재정착 프로젝트 착수",
+          "summary_en": "The total number of graves that need to be relocated to make way for the project at the Ninh Thuan 1 Nuclear Power Plant is 566, with compensation and support ranging from 11 to 24 million VND per gra",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "VietnamPlus - Kinh te",
+          "url": "https://www.vietnamplus.vn/boi-thuong-di-doi-ngoi-mo-ph",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-28",
+          "title_ko": "베트남 원전 건설 계약으로 인한 긍정적 영향",
+          "title_en": "Tác động tích cực từ thỏa thuận xây dựng dự án Nhà máy điện hạt nhân của Việt Nam",
+          "title_vi": "",
+          "summary_ko": "러시아는 전통적인 대용량 원전뿐 아니라 소형모듈형원자로(SMR), 부유식발전소(FPU) 등도 적극 추진하고 있다. 러시아는 문칸화(Moon Khanh Hoa)에 곧 원자력 발전소를 개발할 것으로 예상 유권자들은 원자력 발전소 프로젝트 5차 회의를 기대",
+          "summary_en": "Russia is actively promoting not only traditional large-capacity nuclear power plants, but also small modular reactors (SMRs) and floating power units (FPUs). Russia expects to soon develop a nuclear ",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "VietnamPlus - Kinh te",
+          "url": "https://www.vietnamplus.vn/tac-dong-tich-cuc-tu-thoa-th",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-17",
+          "title_ko": "베트남, Assystem Group과 원자력 분야 협력 논의",
+          "title_en": "Việt Nam trao đổi với tập đoàn Assystem về hợp tác trong lĩnh vực điện hạt nhân",
+          "title_vi": "",
+          "summary_ko": "Trinh Duc Hai 대사는 공급원 다변화 및 베트남의 장기 에너지 전략 수립 방향에 따라 원자력 협력 가능성에 관해 Assystem 그룹의 리더들과 협력했습니다. 베트남, 원자력 발전에 관한 국제 협력 촉진 슬로베니아는 베트남의 전력 개발을 지원할 준비가 되어 있음",
+          "summary_en": "Ambassador Trinh Duc Hai worked with leaders of Assystem Group on the possibility of nuclear power cooperation, in accordance with the direction of diversifying supply sources and building Vietnam's l",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "VietnamPlus - Kinh te",
+          "url": "https://www.vietnamplus.vn/viet-nam-trao-doi-voi-tap-do",
+          "milestone": ""
+        },
+        {
+          "date": "2025-11-21",
+          "title_ko": "LNG 논트락 3·4 발전 단지 프로젝트의 추진 현황 (2025년 11월 21일 업데이트) | 베트남 에너지 매거진",
+          "title_en": "Implementation status of LNG Nhon Trach 3 and 4 power project clusters (updated November 21, 2025) | Vietnam Energy Maga",
+          "title_vi": "",
+          "summary_ko": "편집부로 문의하기 기존 댓글 댓글, 댓글 댓글 - 전망 댓글 전력 석유 및 가스 석탄 산업 원자력, 재생 에너지 재생 에너지 원자력 과학, 기술, 환경 문화...",
+          "summary_en": "Contact the editorial office Existing comments Comments, Comments Comments - Forecasts Comments Electricity Oil and gas Coal industry Nuclear power, renewable energy Renewable energy Atomic energy Sci",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "nangluongvietnam.vn",
+          "url": "https://nangluongvietnam.vn/tinh-hinh-trien-khai-cum-du",
+          "milestone": ""
+        }
+      ],
+      "article_count": 4,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-PWR-PDP8, VN-PWR-PDP8-LNG": {
+      "plan_id": "VN-PWR-PDP8, VN-PWR-PDP8-LNG",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "VN-PWR-PDP8, VN-PWR-PDP8-LNG",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-04-10",
+          "title_ko": "카나(Cà Ná) LNG 발전소 및 부두 프로젝트에 대한 투자 계약 체결",
+          "title_en": "Investment deal signed for Cà Ná LNG power plant, wharf projects",
+          "title_vi": "",
+          "summary_ko": "총 사업비 60조 동(23억 달러)이 넘는 중남부 칸호아성의 ‘카나 부두 단지 – 1단계’ 사업이 4월 10일 계약 체결되었다.",
+          "summary_en": "The Cà Ná Wharf Complex – Phase 1 in the south-central province of Khánh Hòa, worth more than VNĐ60 trillion (US$2.3 billion) in total, were signed on April 10.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Vietnam News - Economy",
+          "url": "https://vietnamnews.vn/economy/1779216/investment-deal-",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-08",
+          "title_ko": "PV GAS, 티바이 LNG 터미널 처리 능력 확대",
+          "title_en": "PV GAS increases capacity of Thi Vai LNG terminal",
+          "title_vi": "",
+          "summary_ko": "페트로베트남 가스(PV GAS)는 4월 7일, 자사의 물류 자회사가 티바이(Thi Vai) 액화천연가스(LNG) 터미널의 재기화 용량을 확대하기 위한 시험 가동을 성공적으로 마쳤다고 발표했다.",
+          "summary_en": "Petrovietnam Gas PV GAS on April 7 announced that its logistics subsidiary has successfully completed a trial run to increase regasification capacity of its Thi Vai liquefied natural gas LNG terminal",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "NewsData/Waste Water",
+          "url": "https://vir.com.vn/pv-gas-increases-capacity-of-thi-vai",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-08",
+          "title_ko": "티바이 LNG 터미널의 재기화 처리 능력이 시간당 288톤으로 확대되었다",
+          "title_en": "Thi Vai LNG Terminal’s regasification capacity boosted to 288 tons per hour",
+          "title_vi": "",
+          "summary_ko": "PV GAS는 티바이(Thi Vai) LNG 터미널의 재기화 용량을 시간당 288톤으로 성공적으로 확대함으로써, 동남부 지역의 건기 성수기 동안 발전용 가스 공급 역량을 강화했다. 베트남, 총리 방문 기간 중 러시아와 LNG 협력 강화 모색 LNG 운반선 출항",
+          "summary_en": "PV GAS has successfully increased regasification capacity at its Thi Vai LNG Terminal to 288 tons per hour, strengthening gas supply readiness for power generation during the peak dry season in the So",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP News English",
+          "url": "https://en.sggp.org.vn/thi-vai-lng-terminals-regasifica",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-07",
+          "title_ko": "건기 전력 수요 급증에 대응하기 위해 티바이 LNG 발전소 발전 용량 증설",
+          "title_en": "Increasing the capacity of the Thi Vai LNG plant to meet peak electricity demand during the dry season",
+          "title_vi": "",
+          "summary_ko": "베트남 가스공사(PV Gas)의 발표에 따르면, 티바이 LNG 저장소의 재기화 용량을 시간당 288톤으로 증설하는 작업을 완료했다고 한다.",
+          "summary_en": "According to information from Vietnam Gas Corporation (PV Gas), the company has recently completed the expansion of the regasification capacity at the Thi Vai LNG terminal to 288 tons per hour.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Tuoi Tre - Kinh doanh",
+          "url": "https://tuoitre.vn/nang-cong-suat-khi-lng-thi-vai-dap-u",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-06",
+          "title_ko": "EVN 및 PV 가스, Quang Trach 발전소용 LNG 공급 합의",
+          "title_en": "EVN and PV GAS agree to supply LNG for Quang Trach power plants",
+          "title_vi": "",
+          "summary_ko": "베트남 전력 EVN과 페트로베트남 가스 PV 가스는 4월 3일 하노이에서 하틴의 붕앙 LNG 터미널에서 꽝 트라치 II 및 III 발전소로 액화 천연 가스 LNG 공급에 관한 프레임워크 계약을 체결했습니다.",
+          "summary_en": "Vietnam Electricity EVN and Petrovietnam Gas PV GAS signed a framework agreement on the supply of liquefied natural gas LNG from the Vung Ang LNG terminal in Ha Tinh to the Quang Trach II and III powe",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "NewsData/Bac Ninh",
+          "url": "https://vir.com.vn/evn-and-pv-gas-agree-to-supply-lng-f",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-12",
+          "title_ko": "호르무즈 해협 통과: 63,000톤의 LNG를 안전하게 베트남으로 운반하는 선박",
+          "title_en": "Vượt eo biển Hormuz: Tàu chở 63.000 tấn LNG về Việt Nam an toàn",
+          "title_vi": "",
+          "summary_ko": "이는 2026년 PV GAS의 첫 LNG 수입선이다. 특히 이 선박은 이란 군사적 긴장이 발발하기 전 중동을 떠나 호르무즈 해협을 통과했다.",
+          "summary_en": "This is PV GAS's first imported LNG ship in 2026. Notably, the ship left the Middle East and passed through the Strait of Hormuz before military tensions in Iran broke out.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Bao Ha Tinh",
+          "url": "https://baohatinh.vn/vuot-eo-bien-hormuz-tau-cho-63000-",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-11",
+          "title_ko": "Thi Vai 항구에 정박 중인 63,000톤급 LNG 운반선",
+          "title_en": "LNG carrier delivering 63,000 tons docks at Thi Vai Port",
+          "title_vi": "",
+          "summary_ko": "약 63,000톤의 액화천연가스를 운반하는 LNG 운반선 FAT'H AL KHAIR가 베트남가스공사(PV GAS)가 운영하는 호치민시 티바이 LNG 터미널에 정박했습니다. Phuoc An 다리가 Thi Vai 강 위로 점진적으로 형성됨 Cai Mep에서 모선 처리량 – Thi Vai 18 증가",
+          "summary_en": "LNG carrier FAT’H AL KHAIR has docked at Thi Vai LNG Terminal in Ho Chi Minh City, operated by Vietnam Gas Corporation (PV GAS), carrying approximately 63,000 tons of liquefied natural gas. Phuoc An B",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP News English",
+          "url": "https://en.sggp.org.vn/lng-carrier-delivering-63000-ton",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-11",
+          "title_ko": "63,000톤의 LNG를 운반하는 선박이 Thi Vai 항구에 정박했습니다.",
+          "title_en": "Tàu chở 63.000 tấn LNG cập cảng Thị Vải",
+          "title_vi": "",
+          "summary_ko": "FAT'H AL KHAIR 선박은 약 63,000톤의 LNG를 운반하는 베트남 가스 공사의 Thi Vai LNG 터미널(HCMC)에 정박했습니다. 이는 2026년 PV GAS의 첫 수입 LNG열차로, 국가 전력계통의 연료원 확보에 적극적으로 기여하고 있습니다.",
+          "summary_en": "The ship FAT'H AL KHAIR docked at Thi Vai LNG Terminal (HCMC) of Vietnam Gas Corporation, carrying about 63,000 tons of LNG. This is PV GAS's first imported LNG train in 2026, proactively contributing",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP",
+          "url": "https://www.sggp.org.vn/tau-cho-63000-tan-lng-cap-cang-",
+          "milestone": ""
+        }
+      ],
+      "article_count": 30,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-OG-2030": {
+      "plan_id": "VN-OG-2030",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "베트남 석유가스 분야 전략 2030",
+      "description_ko": "",
+      "decision": "Decision 893/QĐ-TTg (2023)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-04-15",
+          "title_ko": "Petrovietnam và bài toán ổn định cung ứng xăng dầu trước biến động toàn cầu",
+          "title_en": "Petrovietnam và bài toán ổn định cung ứng xăng dầu trước biến động toàn cầu",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "VietnamNet - Kinh doanh",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-03",
+          "title_ko": "PM, Dung Quat 석유 정제 및 에너지 센터 프로젝트 정책 구축 요청",
+          "title_en": "PM requests building of policies for Dung Quat oil refining and energy centre project",
+          "title_vi": "",
+          "summary_ko": "Pham Minh Chinh 총리는 Quang Ngai 중부 지방의 Dung Quat Economic Zone (EZ) 에서 국가 석유 정제 및 에너지 센터 프로젝트를 신속하게 추진하기 위해 신속한 조치와 제로 망설임을 요구했으며, 신속하고 효과적인 결과를 제공하기 위해 명확한 로드맵과 사용 가능한 모든 자원을 촉구했습니다.",
+          "summary_en": "Prime Minister Pham Minh Chinh has demanded rapid action and zero hesitation to expedite the National Oil Refining and Energy Centre project at Dung Quat Economic Zone (EZ) in the central province of ",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Nhan Dan English",
+          "url": "https://en.nhandan.vn/pm-requests-building-of-policies-",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-03",
+          "title_ko": "Thảng nhết chât trương triến khai Đế án Trung tâm Công nghiệp - Năng lưếng sinh thái Petrovietnam tại Vảng Áng",
+          "title_en": "Thống nhất chủ trương triển khai Đề án Trung tâm Công nghiệp - Năng lượng sinh thái Petrovietnam tại Vũng Áng",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Bao Ha Tinh",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-28",
+          "title_ko": "FPT, Petrovietnam, Vingroup, Viettel은 훌륭하게 \"해외로 나갔습니다\". Cao Duc Thang 씨는 총리에게 무엇을 제안 했습니까?",
+          "title_en": "FPT, Petrovietnam, Vingroup, Viettel \"went abroad\" brilliantly, what did Mr. Cao Duc Thang propose to the Prime Minister?",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "CafeBiz",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-10",
+          "title_ko": "3월 10일 오후 팟캐스트 뉴스: 국내 수요 우선으로 원유 수출 중단 제안",
+          "title_en": "Podcast bản tin chiều 10-3: Kiến nghị dừng xuất khẩu dầu thô, ưu tiên nhu cầu trong nước",
+          "title_vi": "",
+          "summary_ko": "Saigon Giai Phong 신문의 3월 10일 오후 뉴스 팟캐스트에는 다음과 같은 주목할만한 정보가 포함되어 있습니다. Petrovietnam은 정부에 원유 수출 중단을 제안했습니다. 호치민시는 1급 학생을 위한 입학 계획 초안에 대한 의견을 수집합니다. 4월에 석유 수입을 계획하고 있는 기업 문제를 일으킨 오토바이 택시기사를 긴급 검거하세요",
+          "summary_en": "The March 10 afternoon news podcast on Saigon Giai Phong Newspaper contained the following notable information: Petrovietnam proposed to the Government to stop crude oil exports; Ho Chi Minh City coll",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP",
+          "url": "https://www.sggp.org.vn/podcast-ban-tin-chieu-10-3-kien",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-10",
+          "title_ko": "오후뉴스 3월 10일: 10학년 입학시험이 6월 1일과 2일에 치러집니다.",
+          "title_en": "Bản tin chiều 10-3: Kỳ thi tuyển sinh lớp 10 diễn ra trong hai ngày 1 và 2-6",
+          "title_vi": "",
+          "summary_ko": "Saigon Giai Phong 신문의 3월 10일 오후 뉴스에는 다음과 같은 주목할만한 정보가 포함되어 있습니다. Petrovietnam은 정부가 원유 수출을 중단할 것을 제안했습니다. 호치민시는 1급 학생을 위한 입학 계획 초안에 대한 의견을 수집합니다. 4월에 석유 수입을 계획하고 있는 기업 게이트 앞에서 소란을 일으킨 오토바이 택시기사 긴급 체포",
+          "summary_en": "The March 10 afternoon news on Saigon Giai Phong Newspaper contained the following notable information: Petrovietnam proposed that the Government stop crude oil exports; Ho Chi Minh City collects opin",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP",
+          "url": "https://www.sggp.org.vn/ban-tin-chieu-10-3-ky-thi-tuyen",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-10",
+          "title_ko": "페트로베트남, 정부에 원유 수출 중단 제안",
+          "title_en": "Petrovietnam kiến nghị Chính phủ cho dừng xuất khẩu dầu thô",
+          "title_vi": "",
+          "summary_ko": "nan",
+          "summary_en": "Trước diễn biến phức tạp của tình hình Trung Đông, Tập đoàn Công nghiệp - Năng lượng Quốc gia Việt Nam (Petrovietnam) đã tiếp tục kiến nghị Chính phủ xem xét các biện pháp mạnh hơn trong điều hành ngu",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP",
+          "url": "https://www.sggp.org.vn/petrovietnam-kien-nghi-chinh-ph",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-10",
+          "title_ko": "PVN은 국내 소비를 보장하기 위해 원유 수출을 중단할 것을 제안했습니다.",
+          "title_en": "PVN kiến nghị dừng xuất khẩu dầu thô để đảm bảo tiêu dùng trong nước",
+          "title_vi": "",
+          "summary_ko": "(Dan Tri) - 현재 호르무즈 해협 사건은 베트남에 영향을 미치지 않고 있다. 그러나 국제 시장의 LNG 가격은 이제 상승했습니다. 따라서 공급을 보장하기 위해 PVN은 원유 수출을 중단할 것을 제안했습니다.",
+          "summary_en": "(Dan Tri) - Currently, the incident in the Strait of Hormuz has not affected Vietnam. However, LNG prices on the international market have now increased. Therefore, to ensure supply, PVN proposed to s",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Dan Tri - Kinh doanh",
+          "url": "https://dantri.com.vn/kinh-doanh/pvn-kien-nghi-dung-xua",
+          "milestone": ""
+        }
+      ],
+      "article_count": 16,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-TRAN-2055": {
+      "plan_id": "VN-TRAN-2055",
+      "stage": "PLANNING",
+      "stage_label": {
+        "ko": "계획·승인",
+        "en": "Planning",
+        "vi": "Lập kế hoạch"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
+      "description_ko": "",
+      "decision": "Decision 1412/QĐ-TTg (2021)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "None",
+          "title_ko": "Long Thanh airport nears completion — first runway 91% done",
+          "title_en": "Long Thanh airport nears completion — first runway 91% done",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Unknown",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-05-05",
+          "title_ko": "호치민시는 두 자릿수 성장을 위한 \"충분히 깨끗하고 신뢰할 수 있는\" 전력을 확보하고자 합니다.",
+          "title_en": "Ho Chi Minh City seeks to secure “sufficient–clean–reliable” power for double-digit growth",
+          "title_vi": "Thành phố Hồ Chí Minh tìm cách đảm bảo sức mạnh “đủ sạch - đáng tin cậy” cho tăng trưởng hai con số",
+          "summary_ko": "호치민시의 GRDP는 산업, 건설 및 서비스에 힘입어 2026-2030년에 매년 평균 10.2% 씩 성장할 수 있습니다. 이는 전력 수요를 첨단 제조, 물류, 디지털 인프라 및 녹색 경제로 전환시킬 것입니다. 전기에 대한 압력을 완화하기 위한 옥상 태양광 발전",
+          "summary_en": "Ho Chi Minh City’s GRDP could grow by an average of 10.2% annually in 2026–2030, driven by industry, construction and services. This will shift electricity demand toward high-tech manufacturing, logis",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "vietnamplus",
+          "url": "https://en.vietnamplus.vn/ho-chi-minh-city-seeks-to-secure-sufficientcleanreliable-power-for-double-digit-growth-post342226.vnp",
+          "milestone": ""
+        },
+        {
+          "date": "2026-05-05",
+          "title_ko": "5월 5일 ☕ 오후 브리핑",
+          "title_en": "☕ Afternoon briefing on May 5",
+          "title_vi": "Cuộc họp giao ban ☕ buổi chiều vào ngày 5 tháng 5",
+          "summary_ko": "다음은 베트남 통신사가 보도한 당일 행사에 대한 간략한 리뷰입니다. 5월 4일 ☕ 오후 브리핑 5월 5일 ☀️ ☀️ 오전 소화 5월 4일 오전 소화",
+          "summary_en": "The following is a brief review of the day’s events as reported by the Vietnam News Agency. ☕ Afternoon briefing on May 4 ☀️ Morning digest on May 5 ☀️ Morning digest on May 4",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "vietnamplus",
+          "url": "https://en.vietnamplus.vn/afternoon-briefing-on-may-5-post342233.vnp",
+          "milestone": ""
+        },
+        {
+          "date": "2026-05-05",
+          "title_ko": "베트남 – 범아시아 전력망 이니셔티브의 전략적 연계: ADB",
+          "title_en": "Vietnam – A strategic link in Pan-Asia Power Grid Initiative: ADB",
+          "title_vi": "Việt Nam – Liên kết chiến lược trong Sáng kiến Lưới điện Châu Á: ADB",
+          "summary_ko": "베트남 통신사 (VNA) 의 기자와의 인터뷰에서 ADB의 동남아시아 및 태평양 에너지 부문 이사인 게이주 미쓰하시 (Keiju Mitsuhashi) 는 베트남을 광범위한 범아시아 전력망 이니셔티브 (Pan-Asia Power Grid Initiative, PAGI) 의 \"진정으로 중요한\" 부분으로 묘사하면서 이러한 전략적 입장을 강조했다. PM은 n",
+          "summary_en": "In an interview with the Vietnam News Agency (VNA)'s reporter, Keiju Mitsuhashi, Director for Energy Sector for Southeast Asia and the Pacific at ADB, underscored this strategic position, describing V",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "vietnamplus",
+          "url": "https://en.vietnamplus.vn/vietnam-a-strategic-link-in-pan-asia-power-grid-initiative-adb-post342238.vnp",
+          "milestone": ""
+        },
+        {
+          "date": "2026-05-05",
+          "title_ko": "HCMC 조국전선은 적십자가 선제적 지원으로 전환할 것을 촉구합니다.",
+          "title_en": "HCMC Fatherland Front urges Red Cross to shift toward proactive aid",
+          "title_vi": "Mặt trận Tổ quốc thành phố Hồ Chí Minh kêu gọi Hội Chữ thập đỏ chuyển hướng sang viện trợ chủ động",
+          "summary_ko": "호치민시 베트남 조국전선 (VFF) 위원회의 응우옌 푸옥 로크 (Nguyen Phuoc Loc) 위원장은 호치민시 적십자회에 수동적 구호를 넘어 지속 가능한 생계 지원에 집중할 것을 촉구했다.",
+          "summary_en": "Chairman Nguyen Phuoc Loc of the Vietnam Fatherland Front (VFF) Committee of Ho Chi Minh City called on the Ho Chi Minh City Red Cross Society to move beyond passive relief and focus on sustainable li",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "sggp_org_vn",
+          "url": "https://en.sggp.org.vn/hcmc-fatherland-front-urges-red-cross-to-shift-toward-proactive-aid-post126023.html",
+          "milestone": ""
+        },
+        {
+          "date": "2026-05-05",
+          "title_ko": "2026년 중국 3대 유압 파일 드라이버 제조업체: 파운데이션 엔지니어링 분야의 글로벌 혁신 선도",
+          "title_en": "Chinese Top 3 Hydraulic Pile Driver Manufacturers In 2026: Leading Global Innovation In Foundation Engineering",
+          "title_vi": "3 nhà sản xuất máy đóng cọc thủy lực hàng đầu Trung Quốc năm 2026: Đổi mới hàng đầu thế giới về kỹ thuật nền tảng",
+          "summary_ko": "(MENAFN - EIN Presswire) EINPresswire/-- 중국 상하이 - 2026년 5월 6일-- 재생 에너지 프로젝트, 도시 개발 및 교통 네트워크에 힘입어 글로벌 인프라 붐이...",
+          "summary_en": "(MENAFN - EIN Presswire) EINPresswire/ -- Shanghai, China - May 6, 2026--The global infrastructure boom, driven by renewable energy projects, urban development, and transportation networks, has ...",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "menafn",
+          "url": "https://menafn.com/1111074087/Chinese-Top-3-Hydraulic-Pile-Driver-Manufacturers-In-2026-Leading-Global-Innovation-In-Foundation-Engineering",
+          "milestone": ""
+        },
+        {
+          "date": "2026-05-04",
+          "title_ko": "외부 위험에도 불구하고 베트남은 여전히 밝은 지역으로 남아 있습니다: 국제 기관",
+          "title_en": "Vietnam remains regional bright spot despite external risks: int’l institutions",
+          "title_vi": "Việt Nam vẫn là điểm sáng khu vực bất chấp rủi ro bên ngoài: các tổ chức quốctế",
+          "summary_ko": "4월 10일 발표된 아시아개발전망 (ADO) 보고서에 따르면, 아시아개발은행 (ADB) 은 베트남의 GDP가 2026년 7.2% 에 도달하고 2027년에는 약 7% 를 유지할 것으로 전망했다. 이러한 견해를 공유하면서, 아세안 +3 거시경제연구소 (AMRO) 와 유나이티드 해외은행 (UOB) 도",
+          "summary_en": "According to the Asian Development Outlook (ADO) report released on April 10, the Asian Development Bank (ADB) forecasts Vietnam’s GDP to reach 7.2% in 2026 and remain around 7% in 2027. Sharing this ",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "vietnamplus",
+          "url": "https://en.vietnamplus.vn/vietnam-remains-regional-bright-spot-despite-external-risks-intl-institutions-post342162.vnp",
+          "milestone": ""
+        },
+        {
+          "date": "2026-05-04",
+          "title_ko": "롱탄 국제공항 1단계, 2026년 상업 운영 예정",
+          "title_en": "Phase 1 of Long Thanh Int'l Airport to be put into commercial operation in 2026",
+          "title_vi": "Giai đoạn 1 của Sân bay quốc tế Long Thành sẽ được đưa vào khai thác thương mại vào năm 2026",
+          "summary_ko": "르 민 훙 (Le Minh Hung) 총리는 5월 4일 정부 본부에서 롱탄 국제공항 건설을 위한 투자 프로젝트의 진행 상황을 검토하고 장애물과 병목 현상을 해결하며 1단계 시행을 가속화하기 위한 회의를 주재했다.",
+          "summary_en": "Prime Minister Le Minh Hung chaired a meeting to review progress, address obstacles and bottlenecks, and accelerate the implementation of phase 1 of the investment project to build Long Thanh Int'l Ai",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "sggp_org_vn",
+          "url": "https://en.sggp.org.vn/phase-1-of-long-thanh-intl-airport-to-be-put-into-commercial-operation-in-2026-post125995.html",
+          "milestone": ""
+        }
+      ],
+      "article_count": 34,
+      "insight": "",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "milestone": "정책·법령 발표",
+      "timeline": [
+        {
+          "date": "2026-05-04",
+          "stage": "UNKNOWN",
+          "milestone_ko": "해당 사항 없음",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-05-04",
+          "stage": "PLANNING",
+          "milestone_ko": "베트남 신용전망 상향 (Ba2 확인)",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-05-02",
+          "stage": "COMPLETION",
+          "milestone_ko": "준공·운영 개시",
+          "source": "VnExpress International"
+        },
+        {
+          "date": "2026-05-02",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-29",
+          "stage": "OPERATION",
+          "milestone_ko": "운영 성과 업데이트",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-29",
+          "stage": "CONSTRUCTION",
+          "milestone_ko": "착공·건설 진행 중",
+          "source": "VnExpress International"
+        }
+      ]
+    },
+    "VN-WAT-RURAL": {
+      "plan_id": "VN-WAT-RURAL",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "VN-WAT-RURAL",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2022-01-21",
+          "title_ko": "Nearly VND1.7 trln invested in rural clean water supply projects",
+          "title_en": "Nearly VND1.7 trln invested in rural clean water supply projects",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Dong Nai News",
+          "url": "http://www.baodongnai.com.vn/english/business/202201/nearly-vnd17-trln-invested-in-rural-clean-water-supply-projects-3100087/",
+          "milestone": ""
+        },
+        {
+          "date": "2020-08-12",
+          "title_ko": "82 rural water supply projects operating in Dong Nai",
+          "title_en": "82 rural water supply projects operating in Dong Nai",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Dong Nai News",
+          "url": "http://baodongnai.com.vn/english/society/202012/82-rural-water-supply-projects-operating-in-dong-nai-3033883/",
+          "milestone": ""
+        },
+        {
+          "date": "2020-05-18",
+          "title_ko": "WB-funded rural sanitation, water supply programme to continue in Dak Nong",
+          "title_en": "WB-funded rural sanitation, water supply programme to continue in Dak Nong",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Government news",
+          "url": "http://news.chinhphu.vn/Home/WBfunded-rural-sanitation-water-supply-programme-to-continue-in-Dak-Nong/20205/40126.vgp",
+          "milestone": ""
+        }
+      ],
+      "article_count": 3,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "HN-URBAN-WEST,HN-URBAN-INFRA": {
+      "plan_id": "HN-URBAN-WEST,HN-URBAN-INFRA",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "HN-URBAN-WEST,HN-URBAN-INFRA",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-02-24",
+          "title_ko": "호아락 하이테크파크 460ha 확장 — 베트남 실리콘밸리 2026",
+          "title_en": "Hoa Lac Hi-Tech Park 460ha expansion — Vietnam Silicon Valley 2026",
+          "title_vi": "",
+          "summary_ko": "호아락 하이테크파크 460ha 확장 토지수용 2026년 완료. Meta·ASU·SIA 전략투자자 유치. AI·반도체·바이오·우주항공 집중.",
+          "summary_en": "Hoa Lac Hi-Tech Park 460ha expansion land clearance 2026. Meta, ASU, SIA investors targeted. AI, semiconductor, bio, aerospace focus.",
+          "grade": "HIGH",
+          "stage": "UNKNOWN",
+          "source": "Vietnam.vn",
+          "url": "https://www.vietnam.vn/en/dinh-hinh-phat-trien-khu-cong",
+          "milestone": ""
+        },
+        {
+          "date": "2025-12-20",
+          "title_ko": "호아락 하이테크파크, 베트남 혁신 허브 도약 — 109개 프로젝트 $4.59B",
+          "title_en": "Hoa Lac Hi-Tech Park poised to become Vietnam innovation hub — 109 projects $4.59B",
+          "title_vi": "",
+          "summary_ko": "호아락 하이테크파크: 109개 투자 프로젝트, $4.59B 등록자본. 2025 개정 수도법 특별 메커니즘. 2045년 글로벌 혁신시스템 핵심 거점.",
+          "summary_en": "Hoa Lac: 109 projects, $4.59B registered capital. 2025 Capital Law special mechanism. Target: global innovation hub by 2045.",
+          "grade": "HIGH",
+          "stage": "UNKNOWN",
+          "source": "VietnamPlus",
+          "url": "https://en.vietnamplus.vn/hoa-lac-hi-tech-park-poised-t",
+          "milestone": ""
+        }
+      ],
+      "article_count": 2,
       "insight": "",
       "next_watch": "",
       "milestone": "",
@@ -424,9 +1957,119 @@
         },
         {
           "date": "2026-05-02",
-          "stage": "PLANNING",
-          "milestone_ko": "친환경 산업단지 개발 마스터플랜 수립",
+          "stage": "TENDERING",
+          "milestone_ko": "친환경 산업단지 인프라 재구성 및 FDI 투자자 유치",
           "source": "sggp_org_vn"
+        }
+      ]
+    },
+    "VN-ENV-IND-1894": {
+      "plan_id": "VN-ENV-IND-1894",
+      "stage": "PLANNING",
+      "stage_label": {
+        "ko": "계획·승인",
+        "en": "Planning",
+        "vi": "Lập kế hoạch"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
+      "description_ko": "",
+      "decision": "Decision 1894/QĐ-TTg (2024)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-05-04",
+          "title_ko": "2026년 5월부터 시행되는 4가지 새로운 환경 정책",
+          "title_en": "Four new environmental policies effective from May 2026",
+          "title_vi": "Bốn chính sách mới về môi trường có hiệu lực từ tháng 05/2026",
+          "summary_ko": "베트남이 2026년 5월부터 시행하는 4가지 새로운 환경 정책에 관한 기사. 환경 분야의 주요 정책 변화를 다루고 있으며, 구체적인 정책 내용은 본문에 제시되지 않음.",
+          "summary_en": "It is allowed to exchange carbon credits with international partners; enterprises are required to recycle products and packaging according to the EPR mechanism; priority is given to dedicating the use",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Moi truong & Cuoc song",
+          "url": "https://moitruong.net.vn/bon-chinh-sach-moi-ve-moi-truong-co-hieu-luc-tu-thang-05-2026-99254.html",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-07",
+          "title_ko": "친환경 산업단지가 차세대 외국인 직접 투자를 주도한다",
+          "title_en": "Green industrial parks drive next-generation FDI",
+          "title_vi": "Các khu công nghiệp xanh thúc đẩy dòng vốn đầu tư trực tiếp nước ngoài thế hệ mới",
+          "summary_ko": "호치민시는 기술 이전을 지원하기 위해 외국인 직접 투자 기업, 국내 대기업 및 중소기업 간의 연계성을 강화하는 한편, 공급망 데이터 시스템, 스마트 물류창고, 지역 물류 센터 및 내륙 컨테이너 터미널에 대한 투자를 확대해야 한다.",
+          "summary_en": "Ho Chi Minh City needs to strengthen investment in supply chain data systems, smart warehouses, regional logistics centres and inland container depots, while promoting stronger linkages between FDI fi",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "NewsData/Dong Nai",
+          "url": "https://en.vietnamplus.vn/green-industrial-parks-drive-next-generation-fdi-post340620.vnp",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-19",
+          "title_ko": "순환 경제 덕분에 수많은 폐기물이 환경에 유입되는 것을 방지합니다.",
+          "title_en": "Ngăn chặn nhiều tấn rác thải ra môi trường nhờ kinh tế tuần hoàn",
+          "title_vi": "Ngăn chặn nhiều tấn rác thải ra môi trường nhờ kinh tế tuần hoàn",
+          "summary_ko": "유누스 환경 허브(Yunus Environment Hub)를 통해 독일과 네덜란드 정부가 베트남과 협력하여 기업의 순환 경제로의 전환을 촉진하는 강좌를 제공했습니다.",
+          "summary_en": "The cooperation of the German and Dutch Governments with Vietnam through the Yunus Environment Hub has provided classes to promote businesses' transition to a circular economy.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Tuoi Tre - Kinh doanh",
+          "url": "https://tuoitre.vn/ngan-chan-nhieu-tan-rac-thai-ra-moi-truong-nho-kinh-te-tuan-hoan-20260319111329632.htm",
+          "milestone": ""
+        },
+        {
+          "date": "2026-02-11",
+          "title_ko": "베트남은 노르웨이와의 다각적인 협력 강화를 중요하게 생각합니다: FM",
+          "title_en": "Vietnam values strengthening multifaceted cooperation with Norway: FM",
+          "title_vi": "Việt Nam coi trọng tăng cường hợp tác nhiều mặt với Na Uy: FM",
+          "summary_ko": "노르웨이는 무역, ​​지속 가능한 어업, 녹색 에너지, 해양 경제, 녹색 전환 및 순환 경제 개발과 같은 분야에서 베트남과의 협력을 강화하기를 희망합니다.",
+          "summary_en": "Norway wishes to strengthen cooperation with Vietnam in areas such as trade, sustainable fisheries, green energy, the marine economy, green transition and the development of a circular economy.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP News English",
+          "url": "https://en.sggp.org.vn/vietnam-values-strengthening-multifaceted-cooperation-with-norway-fm-post123918.html",
+          "milestone": ""
+        },
+        {
+          "date": "2025-12-31",
+          "title_ko": "차세대 산업단지 개발, 고품질 외국인 직접투자(FDI) 유치를 위한 기반 마련",
+          "title_en": "Phát triển khu công nghiệp thế hệ mới, ‘dọn tổ’ đón FDI chất lượng cao",
+          "title_vi": "Phát triển khu công nghiệp thế hệ mới, ‘dọn tổ’ đón FDI chất lượng cao",
+          "summary_ko": "탄소국경조정제도(CBAM)와 ESG 기준이 강화되는 가운데, 녹색 인프라와 순환 경제를 갖춘 통합형 생태 산업단지는 우수한 해외 투자자들을 유치하는 새로운 매력이 될 것입니다. 이러한 차세대 산업단지는...",
+          "summary_en": "In the context of tightening carbon border adjustment mechanisms (CBAM) and ESG standards, integrated ecological industrial parks with green infrastructure and circular economy will become new magnets",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Tuoi Tre",
+          "url": "https://tuoitre.vn/phat-trien-khu-cong-nghiep-the-he-moi-don-to-don-fdi-chat-luong-cao-20251231142923773.htm",
+          "milestone": ""
+        },
+        {
+          "date": "2025-10-23",
+          "title_ko": "Prodezi 생태산업단지 모델은 ESG 표준을 충족합니다.",
+          "title_en": "Prodezi eco-industrial park model meets ESG standards",
+          "title_vi": "Mô hình khu công nghiệp sinh thái Prodezi đạt tiêu chuẩn ESG",
+          "summary_ko": "Prodezi Long An은 녹색 인프라, 재생 가능 에너지 및 순환 경제 원칙을 통합합니다. 현대 투자자들은 ESG 기준을 충족하는 지속 가능한 환경을 추구합니다.",
+          "summary_en": "Prodezi Long An incorporates green infrastructure, renewable energy, and circular economy principles. Modern investors seek sustainable environments meeting ESG criteria.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "vietdata.vn",
+          "url": "https://www.vietdata.vn/post/vietnam-s-next-wave-integrated-eco-industrial-parks-draw-significant-fdi",
+          "milestone": ""
+        }
+      ],
+      "article_count": 6,
+      "insight": "",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "milestone": "정책·법령 발표",
+      "timeline": [
+        {
+          "date": "2026-05-04",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song"
         }
       ]
     },
@@ -554,1545 +2197,6 @@
         }
       ],
       "article_count": 11,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-OG-2030": {
-      "plan_id": "VN-OG-2030",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "베트남 석유가스 분야 전략 2030",
-      "description_ko": "",
-      "decision": "Decision 893/QĐ-TTg (2023)",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-04-15",
-          "title_ko": "Petrovietnam và bài toán ổn định cung ứng xăng dầu trước biến động toàn cầu",
-          "title_en": "Petrovietnam và bài toán ổn định cung ứng xăng dầu trước biến động toàn cầu",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "VietnamNet - Kinh doanh",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-03",
-          "title_ko": "PM, Dung Quat 석유 정제 및 에너지 센터 프로젝트 정책 구축 요청",
-          "title_en": "PM requests building of policies for Dung Quat oil refining and energy centre project",
-          "title_vi": "",
-          "summary_ko": "Pham Minh Chinh 총리는 Quang Ngai 중부 지방의 Dung Quat Economic Zone (EZ) 에서 국가 석유 정제 및 에너지 센터 프로젝트를 신속하게 추진하기 위해 신속한 조치와 제로 망설임을 요구했으며, 신속하고 효과적인 결과를 제공하기 위해 명확한 로드맵과 사용 가능한 모든 자원을 촉구했습니다.",
-          "summary_en": "Prime Minister Pham Minh Chinh has demanded rapid action and zero hesitation to expedite the National Oil Refining and Energy Centre project at Dung Quat Economic Zone (EZ) in the central province of ",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Nhan Dan English",
-          "url": "https://en.nhandan.vn/pm-requests-building-of-policies-",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-03",
-          "title_ko": "Thảng nhết chât trương triến khai Đế án Trung tâm Công nghiệp - Năng lưếng sinh thái Petrovietnam tại Vảng Áng",
-          "title_en": "Thống nhất chủ trương triển khai Đề án Trung tâm Công nghiệp - Năng lượng sinh thái Petrovietnam tại Vũng Áng",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Bao Ha Tinh",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-28",
-          "title_ko": "FPT, Petrovietnam, Vingroup, Viettel은 훌륭하게 \"해외로 나갔습니다\". Cao Duc Thang 씨는 총리에게 무엇을 제안 했습니까?",
-          "title_en": "FPT, Petrovietnam, Vingroup, Viettel \"went abroad\" brilliantly, what did Mr. Cao Duc Thang propose to the Prime Minister?",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "CafeBiz",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-10",
-          "title_ko": "3월 10일 오후 팟캐스트 뉴스: 국내 수요 우선으로 원유 수출 중단 제안",
-          "title_en": "Podcast bản tin chiều 10-3: Kiến nghị dừng xuất khẩu dầu thô, ưu tiên nhu cầu trong nước",
-          "title_vi": "",
-          "summary_ko": "Saigon Giai Phong 신문의 3월 10일 오후 뉴스 팟캐스트에는 다음과 같은 주목할만한 정보가 포함되어 있습니다. Petrovietnam은 정부에 원유 수출 중단을 제안했습니다. 호치민시는 1급 학생을 위한 입학 계획 초안에 대한 의견을 수집합니다. 4월에 석유 수입을 계획하고 있는 기업 문제를 일으킨 오토바이 택시기사를 긴급 검거하세요",
-          "summary_en": "The March 10 afternoon news podcast on Saigon Giai Phong Newspaper contained the following notable information: Petrovietnam proposed to the Government to stop crude oil exports; Ho Chi Minh City coll",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP",
-          "url": "https://www.sggp.org.vn/podcast-ban-tin-chieu-10-3-kien",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-10",
-          "title_ko": "오후뉴스 3월 10일: 10학년 입학시험이 6월 1일과 2일에 치러집니다.",
-          "title_en": "Bản tin chiều 10-3: Kỳ thi tuyển sinh lớp 10 diễn ra trong hai ngày 1 và 2-6",
-          "title_vi": "",
-          "summary_ko": "Saigon Giai Phong 신문의 3월 10일 오후 뉴스에는 다음과 같은 주목할만한 정보가 포함되어 있습니다. Petrovietnam은 정부가 원유 수출을 중단할 것을 제안했습니다. 호치민시는 1급 학생을 위한 입학 계획 초안에 대한 의견을 수집합니다. 4월에 석유 수입을 계획하고 있는 기업 게이트 앞에서 소란을 일으킨 오토바이 택시기사 긴급 체포",
-          "summary_en": "The March 10 afternoon news on Saigon Giai Phong Newspaper contained the following notable information: Petrovietnam proposed that the Government stop crude oil exports; Ho Chi Minh City collects opin",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP",
-          "url": "https://www.sggp.org.vn/ban-tin-chieu-10-3-ky-thi-tuyen",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-10",
-          "title_ko": "페트로베트남, 정부에 원유 수출 중단 제안",
-          "title_en": "Petrovietnam kiến nghị Chính phủ cho dừng xuất khẩu dầu thô",
-          "title_vi": "",
-          "summary_ko": "nan",
-          "summary_en": "Trước diễn biến phức tạp của tình hình Trung Đông, Tập đoàn Công nghiệp - Năng lượng Quốc gia Việt Nam (Petrovietnam) đã tiếp tục kiến nghị Chính phủ xem xét các biện pháp mạnh hơn trong điều hành ngu",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP",
-          "url": "https://www.sggp.org.vn/petrovietnam-kien-nghi-chinh-ph",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-10",
-          "title_ko": "PVN은 국내 소비를 보장하기 위해 원유 수출을 중단할 것을 제안했습니다.",
-          "title_en": "PVN kiến nghị dừng xuất khẩu dầu thô để đảm bảo tiêu dùng trong nước",
-          "title_vi": "",
-          "summary_ko": "(Dan Tri) - 현재 호르무즈 해협 사건은 베트남에 영향을 미치지 않고 있다. 그러나 국제 시장의 LNG 가격은 이제 상승했습니다. 따라서 공급을 보장하기 위해 PVN은 원유 수출을 중단할 것을 제안했습니다.",
-          "summary_en": "(Dan Tri) - Currently, the incident in the Strait of Hormuz has not affected Vietnam. However, LNG prices on the international market have now increased. Therefore, to ensure supply, PVN proposed to s",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Dan Tri - Kinh doanh",
-          "url": "https://dantri.com.vn/kinh-doanh/pvn-kien-nghi-dung-xua",
-          "milestone": ""
-        }
-      ],
-      "article_count": 16,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "HN-URBAN-NORTH": {
-      "plan_id": "HN-URBAN-NORTH",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "하노이 북부 도시개발 (동아인, 메린)",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-PWR-PDP8, VN-PWR-PDP8-NUCLEAR": {
-      "plan_id": "VN-PWR-PDP8, VN-PWR-PDP8-NUCLEAR",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "VN-PWR-PDP8, VN-PWR-PDP8-NUCLEAR",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-04-08",
-          "title_ko": "닌투안 1호 원자력 발전소 건설 사업을 위한 묘지 이전 보상",
-          "title_en": "Compensation for the relocation of graves in connection with the Ninh Thuan 1 Nuclear Power Plant project",
-          "title_vi": "",
-          "summary_ko": "닌투안 1호 원자력 발전소 프로젝트 시행을 위해 이전해야 할 묘지는 총 566기이며, 묘지당 보상 및 지원금은 1,100만~2,400만 동이다. 칸호아: 토지 수용 시 보상, 지원 및 재정착에 관한 새로운 규정 제정; 칸호아: 주민 이주 및 재정착 프로젝트 착수",
-          "summary_en": "The total number of graves that need to be relocated to make way for the project at the Ninh Thuan 1 Nuclear Power Plant is 566, with compensation and support ranging from 11 to 24 million VND per gra",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "VietnamPlus - Kinh te",
-          "url": "https://www.vietnamplus.vn/boi-thuong-di-doi-ngoi-mo-ph",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-28",
-          "title_ko": "베트남 원전 건설 계약으로 인한 긍정적 영향",
-          "title_en": "Tác động tích cực từ thỏa thuận xây dựng dự án Nhà máy điện hạt nhân của Việt Nam",
-          "title_vi": "",
-          "summary_ko": "러시아는 전통적인 대용량 원전뿐 아니라 소형모듈형원자로(SMR), 부유식발전소(FPU) 등도 적극 추진하고 있다. 러시아는 문칸화(Moon Khanh Hoa)에 곧 원자력 발전소를 개발할 것으로 예상 유권자들은 원자력 발전소 프로젝트 5차 회의를 기대",
-          "summary_en": "Russia is actively promoting not only traditional large-capacity nuclear power plants, but also small modular reactors (SMRs) and floating power units (FPUs). Russia expects to soon develop a nuclear ",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "VietnamPlus - Kinh te",
-          "url": "https://www.vietnamplus.vn/tac-dong-tich-cuc-tu-thoa-th",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-17",
-          "title_ko": "베트남, Assystem Group과 원자력 분야 협력 논의",
-          "title_en": "Việt Nam trao đổi với tập đoàn Assystem về hợp tác trong lĩnh vực điện hạt nhân",
-          "title_vi": "",
-          "summary_ko": "Trinh Duc Hai 대사는 공급원 다변화 및 베트남의 장기 에너지 전략 수립 방향에 따라 원자력 협력 가능성에 관해 Assystem 그룹의 리더들과 협력했습니다. 베트남, 원자력 발전에 관한 국제 협력 촉진 슬로베니아는 베트남의 전력 개발을 지원할 준비가 되어 있음",
-          "summary_en": "Ambassador Trinh Duc Hai worked with leaders of Assystem Group on the possibility of nuclear power cooperation, in accordance with the direction of diversifying supply sources and building Vietnam's l",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "VietnamPlus - Kinh te",
-          "url": "https://www.vietnamplus.vn/viet-nam-trao-doi-voi-tap-do",
-          "milestone": ""
-        },
-        {
-          "date": "2025-11-21",
-          "title_ko": "LNG 논트락 3·4 발전 단지 프로젝트의 추진 현황 (2025년 11월 21일 업데이트) | 베트남 에너지 매거진",
-          "title_en": "Implementation status of LNG Nhon Trach 3 and 4 power project clusters (updated November 21, 2025) | Vietnam Energy Maga",
-          "title_vi": "",
-          "summary_ko": "편집부로 문의하기 기존 댓글 댓글, 댓글 댓글 - 전망 댓글 전력 석유 및 가스 석탄 산업 원자력, 재생 에너지 재생 에너지 원자력 과학, 기술, 환경 문화...",
-          "summary_en": "Contact the editorial office Existing comments Comments, Comments Comments - Forecasts Comments Electricity Oil and gas Coal industry Nuclear power, renewable energy Renewable energy Atomic energy Sci",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "nangluongvietnam.vn",
-          "url": "https://nangluongvietnam.vn/tinh-hinh-trien-khai-cum-du",
-          "milestone": ""
-        }
-      ],
-      "article_count": 4,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-PWR-PDP8, VN-PWR-PDP8-HYDROGEN": {
-      "plan_id": "VN-PWR-PDP8, VN-PWR-PDP8-HYDROGEN",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "VN-PWR-PDP8, VN-PWR-PDP8-HYDROGEN",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2024-05-16",
-          "title_ko": "nan",
-          "title_en": "Standard Chartered backs green hydrogen project in Mekong Delta",
-          "title_vi": "",
-          "summary_ko": "nan",
-          "summary_en": "nan",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "The Saigon Times",
-          "url": "https://english.thesaigontimes.vn/standard-chartered-ba",
-          "milestone": ""
-        }
-      ],
-      "article_count": 1,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-PWR-PDP8-HYDROGEN": {
-      "plan_id": "VN-PWR-PDP8-HYDROGEN",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "PDP8 그린수소",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-EV-2030": {
-      "plan_id": "VN-EV-2030",
-      "stage": "OPERATION",
-      "stage_label": {
-        "ko": "운영·확장",
-        "en": "Operation",
-        "vi": "Vận hành"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "베트남 전기차·친환경 교통 전략 2030",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-05-04",
-          "title_ko": "PVOIL, 5월 15일부터 E10 가솔린 전국 출시",
-          "title_en": "PVOIL to roll out E10 gasoline nationwide from May 15",
-          "title_vi": "PVOIL triển khai xăng E10 trên toàn quốc từ ngày 15/5",
-          "summary_ko": "베트남 국영 석유사 PVOIL이 5월 15일부터 전국 모든 주유소에서 E10 바이오연료 휘발유 판매를 시작한다. 13개 주요 저장소의 혼합·저장 시스템을 업그레이드하고 에탄올 공급망을 확보했으며, 품질 기준을 충족한다.",
-          "summary_en": "PVOIL began piloting E10 gasoline sales on August 1, 2025, in Hanoi and Hai Phong, before expanding to central and southern regions. As of April 2026, the company operated 558 petrol stations selling ",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "vietnamplus",
-          "url": "https://en.vietnamplus.vn/pvoil-to-roll-out-e10-gasoline-nationwide-from-may-15-post342175.vnp",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-23",
-          "title_ko": "‘VinFast는 다시는 가솔린 자동차를 생산하지 않을 것입니다’: 동남아시아에서 가장 부유 한 사람 Pham Nhat Vuong",
-          "title_en": "‘VinFast will never produce gasoline cars again’: Southeast Asia’s richest man Pham Nhat Vuong",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "VnExpress Business",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-18",
-          "title_ko": "하노이, 친환경 대중교통으로 전기버스 전환 가속화",
-          "title_en": "Ha Noi accelerates electric bus transition towards green public transport",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Nhan Dan English",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-10",
-          "title_ko": "전력 당국, 전력망 안정화를 위해 시간대별 전기차 충전 요금제 검토 중",
-          "title_en": "Ministry weighs time-based EV charging tariffs to safeguard grid",
-          "title_vi": "Bộ đang xem xét áp dụng biểu giá sạc xe điện theo thời gian để bảo vệ lưới điện",
-          "summary_ko": "산업통상부는 전기화 추세가 가속화됨에 따라 베트남 전력망의 부담을 완화하기 위해, 전기차 소유주들이 비성수대에 충전하도록 유도하는 시간대별 전기 요금제를 검토하고 있다. 빈하오-판티엣 고속도로에 주유소 및 전기차 충전소 개장",
-          "summary_en": "The Ministry of Industry and Trade is considering a time-of-use electricity pricing scheme to steer electric vehicle owners toward off-peak charging, aiming to ease pressure on Vietnam’s power grid as",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP News English",
-          "url": "https://en.sggp.org.vn/ministry-weighs-time-based-ev-charging-tariffs-to-safeguard-grid-post125312.html",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-07",
-          "title_ko": "하노이, 전기차 배터리 교환망 구축에 박차를 가하고 있다",
-          "title_en": "Hanoi prioritizes rapid electric vehicle battery-swapping network",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP News English",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2024-09-10",
-          "title_ko": "Petrovietnam power unit aims to develop 1,000 EV charging stations by 2035",
-          "title_en": "Petrovietnam power unit aims to develop 1,000 EV charging stations by 2035",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "The Investor",
-          "url": "https://theinvestor.vn/petrovietnam-power-unit-aims-to-develop-1000-ev-charging-stations-by-2035-d12183.html",
-          "milestone": ""
-        }
-      ],
-      "article_count": 6,
-      "insight": "",
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
-      "milestone": "운영 성과 업데이트",
-      "timeline": [
-        {
-          "date": "2026-05-04",
-          "stage": "OPERATION",
-          "milestone_ko": "운영 성과 업데이트",
-          "source": "vietnamplus"
-        }
-      ]
-    },
-    "HN-URBAN-INFRA": {
-      "plan_id": "HN-URBAN-INFRA",
-      "stage": "PLANNING",
-      "stage_label": {
-        "ko": "계획·승인",
-        "en": "Planning",
-        "vi": "Lập kế hoạch"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "하노이 도시 인프라 개발 계획 2030",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-05-04",
-          "title_ko": "하노이는 2026년 우기 전에 일련의 긴급 인프라 프로젝트의 진행을 촉진합니다",
-          "title_en": "Hanoi promotes the progress of a series of urgent infrastructure projects before the rainy season 2026",
-          "title_vi": "Hà Nội thúc đẩy tiến độ loạt dự án hạ tầng cấp bách trước mùa mưa 2026",
-          "summary_ko": "하노이시가 2026년 우기 전 긴급 기반시설 사업들의 진행 속도를 높이고 있습니다. 도시 인프라 현대화와 홍수 대비를 위한 다양한 프로젝트가 추진 중이며, 우기 도래 전 완공을 목표로 하고 있습니다.",
-          "summary_en": "Leaders of the Hanoi City Party Committee requested to completely handle problems in terms of premises, procedures and materials in order to ensure the progress of drainage, transport and environmenta",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Moi truong & Cuoc song",
-          "url": "https://moitruong.net.vn/ha-noi-thuc-day-tien-do-loat-du-an-ha-tang-cap-bach-truoc-mua-mua-2026-99247.html",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-30",
-          "title_ko": "하노이는 배수 시스템을 적극적으로 운영하여 4 월 30 일부터 5 월 1 일까지의 휴가 기간 동안 홍수를 예방합니다.",
-          "title_en": "Hà Nội chủ động vận hành hệ thống thoát nước, phòng ngừa úng ngập trong dịp nghỉ lễ 30/4 – 1/5",
-          "title_vi": "Hà Nội chủ động vận hành hệ thống thoát nước, phòng ngừa úng ngập trong dịp nghỉ lễ 30/4 – 1/5",
-          "summary_ko": "하노이가 4월 30일~5월 1일 휴일 기간 중 홍수 피해를 예방하기 위해 적극적으로 배수 시스템을 운영합니다. 도시 배수 인프라의 사전적 관리를 통해 침수 발생을 방지하려는 조치입니다.",
-          "summary_en": "In order to ensure the urban environment and serve people to play and travel smoothly during the holidays of April 30 and May 1, Hanoi Drainage One-Member Co., Ltd. has implemented synchronous plans t",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Moi truong & Cuoc song",
-          "url": "https://moitruong.net.vn/ha-noi-chu-dong-van-hanh-he-thong-thoat-nuoc-phong-ngua-ung-ngap-trong-dip-nghi-le-30-4-1-5-99195.html",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-05",
-          "title_ko": "하노이 링로드4 병행도로 2026년 6월 개통 목표 — 113km 업데이트",
-          "title_en": "Hanoi Ring Road 4 parallel road to open June 2026 — 113km update",
-          "title_vi": "",
-          "summary_ko": "하노이 링로드4(113km) 병행도로 2026년 6월 개통 목표. 하노이 58.2km+흥옌+박닌 구간. PPP 고속도로 2027년 예정.",
-          "summary_en": "Ring Road 4 (113km) parallel road June 2026 opening target. PPP expressway 2027. Strategic economic axis for Capital Region.",
-          "grade": "HIGH",
-          "stage": "UNKNOWN",
-          "source": "Vietnam.vn",
-          "url": "https://www.vietnam.vn/en/vanh-dai-4-vung-thu-do-thong-",
-          "milestone": ""
-        },
-        {
-          "date": "2023-06-25",
-          "title_ko": "하노이 링로드4 수도권 착공 2023년 6월 — 총 투자 $3.6B",
-          "title_en": "Hanoi Ring Road 4 Capital Region breaks ground June 2023 — $3.6B",
-          "title_vi": "",
-          "summary_ko": "링로드4 수도권(113km) 2023년 6월 25일 착공. 총 사업비 $3.6B. 국비+지방비+PPP 구성.",
-          "summary_en": "Ring Road 4 Capital Region (113km) groundbreaking Jun 25, 2023. Total $3.6B. State + local + PPP funding.",
-          "grade": "HIGH",
-          "stage": "UNKNOWN",
-          "source": "Vietnam.vn",
-          "url": "https://www.vietnam.vn/en/ngay-25-6-ha-noi-khoi-cong-du",
-          "milestone": ""
-        }
-      ],
-      "article_count": 4,
-      "insight": "",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "milestone": "정책·법령 발표",
-      "timeline": [
-        {
-          "date": "2026-05-04",
-          "stage": "CONSTRUCTION",
-          "milestone_ko": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song"
-        },
-        {
-          "date": "2026-04-30",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song"
-        }
-      ]
-    },
-    "VN-WW-2030": {
-      "plan_id": "VN-WW-2030",
-      "stage": "PLANNING",
-      "stage_label": {
-        "ko": "계획·승인",
-        "en": "Planning",
-        "vi": "Lập kế hoạch"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "베트남 국가 하수처리 프로그램 2030",
-      "description_ko": "",
-      "decision": "Decision 1085/QĐ-TTg (2016) + QCVN 14:2008",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "None",
-          "title_ko": "Hanoi Yen Xa WWTP begins trial operation — milestone for To Lich river cleanup",
-          "title_en": "Hanoi Yen Xa WWTP begins trial operation — milestone for To Lich river cleanup",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "HIGH",
-          "stage": "UNKNOWN",
-          "source": "Unknown",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-01",
-          "title_ko": "1/4 CONSTRUCTION PRISM: 하노이는 일련의 배수 시스템 프로젝트를 시행했습니다.",
-          "title_en": "Lăng kính xây dựng 1/4: Hà Nội triển khai đồng loạt các dự án hệ thống thoát nước",
-          "title_vi": "",
-          "summary_ko": "Nếi dung chính bān tin hôm nay: Quyết tâm hoàn thành cơ sânh dâ liệu đết đai toàn quạc trong năm 2026; Luết kinh doanh Bết đếng sạn (sâa đếi): Siết chết quy đệnh đào tạo và hành ngh ́ môi giţi; Hà Nếi",
-          "summary_en": "Nội dung chính bản tin hôm nay: Quyết tâm hoàn thành cơ sở dữ liệu đất đai toàn quốc trong năm 2026; Luật kinh doanh Bất động sản (sửa đổi): Siết chặt quy định đào tạo và hành nghề môi giới; Hà Nội tr",
-          "grade": "POLICY",
-          "stage": "UNKNOWN",
-          "source": "Bao Xay Dung",
-          "url": "https://baoxaydung.vn/lang-kinh-xay-dung-1-4-ha-noi-tri",
-          "milestone": ""
-        },
-        {
-          "date": "2025-08-20",
-          "title_ko": "하노이 옌짜 폐수처리장 준공 — 북부 베트남 최대 270,000㎥/일",
-          "title_en": "Yen Xa WWTP inaugurated — Northern Vietnam largest 270,000 m3/day",
-          "title_vi": "",
-          "summary_ko": "하노이 옌짜(Yen Xa) 폐수처리장(270,000㎥/일) 2025년 8월 19일 공식 준공. JICA ODA 지원, 총 투자 $690M. 또리히(To Lich)강 정화 핵심 시설.",
-          "summary_en": "Yen Xa Wastewater Treatment Plant (270,000 m3/day) officially inaugurated in Hanoi Aug 2025. JICA ODA funded, $690M total investment.",
-          "grade": "HIGH",
-          "stage": "UNKNOWN",
-          "source": "VietnamPlus",
-          "url": "https://en.vietnamplus.vn/largest-wastewater-treatment-",
-          "milestone": ""
-        },
-        {
-          "date": "2025-06-15",
-          "title_ko": "Thu Duc City WWTP는 동남아시아 최대의 폐수 처리장으로 거듭났습니다",
-          "title_en": "Thu Duc City WWTP becomes Southeast Asia's largest wastewater treatment plant",
-          "title_vi": "",
-          "summary_ko": "Thu Duc City에 5억 2,400만 달러를 투자하여 동남아시아 최대 규모의 WWTP를 건설 중입니다. MBBR 기술은 하루 110만m3를 처리하고 8개 구역에 걸쳐 180만 명의 주민에게 서비스를 제공합니다.",
-          "summary_en": "Southeast Asia's largest WWTP under construction in Thu Duc City with $524 million investment. Features MBBR technology, treating 1.1 million m3/day, serving 1.8 million residents across eight distric",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "trade.gov",
-          "url": "https://www.trade.gov/market-intelligence/vietnam-water",
-          "milestone": ""
-        },
-        {
-          "date": "2025-01-03",
-          "title_ko": "옌자(Yen Xa) 폐수처리장, 베트남 북부 최대 규모로 시범 가동 시작",
-          "title_en": "Yen Xa Wastewater Treatment Plant begins trial operation as Northern Vietnam's largest",
-          "title_vi": "",
-          "summary_ko": "베트남 북부 최대 규모의 Yen Xa WWTP가 시범 운영을 시작합니다. 2025년까지 하노이의 폐수 처리율 50-55% 목표에 매우 중요합니다. 시는 현재 4개의 새로운 프로젝트가 계획되어 있으며 처리율은 30%입니다.",
-          "summary_en": "Yen Xa WWTP, Northern Vietnam's largest, begins trial operation. Critical for Hanoi's target of 50-55% wastewater treatment rate by 2025. City currently at 30% treatment rate with 4 new projects plann",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "b-company.jp",
-          "url": "https://b-company.jp/trial-operation-of-northern-vietna",
-          "milestone": ""
-        },
-        {
-          "date": "2024-12-11",
-          "title_ko": "하노이는 Yen Xa 폐수 프로젝트 예산을 2억 ​​달러 이상 줄였습니다.",
-          "title_en": "Hanoi reduces Yen Xa wastewater project budget by over $200 million",
-          "title_vi": "",
-          "summary_ko": "nan",
-          "summary_en": "nan",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Vietnamnet",
-          "url": "https://vietnamnet.vn/en/hanoi-reduces-yen-xa-wastewate",
-          "milestone": ""
-        },
-        {
-          "date": "2024-12-10",
-          "title_ko": "하노이, To Lich 강 청소 및 도시 폐수 정비 추진",
-          "title_en": "Hanoi pushes To Lich river cleanup and urban wastewater overhaul",
-          "title_vi": "",
-          "summary_ko": "nan",
-          "summary_en": "nan",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Vietnam Investment Review",
-          "url": "https://vir.com.vn/hanoi-pushes-to-lich-river-cleanup-a",
-          "milestone": ""
-        },
-        {
-          "date": "2024-11-26",
-          "title_ko": "nan",
-          "title_en": "Inauguration of wastewater treatment plant at Cat Ba Amatina project",
-          "title_vi": "",
-          "summary_ko": "nan",
-          "summary_en": "nan",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Investment news",
-          "url": "https://baodautu.vn/khanh-thanh-nha-may-xu-ly-nuoc-thai",
-          "milestone": ""
-        }
-      ],
-      "article_count": 37,
-      "insight": "",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "milestone": "정책·법령 발표",
-      "timeline": [
-        {
-          "date": "None",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "Unknown"
-        }
-      ]
-    },
-    "VN-WAT-URBAN": {
-      "plan_id": "VN-WAT-URBAN",
-      "stage": "CONSTRUCTION",
-      "stage_label": {
-        "ko": "건설·시공",
-        "en": "Construction",
-        "vi": "Xây dựng"
-      },
-      "confidence": 0.695,
-      "haiku_used": false,
-      "title_ko": "도시 배수·침수 방지 마스터플랜",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-05-04",
-          "title_ko": "폐수에 의해 \"질식\" 된 나트랑: 만 오염이 기준치를 초과하여 불법 배출 처리를 강화합니다.",
-          "title_en": "Nha Trang \"suffocated\" by wastewater: Bay pollution exceeds threshold, tightening illegal discharge treatment",
-          "title_vi": "Nha Trang “ngộp thở” vì nước thải: Ô nhiễm vịnh vượt ngưỡng, siết xử lý xả thải trái phép",
-          "summary_ko": "나트랑 해만이 하수 오염으로 심각한 환경 위기를 맞고 있습니다. 오염도가 기준치를 초과했으며, 당국은 불법 배출 행위에 대한 단속을 강화하고 있습니다.",
-          "summary_en": "The situation of domestic, urban and aquaculture wastewater discharged directly into the sea makes Nha Trang Bay seriously polluted, many indicators far exceed the norm. Facing the situation that has ",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Moi truong & Cuoc song",
-          "url": "https://moitruong.net.vn/nha-trang-ngop-tho-vi-nuoc-thai-o-nhiem-vinh-vuot-nguong-siet-xu-ly-xa-thai-trai-phep-99255.html",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-08",
-          "title_ko": "하이퐁: 수천 가구가 생활용수 수질에 대해 우려하고 있다",
-          "title_en": "Hải Phòng: Hàng nghìn hộ dân lo lắng về chất lượng nước sinh hoạt",
-          "title_vi": "Hải Phòng: Hàng nghìn hộ dân lo lắng về chất lượng nước sinh hoạt",
-          "summary_ko": "빈틴(Vĩnh Thịnh) 면의 수천 가구가 둥티엔 2(Dũng Tiến 2) 정수장에서 공급되는 생활용수가 위생 기준을 충족하지 못하고, 물이 탁하며, 필터에 진흙이 낀 것처럼 더럽다고 불만을 토로했다. 칸토(Cần Thơ) 연안 지역 주민들은 깨끗한 물을 갈망하며, 밤새 물 한 방울을 기다리며 지새우고 있다. 농촌의 깨끗한 물: 현재 약 68%의 주민만",
-          "summary_en": "Hàng nghìn hộ dân tại xã Vĩnh Thịnh bày tỏ bức xúc khi nước sinh hoạt do Nhà máy nước Dũng Tiến 2 cung cấp, không đảm bảo vệ sinh, nước vẩn đục, cục lọc bẩn như bám bùn nhão. Người dân vùng ven biển C",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "VietnamPlus - Moi truong",
-          "url": "https://www.vietnamplus.vn/hai-phong-hang-nghin-ho-dan-lo-lang-ve-chat-luong-nuoc-sinh-hoat-post1103643.vnp",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-25",
-          "title_ko": "푸꾸옥 Duong Dong 2 수자원 프로젝트 착공",
-          "title_en": "Khởi công dự án Nhà máy nước Dương Đông 2 ở Phú Quốc",
-          "title_vi": "Khởi công dự án Nhà máy nước Dương Đông 2 ở Phú Quốc",
-          "summary_ko": "푸꾸옥 특별구역(안장성)의 즈엉동 2 정수장 프로젝트는 푸꾸옥 섬 주민들이 사용할 수 있는 깨끗한 물 공급을 보장하는 전략적 중요성을 갖고 있습니다.",
-          "summary_en": "Duong Dong 2 water plant project in Phu Quoc special zone (An Giang province) has strategic significance in ensuring clean water supply for people on Phu Quoc island to use.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Tuoi Tre - Kinh doanh",
-          "url": "https://tuoitre.vn/khoi-cong-du-an-nha-may-nuoc-duong-dong-2-o-phu-quoc-2026032513362488.htm",
-          "milestone": ""
-        },
-        {
-          "date": "2025-11-15",
-          "title_ko": "반몽 정수장 1단계가 가동을 시작했습니다",
-          "title_en": "Ban Mong Water Treatment Plant phase 1 begins operation",
-          "title_vi": "Nhà máy xử lý nước Ban Mong giai đoạn 1 chính thức đi vào hoạt động",
-          "summary_ko": "2,380억 동을 투자해 건설된 반몽 정수장 1단계 시설이 가동되었으며, 일일 처리 용량은 1만 m³이다. 총 설계 용량은 일일 2만 7,000 m³로, 이는 손라성에서 가장 큰 상수도 공급 프로젝트이다.",
-          "summary_en": "Ban Mong Water Treatment Plant phase 1 operational with VND 238 billion investment, 10,000 m3/day capacity. Total designed capacity 27,000 m3/day, largest water supply project in Son La province.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "vietnam.vn",
-          "url": "https://www.vietnam.vn/en/phat-trien-cap-nuoc-sinh-hoat-do-thi",
-          "milestone": ""
-        },
-        {
-          "date": "2025-06-15",
-          "title_ko": "Thu Duc City WWTP는 동남아시아 최대의 폐수 처리장으로 거듭났습니다",
-          "title_en": "Thu Duc City WWTP becomes Southeast Asia's largest wastewater treatment plant",
-          "title_vi": "Nhà máy xử lý nước thải Thành phố Thủ Đức trở thành nhà máy xử lý nước thải lớn nhất Đông Nam Á",
-          "summary_ko": "Thu Duc City에 5억 2,400만 달러를 투자하여 동남아시아 최대 규모의 WWTP를 건설 중입니다. MBBR 기술은 하루 110만m3를 처리하고 8개 구역에 걸쳐 180만 명의 주민에게 서비스를 제공합니다.",
-          "summary_en": "Southeast Asia's largest WWTP under construction in Thu Duc City with $524 million investment. Features MBBR technology, treating 1.1 million m3/day, serving 1.8 million residents across eight distric",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "trade.gov",
-          "url": "https://www.trade.gov/market-intelligence/vietnam-water-and-wastewater-management",
-          "milestone": ""
-        },
-        {
-          "date": "2025-01-03",
-          "title_ko": "옌자(Yen Xa) 폐수처리장, 베트남 북부 최대 규모로 시범 가동 시작",
-          "title_en": "Yen Xa Wastewater Treatment Plant begins trial operation as Northern Vietnam's largest",
-          "title_vi": "Nhà máy xử lý nước thải Yên Xá bắt đầu vận hành thử nghiệm lớn nhất miền Bắc Việt Nam",
-          "summary_ko": "베트남 북부 최대 규모의 Yen Xa WWTP가 시범 운영을 시작합니다. 2025년까지 하노이의 폐수 처리율 50-55% 목표에 매우 중요합니다. 시는 현재 4개의 새로운 프로젝트가 계획되어 있으며 처리율은 30%입니다.",
-          "summary_en": "Yen Xa WWTP, Northern Vietnam's largest, begins trial operation. Critical for Hanoi's target of 50-55% wastewater treatment rate by 2025. City currently at 30% treatment rate with 4 new projects plann",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "b-company.jp",
-          "url": "https://b-company.jp/trial-operation-of-northern-vietnam-largest-wastewater-treatment-plant/",
-          "milestone": ""
-        }
-      ],
-      "article_count": 6,
-      "insight": "",
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "milestone": "착공·건설 진행 중",
-      "timeline": [
-        {
-          "date": "2026-05-04",
-          "stage": "CONSTRUCTION",
-          "milestone_ko": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song"
-        }
-      ]
-    },
-    "VN-PWR-PDP8,VN-PWR-PDP8-RENEWABLE": {
-      "plan_id": "VN-PWR-PDP8,VN-PWR-PDP8-RENEWABLE",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "VN-PWR-PDP8,VN-PWR-PDP8-RENEWABLE",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "None",
-          "title_ko": "Vietnam Revised PDP8 under Decision 768 — offshore wind solar targets raised",
-          "title_en": "Vietnam Revised PDP8 under Decision 768 — offshore wind solar targets raised",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "POLICY",
-          "stage": "UNKNOWN",
-          "source": "Unknown",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2025-04-27",
-          "title_ko": "PDP8 개정 Decision 768 — 해상풍력·태양광 목표 대폭 상향",
-          "title_en": "Vietnam Revised PDP8 Decision 768 — offshore wind solar targets raised",
-          "title_vi": "",
-          "summary_ko": "PDP8 개정(Decision 768, 2025.4): 해상풍력 3배 상향(17,032MW), 태양광 대폭 증가, BESS 300→10,000MW. 총 투자 $134.7B.",
-          "summary_en": "PDP8 revised under Decision 768 (Apr 2025): offshore wind tripled to 17,032MW, solar up, BESS 300→10,000MW. Total $134.7B.",
-          "grade": "POLICY",
-          "stage": "UNKNOWN",
-          "source": "The Shiv Energy",
-          "url": "https://the-shiv.com/vietnams-revised-power-development",
-          "milestone": ""
-        }
-      ],
-      "article_count": 2,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-URB-METRO-2030": {
-      "plan_id": "VN-URB-METRO-2030",
-      "stage": "CONSTRUCTION",
-      "stage_label": {
-        "ko": "건설·시공",
-        "en": "Construction",
-        "vi": "Xây dựng"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "베트남 도시철도(메트로) 개발 계획",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-05-04",
-          "title_ko": "방콕의 녹색 도시 재생은 동남아시아 도시에 대한 모델을 제공합니다.",
-          "title_en": "Bangkok’s green urban regeneration offers a model for Southeast Asian cities",
-          "title_vi": "Tái tạo đô thị xanh của Bangkok cung cấp một mô hình cho các thành phố Đông Nam Á",
-          "summary_ko": "기사는 방콕의 녹색 도시 재생 사업이 동남아시아 도시들을 위한 모범 사례를 제시한다고 소개합니다. 베트남을 포함한 지역 도시들이 지속가능한 도시 발전을 추진하는 데 참고할 수 있는 모델을 제공합니다.",
-          "summary_en": "Today’s podcast episode takes you to Bangkok, Thailand, and its story of green urban regeneration. From revitalising green spaces and restoring canals to developing clean transportation, these experie",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "vietnamplus",
-          "url": "https://en.vietnamplus.vn/bangkoks-green-urban-regeneration-offers-a-model-for-southeast-asian-cities-post342108.vnp",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-21",
-          "title_ko": "하노이와 호치민시, 30개의 도시 철도 노선 건설",
-          "title_en": "Hanoi and Ho Chi Minh City to build 30 urban railway lines",
-          "title_vi": "",
-          "summary_ko": "베트남은 하노이와 호치민시가 국가 교통 인프라를 현대화하기 위한 광범위한 전략의 일환으로 총 30개의 지하철 노선을 건설할 계획으로 도시 철도 네트워크의 대대적인 확장을 계획하고 있습니다.",
-          "summary_en": "Vietnam plans a major expansion of its urban railway network, with Hanoi and Ho Chi Minh City set to build a total of 30 metro lines, as part of a broader strategy to modernize national transport infr",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP News English",
-          "url": "https://en.sggp.org.vn/hanoi-and-ho-chi-minh-city-to-bu",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-17",
-          "title_ko": "Long Thanh 공항에 Ben Thanh-Suoi Tien 지하철 프로젝트를 구현하기 위한 토지 취득",
-          "title_en": "Thu hồi đất triển khai Dự án metro Bến Thành-Suối Tiên đến Sân bay Long Thành",
-          "title_vi": "",
-          "summary_ko": "Dong Nai 토지기금개발센터에 따르면 Ben Thanh-Suoi Tien 지하철 노선을 지방 행정 센터와 Long Thanh 국제공항까지 연장하는 프로젝트의 총 길이는 44.6km입니다. 문제 해결",
-          "summary_en": "According to the Dong Nai Land Fund Development Center, the project extending the Ben Thanh-Suoi Tien Metro line to the Provincial Administrative Center and Long Thanh International Airport has a tota",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "VietnamPlus - Giao thong",
-          "url": "https://www.vietnamplus.vn/thu-hoi-dat-trien-khai-du-an",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-17",
-          "title_ko": "부총리는 하노이와 호치민시에 지하철역 주변의 TOD를 우선적으로 처리하도록 요청했습니다.",
-          "title_en": "Phó thủ tướng yêu cầu Hà Nội, TP HCM ưu tiên TOD quanh ga metro",
-          "title_vi": "",
-          "summary_ko": "Pham Gia Tuc 부총리는 TOD 메커니즘을 완성하고 지하철역 주변의 도시 개발을 우선시하며 하노이와 호치민시의 도시 철도 프로젝트 진행 속도를 높일 것을 요청했습니다.",
-          "summary_en": "Permanent Deputy Prime Minister Pham Gia Tuc requested to complete the TOD mechanism, prioritize urban development around metro stations, and speed up the progress of urban railway projects in Hanoi a",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "VnExpress - Thoi su",
-          "url": "https://vnexpress.net/pho-thu-tuong-yeu-cau-ha-noi-tp-h",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-14",
-          "title_ko": "HCMC, 2차 지하철 노선 건설을 위해 시내 나무 400그루 이동",
-          "title_en": "HCMC to move 400 downtown trees for 2nd metro line construction",
-          "title_vi": "",
-          "summary_ko": "호치민시는 벤탄 (Ben Thanh) 과 탐루옹 (Tham Luong) 사이의 지하철 2호선 건설을 위해 중앙의 여러 도로를 따라 400여 그루의 나무를 재배치할 예정입니다.",
-          "summary_en": "Ho Chi Minh City will relocate more than 400 trees along several roads in the center to make way for construction of metro line No. 2 between Ben Thanh and Tham Luong.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "VnExpress English - News",
-          "url": "https://e.vnexpress.net/news/news/traffic/hcmc-to-move-",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-05",
-          "title_ko": "호치민시, 지하철 2호선 건설 가속화",
-          "title_en": "Ho Chi Minh City accelerates Metro Line 2 construction",
-          "title_vi": "",
-          "summary_ko": "Ben Thanh–Tham Luong 지하철 프로젝트는 동기화 된 솔루션과 터널 보링 머신의 확장 된 사용을 통해 도시의 도시 철도 시스템에 대한 새로운 기술 표준을 설정하기 위해 빠르게 추적되고 있습니다. 호치민 국제공항 (HCMC) 에서 벤탄 수오이 티엔 (Ben Thanh–Suoi Tien) 지하철 노선을 롱탄 공항 (Long Thanh Airport",
-          "summary_en": "With synchronized solutions and expanded use of tunnel boring machines, the Ben Thanh–Tham Luong metro project is being fast-tracked to set new technological standards for the city’s urban railway sys",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP News English",
-          "url": "https://en.sggp.org.vn/ho-chi-minh-city-accelerates-met",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-04",
-          "title_ko": "호치민시 지도자들이 지하철 2호선 현장 조사를 실시합니다.",
-          "title_en": "Ho Chi Minh City’s leaders conduct field survey of Metro Line No. 2",
-          "title_vi": "",
-          "summary_ko": "4월 3일, 호치민시 인민위원회 경제 예산 위원회의 조사 대표단이 지하철 2호선 프로젝트 (벤탄 – 탐루옹) 의 S5역과 탐루옹 창고에 대한 현장 점검을 실시했습니다.",
-          "summary_en": "On April 3, a survey delegation from the Economic and Budget Committee of the Ho Chi Minh City People’s Council conducted an on-site inspection of Station S5 and the Tham Luong depot of the Metro Line",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP News English",
-          "url": "https://en.sggp.org.vn/ho-chi-minh-citys-leaders-conduc",
-          "milestone": ""
-        }
-      ],
-      "article_count": 7,
-      "insight": "",
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "milestone": "착공·건설 진행 중",
-      "timeline": [
-        {
-          "date": "2026-05-04",
-          "stage": "CONSTRUCTION",
-          "milestone_ko": "착공·건설 진행 중",
-          "source": "vietnamplus"
-        }
-      ]
-    },
-    "VN-CARBON-2050": {
-      "plan_id": "VN-CARBON-2050",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "VN-CARBON-2050",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-04-03",
-          "title_ko": "Phát triến công nghiệp xanh, Đếng Nai đết mếc tiêu phát thải ròng bếng 0",
-          "title_en": "Phát triển công nghiệp xanh, Đồng Nai đặt mục tiêu phát thải ròng bằng 0",
-          "title_vi": "Phát triển công nghiệp xanh, Đồng Nai đặt mục tiêu phát thải ròng bằng 0",
-          "summary_ko": "태국 동나이 추이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 ",
-          "summary_en": "Tỉnh Đồng Nai chuyển đổi các khu công nghiệp hiện hữu tại các đô thị theo hướng phát triển ngành công nghiệp công nghệ cao, lựa chọn sản phẩm, có giá trị gia tăng cao tham gia chuỗi giá trị toàn cầu. ",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "VietnamPlus - Moi truong",
-          "url": "https://www.vietnamplus.vn/phat-trien-cong-nghiep-xanh-dong-nai-dat-muc-tieu-phat-thai-rong-bang-0-post1102647.vnp",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-28",
-          "title_ko": "배기가스 저감, 날개 들어올리기",
-          "title_en": "Reduce emissions, lift the wings",
-          "title_vi": "Giảm phát thải, nâng những cánh bay",
-          "summary_ko": "2026년 1월 1일부터 베트남 항공청은 국제선 탄소 감축 및 상쇄를 위한 글로벌 메커니즘인 CORSIA에 공식 가입했습니다. [동영상] 비엣에비에이션, 탄소 저감 메커니즘 운송 부문 배출 감축 잠재력 총 온실가스 배출 할당량에 공식 합류",
-          "summary_en": "Since January 1, 2026, the Vietnam Aviation Administration has officially joined CORSIA - the global mechanism for carbon reduction and offsetting for international flights. [Video] Viet Aviation Offi",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Nhandan - Moi truong",
-          "url": "https://nhandan.vn/giam-phat-thai-nang-nhung-canh-bay-post951492.html",
-          "milestone": ""
-        }
-      ],
-      "article_count": 2,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-WAT-RESOURCES": {
-      "plan_id": "VN-WAT-RESOURCES",
-      "stage": "PLANNING",
-      "stage_label": {
-        "ko": "계획·승인",
-        "en": "Planning",
-        "vi": "Lập kế hoạch"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "베트남 수자원 개발 전략 2030",
-      "description_ko": "",
-      "decision": "Decision 1622/QĐ-TTg (2017)",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-05-04",
-          "title_ko": "수력 발전은 El Nino 2026의 위험에 처하기 전에 물을 축적하기 위해 돌진합니다.",
-          "title_en": "Hydropower rushes to accumulate water before the risk of El Nino 2026",
-          "title_vi": "Thủy điện chạy đua tích nước trước nguy cơ El Nino 2026",
-          "summary_ko": "베트남 수력발전소들이 2026년 엘니뇨 현상에 대비하여 저수지 저수량 확보에 나서고 있다. 가뭄 위기에 대응하기 위해 수력발전 시설들이 적극적으로 물 저장에 집중하고 있는 상황이다.",
-          "summary_en": "The dry season of 2026 is forecast to be harsh when the El Nino phenomenon is likely to occur from June to August with a high probability of prolonged and increased risk of widespread water shortages.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Moi truong & Cuoc song",
-          "url": "https://moitruong.net.vn/thuy-dien-chay-dua-tich-nuoc-truoc-nguy-co-el-nino-2026-99252.html",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-22",
-          "title_ko": "동탑성 해안 섬 코뮌은 가뭄과 염분에 적극적으로 대응합니다.",
-          "title_en": "The coastal island commune of Dong Thap province actively responds to drought and salinity",
-          "title_vi": "",
-          "summary_ko": "탄푸동 (Tan Phu Dong) 은 동탑 (Dong Thap) 주의 해안 섬 코뮌입니다. 매년 지역은 기후 변화, 특히 가뭄과 건기 바닷물 침입의 직접적인 영향을 받습니다. 위의 상황에 직면하여 당국과 지역 주민들은 예방과 통제를 위해 많은 해결책을 적극적으로 시행해 왔습니다.",
-          "summary_en": "Tan Phu Dong is a coastal islet commune of Dong Thap province. Every year, localities are directly affected by climate change, especially drought and saltwater intrusion in the dry season. Faced with ",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Nhandan - Moi truong",
-          "url": "https://nhandan.vn/xa-cu-lao-ven-bien-tinh-dong-thap-ch",
-          "milestone": ""
-        },
-        {
-          "date": "2024-01-12",
-          "title_ko": "nan",
-          "title_en": "Master planning of river basins aims at protecting water resources",
-          "title_vi": "",
-          "summary_ko": "nan",
-          "summary_en": "nan",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Vietnam News",
-          "url": "https://vietnamnews.vn/environment/1639118/master-plann",
-          "milestone": ""
-        },
-        {
-          "date": "2023-12-11",
-          "title_ko": "nan",
-          "title_en": "Mekong Delta takes proactive measures to cope with saltwater intrusion, drought",
-          "title_vi": "",
-          "summary_ko": "nan",
-          "summary_en": "nan",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Vietnam News",
-          "url": "https://vietnamnews.vn/environment/1637802/mekong-delta",
-          "milestone": ""
-        },
-        {
-          "date": "2022-07-28",
-          "title_ko": "nan",
-          "title_en": "Support for integrated management of water resources in Vu Gia-Thu Bon river basin",
-          "title_vi": "",
-          "summary_ko": "nan",
-          "summary_en": "nan",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Monre",
-          "url": "http://www9.monre.gov.vn/wps/portal/news!!/",
-          "milestone": ""
-        },
-        {
-          "date": "2020-05-23",
-          "title_ko": "nan",
-          "title_en": "PM calls for urgent action to deal with drought, saltwater intrusion",
-          "title_vi": "",
-          "summary_ko": "nan",
-          "summary_en": "nan",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Communist Party news",
-          "url": "http://en.dangcongsan.vn/social-affairs/pm-calls-for-ur",
-          "milestone": ""
-        }
-      ],
-      "article_count": 6,
-      "insight": "",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "milestone": "정책·법령 발표",
-      "timeline": [
-        {
-          "date": "2026-05-04",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song"
-        }
-      ]
-    },
-    "VN-TRAN-2055": {
-      "plan_id": "VN-TRAN-2055",
-      "stage": "PLANNING",
-      "stage_label": {
-        "ko": "계획·승인",
-        "en": "Planning",
-        "vi": "Lập kế hoạch"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
-      "description_ko": "",
-      "decision": "Decision 1412/QĐ-TTg (2021)",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "None",
-          "title_ko": "Long Thanh airport nears completion — first runway 91% done",
-          "title_en": "Long Thanh airport nears completion — first runway 91% done",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Unknown",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-05-05",
-          "title_ko": "호치민시는 두 자릿수 성장을 위한 \"충분히 깨끗하고 신뢰할 수 있는\" 전력을 확보하고자 합니다.",
-          "title_en": "Ho Chi Minh City seeks to secure “sufficient–clean–reliable” power for double-digit growth",
-          "title_vi": "Thành phố Hồ Chí Minh tìm cách đảm bảo sức mạnh “đủ sạch - đáng tin cậy” cho tăng trưởng hai con số",
-          "summary_ko": "호치민시의 GRDP는 산업, 건설 및 서비스에 힘입어 2026-2030년에 매년 평균 10.2% 씩 성장할 수 있습니다. 이는 전력 수요를 첨단 제조, 물류, 디지털 인프라 및 녹색 경제로 전환시킬 것입니다. 전기에 대한 압력을 완화하기 위한 옥상 태양광 발전",
-          "summary_en": "Ho Chi Minh City’s GRDP could grow by an average of 10.2% annually in 2026–2030, driven by industry, construction and services. This will shift electricity demand toward high-tech manufacturing, logis",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "vietnamplus",
-          "url": "https://en.vietnamplus.vn/ho-chi-minh-city-seeks-to-secure-sufficientcleanreliable-power-for-double-digit-growth-post342226.vnp",
-          "milestone": ""
-        },
-        {
-          "date": "2026-05-05",
-          "title_ko": "5월 5일 ☕ 오후 브리핑",
-          "title_en": "☕ Afternoon briefing on May 5",
-          "title_vi": "Cuộc họp giao ban ☕ buổi chiều vào ngày 5 tháng 5",
-          "summary_ko": "다음은 베트남 통신사가 보도한 당일 행사에 대한 간략한 리뷰입니다. 5월 4일 ☕ 오후 브리핑 5월 5일 ☀️ ☀️ 오전 소화 5월 4일 오전 소화",
-          "summary_en": "The following is a brief review of the day’s events as reported by the Vietnam News Agency. ☕ Afternoon briefing on May 4 ☀️ Morning digest on May 5 ☀️ Morning digest on May 4",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "vietnamplus",
-          "url": "https://en.vietnamplus.vn/afternoon-briefing-on-may-5-post342233.vnp",
-          "milestone": ""
-        },
-        {
-          "date": "2026-05-05",
-          "title_ko": "베트남 – 범아시아 전력망 이니셔티브의 전략적 연계: ADB",
-          "title_en": "Vietnam – A strategic link in Pan-Asia Power Grid Initiative: ADB",
-          "title_vi": "Việt Nam – Liên kết chiến lược trong Sáng kiến Lưới điện Châu Á: ADB",
-          "summary_ko": "베트남 통신사 (VNA) 의 기자와의 인터뷰에서 ADB의 동남아시아 및 태평양 에너지 부문 이사인 게이주 미쓰하시 (Keiju Mitsuhashi) 는 베트남을 광범위한 범아시아 전력망 이니셔티브 (Pan-Asia Power Grid Initiative, PAGI) 의 \"진정으로 중요한\" 부분으로 묘사하면서 이러한 전략적 입장을 강조했다. PM은 n",
-          "summary_en": "In an interview with the Vietnam News Agency (VNA)'s reporter, Keiju Mitsuhashi, Director for Energy Sector for Southeast Asia and the Pacific at ADB, underscored this strategic position, describing V",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "vietnamplus",
-          "url": "https://en.vietnamplus.vn/vietnam-a-strategic-link-in-pan-asia-power-grid-initiative-adb-post342238.vnp",
-          "milestone": ""
-        },
-        {
-          "date": "2026-05-05",
-          "title_ko": "HCMC 조국전선은 적십자가 선제적 지원으로 전환할 것을 촉구합니다.",
-          "title_en": "HCMC Fatherland Front urges Red Cross to shift toward proactive aid",
-          "title_vi": "Mặt trận Tổ quốc thành phố Hồ Chí Minh kêu gọi Hội Chữ thập đỏ chuyển hướng sang viện trợ chủ động",
-          "summary_ko": "호치민시 베트남 조국전선 (VFF) 위원회의 응우옌 푸옥 로크 (Nguyen Phuoc Loc) 위원장은 호치민시 적십자회에 수동적 구호를 넘어 지속 가능한 생계 지원에 집중할 것을 촉구했다.",
-          "summary_en": "Chairman Nguyen Phuoc Loc of the Vietnam Fatherland Front (VFF) Committee of Ho Chi Minh City called on the Ho Chi Minh City Red Cross Society to move beyond passive relief and focus on sustainable li",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "sggp_org_vn",
-          "url": "https://en.sggp.org.vn/hcmc-fatherland-front-urges-red-cross-to-shift-toward-proactive-aid-post126023.html",
-          "milestone": ""
-        },
-        {
-          "date": "2026-05-04",
-          "title_ko": "외부 위험에도 불구하고 베트남은 여전히 밝은 지역으로 남아 있습니다: 국제 기관",
-          "title_en": "Vietnam remains regional bright spot despite external risks: int’l institutions",
-          "title_vi": "Việt Nam vẫn là điểm sáng khu vực bất chấp rủi ro bên ngoài: các tổ chức quốctế",
-          "summary_ko": "4월 10일 발표된 아시아개발전망 (ADO) 보고서에 따르면, 아시아개발은행 (ADB) 은 베트남의 GDP가 2026년 7.2% 에 도달하고 2027년에는 약 7% 를 유지할 것으로 전망했다. 이러한 견해를 공유하면서, 아세안 +3 거시경제연구소 (AMRO) 와 유나이티드 해외은행 (UOB) 도",
-          "summary_en": "According to the Asian Development Outlook (ADO) report released on April 10, the Asian Development Bank (ADB) forecasts Vietnam’s GDP to reach 7.2% in 2026 and remain around 7% in 2027. Sharing this ",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "vietnamplus",
-          "url": "https://en.vietnamplus.vn/vietnam-remains-regional-bright-spot-despite-external-risks-intl-institutions-post342162.vnp",
-          "milestone": ""
-        },
-        {
-          "date": "2026-05-04",
-          "title_ko": "롱탄 국제공항 1단계, 2026년 상업 운영 예정",
-          "title_en": "Phase 1 of Long Thanh Int'l Airport to be put into commercial operation in 2026",
-          "title_vi": "Giai đoạn 1 của Sân bay quốc tế Long Thành sẽ được đưa vào khai thác thương mại vào năm 2026",
-          "summary_ko": "르 민 훙 (Le Minh Hung) 총리는 5월 4일 정부 본부에서 롱탄 국제공항 건설을 위한 투자 프로젝트의 진행 상황을 검토하고 장애물과 병목 현상을 해결하며 1단계 시행을 가속화하기 위한 회의를 주재했다.",
-          "summary_en": "Prime Minister Le Minh Hung chaired a meeting to review progress, address obstacles and bottlenecks, and accelerate the implementation of phase 1 of the investment project to build Long Thanh Int'l Ai",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "sggp_org_vn",
-          "url": "https://en.sggp.org.vn/phase-1-of-long-thanh-intl-airport-to-be-put-into-commercial-operation-in-2026-post125995.html",
-          "milestone": ""
-        },
-        {
-          "date": "2026-05-04",
-          "title_ko": "호주, 베트남 아연 도금강에 반덤핑 프로브 출시",
-          "title_en": "Australia launches anti-dumping probe into Vietnamese galvanised steel",
-          "title_vi": "Úc ra mắt đầu dò chống bán phá giá vào thép mạ kẽm Việt Nam",
-          "summary_ko": "베트남 무역구제청 (Trade Remedies Authority of Vietnam) 은 베트남의 아연 도금 철강 수출업자들에게 호주에 대한 개발 상황을 모니터링하고 적절한 대응 조치를 준비 할 것을 권고했다. 기업은 제품과 관련된 모든 수출 활동, 특히 가격 및 생산 비용에 대한 데이터를 검토할 것을 촉구합니다.",
-          "summary_en": "The Trade Remedies Authority of Vietnam has advised Vietnamese exporters of galvanised steel to Australia to monitor developments and prepare appropriate response measures. Companies are urged to revi",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "vietnamplus",
-          "url": "https://en.vietnamplus.vn/australia-launches-anti-dumping-probe-into-vietnamese-galvanised-steel-post342174.vnp",
-          "milestone": ""
-        }
-      ],
-      "article_count": 33,
-      "insight": "",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "milestone": "정책·법령 발표",
-      "timeline": [
-        {
-          "date": "2026-05-04",
-          "stage": "CONSTRUCTION",
-          "milestone_ko": "착공·건설 진행 중",
-          "source": "vietnamplus"
-        },
-        {
-          "date": "2026-05-04",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "vietnamplus"
-        },
-        {
-          "date": "2026-05-02",
-          "stage": "COMPLETION",
-          "milestone_ko": "준공·운영 개시",
-          "source": "VnExpress International"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "OPERATION",
-          "milestone_ko": "운영 성과 업데이트",
-          "source": "vietnamplus"
-        }
-      ]
-    },
-    "HN-URBAN-WEST,HN-URBAN-INFRA": {
-      "plan_id": "HN-URBAN-WEST,HN-URBAN-INFRA",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "HN-URBAN-WEST,HN-URBAN-INFRA",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-02-24",
-          "title_ko": "호아락 하이테크파크 460ha 확장 — 베트남 실리콘밸리 2026",
-          "title_en": "Hoa Lac Hi-Tech Park 460ha expansion — Vietnam Silicon Valley 2026",
-          "title_vi": "",
-          "summary_ko": "호아락 하이테크파크 460ha 확장 토지수용 2026년 완료. Meta·ASU·SIA 전략투자자 유치. AI·반도체·바이오·우주항공 집중.",
-          "summary_en": "Hoa Lac Hi-Tech Park 460ha expansion land clearance 2026. Meta, ASU, SIA investors targeted. AI, semiconductor, bio, aerospace focus.",
-          "grade": "HIGH",
-          "stage": "UNKNOWN",
-          "source": "Vietnam.vn",
-          "url": "https://www.vietnam.vn/en/dinh-hinh-phat-trien-khu-cong",
-          "milestone": ""
-        },
-        {
-          "date": "2025-12-20",
-          "title_ko": "호아락 하이테크파크, 베트남 혁신 허브 도약 — 109개 프로젝트 $4.59B",
-          "title_en": "Hoa Lac Hi-Tech Park poised to become Vietnam innovation hub — 109 projects $4.59B",
-          "title_vi": "",
-          "summary_ko": "호아락 하이테크파크: 109개 투자 프로젝트, $4.59B 등록자본. 2025 개정 수도법 특별 메커니즘. 2045년 글로벌 혁신시스템 핵심 거점.",
-          "summary_en": "Hoa Lac: 109 projects, $4.59B registered capital. 2025 Capital Law special mechanism. Target: global innovation hub by 2045.",
-          "grade": "HIGH",
-          "stage": "UNKNOWN",
-          "source": "VietnamPlus",
-          "url": "https://en.vietnamplus.vn/hoa-lac-hi-tech-park-poised-t",
-          "milestone": ""
-        }
-      ],
-      "article_count": 2,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-PWR-PDP8": {
-      "plan_id": "VN-PWR-PDP8",
-      "stage": "PLANNING",
-      "stage_label": {
-        "ko": "계획·승인",
-        "en": "Planning",
-        "vi": "Lập kế hoạch"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "베트남 제8차 국가전력개발계획",
-      "description_ko": "",
-      "decision": "Decision 500/QĐ-TTg (2023) + Decision 768/QĐ-TTg (2024 개정)",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-05-05",
-          "title_ko": "[동영상] El Nino 2026의 위험에 처하기 전에 수력 발전이 물을 모으기 위해 돌진합니다.",
-          "title_en": "[VIDEO] Hydropower rushes to collect water before the risk of El Nino 2026",
-          "title_vi": "[VIDEO] Thủy điện chạy đua tích nước trước nguy cơ El Nino 2026",
-          "summary_ko": "베트남 수력발전소들이 2026년 엘니뇨 현상에 대비해 저수지 물 저장에 나섰다. 가뭄 위험에 대응하기 위해 수력발전 시설들이 적극적으로 용수 확보에 진행 중이다.",
-          "summary_en": "The dry season of 2026 is forecast to be harsh when the El Nino phenomenon is likely to occur from June to August with a high probability of prolonged and increased risk of widespread water shortages.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Moi truong & Cuoc song",
-          "url": "https://moitruong.net.vn/video-thuy-dien-chay-dua-tich-nuoc-truoc-nguy-co-el-nino-2026-99294.html",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-30",
-          "title_ko": "더운 날씨와 전기 부족은 동남아시아에 동시에 압력을 가합니다.",
-          "title_en": "Nắng nóng và thiếu điện cùng lúc gây sức ép lên Đông Nam Á",
-          "title_vi": "Nắng nóng và thiếu điện cùng lúc gây sức ép lên Đông Nam Á",
-          "summary_ko": "동남아시아가 동시에 극심한 더위와 전력 부족으로 인한 압력에 직면하고 있다. 높은 기온으로 인한 전력 수요 증가가 지역의 전력 공급 능력을 초과하면서 에너지 위기가 심화되고 있는 상황이다.",
-          "summary_en": "Workers in many Southeast Asian countries are dealing with a \"dual crisis\" when the region is simultaneously affected by prolonged heat and the risk of energy shortages in the context of complicated w",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Moi truong & Cuoc song",
-          "url": "https://moitruong.net.vn/nang-nong-va-thieu-dien-cung-luc-gay-suc-ep-len-dong-nam-a-99183.html",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-21",
-          "title_ko": "1 chiếc tủ lạnh chạy 24/7 hết bao nhiêu tiền điện: EVN Việt Nam đưa ra đáp án",
-          "title_en": "1 chiếc tủ lạnh chạy 24/7 hết bao nhiêu tiền điện: EVN Việt Nam đưa ra đáp án",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "CafeBiz",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-17",
-          "title_ko": "EVNSPC는 Lai Son 110kV 변압기 스테이션에 전력을 공급하고 운영합니다.",
-          "title_en": "EVNSPC đóng điện, vận hành Trạm biến áp 110kV Lại Sơn",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Bao Xay Dung",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-17",
-          "title_ko": "EVNSPC는 검사를 강화하고 Phu Quoc 및 APEC 2027에 대한 전력 프로젝트를 촉구합니다.",
-          "title_en": "EVNSPC tăng cường kiểm tra, đôn đốc các dự án điện cho Phú Quốc và APEC 2027",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Thanh Nien - Kinh te",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-16",
-          "title_ko": "EVN Việt Nam hướng dẫn: Làm điều này trước khi ngủ có thể giúp giảm tiền điện mỗi tháng",
-          "title_en": "EVN Việt Nam hướng dẫn: Làm điều này trước khi ngủ có thể giúp giảm tiền điện mỗi tháng",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "CafeBiz",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-16",
-          "title_ko": "EVN Việt Nam cảnh báo: 5 thiết bị tắt rồi vẫn \"chạy ngầm\" 24/7, nhiều nhà bị tốn điện oan",
-          "title_en": "EVN Việt Nam cảnh báo: 5 thiết bị tắt rồi vẫn \"chạy ngầm\" 24/7, nhiều nhà bị tốn điện oan",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "CafeBiz",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-15",
-          "title_ko": "Hàng triệu gia đình chú ý: EVN Việt Nam chỉ thẳng “thủ phạm” khiến hóa đơn tiền điện mùa nắng nóng tăng vọt",
-          "title_en": "Hàng triệu gia đình chú ý: EVN Việt Nam chỉ thẳng “thủ phạm” khiến hóa đơn tiền điện mùa nắng nóng tăng vọt",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "CafeBiz",
-          "url": "",
-          "milestone": ""
-        }
-      ],
-      "article_count": 51,
-      "insight": "",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "milestone": "정책·법령 발표",
-      "timeline": [
-        {
-          "date": "2026-05-05",
-          "stage": "PLANNING",
-          "milestone_ko": "베트남-미국 에너지협력 양해각서(MOU) 체결 협상",
-          "source": "vietnamplus"
-        },
-        {
-          "date": "2026-05-05",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song"
-        },
-        {
-          "date": "2026-04-30",
-          "stage": "OPERATION",
-          "milestone_ko": "동남아 전력수급 위기 상황 발생",
-          "source": "Moi truong & Cuoc song"
-        }
-      ]
-    },
-    "HN-URBAN-NORTH,HN-URBAN-INFRA": {
-      "plan_id": "HN-URBAN-NORTH,HN-URBAN-INFRA",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "HN-URBAN-NORTH,HN-URBAN-INFRA",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2025-08-20",
-          "title_ko": "하노이 동아인 BRG-Sumitomo 스마트시티 1단계 착공 — $4.2B 272ha",
-          "title_en": "North Hanoi BRG-Sumitomo Smart City Phase 1 breaks ground — $4.2B 272ha",
-          "title_vi": "",
-          "summary_ko": "하노이 동아인구 BRG-Sumitomo 스마트시티(272ha, $4.2B) 2025.8.19 1단계 착공. 5단계 개발, 108층 금융타워. 2032년 완공 목표.",
-          "summary_en": "BRG-Sumitomo Smart City (272ha, $4.2B) Dong Anh breaks ground Aug 2025. Phase 1 of 5-phase plan. 108-floor tower planned.",
-          "grade": "HIGH",
-          "stage": "UNKNOWN",
-          "source": "The Modulus Media",
-          "url": "https://themodulusmedia.com/north-hanoi-smart-city-proj",
-          "milestone": ""
-        },
-        {
-          "date": "2023-11-11",
-          "title_ko": "하노이, 동아인 BRG 스마트시티 프로젝트 공식 발표 — $4.2B",
-          "title_en": "Hanoi launches $4.2B BRG Dong Anh smart city project",
-          "title_vi": "",
-          "summary_ko": "하노이시, 동아인구 냣딴교 앞 272ha BRG-Sumitomo 스마트시티($4.2B) 공식 발표. 5단계 개발, 108층 금융센터 포함.",
-          "summary_en": "Hanoi officially announces 272ha BRG-Sumitomo Smart City ($4.2B) in Dong Anh. 5-phase development, 108-floor financial center.",
-          "grade": "HIGH",
-          "stage": "UNKNOWN",
-          "source": "VnExpress International",
-          "url": "https://e.vnexpress.net/news/news/hanoi-launches-4-2b-s",
-          "milestone": ""
-        }
-      ],
-      "article_count": 2,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "HN-URBAN-INFRA, HN-URBAN-WEST": {
-      "plan_id": "HN-URBAN-INFRA, HN-URBAN-WEST",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "HN-URBAN-INFRA, HN-URBAN-WEST",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-03-13",
-          "title_ko": "베트남 우주센터 개관",
-          "title_en": "Khánh thành Trung tâm Vũ trụ Việt Nam",
-          "title_vi": "",
-          "summary_ko": "베트남 우주 센터는 직경 9.3m 안테나를 갖춘 지상 시스템과 위성 R&D 센터를 갖춘 호아락 하이테크 파크에 문을 열었습니다. 억만장자 Elon Musk의 위성 인터넷은 베트남에서 라이센스를 받았습니다. 또 다른 회사는 베트남에서 위성 인터넷을 시험하기 위한 신청서를 제출했습니다.",
-          "summary_en": "The Vietnam Space Center was inaugurated at Hoa Lac Hi-Tech Park, possessing a ground system with a 9.3m diameter antenna and a satellite R&D center. Billionaire Elon Musk's satellite Internet is lice",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Bao Ha Tinh",
-          "url": "https://baohatinh.vn/khanh-thanh-trung-tam-vu-tru-viet-",
-          "milestone": ""
-        }
-      ],
-      "article_count": 1,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "HN-URBAN-WEST": {
-      "plan_id": "HN-URBAN-WEST",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "하노이 서부 도시개발 (화락 첨단기술단지)",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [],
-      "article_count": 0,
       "insight": "",
       "next_watch": "",
       "milestone": "",
@@ -2228,7 +2332,7 @@
         {
           "date": "2026-04-29",
           "stage": "UNKNOWN",
-          "milestone_ko": "기사 내용 부재",
+          "milestone_ko": "베트남 LNG 사업 관련 정보 없음",
           "source": "menafn"
         },
         {
@@ -2246,10 +2350,297 @@
         {
           "date": "2026-04-29",
           "stage": "UNKNOWN",
-          "milestone_ko": "기사 내용이 사업과 무관함",
+          "milestone_ko": "관련 정보 없음",
           "source": "vietnamnews_vn"
         }
       ]
+    },
+    "VN-PWR-PDP8-GRID": {
+      "plan_id": "VN-PWR-PDP8-GRID",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "PDP8 송배전망 확충",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-03-14",
+          "title_ko": "캐나다의 베트남 교수는 북미 최대 전력망의 수명을 연장하기 위해 백만 달러의 보조금을 받았습니다.",
+          "title_en": "Vietnamese professor in Canada lands million-dollar grant to extend life of North America's largest power grid",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "VnExpress English - News",
+          "url": "",
+          "milestone": ""
+        }
+      ],
+      "article_count": 1,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-PWR-PDP8-RENEWABLE": {
+      "plan_id": "VN-PWR-PDP8-RENEWABLE",
+      "stage": "COMPLETION",
+      "stage_label": {
+        "ko": "준공·개통",
+        "en": "Completion",
+        "vi": "Hoàn thành"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-05-05",
+          "title_ko": "베트남, APAC 풍력 에너지 컨퍼런스 2026 개최: 풍력 발전 투자 유치 기회 확대",
+          "title_en": "Vietnam hosts APAC Wind Energy Conference 2026: Expanding opportunities to attract investment in wind power",
+          "title_vi": "Việt Nam đăng cai Hội nghị Năng lượng gió APAC 2026: Mở rộng cơ hội thu hút đầu tư cho điện gió",
+          "summary_ko": "베트남이 2026년 APAC 풍력에너지 회의를 개최하여 풍력발전 투자 유치 기회를 확대한다. 이 국제회의는 아시아태평양 지역의 풍력에너지 산업 발전을 촉진하고 베트남의 재생에너지 투자 확대를 도모하는 전략적 행사이다.",
+          "summary_en": "Hanoi will become the focal point of the region's renewable energy sector when it hosts the APAC Wind Energy Summit 2026, taking place from June 9-11.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Moi truong & Cuoc song",
+          "url": "https://moitruong.net.vn/viet-nam-dang-cai-hoi-nghi-nang-luong-gio-apac-2026-mo-rong-co-hoi-thu-hut-dau-tu-cho-dien-gio-99260.html",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-14",
+          "title_ko": "옥상 태양광 발전 - 더운 날씨 피크 시 계통 압력 감소",
+          "title_en": "Rooftop solar power - reduce grid pressure during hot weather peak",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Bao Ha Tinh",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-31",
+          "title_ko": "PM, 절전 강화, 옥상 태양광 발전 가속화 요청",
+          "title_en": "PM requests enhancing power saving, accelerating rooftop solar rollout",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Nhan Dan English",
+          "url": "",
+          "milestone": ""
+        }
+      ],
+      "article_count": 3,
+      "insight": "",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "milestone": "준공·운영 개시",
+      "timeline": [
+        {
+          "date": "2026-04-29",
+          "stage": "COMPLETION",
+          "milestone_ko": "준공·운영 개시",
+          "source": "menafn"
+        },
+        {
+          "date": "2026-04-29",
+          "stage": "OPERATION",
+          "milestone_ko": "운영 성과 업데이트",
+          "source": "channelnewsasia"
+        },
+        {
+          "date": "2026-04-29",
+          "stage": "UNKNOWN",
+          "milestone_ko": "베트남 사업과 무관한 미국 배터리 저장 기사",
+          "source": "menafn"
+        },
+        {
+          "date": "2026-04-29",
+          "stage": "UNKNOWN",
+          "milestone_ko": "사업 관련 정보 없음",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-29",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "vietnamplus"
+        },
+        {
+          "date": "2026-04-29",
+          "stage": "UNKNOWN",
+          "milestone_ko": "기사 내용이 재생에너지 사업과 무관함",
+          "source": "vietnamnews_vn"
+        }
+      ]
+    },
+    "VN-WAT-RESOURCES": {
+      "plan_id": "VN-WAT-RESOURCES",
+      "stage": "PLANNING",
+      "stage_label": {
+        "ko": "계획·승인",
+        "en": "Planning",
+        "vi": "Lập kế hoạch"
+      },
+      "confidence": 1.0,
+      "haiku_used": false,
+      "title_ko": "베트남 수자원 개발 전략 2030",
+      "description_ko": "",
+      "decision": "Decision 1622/QĐ-TTg (2017)",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-05-04",
+          "title_ko": "수력 발전은 El Nino 2026의 위험에 처하기 전에 물을 축적하기 위해 돌진합니다.",
+          "title_en": "Hydropower rushes to accumulate water before the risk of El Nino 2026",
+          "title_vi": "Thủy điện chạy đua tích nước trước nguy cơ El Nino 2026",
+          "summary_ko": "베트남 수력발전소들이 2026년 엘니뇨 현상에 대비하여 저수지 저수량 확보에 나서고 있다. 가뭄 위기에 대응하기 위해 수력발전 시설들이 적극적으로 물 저장에 집중하고 있는 상황이다.",
+          "summary_en": "The dry season of 2026 is forecast to be harsh when the El Nino phenomenon is likely to occur from June to August with a high probability of prolonged and increased risk of widespread water shortages.",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Moi truong & Cuoc song",
+          "url": "https://moitruong.net.vn/thuy-dien-chay-dua-tich-nuoc-truoc-nguy-co-el-nino-2026-99252.html",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-22",
+          "title_ko": "동탑성 해안 섬 코뮌은 가뭄과 염분에 적극적으로 대응합니다.",
+          "title_en": "The coastal island commune of Dong Thap province actively responds to drought and salinity",
+          "title_vi": "",
+          "summary_ko": "탄푸동 (Tan Phu Dong) 은 동탑 (Dong Thap) 주의 해안 섬 코뮌입니다. 매년 지역은 기후 변화, 특히 가뭄과 건기 바닷물 침입의 직접적인 영향을 받습니다. 위의 상황에 직면하여 당국과 지역 주민들은 예방과 통제를 위해 많은 해결책을 적극적으로 시행해 왔습니다.",
+          "summary_en": "Tan Phu Dong is a coastal islet commune of Dong Thap province. Every year, localities are directly affected by climate change, especially drought and saltwater intrusion in the dry season. Faced with ",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Nhandan - Moi truong",
+          "url": "https://nhandan.vn/xa-cu-lao-ven-bien-tinh-dong-thap-ch",
+          "milestone": ""
+        },
+        {
+          "date": "2024-01-12",
+          "title_ko": "nan",
+          "title_en": "Master planning of river basins aims at protecting water resources",
+          "title_vi": "",
+          "summary_ko": "nan",
+          "summary_en": "nan",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Vietnam News",
+          "url": "https://vietnamnews.vn/environment/1639118/master-plann",
+          "milestone": ""
+        },
+        {
+          "date": "2023-12-11",
+          "title_ko": "nan",
+          "title_en": "Mekong Delta takes proactive measures to cope with saltwater intrusion, drought",
+          "title_vi": "",
+          "summary_ko": "nan",
+          "summary_en": "nan",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Vietnam News",
+          "url": "https://vietnamnews.vn/environment/1637802/mekong-delta",
+          "milestone": ""
+        },
+        {
+          "date": "2022-07-28",
+          "title_ko": "nan",
+          "title_en": "Support for integrated management of water resources in Vu Gia-Thu Bon river basin",
+          "title_vi": "",
+          "summary_ko": "nan",
+          "summary_en": "nan",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Monre",
+          "url": "http://www9.monre.gov.vn/wps/portal/news!!/",
+          "milestone": ""
+        },
+        {
+          "date": "2020-05-23",
+          "title_ko": "nan",
+          "title_en": "PM calls for urgent action to deal with drought, saltwater intrusion",
+          "title_vi": "",
+          "summary_ko": "nan",
+          "summary_en": "nan",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Communist Party news",
+          "url": "http://en.dangcongsan.vn/social-affairs/pm-calls-for-ur",
+          "milestone": ""
+        }
+      ],
+      "article_count": 6,
+      "insight": "",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "milestone": "정책·법령 발표",
+      "timeline": [
+        {
+          "date": "2026-05-04",
+          "stage": "PLANNING",
+          "milestone_ko": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song"
+        }
+      ]
+    },
+    "VN-PWR-PDP8, VN-PWR-PDP8-HYDROGEN": {
+      "plan_id": "VN-PWR-PDP8, VN-PWR-PDP8-HYDROGEN",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "VN-PWR-PDP8, VN-PWR-PDP8-HYDROGEN",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2024-05-16",
+          "title_ko": "nan",
+          "title_en": "Standard Chartered backs green hydrogen project in Mekong Delta",
+          "title_vi": "",
+          "summary_ko": "nan",
+          "summary_en": "nan",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "The Saigon Times",
+          "url": "https://english.thesaigontimes.vn/standard-chartered-ba",
+          "milestone": ""
+        }
+      ],
+      "article_count": 1,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
     },
     "VN-PWR-PDP8-NUCLEAR": {
       "plan_id": "VN-PWR-PDP8-NUCLEAR",
@@ -2303,7 +2694,7 @@
         {
           "date": "2026-04-29",
           "stage": "UNKNOWN",
-          "milestone_ko": "기사 내용이 베트남 원전사업과 무관",
+          "milestone_ko": "베트남 핵전력 사업 정보 부재",
           "source": "menafn"
         },
         {
@@ -2321,24 +2712,48 @@
         {
           "date": "2026-04-29",
           "stage": "UNKNOWN",
-          "milestone_ko": "기사 내용 사업 무관",
+          "milestone_ko": "사업 관련 정보 없음",
           "source": "vietnamnews_vn"
         }
       ]
     },
-    "VN-ENV-IND-1894": {
-      "plan_id": "VN-ENV-IND-1894",
-      "stage": "PLANNING",
+    "HN-URBAN-WEST": {
+      "plan_id": "HN-URBAN-WEST",
+      "stage": "UNKNOWN",
       "stage_label": {
-        "ko": "계획·승인",
-        "en": "Planning",
-        "vi": "Lập kế hoạch"
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
       },
-      "confidence": 1.0,
+      "confidence": 0.0,
       "haiku_used": false,
-      "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
+      "title_ko": "하노이 서부 도시개발 (화락 첨단기술단지)",
       "description_ko": "",
-      "decision": "Decision 1894/QĐ-TTg (2024)",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [],
+      "article_count": 0,
+      "insight": "",
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
+    },
+    "VN-EV-2030": {
+      "plan_id": "VN-EV-2030",
+      "stage": "CONSTRUCTION",
+      "stage_label": {
+        "ko": "건설·시공",
+        "en": "Construction",
+        "vi": "Xây dựng"
+      },
+      "confidence": 0.982,
+      "haiku_used": false,
+      "title_ko": "베트남 전기차·친환경 교통 전략 2030",
+      "description_ko": "",
+      "decision": "",
       "sector": "",
       "area": "",
       "kpi_targets": [],
@@ -2346,459 +2761,34 @@
       "articles": [
         {
           "date": "2026-05-04",
-          "title_ko": "2026년 5월부터 시행되는 4가지 새로운 환경 정책",
-          "title_en": "Four new environmental policies effective from May 2026",
-          "title_vi": "Bốn chính sách mới về môi trường có hiệu lực từ tháng 05/2026",
-          "summary_ko": "베트남이 2026년 5월부터 시행하는 4가지 새로운 환경 정책에 관한 기사. 환경 분야의 주요 정책 변화를 다루고 있으며, 구체적인 정책 내용은 본문에 제시되지 않음.",
-          "summary_en": "It is allowed to exchange carbon credits with international partners; enterprises are required to recycle products and packaging according to the EPR mechanism; priority is given to dedicating the use",
+          "title_ko": "PVOIL, 5월 15일부터 E10 가솔린 전국 출시",
+          "title_en": "PVOIL to roll out E10 gasoline nationwide from May 15",
+          "title_vi": "PVOIL triển khai xăng E10 trên toàn quốc từ ngày 15/5",
+          "summary_ko": "베트남 국영 석유사 PVOIL이 5월 15일부터 전국 모든 주유소에서 E10 바이오연료 휘발유 판매를 시작한다. 13개 주요 저장소의 혼합·저장 시스템을 업그레이드하고 에탄올 공급망을 확보했으며, 품질 기준을 충족한다.",
+          "summary_en": "PVOIL began piloting E10 gasoline sales on August 1, 2025, in Hanoi and Hai Phong, before expanding to central and southern regions. As of April 2026, the company operated 558 petrol stations selling ",
           "grade": "MEDIUM",
           "stage": "UNKNOWN",
-          "source": "Moi truong & Cuoc song",
-          "url": "https://moitruong.net.vn/bon-chinh-sach-moi-ve-moi-truong-co-hieu-luc-tu-thang-05-2026-99254.html",
+          "source": "vietnamplus",
+          "url": "https://en.vietnamplus.vn/pvoil-to-roll-out-e10-gasoline-nationwide-from-may-15-post342175.vnp",
           "milestone": ""
         },
         {
-          "date": "2026-04-07",
-          "title_ko": "친환경 산업단지가 차세대 외국인 직접 투자를 주도한다",
-          "title_en": "Green industrial parks drive next-generation FDI",
-          "title_vi": "Các khu công nghiệp xanh thúc đẩy dòng vốn đầu tư trực tiếp nước ngoài thế hệ mới",
-          "summary_ko": "호치민시는 기술 이전을 지원하기 위해 외국인 직접 투자 기업, 국내 대기업 및 중소기업 간의 연계성을 강화하는 한편, 공급망 데이터 시스템, 스마트 물류창고, 지역 물류 센터 및 내륙 컨테이너 터미널에 대한 투자를 확대해야 한다.",
-          "summary_en": "Ho Chi Minh City needs to strengthen investment in supply chain data systems, smart warehouses, regional logistics centres and inland container depots, while promoting stronger linkages between FDI fi",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "NewsData/Dong Nai",
-          "url": "https://en.vietnamplus.vn/green-industrial-parks-drive-next-generation-fdi-post340620.vnp",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-19",
-          "title_ko": "순환 경제 덕분에 수많은 폐기물이 환경에 유입되는 것을 방지합니다.",
-          "title_en": "Ngăn chặn nhiều tấn rác thải ra môi trường nhờ kinh tế tuần hoàn",
-          "title_vi": "Ngăn chặn nhiều tấn rác thải ra môi trường nhờ kinh tế tuần hoàn",
-          "summary_ko": "유누스 환경 허브(Yunus Environment Hub)를 통해 독일과 네덜란드 정부가 베트남과 협력하여 기업의 순환 경제로의 전환을 촉진하는 강좌를 제공했습니다.",
-          "summary_en": "The cooperation of the German and Dutch Governments with Vietnam through the Yunus Environment Hub has provided classes to promote businesses' transition to a circular economy.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Tuoi Tre - Kinh doanh",
-          "url": "https://tuoitre.vn/ngan-chan-nhieu-tan-rac-thai-ra-moi-truong-nho-kinh-te-tuan-hoan-20260319111329632.htm",
-          "milestone": ""
-        },
-        {
-          "date": "2026-02-11",
-          "title_ko": "베트남은 노르웨이와의 다각적인 협력 강화를 중요하게 생각합니다: FM",
-          "title_en": "Vietnam values strengthening multifaceted cooperation with Norway: FM",
-          "title_vi": "Việt Nam coi trọng tăng cường hợp tác nhiều mặt với Na Uy: FM",
-          "summary_ko": "노르웨이는 무역, ​​지속 가능한 어업, 녹색 에너지, 해양 경제, 녹색 전환 및 순환 경제 개발과 같은 분야에서 베트남과의 협력을 강화하기를 희망합니다.",
-          "summary_en": "Norway wishes to strengthen cooperation with Vietnam in areas such as trade, sustainable fisheries, green energy, the marine economy, green transition and the development of a circular economy.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP News English",
-          "url": "https://en.sggp.org.vn/vietnam-values-strengthening-multifaceted-cooperation-with-norway-fm-post123918.html",
-          "milestone": ""
-        },
-        {
-          "date": "2025-12-31",
-          "title_ko": "차세대 산업단지 개발, 고품질 외국인 직접투자(FDI) 유치를 위한 기반 마련",
-          "title_en": "Phát triển khu công nghiệp thế hệ mới, ‘dọn tổ’ đón FDI chất lượng cao",
-          "title_vi": "Phát triển khu công nghiệp thế hệ mới, ‘dọn tổ’ đón FDI chất lượng cao",
-          "summary_ko": "탄소국경조정제도(CBAM)와 ESG 기준이 강화되는 가운데, 녹색 인프라와 순환 경제를 갖춘 통합형 생태 산업단지는 우수한 해외 투자자들을 유치하는 새로운 매력이 될 것입니다. 이러한 차세대 산업단지는...",
-          "summary_en": "In the context of tightening carbon border adjustment mechanisms (CBAM) and ESG standards, integrated ecological industrial parks with green infrastructure and circular economy will become new magnets",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Tuoi Tre",
-          "url": "https://tuoitre.vn/phat-trien-khu-cong-nghiep-the-he-moi-don-to-don-fdi-chat-luong-cao-20251231142923773.htm",
-          "milestone": ""
-        },
-        {
-          "date": "2025-10-23",
-          "title_ko": "Prodezi 생태산업단지 모델은 ESG 표준을 충족합니다.",
-          "title_en": "Prodezi eco-industrial park model meets ESG standards",
-          "title_vi": "Mô hình khu công nghiệp sinh thái Prodezi đạt tiêu chuẩn ESG",
-          "summary_ko": "Prodezi Long An은 녹색 인프라, 재생 가능 에너지 및 순환 경제 원칙을 통합합니다. 현대 투자자들은 ESG 기준을 충족하는 지속 가능한 환경을 추구합니다.",
-          "summary_en": "Prodezi Long An incorporates green infrastructure, renewable energy, and circular economy principles. Modern investors seek sustainable environments meeting ESG criteria.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "vietdata.vn",
-          "url": "https://www.vietdata.vn/post/vietnam-s-next-wave-integrated-eco-industrial-parks-draw-significant-fdi",
-          "milestone": ""
-        }
-      ],
-      "article_count": 6,
-      "insight": "",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "milestone": "정책·법령 발표",
-      "timeline": [
-        {
-          "date": "2026-05-04",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song"
-        }
-      ]
-    },
-    "VN-SC-2030": {
-      "plan_id": "VN-SC-2030",
-      "stage": "PLANNING",
-      "stage_label": {
-        "ko": "계획·승인",
-        "en": "Planning",
-        "vi": "Lập kế hoạch"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "베트남 스마트시티 개발 프로그램 2030",
-      "description_ko": "",
-      "decision": "Decision 950/QĐ-TTg (2018)",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-04-20",
-          "title_ko": "SHB는 디지털 전환을 촉진하기 위해 Huawei와 협력합니다",
-          "title_en": "SHB teams up with Huawei to boost digital transformation",
+          "date": "2026-04-23",
+          "title_ko": "‘VinFast는 다시는 가솔린 자동차를 생산하지 않을 것입니다’: 동남아시아에서 가장 부유 한 사람 Pham Nhat Vuong",
+          "title_en": "‘VinFast will never produce gasoline cars again’: Southeast Asia’s richest man Pham Nhat Vuong",
           "title_vi": "",
           "summary_ko": "",
           "summary_en": "",
           "grade": "MEDIUM",
           "stage": "UNKNOWN",
-          "source": "Vietnam News - Economy",
+          "source": "VnExpress Business",
           "url": "",
           "milestone": ""
         },
         {
-          "date": "2026-04-09",
-          "title_ko": "호치민시에서 애국적 경쟁 운동이 획기적인 발전을 이끌고 있다",
-          "title_en": "Patriotic emulation movements catalyze breakthroughs in HCMC",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP News English",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-05",
-          "title_ko": "스마트 시티와 디지털 산업단지를 강화하기 위한 5G 출시 가속화",
-          "title_en": "5G rollout accelerated to power smart cities and digital industrial parks",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP News English",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-02-25",
-          "title_ko": "베트남, 디지털 경제를 위한 최초의 국가 블록체인 인프라 출시",
-          "title_en": "Vietnam launches first national blockchain infrastructure for digital economy",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP News English",
-          "url": "",
-          "milestone": ""
-        }
-      ],
-      "article_count": 4,
-      "insight": "",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "milestone": "정책·법령 발표",
-      "timeline": [
-        {
-          "date": "2026-05-05",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "vietnamplus"
-        }
-      ]
-    },
-    "VN-PWR-PDP8-GRID": {
-      "plan_id": "VN-PWR-PDP8-GRID",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "PDP8 송배전망 확충",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-03-14",
-          "title_ko": "캐나다의 베트남 교수는 북미 최대 전력망의 수명을 연장하기 위해 백만 달러의 보조금을 받았습니다.",
-          "title_en": "Vietnamese professor in Canada lands million-dollar grant to extend life of North America's largest power grid",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "VnExpress English - News",
-          "url": "",
-          "milestone": ""
-        }
-      ],
-      "article_count": 1,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-PWR-PDP8, VN-PWR-PDP8-LNG": {
-      "plan_id": "VN-PWR-PDP8, VN-PWR-PDP8-LNG",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "VN-PWR-PDP8, VN-PWR-PDP8-LNG",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-04-10",
-          "title_ko": "카나(Cà Ná) LNG 발전소 및 부두 프로젝트에 대한 투자 계약 체결",
-          "title_en": "Investment deal signed for Cà Ná LNG power plant, wharf projects",
-          "title_vi": "",
-          "summary_ko": "총 사업비 60조 동(23억 달러)이 넘는 중남부 칸호아성의 ‘카나 부두 단지 – 1단계’ 사업이 4월 10일 계약 체결되었다.",
-          "summary_en": "The Cà Ná Wharf Complex – Phase 1 in the south-central province of Khánh Hòa, worth more than VNĐ60 trillion (US$2.3 billion) in total, were signed on April 10.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Vietnam News - Economy",
-          "url": "https://vietnamnews.vn/economy/1779216/investment-deal-",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-08",
-          "title_ko": "PV GAS, 티바이 LNG 터미널 처리 능력 확대",
-          "title_en": "PV GAS increases capacity of Thi Vai LNG terminal",
-          "title_vi": "",
-          "summary_ko": "페트로베트남 가스(PV GAS)는 4월 7일, 자사의 물류 자회사가 티바이(Thi Vai) 액화천연가스(LNG) 터미널의 재기화 용량을 확대하기 위한 시험 가동을 성공적으로 마쳤다고 발표했다.",
-          "summary_en": "Petrovietnam Gas PV GAS on April 7 announced that its logistics subsidiary has successfully completed a trial run to increase regasification capacity of its Thi Vai liquefied natural gas LNG terminal",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "NewsData/Waste Water",
-          "url": "https://vir.com.vn/pv-gas-increases-capacity-of-thi-vai",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-08",
-          "title_ko": "티바이 LNG 터미널의 재기화 처리 능력이 시간당 288톤으로 확대되었다",
-          "title_en": "Thi Vai LNG Terminal’s regasification capacity boosted to 288 tons per hour",
-          "title_vi": "",
-          "summary_ko": "PV GAS는 티바이(Thi Vai) LNG 터미널의 재기화 용량을 시간당 288톤으로 성공적으로 확대함으로써, 동남부 지역의 건기 성수기 동안 발전용 가스 공급 역량을 강화했다. 베트남, 총리 방문 기간 중 러시아와 LNG 협력 강화 모색 LNG 운반선 출항",
-          "summary_en": "PV GAS has successfully increased regasification capacity at its Thi Vai LNG Terminal to 288 tons per hour, strengthening gas supply readiness for power generation during the peak dry season in the So",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP News English",
-          "url": "https://en.sggp.org.vn/thi-vai-lng-terminals-regasifica",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-07",
-          "title_ko": "건기 전력 수요 급증에 대응하기 위해 티바이 LNG 발전소 발전 용량 증설",
-          "title_en": "Increasing the capacity of the Thi Vai LNG plant to meet peak electricity demand during the dry season",
-          "title_vi": "",
-          "summary_ko": "베트남 가스공사(PV Gas)의 발표에 따르면, 티바이 LNG 저장소의 재기화 용량을 시간당 288톤으로 증설하는 작업을 완료했다고 한다.",
-          "summary_en": "According to information from Vietnam Gas Corporation (PV Gas), the company has recently completed the expansion of the regasification capacity at the Thi Vai LNG terminal to 288 tons per hour.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Tuoi Tre - Kinh doanh",
-          "url": "https://tuoitre.vn/nang-cong-suat-khi-lng-thi-vai-dap-u",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-06",
-          "title_ko": "EVN 및 PV 가스, Quang Trach 발전소용 LNG 공급 합의",
-          "title_en": "EVN and PV GAS agree to supply LNG for Quang Trach power plants",
-          "title_vi": "",
-          "summary_ko": "베트남 전력 EVN과 페트로베트남 가스 PV 가스는 4월 3일 하노이에서 하틴의 붕앙 LNG 터미널에서 꽝 트라치 II 및 III 발전소로 액화 천연 가스 LNG 공급에 관한 프레임워크 계약을 체결했습니다.",
-          "summary_en": "Vietnam Electricity EVN and Petrovietnam Gas PV GAS signed a framework agreement on the supply of liquefied natural gas LNG from the Vung Ang LNG terminal in Ha Tinh to the Quang Trach II and III powe",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "NewsData/Bac Ninh",
-          "url": "https://vir.com.vn/evn-and-pv-gas-agree-to-supply-lng-f",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-12",
-          "title_ko": "호르무즈 해협 통과: 63,000톤의 LNG를 안전하게 베트남으로 운반하는 선박",
-          "title_en": "Vượt eo biển Hormuz: Tàu chở 63.000 tấn LNG về Việt Nam an toàn",
-          "title_vi": "",
-          "summary_ko": "이는 2026년 PV GAS의 첫 LNG 수입선이다. 특히 이 선박은 이란 군사적 긴장이 발발하기 전 중동을 떠나 호르무즈 해협을 통과했다.",
-          "summary_en": "This is PV GAS's first imported LNG ship in 2026. Notably, the ship left the Middle East and passed through the Strait of Hormuz before military tensions in Iran broke out.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Bao Ha Tinh",
-          "url": "https://baohatinh.vn/vuot-eo-bien-hormuz-tau-cho-63000-",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-11",
-          "title_ko": "Thi Vai 항구에 정박 중인 63,000톤급 LNG 운반선",
-          "title_en": "LNG carrier delivering 63,000 tons docks at Thi Vai Port",
-          "title_vi": "",
-          "summary_ko": "약 63,000톤의 액화천연가스를 운반하는 LNG 운반선 FAT'H AL KHAIR가 베트남가스공사(PV GAS)가 운영하는 호치민시 티바이 LNG 터미널에 정박했습니다. Phuoc An 다리가 Thi Vai 강 위로 점진적으로 형성됨 Cai Mep에서 모선 처리량 – Thi Vai 18 증가",
-          "summary_en": "LNG carrier FAT’H AL KHAIR has docked at Thi Vai LNG Terminal in Ho Chi Minh City, operated by Vietnam Gas Corporation (PV GAS), carrying approximately 63,000 tons of liquefied natural gas. Phuoc An B",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP News English",
-          "url": "https://en.sggp.org.vn/lng-carrier-delivering-63000-ton",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-11",
-          "title_ko": "63,000톤의 LNG를 운반하는 선박이 Thi Vai 항구에 정박했습니다.",
-          "title_en": "Tàu chở 63.000 tấn LNG cập cảng Thị Vải",
-          "title_vi": "",
-          "summary_ko": "FAT'H AL KHAIR 선박은 약 63,000톤의 LNG를 운반하는 베트남 가스 공사의 Thi Vai LNG 터미널(HCMC)에 정박했습니다. 이는 2026년 PV GAS의 첫 수입 LNG열차로, 국가 전력계통의 연료원 확보에 적극적으로 기여하고 있습니다.",
-          "summary_en": "The ship FAT'H AL KHAIR docked at Thi Vai LNG Terminal (HCMC) of Vietnam Gas Corporation, carrying about 63,000 tons of LNG. This is PV GAS's first imported LNG train in 2026, proactively contributing",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "SGGP",
-          "url": "https://www.sggp.org.vn/tau-cho-63000-tan-lng-cap-cang-",
-          "milestone": ""
-        }
-      ],
-      "article_count": 30,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-PWR-PDP8, VN-PWR-PDP8-GRID": {
-      "plan_id": "VN-PWR-PDP8, VN-PWR-PDP8-GRID",
-      "stage": "UNKNOWN",
-      "stage_label": {
-        "ko": "미확정",
-        "en": "Unknown",
-        "vi": "Chưa xác định"
-      },
-      "confidence": 0.0,
-      "haiku_used": false,
-      "title_ko": "VN-PWR-PDP8, VN-PWR-PDP8-GRID",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-04-13",
-          "title_ko": "베트남은 자체 축전지를 생산해 전력망 '구출'에 기여",
-          "title_en": "Việt Nam tự sản xuất pin lưu trữ, góp phần \"giải cứu\" lưới điện",
-          "title_vi": "",
-          "summary_ko": "(Dan Tri) - 베트남에 16GW BESS가 필요할 때 3000억 VND 규모의 배터리 저장 단지가 등장하여 전력망 부하를 줄이고 \"메이드 인 베트남\" 에너지 생태계를 구축하려는 야망을 열었습니다.",
-          "summary_en": "(Dan Tri) - The 300 billion VND battery storage complex appeared just when Vietnam needed 16GW BESS, opening the way to reduce power grid load and the ambition to build a \"made in Vietnam\" energy ecos",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Dan Tri - Kinh doanh",
-          "url": "https://dantri.com.vn/kinh-doanh/viet-nam-tu-san-xuat-p",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-09",
-          "title_ko": "EVN, 전력망 내 BESS 구축 추진",
-          "title_en": "EVN thúc đẩy triển khai BESS trên lưới điện",
-          "title_vi": "",
-          "summary_ko": "베트남 전력공사(EVN)의 경영진은 배터리 에너지 저장 시스템(BESS)이 전력 시스템의 운영 및 발전에 있어 중요한 해결책 중 하나라고 밝혔다. EVN은 관련 기관들과 협력하여 산업통상자원부에 제도 및 정책상의 걸림돌을 해소해 줄 것을 요청함으로써 BESS를 대대적으로 도입할 계획이다.",
-          "summary_en": "Lãnh đạo Tập đoàn Điện lực Việt Nam (EVN) cho biết Hệ thống Pin lưu trữ (BESS) là một trong những giải pháp quan trọng trong vận hành và phát triển hệ thống điện. EVN sẽ phối hợp với các đơn vị liên q",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Thanh Nien - Kinh te",
-          "url": "https://thanhnien.vn/evn-thuc-day-trien-khai-bess-tren-",
-          "milestone": ""
-        },
-        {
-          "date": "2026-04-08",
-          "title_ko": "EVN, 전력망 기반 에너지 저장 배터리 개발 로드맵 가속화",
-          "title_en": "EVN đẩy nhanh lộ trình phát triển pin lưu trữ năng lượng trên lưới điện",
-          "title_vi": "",
-          "summary_ko": "베트남 전력공사(EVN)는 전 세계적인 에너지 전환 과정의 필연적인 흐름에 따라 베트남 내 에너지 저장 시스템(BESS) 개발 계획을 가속화할 것이라고 밝혔다.",
-          "summary_en": "Tập đoàn Điện lực Việt Nam (EVN) cho biết sẽ đẩy nhanh lộ trình phát triển hệ thống pin lưu trữ năng lượng (BESS) tại Việt Nam, như xu thế tất yếu trong quá trình chuyển dịch năng lượng toàn cầu.",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Thanh Nien - Kinh te",
-          "url": "https://thanhnien.vn/evn-day-nhanh-lo-trinh-phat-trien-",
-          "milestone": ""
-        },
-        {
-          "date": "2024-01-18",
-          "title_ko": "nan",
-          "title_en": "EVN kicks off circuit-3 500kV transmission line sections",
-          "title_vi": "",
-          "summary_ko": "nan",
-          "summary_en": "nan",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Vietnam News",
-          "url": "https://vietnamnews.vn/economy/1639458/evn-kicks-off-ci",
-          "milestone": ""
-        }
-      ],
-      "article_count": 4,
-      "insight": "",
-      "next_watch": "",
-      "milestone": "",
-      "timeline": []
-    },
-    "VN-PWR-PDP8-RENEWABLE": {
-      "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "stage": "COMPLETION",
-      "stage_label": {
-        "ko": "준공·개통",
-        "en": "Completion",
-        "vi": "Hoàn thành"
-      },
-      "confidence": 1.0,
-      "haiku_used": false,
-      "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
-      "description_ko": "",
-      "decision": "",
-      "sector": "",
-      "area": "",
-      "kpi_targets": [],
-      "key_projects": [],
-      "articles": [
-        {
-          "date": "2026-04-14",
-          "title_ko": "옥상 태양광 발전 - 더운 날씨 피크 시 계통 압력 감소",
-          "title_en": "Rooftop solar power - reduce grid pressure during hot weather peak",
-          "title_vi": "",
-          "summary_ko": "",
-          "summary_en": "",
-          "grade": "MEDIUM",
-          "stage": "UNKNOWN",
-          "source": "Bao Ha Tinh",
-          "url": "",
-          "milestone": ""
-        },
-        {
-          "date": "2026-03-31",
-          "title_ko": "PM, 절전 강화, 옥상 태양광 발전 가속화 요청",
-          "title_en": "PM requests enhancing power saving, accelerating rooftop solar rollout",
+          "date": "2026-04-18",
+          "title_ko": "하노이, 친환경 대중교통으로 전기버스 전환 가속화",
+          "title_en": "Ha Noi accelerates electric bus transition towards green public transport",
           "title_vi": "",
           "summary_ko": "",
           "summary_en": "",
@@ -2807,50 +2797,110 @@
           "source": "Nhan Dan English",
           "url": "",
           "milestone": ""
+        },
+        {
+          "date": "2026-04-10",
+          "title_ko": "전력 당국, 전력망 안정화를 위해 시간대별 전기차 충전 요금제 검토 중",
+          "title_en": "Ministry weighs time-based EV charging tariffs to safeguard grid",
+          "title_vi": "Bộ đang xem xét áp dụng biểu giá sạc xe điện theo thời gian để bảo vệ lưới điện",
+          "summary_ko": "산업통상부는 전기화 추세가 가속화됨에 따라 베트남 전력망의 부담을 완화하기 위해, 전기차 소유주들이 비성수대에 충전하도록 유도하는 시간대별 전기 요금제를 검토하고 있다. 빈하오-판티엣 고속도로에 주유소 및 전기차 충전소 개장",
+          "summary_en": "The Ministry of Industry and Trade is considering a time-of-use electricity pricing scheme to steer electric vehicle owners toward off-peak charging, aiming to ease pressure on Vietnam’s power grid as",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP News English",
+          "url": "https://en.sggp.org.vn/ministry-weighs-time-based-ev-charging-tariffs-to-safeguard-grid-post125312.html",
+          "milestone": ""
+        },
+        {
+          "date": "2026-04-07",
+          "title_ko": "하노이, 전기차 배터리 교환망 구축에 박차를 가하고 있다",
+          "title_en": "Hanoi prioritizes rapid electric vehicle battery-swapping network",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "SGGP News English",
+          "url": "",
+          "milestone": ""
+        },
+        {
+          "date": "2024-09-10",
+          "title_ko": "Petrovietnam power unit aims to develop 1,000 EV charging stations by 2035",
+          "title_en": "Petrovietnam power unit aims to develop 1,000 EV charging stations by 2035",
+          "title_vi": "",
+          "summary_ko": "",
+          "summary_en": "",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "The Investor",
+          "url": "https://theinvestor.vn/petrovietnam-power-unit-aims-to-develop-1000-ev-charging-stations-by-2035-d12183.html",
+          "milestone": ""
+        }
+      ],
+      "article_count": 6,
+      "insight": "",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "milestone": "착공·건설 진행 중",
+      "timeline": [
+        {
+          "date": "2026-05-04",
+          "stage": "CONSTRUCTION",
+          "milestone_ko": "착공·건설 진행 중",
+          "source": "vietnamplus"
+        }
+      ]
+    },
+    "VN-CARBON-2050": {
+      "plan_id": "VN-CARBON-2050",
+      "stage": "UNKNOWN",
+      "stage_label": {
+        "ko": "미확정",
+        "en": "Unknown",
+        "vi": "Chưa xác định"
+      },
+      "confidence": 0.0,
+      "haiku_used": false,
+      "title_ko": "VN-CARBON-2050",
+      "description_ko": "",
+      "decision": "",
+      "sector": "",
+      "area": "",
+      "kpi_targets": [],
+      "key_projects": [],
+      "articles": [
+        {
+          "date": "2026-04-03",
+          "title_ko": "Phát triến công nghiệp xanh, Đếng Nai đết mếc tiêu phát thải ròng bếng 0",
+          "title_en": "Phát triển công nghiệp xanh, Đồng Nai đặt mục tiêu phát thải ròng bằng 0",
+          "title_vi": "Phát triển công nghiệp xanh, Đồng Nai đặt mục tiêu phát thải ròng bằng 0",
+          "summary_ko": "태국 동나이 추이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 동 타이 ",
+          "summary_en": "Tỉnh Đồng Nai chuyển đổi các khu công nghiệp hiện hữu tại các đô thị theo hướng phát triển ngành công nghiệp công nghệ cao, lựa chọn sản phẩm, có giá trị gia tăng cao tham gia chuỗi giá trị toàn cầu. ",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "VietnamPlus - Moi truong",
+          "url": "https://www.vietnamplus.vn/phat-trien-cong-nghiep-xanh-dong-nai-dat-muc-tieu-phat-thai-rong-bang-0-post1102647.vnp",
+          "milestone": ""
+        },
+        {
+          "date": "2026-03-28",
+          "title_ko": "배기가스 저감, 날개 들어올리기",
+          "title_en": "Reduce emissions, lift the wings",
+          "title_vi": "Giảm phát thải, nâng những cánh bay",
+          "summary_ko": "2026년 1월 1일부터 베트남 항공청은 국제선 탄소 감축 및 상쇄를 위한 글로벌 메커니즘인 CORSIA에 공식 가입했습니다. [동영상] 비엣에비에이션, 탄소 저감 메커니즘 운송 부문 배출 감축 잠재력 총 온실가스 배출 할당량에 공식 합류",
+          "summary_en": "Since January 1, 2026, the Vietnam Aviation Administration has officially joined CORSIA - the global mechanism for carbon reduction and offsetting for international flights. [Video] Viet Aviation Offi",
+          "grade": "MEDIUM",
+          "stage": "UNKNOWN",
+          "source": "Nhandan - Moi truong",
+          "url": "https://nhandan.vn/giam-phat-thai-nang-nhung-canh-bay-post951492.html",
+          "milestone": ""
         }
       ],
       "article_count": 2,
       "insight": "",
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
-      "milestone": "준공·운영 개시",
-      "timeline": [
-        {
-          "date": "2026-04-29",
-          "stage": "COMPLETION",
-          "milestone_ko": "준공·운영 개시",
-          "source": "menafn"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "OPERATION",
-          "milestone_ko": "운영 성과 업데이트",
-          "source": "channelnewsasia"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "UNKNOWN",
-          "milestone_ko": "기사가 베트남 인프라 사업과 무관",
-          "source": "menafn"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "UNKNOWN",
-          "milestone_ko": "인프라 사업 관련 정보 없음",
-          "source": "vietnamplus"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "PLANNING",
-          "milestone_ko": "정책·법령 발표",
-          "source": "vietnamplus"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "UNKNOWN",
-          "milestone_ko": "기사 내용 무관",
-          "source": "vietnamnews_vn"
-        }
-      ]
+      "next_watch": "",
+      "milestone": "",
+      "timeline": []
     }
   }
 }

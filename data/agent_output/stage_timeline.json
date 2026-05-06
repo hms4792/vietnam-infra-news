@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06 02:38",
+  "generated_at": "2026-05-06 12:31",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -12,31 +12,38 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-05-05",
+          "date": "2026-05-06",
           "stage": "PLANNING",
-          "milestone": "베트남-미국 에너지협력 양해각서(MOU) 체결 협상",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "베트남, 청정 에너지 촉진, 아세안 전력 연결 가속화"
+        },
+        {
+          "date": "2026-05-05",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
           "source": "vietnamplus",
           "title_ko": "베트남, 미국, 더 강력한 에너지 협력 모색"
         },
         {
           "date": "2026-05-05",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "OPERATION",
+          "milestone": "건기 안정적 운영 중, 하류 전력·용수 공급 보장",
           "source": "Moi truong & Cuoc song",
           "title_ko": "부옹 수력 발전소는 건기에 활발하게 운영되어 하류의 전기 및 수도 공급을 보장합니다."
         },
         {
           "date": "2026-04-30",
           "stage": "OPERATION",
-          "milestone": "동남아 전력수급 위기 상황 발생",
+          "milestone": "지역 전력 수급 위기 심화",
           "source": "Moi truong & Cuoc song",
           "title_ko": "더운 날씨와 전기 부족은 동남아시아에 동시에 압력을 가합니다."
         }
       ],
-      "next_watch": "양국 에너지 협력 프레임워크 최종 합의 및 구체적 프로젝트 선정",
-      "latest_insight": "초기 전략적 파트너십 단계로 실질적 사업 추진까지는 추가 협상 필요. 장기적 에너지 전환 추진 기조에 부합하는 정책 신호로 평가",
-      "latest_article_date": "2026-05-05",
-      "article_count": 4,
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-05-06",
+      "article_count": 5,
       "haiku_count": 2,
       "kpi_targets": []
     },
@@ -67,14 +74,14 @@
         {
           "date": "2026-04-29",
           "stage": "UNKNOWN",
-          "milestone": "기사가 베트남 인프라 사업과 무관",
+          "milestone": "베트남 사업과 무관한 미국 배터리 저장 기사",
           "source": "menafn",
           "title_ko": "장기 성장을 위한 혁신이 필요한 미국 배터리 스토리지"
         },
         {
           "date": "2026-04-29",
           "stage": "UNKNOWN",
-          "milestone": "인프라 사업 관련 정보 없음",
+          "milestone": "사업 관련 정보 없음",
           "source": "vietnamplus",
           "title_ko": "미국 제국주의에 저항하는 청소년 자원봉사 운동"
         },
@@ -88,7 +95,7 @@
         {
           "date": "2026-04-29",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 무관",
+          "milestone": "기사 내용이 재생에너지 사업과 무관함",
           "source": "vietnamnews_vn",
           "title_ko": "Phu 'Tho' 는 2026년 Hu 'ng Kings 기념일 동안 약 650만 명의 방문객에게 서비스를 제공합니다."
         }
@@ -127,7 +134,7 @@
         {
           "date": "2026-04-29",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 부재",
+          "milestone": "베트남 LNG 사업 관련 정보 없음",
           "source": "menafn",
           "title_ko": "장기 성장을 위한 혁신이 필요한 미국 배터리 스토리지"
         },
@@ -148,7 +155,7 @@
         {
           "date": "2026-04-29",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용이 사업과 무관함",
+          "milestone": "관련 정보 없음",
           "source": "vietnamnews_vn",
           "title_ko": "Phu 'Tho' 는 2026년 Hu 'ng Kings 기념일 동안 약 650만 명의 방문객에게 서비스를 제공합니다."
         }
@@ -187,7 +194,7 @@
         {
           "date": "2026-04-29",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용이 베트남 원전사업과 무관",
+          "milestone": "베트남 핵전력 사업 정보 부재",
           "source": "menafn",
           "title_ko": "장기 성장을 위한 혁신이 필요한 미국 배터리 스토리지"
         },
@@ -208,7 +215,7 @@
         {
           "date": "2026-04-29",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 사업 무관",
+          "milestone": "사업 관련 정보 없음",
           "source": "vietnamnews_vn",
           "title_ko": "Phu 'Tho' 는 2026년 Hu 'ng Kings 기념일 동안 약 650만 명의 방문객에게 서비스를 제공합니다."
         }
@@ -346,8 +353,8 @@
         },
         {
           "date": "2026-05-02",
-          "stage": "PLANNING",
-          "milestone": "친환경 산업단지 개발 마스터플랜 수립",
+          "stage": "TENDERING",
+          "milestone": "친환경 산업단지 인프라 재구성 및 FDI 투자자 유치",
           "source": "sggp_org_vn",
           "title_ko": "녹색산업단지, FDI 투자자 유치"
         }
@@ -364,22 +371,22 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
         {
           "date": "2026-05-04",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "UNKNOWN",
+          "milestone": "해당 사항 없음",
           "source": "vietnamplus",
           "title_ko": "ILDEX VIETNAM 2026, 농식품 부문에서 지속 가능한 변화 강조"
         },
         {
           "date": "2026-05-04",
           "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "milestone": "베트남 신용전망 상향 (Ba2 확인)",
           "source": "vietnamplus",
           "title_ko": "Moody 's는 베트남의 전망을 개혁 추진에 대한 \"긍정적\" 으로 끌어 올립니다."
         },
@@ -391,18 +398,32 @@
           "title_ko": "베트남의 $ 247M 고속도로와 바다 전망의 고가교 개통"
         },
         {
+          "date": "2026-05-02",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamplus",
+          "title_ko": "새로운 협력 체계를 구축하기 위한 최고 리더의 인도 방문 예정: 차장 FM"
+        },
+        {
           "date": "2026-04-29",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
           "source": "vietnamplus",
           "title_ko": "아르헨티나 친구가 베트남의 발전 성과에 찬사를 보냅니다."
+        },
+        {
+          "date": "2026-04-29",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "VnExpress International",
+          "title_ko": "호치민시, 사이공 강 아래에서 14억 달러 ($) 규모의 지하철 터널링 공사 착공"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
+      "next_watch": "기사 내용이 VN-TRAN-2055 사업과 무관",
+      "latest_insight": "제공된 기사는 농식품 박람회 관련 내용으로, 베트남 인프라 사업(VN-TRAN-2055)의 진행 상황을 파악할 수 있는 정보 부재",
       "latest_article_date": "2026-05-04",
       "article_count": 8,
-      "haiku_count": 0,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-URB-METRO-2030": {
@@ -410,11 +431,18 @@
       "title_ko": "베트남 도시철도(메트로) 개발 계획",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
+        {
+          "date": "2026-05-05",
+          "stage": "UNKNOWN",
+          "milestone": "국내 여행 수요 81% 증가 기록",
+          "source": "vir_vn",
+          "title_ko": "아고다, 베트남 국내 여행 검색 81% 증가"
+        },
         {
           "date": "2026-05-04",
           "stage": "CONSTRUCTION",
@@ -423,11 +451,11 @@
           "title_ko": "방콕의 녹색 도시 재생은 동남아시아 도시에 대한 모델을 제공합니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-04",
-      "article_count": 1,
-      "haiku_count": 0,
+      "next_watch": "메트로 인프라 구축 계획 발표 여부 모니터링",
+      "latest_insight": "베트남 국내 관광 수요 급증으로 도시 교통 인프라 투자 필요성 증대. 메트로 사업의 시장성 제고 신호.",
+      "latest_article_date": "2026-05-05",
+      "article_count": 2,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-SC-2030": {
@@ -460,20 +488,20 @@
       "title_ko": "베트남 전기차·친환경 교통 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
           "date": "2026-05-04",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
           "source": "vietnamplus",
           "title_ko": "PVOIL, 5월 15일부터 E10 가솔린 전국 출시"
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-05-04",
       "article_count": 1,
