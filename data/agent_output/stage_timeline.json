@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06 12:31",
+  "generated_at": "2026-05-07 12:32",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -28,14 +28,14 @@
         {
           "date": "2026-05-05",
           "stage": "OPERATION",
-          "milestone": "건기 안정적 운영 중, 하류 전력·용수 공급 보장",
+          "milestone": "건기 전력·용수 공급 안정화 달성",
           "source": "Moi truong & Cuoc song",
           "title_ko": "부옹 수력 발전소는 건기에 활발하게 운영되어 하류의 전기 및 수도 공급을 보장합니다."
         },
         {
           "date": "2026-04-30",
           "stage": "OPERATION",
-          "milestone": "지역 전력 수급 위기 심화",
+          "milestone": "동남아 전력수급 위기 심화 및 수요 급증",
           "source": "Moi truong & Cuoc song",
           "title_ko": "더운 날씨와 전기 부족은 동남아시아에 동시에 압력을 가합니다."
         }
@@ -52,59 +52,52 @@
       "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
       "sector": "",
       "area": "",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-04-29",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "menafn",
-          "title_ko": "인도-미국 합작 벤처기업 니사르 (NISAR) 가 멕시코시티가 놀라운 속도로 가라앉고 있음을 보여줍니다."
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "channelnewsasia",
-          "title_ko": "아마존, 강력한 AI 수요에 대한 클라우드 기대치 상회, 점유율 상승"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "UNKNOWN",
-          "milestone": "베트남 사업과 무관한 미국 배터리 저장 기사",
-          "source": "menafn",
-          "title_ko": "장기 성장을 위한 혁신이 필요한 미국 배터리 스토리지"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "UNKNOWN",
-          "milestone": "사업 관련 정보 없음",
-          "source": "vietnamplus",
-          "title_ko": "미국 제국주의에 저항하는 청소년 자원봉사 운동"
-        },
-        {
-          "date": "2026-04-29",
+          "date": "2026-05-07",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "호치민시, IUU '옐로카드' 해제 결정적 조치 나서"
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "디엔비엔푸의 승리 - 20세기의 서사시와 시대의 가치"
         },
         {
-          "date": "2026-04-29",
+          "date": "2026-05-06",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용이 재생에너지 사업과 무관함",
-          "source": "vietnamnews_vn",
-          "title_ko": "Phu 'Tho' 는 2026년 Hu 'ng Kings 기념일 동안 약 650만 명의 방문객에게 서비스를 제공합니다."
+          "milestone": "기사 내용 분석 불가",
+          "source": "VnExpress Business",
+          "title_ko": "수출이 줄어들면서 과일 가격이 급락합니다."
+        },
+        {
+          "date": "2026-05-06",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "VnExpress Business",
+          "title_ko": "정재은, 베트남에 10MW 옥상 태양광 시스템 설치"
+        },
+        {
+          "date": "2026-05-05",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "베트남, APAC 풍력 에너지 컨퍼런스 2026 개최: 풍력 발전 투자 유치 기회 확대"
+        },
+        {
+          "date": "2026-05-04",
+          "stage": "UNKNOWN",
+          "milestone": "기사 내용 없음",
+          "source": "VnExpress International",
+          "title_ko": "태국, 말레이시아와의 철도 연결 가속화"
         }
       ],
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-04-29",
-      "article_count": 8,
-      "haiku_count": 3,
+      "latest_article_date": "2026-05-07",
+      "article_count": 6,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-LNG": {
@@ -112,59 +105,52 @@
       "title_ko": "PDP8 LNG 가스발전",
       "sector": "",
       "area": "",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-04-29",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "menafn",
-          "title_ko": "인도-미국 합작 벤처기업 니사르 (NISAR) 가 멕시코시티가 놀라운 속도로 가라앉고 있음을 보여줍니다."
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "channelnewsasia",
-          "title_ko": "아마존, 강력한 AI 수요에 대한 클라우드 기대치 상회, 점유율 상승"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "UNKNOWN",
-          "milestone": "베트남 LNG 사업 관련 정보 없음",
-          "source": "menafn",
-          "title_ko": "장기 성장을 위한 혁신이 필요한 미국 배터리 스토리지"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "UNKNOWN",
-          "milestone": "사업 관련 정보 부재",
-          "source": "vietnamplus",
-          "title_ko": "미국 제국주의에 저항하는 청소년 자원봉사 운동"
-        },
-        {
-          "date": "2026-04-29",
+          "date": "2026-05-07",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "호치민시, IUU '옐로카드' 해제 결정적 조치 나서"
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "디엔비엔푸의 승리 - 20세기의 서사시와 시대의 가치"
         },
         {
-          "date": "2026-04-29",
+          "date": "2026-05-06",
           "stage": "UNKNOWN",
-          "milestone": "관련 정보 없음",
-          "source": "vietnamnews_vn",
-          "title_ko": "Phu 'Tho' 는 2026년 Hu 'ng Kings 기념일 동안 약 650만 명의 방문객에게 서비스를 제공합니다."
+          "milestone": "기사 내용 불일치",
+          "source": "VnExpress Business",
+          "title_ko": "수출이 줄어들면서 과일 가격이 급락합니다."
+        },
+        {
+          "date": "2026-05-06",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "LNG 발전 프로젝트 메커니즘 완성: 전기 가격에 압력을 가하지 않고 출력 보장"
+        },
+        {
+          "date": "2026-05-06",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "VnExpress Business",
+          "title_ko": "정재은, 베트남에 10MW 옥상 태양광 시스템 설치"
+        },
+        {
+          "date": "2026-05-04",
+          "stage": "UNKNOWN",
+          "milestone": "기사 내용 부재로 판단 불가",
+          "source": "VnExpress International",
+          "title_ko": "태국, 말레이시아와의 철도 연결 가속화"
         }
       ],
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-04-29",
-      "article_count": 8,
-      "haiku_count": 3,
+      "latest_article_date": "2026-05-07",
+      "article_count": 5,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-NUCLEAR": {
@@ -172,59 +158,70 @@
       "title_ko": "PDP8 원전 재개",
       "sector": "",
       "area": "",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-04-29",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "menafn",
-          "title_ko": "인도-미국 합작 벤처기업 니사르 (NISAR) 가 멕시코시티가 놀라운 속도로 가라앉고 있음을 보여줍니다."
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "channelnewsasia",
-          "title_ko": "아마존, 강력한 AI 수요에 대한 클라우드 기대치 상회, 점유율 상승"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "UNKNOWN",
-          "milestone": "베트남 핵전력 사업 정보 부재",
-          "source": "menafn",
-          "title_ko": "장기 성장을 위한 혁신이 필요한 미국 배터리 스토리지"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "UNKNOWN",
-          "milestone": "핵심 정보 부재",
-          "source": "vietnamplus",
-          "title_ko": "미국 제국주의에 저항하는 청소년 자원봉사 운동"
-        },
-        {
-          "date": "2026-04-29",
+          "date": "2026-05-07",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "호치민시, IUU '옐로카드' 해제 결정적 조치 나서"
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "디엔비엔푸의 승리 - 20세기의 서사시와 시대의 가치"
         },
         {
-          "date": "2026-04-29",
+          "date": "2026-05-06",
           "stage": "UNKNOWN",
-          "milestone": "사업 관련 정보 없음",
-          "source": "vietnamnews_vn",
-          "title_ko": "Phu 'Tho' 는 2026년 Hu 'ng Kings 기념일 동안 약 650만 명의 방문객에게 서비스를 제공합니다."
+          "milestone": "관련 정보 없음",
+          "source": "VnExpress Business",
+          "title_ko": "수출이 줄어들면서 과일 가격이 급락합니다."
+        },
+        {
+          "date": "2026-05-06",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "VnExpress Business",
+          "title_ko": "정재은, 베트남에 10MW 옥상 태양광 시스템 설치"
+        },
+        {
+          "date": "2026-05-04",
+          "stage": "UNKNOWN",
+          "milestone": "기사 내용 부재로 판단 불가",
+          "source": "VnExpress International",
+          "title_ko": "태국, 말레이시아와의 철도 연결 가속화"
         }
       ],
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-04-29",
-      "article_count": 8,
-      "haiku_count": 3,
+      "latest_article_date": "2026-05-07",
+      "article_count": 4,
+      "haiku_count": 2,
+      "kpi_targets": []
+    },
+    "VN-OG-2030": {
+      "plan_id": "VN-OG-2030",
+      "title_ko": "베트남 석유가스 분야 전략 2030",
+      "sector": "",
+      "area": "",
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
+      "stage_history": [
+        {
+          "date": "2026-05-07",
+          "stage": "UNKNOWN",
+          "milestone": "기사 내용 부족",
+          "source": "VnExpress Business",
+          "title_ko": "휘발유 가격 인상"
+        }
+      ],
+      "next_watch": "VN-OG-2030 관련 구체적 진행 정보 필요",
+      "latest_insight": "제공된 기사는 휘발유 가격 변동에 관한 일반 뉴스로, 인프라 사업 진행현황과 무관함. 마스터플랜 관련 정보 없음.",
+      "latest_article_date": "2026-05-07",
+      "article_count": 1,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-WW-2030": {
@@ -257,11 +254,18 @@
       "title_ko": "베트남 수자원 개발 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
+        {
+          "date": "2026-05-07",
+          "stage": "UNKNOWN",
+          "milestone": "수자원 위기 대응 정책 수립",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "'슈퍼 엘니노' 의 위험에 처한 아시아의 에너지 및 식량 안보"
+        },
         {
           "date": "2026-05-04",
           "stage": "PLANNING",
@@ -270,11 +274,11 @@
           "title_ko": "수력 발전은 El Nino 2026의 위험에 처하기 전에 물을 축적하기 위해 돌진합니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-04",
-      "article_count": 1,
-      "haiku_count": 0,
+      "next_watch": "베트남 수자원 관리 정책 및 인프라 투자 계획 공시",
+      "latest_insight": "슈퍼 엘니뇨로 인한 수자원 부족이 예상되어 관련 인프라 사업의 긴급성 및 투자 필요성 증대. 정부의 기후변화 대응 정책 모니터링 필수.",
+      "latest_article_date": "2026-05-07",
+      "article_count": 2,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-WAT-URBAN": {
@@ -354,7 +358,7 @@
         {
           "date": "2026-05-02",
           "stage": "TENDERING",
-          "milestone": "친환경 산업단지 인프라 재구성 및 FDI 투자자 유치",
+          "milestone": "FDI 투자자 유치 및 녹색산업단지 조성",
           "source": "sggp_org_vn",
           "title_ko": "녹색산업단지, FDI 투자자 유치"
         }
@@ -386,9 +390,30 @@
         {
           "date": "2026-05-04",
           "stage": "PLANNING",
-          "milestone": "베트남 신용전망 상향 (Ba2 확인)",
+          "milestone": "베트남 신용 전망 '긍정적' 상향, 인프라 업그레이드 추진",
           "source": "vietnamplus",
           "title_ko": "Moody 's는 베트남의 전망을 개혁 추진에 대한 \"긍정적\" 으로 끌어 올립니다."
+        },
+        {
+          "date": "2026-05-04",
+          "stage": "CONSTRUCTION",
+          "milestone": "총리 차원의 프로젝트 가속화 지시",
+          "source": "vietnamplus",
+          "title_ko": "PM, 롱탄 공항 프로젝트 가속화를 위한 신속한 조치 촉구"
+        },
+        {
+          "date": "2026-05-04",
+          "stage": "PLANNING",
+          "milestone": "총리의 프로젝트 가속화 촉구",
+          "source": "nhandan_vn",
+          "title_ko": "PM, 롱탄 공항 프로젝트 가속화를 위한 신속한 조치 촉구"
+        },
+        {
+          "date": "2026-05-04",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamplus",
+          "title_ko": "외부 위험에도 불구하고 베트남은 여전히 밝은 지역으로 남아 있습니다: 국제 기관"
         },
         {
           "date": "2026-05-02",
@@ -396,34 +421,13 @@
           "milestone": "준공·운영 개시",
           "source": "VnExpress International",
           "title_ko": "베트남의 $ 247M 고속도로와 바다 전망의 고가교 개통"
-        },
-        {
-          "date": "2026-05-02",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "새로운 협력 체계를 구축하기 위한 최고 리더의 인도 방문 예정: 차장 FM"
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "vietnamplus",
-          "title_ko": "아르헨티나 친구가 베트남의 발전 성과에 찬사를 보냅니다."
-        },
-        {
-          "date": "2026-04-29",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "VnExpress International",
-          "title_ko": "호치민시, 사이공 강 아래에서 14억 달러 ($) 규모의 지하철 터널링 공사 착공"
         }
       ],
-      "next_watch": "기사 내용이 VN-TRAN-2055 사업과 무관",
-      "latest_insight": "제공된 기사는 농식품 박람회 관련 내용으로, 베트남 인프라 사업(VN-TRAN-2055)의 진행 상황을 파악할 수 있는 정보 부재",
+      "next_watch": "VN-TRAN-2055 관련 공식 공고 모니터링",
+      "latest_insight": "기사 내용이 인프라 사업과 무관한 농식품 박람회 관련 내용으로, VN-TRAN-2055 사업 진행상황 정보 미포함",
       "latest_article_date": "2026-05-04",
       "article_count": 8,
-      "haiku_count": 2,
+      "haiku_count": 4,
       "kpi_targets": []
     },
     "VN-URB-METRO-2030": {
@@ -431,30 +435,30 @@
       "title_ko": "베트남 도시철도(메트로) 개발 계획",
       "sector": "",
       "area": "",
-      "current_stage": "UNKNOWN",
-      "stage_label_ko": "단계 미확정",
-      "stage_color": "9CA3AF",
-      "stage_order": 0,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
+        {
+          "date": "2026-05-06",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamnews_vn",
+          "title_ko": "호치민시, 교육, 인프라, 스마트 시티를 연계한 주요 기술 쇼케이스 개최"
+        },
         {
           "date": "2026-05-05",
           "stage": "UNKNOWN",
-          "milestone": "국내 여행 수요 81% 증가 기록",
+          "milestone": "기사 내용이 인프라 사업과 무관함",
           "source": "vir_vn",
           "title_ko": "아고다, 베트남 국내 여행 검색 81% 증가"
-        },
-        {
-          "date": "2026-05-04",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "vietnamplus",
-          "title_ko": "방콕의 녹색 도시 재생은 동남아시아 도시에 대한 모델을 제공합니다."
         }
       ],
-      "next_watch": "메트로 인프라 구축 계획 발표 여부 모니터링",
-      "latest_insight": "베트남 국내 관광 수요 급증으로 도시 교통 인프라 투자 필요성 증대. 메트로 사업의 시장성 제고 신호.",
-      "latest_article_date": "2026-05-05",
-      "article_count": 2,
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-05-06",
+      "article_count": 3,
       "haiku_count": 1,
       "kpi_targets": []
     },
