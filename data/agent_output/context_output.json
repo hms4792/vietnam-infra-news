@@ -1,41 +1,17 @@
 {
-  "generated_at": "2026-05-07 12:32",
+  "generated_at": "2026-05-08 12:13",
   "model": "claude-haiku-4-5-20251001",
-  "total_articles": 44,
-  "haiku_used": 16,
+  "total_articles": 46,
+  "haiku_used": 22,
   "stage_summary": {
-    "PLANNING": 16,
+    "PLANNING": 12,
     "TENDERING": 4,
-    "CONSTRUCTION": 10,
+    "CONSTRUCTION": 11,
     "COMPLETION": 1,
-    "OPERATION": 3,
-    "UNKNOWN": 10
+    "OPERATION": 2,
+    "UNKNOWN": 16
   },
   "articles": [
-    {
-      "date": "2026-04-30",
-      "province": "",
-      "sector": "Power",
-      "title_ko": "더운 날씨와 전기 부족은 동남아시아에 동시에 압력을 가합니다.",
-      "title_en": "",
-      "summary_ko": "동남아시아가 동시에 극심한 더위와 전력 부족으로 인한 압력에 직면하고 있다. 높은 기온으로 인한 전력 수요 증가가 지역의 전력 공급 능력을 초과하면서 에너지 위기가 심화되고 있는 상황이다.",
-      "summary_en": "Workers in many Southeast Asian countries are dealing with a \"dual crisis\" when the region is simultaneously affected by prolonged heat and the risk of energy shortages in the context of complicated world geopolitics.",
-      "source": "Moi truong & Cuoc song",
-      "url": "https://moitruong.net.vn/nang-nong-va-thieu-dien-cung-luc-gay-suc-ep-len-dong-nam-a-99183.html",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "VN-PWR-PDP8",
-      "plan_id": "VN-PWR-PDP8",
-      "rule_stage": "UNKNOWN",
-      "rule_conf": 0.0,
-      "stage": "OPERATION",
-      "confidence": 0.6,
-      "milestone": "동남아 전력수급 위기 심화 및 수요 급증",
-      "next_watch": "베트남 전력망 확충 프로젝트 가동 현황 및 신규 발전 용량 투입",
-      "insight": "극한 기후와 전력 부족 심화로 신규 발전소 및 송배전망 확충 사업의 상업운전 가속화 필요. 기존 시설 최대 가동 단계.",
-      "stage_reason": "기존 전력망 운영 중 수급 부족 현상 표현",
-      "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
-    },
     {
       "date": "2026-05-05",
       "province": "",
@@ -58,7 +34,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.67)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-05",
@@ -77,12 +53,12 @@
       "rule_conf": 0.644,
       "stage": "OPERATION",
       "confidence": 0.95,
-      "milestone": "건기 전력·용수 공급 안정화 달성",
-      "next_watch": "우기 저수량 관리 및 용수 배분 효율성 모니터링",
-      "insight": "A Vương 수력발전소가 상업운전 단계를 넘어 안정적 운영 중입니다. 건기에도 하류 지역 전력·용수 공급을 보장하는 것은 사업이 설계 목표를 달성하고 있음을 의미하며, 향후 확장 또는 유사 프로젝트의 투자 신뢰도가 높습니다.",
-      "stage_reason": "발전소 정상 운영 중, 전력·용수 공급 기능 수행",
+      "milestone": "건기 운영 개시 및 하류 전력·용수 공급 개시",
+      "next_watch": "연간 발전량 및 용수 공급 실적 모니터링",
+      "insight": "A Vương 수력발전소가 상업운전 단계로 진입하여 하류지역 전력 및 용수 공급을 정상 수행 중. 발전소의 안정적 운영 능력 입증으로 투자 수익성 검증 시작.",
+      "stage_reason": "건기 운영 개시로 상업운전 단계 진입",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-05",
@@ -106,7 +82,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-06",
@@ -130,7 +106,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -149,12 +125,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "기사 내용 없음",
-      "next_watch": "베트남 재생에너지 사업 관련 뉴스 수집 필요",
-      "insight": "제공된 기사는 태국-말레이시아 철도 연결 관련 내용으로, VN-PWR-PDP8-RENEWABLE 사업과 무관함",
-      "stage_reason": "기사 내용 부재로 판단 불가",
+      "milestone": "기사 내용 부재로 판단 불가",
+      "next_watch": "마스터플랜과 무관한 태국-말레이시아 철도 사업",
+      "insight": "제공된 기사가 VN-PWR-PDP8-RENEWABLE 사업과 관련 없음. 베트남 재생에너지 사업 분석 자료 필요",
+      "stage_reason": "베트남 전력 사업과 무관",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-05",
@@ -178,7 +154,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-06",
@@ -186,7 +162,7 @@
       "sector": "General",
       "title_ko": "Skycorp Solar Group Limited, $ 3.6 백만 두 번째 비공개 배치 발표, 총 최근 파이프 자금 $ 6.6 백만",
       "title_en": "Skycorp Solar Group Limited Announces $3.6 Million Second Private Placement, Bringing Total Recent PIPE Funding To $6.6 Million",
-      "summary_ko": "스카이코프 솔라 그룹이 360만 달러 규모의 2차 사모 펀딩을 실시하여 최근 총 펀딩액이 660만 달러에 달했습니다. 태양광 에너지 기업의 자금 조달 소식입니다.",
+      "summary_ko": "Skycorp Solar Group Limited이 360만 달러 규모의 두 번째 사모 펀딩을 발표했으며, 최근 총 펀딩액은 660만 달러에 이르렀습니다. 태양광 에너지 기업의 자금 조달 소식입니다.",
       "summary_en": "(MENAFN - GlobeNewsWire - Nasdaq) NINGBO, China, May 06, 2026 (GLOBE NEWSWIRE) -- Skycorp Solar Group Limited (–Skycorp– or the–Company–) (NASDAQ: PN), a solar PV product provider engaged in the ...",
       "source": "menafn",
       "url": "https://menafn.com/1111076602/Skycorp-Solar-Group-Limited-Announces-36-Million-Second-Private-Placement-Bringing-Total-Recent-PIPE-Funding-To-66-Million",
@@ -202,7 +178,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.82)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-06",
@@ -221,12 +197,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "기사 내용 분석 불가",
-      "next_watch": "재생에너지 관련 공식 발표 필요",
-      "insight": "제공된 기사는 과일 수출 가격 하락에 관한 내용으로 VN-PWR-PDP8-RENEWABLE 사업과 무관함. 재생에너지 인프라 사업 진행현황 정보 필요",
-      "stage_reason": "사업 관련 정보 없음",
+      "milestone": "사업 관련 정보 부재",
+      "next_watch": "재정 조건 및 사업 공고 모니터링",
+      "insight": "제공된 기사는 과일 수출 가격 변동에 관한 경제 뉴스로, VN-PWR-PDP8-RENEWABLE 재생에너지 사업과 무관합니다.",
+      "stage_reason": "사업 기사 없음",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-06",
@@ -250,7 +226,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-07",
@@ -258,23 +234,47 @@
       "sector": "Power",
       "title_ko": "디엔비엔푸의 승리 - 20세기의 서사시와 시대의 가치",
       "title_en": "Dien Bien Phu victory - The epic of the twentieth century and the values of the times",
-      "summary_ko": "기사는 디엔비엔푸 전투의 역사적 의의를 다루는 문화·역사 관련 콘텐츠로, 베트남 인프라 및 개발 계획과는 무관한 주제입니다.",
+      "summary_ko": "본 기사는 베트남의 역사적 사건인 디엔비엔푸 전투의 승리를 다룬 역사 및 문화 콘텐츠입니다. 인프라 관련 내용이 없습니다.",
       "summary_en": "On May 7, 1954, the \"Determined to fight, determined to win\" flag of the Vietnam People's Army flew on the roof of the De Castries bunker, making the Dien Bien Phu Victory \"illustrious in five continents, earth-shaking\". This is not only the great victory of the Vietnamese people in the resistance war against the French colonialists, but the stork",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/chien-thang-dien-bien-phu-ban-hung-ca-cua-the-ky-xx-va-gia-tri-thoi-dai-99333.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "",
       "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
-      "stage": "PLANNING",
-      "confidence": 1.0,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "rule_stage": "UNKNOWN",
+      "rule_conf": 0.0,
+      "stage": "UNKNOWN",
+      "confidence": 0.0,
+      "milestone": "인프라 사업 정보 부재",
+      "next_watch": "VN-PWR-PDP8-RENEWABLE 관련 공식 발표 모니터링",
+      "insight": "제공된 기사는 베트남 디엔비엔푸 전투의 역사·문화 콘텐츠로 신재생에너지 인프라 사업과 무관합니다. 사업 진행 현황 파악을 위해 공식 발표자료 확보 필요",
+      "stage_reason": "인프라 관련 내용 없음",
+      "haiku_used": true,
+      "analyzed_at": "2026-05-08 12:12"
+    },
+    {
+      "date": "2026-05-08",
+      "province": "",
+      "sector": "Power",
+      "title_ko": "태국, PM2.5 오염 관리 진전 보고",
+      "title_en": "Thailand reports progress in PM2.5 pollution control",
+      "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/environment/thailand-reports-progress-in-pm2-5-pollution-control-5071445.html\">&lt; img src = \"https://vcdn1-english.vnecdn.net/2026/05/08/lyethidgszoypjwob7o4jfk5hi-177-6924-8133-1778212009.jpg?w=900&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=dVQYqiaQn-AMw3j",
+      "summary_en": "<a href=\"https://e.vnexpress.net/news/news/environment/thailand-reports-progress-in-pm2-5-pollution-control-5071445.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/05/08/lyethidgszoypjwob7o4jfk5hi-177-6924-8133-1778212009.jpg?w=900&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=dVQYqiaQn-AMw3j",
+      "source": "VnExpress International",
+      "url": "https://e.vnexpress.net/news/news/environment/thailand-reports-progress-in-pm2-5-pollution-control-5071445.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "",
+      "plan_id": "VN-PWR-PDP8-RENEWABLE",
+      "rule_stage": "UNKNOWN",
+      "rule_conf": 0.0,
+      "stage": "UNKNOWN",
+      "confidence": 0.0,
+      "milestone": "기사 내용 부재로 판단 불가",
+      "next_watch": "VN-PWR-PDP8-RENEWABLE 관련 공식 발표 모니터링",
+      "insight": "제공 기사가 태국 PM2.5 오염 관리에 관한 내용으로 베트남 재생에너지 사업과 무관함",
+      "stage_reason": "기사-사업 연관성 없음",
+      "haiku_used": true,
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -294,11 +294,11 @@
       "stage": "UNKNOWN",
       "confidence": 0.0,
       "milestone": "기사 내용 부재로 판단 불가",
-      "next_watch": "마스터플랜 VN-PWR-PDP8-LNG 관련 정보 확보",
-      "insight": "제공된 기사가 태국-말레이시아 철도 연결 프로젝트로, 베트남 LNG 인프라 사업과 무관함. 정확한 기사 내용 필요.",
-      "stage_reason": "기사 요약 정보 없음",
+      "next_watch": "VN-PWR-PDP8-LNG 관련 공식 발표 모니터링",
+      "insight": "제공된 기사가 태국-말레이시아 철도 연결 사업으로 베트남 LNG 전력 사업과 무관함. 정확한 기사 제공 필요.",
+      "stage_reason": "기사 내용 없음",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-06",
@@ -317,12 +317,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "기사 내용 불일치",
-      "next_watch": "VN-PWR-PDP8-LNG 관련 공식 소식 추적",
-      "insight": "제공된 기사는 베트남 과일 수출 가격 관련 경제 뉴스로, LNG 전력 인프라 사업과 무관합니다.",
+      "milestone": "기사 내용 부재",
+      "next_watch": "VN-PWR-PDP8-LNG 관련 정보 수집 필요",
+      "insight": "제공된 기사는 과일 수출 가격 급락 관련 경제뉴스로, LNG 전력 인프라 사업과 무관함",
       "stage_reason": "사업 관련 정보 없음",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-06",
@@ -346,7 +346,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.83)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-06",
@@ -370,7 +370,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-07",
@@ -378,23 +378,47 @@
       "sector": "Power",
       "title_ko": "디엔비엔푸의 승리 - 20세기의 서사시와 시대의 가치",
       "title_en": "Dien Bien Phu victory - The epic of the twentieth century and the values of the times",
-      "summary_ko": "기사는 디엔비엔푸 전투의 역사적 의의를 다루는 문화·역사 관련 콘텐츠로, 베트남 인프라 및 개발 계획과는 무관한 주제입니다.",
+      "summary_ko": "본 기사는 베트남의 역사적 사건인 디엔비엔푸 전투의 승리를 다룬 역사 및 문화 콘텐츠입니다. 인프라 관련 내용이 없습니다.",
       "summary_en": "On May 7, 1954, the \"Determined to fight, determined to win\" flag of the Vietnam People's Army flew on the roof of the De Castries bunker, making the Dien Bien Phu Victory \"illustrious in five continents, earth-shaking\". This is not only the great victory of the Vietnamese people in the resistance war against the French colonialists, but the stork",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/chien-thang-dien-bien-phu-ban-hung-ca-cua-the-ky-xx-va-gia-tri-thoi-dai-99333.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "",
       "plan_id": "VN-PWR-PDP8-LNG",
-      "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
-      "stage": "PLANNING",
-      "confidence": 1.0,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "rule_stage": "UNKNOWN",
+      "rule_conf": 0.0,
+      "stage": "UNKNOWN",
+      "confidence": 0.0,
+      "milestone": "인프라 관련 정보 부재",
+      "next_watch": "VN-PWR-PDP8-LNG 관련 공식 발표 모니터링 필요",
+      "insight": "제공된 기사는 역사·문화 콘텐츠로 사업 진행상황 파악 불가. 별도의 공식 소식 추적 필요.",
+      "stage_reason": "인프라 프로젝트 관련 내용 없음",
+      "haiku_used": true,
+      "analyzed_at": "2026-05-08 12:12"
+    },
+    {
+      "date": "2026-05-08",
+      "province": "",
+      "sector": "Power",
+      "title_ko": "태국, PM2.5 오염 관리 진전 보고",
+      "title_en": "Thailand reports progress in PM2.5 pollution control",
+      "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/environment/thailand-reports-progress-in-pm2-5-pollution-control-5071445.html\">&lt; img src = \"https://vcdn1-english.vnecdn.net/2026/05/08/lyethidgszoypjwob7o4jfk5hi-177-6924-8133-1778212009.jpg?w=900&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=dVQYqiaQn-AMw3j",
+      "summary_en": "<a href=\"https://e.vnexpress.net/news/news/environment/thailand-reports-progress-in-pm2-5-pollution-control-5071445.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/05/08/lyethidgszoypjwob7o4jfk5hi-177-6924-8133-1778212009.jpg?w=900&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=dVQYqiaQn-AMw3j",
+      "source": "VnExpress International",
+      "url": "https://e.vnexpress.net/news/news/environment/thailand-reports-progress-in-pm2-5-pollution-control-5071445.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "",
+      "plan_id": "VN-PWR-PDP8-LNG",
+      "rule_stage": "UNKNOWN",
+      "rule_conf": 0.0,
+      "stage": "UNKNOWN",
+      "confidence": 0.0,
+      "milestone": "기사 내용 불명확",
+      "next_watch": "VN-PWR-PDP8-LNG 관련 공식 발표 모니터링",
+      "insight": "제공된 기사는 태국 PM2.5 오염 관리 관련 내용으로, 베트남 LNG 전력사업(VN-PWR-PDP8-LNG)과 무관함. 사업 진행 상황 파악 불가.",
+      "stage_reason": "기사 내용이 해당 사업과 무관",
+      "haiku_used": true,
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -414,11 +438,11 @@
       "stage": "UNKNOWN",
       "confidence": 0.0,
       "milestone": "기사 내용 부재로 판단 불가",
-      "next_watch": "마스터플랜과 관련 없는 태국-말레이시아 철도 기사",
-      "insight": "제공된 기사가 VN-PWR-PDP8-NUCLEAR 베트남 핵전력 사업과 무관하므로 분석 불가능",
-      "stage_reason": "관련성 없는 기사로 단계 판단 불가",
+      "next_watch": "VN-PWR-PDP8-NUCLEAR 관련 공식 소식 모니터링",
+      "insight": "제공된 기사가 태국-말레이시아 철도 연결 사업으로 베트남 핵전력 사업과 무관함. 정확한 기사 제공 필요",
+      "stage_reason": "기사 내용 없음",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-06",
@@ -437,12 +461,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "관련 정보 없음",
-      "next_watch": "원문 기사 및 관련 공식 발표 필요",
-      "insight": "제공된 기사는 베트남 과일 수출 및 가격 관련 경제 뉴스이며, VN-PWR-PDP8-NUCLEAR 사업과 직접적 관련성 없음",
+      "milestone": "기사 내용 부적절",
+      "next_watch": "원자력 발전 관련 공식 보도 확인 필요",
+      "insight": "제공된 기사는 과일 수출 관련 경제 뉴스로, VN-PWR-PDP8-NUCLEAR 원자력 발전 사업과 무관합니다.",
       "stage_reason": "사업 관련 정보 부재",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-06",
@@ -466,7 +490,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-07",
@@ -474,23 +498,47 @@
       "sector": "Power",
       "title_ko": "디엔비엔푸의 승리 - 20세기의 서사시와 시대의 가치",
       "title_en": "Dien Bien Phu victory - The epic of the twentieth century and the values of the times",
-      "summary_ko": "기사는 디엔비엔푸 전투의 역사적 의의를 다루는 문화·역사 관련 콘텐츠로, 베트남 인프라 및 개발 계획과는 무관한 주제입니다.",
+      "summary_ko": "본 기사는 베트남의 역사적 사건인 디엔비엔푸 전투의 승리를 다룬 역사 및 문화 콘텐츠입니다. 인프라 관련 내용이 없습니다.",
       "summary_en": "On May 7, 1954, the \"Determined to fight, determined to win\" flag of the Vietnam People's Army flew on the roof of the De Castries bunker, making the Dien Bien Phu Victory \"illustrious in five continents, earth-shaking\". This is not only the great victory of the Vietnamese people in the resistance war against the French colonialists, but the stork",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/chien-thang-dien-bien-phu-ban-hung-ca-cua-the-ky-xx-va-gia-tri-thoi-dai-99333.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "",
       "plan_id": "VN-PWR-PDP8-NUCLEAR",
-      "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
-      "stage": "PLANNING",
-      "confidence": 1.0,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "rule_stage": "UNKNOWN",
+      "rule_conf": 0.0,
+      "stage": "UNKNOWN",
+      "confidence": 0.0,
+      "milestone": "인프라 관련 정보 없음",
+      "next_watch": "베트남 핵전력개발계획 공식 발표 모니터링",
+      "insight": "본 기사는 역사문화 콘텐츠로 VN-PWR-PDP8-NUCLEAR 사업과 무관함. 공식 뉴스채널을 통한 지속적 모니터링 필요.",
+      "stage_reason": "인프라 사업 관련 내용 부재",
+      "haiku_used": true,
+      "analyzed_at": "2026-05-08 12:12"
+    },
+    {
+      "date": "2026-05-08",
+      "province": "",
+      "sector": "Power",
+      "title_ko": "태국, PM2.5 오염 관리 진전 보고",
+      "title_en": "Thailand reports progress in PM2.5 pollution control",
+      "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/environment/thailand-reports-progress-in-pm2-5-pollution-control-5071445.html\">&lt; img src = \"https://vcdn1-english.vnecdn.net/2026/05/08/lyethidgszoypjwob7o4jfk5hi-177-6924-8133-1778212009.jpg?w=900&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=dVQYqiaQn-AMw3j",
+      "summary_en": "<a href=\"https://e.vnexpress.net/news/news/environment/thailand-reports-progress-in-pm2-5-pollution-control-5071445.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/05/08/lyethidgszoypjwob7o4jfk5hi-177-6924-8133-1778212009.jpg?w=900&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=dVQYqiaQn-AMw3j",
+      "source": "VnExpress International",
+      "url": "https://e.vnexpress.net/news/news/environment/thailand-reports-progress-in-pm2-5-pollution-control-5071445.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "",
+      "plan_id": "VN-PWR-PDP8-NUCLEAR",
+      "rule_stage": "UNKNOWN",
+      "rule_conf": 0.0,
+      "stage": "UNKNOWN",
+      "confidence": 0.0,
+      "milestone": "기사 내용 부재",
+      "next_watch": "VN-PWR-PDP8-NUCLEAR 관련 공식 발표 모니터링",
+      "insight": "제공된 기사는 태국 PM2.5 오염 관리로 베트남 원전 사업과 무관함. 정확한 사업 기사 재확인 필요",
+      "stage_reason": "관련 기사 없음",
+      "haiku_used": true,
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-07",
@@ -509,12 +557,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "기사 내용 부족",
-      "next_watch": "VN-OG-2030 관련 구체적 진행 정보 필요",
-      "insight": "제공된 기사는 휘발유 가격 변동에 관한 일반 뉴스로, 인프라 사업 진행현황과 무관함. 마스터플랜 관련 정보 없음.",
+      "milestone": "기사 내용 불충분",
+      "next_watch": "VN-OG-2030 관련 공식 발표 모니터링",
+      "insight": "제공된 기사는 유가 변동 뉴스로 VN-OG-2030 마스터플랜과 직접적 연관성 없음. 사업 진행 현황 판단 불가.",
       "stage_reason": "사업 관련 정보 부재",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "None",
@@ -538,7 +586,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -562,7 +610,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-07",
@@ -570,7 +618,7 @@
       "sector": "Power",
       "title_ko": "'슈퍼 엘니노' 의 위험에 처한 아시아의 에너지 및 식량 안보",
       "title_en": "Energy and food security in Asia at risk of 'super El Nino'",
-      "summary_ko": "슈퍼 엘니뇨 현상이 아시아 지역의 에너지와 식량 안보를 위협하고 있습니다. 극한 기후 현상으로 인한 수자원 부족, 농업 생산 감소, 에너지 공급 차질 등이 예상되며, 지역 전체의 경제 안정성이 흔들릴 수 있습니다.",
+      "summary_ko": "슈퍼 엘니뇨 현상이 아시아의 에너지 및 식량 안보를 위협하고 있습니다. 베트남을 포함한 아시아 지역이 기후변화로 인한 에너지와 식량 공급 불안정에 직면하고 있으며, 이에 대한 대응 방안이 필요합니다.",
       "summary_en": "Asia, already hit hard by the Middle East conflict, now faces the risk of a strong El Niño that could spike energy demand, deplete hydropower production and damage crops.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/an-ninh-nang-luong-luong-thuc-o-chau-a-co-nguy-co-bi-sieu-el-nino-de-doa-99295.html",
@@ -580,13 +628,13 @@
       "rule_stage": "UNKNOWN",
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
-      "confidence": 0.3,
-      "milestone": "수자원 위기 대응 정책 수립",
-      "next_watch": "베트남 수자원 관리 정책 및 인프라 투자 계획 공시",
-      "insight": "슈퍼 엘니뇨로 인한 수자원 부족이 예상되어 관련 인프라 사업의 긴급성 및 투자 필요성 증대. 정부의 기후변화 대응 정책 모니터링 필수.",
-      "stage_reason": "기사 내용이 일반적 기후 위험 전망이며 구체적 사업 진행 정보 부재",
+      "confidence": 0.0,
+      "milestone": "기후변화 대응 정책 수립 필요",
+      "next_watch": "베트남 에너지·식량 안보 정책 발표 모니터링",
+      "insight": "슈퍼 엘니뇨로 인한 베트남 에너지·식량 공급 위험 심화. 인프라 투자 리스크 상승 및 정책 변화 주시 필요",
+      "stage_reason": "사업 추진 관련 구체적 정보 부재",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -610,7 +658,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.70)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
+    },
+    {
+      "date": "2026-05-08",
+      "province": "",
+      "sector": "Power",
+      "title_ko": "포장, 배터리 및 전자 제품 재활용 책임",
+      "title_en": "Take responsibility for recycling packaging, batteries, and electronics",
+      "summary_ko": "베트남이 포장재, 배터리, 전자제품의 재활용 책임을 강화하고 있습니다. 순환경제 원칙에 따라 생산자와 수입업체의 재활용 의무를 확대하고 있으며, 전자폐기물 관리 기준을 엄격히 적용하고 있습니다.",
+      "summary_en": "According to the new regulations of the Government, enterprises producing and importing packaging, batteries, batteries and electronic devices must perform the responsibility for recycling or contributing funds in proportion to the volume of products put on the market.",
+      "source": "Moi truong & Cuoc song",
+      "url": "https://moitruong.net.vn/siet-trach-nhiem-tai-che-bao-bi-pin-va-thiet-bi-dien-tu-99339.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-SWM-NATIONAL-2030",
+      "plan_id": "VN-SWM-NATIONAL-2030",
+      "rule_stage": "PLANNING",
+      "rule_conf": 0.6,
+      "stage": "PLANNING",
+      "confidence": 0.85,
+      "milestone": "재활용 책임 제도 법령 강화",
+      "next_watch": "생산자·수입업체 의무 이행 규칙 발효 시점",
+      "insight": "순환경제 원칙 기반 폐기물 관리 제도화. 생산자 확대책임제(EPR) 강화로 재활용 인프라 투자 기회 확대 예상",
+      "stage_reason": "법령·규칙 강화 단계로 실행 준비 중",
+      "haiku_used": true,
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -634,7 +706,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-02",
@@ -653,12 +725,12 @@
       "rule_conf": 1.0,
       "stage": "TENDERING",
       "confidence": 0.75,
-      "milestone": "FDI 투자자 유치 및 녹색산업단지 조성",
-      "next_watch": "투자계약 체결 및 사업 시행사 선정 공고",
-      "insight": "지속가능한 생산에 대한 글로벌 수요 증가로 친환경 산업단지 개발이 가속화되고 있으며, FDI 투자자 유치 단계에서 본격적인 자금 조달 및 계약 단계로 진입 중인 상황",
-      "stage_reason": "투자자 유치 단계 진행 중, 입찰·계약 준비 단계",
+      "milestone": "FDI 투자자 유치 협상 진행 중",
+      "next_watch": "녹색산업단지 인프라 구축 계약 체결 여부",
+      "insight": "친환경 생산 수요 증가로 산업단지 재구성 추진 중. FDI 투자자 유치 단계로 계약 체결 임박 상황으로 판단.",
+      "stage_reason": "투자자 유치 단계이며 인프라 재구성 진행",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-03",
@@ -682,7 +754,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.82)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "None",
@@ -706,7 +778,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-02",
@@ -730,7 +802,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.87)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-02",
@@ -754,7 +826,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.92)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -773,12 +845,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.0,
-      "milestone": "해당 사항 없음",
-      "next_watch": "VN-TRAN-2055 관련 공식 공고 모니터링",
-      "insight": "기사 내용이 인프라 사업과 무관한 농식품 박람회 관련 내용으로, VN-TRAN-2055 사업 진행상황 정보 미포함",
-      "stage_reason": "기사가 사업 관련 정보 미제공",
+      "milestone": "기사는 인프라 사업과 무관함",
+      "next_watch": "VN-TRAN-2055 사업 관련 공식 소식 모니터링",
+      "insight": "제공된 기사는 농식품 박람회로서 VN-TRAN-2055 마스터플랜과의 연관성 없음. 운송·인프라 프로젝트 진행상황 추적 필요",
+      "stage_reason": "기사 주제: 축산수산 박람회, 관련성 부재",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -796,13 +868,13 @@
       "rule_stage": "UNKNOWN",
       "rule_conf": 0.0,
       "stage": "PLANNING",
-      "confidence": 0.35,
-      "milestone": "베트남 신용 전망 '긍정적' 상향, 인프라 업그레이드 추진",
-      "next_watch": "VN-TRAN-2055 구체적 사업 계획 및 정부 승인 공시",
-      "insight": "무디스 긍정 전망으로 베트남 인프라 투자 환경 개선. 정부 부채 안정적이고 외국인투자 유입 견조해 사업 재정 확보 가능성 높음.",
-      "stage_reason": "국가 신용도 향상이 기초 단계, 구체적 사업정보 부재",
+      "confidence": 0.4,
+      "milestone": "무디스 신용전망 상향조정 (긍정적)",
+      "next_watch": "인프라 사업 구체적 착수 일정 및 투자 조달 계획 공시",
+      "insight": "베트남 신용 전망 개선으로 기반 사업의 자금 조달 환경 개선. 다만 기사는 거시경제 평가일 뿐 VN-TRAN-2055 구체 진행은 미언급",
+      "stage_reason": "사업 특정 진행 정보 부재, 거시경제 신용평가만 확인",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -820,13 +892,13 @@
       "rule_stage": "COMPLETION",
       "rule_conf": 0.45,
       "stage": "CONSTRUCTION",
-      "confidence": 0.65,
-      "milestone": "총리 차원의 프로젝트 가속화 지시",
-      "next_watch": "착공 진도율 공개 및 인도 협력 진전 현황",
-      "insight": "베트남-인도 전략적 파트너십 강화로 자금 조달 및 기술 협력 가능성 증대. 정부 차원 추진력으로 일정 단축 기대.",
-      "stage_reason": "총리의 적극적 가속화 촉구로 이미 진행 중인 사업 추정",
+      "confidence": 0.7,
+      "milestone": "롱탄 공항 프로젝트 가속화 촉구",
+      "next_watch": "착공 진행 현황 및 구체적 일정 발표 모니터링",
+      "insight": "정부 최고위급의 프로젝트 가속화 지시는 건설 단계 진행 중 진도 부진으로 인한 개입 시사. 베트남-인도 전략적 협력 강화 배경의 정치적 추진력 확보 의미.",
+      "stage_reason": "총리 직접 개입 촉구로 진행 중인 건설단계 추정",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -843,14 +915,14 @@
       "plan_id": "VN-TRAN-2055",
       "rule_stage": "CONSTRUCTION",
       "rule_conf": 0.524,
-      "stage": "PLANNING",
+      "stage": "CONSTRUCTION",
       "confidence": 0.75,
-      "milestone": "총리의 프로젝트 가속화 촉구",
-      "next_watch": "세부 설계 및 재정 계획 확정 여부 모니터링",
-      "insight": "총리급 지시로 정책 우선순위 상향 확인. 향후 입찰 공고 및 투자유치 단계 진행 예상. 호찌민 교통 허브 강화를 통한 장기 경제 효과 기대",
-      "stage_reason": "구체적 시공 진행 내용 부재, 정책적 촉구 단계",
+      "milestone": "총리 주도 프로젝트 가속화 촉구",
+      "next_watch": "공사 진행률 및 자금 조성 현황 모니터링",
+      "insight": "정부 차원의 강력한 추진 의지 표현. 지연 사업의 재점화로 2026년 이후 본격 시공 기대. 호찌민 교통 허브 구축을 통한 경제 활성화 예상",
+      "stage_reason": "정부 차원 가속화 촉구는 이미 착공된 사업의 진행 가속 신호",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -874,7 +946,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.82)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -898,7 +970,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.65)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-04",
@@ -922,7 +994,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:12"
     },
     {
       "date": "2026-05-05",
@@ -941,12 +1013,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.2,
-      "milestone": "기사 내용이 인프라 사업과 무관함",
-      "next_watch": "VN-URB-METRO-2030 관련 공식 발표 모니터링",
-      "insight": "아고다 여행 검색 증가는 관광 수요를 보여주지만, 도시철도 인프라 사업 진행상황과 직접적 연관성 없음. 사업 관련 기사 필요.",
-      "stage_reason": "메트로 사업과 무관한 관광업계 기사",
+      "milestone": "베트남 국내 관광 수요 증가 추세",
+      "next_watch": "도시철도 사업 관련 공식 발표 및 투자 계획",
+      "insight": "관광 수요 증가는 도시철도 같은 교통 인프라 필요성을 뒷받침하나, 사업 진행 정보 부재로 단계 판단 불가",
+      "stage_reason": "메트로 사업과 무관한 관광 통계 자료",
       "haiku_used": true,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:13"
     },
     {
       "date": "2026-05-06",
@@ -954,7 +1026,7 @@
       "sector": "Industrial Parks",
       "title_ko": "호치민시, 교육, 인프라, 스마트 시티를 연계한 주요 기술 쇼케이스 개최",
       "title_en": "HCM City hosts major tech showcase linking education, infrastructure, smart cities",
-      "summary_ko": "호찌민시가 교육, 인프라, 스마트시티를 연계하는 대규모 기술 전시회를 개최했습니다. 이 행사는 기술 혁신과 도시 인프라 발전을 통한 스마트시티 구축을 목표로 하며, 교육과 인프라 분야의 통합적 발전을 추진하고 있습니다.",
+      "summary_ko": "호치민시에서 교육, 인프라, 스마트시티를 연결하는 대규모 기술 전시회가 개최되었습니다. 이 행사는 기술 혁신과 도시 인프라 발전을 통해 스마트시티 구축을 추진하는 것을 목표로 합니다.",
       "summary_en": "Smart City Asia, Education Vietnam and LEDTEC Asia, Việt Nam’s leading international exhibition series on smart cities, smart education, IoT, robotics, smart lighting and advanced technologies, opened at the Saigon Exhibition and Convention Centre in HCM City on May 6.",
       "source": "vietnamnews_vn",
       "url": "https://vietnamnews.vn/economy/1780818/hcm-city-hosts-major-tech-showcase-linking-education-infrastructure-smart-cities.html",
@@ -970,7 +1042,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.77)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:13"
     },
     {
       "date": "2026-05-05",
@@ -994,7 +1066,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:13"
     },
     {
       "date": "2026-05-04",
@@ -1018,31 +1090,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.98)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
-    },
-    {
-      "date": "2026-04-30",
-      "province": "",
-      "sector": "Water Supply/Drainage",
-      "title_ko": "하노이는 배수 시스템을 적극적으로 운영하여 4 월 30 일부터 5 월 1 일까지의 휴가 기간 동안 홍수를 예방합니다.",
-      "title_en": "",
-      "summary_ko": "하노이가 4월 30일~5월 1일 휴일 기간 중 홍수 피해를 예방하기 위해 적극적으로 배수 시스템을 운영합니다. 도시 배수 인프라의 사전적 관리를 통해 침수 발생을 방지하려는 조치입니다.",
-      "summary_en": "In order to ensure the urban environment and serve people to play and travel smoothly during the holidays of April 30 and May 1, Hanoi Drainage One-Member Co., Ltd. has implemented synchronous plans to operate the drainage system safely and smoothly, ready to respond to situations of heavy rain and natural disasters.",
-      "source": "Moi truong & Cuoc song",
-      "url": "https://moitruong.net.vn/ha-noi-chu-dong-van-hanh-he-thong-thoat-nuoc-phong-ngua-ung-ngap-trong-dip-nghi-le-30-4-1-5-99195.html",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "HN-URBAN-INFRA",
-      "plan_id": "HN-URBAN-INFRA",
-      "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
-      "stage": "PLANNING",
-      "confidence": 1.0,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:13"
     },
     {
       "date": "2026-05-04",
@@ -1066,7 +1114,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-07 12:32"
+      "analyzed_at": "2026-05-08 12:13"
     }
   ]
 }
