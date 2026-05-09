@@ -471,3 +471,10 @@ class AISummarizer:
     def translate(self, text: str, src: str = "auto", tgt: str = "ko") -> str:
         """레거시 호환용 단일 번역 함수."""
         return self._translate_one(text, src, tgt)
+
+    # ── main.py 호환성 별칭 ────────────────────────────────────────────────
+    # main.py가 process_articles()로 호출 → summarize_articles()로 연결
+    # 두 이름 모두 동일하게 작동 (절대 제거 금지)
+    def process_articles(self, articles: list) -> list:
+        """main.py 호환용 별칭 — summarize_articles()와 동일."""
+        return self.summarize_articles(articles)
