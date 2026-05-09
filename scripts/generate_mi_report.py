@@ -1,37 +1,37 @@
 """
-generate_mi_report.py  ── SA-8 Sub Agent v2.0
+generate_mi_report.py  ── SA-8 Sub Agent v4.0
 =====================================================
 역할: 주간 MI 보고서 자동 생성 (Claude Haiku AI 분석 통합)
 
+v4.0 주요 변경 (2026-05-09):
+  1. 과거 기사 누적 유지
+     - days_back=90 (기존 7일 → 90일치 기사 전체 유지)
+     - 각 기사에 is_new 태그: 최근 7일 = True, 그 이전 = False
+     - JS 빌더에서 is_new=True인 기사만 노란색 하이라이트
+  2. 이메일 발송 조건 수정
+     - 기존: KPI 변동 있을 때만 발송 → 사실상 미발송
+     - 수정: 신규 기사(is_new=True) 1건 이상이면 항상 발송
+     - 신규 기사 없어도 KPI 변동 있으면 발송
+  3. 이메일 본문 강화
+     - 기사 수, 플랜 수, AI Executive Summary 본문 포함
+     - 첨부 실패 시에도 텍스트 요약만이라도 발송
+
 아키텍처 (2-레이어 설계):
-  ┌─────────────────────────────────────────────────────────┐
-  │  Layer 1 — 고정 데이터 (knowledge_index.json에서 로드)  │
-  │    · 사업 개요 (텍스트)                                 │
-  │    · KPI 목표값 테이블                                  │
-  │    · 주요 프로젝트 목록                                 │
-  │    → 매주 동일하게 유지, 변경 없음                       │
-  ├─────────────────────────────────────────────────────────┤
-  │  Layer 2 — AI 동적 분석 (Claude Haiku로 매주 생성)      │
-  │    · 최신 기사 → Haiku → 사업개요 연계 분석문           │
-  │    · KPI 변동 감지 → 노란색 하이라이트 자동 표시         │
-  │    · 플랜별 인사이트 + Executive Summary AI 논평         │
-  └─────────────────────────────────────────────────────────┘
-
-실행:
-  python3 scripts/generate_mi_report.py
-  python3 scripts/generate_mi_report.py --send-email
-  python3 scripts/generate_mi_report.py --dry-run   # AI 호출 없이 구조만 생성
-
-GitHub Actions: collect_weekly.yml SA-8 단계에서 호출
+  Layer 1 — 고정 데이터 (knowledge_index.json에서 로드)
+    · 사업 개요, KPI 목표값, 주요 프로젝트 목록
+  Layer 2 — AI 동적 분석 (Claude Haiku로 매주 생성)
+    · 최신 기사 → Haiku → 사업개요 연계 분석문
+    · 신규 기사 → 노란색 하이라이트
+    · 플랜별 인사이트 + Executive Summary AI 논평
 
 영구 제약:
-  - Anthropic API: GitHub Actions에서 claude-haiku-4-5로만 사용 (연결 오류 방지용 claude-haiku-4-5)
-  - Translation: Google Translate만 사용 (ANTHROPIC_API_KEY는 분석에만)
+  - Anthropic API: claude-haiku-4-5-20251001 (번역 금지, 분석에만)
+  - Translation: Google Translate만 사용
   - 이메일 Secrets: EMAIL_USERNAME / EMAIL_PASSWORD
-
-버전: v3.0 (2026-04-24) — SA-7 context_analyzer 연동 추가
+  - GitHub Pages: main 브랜치 /docs (gh-pages 금지)
 """
 
+import glob as _glob
 import json
 import logging
 import os
@@ -58,12 +58,15 @@ AGENT_OUT_DIR = DATA_DIR / 'agent_output'
 SHARED_DIR    = DATA_DIR / 'shared'
 
 EXCEL_PATH    = DATA_DIR / 'database' / 'Vietnam_Infra_News_Database_Final.xlsx'
-# knowledge_index 탐색 경로 (docs/shared 우선 — Genspark 공유 실제 경로)
 KI_PATH       = BASE_DIR / 'docs' / 'shared' / 'knowledge_index.json'
 KI_PATH_ALT   = SHARED_DIR / 'knowledge_index.json'
 KI_PATH_L1    = SHARED_DIR / 'layer1_data.json'
 KPI_SNAP_PATH = AGENT_OUT_DIR / 'kpi_snapshot_weekly.json'
 JS_BUILDER    = SCRIPTS_DIR / 'build_mi_report_sa8.js'
+
+# SA-7 출력 파일 경로
+CONTEXT_OUT  = BASE_DIR / 'data' / 'agent_output' / 'context_output.json'
+TIMELINE_OUT = BASE_DIR / 'data' / 'agent_output' / 'stage_timeline.json'
 
 # ── 로깅 ──────────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -76,37 +79,23 @@ log = logging.getLogger('SA-8')
 # ── Anthropic API 설정 ────────────────────────────────────────────────────
 ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages'
 HAIKU_MODEL       = 'claude-haiku-4-5-20251001'
+MAX_TOKENS        = 1500
+HAIKU_TIMEOUT     = 45
 
-# SA-7 출력 파일 경로
-CONTEXT_OUT  = BASE_DIR / 'data' / 'agent_output' / 'context_output.json'
-TIMELINE_OUT = BASE_DIR / 'data' / 'agent_output' / 'stage_timeline.json'  # 영구 고정 — 연결 안정성
-MAX_TOKENS        = 1500   # 플랜당 분석문 최대 토큰
-HAIKU_TIMEOUT     = 45     # 초
-
+# v4.0: 기사 수집 기간 설정
+DAYS_TOTAL  = 90   # 전체 유지 기간 (기존 기사 포함)
+DAYS_NEW    = 7    # 신규 기사 기준 (노란 마킹 대상)
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  SA-7 연동 — context_output.json 로드
+#  SA-7 연동
 # ══════════════════════════════════════════════════════════════════════════
 def load_sa7_context() -> dict:
-    """
-    SA-7 context_analyzer.py가 생성한 context_output.json 로드.
-
-    각 기사에 진행단계(stage), 마일스톤(milestone), 다음 관찰 포인트(next_watch),
-    Expert Insight가 포함되어 있습니다.
-
-    SA-7 출력이 없으면 빈 dict 반환 (SA-8은 계속 정상 실행).
-
-    Returns:
-        {url: {stage, milestone, next_watch, insight, confidence, haiku_used}}
-    """
     if not CONTEXT_OUT.exists():
         log.info("SA-7 context_output.json 없음 — 진행단계 데이터 없이 실행")
         return {}
-
     with open(CONTEXT_OUT, 'r', encoding='utf-8') as f:
         ctx = json.load(f)
-
     ctx_by_url = {}
     for art in ctx.get('articles', []):
         url = art.get('url', '')
@@ -120,51 +109,22 @@ def load_sa7_context() -> dict:
                 'haiku_used': art.get('haiku_used', False),
                 'plan_id':    art.get('plan_id', ''),
             }
-
     log.info(f"SA-7 context_output 로드: {len(ctx_by_url)}건")
     return ctx_by_url
 
 
 def load_sa7_timeline() -> dict:
-    """
-    SA-7 stage_timeline.json 로드.
-    플랜별 현재 진행단계 + 히스토리 반환.
-    """
     if not TIMELINE_OUT.exists():
         return {}
-
     with open(TIMELINE_OUT, 'r', encoding='utf-8') as f:
         tl = json.load(f)
     return tl.get('plans', {})
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  [STEP 1] Layer 1 데이터: knowledge_index.json 로드
-#           → 사업 개요 / KPI 목표값 / 프로젝트 목록 (고정)
+#  [STEP 1] knowledge_index.json 로드
 # ══════════════════════════════════════════════════════════════════════════
 def load_knowledge_index() -> dict:
-    """
-    knowledge_index.json v2.1에서 마스터플랜 고정 데이터 로드.
-    
-    구조 (v2.1):
-      masterplans: {
-        "VN-WW-2030": {
-          "title_ko": "...",
-          "decision": "...",
-          "description_ko": "...",   ← 사업 개요 (Layer 1 고정)
-          "kpi_targets": [...],      ← KPI 목표값 (Layer 1 고정)
-          "key_projects": [...],     ← 주요 프로젝트 목록 (Layer 1 고정)
-          "sectors": [...],
-          "keywords_en": [...],
-          "keywords_vi": [...],
-          "match_threshold": 45,
-        },
-        ...
-      }
-    
-    knowledge_index가 없으면 최소한의 기본 구조 반환.
-    """
-    # 순서대로 탐색: docs/shared → data/shared → layer1_data
     ki_file = None
     for candidate in [KI_PATH, KI_PATH_ALT, KI_PATH_L1]:
         if candidate.exists():
@@ -172,7 +132,7 @@ def load_knowledge_index() -> dict:
             break
 
     if not ki_file:
-        log.warning(f"knowledge_index.json 없음 — 기본 플랜 구조 사용")
+        log.warning("knowledge_index.json 없음 — 기본 플랜 구조 사용")
         return _default_knowledge_index()
 
     log.info(f"knowledge_index 로드: {ki_file}")
@@ -185,7 +145,6 @@ def load_knowledge_index() -> dict:
 
 
 def _default_knowledge_index() -> dict:
-    """knowledge_index.json 없을 때 사용하는 최소 기본 구조."""
     return {
         "VN-WW-2030": {
             "title_ko": "폐수처리 인프라 국가 마스터플랜 2021~2030",
@@ -193,13 +152,9 @@ def _default_knowledge_index() -> dict:
             "description_ko": "국가 폐수처리 마스터플랜(2021~2030)은 도시 폐수처리율을 2025년 50%, 2030년 85%로 끌어올리는 것을 목표로 한다.",
             "kpi_targets": [
                 {"indicator": "도시 폐수처리율", "target_2030": "85%", "current": "~29% (하노이)"},
-                {"indicator": "신규 WWTP 용량", "target_2030": "2,900,000 m³/일", "current": "약 800,000 m³/일"},
-                {"indicator": "ODA 연계 투자", "target_2030": "$2.5B+", "current": "JICA $690M"},
+                {"indicator": "신규 WWTP 용량",  "target_2030": "2,900,000 m³/일", "current": "약 800,000 m³/일"},
             ],
-            "key_projects": [
-                {"name": "옌짜 (Yen Xa)", "location": "하노이", "capacity": "270,000 m³/일", "note": "2025.8 준공"},
-                {"name": "투득시 (Thu Duc)", "location": "호치민", "capacity": "1,100,000 m³/일", "note": "동남아 최대"},
-            ],
+            "key_projects": [],
             "sectors": ["Waste Water"],
             "area": "Environment",
         },
@@ -207,10 +162,10 @@ def _default_knowledge_index() -> dict:
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  [STEP 2] Excel DB에서 최신 기사 추출 (Layer 2 입력)
+#  [STEP 2] Excel DB에서 기사 추출
+#  v4.0: days_back=90으로 확장, 각 기사에 is_new 태그 부착
 # ══════════════════════════════════════════════════════════════════════════
 def _sector_to_area(sector: str) -> str:
-    """src_type(섹터)에서 area를 계산 — build_dashboard와 동일 로직."""
     ENV = {'Waste Water', 'Water Supply/Drainage', 'Solid Waste', 'Environment'}
     ENG = {'Power', 'Oil & Gas'}
     if sector in ENV: return 'Environment'
@@ -219,28 +174,36 @@ def _sector_to_area(sector: str) -> str:
     return 'Environment'
 
 
-def extract_weekly_articles(days_back: int = 7) -> list[dict]:
+def extract_articles(days_back: int = DAYS_TOTAL) -> tuple[list[dict], list[dict]]:
     """
-    Excel DB → 최근 N일 기사 추출.
-    ctx_plans 컬럼으로 플랜별 그룹핑 가능하도록 반환.
+    Excel DB → 최근 days_back일 기사 추출.
+
+    v4.0 변경:
+      - days_back 기본값 90일 (기존 기사 누적 유지)
+      - 각 기사에 is_new 태그 부착
+        · is_new=True  : 최근 DAYS_NEW(7)일 이내 → 노란색 마킹 대상
+        · is_new=False : 그 이전 → 회색 (기존 기사)
+
+    Returns:
+        (all_articles, new_articles)
+        all_articles: 전체 기사 (is_new 태그 포함)
+        new_articles: 신규 기사만 (이메일 발송 조건 판단용)
     """
     if not EXCEL_PATH.exists():
         log.warning(f"Excel DB 없음: {EXCEL_PATH}")
-        return []
+        return [], []
 
-    wb  = openpyxl.load_workbook(EXCEL_PATH, read_only=True, data_only=True)
-    
+    wb = openpyxl.load_workbook(EXCEL_PATH, read_only=True, data_only=True)
     if 'News Database' not in wb.sheetnames:
         log.warning("'News Database' 시트 없음")
         wb.close()
-        return []
+        return [], []
 
     ws      = wb['News Database']
     headers = [str(c.value or '').strip().lower().replace(' ', '_')
                for c in next(ws.iter_rows(min_row=1, max_row=1))]
 
-    # 컬럼 인덱스 동적 맵핑
-    def col_idx(keys: list[str]) -> int | None:
+    def col_idx(keys):
         for k in keys:
             for i, h in enumerate(headers):
                 if k in h:
@@ -249,33 +212,39 @@ def extract_weekly_articles(days_back: int = 7) -> list[dict]:
 
     ci = {
         'date':       col_idx(['date']),
-        'sector':     col_idx(['business_sector', 'sector', 'src_type']),   # src_type 별칭 추가
-        'area':       col_idx(['area']),                                      # area 없으면 None
+        'sector':     col_idx(['business_sector', 'sector', 'src_type']),
+        'area':       col_idx(['area']),
         'province':   col_idx(['province']),
-        'title_ko':   col_idx(['title_ko', 'tit_ko']),                       # tit_ko 별칭 추가
+        'title_ko':   col_idx(['title_ko', 'tit_ko']),
         'title_en':   col_idx(['title_en', 'title_(en/vi)', 'title', 'news_title']),
-        'summary_ko': col_idx(['summary_ko', 'sum_ko']),                     # sum_ko 별칭
-        'summary_en': col_idx(['summary_en', 'short_summary', 'sum_en']),    # sum_en 별칭
+        'summary_ko': col_idx(['summary_ko', 'sum_ko']),
+        'summary_en': col_idx(['summary_en', 'short_summary', 'sum_en']),
         'source':     col_idx(['source']),
         'url':        col_idx(['link', 'url']),
-        'ctx_grade':  col_idx(['ctx_grade', 'grade']),                       # grade 별칭
-        'ctx_plans':  col_idx(['ctx_plans', 'plan_id']),                     # plan_id 별칭
+        'ctx_grade':  col_idx(['ctx_grade', 'grade']),
+        'ctx_plans':  col_idx(['ctx_plans', 'plan_id']),
     }
 
-    cutoff   = (datetime.now() - timedelta(days=days_back)).strftime('%Y-%m-%d')
-    articles = []
+    today_str  = datetime.now().strftime('%Y-%m-%d')
+    cutoff_all = (datetime.now() - timedelta(days=days_back)).strftime('%Y-%m-%d')
+    cutoff_new = (datetime.now() - timedelta(days=DAYS_NEW)).strftime('%Y-%m-%d')
+
+    all_articles = []
+    new_articles = []
 
     for row in ws.iter_rows(min_row=2, values_only=True):
-        # date 필드 — date/published_date 모두 지원
         date_val = str(row[ci['date']] if ci['date'] is not None else '').strip()[:10]
-        if not date_val or date_val < cutoff:
+        if not date_val or date_val < cutoff_all:
             continue
 
         title_ko = str(row[ci['title_ko']] if ci['title_ko'] is not None else '').strip()
         if not title_ko:
             continue
 
-        articles.append({
+        # ★ v4.0: is_new 태그 — 최근 7일 이내면 True
+        is_new = (date_val >= cutoff_new)
+
+        art = {
             'date':       date_val,
             'sector':     str(row[ci['sector']]    if ci['sector']    is not None else ''),
             'area':       (str(row[ci['area']] if ci['area'] is not None else '')
@@ -289,19 +258,20 @@ def extract_weekly_articles(days_back: int = 7) -> list[dict]:
             'url':        str(row[ci['url']]        if ci['url']        is not None else ''),
             'ctx_grade':  str(row[ci['ctx_grade']] if ci['ctx_grade'] is not None else 'MEDIUM'),
             'ctx_plans':  str(row[ci['ctx_plans']] if ci['ctx_plans'] is not None else ''),
-        })
+            'is_new':     is_new,   # ★ v4.0 신규 태그
+        }
+        all_articles.append(art)
+        if is_new:
+            new_articles.append(art)
 
     wb.close()
-    articles.sort(key=lambda x: x['date'], reverse=True)
-    log.info(f"Excel DB 추출: {len(articles)}건 (최근 {days_back}일)")
-    return articles
+    all_articles.sort(key=lambda x: x['date'], reverse=True)
+    log.info(f"Excel DB 추출: 전체 {len(all_articles)}건 (신규 {len(new_articles)}건 / 기존 {len(all_articles)-len(new_articles)}건)")
+    return all_articles, new_articles
 
 
 def group_articles_by_plan(articles: list[dict], plans: dict) -> dict:
-    """
-    기사를 ctx_plans 기준으로 플랜별 그룹핑.
-    ctx_plans가 비어 있으면 sector 기반으로 fallback 매핑.
-    """
+    """기사를 ctx_plans 기준으로 플랜별 그룹핑."""
     SECTOR_TO_PLAN = {
         'Waste Water':           ['VN-WW-2030'],
         'Water Supply/Drainage': ['VN-WAT-URBAN', 'VN-WAT-RESOURCES'],
@@ -313,14 +283,12 @@ def group_articles_by_plan(articles: list[dict], plans: dict) -> dict:
         'Transport':             ['VN-TRAN-2055'],
     }
 
-    grouped: dict[str, list] = {plan_id: [] for plan_id in plans}
+    grouped = {plan_id: [] for plan_id in plans}
 
     for art in articles:
-        # 1순위: ctx_plans 컬럼 (SA-6/SA-7이 매핑한 값)
         plan_ids = [p.strip() for p in art['ctx_plans'].split(',')
                     if p.strip() and p.strip() in plans]
 
-        # 2순위: sector → 플랜 fallback
         if not plan_ids:
             plan_ids = [p for p in SECTOR_TO_PLAN.get(art['sector'], [])
                         if p in plans]
@@ -334,22 +302,14 @@ def group_articles_by_plan(articles: list[dict], plans: dict) -> dict:
 # ══════════════════════════════════════════════════════════════════════════
 #  [STEP 3] KPI 변동 감지
 # ══════════════════════════════════════════════════════════════════════════
-def detect_kpi_changes(plans: dict) -> dict[str, list[str]]:
-    """
-    직전 주 KPI 스냅샷과 비교하여 변동 항목 목록 반환.
-    변동 있으면 → 보고서에서 노란색 하이라이트 처리.
-
-    Returns:
-        { plan_id: ["변동 설명 문자열", ...] }
-    """
-    # 현재 스냅샷 생성 (threshold + 키워드 수)
+def detect_kpi_changes(plans: dict) -> dict:
     current_snap = {}
     for pid, plan in plans.items():
         current_snap[pid] = {
-            'threshold':    plan.get('match_threshold', plan.get('threshold', 50)),
-            'kw_en_count':  len(plan.get('keywords_en', [])),
-            'kw_vi_count':  len(plan.get('keywords_vi', [])),
-            'kpi_count':    len(plan.get('kpi_targets', [])),
+            'threshold':   plan.get('match_threshold', plan.get('threshold', 50)),
+            'kw_en_count': len(plan.get('keywords_en', [])),
+            'kw_vi_count': len(plan.get('keywords_vi', [])),
+            'kpi_count':   len(plan.get('kpi_targets', [])),
         }
 
     AGENT_OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -363,28 +323,24 @@ def detect_kpi_changes(plans: dict) -> dict[str, list[str]]:
     with open(KPI_SNAP_PATH, 'r', encoding='utf-8') as f:
         prev_snap = json.load(f)
 
-    changes: dict[str, list[str]] = {}
+    changes = {}
     for pid, curr in current_snap.items():
         prev = prev_snap.get(pid, {})
         plan_changes = []
 
         if curr['threshold'] != prev.get('threshold', curr['threshold']):
-            plan_changes.append(
-                f"매칭 임계값 변동: {prev.get('threshold','?')} → {curr['threshold']}"
-            )
+            plan_changes.append(f"매칭 임계값 변동: {prev.get('threshold','?')} → {curr['threshold']}")
+
         diff_en = curr['kw_en_count'] - prev.get('kw_en_count', curr['kw_en_count'])
         diff_vi = curr['kw_vi_count'] - prev.get('kw_vi_count', curr['kw_vi_count'])
         if diff_en != 0:
-            sign = '+' if diff_en > 0 else ''
-            plan_changes.append(f"영문 키워드 {sign}{diff_en}개 변동")
+            plan_changes.append(f"영문 키워드 {'+' if diff_en>0 else ''}{diff_en}개 변동")
         if diff_vi != 0:
-            sign = '+' if diff_vi > 0 else ''
-            plan_changes.append(f"베트남어 키워드 {sign}{diff_vi}개 변동")
+            plan_changes.append(f"베트남어 키워드 {'+' if diff_vi>0 else ''}{diff_vi}개 변동")
 
         if plan_changes:
             changes[pid] = plan_changes
 
-    # 스냅샷 갱신
     with open(KPI_SNAP_PATH, 'w', encoding='utf-8') as f:
         json.dump(current_snap, f, ensure_ascii=False, indent=2)
 
@@ -393,15 +349,9 @@ def detect_kpi_changes(plans: dict) -> dict[str, list[str]]:
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  [STEP 4] Layer 2: Claude Haiku로 플랜별 분석문 생성
-#           입력: 사업 개요(Layer 1) + 최신 기사 목록
-#           출력: 사업개요와 연계된 분석 인사이트 텍스트
+#  [STEP 4] Claude Haiku AI 분석
 # ══════════════════════════════════════════════════════════════════════════
 def call_haiku(system_prompt: str, user_prompt: str, api_key: str) -> str:
-    """
-    Claude Haiku API 단일 호출.
-    연결 실패 시 빈 문자열 반환 (보고서 생성은 계속 진행).
-    """
     headers = {
         'Content-Type':      'application/json',
         'x-api-key':         api_key,
@@ -413,13 +363,11 @@ def call_haiku(system_prompt: str, user_prompt: str, api_key: str) -> str:
         'system':     system_prompt,
         'messages':   [{'role': 'user', 'content': user_prompt}],
     }
-
     try:
         resp = requests.post(ANTHROPIC_API_URL, headers=headers,
                              json=payload, timeout=HAIKU_TIMEOUT)
         resp.raise_for_status()
         data = resp.json()
-        # content 블록에서 text 추출
         for block in data.get('content', []):
             if block.get('type') == 'text':
                 return block['text'].strip()
@@ -433,47 +381,52 @@ def call_haiku(system_prompt: str, user_prompt: str, api_key: str) -> str:
 def generate_plan_analysis(
     plan_id:     str,
     plan_data:   dict,
-    articles:    list[dict],
+    new_articles:    list[dict],   # ★ v4.0: 신규 기사만 분석에 사용
+    all_articles:    list[dict],   # 전체 기사 (페이로드 전달용)
     kpi_changes: list[str],
     api_key:     str,
     dry_run:     bool = False,
 ) -> dict:
     """
-    플랜 1개에 대한 Haiku 분석 실행.
-
-    Returns:
-        {
-          'news_analysis':  str,   # 최신 기사 → 사업개요 연계 분석 (한국어)
-          'insight':        str,   # Expert Insight (2~3문장)
-          'kpi_status':     str,   # KPI 현황 요약 (1문장)
-          'articles_used':  int,   # 분석에 사용된 기사 수
-        }
+    플랜 1개에 대한 Haiku 분석.
+    v4.0: 신규 기사(is_new=True)만 분석 대상, 전체 기사는 JS 빌더에 전달
     """
-    if not articles:
+    if not new_articles and not all_articles:
         return {
-            'news_analysis':  f"이번 주 {plan_id} 관련 신규 기사가 수집되지 않았습니다.",
-            'insight':        '',
-            'kpi_status':     '',
-            'articles_used':  0,
-        }
-
-    if dry_run or not api_key:
-        # ── v3.1: API 없으면 이전 논평 재사용 (DRY-RUN 텍스트 금지) ──
-        # prev_analysis는 caller(main)에서 주입 — 없으면 '' 유지
-        prev = getattr(generate_plan_analysis, '_prev_analyses', {}).get(plan_id, {})
-        prev_news = prev.get('news_analysis', '')
-        prev_ins  = prev.get('insight', '')
-        return {
-            # 이전 논평이 있으면 재사용, 없으면 중립적 안내문
-            'news_analysis':  prev_news if prev_news else f"이번 주 수집 기사 {len(articles)}건. AI 분석은 API 재활성화 후 업데이트됩니다.",
-            'insight':        prev_ins  if prev_ins  else '',
-            'kpi_status':     '',
-            'articles_used':  len(articles),
-            # ★ v3.2: 새 AI 논평 여부 플래그 (False = 이전 논평 재사용)
+            'news_analysis':   f"이번 주 {plan_id} 관련 신규 기사가 없습니다.",
+            'insight':         '',
+            'kpi_status':      '',
+            'articles_used':   0,
             'analysis_is_new': False,
         }
 
-    # ── 시스템 프롬프트 (Layer 1 고정 데이터 포함) ─────────────────────
+    if dry_run or not api_key:
+        prev = getattr(generate_plan_analysis, '_prev_analyses', {}).get(plan_id, {})
+        return {
+            'news_analysis':   prev.get('news_analysis', '') or (
+                f"신규 기사 {len(new_articles)}건 수집. AI 분석은 API 재활성화 후 업데이트됩니다."
+                if new_articles else "이번 주 신규 기사 없음 — 기존 분석 유지."
+            ),
+            'insight':         prev.get('insight', ''),
+            'kpi_status':      '',
+            'articles_used':   len(new_articles),
+            'analysis_is_new': False,
+        }
+
+    # 신규 기사가 없으면 이전 분석 재사용
+    if not new_articles:
+        prev = getattr(generate_plan_analysis, '_prev_analyses', {}).get(plan_id, {})
+        if prev.get('news_analysis'):
+            log.info(f"    {plan_id}: 신규 기사 없음 → 이전 분석 재사용")
+            return {
+                'news_analysis':   prev.get('news_analysis', ''),
+                'insight':         prev.get('insight', ''),
+                'kpi_status':      '',
+                'articles_used':   0,
+                'analysis_is_new': False,
+            }
+
+    # ── 시스템 프롬프트 ─────────────────────────────────────────────────
     description = plan_data.get('description_ko', plan_data.get('description', ''))
     kpi_list    = plan_data.get('kpi_targets', [])
     kpi_text    = '\n'.join(
@@ -503,13 +456,13 @@ KPI 목표:
 5. 전체 분량: 200~350자 이내
 """
 
-    # ── 기사 목록 구성 (최대 8건, HIGH 우선) ─────────────────────────
-    sorted_arts = sorted(articles,
-                         key=lambda x: (0 if x['ctx_grade'] == 'HIGH' else 1, x['date']),
-                         reverse=False)[:8]
+    # 신규 기사 최대 8건 (HIGH 우선)
+    sorted_new = sorted(new_articles,
+                        key=lambda x: (0 if x['ctx_grade'] == 'HIGH' else 1, x['date']),
+                        reverse=False)[:8]
 
     arts_text = ''
-    for i, a in enumerate(sorted_arts, 1):
+    for i, a in enumerate(sorted_new, 1):
         title = a.get('title_ko') or a.get('title_en', '')
         summ  = a.get('summary_ko') or a.get('summary_en', '')
         arts_text += f"\n[{i}] {a['date']} | {a['source']} | {a['ctx_grade']}\n"
@@ -517,15 +470,14 @@ KPI 목표:
         if summ:
             arts_text += f"    요약: {summ[:150]}\n"
 
-    # KPI 변동 정보 추가
     change_note = ''
     if kpi_changes:
         change_note = '\n\n【이번 주 변동 사항】\n' + '\n'.join(f'  ★ {c}' for c in kpi_changes)
 
-    user_prompt = f"""아래 최신 기사 {len(sorted_arts)}건을 분석하여 사업 개요와 KPI에 연계된
-진행현황 분석문을 작성하세요.{change_note}
+    user_prompt = f"""아래 이번 주 신규 기사 {len(sorted_new)}건을 분석하여
+사업 개요와 KPI에 연계된 진행현황 분석문을 작성하세요.{change_note}
 
-【최신 기사 목록】
+【이번 주 신규 기사 목록】
 {arts_text}
 
 【요청】
@@ -542,16 +494,12 @@ KPI 목표:
 
     raw = call_haiku(system_prompt, user_prompt, api_key)
 
-    # ── 응답 파싱 ───────────────────────────────────────────────────────
     news_analysis = ''
     insight       = ''
-
     if '[최신 뉴스 분석]' in raw:
         news_analysis = raw.split('[최신 뉴스 분석]')[1].split('[Expert Insight]')[0].strip()
     if '[Expert Insight]' in raw:
         insight = raw.split('[Expert Insight]')[1].strip()
-
-    # 파싱 실패 시 전체 텍스트를 news_analysis로 사용
     if not news_analysis and raw:
         news_analysis = raw[:400]
 
@@ -559,28 +507,28 @@ KPI 목표:
         'news_analysis':   news_analysis,
         'insight':         insight,
         'kpi_status':      '',
-        'articles_used':   len(sorted_arts),
-        # ★ v3.2: 새 AI 논평 여부 플래그 (True = 이번 주 새로 생성)
+        'articles_used':   len(sorted_new),
         'analysis_is_new': True,
     }
 
 
 def generate_executive_summary(
-    all_articles: list[dict],
+    new_articles: list[dict],
     kpi_changes:  dict,
     api_key:      str,
     dry_run:      bool = False,
+    prev_exec:    str = '',
 ) -> str:
-    """
-    전체 기사를 종합한 Executive Summary AI 논평 생성.
-    보고서 첫 페이지에 삽입.
-    """
+    """전체 기사를 종합한 Executive Summary."""
     if dry_run or not api_key:
-        return '[DRY-RUN] Executive Summary AI 논평 자리.'
+        return prev_exec if prev_exec else '이번 주 AI Executive Summary (API 비활성 — 이전 내용 유지).'
 
-    high_arts = [a for a in all_articles if a.get('ctx_grade') == 'HIGH'][:5]
+    if not new_articles:
+        return prev_exec if prev_exec else '이번 주 신규 기사가 없습니다. 기존 분석을 유지합니다.'
+
+    high_arts = [a for a in new_articles if a.get('ctx_grade') == 'HIGH'][:5]
     if not high_arts:
-        high_arts = all_articles[:5]
+        high_arts = new_articles[:5]
 
     arts_text = '\n'.join(
         f"- [{a['date']}] {a.get('title_ko', a.get('title_en',''))[:80]} ({a['sector']})"
@@ -596,7 +544,7 @@ def generate_executive_summary(
 사업개발자와 투자자에게 실질적인 시사점을 제공하는 전문적 분석문을 작성하세요.
 분량: 300~450자, 한국어"""
 
-    user_prompt = f"""이번 주 주요 기사:
+    user_prompt = f"""이번 주 주요 신규 기사:
 {arts_text}
 
 KPI 변동 플랜: {change_summary}
@@ -608,111 +556,109 @@ KPI 변동 플랜: {change_summary}
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  [STEP 5] 보고서 데이터 조립 → JS 빌더 호출
+#  [STEP 5] 페이로드 조립 → JS 빌더 호출
 # ══════════════════════════════════════════════════════════════════════════
 def assemble_report_payload(
-    plans:         dict,
-    grouped_arts:  dict,
-    all_articles:  list,
-    analyses:      dict,
-    exec_summary:  str,
-    kpi_changes:   dict,
-    sa7_context:   dict | None = None,   # SA-7 기사별 진행단계 데이터
-    sa7_timeline:  dict | None = None,   # SA-7 플랜별 타임라인
+    plans:        dict,
+    grouped_arts: dict,        # 전체 기사 (is_new 태그 포함)
+    all_articles: list[dict],
+    new_articles: list[dict],
+    analyses:     dict,
+    exec_summary: str,
+    kpi_changes:  dict,
+    sa7_context:  dict = None,
+    sa7_timeline: dict = None,
 ) -> dict:
     """
-    Node.js docx 빌더에 전달할 최종 JSON 페이로드 구성.
-    Layer 1 (고정) + Layer 2 (AI 동적) 결합.
+    v4.0: 플랜별 articles에 전체 기사 포함, is_new 태그로 노란 마킹 구분
     """
     today      = datetime.now().strftime('%Y-%m-%d')
     week_label = datetime.now().strftime('%Y-W%V')
 
     plan_sections = []
     for plan_id, plan_data in plans.items():
-        arts      = grouped_arts.get(plan_id, [])
-        analysis  = analyses.get(plan_id, {})
-        changes   = kpi_changes.get(plan_id, [])
+        arts     = grouped_arts.get(plan_id, [])
+        analysis = analyses.get(plan_id, {})
+        changes  = kpi_changes.get(plan_id, [])
 
-        # ── SA-7 진행단계 데이터 읽기 ─────────────────────────────────
         tl_data    = (sa7_timeline or {}).get(plan_id, {})
         cur_stage  = tl_data.get('current_stage', 'UNKNOWN')
         stage_hist = tl_data.get('stage_history', [])
         next_watch = tl_data.get('next_watch', '')
 
+        # 기사 정렬: 신규 우선, 동일 날짜면 HIGH 우선
+        arts_sorted = sorted(arts,
+                             key=lambda x: (0 if x.get('is_new') else 1,
+                                            0 if x.get('ctx_grade') == 'HIGH' else 1,
+                                            x['date']),
+                             reverse=False)
+
         plan_sections.append({
-            # ── Layer 1: 고정 데이터 ──────────────────────────────────
-            'plan_id':       plan_id,
-            'title_ko':      plan_data.get('title_ko', plan_id),
-            'decision':      plan_data.get('decision', ''),
-            'sector':        ', '.join(plan_data.get('sectors', [])),
-            'area':          plan_data.get('area', ''),
+            # Layer 1: 고정 데이터
+            'plan_id':        plan_id,
+            'title_ko':       plan_data.get('title_ko', plan_id),
+            'decision':       plan_data.get('decision', ''),
+            'sector':         ', '.join(plan_data.get('sectors', [])),
+            'area':           plan_data.get('area', ''),
             'description_ko': plan_data.get('description_ko', plan_data.get('description', '')),
-            'kpi_targets':   plan_data.get('kpi_targets', []),     # KPI 목표값 테이블
-            'key_projects':  plan_data.get('key_projects', []),    # 주요 프로젝트 목록
+            'kpi_targets':    plan_data.get('kpi_targets', []),
+            'key_projects':   plan_data.get('key_projects', []),
 
-            # ── Layer 2: AI 동적 데이터 ───────────────────────────────
-            'articles':         arts[:8],                             # 최신 기사 카드
-            'news_analysis':    analysis.get('news_analysis', ''),   # AI 분석문
-            'insight':          analysis.get('insight', ''),          # Expert Insight
-            'articles_used':    analysis.get('articles_used', 0),
-            # ★ v3.2: 새 AI 논평 여부 → JS 빌더에서 노란색 하이라이트 처리
-            'analysis_is_new':  analysis.get('analysis_is_new', False),
+            # Layer 2: AI 동적 데이터
+            'articles':        arts_sorted[:20],  # 최대 20건 (신규+기존 혼합)
+            'new_count':       sum(1 for a in arts_sorted if a.get('is_new')),
+            'old_count':       sum(1 for a in arts_sorted if not a.get('is_new')),
+            'news_analysis':   analysis.get('news_analysis', ''),
+            'insight':         analysis.get('insight', ''),
+            'articles_used':   analysis.get('articles_used', 0),
+            'analysis_is_new': analysis.get('analysis_is_new', False),
 
-            # ── KPI 변동 (노란색 하이라이트) ─────────────────────────
+            # KPI 변동
             'kpi_changes':    changes,
             'has_kpi_change': len(changes) > 0,
 
-            # ── SA-7 진행단계 데이터 ──────────────────────────────────
+            # SA-7 진행단계
             'current_stage':  cur_stage,
-            'stage_history':  stage_hist[:5],   # 최근 5개 이정표
+            'stage_history':  stage_hist[:5],
             'next_watch':     next_watch,
         })
 
-    # exec_summary_is_new: plan_sections 중 하나라도 analysis_is_new=True이면 True
     any_new = any(s.get('analysis_is_new', False) for s in plan_sections)
+    new_art_count = len(new_articles)
 
     return {
-        'report_date':       today,
-        'report_week':       week_label,
-        'total_articles':    len(all_articles),
-        'plan_count':        len(plan_sections),
-        'executive_summary': exec_summary,
-        'kpi_changes_count': sum(len(v) for v in kpi_changes.values()),
-        'plan_sections':     plan_sections,
-        # ★ v3.2: Executive Summary도 새로 생성됐는지 여부
+        'report_date':         today,
+        'report_week':         week_label,
+        'total_articles':      len(all_articles),
+        'new_articles_count':  new_art_count,   # ★ v4.0 신규 기사 수
+        'plan_count':          len(plan_sections),
+        'executive_summary':   exec_summary,
+        'kpi_changes_count':   sum(len(v) for v in kpi_changes.values()),
+        'plan_sections':       plan_sections,
         'exec_summary_is_new': any_new,
     }
 
 
 def run_js_builder(payload: dict, output_path: Path) -> bool:
-    """
-    Node.js docx 빌더 호출.
-    페이로드를 임시 JSON으로 저장 후 환경변수로 경로 전달.
-    v3.2: EXEC_SUMMARY_IS_NEW 값을 JS 소스에 동적 교체
-    """
+    """Node.js docx 빌더 호출."""
     AGENT_OUT_DIR.mkdir(parents=True, exist_ok=True)
     tmp_json = AGENT_OUT_DIR / 'sa8_report_payload.json'
 
     with open(tmp_json, 'w', encoding='utf-8') as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
-    # ── v3.2: JS 파일의 EXEC_SUMMARY_IS_NEW 값 동적 교체 ──────────────
-    # exec_summary_is_new: 이번 주 Executive Summary가 새로 생성됐는지 여부
     is_new_exec = payload.get('exec_summary_is_new', False)
+
     if JS_BUILDER.exists():
         js_src = JS_BUILDER.read_text(encoding='utf-8')
         js_src = js_src.replace(
             'const EXEC_SUMMARY_IS_NEW = false;  // Python이 동적으로 교체',
             f'const EXEC_SUMMARY_IS_NEW = {str(is_new_exec).lower()};  // Python 자동 설정'
         )
-        # 임시 JS 파일에 저장 후 빌더로 사용
         tmp_js = AGENT_OUT_DIR / 'build_mi_report_tmp.js'
         tmp_js.write_text(js_src, encoding='utf-8')
         actual_builder = tmp_js
     else:
-        actual_builder = JS_BUILDER
-
-    if not JS_BUILDER.exists():
         log.error(f"JS 빌더 없음: {JS_BUILDER}")
         return False
 
@@ -720,15 +666,14 @@ def run_js_builder(payload: dict, output_path: Path) -> bool:
     env['SA8_DATA_FILE']   = str(tmp_json)
     env['SA8_OUTPUT_PATH'] = str(output_path)
 
-    builder_to_use = actual_builder if 'actual_builder' in dir() else JS_BUILDER
-    log.info(f"Node.js 빌더 호출: {builder_to_use.name} (exec_is_new={is_new_exec})")
+    log.info(f"Node.js 빌더 호출: {actual_builder.name} (exec_is_new={is_new_exec})")
     result = subprocess.run(
-        ['node', str(JS_BUILDER)],
+        ['node', str(actual_builder)],
         capture_output=True, text=True, timeout=180, env=env
     )
 
     if result.returncode != 0:
-        log.error(f"빌더 오류:\n{result.stderr[:500]}")
+        log.error(f"빌더 오류:\n{result.stderr[:800]}")
         return False
 
     if result.stdout:
@@ -737,59 +682,110 @@ def run_js_builder(payload: dict, output_path: Path) -> bool:
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  [STEP 6] 이메일 발송
+#  [STEP 6] 이메일 발송 (v4.0: 발송 조건 수정 + 본문 강화)
 # ══════════════════════════════════════════════════════════════════════════
-def send_email(report_path: Path) -> bool:
+def send_email(report_path, payload: dict) -> bool:
+    """
+    v4.0 이메일 발송.
+
+    발송 조건 (OR 조건):
+      - 신규 기사(is_new=True) 1건 이상
+      - KPI 변동 1건 이상
+
+    본문 내용:
+      - 수집 기사 수, 신규 기사 수, 플랜 수
+      - AI Executive Summary 전문
+      - 플랜별 신규/기존 기사 수 요약
+    """
     username = os.getenv('EMAIL_USERNAME')
     password = os.getenv('EMAIL_PASSWORD')
     if not username or not password:
         log.warning("EMAIL_USERNAME/PASSWORD 없음 — 이메일 건너뜀")
         return False
 
-    today = datetime.now().strftime('%Y년 %m월 %d일')
-    msg   = MIMEMultipart()
+    today      = datetime.now().strftime('%Y년 %m월 %d일')
+    week_label = payload.get('report_week', '')
+    total_arts = payload.get('total_articles', 0)
+    new_count  = payload.get('new_articles_count', 0)
+    kpi_count  = payload.get('kpi_changes_count', 0)
+    exec_summ  = payload.get('executive_summary', '')
+
+    body_lines = [
+        f"베트남 인프라 MI 주간 보고서 ({week_label})",
+        f"발행일: {today}",
+        f"생성: SA-8 자동 파이프라인 (Claude Haiku 분석 통합)",
+        "",
+        "=" * 55,
+        f"▶ 전체 누적 기사: {total_arts}건",
+        f"▶ 이번 주 신규:   {new_count}건  ← 노란색 마킹",
+        f"▶ 분석 플랜:      {payload.get('plan_count', 0)}개",
+        f"▶ KPI 변동:       {kpi_count}개 플랜",
+        "=" * 55,
+        "",
+        "【Executive Summary — AI 분석 (Claude Haiku)】",
+        "─" * 55,
+        exec_summ or "(이번 주 신규 기사 없음 — 기존 분석 유지)",
+        "",
+        "─" * 55,
+        "★ 노란색 강조 = 이번 주 신규 기사",
+        "★ 회색 = 기존 누적 기사 (내용 유지)",
+        "★ KPI 변동 플랜은 ⚠ 아이콘으로 강조",
+        "",
+    ]
+
+    # 플랜별 수집 현황
+    plan_sections = payload.get('plan_sections', [])
+    if plan_sections:
+        body_lines.append("【플랜별 기사 현황】")
+        for sec in plan_sections:
+            new_c  = sec.get('new_count', 0)
+            old_c  = sec.get('old_count', 0)
+            total  = new_c + old_c
+            if total == 0:
+                continue
+            kpi_flag = "⚠ " if sec.get('has_kpi_change') else "  "
+            new_flag = f"신규{new_c}건" if new_c > 0 else "신규없음"
+            body_lines.append(
+                f"  {kpi_flag}{sec.get('plan_id','')}: 총{total}건 ({new_flag} / 기존{old_c}건)"
+            )
+
+    body = "\n".join(body_lines)
+
+    msg = MIMEMultipart()
     msg['From']    = username
     msg['To']      = username
-    msg['Subject'] = f"[VN Infra MI] 주간 보고서 — {today}"
-
-    body = (f"베트남 인프라 MI 주간 보고서 (첨부)\n\n"
-            f"발행일: {today}\n"
-            f"생성: SA-8 자동 파이프라인 (Claude Haiku 분석)\n\n"
-            f"★ 노란색 강조 = 직전 주 대비 KPI 변동사항\n"
-            f"★ AI 논평 = Layer 2 Claude Haiku 생성 (사업 개요 연계)\n")
+    msg['Subject'] = f"[VN Infra MI] 주간 보고서 {today} — 신규 {new_count}건"
     msg.attach(MIMEText(body, 'plain', 'utf-8'))
 
-    with open(report_path, 'rb') as f:
-        att = MIMEApplication(f.read(), Name=report_path.name)
-    att['Content-Disposition'] = f'attachment; filename="{report_path.name}"'
-    msg.attach(att)
+    # 첨부 파일 (존재 시)
+    if report_path and Path(str(report_path)).exists():
+        with open(report_path, 'rb') as f:
+            att = MIMEApplication(f.read(), Name=Path(str(report_path)).name)
+        att['Content-Disposition'] = f'attachment; filename="{Path(str(report_path)).name}"'
+        msg.attach(att)
+        log.info(f"이메일 첨부: {Path(str(report_path)).name}")
+    else:
+        log.warning("첨부 파일 없음 — 텍스트 요약만 발송")
 
     try:
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as srv:
             srv.login(username, password)
             srv.sendmail(username, [username], msg.as_string())
-        log.info(f"이메일 발송 완료: {username}")
+        log.info(f"✅ 이메일 발송 완료: {username}")
         return True
+    except smtplib.SMTPAuthenticationError:
+        log.error("이메일 인증 실패 — Gmail App Password 확인 필요")
+    except smtplib.SMTPException as e:
+        log.error(f"SMTP 오류: {e}")
     except Exception as e:
-        log.error(f"이메일 오류: {e}")
-        return False
-
+        log.error(f"이메일 발송 실패: {e}")
+    return False
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  v3.1 신규: 이전 보고서 페이로드 로드 (AI 논평 보존용)
+#  이전 보고서 페이로드 로드 (AI 논평 보존용)
 # ══════════════════════════════════════════════════════════════════════════
-def load_previous_report_payload() -> dict | None:
-    """
-    직전 주 sa8_report_payload.json을 로드.
-    API 차단 시 이전 AI 논평(news_analysis, insight, exec_summary)을
-    그대로 재사용하기 위함.
-
-    탐색 순서:
-      1. data/agent_output/sa8_report_payload.json  (가장 최근 페이로드)
-      2. data/agent_output/mi_daily_*.json           (최근 daily 파일)
-    """
-    # 1순위: 직전 주간 페이로드
+def load_previous_report_payload():
     payload_path = AGENT_OUT_DIR / 'sa8_report_payload.json'
     if payload_path.exists():
         try:
@@ -800,10 +796,8 @@ def load_previous_report_payload() -> dict | None:
         except Exception as e:
             log.warning(f"이전 페이로드 로드 실패: {e}")
 
-    # 2순위: 가장 최근 daily JSON
-    import glob
     daily_files = sorted(
-        glob.glob(str(AGENT_OUT_DIR / 'mi_daily_*.json')),
+        _glob.glob(str(AGENT_OUT_DIR / 'mi_daily_*.json')),
         reverse=True
     )
     if daily_files:
@@ -819,31 +813,13 @@ def load_previous_report_payload() -> dict | None:
     return None
 
 
-def get_previous_plan_analysis(prev_payload: dict | None, plan_id: str) -> dict:
-    """
-    이전 보고서에서 특정 plan_id의 AI 논평을 추출.
-    없으면 빈 dict 반환.
-    """
-    if not prev_payload:
-        return {}
-    for section in prev_payload.get('plan_sections', []):
-        if section.get('plan_id') == plan_id:
-            return {
-                'news_analysis': section.get('news_analysis', ''),
-                'insight':       section.get('insight', ''),
-                'kpi_status':    section.get('kpi_status', ''),
-                'articles_used': section.get('articles_used', 0),
-            }
-    return {}
-
 # ══════════════════════════════════════════════════════════════════════════
 #  main()
 # ══════════════════════════════════════════════════════════════════════════
 def main():
     dry_run    = '--dry-run'    in sys.argv
     send_mail  = '--send-email' in sys.argv
-    daily_only = '--daily-only' in sys.argv   # SA-7 결과 JSON만 저장, docx 미생성
-    days_back  = 7
+    daily_only = '--daily-only' in sys.argv
 
     api_key = os.getenv('ANTHROPIC_API_KEY', '')
     if not api_key and not dry_run:
@@ -855,19 +831,15 @@ def main():
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
 
     log.info("=" * 65)
-    log.info(f"SA-8 MI Report Generator v3.2 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    log.info(f"SA-8 MI Report Generator v4.0 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     log.info(f"모드: {'DRY-RUN' if dry_run else 'LIVE'} | AI 모델: {HAIKU_MODEL}")
+    log.info(f"기사 수집: 전체 {DAYS_TOTAL}일 / 신규 기준 {DAYS_NEW}일 (노란 마킹)")
     log.info("=" * 65)
 
-    # ── Step 0: v3.1 이전 보고서 로드 (AI 논평 보존) ───────────────────
+    # ── Step 0: 이전 보고서 로드 ────────────────────────────────────────
     prev_payload = load_previous_report_payload()
-    if dry_run and prev_payload:
-        log.info("API 차단 중 → 이전 AI 논평 보존 모드 활성화")
-        prev_exec_summary = prev_payload.get('executive_summary', '')
-    else:
-        prev_exec_summary = ''
+    prev_exec_summary = prev_payload.get('executive_summary', '') if prev_payload else ''
 
-    # 이전 논평을 함수 속성으로 주입 (클로저 대신 간단한 방법)
     generate_plan_analysis._prev_analyses = {}
     if prev_payload:
         for sec in prev_payload.get('plan_sections', []):
@@ -877,7 +849,6 @@ def main():
                     'news_analysis': sec.get('news_analysis', ''),
                     'insight':       sec.get('insight', ''),
                 }
-    generate_executive_summary._prev_exec = prev_exec_summary
 
     # ── Step 1: Layer 1 고정 데이터 로드 ────────────────────────────────
     plans = load_knowledge_index()
@@ -885,51 +856,56 @@ def main():
         log.error("마스터플랜 데이터 없음 — 종료")
         sys.exit(1)
 
-    # ── Step 2: 최신 기사 추출 ──────────────────────────────────────────
-    all_articles  = extract_weekly_articles(days_back)
-    grouped_arts  = group_articles_by_plan(all_articles, plans)
+    # ── Step 2: 기사 추출 (전체 90일 + 신규 태그) ───────────────────────
+    all_articles, new_articles = extract_articles(DAYS_TOTAL)
+    grouped_arts = group_articles_by_plan(all_articles, plans)
 
-    # ── Step 3: SA-7 진행단계 데이터 로드 ─────────────────────────────────
+    # ── Step 3: SA-7 데이터 로드 ──────────────────────────────────────
     log.info("SA-7 context 로드 중...")
     sa7_context  = load_sa7_context()
     sa7_timeline = load_sa7_timeline()
 
-    # ── Step 3b: KPI 변동 감지 ──────────────────────────────────────────
+    # ── Step 3b: KPI 변동 감지 ─────────────────────────────────────────
     kpi_changes = detect_kpi_changes(plans)
 
-    # ── Step 4: Layer 2 — Haiku AI 분석 (플랜별) ────────────────────────
-    analyses: dict[str, dict] = {}
+    # ── Step 4: Haiku AI 분석 (플랜별, 신규 기사 기반) ─────────────────
+    analyses   = {}
     total_plans = len(plans)
     for i, (plan_id, plan_data) in enumerate(plans.items(), 1):
-        arts = grouped_arts.get(plan_id, [])
+        all_arts = grouped_arts.get(plan_id, [])
+        new_arts = [a for a in all_arts if a.get('is_new')]
+
         if dry_run:
-            log.info(f"  [{i}/{total_plans}] {plan_id}: {len(arts)}건 기사 → 이전 논평 재사용")
+            log.info(f"  [{i}/{total_plans}] {plan_id}: 신규{len(new_arts)}건 / 전체{len(all_arts)}건 → 이전 분석 재사용")
         else:
-            log.info(f"  [{i}/{total_plans}] {plan_id}: {len(arts)}건 기사 → Haiku 분석 중...")
+            log.info(f"  [{i}/{total_plans}] {plan_id}: 신규{len(new_arts)}건 / 전체{len(all_arts)}건 → Haiku 분석")
 
         analyses[plan_id] = generate_plan_analysis(
-            plan_id     = plan_id,
-            plan_data   = plan_data,
-            articles    = arts,
-            kpi_changes = kpi_changes.get(plan_id, []),
-            api_key     = api_key,
-            dry_run     = dry_run,
+            plan_id      = plan_id,
+            plan_data    = plan_data,
+            new_articles = new_arts,
+            all_articles = all_arts,
+            kpi_changes  = kpi_changes.get(plan_id, []),
+            api_key      = api_key,
+            dry_run      = dry_run,
         )
-        # API rate limit 방지
         if not dry_run and api_key:
             time.sleep(0.5)
 
-    # ── Step 4b: Executive Summary AI 논평 ──────────────────────────────
+    # ── Step 4b: Executive Summary ────────────────────────────────────
     log.info("Executive Summary 생성 중...")
-    exec_summary = generate_executive_summary(all_articles, kpi_changes, api_key, dry_run)
+    exec_summary = generate_executive_summary(
+        new_articles, kpi_changes, api_key, dry_run, prev_exec_summary
+    )
 
-    # ── Step 5: 페이로드 조립 → Node.js 빌더 호출 ───────────────────────
+    # ── Step 5: 페이로드 조립 → JS 빌더 ──────────────────────────────
     payload = assemble_report_payload(
-        plans, grouped_arts, all_articles, analyses, exec_summary, kpi_changes,
+        plans, grouped_arts, all_articles, new_articles,
+        analyses, exec_summary, kpi_changes,
         sa7_context=sa7_context,
         sa7_timeline=sa7_timeline,
     )
-    # daily-only 모드: JSON 페이로드만 저장 (docx 미생성)
+
     if daily_only:
         AGENT_OUT_DIR.mkdir(parents=True, exist_ok=True)
         daily_json = AGENT_OUT_DIR / f'mi_daily_{datetime.now().strftime("%Y%m%d")}.json'
@@ -941,55 +917,49 @@ def main():
     success = run_js_builder(payload, output_path)
 
     if not success:
-        log.warning("신규 docx 생성 실패 — 이전 보고서 보존 확인 중...")
-        # ★ v3.1: 생성 실패 시 이전 보고서가 있으면 계속 진행 (크래시 금지)
-        reports_dir = DOCS_DIR.parent / 'docs' / 'reports'
-        if not reports_dir.exists():
-            reports_dir = DOCS_DIR / 'reports'
-        prev_files = sorted(reports_dir.glob('VN_Infra_MI_Weekly_Report_*.docx'),
-                            reverse=True)
-        if prev_files:
-            log.info(f"이전 보고서 유지: {prev_files[0].name} — 파이프라인 계속")
-        else:
-            log.warning("이전 보고서도 없음 — pptx만 발송 시도")
-        # sys.exit(1) 제거: docx 실패가 전체 파이프라인을 중단시키지 않음
+        log.warning("신규 docx 생성 실패 — 이전 보고서 확인 중...")
+        candidates = sorted(
+            _glob.glob(str(DOCS_DIR / 'reports' / '*.docx')), reverse=True
+        ) + sorted(
+            _glob.glob(str(DOCS_DIR / 'VN_Infra_MI_Weekly_Report_*.docx')), reverse=True
+        )
+        if candidates:
+            log.info(f"이전 보고서 유지: {Path(candidates[0]).name}")
 
-    # ── Step 6: 이메일 발송 (선택) ──────────────────────────────────────
-    # ★ v3.1: 파일 존재 확인 후 발송 (없으면 이전 보고서 탐색)
-    if send_mail:
+    # ── Step 6: 이메일 발송 ──────────────────────────────────────────
+    # v4.0: 신규 기사 ≥ 1건 OR KPI 변동 ≥ 1건이면 발송
+    should_send = send_mail and (len(new_articles) > 0 or len(kpi_changes) > 0)
+
+    if should_send:
         email_target = None
         if output_path.exists():
             email_target = output_path
-            log.info(f"이메일 첨부: {output_path.name}")
         else:
-            # 이전 보고서 탐색 (docs/reports/ 폴더에서 최신 파일)
-            reports_dir = DOCS_DIR.parent / 'docs' / 'reports'
-            if not reports_dir.exists():
-                reports_dir = DOCS_DIR / 'reports'
-            prev_files = sorted(reports_dir.glob('VN_Infra_MI_Weekly_Report_*.docx'),
-                                reverse=True)
-            if prev_files:
-                email_target = prev_files[0]
-                log.info(f"신규 docx 없음 — 이전 보고서 첨부: {email_target.name}")
-            else:
-                log.warning("발송 가능한 보고서 없음 — 이메일 건너뜀")
+            # 탐색: docs/reports/*.pptx → docs/reports/*.docx → docs/*.docx
+            candidates = (
+                sorted(_glob.glob(str(DOCS_DIR / 'reports' / '*.pptx')), reverse=True)
+                + sorted(_glob.glob(str(DOCS_DIR / 'reports' / '*.docx')), reverse=True)
+                + sorted(_glob.glob(str(DOCS_DIR / 'VN_Infra_MI_Weekly_Report_*.docx')), reverse=True)
+            )
+            if candidates:
+                email_target = Path(candidates[0])
+                log.info(f"신규 docx 없음 — 최신 보고서 첨부: {email_target.name}")
 
-        if email_target and email_target.exists():
-            send_email(email_target)
+        send_email(email_target, payload)
 
-    # ── 결과 요약 ───────────────────────────────────────────────────────
+    elif send_mail:
+        log.info("발송 조건 미충족 (신규 기사 없음 + KPI 변동 없음) — 이메일 건너뜀")
+
+    # ── 결과 요약 ───────────────────────────────────────────────────
     log.info("")
     log.info("━" * 65)
-    log.info(f"✅ SA-8 완료")
+    log.info(f"✅ SA-8 v4.0 완료")
     log.info(f"   출력: {output_path}")
-    log.info(f"   기사: {len(all_articles)}건 | 플랜: {len(plans)}개")
-    if dry_run and prev_payload:
-        log.info("   AI 분석: 이전 논평 보존 (API 비활성 — 기존 인사이트 유지)")
-    elif dry_run:
-        log.info("   AI 분석: 비활성 (이전 논평 없음 — 빈칸 처리)")
-    else:
-        log.info("   AI 분석: LIVE (Claude Haiku)")
-    log.info(f"   KPI 변동: {len(kpi_changes)}개 플랜 (노란색 표시)")
+    log.info(f"   기사: 전체 {len(all_articles)}건 | 신규 {len(new_articles)}건")
+    log.info(f"   플랜: {len(plans)}개")
+    log.info(f"   AI 분석: {'LIVE (Claude Haiku)' if not dry_run and api_key else '이전 논평 재사용'}")
+    log.info(f"   KPI 변동: {len(kpi_changes)}개 플랜")
+    log.info(f"   이메일: {'발송' if should_send else '미발송 (조건 미충족)' if send_mail else '옵션 없음'}")
     log.info("━" * 65)
 
 
