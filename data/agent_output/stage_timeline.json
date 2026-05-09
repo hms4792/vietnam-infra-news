@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-08 12:13",
+  "generated_at": "2026-05-09 04:29",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -28,7 +28,7 @@
         {
           "date": "2026-05-05",
           "stage": "OPERATION",
-          "milestone": "건기 운영 개시 및 하류 전력·용수 공급 개시",
+          "milestone": "건기 운영 체계 확립",
           "source": "Moi truong & Cuoc song",
           "title_ko": "부옹 수력 발전소는 건기에 활발하게 운영되어 하류의 전기 및 수도 공급을 보장합니다."
         }
@@ -45,22 +45,29 @@
       "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
       "sector": "",
       "area": "",
-      "current_stage": "UNKNOWN",
-      "stage_label_ko": "단계 미확정",
-      "stage_color": "9CA3AF",
-      "stage_order": 0,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
           "date": "2026-05-08",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "[VIDEO] 베트남 물환경협회, 새로운 농촌조정중앙사무소와 협력: 깨끗한 물과 새로운 농촌환경에 대한 조정 강화"
+        },
+        {
+          "date": "2026-05-08",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 부재로 판단 불가",
+          "milestone": "기사 내용 불충분",
           "source": "VnExpress International",
           "title_ko": "태국, PM2.5 오염 관리 진전 보고"
         },
         {
           "date": "2026-05-07",
           "stage": "UNKNOWN",
-          "milestone": "인프라 사업 정보 부재",
+          "milestone": "인프라 관련 정보 부재",
           "source": "Moi truong & Cuoc song",
           "title_ko": "디엔비엔푸의 승리 - 20세기의 서사시와 시대의 가치"
         },
@@ -74,16 +81,9 @@
         {
           "date": "2026-05-06",
           "stage": "UNKNOWN",
-          "milestone": "사업 관련 정보 부재",
+          "milestone": "기사 내용 부적합",
           "source": "VnExpress Business",
           "title_ko": "수출이 줄어들면서 과일 가격이 급락합니다."
-        },
-        {
-          "date": "2026-05-06",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "VnExpress Business",
-          "title_ko": "정재은, 베트남에 10MW 옥상 태양광 시스템 설치"
         },
         {
           "date": "2026-05-05",
@@ -91,12 +91,19 @@
           "milestone": "입찰·계약 진행",
           "source": "Moi truong & Cuoc song",
           "title_ko": "베트남, APAC 풍력 에너지 컨퍼런스 2026 개최: 풍력 발전 투자 유치 기회 확대"
+        },
+        {
+          "date": "2026-05-04",
+          "stage": "UNKNOWN",
+          "milestone": "기사 내용 부재로 판단 불가",
+          "source": "VnExpress International",
+          "title_ko": "태국, 말레이시아와의 철도 연결 가속화"
         }
       ],
-      "next_watch": "VN-PWR-PDP8-RENEWABLE 관련 공식 발표 모니터링",
-      "latest_insight": "제공 기사가 태국 PM2.5 오염 관리에 관한 내용으로 베트남 재생에너지 사업과 무관함",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
       "latest_article_date": "2026-05-08",
-      "article_count": 7,
+      "article_count": 8,
       "haiku_count": 4,
       "kpi_targets": []
     },
@@ -105,15 +112,22 @@
       "title_ko": "PDP8 LNG 가스발전",
       "sector": "",
       "area": "",
-      "current_stage": "UNKNOWN",
-      "stage_label_ko": "단계 미확정",
-      "stage_color": "9CA3AF",
-      "stage_order": 0,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
           "date": "2026-05-08",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "[VIDEO] 베트남 물환경협회, 새로운 농촌조정중앙사무소와 협력: 깨끗한 물과 새로운 농촌환경에 대한 조정 강화"
+        },
+        {
+          "date": "2026-05-08",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 불명확",
+          "milestone": "기사 내용 불일치",
           "source": "VnExpress International",
           "title_ko": "태국, PM2.5 오염 관리 진전 보고"
         },
@@ -127,7 +141,7 @@
         {
           "date": "2026-05-06",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 부재",
+          "milestone": "사업 정보 불일치",
           "source": "VnExpress Business",
           "title_ko": "수출이 줄어들면서 과일 가격이 급락합니다."
         },
@@ -139,13 +153,6 @@
           "title_ko": "LNG 발전 프로젝트 메커니즘 완성: 전기 가격에 압력을 가하지 않고 출력 보장"
         },
         {
-          "date": "2026-05-06",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "VnExpress Business",
-          "title_ko": "정재은, 베트남에 10MW 옥상 태양광 시스템 설치"
-        },
-        {
           "date": "2026-05-04",
           "stage": "UNKNOWN",
           "milestone": "기사 내용 부재로 판단 불가",
@@ -153,10 +160,10 @@
           "title_ko": "태국, 말레이시아와의 철도 연결 가속화"
         }
       ],
-      "next_watch": "VN-PWR-PDP8-LNG 관련 공식 발표 모니터링",
-      "latest_insight": "제공된 기사는 태국 PM2.5 오염 관리 관련 내용으로, 베트남 LNG 전력사업(VN-PWR-PDP8-LNG)과 무관함. 사업 진행 상황 파악 불가.",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
       "latest_article_date": "2026-05-08",
-      "article_count": 6,
+      "article_count": 7,
       "haiku_count": 4,
       "kpi_targets": []
     },
@@ -165,15 +172,22 @@
       "title_ko": "PDP8 원전 재개",
       "sector": "",
       "area": "",
-      "current_stage": "UNKNOWN",
-      "stage_label_ko": "단계 미확정",
-      "stage_color": "9CA3AF",
-      "stage_order": 0,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
           "date": "2026-05-08",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "[VIDEO] 베트남 물환경협회, 새로운 농촌조정중앙사무소와 협력: 깨끗한 물과 새로운 농촌환경에 대한 조정 강화"
+        },
+        {
+          "date": "2026-05-08",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 부재",
+          "milestone": "기사 내용 부재로 판단 불가",
           "source": "VnExpress International",
           "title_ko": "태국, PM2.5 오염 관리 진전 보고"
         },
@@ -192,24 +206,17 @@
           "title_ko": "수출이 줄어들면서 과일 가격이 급락합니다."
         },
         {
-          "date": "2026-05-06",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "VnExpress Business",
-          "title_ko": "정재은, 베트남에 10MW 옥상 태양광 시스템 설치"
-        },
-        {
           "date": "2026-05-04",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 부재로 판단 불가",
+          "milestone": "기사 내용 불충분",
           "source": "VnExpress International",
           "title_ko": "태국, 말레이시아와의 철도 연결 가속화"
         }
       ],
-      "next_watch": "VN-PWR-PDP8-NUCLEAR 관련 공식 발표 모니터링",
-      "latest_insight": "제공된 기사는 태국 PM2.5 오염 관리로 베트남 원전 사업과 무관함. 정확한 사업 기사 재확인 필요",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
       "latest_article_date": "2026-05-08",
-      "article_count": 5,
+      "article_count": 6,
       "haiku_count": 4,
       "kpi_targets": []
     },
@@ -231,8 +238,8 @@
           "title_ko": "휘발유 가격 인상"
         }
       ],
-      "next_watch": "VN-OG-2030 관련 공식 발표 모니터링",
-      "latest_insight": "제공된 기사는 유가 변동 뉴스로 VN-OG-2030 마스터플랜과 직접적 연관성 없음. 사업 진행 현황 판단 불가.",
+      "next_watch": "VN-OG-2030 관련 구체적 정보 수집 필요",
+      "latest_insight": "제공된 기사는 휘발유 가격 변동에 관한 일반 뉴스로 VN-OG-2030 인프라 사업과 직접적 관련성 없음",
       "latest_article_date": "2026-05-07",
       "article_count": 1,
       "haiku_count": 1,
@@ -276,7 +283,7 @@
         {
           "date": "2026-05-07",
           "stage": "UNKNOWN",
-          "milestone": "기후변화 대응 정책 수립 필요",
+          "milestone": "해당 사항 없음",
           "source": "Moi truong & Cuoc song",
           "title_ko": "'슈퍼 엘니노' 의 위험에 처한 아시아의 에너지 및 식량 안보"
         },
@@ -288,8 +295,8 @@
           "title_ko": "수력 발전은 El Nino 2026의 위험에 처하기 전에 물을 축적하기 위해 돌진합니다."
         }
       ],
-      "next_watch": "베트남 에너지·식량 안보 정책 발표 모니터링",
-      "latest_insight": "슈퍼 엘니뇨로 인한 베트남 에너지·식량 공급 위험 심화. 인프라 투자 리스크 상승 및 정책 변화 주시 필요",
+      "next_watch": "VN-WAT-RESOURCES 관련 구체적 사업 뉴스 모니터링",
+      "latest_insight": "기사는 슈퍼 엘니뇨의 기후 영향을 다루며, 구체적 인프라 사업 진행 정보 미포함. 수자원 관리 필요성 재확인.",
       "latest_article_date": "2026-05-07",
       "article_count": 2,
       "haiku_count": 1,
@@ -333,16 +340,16 @@
         {
           "date": "2026-05-08",
           "stage": "PLANNING",
-          "milestone": "재활용 책임 제도 법령 강화",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "포장, 배터리 및 전자 제품 재활용 책임"
         }
       ],
-      "next_watch": "생산자·수입업체 의무 이행 규칙 발효 시점",
-      "latest_insight": "순환경제 원칙 기반 폐기물 관리 제도화. 생산자 확대책임제(EPR) 강화로 재활용 인프라 투자 기회 확대 예상",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-05-08",
       "article_count": 1,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": []
     },
     "VN-ENV-IND-1894": {
@@ -350,11 +357,18 @@
       "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
       "stage_history": [
+        {
+          "date": "2026-05-08",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "[동영상] 르 민 쑤언 산업단지 (Le Minh Xuan Industrial Park) 호치민시): 사람들은 장기간에 걸친 오염으로 인해 계속해서 \"도움을 요청\" 합니다."
+        },
         {
           "date": "2026-05-04",
           "stage": "PLANNING",
@@ -363,10 +377,10 @@
           "title_ko": "2026년 5월부터 시행되는 4가지 새로운 환경 정책"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-04",
-      "article_count": 1,
+      "latest_article_date": "2026-05-08",
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -388,6 +402,13 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
+          "date": "2026-05-08",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamplus",
+          "title_ko": "PM 차장은 공항 시스템에 대한 전략적, 동기식 계획을 강조합니다."
+        },
+        {
           "date": "2026-05-03",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
@@ -397,7 +418,7 @@
         {
           "date": "2026-05-02",
           "stage": "TENDERING",
-          "milestone": "FDI 투자자 유치 협상 진행 중",
+          "milestone": "FDI 투자자 유치 단계 진행",
           "source": "sggp_org_vn",
           "title_ko": "녹색산업단지, FDI 투자자 유치"
         }
@@ -405,7 +426,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 3,
+      "article_count": 5,
       "haiku_count": 1,
       "kpi_targets": []
     },
@@ -422,28 +443,28 @@
         {
           "date": "2026-05-04",
           "stage": "UNKNOWN",
-          "milestone": "기사는 인프라 사업과 무관함",
+          "milestone": "해당 사항 없음",
           "source": "vietnamplus",
           "title_ko": "ILDEX VIETNAM 2026, 농식품 부문에서 지속 가능한 변화 강조"
         },
         {
           "date": "2026-05-04",
           "stage": "PLANNING",
-          "milestone": "무디스 신용전망 상향조정 (긍정적)",
+          "milestone": "베트남 신용전망 긍정적 상향조정",
           "source": "vietnamplus",
           "title_ko": "Moody 's는 베트남의 전망을 개혁 추진에 대한 \"긍정적\" 으로 끌어 올립니다."
         },
         {
           "date": "2026-05-04",
           "stage": "CONSTRUCTION",
-          "milestone": "롱탄 공항 프로젝트 가속화 촉구",
+          "milestone": "총리 차원의 프로젝트 가속화 지시",
           "source": "vietnamplus",
           "title_ko": "PM, 롱탄 공항 프로젝트 가속화를 위한 신속한 조치 촉구"
         },
         {
           "date": "2026-05-04",
-          "stage": "CONSTRUCTION",
-          "milestone": "총리 주도 프로젝트 가속화 촉구",
+          "stage": "PLANNING",
+          "milestone": "총리의 사업 가속화 촉구 및 신속 조치 지시",
           "source": "nhandan_vn",
           "title_ko": "PM, 롱탄 공항 프로젝트 가속화를 위한 신속한 조치 촉구"
         },
@@ -462,8 +483,8 @@
           "title_ko": "베트남의 $ 247M 고속도로와 바다 전망의 고가교 개통"
         }
       ],
-      "next_watch": "VN-TRAN-2055 사업 관련 공식 소식 모니터링",
-      "latest_insight": "제공된 기사는 농식품 박람회로서 VN-TRAN-2055 마스터플랜과의 연관성 없음. 운송·인프라 프로젝트 진행상황 추적 필요",
+      "next_watch": "VN-TRAN-2055 관련 공식 진행상황 공시 필요",
+      "latest_insight": "제공 기사는 농식품 박람회 개최 소식으로 인프라 사업과 무관함. 마스터플랜 VN-TRAN-2055의 실제 진행 현황 정보 부재",
       "latest_article_date": "2026-05-04",
       "article_count": 8,
       "haiku_count": 4,
@@ -489,7 +510,7 @@
         {
           "date": "2026-05-05",
           "stage": "UNKNOWN",
-          "milestone": "베트남 국내 관광 수요 증가 추세",
+          "milestone": "관광수요 증가 추이 모니터링",
           "source": "vir_vn",
           "title_ko": "아고다, 베트남 국내 여행 검색 81% 증가"
         }
