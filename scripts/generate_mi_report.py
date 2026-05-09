@@ -378,65 +378,219 @@ def call_haiku(system_prompt: str, user_prompt: str, api_key: str) -> str:
     return ''
 
 
-def generate_plan_analysis(
-    plan_id:     str,
-    plan_data:   dict,
-    new_articles:    list[dict],   # ★ v4.0: 신규 기사만 분석에 사용
-    all_articles:    list[dict],   # 전체 기사 (페이로드 전달용)
-    kpi_changes: list[str],
-    api_key:     str,
-    dry_run:     bool = False,
+def _build_collection_quality_eval(
+    plan_id: str,
+    plan_data: dict,
+    all_articles: list[dict],
+    new_articles: list[dict],
 ) -> dict:
     """
-    플랜 1개에 대한 Haiku 분석.
-    v4.0: 신규 기사(is_new=True)만 분석 대상, 전체 기사는 JS 빌더에 전달
-    """
-    if not new_articles and not all_articles:
-        return {
-            'news_analysis':   f"이번 주 {plan_id} 관련 신규 기사가 없습니다.",
-            'insight':         '',
-            'kpi_status':      '',
-            'articles_used':   0,
-            'analysis_is_new': False,
+    v5.0 신규: 수집기사 품질 평가 (Haiku 호출 없이 규칙 기반)
+
+    평가 항목:
+      - 수집 충분성: 플랜 중요도 대비 기사 수
+      - 소스 다양성: 단일 출처 편중 여부
+      - 신규 비율: 이번 주 신규 기사 비율
+      - 고등급 비율: HIGH 기사 비율
+      - 공백 탐지: 최근 30일 내 기사 없는 구간
+      - 누락 가능성: KPI 관련 핵심 이벤트 미수집 경고
+
+    Returns:
+        {
+          'coverage_score': 0~100,
+          'quality_grade':  'A'/'B'/'C'/'D',
+          'issues':         [문제점 리스트],
+          'missing_signals': [누락 가능 이벤트],
+          'source_diversity': N,
         }
+    """
+    issues         = []
+    missing_signals = []
+
+    total     = len(all_articles)
+    new_count = len(new_articles)
+    high_count = sum(1 for a in all_articles if a.get('ctx_grade') == 'HIGH')
+    sources    = list({a.get('source', '') for a in all_articles if a.get('source')})
+
+    # 1. 수집 충분성
+    if total == 0:
+        issues.append('⚠ 수집 기사 없음 — 키워드 매핑 재검토 필요')
+        missing_signals.append('전체 기사 누락 — 섹터 키워드 또는 NewsData 쿼리 점검')
+    elif total < 3:
+        issues.append(f'⚠ 수집 기사 부족 ({total}건) — 최소 5건 권장')
+    elif total < 8:
+        issues.append(f'△ 기사 수 보통 ({total}건) — 전문미디어 보완 권장')
+
+    # 2. 신규 기사 비율
+    new_ratio = new_count / max(total, 1)
+    if new_ratio == 0:
+        issues.append('⚠ 이번 주 신규 기사 없음 — 파이프라인 또는 키워드 점검')
+    elif new_ratio < 0.1:
+        issues.append(f'△ 신규 기사 비율 낮음 ({new_count}/{total}건)')
+
+    # 3. 소스 다양성
+    src_count = len(sources)
+    if src_count == 1:
+        issues.append(f'⚠ 단일 출처 편중 ({sources[0]}) — 다변화 필요')
+    elif src_count < 3:
+        issues.append(f'△ 출처 다양성 부족 ({src_count}개)')
+
+    # 4. 고등급 비율
+    high_ratio = high_count / max(total, 1)
+    if total > 3 and high_ratio == 0:
+        issues.append('△ HIGH 등급 기사 없음 — 핵심 정책/사업 기사 미수집 가능')
+
+    # 5. 날짜 공백 탐지 (최근 30일)
+    from datetime import datetime as _dt, timedelta as _td
+    today = _dt.now().date()
+    recent_dates = set()
+    for a in all_articles:
+        try:
+            d = _dt.strptime(a['date'][:10], '%Y-%m-%d').date()
+            if (today - d).days <= 30:
+                recent_dates.add(d)
+        except Exception:
+            pass
+    if total > 0 and len(recent_dates) < 2:
+        issues.append('△ 최근 30일 기사 날짜 분산 부족 — 수집 주기 점검')
+
+    # 6. KPI 기반 누락 가능 이벤트 탐지
+    kpi_targets = plan_data.get('kpi_targets', [])
+    key_projects = plan_data.get('key_projects', [])
+    all_text = ' '.join([
+        a.get('title_ko', '') + ' ' + a.get('title_en', '') + ' ' + a.get('summary_ko', '')
+        for a in all_articles
+    ]).lower()
+
+    for kpi in kpi_targets:
+        indicator = kpi.get('indicator', '')
+        target    = kpi.get('target_2030', '')
+        # 수치가 있는 KPI인데 관련 기사가 없으면 경고
+        if target and '%' in target or 'MW' in target or '$' in target or 'km' in target:
+            kw = indicator.lower().replace(' ', '')[:6]
+            if kw and kw not in all_text:
+                missing_signals.append(f"KPI '{indicator}' 관련 기사 미수집 가능")
+
+    for proj in key_projects[:3]:
+        proj_name = proj.get('name', '')
+        if proj_name and proj_name.lower()[:8] not in all_text:
+            missing_signals.append(f"주요 프로젝트 '{proj_name}' 관련 기사 미수집 가능")
+
+    # 7. 종합 점수 계산
+    score = 100
+    score -= min(30, (3 - min(total, 3)) * 10)       # 기사 수
+    score -= min(20, (3 - min(src_count, 3)) * 7)    # 소스 다양성
+    score -= (20 if new_count == 0 else 0)            # 신규 없음
+    score -= (10 if high_count == 0 and total > 3 else 0)  # HIGH 없음
+    score -= min(20, len(missing_signals) * 5)        # 누락 경고
+    score  = max(0, score)
+
+    if score >= 80:   grade = 'A'
+    elif score >= 60: grade = 'B'
+    elif score >= 40: grade = 'C'
+    else:             grade = 'D'
+
+    return {
+        'coverage_score':   score,
+        'quality_grade':    grade,
+        'issues':           issues,
+        'missing_signals':  missing_signals[:5],   # 최대 5개
+        'source_diversity': src_count,
+        'high_ratio_pct':   round(high_ratio * 100, 1),
+        'new_ratio_pct':    round(new_ratio * 100, 1),
+    }
+
+
+def generate_plan_analysis(
+    plan_id:      str,
+    plan_data:    dict,
+    new_articles: list[dict],   # 신규 기사 (is_new=True)
+    all_articles: list[dict],   # 전체 누적 기사
+    kpi_changes:  list[str],
+    api_key:      str,
+    dry_run:      bool = False,
+) -> dict:
+    """
+    v5.0: 맥락 기반 진행현황 분석 + 수집품질 평가 통합
+
+    분석 구조 (3계층):
+      Layer 1 — 수집품질 평가 (규칙 기반, API 불필요)
+        · 기사 수/소스 다양성/신규 비율/HIGH 비율/공백 탐지
+        · KPI 기반 누락 가능 이벤트 탐지
+
+      Layer 2 — 맥락 기반 진행현황 분석 (Haiku)
+        · 히스토리 기사(전체) + 신규 기사 통합 분석
+        · KPI 목표 대비 현재 진행단계 평가
+        · 마스터플랜 사업 개요와 연계한 맥락 해석
+
+      Layer 3 — Expert Insight + 품질 평가 요약
+        · 사업개발자/투자자 시사점
+        · 수집품질 등급 + 보완 권고사항
+    """
+
+    # ── 수집품질 평가 (API 불필요, 항상 실행) ──────────────────────────
+    quality_eval = _build_collection_quality_eval(
+        plan_id, plan_data, all_articles, new_articles
+    )
+
+    # ── 기본 반환 구조 ──────────────────────────────────────────────────
+    base_result = {
+        'news_analysis':    '',
+        'insight':          '',
+        'kpi_status':       '',
+        'articles_used':    len(new_articles),
+        'analysis_is_new':  False,
+        'quality_eval':     quality_eval,   # ★ v5.0 신규
+    }
+
+    if not new_articles and not all_articles:
+        base_result['news_analysis'] = f"이번 주 {plan_id} 관련 기사가 없습니다."
+        return base_result
 
     if dry_run or not api_key:
         prev = getattr(generate_plan_analysis, '_prev_analyses', {}).get(plan_id, {})
-        return {
-            'news_analysis':   prev.get('news_analysis', '') or (
+        base_result.update({
+            'news_analysis': prev.get('news_analysis', '') or (
                 f"신규 기사 {len(new_articles)}건 수집. AI 분석은 API 재활성화 후 업데이트됩니다."
                 if new_articles else "이번 주 신규 기사 없음 — 기존 분석 유지."
             ),
-            'insight':         prev.get('insight', ''),
-            'kpi_status':      '',
-            'articles_used':   len(new_articles),
-            'analysis_is_new': False,
-        }
+            'insight':    prev.get('insight', ''),
+        })
+        return base_result
 
-    # 신규 기사가 없으면 이전 분석 재사용
+    # 신규 기사 없으면 이전 분석 재사용
     if not new_articles:
         prev = getattr(generate_plan_analysis, '_prev_analyses', {}).get(plan_id, {})
         if prev.get('news_analysis'):
             log.info(f"    {plan_id}: 신규 기사 없음 → 이전 분석 재사용")
-            return {
-                'news_analysis':   prev.get('news_analysis', ''),
-                'insight':         prev.get('insight', ''),
-                'kpi_status':      '',
-                'articles_used':   0,
-                'analysis_is_new': False,
-            }
+            base_result.update({
+                'news_analysis': prev.get('news_analysis', ''),
+                'insight':       prev.get('insight', ''),
+            })
+            return base_result
 
-    # ── 시스템 프롬프트 ─────────────────────────────────────────────────
-    description = plan_data.get('description_ko', plan_data.get('description', ''))
-    kpi_list    = plan_data.get('kpi_targets', [])
-    kpi_text    = '\n'.join(
+    # ── 시스템 프롬프트 (v5.0 — 맥락+품질 통합) ────────────────────────
+    description  = plan_data.get('description_ko', plan_data.get('description', ''))
+    kpi_list     = plan_data.get('kpi_targets', [])
+    kpi_text     = '\n'.join(
         f"  - {k.get('indicator','')}: 목표 {k.get('target_2030','?')} / 현황 {k.get('current','?')}"
         for k in kpi_list
     ) or '  (KPI 정보 없음)'
 
+    # 히스토리 기사 요약 (최대 5건, 가장 최근)
+    hist_arts = [a for a in all_articles if not a.get('is_new')][:5]
+    hist_text = ''
+    for a in hist_arts:
+        t = a.get('title_ko') or a.get('title_en', '')
+        hist_text += f"  [{a['date']}] {t[:60]}\n"
+
+    # 수집품질 이슈 요약
+    quality_issues_text = '\n'.join(f"  {iss}" for iss in quality_eval['issues']) or '  없음'
+    missing_text = '\n'.join(f"  {m}" for m in quality_eval['missing_signals']) or '  없음'
+
     system_prompt = f"""당신은 베트남 인프라 시장 전문 분석가입니다.
-아래 마스터플랜의 사업 개요와 KPI를 숙지한 후, 제공된 최신 기사들을 분석하여
-사업 진행현황과의 연계 인사이트를 제공하세요.
+아래 마스터플랜의 사업 개요, KPI, 히스토리 기사를 종합하여
+현재 진행현황을 맥락 기반으로 분석하고 수집품질을 평가합니다.
 
 【마스터플랜: {plan_id}】
 제목: {plan_data.get('title_ko', plan_id)}
@@ -448,13 +602,20 @@ def generate_plan_analysis(
 KPI 목표:
 {kpi_text}
 
+히스토리 기사 (최근 누적):
+{hist_text or '  (없음)'}
+
+수집품질 사전 평가:
+  · 품질등급: {quality_eval['quality_grade']} (점수: {quality_eval['coverage_score']}/100)
+  · 감지된 이슈: {quality_issues_text}
+  · 누락 가능 이벤트: {missing_text}
+
 분석 원칙:
-1. 기사 내용을 사업 개요 및 KPI와 반드시 연계하여 해석
-2. 수치와 근거를 명시 (날짜, 규모, 기관명 포함)
-3. 투자자/사업개발자 관점의 실무적 인사이트 제공
-4. 한국어로 작성, 전문적이고 간결하게
-5. 전체 분량: 200~350자 이내
-"""
+1. 히스토리 + 신규 기사를 함께 보며 사업의 전체 맥락(진행단계, 추세, 변화) 파악
+2. KPI 목표 대비 현재 진행 수준을 정량적으로 평가 (수치 명시)
+3. 수집기사의 품질과 누락 가능성을 언급하고 보완 방향 제시
+4. 투자자/사업개발자 관점의 실무적 인사이트 제공
+5. 한국어, 전문적이고 간결하게"""
 
     # 신규 기사 최대 8건 (HIGH 우선)
     sorted_new = sorted(new_articles,
@@ -474,42 +635,55 @@ KPI 목표:
     if kpi_changes:
         change_note = '\n\n【이번 주 변동 사항】\n' + '\n'.join(f'  ★ {c}' for c in kpi_changes)
 
-    user_prompt = f"""아래 이번 주 신규 기사 {len(sorted_new)}건을 분석하여
-사업 개요와 KPI에 연계된 진행현황 분석문을 작성하세요.{change_note}
+    user_prompt = f"""아래 이번 주 신규 기사 {len(sorted_new)}건을 히스토리 맥락과 함께 분석하여
+진행현황 분석문과 수집품질 평가를 작성하세요.{change_note}
 
 【이번 주 신규 기사 목록】
 {arts_text}
 
 【요청】
-다음 두 항목을 구분하여 답변하세요:
+다음 세 항목을 구분하여 답변하세요:
 
-1. [최신 뉴스 분석] (150~250자)
-   - 기사들이 보여주는 이번 주 핵심 동향
-   - 사업 개요/KPI와의 연계 해석
-   - 변동사항이 있으면 ★ 표시 후 강조
+1. [최신 뉴스 분석] (180~280자)
+   - 히스토리 기사와 신규 기사를 종합한 사업 진행단계 맥락 평가
+   - KPI 목표 대비 현재 달성 수준 (수치 명시)
+   - 이번 주 핵심 동향 및 변화 포인트 (★ 강조)
 
-2. [Expert Insight] (50~100자)
+2. [Expert Insight] (60~100자)
    - 사업개발자/투자자를 위한 핵심 시사점 1~2문장
+
+3. [수집품질 평가] (60~100자)
+   - 이번 주 수집기사의 충분성/다양성 평가
+   - 누락 가능한 이벤트나 보완 필요 소스 제안 (있으면)
 """
 
     raw = call_haiku(system_prompt, user_prompt, api_key)
 
-    news_analysis = ''
-    insight       = ''
+    news_analysis    = ''
+    insight          = ''
+    quality_comment  = ''
+
     if '[최신 뉴스 분석]' in raw:
         news_analysis = raw.split('[최신 뉴스 분석]')[1].split('[Expert Insight]')[0].strip()
     if '[Expert Insight]' in raw:
-        insight = raw.split('[Expert Insight]')[1].strip()
+        insight = raw.split('[Expert Insight]')[1].split('[수집품질 평가]')[0].strip()
+    if '[수집품질 평가]' in raw:
+        quality_comment = raw.split('[수집품질 평가]')[1].strip()
     if not news_analysis and raw:
         news_analysis = raw[:400]
 
-    return {
+    # quality_eval에 AI 코멘트 추가
+    quality_eval['ai_comment'] = quality_comment
+
+    base_result.update({
         'news_analysis':   news_analysis,
         'insight':         insight,
         'kpi_status':      '',
         'articles_used':   len(sorted_new),
         'analysis_is_new': True,
-    }
+        'quality_eval':    quality_eval,
+    })
+    return base_result
 
 
 def generate_executive_summary(
@@ -612,6 +786,13 @@ def assemble_report_payload(
             'insight':         analysis.get('insight', ''),
             'articles_used':   analysis.get('articles_used', 0),
             'analysis_is_new': analysis.get('analysis_is_new', False),
+            # ★ v5.0: 수집품질 평가
+            'quality_eval':    analysis.get('quality_eval', {
+                'coverage_score': 0, 'quality_grade': 'D',
+                'issues': [], 'missing_signals': [],
+                'source_diversity': 0, 'high_ratio_pct': 0.0,
+                'new_ratio_pct': 0.0, 'ai_comment': '',
+            }),
 
             # KPI 변동
             'kpi_changes':    changes,
