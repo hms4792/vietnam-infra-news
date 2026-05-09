@@ -1,33 +1,39 @@
 """
-news_collector.py  — v8.3
+news_collector.py  — v8.4
 ==========================
 베트남 인프라 뉴스 수집기
 
+v8.4 변경사항 (2026-05-09):
+  ★ 한국 공공기관·국제개발금융기관 뉴스 수집 추가
+
+  [배경]
+  - KEITI(환경산업기술원), KOICA, KIND, 해외건설협회 공식 사이트는
+    GitHub Actions 미국 IP에서 HTTP 403 전면 차단 → 직접 크롤링 불가
+  - 해결책: 해당 기관 사업을 보도하는 국제기관 RSS + NewsData.io 쿼리로 우회 수집
+
+  [추가 내용]
+  1. RSS_FEEDS: 국제개발금융기관 공식 RSS 7개 추가
+     - ADB, World Bank, AIIB, GIZ, Vietnam Briefing, Mekong Eye, WaterWorld
+  2. fetch_newsdata() 내 방법1-D/E 블록 추가
+     - 방법1-D: 한국 ODA 기관 뉴스 (KOICA·KIND·KEITI·ICAK) — 홀수일
+     - 방법1-E: 국제개발금융 베트남 인프라 (ADB·WB·AIIB·JICA·GIZ) — 짝수일
+     - 홀짝일 분리 실행으로 기존 200크레딧/일 한도 내 안전 운영
+     - 추가 크레딧: ~40/일 (기존 56 + 40 ≈ 96/200 → 안전)
+
 v8.3 변경사항 (2026-05-04):
   ★ 429 Rate Limit 처리 방식 전면 개선 (무료 플랜 안전 운영)
-  
-  [문제] v8.2까지: 429 발생 시 60초 대기 → 재시도 반복
-         → 크레딧 소진 상태에서 재시도는 의미 없음
-         → 60초 × 4회 이상 = GitHub Actions 타임아웃으로 파이프라인 전체 사망
-  
-  [수정] 429 발생 즉시 NewsData.io 수집 전체 중단
-         → credit_exhausted 플래그 설정 → 모든 후속 쿼리 skip
-         → WARNING 로그 출력 후 RSS 수집 결과만으로 Step3→4 계속 진행
-         → 파이프라인 타임아웃 없이 완주 보장
-  
-  [유지 기간] Free 플랜 사용 기간 동안 영구 유지
-             (유료 전환 시에도 안전 방어 코드로 유지 권장)
+  - 429 발생 즉시 NewsData.io 수집 전체 중단 (대기/재시도 제거)
+  - credit_exhausted 플래그 → 파이프라인 타임아웃 방지
 
 v8.2 변경사항 (2026-04-25):
   - NEWSDATA_MASTER_QUERIES에 한-베 협력 쿼리 4개 추가
-  - _infer_sector_from_title() 신규 추가 (plan_id 없어도 sector 추론)
+  - _infer_sector_from_title() 신규 추가
   - SECTOR_KEYWORDS에 'Korea Vietnam' 관련 키워드 추가
 
 v8.1 변경사항 (2026-04-24):
   - NEWSDATA_QUERIES: 섹터 14개 + 마스터플랜 16개 + Province 3그룹 완전 반영
   - fetch_newsdata(): 5가지 수집 방법 통합 구현
   - should_collect(): 4단계 품질 게이트 유지
-  - 영구 폐쇄 소스 제거 유지
 
 영구 제약:
   - NewsData.io 엔드포인트: /api/1/latest 만 사용 (archive 유료)
@@ -88,6 +94,19 @@ RSS_FEEDS = {
 
     # ── 수자원 / 환경 베트남어 ─────────────────────────────────────────
     'Bao Tai nguyen (VN)':     'https://baotainguyenmoitruong.vn/rss/home.rss',
+
+    # ── v8.4 추가: 국제개발금융·한국 ODA 베트남 관련 RSS ──────────────
+    # KEITI·KOICA·KIND·ICAK 공식사이트는 GitHub Actions IP 차단(403)
+    # → 해당 기관 사업을 보도하는 국제기관 공식 RSS로 우회 수집
+    'ADB Vietnam':             'https://www.adb.org/news/rss.xml',
+    'World Bank VN News':      'https://feeds.worldbank.org/en/rss/vietnam',
+    'AIIB News':               'https://www.aiib.org/en/news-events/rss.xml',
+    'GIZ Press':               'https://www.giz.de/en/newsroom/rss.xml',
+    # 베트남 현지 영문 전문지 (KOICA/KIND 프로젝트 커버)
+    'Vietnam Briefing':        'https://www.vietnam-briefing.com/news/feed',
+    'Mekong Eye':              'https://mekongeye.com/feed/',
+    # 수자원/환경 국제 전문지
+    'Water World News':        'https://www.waterworld.com/rss.xml',
 }
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -133,7 +152,7 @@ SECTOR_KEYWORDS = {
         'cao tốc', 'sân bay', 'cảng biển', 'ring road',
         'long thanh', 'metro', 'brt',
     ],
-    # ── v8.2: 양자협력 키워드 (한-베 정상회담 등) ──────────────────────
+    # v8.2: 양자협력 키워드 (한-베 정상회담 등)
     'Bilateral': [
         'korea vietnam cooperation', 'korea vietnam summit',
         'south korea vietnam', 'korea-vietnam', 'rok vietnam',
@@ -141,6 +160,11 @@ SECTOR_KEYWORDS = {
         'korea invest vietnam', 'vietnam korea energy',
         'vietnam korea nuclear', 'vietnam korea environment',
         'bilateral infrastructure', 'bilateral cooperation vietnam',
+        # v8.4: 한국 공공기관 키워드 추가
+        'koica vietnam', 'keiti vietnam', 'kind korea vietnam',
+        'oda korea vietnam', 'korean oda',
+        'adb vietnam', 'world bank vietnam', 'jica vietnam',
+        'aiib vietnam', 'giz vietnam',
     ],
 }
 
@@ -189,7 +213,9 @@ def _infer_sector_from_title(title: str, summary: str = '') -> str:
         ('Smart City',             ['smart city', 'digital city', 'thành phố thông minh',
                                     'data center', 'ict infrastructure']),
         ('Bilateral',              ['korea vietnam', 'south korea vietnam', 'hàn quốc việt nam',
-                                    'korea-vietnam', 'bilateral cooperation']),
+                                    'korea-vietnam', 'bilateral cooperation',
+                                    'koica vietnam', 'keiti vietnam', 'adb vietnam',
+                                    'world bank vietnam', 'jica vietnam']),
     ]
     for sector, keywords in rules:
         if any(kw in text for kw in keywords):
@@ -200,7 +226,7 @@ def _infer_sector_from_title(title: str, summary: str = '') -> str:
 # ══════════════════════════════════════════════════════════════════════════
 #  1단계: should_collect() — 4단계 품질 게이트
 # ══════════════════════════════════════════════════════════════════════════
-def should_collect(title: str, summary: str = '', source: str = '') -> tuple[bool, str]:
+def should_collect(title: str, summary: str = '', source: str = '') -> tuple:
     text = (title + ' ' + summary).lower()
 
     if len(title.strip()) < 10:
@@ -210,9 +236,15 @@ def should_collect(title: str, summary: str = '', source: str = '') -> tuple[boo
         if re.search(pat, text, re.IGNORECASE):
             return False, f'NOISE:{pat}'
 
+    # v8.4: 국제개발금융·ODA 소스는 베트남 필터 완화
+    ODA_SOURCES = ['adb', 'world bank', 'aiib', 'giz', 'jica', 'koica',
+                   'vietnam briefing', 'mekong eye', 'waterworld', 'water world']
+    is_oda_source = any(s in source.lower() for s in ODA_SOURCES)
+
     INTL_SOURCES = ['nikkei', 'pv-tech', 'energy monitor', 'bloomberg', 'reuters']
     is_intl = any(s in source.lower() for s in INTL_SOURCES)
-    if is_intl:
+
+    if is_intl and not is_oda_source:
         has_vietnam = any(kw in text for kw in VIETNAM_KEYWORDS)
         if not has_vietnam:
             return False, 'NOT_VIETNAM_RELATED'
@@ -224,8 +256,13 @@ def should_collect(title: str, summary: str = '', source: str = '') -> tuple[boo
             break
 
     if not has_sector:
-        bilateral_kw = ['korea vietnam', 'south korea vietnam', 'rok vietnam',
-                        'hàn quốc việt nam', 'korea-vietnam mou', 'bilateral infrastructure']
+        bilateral_kw = [
+            'korea vietnam', 'south korea vietnam', 'rok vietnam',
+            'hàn quốc việt nam', 'korea-vietnam mou', 'bilateral infrastructure',
+            # v8.4: ODA 기관명도 섹터 매칭으로 인정
+            'koica', 'keiti', 'oda korea',
+            'adb loan', 'world bank project', 'jica grant', 'aiib', 'giz project',
+        ]
         if any(kw in text for kw in bilateral_kw):
             has_sector = True
 
@@ -238,9 +275,9 @@ def should_collect(title: str, summary: str = '', source: str = '') -> tuple[boo
 # ══════════════════════════════════════════════════════════════════════════
 #  2단계: RSS 수집
 # ══════════════════════════════════════════════════════════════════════════
-def fetch_rss_articles(hours_back: int = 24) -> list[dict]:
-    cutoff   = datetime.now() - timedelta(hours=hours_back)
-    articles = []
+def fetch_rss_articles(hours_back: int = 24) -> list:
+    cutoff    = datetime.now() - timedelta(hours=hours_back)
+    articles  = []
     seen_urls = set()
 
     for source_name, feed_url in RSS_FEEDS.items():
@@ -264,7 +301,7 @@ def fetch_rss_articles(hours_back: int = 24) -> list[dict]:
                     if hasattr(entry, date_field) and getattr(entry, date_field):
                         try:
                             import calendar
-                            t = getattr(entry, date_field)
+                            t        = getattr(entry, date_field)
                             pub_date = datetime.fromtimestamp(calendar.timegm(t))
                             break
                         except Exception:
@@ -442,21 +479,57 @@ NEWSDATA_PROVINCE_QUERIES = {
     ],
 }
 
+# ── v8.4 추가: 한국 ODA·국제개발금융 전용 NewsData 쿼리 ──────────────────
+# fetch_newsdata() 내 방법1-D/E 블록에서 직접 사용
+# NEWSDATA_QUERIES에 포함하지 않음 — 홀짝일 조건부 실행을 위해 분리
+
+NEWSDATA_KOREAN_ODA_QUERIES = [
+    # KOICA, KIND, KEITI, ICAK 관련
+    {'q': 'KOICA Vietnam water sanitation infrastructure development',
+     'language': 'en', 'sector': 'Water Supply/Drainage', 'label': 'KOICA-WAT'},
+    {'q': 'KEITI environmental technology export Vietnam',
+     'language': 'en', 'sector': 'Solid Waste', 'label': 'KEITI-ENV'},
+    {'q': 'Korean construction company Vietnam contract award infrastructure',
+     'language': 'en', 'sector': 'Transport', 'label': 'ICAK-CONST'},
+    {'q': 'Korea ODA Vietnam infrastructure development project',
+     'language': 'en', 'sector': 'Bilateral', 'label': 'KR-ODA-INFRA'},
+    {'q': 'Korea international cooperation Vietnam environment water energy',
+     'language': 'en', 'sector': 'Bilateral', 'label': 'KR-COOP-ENV'},
+]
+
+NEWSDATA_MDB_QUERIES = [
+    # 국제개발금융기관 (ADB, World Bank, AIIB, JICA, GIZ)
+    {'q': 'ADB Vietnam infrastructure loan project approval',
+     'language': 'en', 'sector': 'Transport', 'label': 'ADB-INFRA'},
+    {'q': 'World Bank Vietnam water sanitation environment project',
+     'language': 'en', 'sector': 'Waste Water', 'label': 'WB-WAT'},
+    {'q': 'AIIB Vietnam energy infrastructure investment',
+     'language': 'en', 'sector': 'Power', 'label': 'AIIB-ENERGY'},
+    {'q': 'JICA Vietnam ODA infrastructure grant loan',
+     'language': 'en', 'sector': 'Water Supply/Drainage', 'label': 'JICA-ODA'},
+    {'q': 'GIZ Vietnam environment sustainable development',
+     'language': 'en', 'sector': 'Solid Waste', 'label': 'GIZ-ENV'},
+]
+
 NEWSDATA_QUERIES = NEWSDATA_SECTOR_QUERIES + NEWSDATA_MASTER_QUERIES
 
 
 # ══════════════════════════════════════════════════════════════════════════
 #  fetch_newsdata() — NewsData.io API 호출
 # ══════════════════════════════════════════════════════════════════════════
-def fetch_newsdata(api_key: str, hours_back: int = 24) -> list[dict]:
+def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
     """
     NewsData.io /api/1/latest API로 기사 수집.
 
-    ★ v8.3 핵심 변경: 429 크레딧 소진 즉시 종료
-      - 429 수신 즉시 credit_exhausted = True 설정
-      - 이후 모든 쿼리 skip → RSS 수집 결과로만 계속 진행
-      - 60초 대기/재시도 완전 제거 → GitHub Actions 타임아웃 방지
-      - Free 플랜 사용 기간 동안 영구 유지 권장
+    수집 방법:
+      방법1-A: 섹터 기본 쿼리 (매일)
+      방법1-B: 마스터플랜 전용 쿼리 (매일)
+      방법1-C: Province 그룹 A/B/C (매일/홀수일/월목)
+      방법1-D: 한국 ODA 기관 쿼리 (홀수일) ← v8.4 신규
+      방법1-E: 국제개발금융 쿼리 (짝수일) ← v8.4 신규
+
+    ★ v8.3 핵심: 429 크레딧 소진 즉시 전체 중단 (대기/재시도 없음)
+    ★ v8.4 추가: 방법1-D/E 홀짝일 분리 실행 (크레딧 40 추가 소비)
     """
     if not api_key:
         log.warning('[NewsData.io] API 키 없음 — 건너뜀')
@@ -469,11 +542,10 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list[dict]:
     credit_used      = 0
     articles         = []
     seen_urls        = set()
-    # ★ v8.3: 429 크레딧 소진 플래그
     credit_exhausted = False
 
     today       = datetime.now()
-    day_odd     = today.day % 2 == 1
+    day_odd     = today.day % 2 == 1   # 홀수일 여부
     day_mon_thu = today.weekday() in (0, 3)
 
     def call_api(q, lang, size=SIZE):
@@ -483,7 +555,6 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list[dict]:
         """
         nonlocal credit_used, credit_exhausted
 
-        # 크레딧 소진 또는 한도 초과 시 즉시 skip
         if credit_exhausted or credit_used >= CREDIT_MAX:
             return []
 
@@ -498,15 +569,11 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list[dict]:
         try:
             resp = requests.get(API_URL, params=params, timeout=15)
 
-            # ── 422: 파라미터 오류 → 조용히 skip ─────────────────────
             if resp.status_code == 422:
                 log.warning(f'[NewsData.io] 422 오류 — q={q[:40]}')
                 return []
 
             # ★ v8.3: 429 크레딧 소진 → 즉시 전체 중단
-            # (60초 대기 + 재시도 완전 제거)
-            # 크레딧이 없는 상태에서 재시도해봐야 또 429만 나오므로 의미 없음
-            # Free 플랜: 자정(KST 00:00) 리셋까지 더 이상 수집 불가
             if resp.status_code == 429:
                 credit_exhausted = True
                 log.warning(
@@ -574,7 +641,6 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list[dict]:
     # ── A: 섹터 기본 쿼리 (매일) ─────────────────────────────────────
     log.info('[NewsData.io] 방법1-A: 섹터 기본 쿼리')
     for q_info in NEWSDATA_SECTOR_QUERIES:
-        # ★ v8.3: credit_exhausted 시 즉시 루프 탈출
         if credit_exhausted or credit_used >= CREDIT_MAX:
             break
         results = call_api(q_info['q'], q_info['language'])
@@ -638,6 +704,44 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list[dict]:
                     articles.append(parsed)
             time.sleep(0.3)
 
+    # ── D: 한국 ODA 기관 쿼리 (홀수일) ← v8.4 신규 ─────────────────
+    # KEITI(환경산업기술원), KOICA, KIND, ICAK(해외건설협회) 관련
+    # 공식 사이트 직접 접근 불가(GitHub Actions IP 차단) → NewsData.io로 우회
+    if day_odd and not credit_exhausted:
+        log.info('[NewsData.io] 방법1-D: 한국 ODA 기관 베트남 뉴스 (홀수일)')
+        for q_info in NEWSDATA_KOREAN_ODA_QUERIES:
+            if credit_exhausted or credit_used >= CREDIT_MAX:
+                break
+            results = call_api(q_info['q'], q_info['language'])
+            for raw in results:
+                parsed = parse_result(
+                    raw,
+                    sector=q_info.get('sector', 'Bilateral'),
+                    plan_id=q_info.get('plan_id', ''),
+                )
+                if parsed:
+                    articles.append(parsed)
+            time.sleep(0.3)
+
+    # ── E: 국제개발금융기관 베트남 인프라 (짝수일) ← v8.4 신규 ──────
+    # ADB, World Bank, AIIB, JICA, GIZ 베트남 사업
+    # 홀짝일 분리로 크레딧 균등 배분 (방법D + E 합산 ~40 크레딧/일)
+    if not day_odd and not credit_exhausted:
+        log.info('[NewsData.io] 방법1-E: 국제개발금융 베트남 인프라 (짝수일)')
+        for q_info in NEWSDATA_MDB_QUERIES:
+            if credit_exhausted or credit_used >= CREDIT_MAX:
+                break
+            results = call_api(q_info['q'], q_info['language'])
+            for raw in results:
+                parsed = parse_result(
+                    raw,
+                    sector=q_info.get('sector', 'Bilateral'),
+                    plan_id=q_info.get('plan_id', ''),
+                )
+                if parsed:
+                    articles.append(parsed)
+            time.sleep(0.3)
+
     # ── 최종 로그 ────────────────────────────────────────────────────
     if credit_exhausted:
         log.warning(
@@ -656,7 +760,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list[dict]:
 # ══════════════════════════════════════════════════════════════════════════
 #  메인 수집 함수
 # ══════════════════════════════════════════════════════════════════════════
-def collect_news(hours_back: int = 24) -> list[dict]:
+def collect_news(hours_back: int = 24) -> list:
     """
     RSS + NewsData.io 통합 수집.
 
@@ -665,16 +769,17 @@ def collect_news(hours_back: int = 24) -> list[dict]:
 
     ★ v8.3: NewsData.io 크레딧 소진(429) 시에도
             RSS 수집 결과만으로 Step3→4 계속 진행됨.
+    ★ v8.4: 방법1-D/E (한국 ODA + 국제개발금융) 추가
     """
     log.info(f'=== 뉴스 수집 시작 (hours_back={hours_back}) ===')
 
     rss_articles = fetch_rss_articles(hours_back)
 
-    api_key = os.getenv('NEWSDATA_API_KEY', '')
+    api_key     = os.getenv('NEWSDATA_API_KEY', '')
     nd_articles = fetch_newsdata(api_key, hours_back)
 
     all_articles = rss_articles + nd_articles
-    seen = set()
+    seen         = set()
     unique_articles = []
     for art in all_articles:
         url = art.get('url', '')
@@ -700,7 +805,7 @@ def collect_news(hours_back: int = 24) -> list[dict]:
 # ══════════════════════════════════════════════════════════════════════════
 if __name__ == '__main__':
     import sys
-    hours = int(sys.argv[1]) if len(sys.argv) > 1 else 24
+    hours    = int(sys.argv[1]) if len(sys.argv) > 1 else 24
     articles = collect_news(hours_back=hours)
     print(f'\n수집 결과: {len(articles)}건')
     for i, art in enumerate(articles[:5], 1):
