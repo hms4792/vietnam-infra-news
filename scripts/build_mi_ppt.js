@@ -1,288 +1,959 @@
-'use strict';
 /**
- * build_mi_ppt.js — SA-8 PPT 보고서 생성기 v1.1
- * ================================================================
- * v1.1 수정사항 (2026-04-26):
- *   - 하드코딩 경로 /home/claude 제거 → 동적 BASE_DIR 계산
- *   - knowledge_index.json 우선 탐색 (docs/shared → data/shared)
- *   - 파일 없을 경우 graceful degradation (빈 슬라이드 생성)
- *   - sa8_report_payload.json AI 분석 결과 슬라이드 연동
+ * build_mi_ppt.js  ── SA-8 PPT 빌더 v3.0
+ * =========================================================
+ * 경영진 보고용 전문 MI 발표 자료 (PptxGenJS 기반)
+ *
+ * v3.0 (2026-05-09) 핵심:
+ *   - 21개 플랜 전체 포함 (기사 없는 플랜도 현황 슬라이드 생성)
+ *   - 신규 기사 노란 배지, 기존 기사 구분 표시
+ *   - 슬라이드 구조:
+ *       1. 표지 (타이틀 + 핵심 통계)
+ *       2. 목차 (영역별)
+ *       3. Executive Summary
+ *       4. KPI 대시보드 (영역별 집계)
+ *       5~N. 플랜별 슬라이드 (각 1장, 기사 많으면 2장)
+ *       N+1. 클로징
+ *
+ * 데이터 소스: SA8_DATA_FILE 환경변수 (generate_mi_report.py 페이로드)
+ *
+ * 실행: node scripts/build_mi_ppt.js
+ * 출력: docs/VN_Infra_MI_Weekly_Report_YYYYMMDD.pptx
  */
+
+'use strict';
+
 const pptxgen = require('pptxgenjs');
 const fs      = require('fs');
 const path    = require('path');
 
-// ★ v1.1 핵심: 동적 경로 (하드코딩 /home/claude 제거)
-const BASE_DIR   = path.resolve(__dirname, '..');
-const SHARED_DIR = path.join(BASE_DIR, 'docs', 'shared');
-const DATA_DIR   = path.join(BASE_DIR, 'data');
-const AGENT_DIR  = path.join(DATA_DIR, 'agent_output');
+// ══════════════════════════════════════════════════════════════════════════
+//  데이터 로드
+// ══════════════════════════════════════════════════════════════════════════
+const BASE_DIR  = path.resolve(__dirname, '..');
+const DATA_FILE = process.env.SA8_DATA_FILE
+  || path.join(BASE_DIR, 'data', 'agent_output', 'sa8_report_payload.json');
+const OUT_DIR   = path.join(BASE_DIR, 'docs');
 
-// knowledge_index 탐색 경로 (우선순위 순)
-const KI_SEARCH = [
-    path.join(SHARED_DIR, 'knowledge_index.json'),
-    path.join(DATA_DIR, 'shared', 'knowledge_index.json'),
-    path.join(DATA_DIR, 'shared', 'layer1_data.json'),
-    path.join(AGENT_DIR, 'knowledge_index.json'),
-];
+if (!fs.existsSync(DATA_FILE)) {
+  console.error('[PPT] 데이터 파일 없음:', DATA_FILE);
+  process.exit(1);
+}
+const payload = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
 
-const SA8_PAYLOAD_PATH = path.join(AGENT_DIR, 'sa8_report_payload.json');
-const TODAY_STR = new Date().toISOString().slice(0,10).replace(/-/g,'');
-const OUT_PATH  = path.join(BASE_DIR, 'docs', `VN_Infra_MI_Weekly_Report_${TODAY_STR}.pptx`);
+const today     = payload.report_date || new Date().toISOString().slice(0, 10);
+const week      = payload.report_week || '';
+const totalArts = payload.total_articles || 0;
+const newCount  = payload.new_articles_count || 0;
+const planSecs  = payload.plan_sections || [];
+const execSumm  = payload.executive_summary || '';
 
-// ── 안전한 JSON 로드 ─────────────────────────────────────────────────────
-function loadJSON(paths, fallback) {
-    for (const p of paths) {
-        if (fs.existsSync(p)) {
-            try {
-                const d = JSON.parse(fs.readFileSync(p, 'utf-8'));
-                console.log(`  [OK] 로드: ${path.basename(p)}`);
-                return d;
-            } catch(e) { console.warn(`  [WARN] 파싱실패: ${p}`); }
-        }
-    }
-    console.warn('  [WARN] 파일 없음 → fallback 사용');
-    return fallback;
+const dateTag   = today.replace(/-/g, '');
+const outPath   = process.env.SA8_OUTPUT_PATH
+  || path.join(OUT_DIR, `VN_Infra_MI_Weekly_Report_${dateTag}.pptx`);
+
+if (!fs.existsSync(path.dirname(outPath))) {
+  fs.mkdirSync(path.dirname(outPath), { recursive: true });
 }
 
-console.log('\n[build_mi_ppt.js v1.1] 데이터 로드');
-console.log('  BASE_DIR:', BASE_DIR);
+console.log(`[build_mi_ppt.js v3.0] 데이터 로드`);
+console.log(`  BASE_DIR: ${BASE_DIR}`);
+console.log(`  [OK] 로드: ${path.basename(DATA_FILE)}`);
+console.log(`  플랜 ${planSecs.length}개 로드 완료`);
 
-const ki_raw = loadJSON(KI_SEARCH, {});
-let LAYER1 = {};
-if (ki_raw.masterplans) {
-    LAYER1 = ki_raw.masterplans;
-    Object.entries(LAYER1).forEach(([id,p]) => { p.plan_id = id; });
-} else {
-    LAYER1 = ki_raw;
-    Object.entries(LAYER1).forEach(([id,p]) => { if(p && typeof p==='object') p.plan_id = id; });
-}
-const SA8 = loadJSON([SA8_PAYLOAD_PATH], { plan_analyses: {} });
+// ══════════════════════════════════════════════════════════════════════════
+//  디자인 시스템
+// ══════════════════════════════════════════════════════════════════════════
 
-const AREA_ORDER = { 'Environment':0, 'Energy Develop.':1, 'Urban Develop.':2 };
-const plans = Object.values(LAYER1)
-    .filter(p => p && p.plan_id)
-    .sort((a,b) => (AREA_ORDER[a.area]??9)-(AREA_ORDER[b.area]??9) || (a.plan_id||'').localeCompare(b.plan_id||''));
-
-console.log(`  플랜 ${plans.length}개 로드 완료`);
-
-// ── 색상 ─────────────────────────────────────────────────────────────────
+// 색상 (hex, # 없이)
 const C = {
-    navy:'0C2340', navyL:'1A3A6B',
-    teal:'0D9488', tealM:'14B8A6', tealL:'E1F5EE',
-    amber:'854F0B', amberM:'EF9F27', amberL:'FFF176',
-    gray:'64748B', grayL:'F8FAFC', grayM:'E2E8F0',
-    blue:'185FA5', white:'FFFFFF', black:'1A1A1A',
+  navy:    '0C2340',
+  navyMid: '1B3A5C',
+  teal:    '0D6E6E',
+  tealL:   'E0F0EF',
+  blue:    '1B4F8A',
+  blueL:   'E3EDF8',
+  purple:  '4A3B8C',
+  purpleL: 'EDE9F8',
+  orange:  'D4820A',
+  green:   '2D6A4F',
+  greenL:  'E8F5E9',
+  amber:   '92400E',
+  amberL:  'FEF3C7',
+  newYellow:'F59E0B',
+  newYellowL:'FFF9C4',
+  grayDark:'374151',
+  grayMid: '6B7280',
+  grayLight:'F3F4F6',
+  white:   'FFFFFF',
+  black:   '111827',
+  silver:  '9CA3AF',
 };
-const SCOLOR = {
-    'Waste Water':'0D9488','Water Supply/Drainage':'0891B2','Solid Waste':'059669',
-    'Power':'F59E0B','Oil & Gas':'78350F','Transport':'3B82F6',
-    'Smart City':'7C3AED','Industrial Parks':'DC2626',
+
+// 영역별 테마
+const AREA_THEME = {
+  'Environment':    { color: C.teal,   light: C.tealL,   icon: 'ENV' },
+  'Energy Develop.':{ color: C.blue,   light: C.blueL,   icon: 'PWR' },
+  'Urban Develop.': { color: C.purple, light: C.purpleL, icon: 'URB' },
+  'default':        { color: C.navy,   light: 'E8EEF4',  icon: '---' },
 };
-const ACOLOR = { 'Environment':'0D9488','Energy Develop.':'F59E0B','Urban Develop.':'3B82F6' };
-const shadow = () => ({ type:'outer',blur:8,offset:3,angle:135,color:'000000',opacity:0.10 });
-const trunc  = (s,n) => { if(!s) return ''; const t=String(s); return t.length>n?t.slice(0,n-1)+'…':t; };
-const arr    = v => Array.isArray(v) ? v : [];
 
-// ── 커버 ─────────────────────────────────────────────────────────────────
-function addCover(pres) {
-    const sl = pres.addSlide();
-    sl.background = { color: C.navy };
-    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:0.35,h:5.625,fill:{color:C.teal}});
-    sl.addText('VIETNAM INFRASTRUCTURE',{x:0.6,y:0.7,w:8.8,h:0.7,fontSize:32,bold:true,color:C.white,fontFace:'Arial Black',charSpacing:4});
-    sl.addText('MARKET INTELLIGENCE REPORT',{x:0.6,y:1.42,w:8.8,h:0.55,fontSize:22,bold:true,color:C.tealM,fontFace:'Arial',charSpacing:2});
-    sl.addShape(pres.shapes.RECTANGLE,{x:0.6,y:2.05,w:8,h:0.04,fill:{color:C.tealM}});
-    sl.addText('베트남 인프라 시장 동향 주간 보고서',{x:0.6,y:2.2,w:8.8,h:0.45,fontSize:16,color:'A5B4C8',fontFace:'Arial',italic:true});
-    const todayLabel = new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
-    [{label:'발행일',value:todayLabel},{label:'분석 기준',value:'knowledge_index v2.1'},
-     {label:'마스터플랜',value:`${plans.length}개 플랜`},{label:'AI 분석',value:'Claude Haiku'}
-    ].forEach((c,i) => {
-        const x = 0.6+i*2.35;
-        sl.addShape(pres.shapes.RECTANGLE,{x,y:2.85,w:2.2,h:1.0,fill:{color:C.navyL},shadow:shadow()});
-        sl.addText(c.label,{x,y:2.88,w:2.2,h:0.28,fontSize:9,color:C.tealM,align:'center',fontFace:'Arial'});
-        sl.addText(c.value,{x,y:3.16,w:2.2,h:0.5,fontSize:12,bold:true,color:C.white,align:'center',fontFace:'Arial'});
+// 진행단계
+const STAGE = {
+  PLANNING:     { ko: '계획·승인', bar: C.blue,   pct: 0.15 },
+  BIDDING:      { ko: '입찰·계약', bar: C.purple, pct: 0.35 },
+  CONSTRUCTION: { ko: '건설·시공', bar: C.orange, pct: 0.60 },
+  COMPLETION:   { ko: '준공·완료', bar: C.green,  pct: 0.90 },
+  OPERATION:    { ko: '운영·확장', bar: C.teal,   pct: 1.00 },
+  UNKNOWN:      { ko: '미확정',   bar: C.grayMid,pct: 0.00 },
+};
+
+// 슬라이드 규격 (LAYOUT_16x9 = 10" × 5.625")
+const W = 10, H = 5.625;
+const MARGIN = 0.35;
+
+// 그림자 (공통)
+const mkShadow = () => ({ type: 'outer', color: '000000', opacity: 0.13, blur: 6, offset: 2, angle: 135 });
+
+// 안전 문자열
+const s = (v, fb) => {
+  if (!v && v !== 0) return fb !== undefined ? fb : '';
+  return String(v).trim() || (fb !== undefined ? fb : '');
+};
+
+// 줄임
+const ellipsis = (str, max) => {
+  const t = s(str, '');
+  return t.length > max ? t.slice(0, max - 1) + '…' : t;
+};
+
+// ══════════════════════════════════════════════════════════════════════════
+//  슬라이드 공통 헬퍼
+// ══════════════════════════════════════════════════════════════════════════
+
+/** 헤더 바 (슬라이드 상단 네이비 바 + 제목) */
+function addHeader(slide, title, subtitle, accentColor) {
+  const ac = accentColor || C.navy;
+  // 상단 좁은 네이비 스트라이프
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: 0, y: 0, w: W, h: 0.06,
+    fill: { color: ac }, line: { color: ac }
+  });
+  // 제목 영역
+  slide.addText(s(title, ''), {
+    x: MARGIN, y: 0.12, w: W - MARGIN * 2 - 1.5, h: 0.46,
+    fontSize: 18, bold: true, fontFace: 'Calibri',
+    color: C.navy, valign: 'middle', margin: 0,
+  });
+  if (subtitle) {
+    slide.addText(s(subtitle, ''), {
+      x: MARGIN, y: 0.58, w: W - MARGIN * 2, h: 0.22,
+      fontSize: 9, color: C.grayMid, fontFace: 'Calibri', margin: 0,
     });
-    const byArea = {};
-    plans.forEach(p => { (byArea[p.area]=byArea[p.area]||[]).push(p); });
-    const areaLabel = {'Environment':'환경 인프라','Energy Develop.':'에너지·전력','Urban Develop.':'도시·교통·산업'};
-    Object.entries(byArea).sort((a,b)=>(AREA_ORDER[a[0]]??9)-(AREA_ORDER[b[0]]??9)).forEach(([area,ap],i) => {
-        const x=0.6+i*3.1, color=ACOLOR[area]||C.teal;
-        sl.addShape(pres.shapes.RECTANGLE,{x,y:4.5,w:2.9,h:0.72,fill:{color,transparency:20}});
-        sl.addText(areaLabel[area]||area,{x,y:4.52,w:2.9,h:0.32,fontSize:11,bold:true,color:C.white,align:'center',fontFace:'Arial'});
-        sl.addText(`${ap.length}개 플랜`,{x,y:4.84,w:2.9,h:0.32,fontSize:12,color:C.white,align:'center',fontFace:'Arial'});
-    });
-    sl.addText('hms4792.github.io/vietnam-infra-news',{x:0.6,y:5.32,w:8.8,h:0.22,fontSize:8,color:'445566',fontFace:'Arial'});
+  }
+  // 날짜 우상단
+  slide.addText(today, {
+    x: W - 1.8, y: 0.12, w: 1.45, h: 0.28,
+    fontSize: 8, color: C.silver, fontFace: 'Calibri',
+    align: 'right', margin: 0,
+  });
 }
 
-// ── KPI 대시보드 ─────────────────────────────────────────────────────────
-function addKpiDash(pres) {
-    const sl = pres.addSlide();
-    sl.background = {color:C.grayL};
-    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:10,h:0.72,fill:{color:C.navy}});
-    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:0.72,w:10,h:0.05,fill:{color:C.teal}});
-    sl.addText('전체 마스터플랜 KPI 목표 현황',{x:0.4,y:0.12,w:9.2,h:0.5,fontSize:22,bold:true,color:C.white,fontFace:'Arial'});
-    sl.addText(`${plans.length}개 마스터플랜 · 2030 목표 기준`,{x:6.5,y:0.18,w:3.2,h:0.38,fontSize:10,color:C.tealM,align:'right',fontFace:'Arial'});
-    const items = [];
-    plans.slice(0,12).forEach(plan => {
-        const kpis = arr(plan.kpi_targets);
-        if(kpis.length>0) {
-            const k = kpis[0];
-            items.push({ label:trunc(k.indicator||plan.title_ko,20), target:trunc(k.target_2030||'-',16),
-                         current:trunc(k.current||'-',20), color:SCOLOR[plan.sector]||C.teal, changed:k.changed===true });
-        }
+/** 하단 푸터 */
+function addFooter(slide, pageNote) {
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: 0, y: H - 0.22, w: W, h: 0.22,
+    fill: { color: C.navy }, line: { color: C.navy }
+  });
+  slide.addText('Vietnam Infrastructure MI Report  |  CONFIDENTIAL', {
+    x: MARGIN, y: H - 0.20, w: 5, h: 0.18,
+    fontSize: 7, color: 'AABBCC', fontFace: 'Calibri', margin: 0,
+  });
+  if (pageNote) {
+    slide.addText(s(pageNote, ''), {
+      x: W - 2.5, y: H - 0.20, w: 2.15, h: 0.18,
+      fontSize: 7, color: 'AABBCC', align: 'right', fontFace: 'Calibri', margin: 0,
     });
-    items.forEach((item,i) => {
-        const col=i%3, row=Math.floor(i/3), x=0.2+col*3.27, y=0.95+row*1.18;
-        sl.addShape(pres.shapes.RECTANGLE,{x,y,w:3.1,h:1.08,fill:{color:C.white},shadow:shadow()});
-        sl.addShape(pres.shapes.RECTANGLE,{x,y,w:0.06,h:1.08,fill:{color:item.color}});
-        sl.addText(item.label,{x:x+0.12,y:y+0.06,w:2.6,h:0.28,fontSize:10,bold:true,color:C.black,fontFace:'Arial'});
-        sl.addText(item.target,{x:x+0.12,y:y+0.34,w:1.5,h:0.36,fontSize:15,bold:true,color:item.color,fontFace:'Arial'});
-        sl.addText('목표',{x:x+0.12,y:y+0.70,w:0.6,h:0.22,fontSize:8,color:C.gray,fontFace:'Arial'});
-        sl.addShape(pres.shapes.RECTANGLE,{x:x+1.72,y:y+0.30,w:1.25,h:0.42,fill:{color:item.changed?C.amberL:C.grayM}});
-        sl.addText((item.changed?'★ ':'')+item.current,{x:x+1.72,y:y+0.30,w:1.25,h:0.42,fontSize:9,bold:item.changed,color:item.changed?C.amber:C.black,align:'center',valign:'middle',fontFace:'Arial'});
-        sl.addText('현황',{x:x+1.72,y:y+0.72,w:1.25,h:0.2,fontSize:8,color:C.gray,align:'center',fontFace:'Arial'});
-    });
-    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:5.32,w:10,h:0.3,fill:{color:'FFFDE7'}});
-    sl.addText('★ 노란색 = 직전 주 대비 KPI 변동사항',{x:0.3,y:5.34,w:9.4,h:0.26,fontSize:9,color:C.amber,bold:true,fontFace:'Arial'});
+  }
 }
 
-// ── 영역 구분 ─────────────────────────────────────────────────────────────
-function addAreaDiv(pres, area, ap) {
-    const sl = pres.addSlide();
-    const ac = ACOLOR[area]||C.navy;
-    sl.background = {color:ac};
-    sl.addShape(pres.shapes.RECTANGLE,{x:6.5,y:0,w:3.5,h:5.625,fill:{color:C.white,transparency:88}});
-    const lbl = {'Environment':'환경 인프라','Energy Develop.':'에너지·전력','Urban Develop.':'도시·교통·산업'};
-    const en  = {'Environment':'Environment Infrastructure','Energy Develop.':'Energy & Power','Urban Develop.':'Urban & Transport'};
-    sl.addText(lbl[area]||area,{x:0.5,y:0.9,w:9,h:1.0,fontSize:44,bold:true,color:C.white,fontFace:'Arial Black'});
-    sl.addText(en[area]||area,{x:0.5,y:1.95,w:9,h:0.5,fontSize:18,color:'D0E4F0',fontFace:'Arial',italic:true});
-    sl.addShape(pres.shapes.RECTANGLE,{x:0.5,y:2.55,w:6,h:0.04,fill:{color:C.white,transparency:40}});
-    sl.addText('포함 마스터플랜',{x:0.5,y:2.75,w:8,h:0.32,fontSize:12,color:C.white,fontFace:'Arial'});
-    ap.forEach((plan,i) => {
-        const col=i%2, row=Math.floor(i/2), x=0.5+col*4.5, y=3.12+row*0.56;
-        sl.addShape(pres.shapes.RECTANGLE,{x,y,w:4.2,h:0.44,fill:{color:C.white,transparency:75}});
-        sl.addText(plan.plan_id,{x:x+0.1,y:y+0.01,w:2.1,h:0.22,fontSize:9,bold:true,color:C.white,fontFace:'Arial'});
-        sl.addText(trunc(plan.title_ko||plan.plan_id,28),{x:x+0.1,y:y+0.22,w:4.0,h:0.18,fontSize:9,color:'FFFFFF',fontFace:'Arial'});
-    });
+/** 컬러 카드 박스 */
+function addCard(slide, x, y, w, h, bgColor, opts) {
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x, y, w, h,
+    fill: { color: bgColor || C.grayLight },
+    line: { color: opts && opts.border ? opts.border : bgColor || C.grayLight, pt: 0.5 },
+    shadow: opts && opts.shadow ? mkShadow() : undefined,
+  });
 }
 
-// ── 플랜 메인 ─────────────────────────────────────────────────────────────
-function addPlanSlide(pres, plan) {
-    const sl = pres.addSlide();
-    sl.background = {color:C.grayL};
-    const sc = SCOLOR[plan.sector]||C.navy;
-    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:10,h:0.65,fill:{color:C.navy}});
-    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:0.65,w:10,h:0.045,fill:{color:sc}});
-    sl.addShape(pres.shapes.RECTANGLE,{x:0.3,y:0.08,w:2.0,h:0.34,fill:{color:sc}});
-    sl.addText(plan.plan_id,{x:0.3,y:0.08,w:2.0,h:0.34,fontSize:8.5,bold:true,color:C.white,align:'center',valign:'middle',fontFace:'Arial'});
-    sl.addText(trunc(plan.title_ko||plan.plan_id,60),{x:2.45,y:0.08,w:7.2,h:0.34,fontSize:14,bold:true,color:C.white,fontFace:'Arial',valign:'middle'});
-    sl.addText(trunc(plan.decision||'',60),{x:2.45,y:0.4,w:7.2,h:0.2,fontSize:9,color:'A0B4C8',fontFace:'Arial'});
-    // 사업 개요
-    sl.addShape(pres.shapes.RECTANGLE,{x:0.2,y:0.82,w:4.6,h:0.3,fill:{color:sc}});
-    sl.addText('■ 사업 개요',{x:0.2,y:0.82,w:4.6,h:0.3,fontSize:11,bold:true,color:C.white,fontFace:'Arial',valign:'middle',margin:4});
-    sl.addShape(pres.shapes.RECTANGLE,{x:0.2,y:1.12,w:4.6,h:1.6,fill:{color:C.white},shadow:shadow()});
-    sl.addShape(pres.shapes.RECTANGLE,{x:0.2,y:1.12,w:0.06,h:1.6,fill:{color:sc}});
-    sl.addText(trunc(plan.description_ko||'사업 개요 정보 없음',300),{x:0.32,y:1.14,w:4.44,h:1.56,fontSize:10.5,color:C.black,fontFace:'Arial',valign:'top',wrap:true,margin:4});
-    // KPI
-    sl.addShape(pres.shapes.RECTANGLE,{x:0.2,y:2.82,w:4.6,h:0.3,fill:{color:sc}});
-    sl.addText('■ KPI 목표 및 현황',{x:0.2,y:2.82,w:4.6,h:0.3,fontSize:11,bold:true,color:C.white,fontFace:'Arial',valign:'middle',margin:4});
-    const kpis = arr(plan.kpi_targets).slice(0,4);
-    if(kpis.length===0) {
-        sl.addText('KPI 정보 없음',{x:0.2,y:3.18,w:4.6,h:0.5,fontSize:11,color:C.gray,fontFace:'Arial'});
-    } else {
-        kpis.forEach((k,i) => {
-            const col=i%2, row=Math.floor(i/2), x=0.2+col*2.35, y=3.18+row*1.18;
-            const changed = k.changed===true;
-            sl.addShape(pres.shapes.RECTANGLE,{x,y,w:2.2,h:1.08,fill:{color:changed?'FFFDE7':C.white},shadow:shadow()});
-            sl.addShape(pres.shapes.RECTANGLE,{x,y,w:0.06,h:1.08,fill:{color:changed?C.amberM:sc}});
-            sl.addText(trunc(k.indicator||'',24),{x:x+0.1,y:y+0.06,w:2.05,h:0.28,fontSize:9,bold:true,color:C.black,fontFace:'Arial'});
-            sl.addText(trunc(k.target_2030||'-',18),{x:x+0.1,y:y+0.34,w:2.05,h:0.36,fontSize:14,bold:true,color:changed?C.amber:sc,fontFace:'Arial'});
-            sl.addText((changed?'★ ':'')+trunc(k.current||'-',28),{x:x+0.1,y:y+0.70,w:2.05,h:0.28,fontSize:8.5,color:changed?C.amber:C.gray,fontFace:'Arial'});
-        });
-    }
-    // 프로젝트
-    sl.addShape(pres.shapes.RECTANGLE,{x:5.0,y:0.82,w:4.8,h:0.3,fill:{color:C.navy}});
-    sl.addText('■ 주요 프로젝트',{x:5.0,y:0.82,w:4.8,h:0.3,fontSize:11,bold:true,color:C.white,fontFace:'Arial',valign:'middle',margin:4});
-    const projs = arr(plan.key_projects).slice(0,8);
-    if(projs.length===0) {
-        sl.addText('프로젝트 정보 없음',{x:5.0,y:1.22,w:4.8,h:0.5,fontSize:11,color:C.gray,fontFace:'Arial'});
-    } else {
-        const mc = projs.length>4, colW = mc?2.3:4.65;
-        projs.forEach((p,i) => {
-            const col=mc?Math.floor(i/Math.ceil(projs.length/2)):0;
-            const row=mc?i%Math.ceil(projs.length/2):i;
-            const x=5.0+col*(colW+0.1), y=1.22+row*0.54;
-            sl.addShape(pres.shapes.RECTANGLE,{x,y,w:colW,h:0.5,fill:{color:C.white},shadow:shadow()});
-            sl.addShape(pres.shapes.RECTANGLE,{x,y,w:0.06,h:0.5,fill:{color:sc,transparency:30}});
-            sl.addText(trunc(p.name||'',30),{x:x+0.1,y:y+0.03,w:colW-0.15,h:0.22,fontSize:9.5,bold:true,color:C.black,fontFace:'Arial'});
-            sl.addText(trunc([p.location,p.capacity].filter(Boolean).join(' | '),38),{x:x+0.1,y:y+0.25,w:colW-0.15,h:0.16,fontSize:8.5,color:C.gray,fontFace:'Arial'});
-        });
-    }
-    // SA-8 AI 분석 결과
-    const ai = (SA8.plan_analyses||{})[plan.plan_id];
-    if(ai && ai.summary) {
-        sl.addShape(pres.shapes.RECTANGLE,{x:0,y:5.22,w:10,h:0.41,fill:{color:'EEF6FF'}});
-        sl.addShape(pres.shapes.RECTANGLE,{x:0,y:5.22,w:0.04,h:0.41,fill:{color:C.blue}});
-        sl.addText(`🤖 AI 분석: ${trunc(ai.summary,120)}`,{x:0.1,y:5.24,w:9.8,h:0.37,fontSize:8.5,color:C.blue,fontFace:'Arial',wrap:true});
-    } else {
-        sl.addShape(pres.shapes.RECTANGLE,{x:0,y:5.42,w:10,h:0.205,fill:{color:C.navy}});
-        sl.addText(`${plan.sector||''}  |  ${plan.area||''}  |  ${plan.decision||''}`,{x:0.3,y:5.43,w:9.4,h:0.18,fontSize:8,color:'8899AA',fontFace:'Arial'});
-    }
+/** 진행단계 프로그레스 바 */
+function addProgressBar(slide, x, y, w, stage) {
+  const info = STAGE[stage] || STAGE.UNKNOWN;
+  const trackH = 0.09;
+  // 트랙
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x, y, w, h: trackH,
+    fill: { color: 'E5E7EB' }, line: { color: 'D1D5DB', pt: 0.3 }
+  });
+  // 채움
+  const fillW = Math.max(w * info.pct, info.pct > 0 ? 0.05 : 0);
+  if (fillW > 0) {
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x, y, w: fillW, h: trackH,
+      fill: { color: info.bar }, line: { color: info.bar, pt: 0 }
+    });
+  }
+  // 레이블
+  slide.addText(info.ko, {
+    x: x + w + 0.05, y: y - 0.01, w: 1.0, h: trackH + 0.02,
+    fontSize: 7.5, color: info.bar, bold: true, fontFace: 'Calibri',
+    valign: 'middle', margin: 0,
+  });
 }
 
-// ── 클로징 ───────────────────────────────────────────────────────────────
-function addClosing(pres) {
-    const sl = pres.addSlide();
-    sl.background = {color:C.navy};
-    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:0,w:0.35,h:5.625,fill:{color:C.teal}});
-    sl.addText('Vietnam Infrastructure MI',{x:0.6,y:0.8,w:9,h:0.65,fontSize:30,bold:true,color:C.white,fontFace:'Arial Black'});
-    sl.addText('Automated Report Pipeline · SA-8',{x:0.6,y:1.5,w:9,h:0.4,fontSize:16,color:C.tealM,fontFace:'Arial',italic:true});
-    sl.addShape(pres.shapes.RECTANGLE,{x:0.6,y:2.05,w:8,h:0.04,fill:{color:C.tealM}});
-    [`${plans.length}개 마스터플랜 · knowledge_index v2.1 기반`,
-     '매주 토요일 KST 22:00 자동 생성 — Claude Haiku AI 기사 분석 연계',
-     'Layer 1 (사업 개요 고정) + Layer 2 (AI 동적 분석) 이중 레이어 구조',
-     '★ 노란색 하이라이트 = KPI 변동 자동 감지 · 이메일 자동 첨부 발송',
-     '대시보드: hms4792.github.io/vietnam-infra-news/',
-    ].forEach((b,i) => {
-        sl.addText([{text:b,options:{bullet:true}}],{x:0.6,y:2.25+i*0.48,w:9,h:0.4,fontSize:12.5,color:'C0D0E0',fontFace:'Arial',margin:4});
+/** KPI 행 (지표명 + 현황 + 목표) */
+function addKpiRow(slide, x, y, w, kpi, isEven) {
+  const rowH = 0.235;
+  const c1 = w * 0.44, c2 = w * 0.28, c3 = w * 0.28;
+  // 배경
+  if (isEven) {
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x, y, w, h: rowH,
+      fill: { color: 'F9FAFB' }, line: { color: 'E5E7EB', pt: 0.3 }
     });
-    const todayStr = new Date().toISOString().slice(0,10);
-    sl.addShape(pres.shapes.RECTANGLE,{x:0,y:5.28,w:10,h:0.345,fill:{color:C.navyL}});
-    sl.addText(`Vietnam Infrastructure MI Report — SA-8 Auto-Generated | ${todayStr}`,{x:0.3,y:5.3,w:9.4,h:0.3,fontSize:8.5,color:'667788',fontFace:'Arial'});
+  }
+  slide.addText(ellipsis(kpi.indicator, 28), {
+    x: x + 0.04, y, w: c1 - 0.04, h: rowH,
+    fontSize: 8, color: C.grayDark, fontFace: 'Calibri', valign: 'middle', margin: 0,
+  });
+  slide.addText(ellipsis(kpi.current || '수집 중', 22), {
+    x: x + c1, y, w: c2, h: rowH,
+    fontSize: 8, color: C.grayMid, fontFace: 'Calibri', valign: 'middle', align: 'center', margin: 0,
+  });
+  slide.addText(ellipsis(kpi.target_2030 || kpi.target || '-', 22), {
+    x: x + c1 + c2, y, w: c3, h: rowH,
+    fontSize: 8.5, bold: true, color: C.teal, fontFace: 'Calibri', valign: 'middle', align: 'center', margin: 0,
+  });
+}
+
+/** 기사 행 (신규=노란 배지, 기존=회색) */
+function addArticleRow(slide, x, y, w, art, rowH) {
+  const isNew = art.is_new === true;
+  const isHigh = (art.ctx_grade || '') === 'HIGH';
+  const bgColor = isNew ? C.newYellowL : C.white;
+  const badgeColor = isNew ? C.newYellow : (isHigh ? C.blue : C.silver);
+  const badgeTxt = isNew ? (isHigh ? 'NEW·H' : 'NEW') : (isHigh ? 'HIGH' : 'MED');
+  const titleColor = isNew ? C.black : C.grayDark;
+
+  // 배경
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x, y, w, h: rowH,
+    fill: { color: bgColor },
+    line: { color: isNew ? 'FCD34D' : 'E5E7EB', pt: 0.4 }
+  });
+
+  const badgeW = 0.42;
+  const dateW  = 0.65;
+  const srcW   = 0.85;
+  const titleW = w - badgeW - dateW - srcW - 0.08;
+
+  // 배지
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: x + 0.02, y: y + 0.035, w: badgeW - 0.04, h: rowH - 0.07,
+    fill: { color: badgeColor }, line: { color: badgeColor, pt: 0 }
+  });
+  slide.addText(badgeTxt, {
+    x: x + 0.02, y: y + 0.035, w: badgeW - 0.04, h: rowH - 0.07,
+    fontSize: 6.5, bold: true, color: C.white, fontFace: 'Calibri',
+    align: 'center', valign: 'middle', margin: 0,
+  });
+
+  // 날짜
+  slide.addText(s(art.date || '', '').slice(5), {
+    x: x + badgeW, y, w: dateW, h: rowH,
+    fontSize: 7, color: C.grayMid, fontFace: 'Calibri',
+    valign: 'middle', align: 'center', margin: 0,
+  });
+
+  // 출처
+  slide.addText(ellipsis(art.source || '', 12), {
+    x: x + badgeW + dateW, y, w: srcW, h: rowH,
+    fontSize: 7, color: C.grayMid, fontFace: 'Calibri',
+    valign: 'middle', margin: 0,
+  });
+
+  // 제목
+  slide.addText(ellipsis(art.title_ko || art.title_en || '', 42), {
+    x: x + badgeW + dateW + srcW, y, w: titleW, h: rowH,
+    fontSize: 7.5, bold: isNew, color: titleColor, fontFace: 'Calibri',
+    valign: 'middle', margin: 0,
+  });
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-//  메인
+//  1. 표지 슬라이드
 // ══════════════════════════════════════════════════════════════════════════
-async function buildPPT() {
-    const pres = new pptxgen();
-    pres.layout  = 'LAYOUT_16x9';
-    pres.author  = 'SA-8 MI Report Pipeline';
-    pres.title   = `Vietnam Infrastructure MI Report ${TODAY_STR}`;
-    pres.subject = '베트남 인프라 시장 동향 주간 보고서';
+function buildCoverSlide() {
+  const slide = pres.addSlide();
+  slide.background = { color: C.navy };
 
-    console.log('\n[슬라이드 생성]');
-    addCover(pres);    console.log('  ✅ 커버');
-    addKpiDash(pres);  console.log('  ✅ KPI 대시보드');
+  // 왼쪽 밝은 세로 라인
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: 0, y: 0, w: 0.06, h: H,
+    fill: { color: C.teal }, line: { color: C.teal }
+  });
 
-    const byArea = {};
-    plans.forEach(p => { (byArea[p.area]=byArea[p.area]||[]).push(p); });
-    const sorted = Object.entries(byArea).sort((a,b)=>(AREA_ORDER[a[0]]??9)-(AREA_ORDER[b[0]]??9));
+  // 메인 타이틀
+  slide.addText('VIETNAM INFRASTRUCTURE', {
+    x: 0.5, y: 1.05, w: 9, h: 0.75,
+    fontSize: 38, bold: true, fontFace: 'Calibri', color: C.white,
+    charSpacing: 3,
+  });
+  slide.addText('MARKET INTELLIGENCE REPORT', {
+    x: 0.5, y: 1.78, w: 9, h: 0.45,
+    fontSize: 22, bold: false, fontFace: 'Calibri', color: '7EB8D4',
+    charSpacing: 5,
+  });
+  slide.addText('베트남 인프라 시장 분석 주간 보고서', {
+    x: 0.5, y: 2.22, w: 9, h: 0.38,
+    fontSize: 15, fontFace: 'Calibri', color: 'B0CFDF',
+  });
 
-    for(const [area, ap] of sorted) {
-        addAreaDiv(pres, area, ap); console.log(`  ✅ 영역: ${area}`);
-        for(const plan of ap) {
-            addPlanSlide(pres, plan); console.log(`  ✅ ${plan.plan_id}`);
-        }
-    }
-    addClosing(pres); console.log('  ✅ 클로징');
+  // 구분선
+  slide.addShape(pres.shapes.LINE, {
+    x: 0.5, y: 2.68, w: 9, h: 0,
+    line: { color: '2E6A9A', width: 1.2, dashType: 'dash' }
+  });
 
-    const outDir = path.dirname(OUT_PATH);
-    if(!fs.existsSync(outDir)) fs.mkdirSync(outDir, {recursive:true});
+  // 메타 정보 카드 (3개)
+  const cards = [
+    { label: '발행일', value: today },
+    { label: '보고 기간', value: week },
+    { label: `수집 기사 (신규 ${newCount}건)`, value: `${totalArts}건` },
+  ];
+  const cw = 2.8, cy = 3.0, ch = 0.85, gap = 0.22;
+  cards.forEach((c, i) => {
+    const cx = 0.5 + i * (cw + gap);
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: cx, y: cy, w: cw, h: ch,
+      fill: { color: C.navyMid }, line: { color: '2E6A9A', pt: 0.8 },
+    });
+    slide.addText(c.label, {
+      x: cx + 0.12, y: cy + 0.06, w: cw - 0.24, h: 0.22,
+      fontSize: 8, color: '7EB8D4', fontFace: 'Calibri', margin: 0,
+    });
+    slide.addText(c.value, {
+      x: cx + 0.12, y: cy + 0.26, w: cw - 0.24, h: 0.48,
+      fontSize: 18, bold: true, color: C.white, fontFace: 'Calibri',
+      valign: 'middle', margin: 0,
+    });
+  });
 
-    await pres.writeFile({fileName: OUT_PATH});
-    const size = (fs.statSync(OUT_PATH).size/1024).toFixed(0);
-    console.log(`\n✅ 완료: ${OUT_PATH} (${size} KB) | 플랜 ${plans.length}개`);
+  // 신규 기사 배너
+  if (newCount > 0) {
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: 0.5, y: 4.05, w: 9, h: 0.30,
+      fill: { color: 'FFF9C4' }, line: { color: 'FCD34D', pt: 0.8 }
+    });
+    slide.addText(`★ 이번 주 신규 기사 ${newCount}건 — 슬라이드 내 노란색 배지로 표시  /  기존 기사는 회색 배지`, {
+      x: 0.5, y: 4.05, w: 9, h: 0.30,
+      fontSize: 9, bold: true, color: C.amber, fontFace: 'Calibri',
+      align: 'center', valign: 'middle', margin: 0,
+    });
+  }
+
+  // 하단 기밀 표시
+  slide.addText('CONFIDENTIAL  —  내부 참고용  —  SA-8 자동 생성 (Claude Haiku)', {
+    x: 0, y: H - 0.28, w: W, h: 0.28,
+    fontSize: 7.5, color: '4A7B9D', fontFace: 'Calibri',
+    align: 'center', valign: 'middle', margin: 0,
+  });
+
+  console.log('  ✅ 표지');
 }
 
-buildPPT().catch(err => { console.error('[오류]', err); process.exit(1); });
+// ══════════════════════════════════════════════════════════════════════════
+//  2. 목차 슬라이드
+// ══════════════════════════════════════════════════════════════════════════
+function buildTocSlide() {
+  const slide = pres.addSlide();
+  slide.background = { color: C.white };
+  addHeader(slide, '목  차', `분석 기간: ${week}  |  전체 ${planSecs.length}개 마스터플랜`, C.navy);
+  addFooter(slide, 'Table of Contents');
+
+  const areaGroups = {};
+  planSecs.forEach(sec => {
+    const a = s(sec.area, 'default');
+    if (!areaGroups[a]) areaGroups[a] = [];
+    areaGroups[a].push(sec);
+  });
+
+  const areas = ['Environment', 'Energy Develop.', 'Urban Develop.'];
+  const colW = (W - MARGIN * 2 - 0.3) / 3;
+  const startY = 0.90;
+
+  areas.forEach((area, col) => {
+    const theme = AREA_THEME[area] || AREA_THEME.default;
+    const secs  = areaGroups[area] || [];
+    const cx = MARGIN + col * (colW + 0.15);
+
+    // 영역 헤더
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: cx, y: startY, w: colW, h: 0.34,
+      fill: { color: theme.color }, line: { color: theme.color }
+    });
+    slide.addText(area, {
+      x: cx, y: startY, w: colW, h: 0.34,
+      fontSize: 10, bold: true, color: C.white, fontFace: 'Calibri',
+      align: 'center', valign: 'middle', margin: 0,
+    });
+
+    // 플랜 목록
+    secs.forEach((sec, i) => {
+      const ry = startY + 0.34 + i * 0.32;
+      const isNew = (sec.new_count || 0) > 0;
+      // 배경
+      slide.addShape(pres.shapes.RECTANGLE, {
+        x: cx, y: ry, w: colW, h: 0.30,
+        fill: { color: i % 2 === 0 ? theme.light : C.white },
+        line: { color: 'E5E7EB', pt: 0.3 }
+      });
+      // 플랜 ID
+      slide.addText(s(sec.plan_id, ''), {
+        x: cx + 0.06, y: ry, w: 1.5, h: 0.30,
+        fontSize: 6.5, bold: true, color: theme.color, fontFace: 'Calibri',
+        valign: 'middle', margin: 0,
+      });
+      // 신규 배지
+      if (isNew) {
+        slide.addShape(pres.shapes.RECTANGLE, {
+          x: cx + colW - 0.42, y: ry + 0.06, w: 0.35, h: 0.18,
+          fill: { color: C.newYellow }, line: { color: C.newYellow, pt: 0 }
+        });
+        slide.addText('★NEW', {
+          x: cx + colW - 0.42, y: ry + 0.06, w: 0.35, h: 0.18,
+          fontSize: 5.5, bold: true, color: C.white, fontFace: 'Calibri',
+          align: 'center', valign: 'middle', margin: 0,
+        });
+      }
+      // 제목
+      slide.addText(ellipsis(sec.title_ko || '', 22), {
+        x: cx + 0.06, y: ry + 0.14, w: colW - 0.5, h: 0.14,
+        fontSize: 6, color: C.grayDark, fontFace: 'Calibri',
+        valign: 'top', margin: 0,
+      });
+    });
+  });
+
+  console.log('  ✅ 목차');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  3. Executive Summary 슬라이드
+// ══════════════════════════════════════════════════════════════════════════
+function buildExecSummarySlide() {
+  const slide = pres.addSlide();
+  slide.background = { color: C.white };
+  addHeader(slide, 'Executive Summary', '이번 주 시장 종합 분석', C.navy);
+  addFooter(slide, 'Executive Summary');
+
+  const isNew = payload.exec_summary_is_new || false;
+  const badgeTxt = isNew ? `★ AI 신규 분석  |  신규 기사 ${newCount}건` : '기존 분석 유지';
+  const badgeColor = isNew ? C.newYellow : C.grayMid;
+
+  // 배지
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: MARGIN, y: 0.82, w: 2.6, h: 0.22,
+    fill: { color: isNew ? C.newYellowL : C.grayLight },
+    line: { color: badgeColor, pt: 0.5 }
+  });
+  slide.addText(badgeTxt, {
+    x: MARGIN, y: 0.82, w: 2.6, h: 0.22,
+    fontSize: 7.5, bold: true, color: badgeColor, fontFace: 'Calibri',
+    align: 'center', valign: 'middle', margin: 0,
+  });
+
+  // 좌측 강조선
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: MARGIN, y: 1.12, w: 0.05, h: 3.38,
+    fill: { color: C.teal }, line: { color: C.teal }
+  });
+
+  // 본문
+  const summaryText = s(execSumm, '이번 주 베트남 인프라 시장 동향 분석.');
+  slide.addText(summaryText, {
+    x: MARGIN + 0.12, y: 1.12, w: W - MARGIN * 2 - 0.12, h: 3.38,
+    fontSize: 11.5, color: C.grayDark, fontFace: 'Calibri',
+    valign: 'top', wrap: true, margin: [6, 8, 6, 8],
+  });
+
+  // 우측 통계 박스
+  const stats = [
+    { label: '전체 누적 기사', value: `${totalArts}건` },
+    { label: '이번 주 신규',   value: `${newCount}건` },
+    { label: '분석 플랜',      value: `${planSecs.length}개` },
+    { label: 'KPI 변동',       value: `${payload.kpi_changes_count || 0}개` },
+  ];
+  const sbx = W - 2.1, sby = 1.12, sbw = 1.72, sbh = 0.72;
+  stats.forEach((st, i) => {
+    const sy = sby + i * (sbh + 0.06);
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: sbx, y: sy, w: sbw, h: sbh,
+      fill: { color: i === 1 ? C.newYellowL : 'F0F4F8' },
+      line: { color: i === 1 ? 'FCD34D' : 'D1D5DB', pt: 0.5 },
+    });
+    slide.addText(st.label, {
+      x: sbx + 0.06, y: sy + 0.04, w: sbw - 0.12, h: 0.22,
+      fontSize: 7, color: C.grayMid, fontFace: 'Calibri', margin: 0,
+    });
+    slide.addText(st.value, {
+      x: sbx + 0.06, y: sy + 0.25, w: sbw - 0.12, h: 0.38,
+      fontSize: 20, bold: true, color: i === 1 ? C.amber : C.navy,
+      fontFace: 'Calibri', valign: 'middle', margin: 0,
+    });
+  });
+
+  console.log('  ✅ Executive Summary');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  4. KPI 대시보드 슬라이드 (영역별 진행단계 집계)
+// ══════════════════════════════════════════════════════════════════════════
+function buildKpiDashboardSlide() {
+  const slide = pres.addSlide();
+  slide.background = { color: C.white };
+  addHeader(slide, 'KPI 대시보드', '마스터플랜 진행단계 및 기사 수집 현황', C.navy);
+  addFooter(slide, 'KPI Dashboard');
+
+  // 영역별 집계
+  const areas = ['Environment', 'Energy Develop.', 'Urban Develop.'];
+  const areaData = {};
+  areas.forEach(a => {
+    const secs = planSecs.filter(s => s.area === a);
+    const totalA = secs.reduce((acc, s) => acc + (s.new_count||0) + (s.old_count||0), 0);
+    const newA   = secs.reduce((acc, s) => acc + (s.new_count||0), 0);
+    areaData[a] = { secs, total: totalA, new: newA };
+  });
+
+  // 영역 요약 카드 (3개)
+  const cw = (W - MARGIN * 2 - 0.3) / 3, cy = 0.85, ch = 1.05;
+  areas.forEach((area, i) => {
+    const theme = AREA_THEME[area] || AREA_THEME.default;
+    const ad    = areaData[area];
+    const cx    = MARGIN + i * (cw + 0.15);
+
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: cx, y: cy, w: cw, h: ch,
+      fill: { color: theme.light }, line: { color: theme.color, pt: 1.2 },
+      shadow: mkShadow(),
+    });
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: cx, y: cy, w: cw, h: 0.28,
+      fill: { color: theme.color }, line: { color: theme.color }
+    });
+    slide.addText(area, {
+      x: cx, y: cy, w: cw, h: 0.28,
+      fontSize: 9.5, bold: true, color: C.white, fontFace: 'Calibri',
+      align: 'center', valign: 'middle', margin: 0,
+    });
+    slide.addText(`${ad.secs.length}개 플랜`, {
+      x: cx + 0.08, y: cy + 0.32, w: cw - 0.16, h: 0.28,
+      fontSize: 8, color: theme.color, fontFace: 'Calibri', margin: 0,
+    });
+    slide.addText(`기사 ${ad.total}건`, {
+      x: cx + 0.08, y: cy + 0.56, w: cw - 0.16, h: 0.22,
+      fontSize: 8, color: C.grayDark, fontFace: 'Calibri', margin: 0,
+    });
+    if (ad.new > 0) {
+      slide.addText(`★ 신규 ${ad.new}건`, {
+        x: cx + 0.08, y: cy + 0.76, w: cw - 0.16, h: 0.20,
+        fontSize: 8, bold: true, color: C.amber, fontFace: 'Calibri', margin: 0,
+      });
+    }
+  });
+
+  // 플랜별 진행단계 테이블 헤더
+  const tby = 2.02, tbx = MARGIN;
+  const tbw  = W - MARGIN * 2;
+  const colWidths = [2.0, 1.05, 1.25, 1.2, 1.05, tbw - 2.0 - 1.05 - 1.25 - 1.2 - 1.05];
+
+  // 헤더 행
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: tbx, y: tby, w: tbw, h: 0.24,
+    fill: { color: C.navy }, line: { color: C.navy }
+  });
+  const hdrs = ['마스터플랜 ID', '영역', '진행단계', '누적 기사', '신규 기사', '다음 관찰 포인트'];
+  let hx = tbx;
+  hdrs.forEach((h, i) => {
+    slide.addText(h, {
+      x: hx, y: tby, w: colWidths[i], h: 0.24,
+      fontSize: 7.5, bold: true, color: C.white, fontFace: 'Calibri',
+      align: 'center', valign: 'middle', margin: 0,
+    });
+    hx += colWidths[i];
+  });
+
+  // 데이터 행
+  const maxRows = Math.floor((H - tby - 0.24 - 0.28) / 0.195);
+  const visibleSecs = planSecs.slice(0, maxRows);
+
+  visibleSecs.forEach((sec, ri) => {
+    const ry = tby + 0.24 + ri * 0.195;
+    const isNew = (sec.new_count || 0) > 0;
+    const rowBg = isNew ? C.newYellowL : (ri % 2 === 0 ? C.white : 'F9FAFB');
+    const stage  = STAGE[sec.current_stage || 'UNKNOWN'] || STAGE.UNKNOWN;
+    const theme  = AREA_THEME[sec.area || ''] || AREA_THEME.default;
+
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: tbx, y: ry, w: tbw, h: 0.192,
+      fill: { color: rowBg }, line: { color: 'E5E7EB', pt: 0.3 }
+    });
+
+    let rx = tbx;
+    const cells = [
+      { text: s(sec.plan_id, ''), color: theme.color, bold: true },
+      { text: ellipsis(sec.area || '', 12), color: C.grayMid },
+      { text: stage.ko, color: stage.bar, bold: true },
+      { text: String((sec.new_count||0) + (sec.old_count||0)) + '건', color: C.grayDark },
+      { text: (sec.new_count||0) > 0 ? `★ ${sec.new_count}건` : '-', color: (sec.new_count||0)>0 ? C.amber : C.silver, bold: (sec.new_count||0) > 0 },
+      { text: ellipsis(sec.next_watch || '', 38), color: C.grayMid },
+    ];
+
+    cells.forEach((cell, ci) => {
+      slide.addText(cell.text, {
+        x: rx + 0.03, y: ry, w: colWidths[ci] - 0.06, h: 0.192,
+        fontSize: 7, bold: cell.bold || false, color: cell.color,
+        fontFace: 'Calibri', valign: 'middle', margin: 0,
+      });
+      rx += colWidths[ci];
+    });
+  });
+
+  if (planSecs.length > maxRows) {
+    slide.addText(`+ ${planSecs.length - maxRows}개 플랜 — 상세 슬라이드 참조`, {
+      x: tbx, y: H - 0.45, w: tbw, h: 0.20,
+      fontSize: 7.5, color: C.grayMid, fontFace: 'Calibri',
+      align: 'center', margin: 0,
+    });
+  }
+
+  console.log('  ✅ KPI 대시보드');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  5~N. 플랜별 슬라이드 (21개 모두)
+// ══════════════════════════════════════════════════════════════════════════
+function buildPlanSlide(sec, slideNum, totalSlides) {
+  const slide = pres.addSlide();
+  slide.background = { color: C.white };
+
+  const theme   = AREA_THEME[s(sec.area, 'default')] || AREA_THEME.default;
+  const stage   = STAGE[sec.current_stage || 'UNKNOWN'] || STAGE.UNKNOWN;
+  const newCount2 = sec.new_count || 0;
+  const oldCount2 = sec.old_count || 0;
+  const kpis    = sec.kpi_targets || [];
+  const arts    = sec.articles    || [];
+  const newArts = arts.filter(a => a.is_new === true);
+  const oldArts = arts.filter(a => a.is_new !== true);
+
+  // ── 상단 헤더 ──────────────────────────────────────────────────
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: 0, y: 0, w: W, h: 0.82,
+    fill: { color: theme.color }, line: { color: theme.color }
+  });
+
+  // 영역 태그
+  slide.addText(s(sec.area, ''), {
+    x: MARGIN, y: 0.05, w: 2.5, h: 0.20,
+    fontSize: 7.5, color: theme.light, fontFace: 'Calibri',
+    bold: false, margin: 0,
+  });
+
+  // 플랜 ID
+  slide.addText(s(sec.plan_id, ''), {
+    x: MARGIN, y: 0.08, w: 3.5, h: 0.22,
+    fontSize: 8, bold: true, color: 'CCDDF0', fontFace: 'Calibri', margin: 0,
+  });
+
+  // 플랜 타이틀
+  slide.addText(ellipsis(sec.title_ko || '', 50), {
+    x: MARGIN, y: 0.28, w: W - MARGIN * 2 - 1.2, h: 0.38,
+    fontSize: 17, bold: true, color: C.white, fontFace: 'Calibri',
+    valign: 'middle', margin: 0,
+  });
+
+  // 근거 법령
+  slide.addText(ellipsis(sec.decision || '', 55), {
+    x: MARGIN, y: 0.65, w: W - MARGIN * 2 - 2.5, h: 0.16,
+    fontSize: 7.5, color: theme.light, fontFace: 'Calibri', margin: 0,
+  });
+
+  // 기사 수 배지 (우상단)
+  const totalA = newCount2 + oldCount2;
+  slide.addText(`기사 ${totalA}건  |  ★신규 ${newCount2}건`, {
+    x: W - 2.1, y: 0.30, w: 1.75, h: 0.30,
+    fontSize: 9, bold: true, color: newCount2 > 0 ? C.newYellowL : 'CCDDF0',
+    fontFace: 'Calibri', align: 'right', valign: 'middle', margin: 0,
+  });
+
+  // ── 슬라이드 번호 ──────────────────────────────────────────────
+  slide.addText(`${slideNum} / ${totalSlides}`, {
+    x: W - 1.0, y: 0.05, w: 0.65, h: 0.18,
+    fontSize: 7, color: 'AABBCC', fontFace: 'Calibri', align: 'right', margin: 0,
+  });
+
+  // ── 진행단계 바 ────────────────────────────────────────────────
+  const pbY = 0.86;
+  slide.addText('진행단계:', {
+    x: MARGIN, y: pbY, w: 0.8, h: 0.16,
+    fontSize: 7.5, color: C.grayMid, fontFace: 'Calibri', margin: 0,
+  });
+  addProgressBar(slide, MARGIN + 0.82, pbY + 0.03, 4.5, sec.current_stage || 'UNKNOWN');
+
+  // ── 콘텐츠 영역 ────────────────────────────────────────────────
+  const contentY = 1.08;
+  const leftW    = 4.2;
+  const rightX   = MARGIN + leftW + 0.18;
+  const rightW   = W - rightX - MARGIN;
+
+  // ── 좌측: KPI + 사업 개요 ──────────────────────────────────────
+
+  // KPI 테이블
+  if (kpis.length > 0) {
+    slide.addText('KPI 목표 현황', {
+      x: MARGIN, y: contentY, w: leftW, h: 0.22,
+      fontSize: 8.5, bold: true, color: theme.color, fontFace: 'Calibri', margin: 0,
+    });
+    // KPI 헤더
+    const khY = contentY + 0.22;
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: MARGIN, y: khY, w: leftW, h: 0.20,
+      fill: { color: theme.color }, line: { color: theme.color }
+    });
+    ['KPI 지표', '현황', '2030 목표'].forEach((h, i) => {
+      const ws = [leftW * 0.44, leftW * 0.28, leftW * 0.28];
+      const xs = [MARGIN, MARGIN + ws[0], MARGIN + ws[0] + ws[1]];
+      slide.addText(h, {
+        x: xs[i], y: khY, w: ws[i], h: 0.20,
+        fontSize: 7.5, bold: true, color: C.white, fontFace: 'Calibri',
+        align: 'center', valign: 'middle', margin: 0,
+      });
+    });
+    const maxKpi = Math.min(kpis.length, 5);
+    for (let ki = 0; ki < maxKpi; ki++) {
+      addKpiRow(slide, MARGIN, khY + 0.20 + ki * 0.235, leftW, kpis[ki], ki % 2 === 1);
+    }
+    const kpiEndY = khY + 0.20 + maxKpi * 0.235;
+
+    // 사업 개요 (KPI 아래)
+    const descY = kpiEndY + 0.10;
+    const desc  = ellipsis(sec.description_ko || '', 120);
+    if (desc && descY < contentY + 3.2) {
+      slide.addShape(pres.shapes.RECTANGLE, {
+        x: MARGIN, y: descY, w: leftW, h: 0.20,
+        fill: { color: theme.light }, line: { color: theme.color, pt: 0.3 }
+      });
+      slide.addText('사업 개요', {
+        x: MARGIN + 0.05, y: descY, w: leftW, h: 0.20,
+        fontSize: 8, bold: true, color: theme.color, fontFace: 'Calibri', valign: 'middle', margin: 0,
+      });
+      slide.addText(desc, {
+        x: MARGIN + 0.05, y: descY + 0.20, w: leftW - 0.1, h: 0.70,
+        fontSize: 8, color: C.grayDark, fontFace: 'Calibri',
+        valign: 'top', wrap: true, margin: [3, 4, 3, 4],
+      });
+    }
+  }
+
+  // ── 우측: AI 분석 + 기사 ───────────────────────────────────────
+
+  // AI 분석
+  const analysis = s(sec.news_analysis, '');
+  const insight  = s(sec.insight, '');
+  const isNewAnalysis = sec.analysis_is_new || false;
+
+  slide.addText('AI 시장 분석 (Claude Haiku)', {
+    x: rightX, y: contentY, w: rightW, h: 0.20,
+    fontSize: 8.5, bold: true, color: theme.color, fontFace: 'Calibri', margin: 0,
+  });
+
+  // 분석 배지
+  const abadge = isNewAnalysis ? '★ 이번 주 신규 분석' : '이전 분석 유지';
+  const abadgeColor = isNewAnalysis ? C.newYellow : C.silver;
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: rightX, y: contentY + 0.21, w: rightW, h: 0.18,
+    fill: { color: isNewAnalysis ? C.newYellowL : C.grayLight },
+    line: { color: abadgeColor, pt: 0.5 }
+  });
+  slide.addText(abadge, {
+    x: rightX, y: contentY + 0.21, w: rightW, h: 0.18,
+    fontSize: 7, bold: true, color: abadgeColor, fontFace: 'Calibri',
+    align: 'center', valign: 'middle', margin: 0,
+  });
+
+  // 분석 본문
+  const analysisText = analysis || '이번 주 신규 기사가 없습니다. 기존 분석을 유지합니다.';
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: rightX, y: contentY + 0.40, w: rightW, h: 0.80,
+    fill: { color: C.white },
+    line: { color: theme.color, pt: 0.8 }
+  });
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: rightX, y: contentY + 0.40, w: 0.04, h: 0.80,
+    fill: { color: theme.color }, line: { color: theme.color, pt: 0 }
+  });
+  slide.addText(ellipsis(analysisText, 200), {
+    x: rightX + 0.08, y: contentY + 0.40, w: rightW - 0.12, h: 0.80,
+    fontSize: 8, color: C.grayDark, fontFace: 'Calibri',
+    valign: 'top', wrap: true, margin: [4, 6, 4, 6],
+  });
+
+  // Expert Insight
+  if (insight) {
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: rightX, y: contentY + 1.22, w: rightW, h: 0.46,
+      fill: { color: theme.light }, line: { color: theme.color, pt: 0.8 }
+    });
+    slide.addText('💡 Insight', {
+      x: rightX + 0.05, y: contentY + 1.22, w: 0.7, h: 0.18,
+      fontSize: 7, bold: true, color: theme.color, fontFace: 'Calibri', margin: 0,
+    });
+    slide.addText(ellipsis(insight, 95), {
+      x: rightX + 0.05, y: contentY + 1.40, w: rightW - 0.1, h: 0.26,
+      fontSize: 7.5, bold: true, color: theme.color, fontFace: 'Calibri',
+      valign: 'middle', wrap: true, margin: 0,
+    });
+  }
+
+  // ── 기사 목록 ──────────────────────────────────────────────────
+  const artStartY = contentY + (insight ? 1.72 : 1.70);
+  const artH      = H - artStartY - 0.30;
+  const artRowH   = 0.215;
+  const maxRows   = Math.floor(artH / artRowH);
+
+  // 기사 섹션 헤더
+  if (arts.length > 0) {
+    const artLabelY = artStartY - 0.20;
+    slide.addText(`수집 기사  (★신규 ${newCount2}건  +  기존 ${oldCount2}건)`, {
+      x: MARGIN, y: artLabelY, w: W - MARGIN * 2, h: 0.18,
+      fontSize: 8, bold: true, color: C.navy, fontFace: 'Calibri', margin: 0,
+    });
+
+    // 기사 헤더 행
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: MARGIN, y: artStartY, w: W - MARGIN * 2, h: 0.20,
+      fill: { color: C.grayDark }, line: { color: C.grayDark }
+    });
+    ['등급', '날짜', '출처', '제목 (한국어)'].forEach((h, i) => {
+      const ws = [0.42, 0.65, 0.85, W - MARGIN * 2 - 0.42 - 0.65 - 0.85];
+      const xs = [MARGIN, MARGIN + 0.42, MARGIN + 0.42 + 0.65, MARGIN + 0.42 + 0.65 + 0.85];
+      slide.addText(h, {
+        x: xs[i], y: artStartY, w: ws[i], h: 0.20,
+        fontSize: 7, bold: true, color: C.white, fontFace: 'Calibri',
+        align: 'center', valign: 'middle', margin: 0,
+      });
+    });
+
+    // 신규 기사 우선 출력
+    const displayArts = [...newArts, ...oldArts].slice(0, maxRows - 1);
+    displayArts.forEach((art, ri) => {
+      addArticleRow(slide, MARGIN, artStartY + 0.20 + ri * artRowH, W - MARGIN * 2, art, artRowH);
+    });
+
+    if (arts.length > displayArts.length) {
+      slide.addText(`+ ${arts.length - displayArts.length}건 추가 기사 — Word 보고서 참조`, {
+        x: MARGIN, y: H - 0.40, w: W - MARGIN * 2, h: 0.14,
+        fontSize: 6.5, color: C.silver, fontFace: 'Calibri', align: 'right', margin: 0,
+      });
+    }
+  } else {
+    slide.addShape(pres.shapes.RECTANGLE, {
+      x: MARGIN, y: artStartY, w: W - MARGIN * 2, h: 0.32,
+      fill: { color: C.grayLight }, line: { color: 'D1D5DB', pt: 0.4 }
+    });
+    slide.addText('이번 주 수집된 기사 없음 — 기존 분석 및 KPI 현황 유지', {
+      x: MARGIN, y: artStartY, w: W - MARGIN * 2, h: 0.32,
+      fontSize: 8.5, color: C.silver, fontFace: 'Calibri',
+      align: 'center', valign: 'middle', margin: 0,
+    });
+  }
+
+  addFooter(slide, `${s(sec.plan_id, '')}  |  ${s(sec.area, '')}`);
+
+  return slide;
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  클로징 슬라이드
+// ══════════════════════════════════════════════════════════════════════════
+function buildClosingSlide() {
+  const slide = pres.addSlide();
+  slide.background = { color: C.navy };
+
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: 0, y: 0, w: 0.06, h: H,
+    fill: { color: C.teal }, line: { color: C.teal }
+  });
+
+  slide.addText('THANK YOU', {
+    x: 0.5, y: 1.5, w: 9, h: 0.8,
+    fontSize: 48, bold: true, fontFace: 'Calibri', color: C.white, align: 'center',
+    charSpacing: 8,
+  });
+  slide.addText(`Vietnam Infrastructure Market Intelligence  |  ${week}`, {
+    x: 0.5, y: 2.42, w: 9, h: 0.35,
+    fontSize: 13, color: '7EB8D4', fontFace: 'Calibri', align: 'center',
+  });
+
+  slide.addShape(pres.shapes.LINE, {
+    x: 1.5, y: 2.90, w: 7, h: 0,
+    line: { color: '2E6A9A', width: 1, dashType: 'dash' }
+  });
+
+  slide.addText([
+    { text: `총 ${planSecs.length}개 마스터플랜  |  전체 ${totalArts}건 기사  |  신규 ${newCount}건`, options: { breakLine: true } },
+    { text: 'SA-8 자동 생성 파이프라인 (Claude Haiku + Node.js)  |  CONFIDENTIAL' }
+  ], {
+    x: 0.5, y: 3.05, w: 9, h: 0.55,
+    fontSize: 9.5, color: '7EB8D4', fontFace: 'Calibri', align: 'center',
+  });
+
+  console.log('  ✅ 클로징');
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+//  메인 실행
+// ══════════════════════════════════════════════════════════════════════════
+const pres = new pptxgen();
+pres.layout  = 'LAYOUT_16x9';
+pres.author  = 'SA-8 MI Pipeline';
+pres.company = 'Vietnam Infra Intelligence';
+pres.title   = `VN Infra MI Report ${today}`;
+
+console.log('\n[슬라이드 생성]');
+
+buildCoverSlide();
+buildTocSlide();
+buildExecSummarySlide();
+buildKpiDashboardSlide();
+
+// 플랜별 슬라이드 (21개 전체)
+const FIXED_SLIDES = 4;  // 표지+목차+ExecSummary+KPI대시보드
+const totalPlanSlides = planSecs.length;
+const totalSlideCount = FIXED_SLIDES + totalPlanSlides + 1;  // +1 클로징
+
+planSecs.forEach((sec, i) => {
+  buildPlanSlide(sec, FIXED_SLIDES + i + 1, totalSlideCount);
+  console.log(`  ✅ ${s(sec.plan_id, '???')} (${(sec.new_count||0)>0?'★신규':'기존'})`);
+});
+
+buildClosingSlide();
+
+// 저장
+pres.writeFile({ fileName: outPath }).then(() => {
+  const stat = fs.statSync(outPath);
+  console.log(`\n✅ 완료: ${outPath} (${(stat.size/1024).toFixed(0)} KB) | 플랜 ${planSecs.length}개`);
+}).catch(err => {
+  console.error('[PPT] 저장 오류:', err);
+  process.exit(1);
+});
