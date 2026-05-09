@@ -406,6 +406,59 @@ function buildAiAnalysis(section, ac) {
     elems.push(SP(0.5));
   }
 
+  // ★ v5.0: 수집품질 평가 섹션
+  var qe       = section.quality_eval || {};
+  var qGrade   = safe(qe.quality_grade, '-');
+  var qScore   = qe.coverage_score || 0;
+  var qIssues  = Array.isArray(qe.issues) ? qe.issues : [];
+  var qMissing = Array.isArray(qe.missing_signals) ? qe.missing_signals : [];
+  var qComment = safe(qe.ai_comment, '');
+
+  var gradeColors = {A: C.green, B: C.teal, C: C.orange, D: C.amber};
+  var gradeFills  = {A: C.greenL, B: C.tealL, C: C.amberL, D: 'FEE2E2'};
+  var gradeColor  = gradeColors[qGrade] || C.gray;
+  var gradeFill   = gradeFills[qGrade]  || C.grayL;
+
+  elems.push(Para('▶ 수집기사 품질 평가', { bold: true, color: C.navy, size: 18, before: 80, after: 40 }));
+  elems.push(new Table({
+    width: { size: CONTENT_W, type: WidthType.DXA },
+    columnWidths: [1800, CONTENT_W - 1800],
+    layout: TableLayoutType.FIXED,
+    rows: [new TableRow({ children: [
+      new TableCell({
+        width: { size: 1800, type: WidthType.DXA },
+        borders: bds(gradeColor), shading: { fill: gradeColor, type: ShadingType.CLEAR },
+        margins: { top: 80, bottom: 80, left: 120, right: 80 },
+        children: [
+          Para('품질 등급', { bold: true, color: C.white, size: 17 }),
+          Para(qGrade + '  (' + qScore + '/100)', { bold: true, color: C.white, size: 22 }),
+        ],
+      }),
+      new TableCell({
+        width: { size: CONTENT_W - 1800, type: WidthType.DXA },
+        borders: bds('DDDDDD'), shading: { fill: gradeFill, type: ShadingType.CLEAR },
+        margins: { top: 80, bottom: 80, left: 160, right: 120 },
+        children: qIssues.length > 0
+          ? qIssues.map(function(iss) { return new Paragraph({ spacing: { after: 40 }, children: [TR(safe(iss, ''), { size: 17, color: C.grayD })] }); })
+          : [Para('이슈 없음 — 수집 양호', { size: 17, color: C.green })],
+      }),
+    ] })],
+  }));
+  elems.push(SP(0.3));
+
+  if (qMissing.length > 0) {
+    elems.push(BoxPara(
+      '※ 누락 가능 이벤트: ' + qMissing.slice(0, 3).join(' / '),
+      { fill: C.amberL, color: C.amber, size: 17 }
+    ));
+    elems.push(SP(0.3));
+  }
+
+  if (qComment) {
+    elems.push(BoxPara(qComment, { fill: C.grayL, color: C.grayD, size: 17 }));
+    elems.push(SP(0.5));
+  }
+
   return elems;
 }
 
