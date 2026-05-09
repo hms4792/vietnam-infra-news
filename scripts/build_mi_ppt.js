@@ -408,38 +408,44 @@ function buildTocSlide() {
       align: 'center', valign: 'middle', margin: 0,
     });
 
-    // 플랜 목록
+    // 플랜 목록 (행 높이 0.42 — ID 상단 + 제목 하단 분리)
     secs.forEach((sec, i) => {
-      const ry = startY + 0.34 + i * 0.32;
+      const rowH = 0.42;
+      const ry   = startY + 0.34 + i * (rowH + 0.02);
       const isNew = (sec.new_count || 0) > 0;
       // 배경
       slide.addShape(pres.shapes.RECTANGLE, {
-        x: cx, y: ry, w: colW, h: 0.30,
+        x: cx, y: ry, w: colW, h: rowH,
         fill: { color: i % 2 === 0 ? theme.light : C.white },
         line: { color: 'E5E7EB', pt: 0.3 }
       });
-      // 플랜 ID
+      // 좌측 색상 강조선
+      slide.addShape(pres.shapes.RECTANGLE, {
+        x: cx, y: ry, w: 0.04, h: rowH,
+        fill: { color: theme.color }, line: { color: theme.color, pt: 0 }
+      });
+      // 플랜 ID (상단)
       slide.addText(s(sec.plan_id, ''), {
-        x: cx + 0.06, y: ry, w: 1.5, h: 0.30,
-        fontSize: 6.5, bold: true, color: theme.color, fontFace: 'Calibri',
-        valign: 'middle', margin: 0,
+        x: cx + 0.08, y: ry + 0.03, w: colW - 0.55, h: 0.18,
+        fontSize: 7, bold: true, color: theme.color, fontFace: 'Calibri',
+        valign: 'top', margin: 0,
       });
       // 신규 배지
       if (isNew) {
         slide.addShape(pres.shapes.RECTANGLE, {
-          x: cx + colW - 0.42, y: ry + 0.06, w: 0.35, h: 0.18,
+          x: cx + colW - 0.40, y: ry + 0.05, w: 0.34, h: 0.15,
           fill: { color: C.newYellow }, line: { color: C.newYellow, pt: 0 }
         });
-        slide.addText('★NEW', {
-          x: cx + colW - 0.42, y: ry + 0.06, w: 0.35, h: 0.18,
-          fontSize: 5.5, bold: true, color: C.white, fontFace: 'Calibri',
+        slide.addText('NEW', {
+          x: cx + colW - 0.40, y: ry + 0.05, w: 0.34, h: 0.15,
+          fontSize: 6, bold: true, color: C.white, fontFace: 'Calibri',
           align: 'center', valign: 'middle', margin: 0,
         });
       }
-      // 제목
-      slide.addText(ellipsis(sec.title_ko || '', 22), {
-        x: cx + 0.06, y: ry + 0.14, w: colW - 0.5, h: 0.14,
-        fontSize: 6, color: C.grayDark, fontFace: 'Calibri',
+      // 한국어 제목 (하단)
+      slide.addText(ellipsis(sec.title_ko || '', 26), {
+        x: cx + 0.08, y: ry + 0.22, w: colW - 0.14, h: 0.18,
+        fontSize: 6.5, color: C.grayDark, fontFace: 'Calibri',
         valign: 'top', margin: 0,
       });
     });
@@ -494,20 +500,20 @@ function buildExecSummarySlide() {
     { label: '분석 플랜',      value: `${planSecs.length}개` },
     { label: 'KPI 변동',       value: `${payload.kpi_changes_count || 0}개` },
   ];
-  const sbx = W - 2.1, sby = 1.12, sbw = 1.72, sbh = 0.72;
+  const sbx = W - 2.1, sby = 1.12, sbw = 1.72, sbh = 0.76;
   stats.forEach((st, i) => {
-    const sy = sby + i * (sbh + 0.06);
+    const sy = sby + i * (sbh + 0.04);
     slide.addShape(pres.shapes.RECTANGLE, {
       x: sbx, y: sy, w: sbw, h: sbh,
       fill: { color: i === 1 ? C.newYellowL : 'F0F4F8' },
       line: { color: i === 1 ? 'FCD34D' : 'D1D5DB', pt: 0.5 },
     });
     slide.addText(st.label, {
-      x: sbx + 0.06, y: sy + 0.04, w: sbw - 0.12, h: 0.22,
-      fontSize: 7, color: C.grayMid, fontFace: 'Calibri', margin: 0,
+      x: sbx + 0.06, y: sy + 0.05, w: sbw - 0.12, h: 0.22,
+      fontSize: 7.5, color: C.grayMid, fontFace: 'Calibri', margin: 0,
     });
     slide.addText(st.value, {
-      x: sbx + 0.06, y: sy + 0.25, w: sbw - 0.12, h: 0.38,
+      x: sbx + 0.06, y: sy + 0.28, w: sbw - 0.12, h: 0.40,
       fontSize: 20, bold: true, color: i === 1 ? C.amber : C.navy,
       fontFace: 'Calibri', valign: 'middle', margin: 0,
     });
@@ -711,20 +717,19 @@ function buildPlanSlide(sec, slideNum, totalSlides) {
   addProgressBar(slide, MARGIN + 0.82, pbY + 0.03, 4.5, sec.current_stage || 'UNKNOWN');
 
   // ── 콘텐츠 영역 ────────────────────────────────────────────────
-  const contentY = 1.08;
-  const leftW    = 4.2;
-  const rightX   = MARGIN + leftW + 0.18;
-  const rightW   = W - rightX - MARGIN;
+  const contentY  = 1.08;
+  const leftW     = 4.2;
+  const rightX    = MARGIN + leftW + 0.18;
+  const rightW    = W - rightX - MARGIN;
+  const ART_START = 3.40;  // ★ 기사 섹션 고정 시작 Y — 겹침 절대 방지
 
-  // ── 좌측: KPI + 사업 개요 ──────────────────────────────────────
+  // ── 좌측: KPI + 사업 개요 (ART_START 이내로 제한) ─────────────
 
-  // KPI 테이블
   if (kpis.length > 0) {
     slide.addText('KPI 목표 현황', {
       x: MARGIN, y: contentY, w: leftW, h: 0.22,
       fontSize: 8.5, bold: true, color: theme.color, fontFace: 'Calibri', margin: 0,
     });
-    // KPI 헤더
     const khY = contentY + 0.22;
     slide.addShape(pres.shapes.RECTANGLE, {
       x: MARGIN, y: khY, w: leftW, h: 0.20,
@@ -733,22 +738,22 @@ function buildPlanSlide(sec, slideNum, totalSlides) {
     ['KPI 지표', '현황', '2030 목표'].forEach((h, i) => {
       const ws = [leftW * 0.44, leftW * 0.28, leftW * 0.28];
       const xs = [MARGIN, MARGIN + ws[0], MARGIN + ws[0] + ws[1]];
-      slide.addText(h, {
-        x: xs[i], y: khY, w: ws[i], h: 0.20,
+      slide.addText(h, { x: xs[i], y: khY, w: ws[i], h: 0.20,
         fontSize: 7.5, bold: true, color: C.white, fontFace: 'Calibri',
-        align: 'center', valign: 'middle', margin: 0,
-      });
+        align: 'center', valign: 'middle', margin: 0 });
     });
-    const maxKpi = Math.min(kpis.length, 5);
+    // KPI 최대 행 수: 사업개요 공간(0.95) + 여백 고려
+    const maxKpi = Math.min(kpis.length, Math.max(1, Math.floor((ART_START - khY - 0.20 - 1.05) / 0.235)));
     for (let ki = 0; ki < maxKpi; ki++) {
       addKpiRow(slide, MARGIN, khY + 0.20 + ki * 0.235, leftW, kpis[ki], ki % 2 === 1);
     }
     const kpiEndY = khY + 0.20 + maxKpi * 0.235;
 
-    // 사업 개요 (KPI 아래)
-    const descY = kpiEndY + 0.10;
-    const desc  = ellipsis(sec.description_ko || '', 120);
-    if (desc && descY < contentY + 3.2) {
+    // 사업 개요 (KPI 아래, ART_START 직전까지만)
+    const descY    = kpiEndY + 0.08;
+    const descMaxH = ART_START - descY - 0.06;
+    const desc     = ellipsis(sec.description_ko || '', 100);
+    if (desc && descMaxH >= 0.40) {
       slide.addShape(pres.shapes.RECTANGLE, {
         x: MARGIN, y: descY, w: leftW, h: 0.20,
         fill: { color: theme.light }, line: { color: theme.color, pt: 0.3 }
@@ -758,27 +763,24 @@ function buildPlanSlide(sec, slideNum, totalSlides) {
         fontSize: 8, bold: true, color: theme.color, fontFace: 'Calibri', valign: 'middle', margin: 0,
       });
       slide.addText(desc, {
-        x: MARGIN + 0.05, y: descY + 0.20, w: leftW - 0.1, h: 0.70,
-        fontSize: 8, color: C.grayDark, fontFace: 'Calibri',
+        x: MARGIN + 0.05, y: descY + 0.20, w: leftW - 0.10, h: Math.min(descMaxH - 0.20, 0.72),
+        fontSize: 7.5, color: C.grayDark, fontFace: 'Calibri',
         valign: 'top', wrap: true, margin: [3, 4, 3, 4],
       });
     }
   }
 
-  // ── 우측: AI 분석 + 기사 ───────────────────────────────────────
+  // ── 우측: AI 분석 (ART_START 이내로 제한) ─────────────────────
 
-  // AI 분석
-  const analysis = s(sec.news_analysis, '');
-  const insight  = s(sec.insight, '');
+  const analysis      = s(sec.news_analysis, '');
+  const insight       = s(sec.insight, '');
   const isNewAnalysis = sec.analysis_is_new || false;
 
   slide.addText('AI 시장 분석 (Claude Haiku)', {
     x: rightX, y: contentY, w: rightW, h: 0.20,
     fontSize: 8.5, bold: true, color: theme.color, fontFace: 'Calibri', margin: 0,
   });
-
-  // 분석 배지
-  const abadge = isNewAnalysis ? '★ 이번 주 신규 분석' : '이전 분석 유지';
+  const abadge      = isNewAnalysis ? '★ 이번 주 신규 분석' : '이전 분석 유지';
   const abadgeColor = isNewAnalysis ? C.newYellow : C.silver;
   slide.addShape(pres.shapes.RECTANGLE, {
     x: rightX, y: contentY + 0.21, w: rightW, h: 0.18,
@@ -791,43 +793,46 @@ function buildPlanSlide(sec, slideNum, totalSlides) {
     align: 'center', valign: 'middle', margin: 0,
   });
 
-  // 분석 본문
+  // 분석 본문 + Insight — ART_START 내로 높이 계산
+  const insH       = insight ? 0.44 : 0;
+  const insGap     = insight ? 0.06 : 0;
+  const analysisH  = ART_START - (contentY + 0.40) - insH - insGap - 0.06;
   const analysisText = analysis || '이번 주 신규 기사가 없습니다. 기존 분석을 유지합니다.';
+
   slide.addShape(pres.shapes.RECTANGLE, {
-    x: rightX, y: contentY + 0.40, w: rightW, h: 0.80,
-    fill: { color: C.white },
-    line: { color: theme.color, pt: 0.8 }
+    x: rightX, y: contentY + 0.40, w: rightW, h: analysisH,
+    fill: { color: C.white }, line: { color: theme.color, pt: 0.8 }
   });
   slide.addShape(pres.shapes.RECTANGLE, {
-    x: rightX, y: contentY + 0.40, w: 0.04, h: 0.80,
+    x: rightX, y: contentY + 0.40, w: 0.04, h: analysisH,
     fill: { color: theme.color }, line: { color: theme.color, pt: 0 }
   });
-  slide.addText(ellipsis(analysisText, 200), {
-    x: rightX + 0.08, y: contentY + 0.40, w: rightW - 0.12, h: 0.80,
+  slide.addText(ellipsis(analysisText, 220), {
+    x: rightX + 0.08, y: contentY + 0.40, w: rightW - 0.12, h: analysisH,
     fontSize: 8, color: C.grayDark, fontFace: 'Calibri',
     valign: 'top', wrap: true, margin: [4, 6, 4, 6],
   });
 
-  // Expert Insight
   if (insight) {
+    const insY = contentY + 0.40 + analysisH + insGap;
     slide.addShape(pres.shapes.RECTANGLE, {
-      x: rightX, y: contentY + 1.22, w: rightW, h: 0.46,
+      x: rightX, y: insY, w: rightW, h: insH,
       fill: { color: theme.light }, line: { color: theme.color, pt: 0.8 }
     });
-    slide.addText('💡 Insight', {
-      x: rightX + 0.05, y: contentY + 1.22, w: 0.7, h: 0.18,
+    slide.addText('Insight', {
+      x: rightX + 0.05, y: insY + 0.02, w: 0.65, h: 0.16,
       fontSize: 7, bold: true, color: theme.color, fontFace: 'Calibri', margin: 0,
     });
-    slide.addText(ellipsis(insight, 95), {
-      x: rightX + 0.05, y: contentY + 1.40, w: rightW - 0.1, h: 0.26,
+    slide.addText(ellipsis(insight, 100), {
+      x: rightX + 0.05, y: insY + 0.20, w: rightW - 0.10, h: insH - 0.22,
       fontSize: 7.5, bold: true, color: theme.color, fontFace: 'Calibri',
       valign: 'middle', wrap: true, margin: 0,
     });
   }
 
-  // ── 기사 목록 ──────────────────────────────────────────────────
-  const artStartY = contentY + (insight ? 1.72 : 1.70);
-  const artH      = H - artStartY - 0.30;
+  // ── 기사 목록 (ART_START 고정 시작 — 겹침 없음) ──────────────
+  const artStartY = ART_START;
+  const artH      = H - artStartY - 0.28;
   const artRowH   = 0.215;
   const maxRows   = Math.floor(artH / artRowH);
 
