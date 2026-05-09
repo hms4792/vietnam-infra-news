@@ -850,7 +850,8 @@ def run_js_builder(payload: dict, output_path: Path) -> bool:
     log.info(f"Node.js 빌더 호출: {actual_builder.name} (exec_is_new={is_new_exec})")
     result = subprocess.run(
         ['node', str(actual_builder)],
-        capture_output=True, text=True, timeout=180, env=env
+        capture_output=True, text=True, timeout=180, env=env,
+        cwd=str(SCRIPTS_DIR)   # ★ v4.1: scripts/ 에서 실행 → node_modules/docx 경로 정상 인식
     )
 
     if result.returncode != 0:
