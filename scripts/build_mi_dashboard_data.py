@@ -511,6 +511,64 @@ def assemble_plan_data(
 # ══════════════════════════════════════════════════════════════════════════
 #  메인
 # ══════════════════════════════════════════════════════════════════════════
+
+# ══════════════════════════════════════════════════════════════════════════
+#  Step 7: mi_dashboard.html 자동 패치 (today 날짜 + 보고서 링크)
+#  ★ 매 실행마다 자동 반영 — 수동 수정 불필요
+# ══════════════════════════════════════════════════════════════════════════
+def patch_mi_dashboard_html(latest_report_date: str, reports: list):
+    """
+    mi_dashboard.html의 하드코딩된 today 날짜와 보고서 링크를 최신으로 교체.
+    기존 화면·기능·데이터는 완전 보존. 날짜와 링크 2가지만 수정.
+    """
+    html_path = BASE_DIR / 'docs' / 'mi_dashboard.html'
+    if not html_path.exists():
+        log.warning(f"mi_dashboard.html 없음: {html_path}")
+        return
+
+    content = html_path.read_text(encoding='utf-8')
+    changed = []
+
+    # 1. today 날짜 교체 ("today":"2026-05-01" 형태)
+    new_content, n = re.subn(
+        r'"today":"[\d-]+"',
+        f'"today":"{latest_report_date}"',
+        content
+    )
+    if n > 0:
+        changed.append(f'today → {latest_report_date}')
+        content = new_content
+
+    # 2. Word 보고서 링크 교체
+    latest_word = next((r for r in reports if r.get('word_exists')), None)
+    if latest_word and latest_word.get('word_url'):
+        new_content, n = re.subn(
+            r'href="reports/VN_Infra_MI_[^"]*\.docx"',
+            f'href="{latest_word["word_url"]}"',
+            content
+        )
+        if n > 0:
+            changed.append(f'Word → {latest_word["word_url"]}')
+            content = new_content
+
+    # 3. PPT 보고서 링크 교체
+    latest_ppt = next((r for r in reports if r.get('pptx_exists')), None)
+    if latest_ppt and latest_ppt.get('pptx_url'):
+        new_content, n = re.subn(
+            r'href="reports/VN_Infra_MI_[^"]*\.pptx"',
+            f'href="{latest_ppt["pptx_url"]}"',
+            content
+        )
+        if n > 0:
+            changed.append(f'PPT → {latest_ppt["pptx_url"]}')
+            content = new_content
+
+    html_path.write_text(content, encoding='utf-8')
+    if changed:
+        log.info(f"mi_dashboard.html 자동 패치 완료: {', '.join(changed)}")
+    else:
+        log.info("mi_dashboard.html 패치 없음 (이미 최신)")
+
 def main():
     log.info("=" * 58)
     log.info(f"MI Dashboard Data Builder v1.2 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
@@ -550,6 +608,9 @@ def main():
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     size_kb = OUTPUT_PATH.stat().st_size // 1024
+    # ★ mi_dashboard.html 자동 패치 (today + 보고서 링크)
+    patch_mi_dashboard_html(latest_report_date, reports)
+
     log.info("")
     log.info("━" * 58)
     log.info("✅ MI Dashboard 데이터 빌드 완료")
