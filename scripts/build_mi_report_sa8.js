@@ -492,7 +492,8 @@ function buildLayer1Section(planData) {
   if (projects.length === 0) {
     elems.push(ALERT('주요 프로젝트(key_projects)가 knowledge_index.json에 등록되지 않았습니다.', C.amberL, C.amber, '⚠️ '));
   } else {
-    const projHeaderCols = ['프로젝트명', '예산 (USD)', '추진 상태', '대상 지역'];
+    // ★ Fix: budget_usd→capacity, province→location 폴백 (knowledge_index 실제 필드명 대응)
+    const projHeaderCols = ['프로젝트명', '규모·용량', '추진 상태', '대상 지역'];
     const projColWidths  = [3400, 1800, 1800, 2360];
 
     const projRows = [
@@ -512,12 +513,16 @@ function buildLayer1Section(planData) {
       }),
       ...projects.map((proj, idx) => {
         const statusColor = getStatusColor(proj.status);
+        // capacity: budget_usd 없으면 capacity 사용, 둘 다 없으면 N/A
+        const capacityVal = proj.capacity || (proj.budget_usd ? formatBudget(proj.budget_usd) : 'N/A');
+        // location: province 없으면 location 사용
+        const locationVal = proj.province || proj.location || '';
         return new TableRow({
           children: [
             _projCell(proj.name_ko || proj.name || '', 3400, idx % 2 === 0 ? C.white : C.grayLL),
-            _projCell(formatBudget(proj.budget_usd), 1800, idx % 2 === 0 ? C.white : C.grayLL, C.blue, true),
-            _projCell(proj.status || '', 1800, statusColor.fill, statusColor.text, true),
-            _projCell(proj.province || proj.location || '', 2360, idx % 2 === 0 ? C.white : C.grayLL),
+            _projCell(capacityVal, 1800, idx % 2 === 0 ? C.white : C.grayLL, C.blue, true),
+            _projCell(proj.status || proj.note || '', 1800, statusColor.fill, statusColor.text, true),
+            _projCell(locationVal, 2360, idx % 2 === 0 ? C.white : C.grayLL),
           ]
         });
       })
@@ -618,7 +623,27 @@ function buildLayer2Section(planData) {
       }
     }
   } else {
-    elems.push(ALERT('AI 분석이 생성되지 않았습니다. (DRY-RUN 또는 해당 기간 기사 없음)', C.grayL, C.gray, 'ℹ️ '));
+    // ★ Fix: 분석 없을 때 기사 목록 기반 인사이트 자동 생성
+    const arts = planData.articles || [];
+    if (arts.length > 0) {
+      const newArts = arts.filter(a => a.isNew);
+      const summaryLines = [];
+      if (newArts.length > 0) {
+        summaryLines.push(`▸ 이번 주 신규 수집 ${newArts.length}건 — 주요 동향:`);
+        newArts.slice(0, 3).forEach(a => {
+          if (a.title_ko) summaryLines.push(`  · ${a.title_ko}`);
+        });
+      }
+      if (summaryLines.length > 0) {
+        for (const line of summaryLines) {
+          elems.push(line.startsWith('▸') ? PB('', line) : P(line));
+        }
+      } else {
+        elems.push(ALERT('AI 분석이 생성되지 않았습니다. (DRY-RUN 또는 해당 기간 기사 없음)', C.grayL, C.gray, 'ℹ️ '));
+      }
+    } else {
+      elems.push(ALERT('AI 분석이 생성되지 않았습니다. (DRY-RUN 또는 해당 기간 기사 없음)', C.grayL, C.gray, 'ℹ️ '));
+    }
   }
 
   elems.push(SP());
@@ -685,7 +710,11 @@ function buildLayer2Section(planData) {
         )
       }),
       ...articles.map(art => {
-        const isNew = art.isNew === true;
+        // ★ Fix: isNew 없으면 날짜 기준으로 판정 (최근 7일)
+        const artDate = art.date || art.d || '';
+        const cutoffDate = new Date(); cutoffDate.setDate(cutoffDate.getDate() - 7);
+        const isNew = art.isNew === true ||
+          (art.isNew === undefined && artDate >= cutoffDate.toISOString().slice(0,10));
         const rowFill = isNew ? C.newBadge : C.white;
         const badge   = isNew ? '🆕' : '·';
         const badgeColor = isNew ? C.newBadgeText : C.gray;
