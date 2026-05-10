@@ -513,61 +513,158 @@ def assemble_plan_data(
 # ══════════════════════════════════════════════════════════════════════════
 
 # ══════════════════════════════════════════════════════════════════════════
-#  Step 7: mi_dashboard.html 자동 패치 (today 날짜 + 보고서 링크)
-#  ★ 매 실행마다 자동 반영 — 수동 수정 불필요
+#  Step 7: mi_dashboard.html BACKEND_DATA 자동 교체
+#  - 화면 로직(JS) 완전 보존, /*__BACKEND_DATA__*/const KI={...}; 만 교체
+#  - 교체 항목: articles, stats, gap_issues, ai_analysis, totals
+#  - 보존 항목: overview, kpis, projects, name, legal 등 knowledge_index 필드
 # ══════════════════════════════════════════════════════════════════════════
-def patch_mi_dashboard_html(latest_report_date: str, reports: list):
+def update_mi_dashboard_html(ki_plans: dict, plan_data: dict,
+                              matched_articles: list, stats: dict,
+                              reports: list):
     """
-    mi_dashboard.html의 하드코딩된 today 날짜와 보고서 링크를 최신으로 교체.
-    기존 화면·기능·데이터는 완전 보존. 날짜와 링크 2가지만 수정.
+    mi_dashboard.html의 /*__BACKEND_DATA__*/ 섹션만 교체.
+    기존 화면 JS 로직, CSS, HTML 구조 완전 보존.
+
+    교체 필드 (자동 업데이트):
+      plans[].articles   → Excel Matched_Plan 최신 기사
+      plans[].stats      → Excel DB 집계
+      plans[].gap_issues → SA-7 분석
+      plans[].ai_analysis→ SA-7 분석
+      totals             → 전체 집계 + today 날짜
+
+    보존 필드 (knowledge_index 수동 관리):
+      plans[].overview, kpis, projects, name, legal 등
     """
     html_path = BASE_DIR / 'docs' / 'mi_dashboard.html'
     if not html_path.exists():
         log.warning(f"mi_dashboard.html 없음: {html_path}")
         return
 
-    content = html_path.read_text(encoding='utf-8')
-    changed = []
+    html = html_path.read_text(encoding='utf-8')
 
-    # 1. today 날짜 교체 ("today":"2026-05-01" 형태)
-    new_content, n = re.subn(
-        r'"today":"[\d-]+"',
-        f'"today":"{latest_report_date}"',
-        content
+    # ── 기사를 플랜별로 그룹핑 ──────────────────────────────────────────
+    art_by_plan: dict[str, list] = {}
+    for art in matched_articles:
+        pid = art.get('plan_id', '')
+        if pid:
+            art_by_plan.setdefault(pid, []).append(art)
+
+    # ── 기존 KI 추출 (knowledge_index 필드 보존용) ──────────────────────
+    m = re.search(r'/\*__BACKEND_DATA__\*/const KI=(\{.*?\});\s*\n',
+                  html, re.DOTALL)
+    if not m:
+        log.warning("BACKEND_DATA 패턴 미발견 — 교체 건너뜀")
+        return
+
+    import json
+    try:
+        old_ki = json.loads(m.group(1))
+    except Exception as e:
+        log.error(f"기존 KI JSON 파싱 실패: {e}")
+        return
+
+    # ── 각 플랜 데이터 조립 ─────────────────────────────────────────────
+    new_plans = {}
+    for pid, old_plan in old_ki.get('plans', {}).items():
+        arts = art_by_plan.get(pid, [])
+
+        # article → HTML 형식 변환 (d, te, tk, sk, src, pv, g, url)
+        new_articles = []
+        for a in arts[:30]:
+            new_articles.append({
+                'd':   a.get('date', ''),
+                'te':  a.get('title_en', '') or a.get('title_ko', ''),
+                'tk':  a.get('title_ko', '') or a.get('title_en', ''),
+                'sk':  (a.get('summary_ko', '') or a.get('summary_en', ''))[:300],
+                'src': a.get('source', ''),
+                'pv':  a.get('province', ''),
+                'g':   a.get('grade', 'MEDIUM'),
+                'url': a.get('url', ''),
+            })
+
+        # stats 계산
+        year_dist: dict[str, int] = {}
+        for a in arts:
+            y = str(a.get('date', ''))[:4]
+            if y.isdigit():
+                year_dist[y] = year_dist.get(y, 0) + 1
+
+        cutoff_week = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
+        this_week = sum(1 for a in arts if a.get('date', '') >= cutoff_week)
+        latest_date = max((a.get('date', '') for a in arts), default='')
+
+        # gap_issues
+        from_plan_data = plan_data.get(pid, {})
+        new_gap = from_plan_data.get('gap_issues',
+                   old_plan.get('gap_issues', []))
+
+        # ai_analysis
+        new_ai = from_plan_data.get('ai_analysis',
+                  old_plan.get('ai_analysis', []))
+
+        # 기존 플랜 기반 + 자동 필드만 교체
+        new_plan = dict(old_plan)   # ← overview, kpis, projects 등 보존
+        new_plan['articles']    = new_articles
+        new_plan['stats']       = {
+            'total':       len(arts),
+            'this_week':   this_week,
+            'year_dist':   year_dist,
+            'latest_date': latest_date,
+        }
+        new_plan['gap_issues']  = new_gap
+        new_plan['ai_analysis'] = new_ai
+        new_plans[pid] = new_plan
+
+    # ── totals 재계산 ────────────────────────────────────────────────────
+    total_news   = stats.get('total_articles', old_ki['totals'].get('total_news', 0))
+    total_mapped = stats.get('matched_count',  old_ki['totals'].get('total_mapped', 0))
+    this_week_total = sum(
+        p.get('stats', {}).get('this_week', 0) for p in new_plans.values()
     )
-    if n > 0:
-        changed.append(f'today → {latest_report_date}')
-        content = new_content
+    high = sum(1 for a in matched_articles if a.get('grade') == 'HIGH')
+    med  = sum(1 for a in matched_articles if a.get('grade') == 'MEDIUM')
+    pol  = sum(1 for a in matched_articles if a.get('grade') == 'POLICY')
 
-    # 2. Word 보고서 링크 교체
+    new_totals = dict(old_ki['totals'])
+    new_totals.update({
+        'total_news':   total_news,
+        'total_mapped': total_mapped,
+        'this_week':    this_week_total,
+        'high':         high,
+        'med':          med,
+        'pol':          pol,
+        'today':        datetime.now().strftime('%Y-%m-%d'),
+    })
+
+    # ── 보고서 링크 교체 ─────────────────────────────────────────────────
+    latest_report_date = reports[0]['date'] if reports else ''
     latest_word = next((r for r in reports if r.get('word_exists')), None)
-    if latest_word and latest_word.get('word_url'):
-        new_content, n = re.subn(
+    latest_ppt  = next((r for r in reports if r.get('pptx_exists')), None)
+
+    # ── 새 KI JSON 생성 ──────────────────────────────────────────────────
+    new_ki = {
+        'plans':       new_plans,
+        'totals':      new_totals,
+        'area_groups': old_ki.get('area_groups', {}),
+    }
+    new_ki_json = json.dumps(new_ki, ensure_ascii=False, separators=(',', ':'))
+
+    new_backend = f'/*__BACKEND_DATA__*/const KI={new_ki_json};'
+    new_html = html[:m.start()] + new_backend + html[m.end()-1:]
+
+    # ── 보고서 링크 패치 ─────────────────────────────────────────────────
+    if latest_word:
+        new_html = re.sub(
             r'href="reports/VN_Infra_MI_[^"]*\.docx"',
-            f'href="{latest_word["word_url"]}"',
-            content
-        )
-        if n > 0:
-            changed.append(f'Word → {latest_word["word_url"]}')
-            content = new_content
-
-    # 3. PPT 보고서 링크 교체
-    latest_ppt = next((r for r in reports if r.get('pptx_exists')), None)
-    if latest_ppt and latest_ppt.get('pptx_url'):
-        new_content, n = re.subn(
+            f'href="{latest_word["word_url"]}"', new_html)
+    if latest_ppt:
+        new_html = re.sub(
             r'href="reports/VN_Infra_MI_[^"]*\.pptx"',
-            f'href="{latest_ppt["pptx_url"]}"',
-            content
-        )
-        if n > 0:
-            changed.append(f'PPT → {latest_ppt["pptx_url"]}')
-            content = new_content
+            f'href="{latest_ppt["pptx_url"]}"', new_html)
 
-    html_path.write_text(content, encoding='utf-8')
-    if changed:
-        log.info(f"mi_dashboard.html 자동 패치 완료: {', '.join(changed)}")
-    else:
-        log.info("mi_dashboard.html 패치 없음 (이미 최신)")
+    html_path.write_text(new_html, encoding='utf-8')
+    log.info(f"mi_dashboard.html BACKEND_DATA 교체 완료")
+    log.info(f"  플랜: {len(new_plans)}개 | 기사: {total_mapped}건 | today: {new_totals['today']}")
 
 def main():
     log.info("=" * 58)
@@ -608,8 +705,14 @@ def main():
         json.dump(output, f, ensure_ascii=False, indent=2)
 
     size_kb = OUTPUT_PATH.stat().st_size // 1024
-    # ★ mi_dashboard.html 자동 패치 (today + 보고서 링크)
-    patch_mi_dashboard_html(latest_report_date, reports)
+    # ★ mi_dashboard.html BACKEND_DATA 자동 교체
+    update_mi_dashboard_html(
+        ki_plans=plans,
+        plan_data=plan_data,
+        matched_articles=matched_articles,
+        stats=stats,
+        reports=reports,
+    )
 
     log.info("")
     log.info("━" * 58)
