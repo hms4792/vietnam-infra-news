@@ -25,9 +25,9 @@ GitHub Actions 연동:
   - KI_PATH: docs/shared/knowledge_index.json 우선 탐색
   - date 키: article.get('date') or article.get('published_date')
 
-버전: v1.1 (2026-05-04)
+버전: v1.2 (2026-05-10)
 변경:
-  ★ BUG FIX: load_matched_articles() — Matched_Plan 헤더 오프셋 수정
+  ★ v1.1 BUG FIX: load_matched_articles() — Matched_Plan 헤더 오프셋 수정
     원인: Matched_Plan 시트 구조
       Row1 = 메타 행 ("★ SA-7 맥락 확정 기사 271건...")  ← merged cell
       Row2 = 실제 헤더 (No, ctx_tag, ctx_grade, Plan_ID ...)
@@ -37,6 +37,19 @@ GitHub Actions 연동:
     수정: 헤더 읽기 min_row=1 → min_row=2
           데이터 읽기 min_row=2 → min_row=3
     효과: 0건 → 271건 정상 로드
+
+  ★ v1.2 BUG FIX: scan_reports() — 파일명 패턴 불일치 수정
+    원인:
+      SA-8이 생성하는 Word 파일명: VN_Infra_MI_Report_YYYYMMDD.docx
+      SA-8이 생성하는 PPT 파일명:  VN_Infra_MI_Weekly_Report_YYYYMMDD.pptx
+      scan_reports()가 찾는 패턴:  VN_Infra_MI_Weekly_Report_*.docx
+      → Word 파일이 패턴에 안 맞아 word_exists=False → 대시보드 날짜 미갱신
+    수정1: generate_mi_report.py에서 docx 파일명도 Weekly_Report 통일
+           (VN_Infra_MI_Report → VN_Infra_MI_Weekly_Report)
+    수정2: scan_reports()에서 두 패턴 모두 스캔하도록 보강
+           (VN_Infra_MI_Weekly_Report_*.docx + VN_Infra_MI_Report_*.docx)
+    수정3: 대시보드 최종갱신일을 stats.updated_at에 명시적으로 포함
+    효과: 대시보드 "주간 MI 보고서 날짜"가 최신 실행일로 자동 갱신됨
 """
 
 import json
@@ -332,24 +345,43 @@ def load_sa8_daily() -> dict:
 
 # ══════════════════════════════════════════════════════════════════════════
 #  Step 5: 보고서 파일 목록 스캔
+#  ★ v1.2 수정: 두 가지 docx 파일명 패턴 모두 인식
+#    - VN_Infra_MI_Weekly_Report_*.docx  (신규 통일 명칭)
+#    - VN_Infra_MI_Report_*.docx         (구버전 호환)
 # ══════════════════════════════════════════════════════════════════════════
 def scan_reports() -> list[dict]:
+    import re
     report_map = {}
 
     if REPORTS_DIR.exists():
+        # ── Word 파일 스캔 (두 패턴 모두 인식) ──────────────────────────
+        # 패턴1: VN_Infra_MI_Weekly_Report_*.docx (신규 통일 명칭)
         for f in sorted(REPORTS_DIR.glob('VN_Infra_MI_Weekly_Report_*.docx'), reverse=True):
             key = f.stem.replace('_Full', '')
             report_map.setdefault(key, {})['word_url']    = f'reports/{f.name}'
-            report_map[key]['word_exists'] = True
+            report_map.setdefault(key, {})['word_exists'] = True
 
+        # 패턴2: VN_Infra_MI_Report_*.docx (구버전 호환 — Weekly 없는 이름)
+        for f in sorted(REPORTS_DIR.glob('VN_Infra_MI_Report_*.docx'), reverse=True):
+            # 날짜 태그 추출해서 Weekly_Report 키와 동일한 key로 매핑
+            m = re.search(r'(\d{8})', f.stem)
+            if m:
+                key = f'VN_Infra_MI_Weekly_Report_{m.group(1)}'
+            else:
+                key = f.stem
+            # 이미 Weekly_Report 패턴에서 찾은 게 없을 때만 추가
+            if not report_map.get(key, {}).get('word_exists'):
+                report_map.setdefault(key, {})['word_url']    = f'reports/{f.name}'
+                report_map.setdefault(key, {})['word_exists'] = True
+
+        # ── PPT 파일 스캔 ────────────────────────────────────────────────
         for f in sorted(REPORTS_DIR.glob('VN_Infra_MI_Weekly_Report_*.pptx'), reverse=True):
             key = f.stem
             report_map.setdefault(key, {})['pptx_url']    = f'reports/{f.name}'
-            report_map[key]['pptx_exists'] = True
+            report_map.setdefault(key, {})['pptx_exists'] = True
 
     reports = []
     for key, info in sorted(report_map.items(), reverse=True):
-        import re
         m = re.search(r'(\d{8})', key)
         date_str = week_str = ''
         if m:
@@ -372,6 +404,9 @@ def scan_reports() -> list[dict]:
         })
 
     log.info(f"보고서 파일 스캔: {len(reports)}개")
+    if reports:
+        latest = reports[0]
+        log.info(f"  최신 보고서: {latest['date']} | Word={latest['word_exists']} PPT={latest['pptx_exists']}")
     return reports
 
 
@@ -478,7 +513,7 @@ def assemble_plan_data(
 # ══════════════════════════════════════════════════════════════════════════
 def main():
     log.info("=" * 58)
-    log.info(f"MI Dashboard Data Builder v1.1 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    log.info(f"MI Dashboard Data Builder v1.2 — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     log.info("=" * 58)
 
     plans            = load_knowledge_index()
@@ -490,15 +525,21 @@ def main():
         plans, matched_articles, ctx_by_plan, timeline, sa8_daily
     )
 
+    # ★ v1.2: 최신 보고서 날짜를 stats에 포함 → 대시보드 갱신일 업데이트
+    latest_report_date = reports[0]['date'] if reports else ''
+
     output = {
-        'generated_at':   datetime.now().strftime('%Y-%m-%d %H:%M'),
-        'generated_date': datetime.now().strftime('%Y-%m-%d'),
+        'generated_at':        datetime.now().strftime('%Y-%m-%d %H:%M'),
+        'generated_date':      datetime.now().strftime('%Y-%m-%d'),
+        'latest_report_date':  latest_report_date,   # ★ 신규 필드
         'stats': {
-            'total_articles': stats.get('total_articles', 0),
-            'matched_count':  stats.get('matched_count', 0),
-            'plan_count':     len(plan_data),
-            'ki_plan_count':  len(plans),
-            'report_count':   len(reports),
+            'total_articles':      stats.get('total_articles', 0),
+            'matched_count':       stats.get('matched_count', 0),
+            'plan_count':          len(plan_data),
+            'ki_plan_count':       len(plans),
+            'report_count':        len(reports),
+            'updated_at':          stats.get('updated_at', ''),        # Excel 갱신시각
+            'latest_report_date':  latest_report_date,                 # 최신 보고서 날짜
         },
         'reports': reports,
         'plans':   plan_data,
@@ -517,6 +558,7 @@ def main():
     log.info(f"   플랜: {len(plan_data)}개")
     log.info(f"   기사: {stats.get('matched_count', 0)}건 (매핑)")
     log.info(f"   보고서: {len(reports)}개")
+    log.info(f"   최신 보고서 날짜: {latest_report_date}")   # ★ 신규 로그
     log.info("━" * 58)
 
 
