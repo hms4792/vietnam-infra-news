@@ -876,24 +876,33 @@ def run_js_builder(payload: dict, output_path: Path) -> bool:
 # ══════════════════════════════════════════════════════════════════════════
 #  [STEP 6] 이메일 발송 (v4.0: 발송 조건 수정 + 본문 강화)
 # ══════════════════════════════════════════════════════════════════════════
-def send_email(report_path, payload: dict) -> bool:
+def send_email(report_path, payload: dict, pptx_path=None) -> bool:
     """
-    v4.0 이메일 발송.
+    v4.3 이메일 발송.
 
     발송 조건 (OR 조건):
       - 신규 기사(is_new=True) 1건 이상
       - KPI 변동 1건 이상
 
     본문 내용:
+      - Dashboard / MI Dashboard 링크 버튼
       - 수집 기사 수, 신규 기사 수, 플랜 수
       - AI Executive Summary 전문
       - 플랜별 신규/기존 기사 수 요약
+
+    첨부 파일:
+      - Word(docx) 보고서 (주 첨부)
+      - PPT(pptx) 보고서 (보조 첨부, 있으면 함께)
     """
     username = os.getenv('EMAIL_USERNAME')
     password = os.getenv('EMAIL_PASSWORD')
     if not username or not password:
         log.warning("EMAIL_USERNAME/PASSWORD 없음 — 이메일 건너뜀")
         return False
+
+    # ── Dashboard URL ─────────────────────────────────────────────────
+    DASHBOARD_URL    = "https://hms4792.github.io/vietnam-infra-news/"
+    MI_DASHBOARD_URL = "https://hms4792.github.io/vietnam-infra-news/mi_dashboard.html"
 
     today      = datetime.now().strftime('%Y년 %m월 %d일')
     week_label = payload.get('report_week', '')
@@ -908,6 +917,11 @@ def send_email(report_path, payload: dict) -> bool:
         f"생성: SA-8 자동 파이프라인 (Claude Haiku 분석 통합)",
         "",
         "=" * 55,
+        "【 대시보드 바로가기 】",
+        f"  ▶ News Dashboard    : {DASHBOARD_URL}",
+        f"  ▶ MI Dashboard      : {MI_DASHBOARD_URL}",
+        "=" * 55,
+        "",
         f"▶ 전체 누적 기사: {total_arts}건",
         f"▶ 이번 주 신규:   {new_count}건  ← 노란색 마킹",
         f"▶ 분석 플랜:      {payload.get('plan_count', 0)}개",
@@ -941,6 +955,14 @@ def send_email(report_path, payload: dict) -> bool:
                 f"  {kpi_flag}{sec.get('plan_id','')}: 총{total}건 ({new_flag} / 기존{old_c}건)"
             )
 
+    body_lines += [
+        "",
+        "─" * 55,
+        f"  ▶ News Dashboard    : {DASHBOARD_URL}",
+        f"  ▶ MI Dashboard      : {MI_DASHBOARD_URL}",
+        "─" * 55,
+    ]
+
     body = "\n".join(body_lines)
 
     msg = MIMEMultipart()
@@ -949,13 +971,28 @@ def send_email(report_path, payload: dict) -> bool:
     msg['Subject'] = f"[VN Infra MI] 주간 보고서 {today} — 신규 {new_count}건"
     msg.attach(MIMEText(body, 'plain', 'utf-8'))
 
-    # 첨부 파일 (존재 시)
+    # ── 첨부 파일 1: Word(docx) ────────────────────────────────────────
+    attached = []
     if report_path and Path(str(report_path)).exists():
         with open(report_path, 'rb') as f:
             att = MIMEApplication(f.read(), Name=Path(str(report_path)).name)
         att['Content-Disposition'] = f'attachment; filename="{Path(str(report_path)).name}"'
         msg.attach(att)
-        log.info(f"이메일 첨부: {Path(str(report_path)).name}")
+        attached.append(Path(str(report_path)).name)
+    else:
+        log.warning("docx 첨부 파일 없음")
+
+    # ── 첨부 파일 2: PPT(pptx) ← v4.3 신규 ───────────────────────────
+    # docx와 함께 항상 PPT도 첨부 (docx 생성 성공/실패 무관)
+    if pptx_path and Path(str(pptx_path)).exists():
+        with open(pptx_path, 'rb') as f:
+            att2 = MIMEApplication(f.read(), Name=Path(str(pptx_path)).name)
+        att2['Content-Disposition'] = f'attachment; filename="{Path(str(pptx_path)).name}"'
+        msg.attach(att2)
+        attached.append(Path(str(pptx_path)).name)
+
+    if attached:
+        log.info(f"이메일 첨부: {' + '.join(attached)}")
     else:
         log.warning("첨부 파일 없음 — 텍스트 요약만 발송")
 
@@ -1137,7 +1174,22 @@ def main():
                 email_target = Path(candidates[0])
                 log.info(f"신규 docx 없음 — 최신 보고서 첨부: {email_target.name}")
 
-        send_email(email_target, payload)
+        # ★ v4.3: PPT 경로 탐색 (docx와 함께 항상 첨부)
+        pptx_target = None
+        today_str   = datetime.now().strftime('%Y%m%d')
+        pptx_today  = DOCS_DIR / f'VN_Infra_MI_Weekly_Report_{today_str}.pptx'
+        if pptx_today.exists():
+            pptx_target = pptx_today
+        else:
+            pptx_cands = sorted(
+                _glob.glob(str(DOCS_DIR / 'reports' / '*.pptx')), reverse=True
+            ) + sorted(
+                _glob.glob(str(DOCS_DIR / 'VN_Infra_MI_Weekly_Report_*.pptx')), reverse=True
+            )
+            if pptx_cands:
+                pptx_target = Path(pptx_cands[0])
+
+        send_email(email_target, payload, pptx_path=pptx_target)
 
     elif send_mail:
         log.info("발송 조건 미충족 (신규 기사 없음 + KPI 변동 없음) — 이메일 건너뜀")
