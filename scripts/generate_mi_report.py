@@ -722,7 +722,10 @@ def main():
 
     today_tag  = datetime.now().strftime('%Y%m%d')
     pptx_path  = output_dir / f'VN_Infra_MI_Weekly_Report_{today_tag}.pptx'
-    docx_path  = AGENT_OUT  / f'VN_Infra_MI_Report_{today_tag}.docx'
+    # ★ Fix: 파일명을 PPT와 동일하게 Weekly_Report로 통일
+    #   이전: VN_Infra_MI_Report_*.docx → scan_reports() 패턴 불일치
+    #   수정: VN_Infra_MI_Weekly_Report_*.docx → 정상 인식
+    docx_path  = REPORTS_DIR / f'VN_Infra_MI_Weekly_Report_{today_tag}.docx'
 
     log.info('=' * 60)
     log.info('SA-8 MI 보고서 생성기 v3.1 시작')
