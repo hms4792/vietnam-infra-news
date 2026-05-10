@@ -821,7 +821,14 @@ def assemble_report_payload(
 
 
 def run_js_builder(payload: dict, output_path: Path) -> bool:
-    """Node.js docx 빌더 호출."""
+    """Node.js docx 빌더 호출.
+    
+    ★ v4.2 핵심 수정: tmp.js를 scripts/ 에 생성
+    - 기존: data/agent_output/build_mi_report_tmp.js → node_modules/docx 경로 못 찾음
+    - 수정: scripts/build_mi_report_tmp.js → scripts/node_modules/docx 정상 인식
+    - Node.js는 JS 파일 위치 기준으로 node_modules를 탐색하므로
+      cwd가 아닌 JS 파일 위치가 핵심
+    """
     AGENT_OUT_DIR.mkdir(parents=True, exist_ok=True)
     tmp_json = AGENT_OUT_DIR / 'sa8_report_payload.json'
 
@@ -836,7 +843,10 @@ def run_js_builder(payload: dict, output_path: Path) -> bool:
             'const EXEC_SUMMARY_IS_NEW = false;  // Python이 동적으로 교체',
             f'const EXEC_SUMMARY_IS_NEW = {str(is_new_exec).lower()};  // Python 자동 설정'
         )
-        tmp_js = AGENT_OUT_DIR / 'build_mi_report_tmp.js'
+        # ★ v4.2: tmp.js를 scripts/ 에 생성 (data/agent_output/ → scripts/)
+        # Node.js는 JS 파일 위치 기준으로 node_modules 탐색
+        # → scripts/node_modules/docx 정상 인식
+        tmp_js = SCRIPTS_DIR / 'build_mi_report_tmp.js'
         tmp_js.write_text(js_src, encoding='utf-8')
         actual_builder = tmp_js
     else:
@@ -851,7 +861,7 @@ def run_js_builder(payload: dict, output_path: Path) -> bool:
     result = subprocess.run(
         ['node', str(actual_builder)],
         capture_output=True, text=True, timeout=180, env=env,
-        cwd=str(SCRIPTS_DIR)   # ★ v4.1: scripts/ 에서 실행 → node_modules/docx 경로 정상 인식
+        cwd=str(SCRIPTS_DIR)   # JS 파일 위치와 동일 — node_modules 탐색 보장
     )
 
     if result.returncode != 0:
