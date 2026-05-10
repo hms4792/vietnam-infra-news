@@ -1,23 +1,52 @@
 /**
- * build_mi_ppt.js  ── SA-8 PPT 빌더 v3.0
+ * build_mi_ppt.js  ── SA-8 PPT 빌더 v4.0
  * =========================================================
  * 경영진 보고용 전문 MI 발표 자료 (PptxGenJS 기반)
  *
- * v3.0 (2026-05-09) 핵심:
- *   - 21개 플랜 전체 포함 (기사 없는 플랜도 현황 슬라이드 생성)
- *   - 신규 기사 노란 배지, 기존 기사 구분 표시
- *   - 슬라이드 구조:
- *       1. 표지 (타이틀 + 핵심 통계)
- *       2. 목차 (영역별)
- *       3. Executive Summary
- *       4. KPI 대시보드 (영역별 집계)
- *       5~N. 플랜별 슬라이드 (각 1장, 기사 많으면 2장)
- *       N+1. 클로징
+ * v4.0 (2026-05-10) 핵심 변경:
+ *   - 첨부 PPT(VN_Infra_MI_Weekly_Report_20260424.pptx) 디자인 완전 재현
+ *   - Layer1 데이터(사업개요, KPI, 주요프로젝트) 완전 적용 — 절대 삭제 금지
+ *   - 슬라이드 구조 (첨부 PPT 기준):
+ *       Slide 1  : 표지 (Navy + Teal, Coverage by Area)
+ *       Slide 2  : 전체 KPI 대시보드 (3×4 그리드)
+ *       Slide 3  : 이번 주 KPI 변동사항 (노란 하이라이트)
+ *       Slide 4  : KPI 달성률 비교 (가로 프로그레스 바)
+ *       Slide 5  : 영역 구분 슬라이드 (환경 인프라)
+ *       Slide 6+ : 플랜별 상세 슬라이드 (사업개요+KPI+프로젝트)
+ *       Slide N  : 영역 구분 (에너지, 도시)
+ *       Slide N+ : 플랜별 상세 슬라이드
+ *       Slide L  : 클로징
+ *   - 각 플랜: 주요 프로젝트 8개 이하는 1장, 초과시 전체 목록 테이블 슬라이드 추가
  *
  * 데이터 소스: SA8_DATA_FILE 환경변수 (generate_mi_report.py 페이로드)
- *
  * 실행: node scripts/build_mi_ppt.js
  * 출력: docs/VN_Infra_MI_Weekly_Report_YYYYMMDD.pptx
+ *
+ * payload JSON 구조:
+ * {
+ *   report_date, report_period, total_articles, new_articles_count,
+ *   executive_summary_ko,
+ *   kpi_dashboard: [{label, target, current, changed}],
+ *   kpi_changes:   [{plan_id, plan_name, indicator, from, to, reason}],
+ *   kpi_achievement: [{label, current_pct}],
+ *   areas: [
+ *     { name_ko, name_en, color, plan_ids: [...] }
+ *   ],
+ *   plans: {
+ *     "VN-XXX": {
+ *       plan_name_ko, sector, area, decision,
+ *       description_ko,           // ★ Layer1 필수
+ *       kpi_targets: [            // ★ Layer1 필수
+ *         {label, target, current, changed}
+ *       ],
+ *       key_projects: [           // ★ Layer1 필수
+ *         {name_ko, location, capacity, note, status}
+ *       ],
+ *       analysis_ko,              // Layer2 AI 분석
+ *       articles: [{title_ko, source, date, isNew}]
+ *     }
+ *   }
+ * }
  */
 
 'use strict';
@@ -26,939 +55,698 @@ const pptxgen = require('pptxgenjs');
 const fs      = require('fs');
 const path    = require('path');
 
-// ══════════════════════════════════════════════════════════════════════════
-//  데이터 로드
-// ══════════════════════════════════════════════════════════════════════════
+// ── 데이터 로드 ────────────────────────────────────────────────────────
 const BASE_DIR  = path.resolve(__dirname, '..');
 const DATA_FILE = process.env.SA8_DATA_FILE
-  || path.join(BASE_DIR, 'data', 'agent_output', 'sa8_report_payload.json');
+               || path.join(BASE_DIR, 'data', 'agent_output', 'sa8_report_payload.json');
 const OUT_DIR   = path.join(BASE_DIR, 'docs');
 
 if (!fs.existsSync(DATA_FILE)) {
   console.error('[PPT] 데이터 파일 없음:', DATA_FILE);
   process.exit(1);
 }
-const payload = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
 
-const today     = payload.report_date || new Date().toISOString().slice(0, 10);
-const week      = payload.report_week || '';
-const totalArts = payload.total_articles || 0;
-const newCount  = payload.new_articles_count || 0;
-const planSecs  = payload.plan_sections || [];
-const execSumm  = payload.executive_summary || '';
-
-const dateTag   = today.replace(/-/g, '');
-const outPath   = process.env.SA8_OUTPUT_PATH
-  || path.join(OUT_DIR, `VN_Infra_MI_Weekly_Report_${dateTag}.pptx`);
+const payload      = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
+const today        = payload.report_date   || new Date().toISOString().slice(0, 10);
+const period       = payload.report_period || '';
+const totalArts    = payload.total_articles      || 0;
+const newCount     = payload.new_articles_count  || 0;
+const execSumm     = payload.executive_summary_ko || payload.executive_summary || '';
+const kpiDash      = payload.kpi_dashboard   || [];
+const kpiChanges   = payload.kpi_changes     || [];
+const kpiAchieve   = payload.kpi_achievement || [];
+const areas        = payload.areas           || [];
+const plans        = payload.plans           || {};
+const dateTag      = today.replace(/-/g, '');
+const outPath      = process.env.SA8_OUTPUT_PATH
+               || path.join(OUT_DIR, `VN_Infra_MI_Weekly_Report_${dateTag}.pptx`);
 
 if (!fs.existsSync(path.dirname(outPath))) {
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
 }
 
-console.log(`[build_mi_ppt.js v3.0] 데이터 로드`);
-console.log(`  BASE_DIR: ${BASE_DIR}`);
-console.log(`  [OK] 로드: ${path.basename(DATA_FILE)}`);
-console.log(`  플랜 ${planSecs.length}개 로드 완료`);
+console.log(`[build_mi_ppt.js v4.0] 데이터 로드`);
+console.log(`  계획 수: ${Object.keys(plans).length}개 | 기사: ${totalArts}건 | 신규: ${newCount}건`);
 
-// ══════════════════════════════════════════════════════════════════════════
-//  디자인 시스템
-// ══════════════════════════════════════════════════════════════════════════
-
-// 색상 (hex, # 없이)
+// ── 색상 팔레트 (첨부 PPT 기준) ────────────────────────────────────────
 const C = {
-  navy:    '0C2340',
-  navyMid: '1B3A5C',
-  teal:    '0D6E6E',
-  tealL:   'E0F0EF',
-  blue:    '1B4F8A',
-  blueL:   'E3EDF8',
-  purple:  '4A3B8C',
-  purpleL: 'EDE9F8',
-  orange:  'D4820A',
-  green:   '2D6A4F',
-  greenL:  'E8F5E9',
-  amber:   '92400E',
-  amberL:  'FEF3C7',
-  newYellow:'F59E0B',
-  newYellowL:'FFF9C4',
-  grayDark:'374151',
-  grayMid: '6B7280',
-  grayLight:'F3F4F6',
+  navy:    '0C2340',  // 표지 배경
+  teal:    '0d9488',  // 환경 포인트
+  gold:    'D4A017',  // 에너지 포인트
+  blue:    '2563EB',  // 도시·교통 포인트
+  green:   '1A6B3C',  // 사업개요 섹션 헤더
+  orange:  'D97706',  // KPI 섹션 헤더
   white:   'FFFFFF',
-  black:   '111827',
-  silver:  '9CA3AF',
+  offWhite:'F8F9FA',
+  black:   '1A1A1A',
+  gray:    '64748B',
+  grayL:   'E2E8F0',
+  yellow:  'FEF08A',  // KPI 변동 하이라이트
+  yellowD: '854D0E',
+  red:     'DC2626',
+  // 섹터 색상
+  env:     '059669',  // 환경 인프라
+  energy:  'D97706',  // 에너지
+  urban:   '2563EB',  // 도시·교통
 };
 
-// 영역별 테마
-const AREA_THEME = {
-  'Environment':    { color: C.teal,   light: C.tealL,   icon: 'ENV' },
-  'Energy Develop.':{ color: C.blue,   light: C.blueL,   icon: 'PWR' },
-  'Urban Develop.': { color: C.purple, light: C.purpleL, icon: 'URB' },
-  'default':        { color: C.navy,   light: 'E8EEF4',  icon: '---' },
+// 영역별 색상
+const AREA_COLORS = {
+  '환경 인프라':  C.env,
+  'Environment':  C.env,
+  '에너지·전력':  C.energy,
+  'Energy':       C.energy,
+  '도시·교통·산업': C.urban,
+  'Urban':        C.urban,
 };
 
-// 진행단계
-const STAGE = {
-  PLANNING:     { ko: '계획·승인', bar: C.blue,   pct: 0.15 },
-  BIDDING:      { ko: '입찰·계약', bar: C.purple, pct: 0.35 },
-  CONSTRUCTION: { ko: '건설·시공', bar: C.orange, pct: 0.60 },
-  COMPLETION:   { ko: '준공·완료', bar: C.green,  pct: 0.90 },
-  OPERATION:    { ko: '운영·확장', bar: C.teal,   pct: 1.00 },
-  UNKNOWN:      { ko: '미확정',   bar: C.grayMid,pct: 0.00 },
-};
+function getAreaColor(area) {
+  for (const [k, v] of Object.entries(AREA_COLORS)) {
+    if ((area || '').includes(k) || (area || '').includes(k.split('·')[0])) return v;
+  }
+  return C.teal;
+}
 
-// 슬라이드 규격 (LAYOUT_16x9 = 10" × 5.625")
+function getSectorColor(sector) {
+  const s = (sector || '').toLowerCase();
+  if (s.includes('waste water') || s.includes('wastewater') || s.includes('water supply') || s.includes('solid waste'))
+    return C.env;
+  if (s.includes('power') || s.includes('oil') || s.includes('gas') || s.includes('energy'))
+    return C.energy;
+  return C.urban;
+}
+
+// ── 슬라이드 치수 (16:9) ───────────────────────────────────────────────
 const W = 10, H = 5.625;
-const MARGIN = 0.35;
 
-// 그림자 (공통)
-const mkShadow = () => ({ type: 'outer', color: '000000', opacity: 0.13, blur: 6, offset: 2, angle: 135 });
-
-// 안전 문자열
-const s = (v, fb) => {
-  if (!v && v !== 0) return fb !== undefined ? fb : '';
-  return String(v).trim() || (fb !== undefined ? fb : '');
-};
-
-// 줄임
-const ellipsis = (str, max) => {
-  const t = s(str, '');
-  return t.length > max ? t.slice(0, max - 1) + '…' : t;
-};
+// ── PPT 인스턴스 생성 ──────────────────────────────────────────────────
+const pres = new pptxgen();
+pres.layout  = 'LAYOUT_16x9';
+pres.author  = 'Claude SA-8 Auto-Report';
+pres.title   = `Vietnam Infrastructure MI Weekly Report ${today}`;
+pres.subject = 'Vietnam Infrastructure Market Intelligence';
 
 // ══════════════════════════════════════════════════════════════════════════
-//  슬라이드 공통 헬퍼
+// Slide 1: 표지
 // ══════════════════════════════════════════════════════════════════════════
+function addCoverSlide() {
+  const sl = pres.addSlide();
+  sl.background = { color: C.navy };
 
-/** 헤더 바 (슬라이드 상단 네이비 바 + 제목) */
-function addHeader(slide, title, subtitle, accentColor) {
-  const ac = accentColor || C.navy;
-  // 상단 좁은 네이비 스트라이프
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x: 0, y: 0, w: W, h: 0.06,
-    fill: { color: ac }, line: { color: ac }
-  });
-  // 제목 영역
-  slide.addText(s(title, ''), {
-    x: MARGIN, y: 0.12, w: W - MARGIN * 2 - 1.5, h: 0.46,
-    fontSize: 18, bold: true, fontFace: 'Calibri',
-    color: C.navy, valign: 'middle', margin: 0,
-  });
-  if (subtitle) {
-    slide.addText(s(subtitle, ''), {
-      x: MARGIN, y: 0.58, w: W - MARGIN * 2, h: 0.22,
-      fontSize: 9, color: C.grayMid, fontFace: 'Calibri', margin: 0,
-    });
-  }
-  // 날짜 우상단
-  slide.addText(today, {
-    x: W - 1.8, y: 0.12, w: 1.45, h: 0.28,
-    fontSize: 8, color: C.silver, fontFace: 'Calibri',
-    align: 'right', margin: 0,
-  });
-}
-
-/** 하단 푸터 */
-function addFooter(slide, pageNote) {
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x: 0, y: H - 0.22, w: W, h: 0.22,
-    fill: { color: C.navy }, line: { color: C.navy }
-  });
-  slide.addText('Vietnam Infrastructure MI Report  |  CONFIDENTIAL', {
-    x: MARGIN, y: H - 0.20, w: 5, h: 0.18,
-    fontSize: 7, color: 'AABBCC', fontFace: 'Calibri', margin: 0,
-  });
-  if (pageNote) {
-    slide.addText(s(pageNote, ''), {
-      x: W - 2.5, y: H - 0.20, w: 2.15, h: 0.18,
-      fontSize: 7, color: 'AABBCC', align: 'right', fontFace: 'Calibri', margin: 0,
-    });
-  }
-}
-
-/** 컬러 카드 박스 */
-function addCard(slide, x, y, w, h, bgColor, opts) {
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x, y, w, h,
-    fill: { color: bgColor || C.grayLight },
-    line: { color: opts && opts.border ? opts.border : bgColor || C.grayLight, pt: 0.5 },
-    shadow: opts && opts.shadow ? mkShadow() : undefined,
-  });
-}
-
-/** 진행단계 프로그레스 바 */
-function addProgressBar(slide, x, y, w, stage) {
-  const info = STAGE[stage] || STAGE.UNKNOWN;
-  const trackH = 0.09;
-  // 트랙
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x, y, w, h: trackH,
-    fill: { color: 'E5E7EB' }, line: { color: 'D1D5DB', pt: 0.3 }
-  });
-  // 채움
-  const fillW = Math.max(w * info.pct, info.pct > 0 ? 0.05 : 0);
-  if (fillW > 0) {
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x, y, w: fillW, h: trackH,
-      fill: { color: info.bar }, line: { color: info.bar, pt: 0 }
-    });
-  }
-  // 레이블
-  slide.addText(info.ko, {
-    x: x + w + 0.05, y: y - 0.01, w: 1.0, h: trackH + 0.02,
-    fontSize: 7.5, color: info.bar, bold: true, fontFace: 'Calibri',
-    valign: 'middle', margin: 0,
-  });
-}
-
-/** KPI 행 (지표명 + 현황 + 목표) */
-function addKpiRow(slide, x, y, w, kpi, isEven) {
-  const rowH = 0.235;
-  const c1 = w * 0.44, c2 = w * 0.28, c3 = w * 0.28;
-  // 배경
-  if (isEven) {
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x, y, w, h: rowH,
-      fill: { color: 'F9FAFB' }, line: { color: 'E5E7EB', pt: 0.3 }
-    });
-  }
-  slide.addText(ellipsis(kpi.indicator, 28), {
-    x: x + 0.04, y, w: c1 - 0.04, h: rowH,
-    fontSize: 8, color: C.grayDark, fontFace: 'Calibri', valign: 'middle', margin: 0,
-  });
-  slide.addText(ellipsis(kpi.current || '수집 중', 22), {
-    x: x + c1, y, w: c2, h: rowH,
-    fontSize: 8, color: C.grayMid, fontFace: 'Calibri', valign: 'middle', align: 'center', margin: 0,
-  });
-  slide.addText(ellipsis(kpi.target_2030 || kpi.target || '-', 22), {
-    x: x + c1 + c2, y, w: c3, h: rowH,
-    fontSize: 8.5, bold: true, color: C.teal, fontFace: 'Calibri', valign: 'middle', align: 'center', margin: 0,
-  });
-}
-
-/** 기사 행 (신규=노란 배지, 기존=회색) */
-function addArticleRow(slide, x, y, w, art, rowH) {
-  const isNew = art.is_new === true;
-  const isHigh = (art.ctx_grade || '') === 'HIGH';
-  const bgColor = isNew ? C.newYellowL : C.white;
-  const badgeColor = isNew ? C.newYellow : (isHigh ? C.blue : C.silver);
-  const badgeTxt = isNew ? (isHigh ? 'NEW·H' : 'NEW') : (isHigh ? 'HIGH' : 'MED');
-  const titleColor = isNew ? C.black : C.grayDark;
-
-  // 배경
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x, y, w, h: rowH,
-    fill: { color: bgColor },
-    line: { color: isNew ? 'FCD34D' : 'E5E7EB', pt: 0.4 }
-  });
-
-  const badgeW = 0.42;
-  const dateW  = 0.65;
-  const srcW   = 0.85;
-  const titleW = w - badgeW - dateW - srcW - 0.08;
-
-  // 배지
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x: x + 0.02, y: y + 0.035, w: badgeW - 0.04, h: rowH - 0.07,
-    fill: { color: badgeColor }, line: { color: badgeColor, pt: 0 }
-  });
-  slide.addText(badgeTxt, {
-    x: x + 0.02, y: y + 0.035, w: badgeW - 0.04, h: rowH - 0.07,
-    fontSize: 6.5, bold: true, color: C.white, fontFace: 'Calibri',
-    align: 'center', valign: 'middle', margin: 0,
-  });
-
-  // 날짜
-  slide.addText(s(art.date || '', '').slice(5), {
-    x: x + badgeW, y, w: dateW, h: rowH,
-    fontSize: 7, color: C.grayMid, fontFace: 'Calibri',
-    valign: 'middle', align: 'center', margin: 0,
-  });
-
-  // 출처
-  slide.addText(ellipsis(art.source || '', 12), {
-    x: x + badgeW + dateW, y, w: srcW, h: rowH,
-    fontSize: 7, color: C.grayMid, fontFace: 'Calibri',
-    valign: 'middle', margin: 0,
-  });
-
-  // 제목
-  slide.addText(ellipsis(art.title_ko || art.title_en || '', 42), {
-    x: x + badgeW + dateW + srcW, y, w: titleW, h: rowH,
-    fontSize: 7.5, bold: isNew, color: titleColor, fontFace: 'Calibri',
-    valign: 'middle', margin: 0,
-  });
-}
-
-// ══════════════════════════════════════════════════════════════════════════
-//  1. 표지 슬라이드
-// ══════════════════════════════════════════════════════════════════════════
-function buildCoverSlide() {
-  const slide = pres.addSlide();
-  slide.background = { color: C.navy };
-
-  // 왼쪽 밝은 세로 라인
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x: 0, y: 0, w: 0.06, h: H,
-    fill: { color: C.teal }, line: { color: C.teal }
+  // 좌측 teal 수직 바
+  sl.addShape(pres.shapes.RECTANGLE, {
+    x: 0, y: 0, w: 0.18, h: H,
+    fill: { color: C.teal }, line: { color: C.teal, width: 0 }
   });
 
   // 메인 타이틀
-  slide.addText('VIETNAM INFRASTRUCTURE', {
-    x: 0.5, y: 1.05, w: 9, h: 0.75,
-    fontSize: 38, bold: true, fontFace: 'Calibri', color: C.white,
-    charSpacing: 3,
+  sl.addText('VIETNAM INFRASTRUCTURE', {
+    x: 0.35, y: 0.25, w: 9.3, h: 0.75,
+    fontSize: 38, bold: true, fontFace: 'Arial Black',
+    color: C.white, charSpacing: 2
   });
-  slide.addText('MARKET INTELLIGENCE REPORT', {
-    x: 0.5, y: 1.78, w: 9, h: 0.45,
-    fontSize: 22, bold: false, fontFace: 'Calibri', color: '7EB8D4',
-    charSpacing: 5,
+  sl.addText('MARKET INTELLIGENCE REPORT', {
+    x: 0.35, y: 1.05, w: 9.3, h: 0.45,
+    fontSize: 20, bold: true, fontFace: 'Arial',
+    color: C.teal, charSpacing: 2
   });
-  slide.addText('베트남 인프라 시장 분석 주간 보고서', {
-    x: 0.5, y: 2.22, w: 9, h: 0.38,
-    fontSize: 15, fontFace: 'Calibri', color: 'B0CFDF',
+  // 구분선 (teal 언더라인 — 직접 shape으로 구현)
+  sl.addShape(pres.shapes.LINE, {
+    x: 0.35, y: 1.78, w: 5.5, h: 0,
+    line: { color: C.teal, width: 2.5 }
+  });
+  sl.addText('베트남 인프라 시장 동향 주간 보고서', {
+    x: 0.35, y: 1.95, w: 9.3, h: 0.45,
+    fontSize: 16, italic: true, fontFace: 'Arial',
+    color: 'AADDFF'
   });
 
-  // 구분선
-  slide.addShape(pres.shapes.LINE, {
-    x: 0.5, y: 2.68, w: 9, h: 0,
-    line: { color: '2E6A9A', width: 1.2, dashType: 'dash' }
-  });
-
-  // 메타 정보 카드 (3개)
+  // 메타 카드 4개
   const cards = [
-    { label: '발행일', value: today },
-    { label: '보고 기간', value: week },
-    { label: `수집 기사 (신규 ${newCount}건)`, value: `${totalArts}건` },
+    { label: '발행일',   val: `${today.replace(/-/g, '년 ').replace('-', '월 ')}일` },
+    { label: '분석 기준', val: payload.knowledge_version || 'knowledge_index v2.3' },
+    { label: '마스터플랜', val: `${Object.keys(plans).length}개 플랜` },
+    { label: 'AI 분석',   val: 'Claude Haiku' },
   ];
-  const cw = 2.8, cy = 3.0, ch = 0.85, gap = 0.22;
+  const cardW = 2.3, cardH = 0.72, cardY = 2.6, cardGap = 0.08;
   cards.forEach((c, i) => {
-    const cx = 0.5 + i * (cw + gap);
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x: cx, y: cy, w: cw, h: ch,
-      fill: { color: C.navyMid }, line: { color: '2E6A9A', pt: 0.8 },
+    const x = 0.35 + i * (cardW + cardGap);
+    sl.addShape(pres.shapes.RECTANGLE, {
+      x, y: cardY, w: cardW, h: cardH,
+      fill: { color: '1A3A5C' }, line: { color: C.teal, width: 1 }
     });
-    slide.addText(c.label, {
-      x: cx + 0.12, y: cy + 0.06, w: cw - 0.24, h: 0.22,
-      fontSize: 8, color: '7EB8D4', fontFace: 'Calibri', margin: 0,
-    });
-    slide.addText(c.value, {
-      x: cx + 0.12, y: cy + 0.26, w: cw - 0.24, h: 0.48,
-      fontSize: 18, bold: true, color: C.white, fontFace: 'Calibri',
-      valign: 'middle', margin: 0,
-    });
+    sl.addText(c.label, { x, y: cardY + 0.04, w: cardW, h: 0.22,
+      fontSize: 9, color: C.teal, align: 'center', fontFace: 'Arial', bold: true });
+    sl.addText(c.val,   { x, y: cardY + 0.28, w: cardW, h: 0.36,
+      fontSize: 13, color: C.white, align: 'center', fontFace: 'Arial', bold: true });
   });
 
-  // 신규 기사 배너
-  if (newCount > 0) {
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x: 0.5, y: 4.05, w: 9, h: 0.30,
-      fill: { color: 'FFF9C4' }, line: { color: 'FCD34D', pt: 0.8 }
+  // Coverage by Area
+  sl.addText('Coverage by Area', {
+    x: 0.35, y: 3.55, w: 3, h: 0.3,
+    fontSize: 11, color: C.gray, fontFace: 'Arial'
+  });
+
+  const areaBands = [
+    { label: '환경 인프라', sub: `${areas.find(a=>a.name_ko?.includes('환경'))?.plan_ids?.length||4} Plans`, color: C.env },
+    { label: '에너지·전력', sub: `${areas.find(a=>a.name_ko?.includes('에너지'))?.plan_ids?.length||4} Plans`, color: C.energy },
+    { label: '도시·교통·산업', sub: `${areas.find(a=>a.name_ko?.includes('도시'))?.plan_ids?.length||4} Plans`, color: C.blue },
+  ];
+  const bw = 2.95, by = 3.9, bh = 0.65;
+  areaBands.forEach((b, i) => {
+    const bx = 0.35 + i * (bw + 0.08);
+    sl.addShape(pres.shapes.RECTANGLE, { x: bx, y: by, w: bw, h: bh,
+      fill: { color: b.color }, line: { color: b.color, width: 0 } });
+    sl.addText(b.label, { x: bx, y: by + 0.06, w: bw, h: 0.3,
+      fontSize: 14, bold: true, color: C.white, align: 'center', fontFace: 'Arial' });
+    sl.addText(b.sub,   { x: bx, y: by + 0.36, w: bw, h: 0.22,
+      fontSize: 11, color: C.white, align: 'center', fontFace: 'Arial' });
+  });
+
+  // URL 푸터
+  sl.addText('hms4792.github.io/vietnam-infra-news', {
+    x: 0.35, y: 5.3, w: 9.3, h: 0.25,
+    fontSize: 9, color: '4A7FA5', fontFace: 'Arial'
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// Slide 2: 전체 KPI 대시보드 (3×4 그리드)
+// ══════════════════════════════════════════════════════════════════════════
+function addKpiDashSlide() {
+  if (kpiDash.length === 0) return;
+  const sl = pres.addSlide();
+  sl.background = { color: C.white };
+
+  // 헤더
+  sl.addShape(pres.shapes.RECTANGLE, { x: 0, y: 0, w: W, h: 0.52,
+    fill: { color: C.navy }, line: { color: C.navy, width: 0 } });
+  sl.addText('전체 마스터플랜 KPI 목표 현황', {
+    x: 0.3, y: 0.06, w: 7, h: 0.4,
+    fontSize: 20, bold: true, color: C.white, fontFace: 'Arial'
+  });
+  sl.addText(`${Object.keys(plans).length}개 마스터플랜 · KPI ${kpiDash.length}개 · 2030 목표 기준`, {
+    x: 7, y: 0.1, w: 2.8, h: 0.35,
+    fontSize: 9, color: 'AADDFF', align: 'right', fontFace: 'Arial'
+  });
+
+  // KPI 카드 그리드 (3열)
+  const cols = 3, cardW = 3.1, cardH = 0.9, gapX = 0.08, gapY = 0.08;
+  const startX = 0.18, startY = 0.62;
+
+  kpiDash.forEach((kpi, i) => {
+    const col = i % cols, row = Math.floor(i / cols);
+    const x = startX + col * (cardW + gapX);
+    const y = startY + row * (cardH + gapY);
+    const changed = kpi.changed;
+    const borderColor = changed ? C.gold : C.grayL;
+
+    sl.addShape(pres.shapes.RECTANGLE, { x, y, w: cardW, h: cardH,
+      fill: { color: changed ? 'FFFDE7' : C.offWhite },
+      line: { color: borderColor, width: changed ? 2 : 1 }
     });
-    slide.addText(`★ 이번 주 신규 기사 ${newCount}건 — 슬라이드 내 노란색 배지로 표시  /  기존 기사는 회색 배지`, {
-      x: 0.5, y: 4.05, w: 9, h: 0.30,
-      fontSize: 9, bold: true, color: C.amber, fontFace: 'Calibri',
-      align: 'center', valign: 'middle', margin: 0,
+
+    sl.addText(kpi.label, { x: x+0.08, y: y+0.05, w: cardW-0.16, h: 0.2,
+      fontSize: 9, color: C.gray, fontFace: 'Arial' });
+
+    // 목표값 (크게)
+    const targetColor = changed ? C.gold : C.teal;
+    sl.addText(String(kpi.target), { x: x+0.08, y: y+0.22, w: cardW*0.55, h: 0.36,
+      fontSize: 18, bold: true, color: targetColor, fontFace: 'Arial' });
+    sl.addText('목표', { x: x+0.08, y: y+0.58, w: cardW*0.5, h: 0.2,
+      fontSize: 8, color: C.gray, fontFace: 'Arial' });
+
+    // 현황값
+    const currentFill = changed ? C.yellow : C.grayL;
+    sl.addShape(pres.shapes.RECTANGLE, {
+      x: x + cardW*0.58, y: y+0.22, w: cardW*0.38, h: 0.36,
+      fill: { color: currentFill }, line: { color: currentFill, width: 0 }
     });
+    sl.addText(String(kpi.current || '-'), {
+      x: x + cardW*0.58, y: y+0.22, w: cardW*0.38, h: 0.36,
+      fontSize: 11, bold: changed, color: changed ? C.yellowD : C.black,
+      align: 'center', valign: 'middle', fontFace: 'Arial'
+    });
+    sl.addText('현황', { x: x + cardW*0.58, y: y+0.58, w: cardW*0.38, h: 0.2,
+      fontSize: 8, color: C.gray, align: 'center', fontFace: 'Arial' });
+  });
+
+  // 하단 노트
+  const noteY = startY + Math.ceil(kpiDash.length / cols) * (cardH + gapY) + 0.05;
+  if (noteY < H - 0.15) {
+    const hasChanges = kpiDash.filter(k => k.changed);
+    if (hasChanges.length > 0) {
+      const noteText = `★ 노란색 = 직전 주 대비 KPI 변동사항 (${hasChanges.map(k=>k.label).join(' · ')})`;
+      sl.addText(noteText, { x: 0.18, y: noteY, w: W-0.36, h: 0.22,
+        fontSize: 8.5, color: C.yellowD, fontFace: 'Arial', italic: true });
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// Slide 3: 이번 주 KPI 변동사항
+// ══════════════════════════════════════════════════════════════════════════
+function addKpiChangesSlide() {
+  if (kpiChanges.length === 0) return;
+  const sl = pres.addSlide();
+  sl.background = { color: C.white };
+
+  sl.addShape(pres.shapes.RECTANGLE, { x: 0, y: 0, w: W, h: 0.52,
+    fill: { color: C.navy }, line: { color: C.navy, width: 0 } });
+  sl.addText('이번 주 핵심 KPI 변동사항', {
+    x: 0.3, y: 0.06, w: 7, h: 0.4,
+    fontSize: 20, bold: true, color: C.white, fontFace: 'Arial'
+  });
+  sl.addText('★ 노란색 항목 = 직전 주 대비 변동 확인', {
+    x: 7, y: 0.12, w: 2.7, h: 0.3,
+    fontSize: 9, color: C.yellow, align: 'right', fontFace: 'Arial'
+  });
+
+  let y = 0.65;
+  kpiChanges.forEach((ch, i) => {
+    const rowH = 0.85;
+    // 좌측 plan_id 배지
+    sl.addShape(pres.shapes.RECTANGLE, { x: 0.2, y, w: 1.6, h: 0.32,
+      fill: { color: C.gold }, line: { color: C.gold, width: 0 } });
+    sl.addText(ch.plan_id || '', { x: 0.2, y, w: 1.6, h: 0.32,
+      fontSize: 9, bold: true, color: C.white, align: 'center', valign: 'middle', fontFace: 'Arial' });
+
+    // 제목
+    sl.addText(`★ ${ch.indicator || ''}`, { x: 2.0, y, w: 7.7, h: 0.32,
+      fontSize: 13, bold: true, color: C.navy, fontFace: 'Arial' });
+
+    // 변동 화살표 행
+    const arrowY = y + 0.35;
+    sl.addText(String(ch.from || ''), { x: 0.2, y: arrowY, w: 2.5, h: 0.3,
+      fontSize: 18, bold: true, color: C.gray, fontFace: 'Arial' });
+    sl.addText('→', { x: 2.7, y: arrowY, w: 0.5, h: 0.3,
+      fontSize: 18, color: C.navy, align: 'center', fontFace: 'Arial' });
+    sl.addText(String(ch.to || ''), { x: 3.2, y: arrowY, w: 3, h: 0.3,
+      fontSize: 18, bold: true, color: C.teal, fontFace: 'Arial' });
+
+    // 근거
+    if (ch.reason) {
+      sl.addText(ch.reason, { x: 0.2, y: arrowY + 0.32, w: W - 0.4, h: 0.2,
+        fontSize: 9, color: C.gray, fontFace: 'Arial', italic: true });
+    }
+
+    // 구분선
+    if (i < kpiChanges.length - 1) {
+      sl.addShape(pres.shapes.LINE, { x: 0.2, y: y + rowH, w: W - 0.4, h: 0,
+        line: { color: C.grayL, width: 1 } });
+    }
+    y += rowH;
+    if (y > H - 0.3) return; // 슬라이드 넘침 방지
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// Slide 4: KPI 달성률 비교
+// ══════════════════════════════════════════════════════════════════════════
+function addKpiAchieveSlide() {
+  if (kpiAchieve.length === 0) return;
+  const sl = pres.addSlide();
+  sl.background = { color: C.white };
+
+  sl.addShape(pres.shapes.RECTANGLE, { x: 0, y: 0, w: W, h: 0.52,
+    fill: { color: C.navy }, line: { color: C.navy, width: 0 } });
+  sl.addText('KPI 달성률 현황 비교 (2025년 기준)', {
+    x: 0.3, y: 0.08, w: 9, h: 0.4,
+    fontSize: 20, bold: true, color: C.white, fontFace: 'Arial'
+  });
+
+  const barH = 0.42, barGap = 0.1, startY = 0.65;
+  const barMaxW = 7.2, labelW = 2.2;
+
+  kpiAchieve.forEach((item, i) => {
+    const y = startY + i * (barH + barGap);
+    const pct = Math.min(Math.max(item.current_pct || 0, 0), 100);
+    const barFillW = (pct / 100) * barMaxW;
+    const barColor = pct >= 80 ? C.env : pct >= 50 ? C.teal : C.gold;
+
+    // 라벨
+    sl.addText(item.label, { x: 0.2, y, w: labelW, h: barH,
+      fontSize: 11, color: C.black, valign: 'middle', fontFace: 'Arial' });
+
+    // 배경 바
+    sl.addShape(pres.shapes.RECTANGLE, { x: labelW + 0.2, y: y + 0.08, w: barMaxW, h: barH - 0.16,
+      fill: { color: C.grayL }, line: { color: C.grayL, width: 0 } });
+
+    // 채워진 바
+    if (barFillW > 0) {
+      sl.addShape(pres.shapes.RECTANGLE, { x: labelW + 0.2, y: y + 0.08, w: barFillW, h: barH - 0.16,
+        fill: { color: barColor }, line: { color: barColor, width: 0 } });
+    }
+
+    // 퍼센트 텍스트
+    sl.addText(`${pct}% / 100%`, { x: labelW + 0.2 + barMaxW + 0.1, y, w: 1.5, h: barH,
+      fontSize: 10, color: C.gray, valign: 'middle', fontFace: 'Arial' });
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// 영역 구분 슬라이드
+// ══════════════════════════════════════════════════════════════════════════
+function addAreaDividerSlide(area) {
+  const sl = pres.addSlide();
+  const areaColor = getAreaColor(area.name_ko || area.name_en || '');
+  sl.background = { color: C.navy };
+
+  // 좌측 컬러 바
+  sl.addShape(pres.shapes.RECTANGLE, { x: 0, y: 0, w: 0.25, h: H,
+    fill: { color: areaColor }, line: { color: areaColor, width: 0 } });
+
+  // 영역명
+  sl.addText(area.name_ko || area.name_en || '', {
+    x: 0.5, y: 0.8, w: 9, h: 1.1,
+    fontSize: 48, bold: true, color: C.white, fontFace: 'Arial Black'
+  });
+  sl.addText(area.name_en || '', {
+    x: 0.5, y: 1.9, w: 9, h: 0.5,
+    fontSize: 22, color: areaColor, fontFace: 'Arial'
+  });
+
+  // 포함 플랜 목록
+  sl.addText('포함 마스터플랜', { x: 0.5, y: 2.65, w: 3, h: 0.3,
+    fontSize: 11, color: C.gray, fontFace: 'Arial' });
+
+  const planIds = area.plan_ids || [];
+  planIds.forEach((pid, i) => {
+    const pdata = plans[pid];
+    if (!pdata) return;
+    const y = 3.0 + i * 0.52;
+    sl.addShape(pres.shapes.RECTANGLE, { x: 0.5, y, w: 9, h: 0.42,
+      fill: { color: '132038' }, line: { color: areaColor, width: 1 } });
+    sl.addText(pid, { x: 0.6, y: y + 0.04, w: 1.8, h: 0.32,
+      fontSize: 9, bold: true, color: areaColor, valign: 'middle', fontFace: 'Arial' });
+    sl.addText(pdata.plan_name_ko || pid, { x: 2.5, y: y + 0.04, w: 6.9, h: 0.32,
+      fontSize: 10, color: C.white, valign: 'middle', fontFace: 'Arial' });
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// 플랜 상세 슬라이드 (Layer1 완전 적용)
+// ══════════════════════════════════════════════════════════════════════════
+/**
+ * addPlanSlide()
+ * ★ Layer1 핵심 함수 — 절대 삭제/수정 금지
+ *   - description_ko : 사업 개요 (좌측 패널)
+ *   - kpi_targets    : KPI 목표 및 현황 (좌측 하단)
+ *   - key_projects   : 주요 프로젝트 목록 (우측 패널, 최대 8개)
+ */
+function addPlanSlide(planId, pdata) {
+  const sl = pres.addSlide();
+  sl.background = { color: C.white };
+  const sectorColor = getSectorColor(pdata.sector || '');
+
+  // ── 상단 헤더 ────────────────────────────────────────────────────────
+  // Plan ID 배지
+  sl.addShape(pres.shapes.RECTANGLE, { x: 0, y: 0, w: 1.9, h: 0.42,
+    fill: { color: sectorColor }, line: { color: sectorColor, width: 0 } });
+  sl.addText(planId, { x: 0, y: 0, w: 1.9, h: 0.42,
+    fontSize: 10, bold: true, color: C.white, align: 'center', valign: 'middle', fontFace: 'Arial' });
+
+  // 플랜명
+  sl.addText(pdata.plan_name_ko || planId, {
+    x: 2.0, y: 0.02, w: 7.8, h: 0.44,
+    fontSize: 18, bold: true, color: C.navy, valign: 'middle', fontFace: 'Arial'
+  });
+
+  // Decision 서브타이틀
+  sl.addText(pdata.decision || '', {
+    x: 2.0, y: 0.44, w: 7.8, h: 0.22,
+    fontSize: 9, color: C.gray, fontFace: 'Arial'
+  });
+
+  // 헤더 구분선
+  sl.addShape(pres.shapes.LINE, { x: 0, y: 0.68, w: W, h: 0,
+    line: { color: C.navy, width: 1.5 } });
+
+  // ── 좌측 패널 (사업개요 + KPI) ────────────────────────────────────
+  const LEFT_W = 5.7, RIGHT_X = 5.95, RIGHT_W = 3.9;
+  const CONTENT_Y = 0.75;
+
+  // ① 사업 개요 헤더 (Layer1 — 절대 유지)
+  sl.addShape(pres.shapes.RECTANGLE, { x: 0, y: CONTENT_Y, w: LEFT_W, h: 0.28,
+    fill: { color: C.green }, line: { color: C.green, width: 0 } });
+  sl.addText('■ 사업 개요', { x: 0.08, y: CONTENT_Y, w: LEFT_W - 0.16, h: 0.28,
+    fontSize: 11, bold: true, color: C.white, valign: 'middle', fontFace: 'Arial' });
+
+  // ① 사업 개요 내용 (Layer1 — 절대 유지)
+  const desc = pdata.description_ko || '(사업 개요 미등록 — knowledge_index.json 업데이트 필요)';
+  const descLines = desc.split('\n').filter(Boolean).slice(0, 5).join(' ');
+  const descTrimmed = descLines.length > 280 ? descLines.substring(0, 280) + '...' : descLines;
+  sl.addShape(pres.shapes.RECTANGLE, { x: 0, y: CONTENT_Y + 0.28, w: LEFT_W, h: 1.55,
+    fill: { color: C.offWhite }, line: { color: C.grayL, width: 1 } });
+  sl.addText(descTrimmed, { x: 0.1, y: CONTENT_Y + 0.32, w: LEFT_W - 0.2, h: 1.48,
+    fontSize: 10, color: C.black, fontFace: 'Arial', valign: 'top',
+    align: 'justify', wrap: true
+  });
+
+  // ② KPI 목표 및 현황 헤더 (Layer1 — 절대 유지)
+  const KPI_Y = CONTENT_Y + 1.85;
+  sl.addShape(pres.shapes.RECTANGLE, { x: 0, y: KPI_Y, w: LEFT_W, h: 0.28,
+    fill: { color: C.orange }, line: { color: C.orange, width: 0 } });
+  sl.addText('■ KPI 목표 및 현황', { x: 0.08, y: KPI_Y, w: LEFT_W - 0.16, h: 0.28,
+    fontSize: 11, bold: true, color: C.white, valign: 'middle', fontFace: 'Arial' });
+
+  // ② KPI 카드들 (Layer1 — 절대 유지)
+  const kpis = pdata.kpi_targets || [];
+  const kpiCardW = (LEFT_W - 0.12) / 3, kpiCardH = 0.82;
+  kpis.slice(0, 3).forEach((kpi, i) => {
+    const kx = i * (kpiCardW + 0.06);
+    const ky = KPI_Y + 0.3;
+    const isChanged = kpi.changed;
+    sl.addShape(pres.shapes.RECTANGLE, { x: kx, y: ky, w: kpiCardW, h: kpiCardH,
+      fill: { color: isChanged ? 'FFFDE7' : C.white },
+      line: { color: isChanged ? C.gold : C.grayL, width: isChanged ? 2 : 1 }
+    });
+    sl.addText(kpi.label || kpi.indicator || '', { x: kx + 0.06, y: ky + 0.04, w: kpiCardW - 0.12, h: 0.22,
+      fontSize: 9, color: C.gray, fontFace: 'Arial', wrap: true });
+    sl.addText(String(kpi.target || ''), { x: kx + 0.06, y: ky + 0.24, w: kpiCardW - 0.12, h: 0.28,
+      fontSize: 16, bold: true, color: isChanged ? C.gold : sectorColor, fontFace: 'Arial' });
+    const currentBg = isChanged ? C.yellow : C.grayL;
+    sl.addShape(pres.shapes.RECTANGLE, { x: kx + 0.06, y: ky + 0.53, w: kpiCardW - 0.12, h: 0.22,
+      fill: { color: currentBg }, line: { color: currentBg, width: 0 } });
+    sl.addText(String(kpi.current || '-'), { x: kx + 0.06, y: ky + 0.53, w: kpiCardW - 0.12, h: 0.22,
+      fontSize: 9, color: isChanged ? C.yellowD : C.black, align: 'center', valign: 'middle', fontFace: 'Arial' });
+  });
+
+  // KPI 별표 (변동 있을 때)
+  if (kpis.some(k => k.changed)) {
+    sl.addText('★ KPI 변동', { x: 0, y: KPI_Y + 0.3 + kpiCardH + 0.03, w: LEFT_W, h: 0.18,
+      fontSize: 8, color: C.yellowD, italic: true, fontFace: 'Arial' });
   }
 
-  // 하단 기밀 표시
-  slide.addText('CONFIDENTIAL  —  내부 참고용  —  SA-8 자동 생성 (Claude Haiku)', {
-    x: 0, y: H - 0.28, w: W, h: 0.28,
-    fontSize: 7.5, color: '4A7B9D', fontFace: 'Calibri',
-    align: 'center', valign: 'middle', margin: 0,
-  });
+  // ── 우측 패널 (주요 프로젝트 목록) — Layer1 ────────────────────────
+  // 우측 헤더
+  sl.addShape(pres.shapes.RECTANGLE, { x: RIGHT_X, y: CONTENT_Y, w: RIGHT_W, h: 0.28,
+    fill: { color: C.navy }, line: { color: C.navy, width: 0 } });
+  sl.addText('■ 주요 프로젝트 목록', { x: RIGHT_X + 0.08, y: CONTENT_Y, w: RIGHT_W - 0.16, h: 0.28,
+    fontSize: 11, bold: true, color: C.white, valign: 'middle', fontFace: 'Arial' });
 
-  console.log('  ✅ 표지');
-}
+  // 프로젝트 카드 (최대 8개, Layer1 — 절대 유지)
+  const projects = pdata.key_projects || [];
+  const displayProjs = projects.slice(0, 8);
+  const projCardH = (H - CONTENT_Y - 0.28 - 0.32) / Math.max(displayProjs.length, 1);
+  const maxProjH = 0.68, minProjH = 0.35;
+  const actualProjH = Math.min(maxProjH, Math.max(minProjH, projCardH));
 
-// ══════════════════════════════════════════════════════════════════════════
-//  2. 목차 슬라이드
-// ══════════════════════════════════════════════════════════════════════════
-function buildTocSlide() {
-  const slide = pres.addSlide();
-  slide.background = { color: C.white };
-  addHeader(slide, '목  차', `분석 기간: ${week}  |  전체 ${planSecs.length}개 마스터플랜`, C.navy);
-  addFooter(slide, 'Table of Contents');
+  displayProjs.forEach((proj, i) => {
+    const py = CONTENT_Y + 0.28 + i * (actualProjH + 0.04);
+    if (py + actualProjH > H - 0.25) return;
 
-  const areaGroups = {};
-  planSecs.forEach(sec => {
-    const a = s(sec.area, 'default');
-    if (!areaGroups[a]) areaGroups[a] = [];
-    areaGroups[a].push(sec);
-  });
-
-  const areas = ['Environment', 'Energy Develop.', 'Urban Develop.'];
-  const colW = (W - MARGIN * 2 - 0.3) / 3;
-  const startY = 0.90;
-
-  areas.forEach((area, col) => {
-    const theme = AREA_THEME[area] || AREA_THEME.default;
-    const secs  = areaGroups[area] || [];
-    const cx = MARGIN + col * (colW + 0.15);
-
-    // 영역 헤더
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x: cx, y: startY, w: colW, h: 0.34,
-      fill: { color: theme.color }, line: { color: theme.color }
-    });
-    slide.addText(area, {
-      x: cx, y: startY, w: colW, h: 0.34,
-      fontSize: 10, bold: true, color: C.white, fontFace: 'Calibri',
-      align: 'center', valign: 'middle', margin: 0,
+    sl.addShape(pres.shapes.RECTANGLE, { x: RIGHT_X, y: py, w: RIGHT_W, h: actualProjH,
+      fill: { color: i % 2 === 0 ? C.offWhite : C.white },
+      line: { color: C.grayL, width: 1 }
     });
 
-    // 플랜 목록 (행 높이 0.42 — ID 상단 + 제목 하단 분리)
-    secs.forEach((sec, i) => {
-      const rowH = 0.42;
-      const ry   = startY + 0.34 + i * (rowH + 0.02);
-      const isNew = (sec.new_count || 0) > 0;
-      // 배경
-      slide.addShape(pres.shapes.RECTANGLE, {
-        x: cx, y: ry, w: colW, h: rowH,
-        fill: { color: i % 2 === 0 ? theme.light : C.white },
-        line: { color: 'E5E7EB', pt: 0.3 }
-      });
-      // 좌측 색상 강조선
-      slide.addShape(pres.shapes.RECTANGLE, {
-        x: cx, y: ry, w: 0.04, h: rowH,
-        fill: { color: theme.color }, line: { color: theme.color, pt: 0 }
-      });
-      // 플랜 ID (상단)
-      slide.addText(s(sec.plan_id, ''), {
-        x: cx + 0.08, y: ry + 0.03, w: colW - 0.55, h: 0.18,
-        fontSize: 7, bold: true, color: theme.color, fontFace: 'Calibri',
-        valign: 'top', margin: 0,
-      });
-      // 신규 배지
-      if (isNew) {
-        slide.addShape(pres.shapes.RECTANGLE, {
-          x: cx + colW - 0.40, y: ry + 0.05, w: 0.34, h: 0.15,
-          fill: { color: C.newYellow }, line: { color: C.newYellow, pt: 0 }
-        });
-        slide.addText('NEW', {
-          x: cx + colW - 0.40, y: ry + 0.05, w: 0.34, h: 0.15,
-          fontSize: 6, bold: true, color: C.white, fontFace: 'Calibri',
-          align: 'center', valign: 'middle', margin: 0,
-        });
-      }
-      // 한국어 제목 (하단)
-      slide.addText(ellipsis(sec.title_ko || '', 26), {
-        x: cx + 0.08, y: ry + 0.22, w: colW - 0.14, h: 0.18,
-        fontSize: 6.5, color: C.grayDark, fontFace: 'Calibri',
-        valign: 'top', margin: 0,
-      });
+    // 프로젝트명
+    sl.addText(proj.name_ko || proj.name || '', {
+      x: RIGHT_X + 0.08, y: py + 0.03, w: RIGHT_W - 0.16, h: 0.24,
+      fontSize: 10, bold: true, color: C.navy, fontFace: 'Arial', wrap: true
     });
-  });
 
-  console.log('  ✅ 목차');
-}
-
-// ══════════════════════════════════════════════════════════════════════════
-//  3. Executive Summary 슬라이드
-// ══════════════════════════════════════════════════════════════════════════
-function buildExecSummarySlide() {
-  const slide = pres.addSlide();
-  slide.background = { color: C.white };
-  addHeader(slide, 'Executive Summary', '이번 주 시장 종합 분석', C.navy);
-  addFooter(slide, 'Executive Summary');
-
-  const isNew = payload.exec_summary_is_new || false;
-  const badgeTxt = isNew ? `★ AI 신규 분석  |  신규 기사 ${newCount}건` : '기존 분석 유지';
-  const badgeColor = isNew ? C.newYellow : C.grayMid;
-
-  // 배지
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x: MARGIN, y: 0.82, w: 2.6, h: 0.22,
-    fill: { color: isNew ? C.newYellowL : C.grayLight },
-    line: { color: badgeColor, pt: 0.5 }
-  });
-  slide.addText(badgeTxt, {
-    x: MARGIN, y: 0.82, w: 2.6, h: 0.22,
-    fontSize: 7.5, bold: true, color: badgeColor, fontFace: 'Calibri',
-    align: 'center', valign: 'middle', margin: 0,
-  });
-
-  // 좌측 강조선
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x: MARGIN, y: 1.12, w: 0.05, h: 3.38,
-    fill: { color: C.teal }, line: { color: C.teal }
-  });
-
-  // 본문
-  const summaryText = s(execSumm, '이번 주 베트남 인프라 시장 동향 분석.');
-  slide.addText(summaryText, {
-    x: MARGIN + 0.12, y: 1.12, w: W - MARGIN * 2 - 0.12, h: 3.38,
-    fontSize: 11.5, color: C.grayDark, fontFace: 'Calibri',
-    valign: 'top', wrap: true, margin: [6, 8, 6, 8],
-  });
-
-  // 우측 통계 박스
-  const stats = [
-    { label: '전체 누적 기사', value: `${totalArts}건` },
-    { label: '이번 주 신규',   value: `${newCount}건` },
-    { label: '분석 플랜',      value: `${planSecs.length}개` },
-    { label: 'KPI 변동',       value: `${payload.kpi_changes_count || 0}개` },
-  ];
-  const sbx = W - 2.1, sby = 1.12, sbw = 1.72, sbh = 0.76;
-  stats.forEach((st, i) => {
-    const sy = sby + i * (sbh + 0.04);
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x: sbx, y: sy, w: sbw, h: sbh,
-      fill: { color: i === 1 ? C.newYellowL : 'F0F4F8' },
-      line: { color: i === 1 ? 'FCD34D' : 'D1D5DB', pt: 0.5 },
+    // 위치 | 규모
+    const locCap = [proj.location || proj.province || '', proj.capacity || proj.size || '']
+      .filter(Boolean).join(' | ');
+    sl.addText(locCap, {
+      x: RIGHT_X + 0.08, y: py + 0.26, w: RIGHT_W - 0.16, h: 0.18,
+      fontSize: 9, color: C.gray, fontFace: 'Arial'
     });
-    slide.addText(st.label, {
-      x: sbx + 0.06, y: sy + 0.05, w: sbw - 0.12, h: 0.22,
-      fontSize: 7.5, color: C.grayMid, fontFace: 'Calibri', margin: 0,
-    });
-    slide.addText(st.value, {
-      x: sbx + 0.06, y: sy + 0.28, w: sbw - 0.12, h: 0.40,
-      fontSize: 20, bold: true, color: i === 1 ? C.amber : C.navy,
-      fontFace: 'Calibri', valign: 'middle', margin: 0,
-    });
-  });
 
-  console.log('  ✅ Executive Summary');
-}
-
-// ══════════════════════════════════════════════════════════════════════════
-//  4. KPI 대시보드 슬라이드 (영역별 진행단계 집계)
-// ══════════════════════════════════════════════════════════════════════════
-function buildKpiDashboardSlide() {
-  const slide = pres.addSlide();
-  slide.background = { color: C.white };
-  addHeader(slide, 'KPI 대시보드', '마스터플랜 진행단계 및 기사 수집 현황', C.navy);
-  addFooter(slide, 'KPI Dashboard');
-
-  // 영역별 집계
-  const areas = ['Environment', 'Energy Develop.', 'Urban Develop.'];
-  const areaData = {};
-  areas.forEach(a => {
-    const secs = planSecs.filter(s => s.area === a);
-    const totalA = secs.reduce((acc, s) => acc + (s.new_count||0) + (s.old_count||0), 0);
-    const newA   = secs.reduce((acc, s) => acc + (s.new_count||0), 0);
-    areaData[a] = { secs, total: totalA, new: newA };
-  });
-
-  // 영역 요약 카드 (3개)
-  const cw = (W - MARGIN * 2 - 0.3) / 3, cy = 0.85, ch = 1.05;
-  areas.forEach((area, i) => {
-    const theme = AREA_THEME[area] || AREA_THEME.default;
-    const ad    = areaData[area];
-    const cx    = MARGIN + i * (cw + 0.15);
-
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x: cx, y: cy, w: cw, h: ch,
-      fill: { color: theme.light }, line: { color: theme.color, pt: 1.2 },
-      shadow: mkShadow(),
-    });
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x: cx, y: cy, w: cw, h: 0.28,
-      fill: { color: theme.color }, line: { color: theme.color }
-    });
-    slide.addText(area, {
-      x: cx, y: cy, w: cw, h: 0.28,
-      fontSize: 9.5, bold: true, color: C.white, fontFace: 'Calibri',
-      align: 'center', valign: 'middle', margin: 0,
-    });
-    slide.addText(`${ad.secs.length}개 플랜`, {
-      x: cx + 0.08, y: cy + 0.32, w: cw - 0.16, h: 0.28,
-      fontSize: 8, color: theme.color, fontFace: 'Calibri', margin: 0,
-    });
-    slide.addText(`기사 ${ad.total}건`, {
-      x: cx + 0.08, y: cy + 0.56, w: cw - 0.16, h: 0.22,
-      fontSize: 8, color: C.grayDark, fontFace: 'Calibri', margin: 0,
-    });
-    if (ad.new > 0) {
-      slide.addText(`★ 신규 ${ad.new}건`, {
-        x: cx + 0.08, y: cy + 0.76, w: cw - 0.16, h: 0.20,
-        fontSize: 8, bold: true, color: C.amber, fontFace: 'Calibri', margin: 0,
+    // 비고 (있을 때, actualProjH 충분할 때만)
+    if (proj.note && actualProjH >= 0.55) {
+      const noteText = proj.note.length > 50 ? proj.note.substring(0, 50) + '…' : proj.note;
+      sl.addText(noteText, {
+        x: RIGHT_X + 0.08, y: py + 0.42, w: RIGHT_W - 0.16, h: 0.18,
+        fontSize: 8, color: getSectorColor(pdata.sector || ''), italic: true, fontFace: 'Arial'
       });
     }
   });
 
-  // 플랜별 진행단계 테이블 헤더
-  const tby = 2.02, tbx = MARGIN;
-  const tbw  = W - MARGIN * 2;
-  const colWidths = [2.0, 1.05, 1.25, 1.2, 1.05, tbw - 2.0 - 1.05 - 1.25 - 1.2 - 1.05];
-
-  // 헤더 행
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x: tbx, y: tby, w: tbw, h: 0.24,
-    fill: { color: C.navy }, line: { color: C.navy }
-  });
-  const hdrs = ['마스터플랜 ID', '영역', '진행단계', '누적 기사', '신규 기사', '다음 관찰 포인트'];
-  let hx = tbx;
-  hdrs.forEach((h, i) => {
-    slide.addText(h, {
-      x: hx, y: tby, w: colWidths[i], h: 0.24,
-      fontSize: 7.5, bold: true, color: C.white, fontFace: 'Calibri',
-      align: 'center', valign: 'middle', margin: 0,
+  // 추가 프로젝트 수 표시
+  const extra = projects.length - displayProjs.length;
+  if (extra > 0) {
+    sl.addText(`+ ${extra}개 추가 프로젝트 (상세 보고서 참조)`, {
+      x: RIGHT_X, y: H - 0.28, w: RIGHT_W, h: 0.22,
+      fontSize: 9, color: C.gray, italic: true, align: 'center', fontFace: 'Arial'
     });
-    hx += colWidths[i];
+  }
+
+  // ── 푸터 ─────────────────────────────────────────────────────────────
+  sl.addShape(pres.shapes.RECTANGLE, { x: 0, y: H - 0.25, w: W, h: 0.25,
+    fill: { color: C.grayL }, line: { color: C.grayL, width: 0 } });
+  const footerParts = [
+    pdata.sector || '',
+    pdata.area || '',
+    pdata.decision || ''
+  ].filter(Boolean).join('  |  ');
+  sl.addText(footerParts, { x: 0.15, y: H - 0.24, w: W - 0.3, h: 0.22,
+    fontSize: 8, color: C.gray, fontFace: 'Arial' });
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// 프로젝트 전체 목록 슬라이드 (8개 초과 시)
+// ══════════════════════════════════════════════════════════════════════════
+function addProjectTableSlide(planId, pdata) {
+  const projects = pdata.key_projects || [];
+  if (projects.length <= 8) return;
+
+  const sl = pres.addSlide();
+  sl.background = { color: C.white };
+  const sectorColor = getSectorColor(pdata.sector || '');
+
+  // 헤더
+  sl.addShape(pres.shapes.RECTANGLE, { x: 0, y: 0, w: W, h: 0.45,
+    fill: { color: C.navy }, line: { color: C.navy, width: 0 } });
+  sl.addText(`${planId} — 프로젝트 전체 목록 (${projects.length}개)`, {
+    x: 0.2, y: 0.05, w: W - 0.4, h: 0.38,
+    fontSize: 15, bold: true, color: C.white, fontFace: 'Arial'
+  });
+
+  // 테이블 헤더
+  const cols = ['프로젝트명', '위치', '규모/용량', '비고'];
+  const colW  = [3.5, 1.5, 2.0, 2.8];
+  let tx = 0.1, ty = 0.5;
+  cols.forEach((col, i) => {
+    sl.addShape(pres.shapes.RECTANGLE, { x: tx, y: ty, w: colW[i], h: 0.3,
+      fill: { color: sectorColor }, line: { color: sectorColor, width: 0 } });
+    sl.addText(col, { x: tx + 0.05, y: ty, w: colW[i] - 0.1, h: 0.3,
+      fontSize: 10, bold: true, color: C.white, valign: 'middle', fontFace: 'Arial' });
+    tx += colW[i];
   });
 
   // 데이터 행
-  const maxRows = Math.floor((H - tby - 0.24 - 0.28) / 0.195);
-  const visibleSecs = planSecs.slice(0, maxRows);
-
-  visibleSecs.forEach((sec, ri) => {
-    const ry = tby + 0.24 + ri * 0.195;
-    const isNew = (sec.new_count || 0) > 0;
-    const rowBg = isNew ? C.newYellowL : (ri % 2 === 0 ? C.white : 'F9FAFB');
-    const stage  = STAGE[sec.current_stage || 'UNKNOWN'] || STAGE.UNKNOWN;
-    const theme  = AREA_THEME[sec.area || ''] || AREA_THEME.default;
-
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x: tbx, y: ry, w: tbw, h: 0.192,
-      fill: { color: rowBg }, line: { color: 'E5E7EB', pt: 0.3 }
-    });
-
-    let rx = tbx;
+  projects.forEach((proj, i) => {
+    const ry = ty + 0.3 + i * 0.38;
+    if (ry + 0.38 > H - 0.2) return;
+    tx = 0.1;
+    const rowFill = i % 2 === 0 ? C.offWhite : C.white;
     const cells = [
-      { text: s(sec.plan_id, ''), color: theme.color, bold: true },
-      { text: ellipsis(sec.area || '', 12), color: C.grayMid },
-      { text: stage.ko, color: stage.bar, bold: true },
-      { text: String((sec.new_count||0) + (sec.old_count||0)) + '건', color: C.grayDark },
-      { text: (sec.new_count||0) > 0 ? `★ ${sec.new_count}건` : '-', color: (sec.new_count||0)>0 ? C.amber : C.silver, bold: (sec.new_count||0) > 0 },
-      { text: ellipsis(sec.next_watch || '', 38), color: C.grayMid },
+      proj.name_ko || proj.name || '',
+      proj.location || proj.province || '',
+      proj.capacity || proj.size || '',
+      proj.note || ''
     ];
-
-    cells.forEach((cell, ci) => {
-      slide.addText(cell.text, {
-        x: rx + 0.03, y: ry, w: colWidths[ci] - 0.06, h: 0.192,
-        fontSize: 7, bold: cell.bold || false, color: cell.color,
-        fontFace: 'Calibri', valign: 'middle', margin: 0,
+    cells.forEach((cell, j) => {
+      sl.addShape(pres.shapes.RECTANGLE, { x: tx, y: ry, w: colW[j], h: 0.36,
+        fill: { color: rowFill }, line: { color: C.grayL, width: 1 } });
+      sl.addText(cell.length > 50 ? cell.substring(0, 50) + '…' : cell, {
+        x: tx + 0.05, y: ry, w: colW[j] - 0.1, h: 0.36,
+        fontSize: 9, color: C.black, valign: 'middle', fontFace: 'Arial', wrap: true
       });
-      rx += colWidths[ci];
+      tx += colW[j];
     });
   });
-
-  if (planSecs.length > maxRows) {
-    slide.addText(`+ ${planSecs.length - maxRows}개 플랜 — 상세 슬라이드 참조`, {
-      x: tbx, y: H - 0.45, w: tbw, h: 0.20,
-      fontSize: 7.5, color: C.grayMid, fontFace: 'Calibri',
-      align: 'center', margin: 0,
-    });
-  }
-
-  console.log('  ✅ KPI 대시보드');
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-//  5~N. 플랜별 슬라이드 (21개 모두)
+// Closing 슬라이드
 // ══════════════════════════════════════════════════════════════════════════
-function buildPlanSlide(sec, slideNum, totalSlides) {
-  const slide = pres.addSlide();
-  slide.background = { color: C.white };
+function addClosingSlide() {
+  const sl = pres.addSlide();
+  sl.background = { color: C.navy };
 
-  const theme   = AREA_THEME[s(sec.area, 'default')] || AREA_THEME.default;
-  const stage   = STAGE[sec.current_stage || 'UNKNOWN'] || STAGE.UNKNOWN;
-  const newCount2 = sec.new_count || 0;
-  const oldCount2 = sec.old_count || 0;
-  const kpis    = sec.kpi_targets || [];
-  const arts    = sec.articles    || [];
-  const newArts = arts.filter(a => a.is_new === true);
-  const oldArts = arts.filter(a => a.is_new !== true);
+  sl.addShape(pres.shapes.RECTANGLE, { x: 0, y: 0, w: 0.2, h: H,
+    fill: { color: C.teal }, line: { color: C.teal, width: 0 } });
 
-  // ── 상단 헤더 ──────────────────────────────────────────────────
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x: 0, y: 0, w: W, h: 0.82,
-    fill: { color: theme.color }, line: { color: theme.color }
+  sl.addText('Vietnam Infrastructure MI', {
+    x: 0.4, y: 0.8, w: 9.4, h: 0.8,
+    fontSize: 36, bold: true, color: C.white, fontFace: 'Arial Black'
+  });
+  sl.addText('Automated Report Pipeline · SA-8', {
+    x: 0.4, y: 1.6, w: 9.4, h: 0.4,
+    fontSize: 18, color: C.teal, fontFace: 'Arial'
   });
 
-  // 영역 태그
-  slide.addText(s(sec.area, ''), {
-    x: MARGIN, y: 0.05, w: 2.5, h: 0.20,
-    fontSize: 7.5, color: theme.light, fontFace: 'Calibri',
-    bold: false, margin: 0,
+  const planCnt = Object.keys(plans).length;
+  const kpiCnt  = Object.values(plans).reduce((acc, p) => acc + (p.kpi_targets||[]).length, 0);
+  const projCnt = Object.values(plans).reduce((acc, p) => acc + (p.key_projects||[]).length, 0);
+
+  sl.addText(`${planCnt}개 마스터플랜 · KPI ${kpiCnt}개 · 프로젝트 ${projCnt}개 — knowledge_index 기반`, {
+    x: 0.4, y: 2.2, w: 9.4, h: 0.3,
+    fontSize: 12, color: 'AADDFF', fontFace: 'Arial'
   });
-
-  // 플랜 ID
-  slide.addText(s(sec.plan_id, ''), {
-    x: MARGIN, y: 0.08, w: 3.5, h: 0.22,
-    fontSize: 8, bold: true, color: 'CCDDF0', fontFace: 'Calibri', margin: 0,
+  sl.addText('매주 토요일 KST 22:00 자동 생성 — Claude Haiku AI 기사 분석 연계', {
+    x: 0.4, y: 2.55, w: 9.4, h: 0.3,
+    fontSize: 12, color: 'AADDFF', fontFace: 'Arial'
   });
-
-  // 플랜 타이틀
-  slide.addText(ellipsis(sec.title_ko || '', 50), {
-    x: MARGIN, y: 0.28, w: W - MARGIN * 2 - 1.2, h: 0.38,
-    fontSize: 17, bold: true, color: C.white, fontFace: 'Calibri',
-    valign: 'middle', margin: 0,
+  sl.addText('Layer 1 (사업 개요 고정) + Layer 2 (AI 동적 분석) 이중 레이어 구조', {
+    x: 0.4, y: 2.9, w: 9.4, h: 0.3,
+    fontSize: 12, color: 'AADDFF', fontFace: 'Arial'
   });
-
-  // 근거 법령
-  slide.addText(ellipsis(sec.decision || '', 55), {
-    x: MARGIN, y: 0.65, w: W - MARGIN * 2 - 2.5, h: 0.16,
-    fontSize: 7.5, color: theme.light, fontFace: 'Calibri', margin: 0,
+  sl.addText('★ 노란색 하이라이트 = KPI 변동 자동 감지 · 이메일 자동 첨부 발송', {
+    x: 0.4, y: 3.25, w: 9.4, h: 0.3,
+    fontSize: 12, color: C.yellow, fontFace: 'Arial'
   });
-
-  // 기사 수 배지 (우상단)
-  const totalA = newCount2 + oldCount2;
-  slide.addText(`기사 ${totalA}건  |  ★신규 ${newCount2}건`, {
-    x: W - 2.1, y: 0.30, w: 1.75, h: 0.30,
-    fontSize: 9, bold: true, color: newCount2 > 0 ? C.newYellowL : 'CCDDF0',
-    fontFace: 'Calibri', align: 'right', valign: 'middle', margin: 0,
+  sl.addText(`대시보드: hms4792.github.io/vietnam-infra-news/`, {
+    x: 0.4, y: 4.1, w: 9.4, h: 0.3,
+    fontSize: 13, color: C.teal, fontFace: 'Arial'
   });
-
-  // ── 슬라이드 번호 ──────────────────────────────────────────────
-  slide.addText(`${slideNum} / ${totalSlides}`, {
-    x: W - 1.0, y: 0.05, w: 0.65, h: 0.18,
-    fontSize: 7, color: 'AABBCC', fontFace: 'Calibri', align: 'right', margin: 0,
-  });
-
-  // ── 진행단계 바 ────────────────────────────────────────────────
-  const pbY = 0.86;
-  slide.addText('진행단계:', {
-    x: MARGIN, y: pbY, w: 0.8, h: 0.16,
-    fontSize: 7.5, color: C.grayMid, fontFace: 'Calibri', margin: 0,
-  });
-  addProgressBar(slide, MARGIN + 0.82, pbY + 0.03, 4.5, sec.current_stage || 'UNKNOWN');
-
-  // ── 콘텐츠 영역 ────────────────────────────────────────────────
-  const contentY  = 1.08;
-  const leftW     = 4.2;
-  const rightX    = MARGIN + leftW + 0.18;
-  const rightW    = W - rightX - MARGIN;
-  const ART_START = 3.40;  // ★ 기사 섹션 고정 시작 Y — 겹침 절대 방지
-
-  // ── 좌측: KPI + 사업 개요 (ART_START 이내로 제한) ─────────────
-
-  if (kpis.length > 0) {
-    slide.addText('KPI 목표 현황', {
-      x: MARGIN, y: contentY, w: leftW, h: 0.22,
-      fontSize: 8.5, bold: true, color: theme.color, fontFace: 'Calibri', margin: 0,
-    });
-    const khY = contentY + 0.22;
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x: MARGIN, y: khY, w: leftW, h: 0.20,
-      fill: { color: theme.color }, line: { color: theme.color }
-    });
-    ['KPI 지표', '현황', '2030 목표'].forEach((h, i) => {
-      const ws = [leftW * 0.44, leftW * 0.28, leftW * 0.28];
-      const xs = [MARGIN, MARGIN + ws[0], MARGIN + ws[0] + ws[1]];
-      slide.addText(h, { x: xs[i], y: khY, w: ws[i], h: 0.20,
-        fontSize: 7.5, bold: true, color: C.white, fontFace: 'Calibri',
-        align: 'center', valign: 'middle', margin: 0 });
-    });
-    // KPI 최대 행 수: 사업개요 공간(0.95) + 여백 고려
-    const maxKpi = Math.min(kpis.length, Math.max(1, Math.floor((ART_START - khY - 0.20 - 1.05) / 0.235)));
-    for (let ki = 0; ki < maxKpi; ki++) {
-      addKpiRow(slide, MARGIN, khY + 0.20 + ki * 0.235, leftW, kpis[ki], ki % 2 === 1);
-    }
-    const kpiEndY = khY + 0.20 + maxKpi * 0.235;
-
-    // 사업 개요 (KPI 아래, ART_START 직전까지만)
-    const descY    = kpiEndY + 0.08;
-    const descMaxH = ART_START - descY - 0.06;
-    const desc     = ellipsis(sec.description_ko || '', 100);
-    if (desc && descMaxH >= 0.40) {
-      slide.addShape(pres.shapes.RECTANGLE, {
-        x: MARGIN, y: descY, w: leftW, h: 0.20,
-        fill: { color: theme.light }, line: { color: theme.color, pt: 0.3 }
-      });
-      slide.addText('사업 개요', {
-        x: MARGIN + 0.05, y: descY, w: leftW, h: 0.20,
-        fontSize: 8, bold: true, color: theme.color, fontFace: 'Calibri', valign: 'middle', margin: 0,
-      });
-      slide.addText(desc, {
-        x: MARGIN + 0.05, y: descY + 0.20, w: leftW - 0.10, h: Math.min(descMaxH - 0.20, 0.72),
-        fontSize: 7.5, color: C.grayDark, fontFace: 'Calibri',
-        valign: 'top', wrap: true, margin: [3, 4, 3, 4],
-      });
-    }
-  }
-
-  // ── 우측: AI 분석 (ART_START 이내로 제한) ─────────────────────
-
-  const analysis      = s(sec.news_analysis, '');
-  const insight       = s(sec.insight, '');
-  const isNewAnalysis = sec.analysis_is_new || false;
-
-  slide.addText('AI 시장 분석 (Claude Haiku)', {
-    x: rightX, y: contentY, w: rightW, h: 0.20,
-    fontSize: 8.5, bold: true, color: theme.color, fontFace: 'Calibri', margin: 0,
-  });
-  const abadge      = isNewAnalysis ? '★ 이번 주 신규 분석' : '이전 분석 유지';
-  const abadgeColor = isNewAnalysis ? C.newYellow : C.silver;
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x: rightX, y: contentY + 0.21, w: rightW, h: 0.18,
-    fill: { color: isNewAnalysis ? C.newYellowL : C.grayLight },
-    line: { color: abadgeColor, pt: 0.5 }
-  });
-  slide.addText(abadge, {
-    x: rightX, y: contentY + 0.21, w: rightW, h: 0.18,
-    fontSize: 7, bold: true, color: abadgeColor, fontFace: 'Calibri',
-    align: 'center', valign: 'middle', margin: 0,
-  });
-
-  // 분석 본문 + Insight — ART_START 내로 높이 계산
-  const insH       = insight ? 0.44 : 0;
-  const insGap     = insight ? 0.06 : 0;
-  const analysisH  = ART_START - (contentY + 0.40) - insH - insGap - 0.06;
-  const analysisText = analysis || '이번 주 신규 기사가 없습니다. 기존 분석을 유지합니다.';
-
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x: rightX, y: contentY + 0.40, w: rightW, h: analysisH,
-    fill: { color: C.white }, line: { color: theme.color, pt: 0.8 }
-  });
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x: rightX, y: contentY + 0.40, w: 0.04, h: analysisH,
-    fill: { color: theme.color }, line: { color: theme.color, pt: 0 }
-  });
-  slide.addText(ellipsis(analysisText, 220), {
-    x: rightX + 0.08, y: contentY + 0.40, w: rightW - 0.12, h: analysisH,
-    fontSize: 8, color: C.grayDark, fontFace: 'Calibri',
-    valign: 'top', wrap: true, margin: [4, 6, 4, 6],
-  });
-
-  if (insight) {
-    const insY = contentY + 0.40 + analysisH + insGap;
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x: rightX, y: insY, w: rightW, h: insH,
-      fill: { color: theme.light }, line: { color: theme.color, pt: 0.8 }
-    });
-    slide.addText('Insight', {
-      x: rightX + 0.05, y: insY + 0.02, w: 0.65, h: 0.16,
-      fontSize: 7, bold: true, color: theme.color, fontFace: 'Calibri', margin: 0,
-    });
-    slide.addText(ellipsis(insight, 100), {
-      x: rightX + 0.05, y: insY + 0.20, w: rightW - 0.10, h: insH - 0.22,
-      fontSize: 7.5, bold: true, color: theme.color, fontFace: 'Calibri',
-      valign: 'middle', wrap: true, margin: 0,
-    });
-  }
-
-  // ── 기사 목록 (ART_START 고정 시작 — 겹침 없음) ──────────────
-  const artStartY = ART_START;
-  const artH      = H - artStartY - 0.28;
-  const artRowH   = 0.215;
-  const maxRows   = Math.floor(artH / artRowH);
-
-  // 기사 섹션 헤더
-  if (arts.length > 0) {
-    const artLabelY = artStartY - 0.20;
-    slide.addText(`수집 기사  (★신규 ${newCount2}건  +  기존 ${oldCount2}건)`, {
-      x: MARGIN, y: artLabelY, w: W - MARGIN * 2, h: 0.18,
-      fontSize: 8, bold: true, color: C.navy, fontFace: 'Calibri', margin: 0,
-    });
-
-    // 기사 헤더 행
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x: MARGIN, y: artStartY, w: W - MARGIN * 2, h: 0.20,
-      fill: { color: C.grayDark }, line: { color: C.grayDark }
-    });
-    ['등급', '날짜', '출처', '제목 (한국어)'].forEach((h, i) => {
-      const ws = [0.42, 0.65, 0.85, W - MARGIN * 2 - 0.42 - 0.65 - 0.85];
-      const xs = [MARGIN, MARGIN + 0.42, MARGIN + 0.42 + 0.65, MARGIN + 0.42 + 0.65 + 0.85];
-      slide.addText(h, {
-        x: xs[i], y: artStartY, w: ws[i], h: 0.20,
-        fontSize: 7, bold: true, color: C.white, fontFace: 'Calibri',
-        align: 'center', valign: 'middle', margin: 0,
-      });
-    });
-
-    // 신규 기사 우선 출력
-    const displayArts = [...newArts, ...oldArts].slice(0, maxRows - 1);
-    displayArts.forEach((art, ri) => {
-      addArticleRow(slide, MARGIN, artStartY + 0.20 + ri * artRowH, W - MARGIN * 2, art, artRowH);
-    });
-
-    if (arts.length > displayArts.length) {
-      slide.addText(`+ ${arts.length - displayArts.length}건 추가 기사 — Word 보고서 참조`, {
-        x: MARGIN, y: H - 0.40, w: W - MARGIN * 2, h: 0.14,
-        fontSize: 6.5, color: C.silver, fontFace: 'Calibri', align: 'right', margin: 0,
-      });
-    }
-  } else {
-    slide.addShape(pres.shapes.RECTANGLE, {
-      x: MARGIN, y: artStartY, w: W - MARGIN * 2, h: 0.32,
-      fill: { color: C.grayLight }, line: { color: 'D1D5DB', pt: 0.4 }
-    });
-    slide.addText('이번 주 수집된 기사 없음 — 기존 분석 및 KPI 현황 유지', {
-      x: MARGIN, y: artStartY, w: W - MARGIN * 2, h: 0.32,
-      fontSize: 8.5, color: C.silver, fontFace: 'Calibri',
-      align: 'center', valign: 'middle', margin: 0,
-    });
-  }
-
-  addFooter(slide, `${s(sec.plan_id, '')}  |  ${s(sec.area, '')}`);
-
-  return slide;
 }
 
 // ══════════════════════════════════════════════════════════════════════════
-//  클로징 슬라이드
+// 메인 빌드 실행
 // ══════════════════════════════════════════════════════════════════════════
-function buildClosingSlide() {
-  const slide = pres.addSlide();
-  slide.background = { color: C.navy };
+console.log('[build_mi_ppt.js v4.0] 슬라이드 생성 시작...');
 
-  slide.addShape(pres.shapes.RECTANGLE, {
-    x: 0, y: 0, w: 0.06, h: H,
-    fill: { color: C.teal }, line: { color: C.teal }
-  });
+addCoverSlide();
+addKpiDashSlide();
+addKpiChangesSlide();
+addKpiAchieveSlide();
 
-  slide.addText('THANK YOU', {
-    x: 0.5, y: 1.5, w: 9, h: 0.8,
-    fontSize: 48, bold: true, fontFace: 'Calibri', color: C.white, align: 'center',
-    charSpacing: 8,
+// 영역별 → 플랜별 순서로 생성
+if (areas.length > 0) {
+  // areas 배열이 있으면 영역 순서 따름
+  areas.forEach(area => {
+    addAreaDividerSlide(area);
+    (area.plan_ids || []).forEach(pid => {
+      const pdata = plans[pid];
+      if (!pdata) return;
+      addPlanSlide(pid, pdata);
+      addProjectTableSlide(pid, pdata);
+    });
   });
-  slide.addText(`Vietnam Infrastructure Market Intelligence  |  ${week}`, {
-    x: 0.5, y: 2.42, w: 9, h: 0.35,
-    fontSize: 13, color: '7EB8D4', fontFace: 'Calibri', align: 'center',
+} else {
+  // areas 배열 없으면 plans 순서 그대로
+  Object.entries(plans).forEach(([pid, pdata]) => {
+    addPlanSlide(pid, pdata);
+    addProjectTableSlide(pid, pdata);
   });
-
-  slide.addShape(pres.shapes.LINE, {
-    x: 1.5, y: 2.90, w: 7, h: 0,
-    line: { color: '2E6A9A', width: 1, dashType: 'dash' }
-  });
-
-  slide.addText([
-    { text: `총 ${planSecs.length}개 마스터플랜  |  전체 ${totalArts}건 기사  |  신규 ${newCount}건`, options: { breakLine: true } },
-    { text: 'SA-8 자동 생성 파이프라인 (Claude Haiku + Node.js)  |  CONFIDENTIAL' }
-  ], {
-    x: 0.5, y: 3.05, w: 9, h: 0.55,
-    fontSize: 9.5, color: '7EB8D4', fontFace: 'Calibri', align: 'center',
-  });
-
-  console.log('  ✅ 클로징');
 }
 
-// ══════════════════════════════════════════════════════════════════════════
-//  메인 실행
-// ══════════════════════════════════════════════════════════════════════════
-const pres = new pptxgen();
-pres.layout  = 'LAYOUT_16x9';
-pres.author  = 'SA-8 MI Pipeline';
-pres.company = 'Vietnam Infra Intelligence';
-pres.title   = `VN Infra MI Report ${today}`;
+addClosingSlide();
 
-console.log('\n[슬라이드 생성]');
-
-buildCoverSlide();
-buildTocSlide();
-buildExecSummarySlide();
-buildKpiDashboardSlide();
-
-// 플랜별 슬라이드 (21개 전체)
-const FIXED_SLIDES = 4;  // 표지+목차+ExecSummary+KPI대시보드
-const totalPlanSlides = planSecs.length;
-const totalSlideCount = FIXED_SLIDES + totalPlanSlides + 1;  // +1 클로징
-
-planSecs.forEach((sec, i) => {
-  buildPlanSlide(sec, FIXED_SLIDES + i + 1, totalSlideCount);
-  console.log(`  ✅ ${s(sec.plan_id, '???')} (${(sec.new_count||0)>0?'★신규':'기존'})`);
-});
-
-buildClosingSlide();
-
-// 저장
-pres.writeFile({ fileName: outPath }).then(() => {
-  const stat = fs.statSync(outPath);
-  console.log(`\n✅ 완료: ${outPath} (${(stat.size/1024).toFixed(0)} KB) | 플랜 ${planSecs.length}개`);
-}).catch(err => {
-  console.error('[PPT] 저장 오류:', err);
-  process.exit(1);
-});
+pres.writeFile({ fileName: outPath })
+  .then(() => {
+    const bytes = fs.statSync(outPath).size;
+    console.log(`[build_mi_ppt.js v4.0] ✅ 완료`);
+    console.log(`   출력: ${outPath}`);
+    console.log(`   크기: ${(bytes/1024).toFixed(0)} KB`);
+    console.log(`   슬라이드 수: 표지+KPI(${kpiDash.length>0?3:0})+영역(${areas.length})+플랜(${Object.keys(plans).length})+클로징`);
+  })
+  .catch(err => {
+    console.error('[build_mi_ppt.js v4.0] 오류:', err.message);
+    process.exit(1);
+  });
