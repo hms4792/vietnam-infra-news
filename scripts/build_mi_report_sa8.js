@@ -467,10 +467,10 @@ function buildLayer1Section(planData) {
       ...kpis.map((kpi, idx) =>
         new TableRow({
           children: [
-            _kpiCell(kpi.indicator || kpi.indicator_ko || '', 3600, idx % 2 === 0 ? C.white : C.grayLL),
+            _kpiCell(kpi.label || kpi.indicator || kpi.indicator_ko || '', 3600, idx % 2 === 0 ? C.white : C.grayLL),
             _kpiCell(String(kpi.target || ''), 2000, idx % 2 === 0 ? C.tealL : C.tealL, C.tealD, true),
             _kpiCell(kpi.unit || '', 1200, idx % 2 === 0 ? C.white : C.grayLL),
-            _kpiCell(String(kpi.baseline || kpi.current_value || '-'), 2560, idx % 2 === 0 ? C.white : C.grayLL),
+            _kpiCell(String(kpi.current || kpi.baseline || kpi.current_value || '-'), 2560, idx % 2 === 0 ? C.white : C.grayLL),
           ]
         })
       )
