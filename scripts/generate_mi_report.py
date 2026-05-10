@@ -491,8 +491,10 @@ def assemble_payload(ki, plans, grouped_arts, all_articles, kpi_changes):
         arts = grouped_arts.get(pid, [])
 
         # Layer1 KPI 정규화 (절대 삭제 금지)
+        # knowledge_index 실제 필드: kpis[].indicator / kpi_targets[].label 양쪽 대응
+        kpi_source = pdata.get('kpi_targets') or pdata.get('kpis') or []
         norm_kpis = []
-        for k in pdata.get('kpi_targets', []):
+        for k in kpi_source:
             if isinstance(k, dict):
                 norm_kpis.append({
                     'label':   (k.get('label') or k.get('indicator') or
@@ -504,8 +506,10 @@ def assemble_payload(ki, plans, grouped_arts, all_articles, kpi_changes):
                 })
 
         # Layer1 프로젝트 정규화 (절대 삭제 금지)
+        # knowledge_index 실제 필드: projects[].name / key_projects[].name_ko 양쪽 대응
+        proj_source = pdata.get('key_projects') or pdata.get('projects') or []
         norm_projs = []
-        for p in pdata.get('key_projects', []):
+        for p in proj_source:
             if isinstance(p, dict):
                 norm_projs.append({
                     'name_ko':  (p.get('name_ko') or p.get('name') or '').strip(),
@@ -532,9 +536,13 @@ def assemble_payload(ki, plans, grouped_arts, all_articles, kpi_changes):
             'sector':       (pdata.get('sector') or
                              (pdata.get('sectors', [''])[0] if pdata.get('sectors') else '')),
             'area':         (pdata.get('area') or ''),
-            'decision':     (pdata.get('decision') or pdata.get('legal_basis') or ''),
+            # knowledge_index: 'legal' 필드, 페이로드: 'decision' 필드
+            'decision':     (pdata.get('decision') or pdata.get('legal') or
+                             pdata.get('legal_basis') or ''),
             # ★ Layer1 필수 필드 — 절대 삭제/변경 금지
-            'description_ko': (pdata.get('description_ko') or pdata.get('description') or ''),
+            # knowledge_index: 'overview' 필드, 페이로드: 'description_ko' 필드
+            'description_ko': (pdata.get('description_ko') or pdata.get('overview') or
+                               pdata.get('description') or ''),
             'kpi_targets':    norm_kpis,
             'key_projects':   norm_projs,
             # Layer2
