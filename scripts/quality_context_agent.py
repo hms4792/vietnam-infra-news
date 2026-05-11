@@ -132,13 +132,24 @@ def build_keyword_dict(plans: dict) -> list:
     for pid, p in plans.items():
         kw_en = p.get('keywords_en', p.get('keywords', []))
         kw_vi = p.get('keywords_vi', [])
+        sector = p.get('sector', '')
+
+        # ★ v3.6 패치: SECTOR_SUPPLEMENT 키워드 직접 주입
+        # knowledge_index에 keywords_en/vi 없는 플랜도 섹터 키워드로 매핑 가능
+        if sector in SECTOR_SUPPLEMENT_KEYWORDS:
+            extra_en, extra_vi = SECTOR_SUPPLEMENT_KEYWORDS[sector]
+            kw_en = list(kw_en) + extra_en
+            kw_vi = list(kw_vi) + extra_vi
+
+        # 키워드가 전혀 없는 플랜도 섹터 키워드가 있으면 포함
         if not kw_en and not kw_vi:
             continue
+
         result.append({
             'plan_id':     pid,
             'keywords_en': [k.lower() for k in kw_en if k],
             'keywords_vi': [k.lower() for k in kw_vi if k],
-            'sector':      p.get('sector', ''),
+            'sector':      sector,
             'area':        p.get('area', ''),
             'threshold':   p.get('threshold', MIN_SCORE),
         })
