@@ -200,6 +200,11 @@ NOISE_PATTERNS = [
     r'\bkeralam\b', r'\bcpi\(m\)\b', r'\bpinarayi\b',
     # 금융 제재 (인프라 무관)
     r'\bnobitex\b', r'\bofac blacklist\b',
+    # ★ v8.5 추가 (5/11 신규 발견 유형)
+    r'\bhantavirus\b', r'\bwild bird\b', r'\bmigratory bird\b',
+    r'\bdurian\b', r'\bmorning digest\b', r'\bdaily digest\b',
+    r'\bnetanyahu\b', r'\btrump iran\b',
+    r'\bamazon seller\b', r'\bhubei dinglong\b',
 ]
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -223,6 +228,14 @@ EXCLUDE_EXACT = [
     'mitsubishi xpander recall',
     'gastric cancer journal',
     'uk institution campus',
+    # ★ v8.5 추가 (5/11 로그 기반 신규 무관 유형)
+    'hantavirus', 'wild bird', 'migratory bird', 'bảo vệ chim',
+    'durian price', 'fruit price', 'durian export',
+    'morning digest', 'daily digest', 'evening digest',
+    'netanyahu', 'trump iran', 'iran peace', 'israel us military',
+    'amazon seller', 'amazon empowering',
+    'hubei dinglong', 'semiconductor materials supplier',
+    'ghg emissions intensity', 'esg report 2025',
 ]
 
 VIETNAM_KEYWORDS = [
