@@ -53,6 +53,7 @@ GitHub Actions 연동:
 """
 
 import json
+import re
 import logging
 import os
 import glob
