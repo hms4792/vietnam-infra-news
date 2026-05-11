@@ -717,6 +717,8 @@ def main():
                         help='기사 수집 기간(일) [기본: 14]')
     parser.add_argument('--send-email', action='store_true',
                         help='이메일 발송')
+    parser.add_argument('--daily-only', action='store_true',
+                        help='Daily pipeline mode (ignored, for yml compatibility)')
     parser.add_argument('--dry-run',    action='store_true',
                         help='페이로드만 생성 (빌더 미실행)')
     parser.add_argument('--output-dir', default=str(DOCS_DIR),
