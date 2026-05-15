@@ -1,53 +1,32 @@
 """
-news_collector.py  — v8.6
+news_collector.py  — v8.7
 ==========================
 베트남 인프라 뉴스 수집기
 
-v8.6 변경사항 (2026-05-15):
-  ★ 변경 1: VnExpress RSS 카테고리 특화 교체
-    [문제] 종합 피드(news.rss, business.rss)가 인프라 무관 기사 62~84% 공급
-           bulldog, cruise, quantum computing, halal 등 매일 새 유형 혼입
-    [변경] news.rss(인프라 16%) → environment.rss(예상 85%)
-           business.rss(38%)  → economy.rss(예상 60%) + traffic.rss(예상 90%)
-    [효과] 무관 기사 65% → 목표 30% 이하
+v8.7 변경사항 (2026-05-15):
+  ★ 변경 1: VnExpress RSS 기존 피드 복원
+    [경위] v8.6에서 카테고리 피드(environment/economy/traffic.rss)로 교체
+    [확인] 5/15 워크플로우: 3개 피드 모두 빈피드(GitHub Actions IP 차단)
+    [복원] news.rss + business.rss 복원
+    [보완] ExcelUpdater v4.0 Vietnam 필터로 무관기사 DB 삽입 단계 차단
 
-  ★ 변경 2: NewsData.io 방법1-D 실행 순서 변경 (한국 ODA 크레딧 보장)
-    [문제] 현재 순서: A(14) → B(30) → C-A(7) → C-B(5) → D(5)
-           → 5/11 실측: 60크레딧 소진으로 D가 단 한 번도 실행 안 됨
-    [변경] 새 순서:   A(14) → D(5,홀수일) → B(30) → C-A(7) → C-B(5) → C-C(월목)
-           → D는 19크레딧 시점에 확실히 실행 보장
-    [효과] KOICA·KEITI·KIND·ICAK 관련 기사 매일(홀수일) 수집 시작
+  ★ 변경 2: 방법D/E 쿼리 재설계 (한국기관·국제기관)
+    [문제] 5/11~5/15 방법D 3회, 방법E 2회 실행 → 수집 0건
+    [원인] 베트남 언론은 KOICA/ADB 약어를 거의 사용 안 함
+           → 기관 약어 중심 쿼리가 country=vn 기사에 히트 안 됨
+    [방법D 재설계] DB 실제 수집 기사 패턴 분석 결과 적용:
+           'KOICA Vietnam water' → 'South Korea Vietnam nuclear power cooperation'
+           'KEITI environmental' → 'Korean company Vietnam water environment project'
+           베트남어 쿼리 신규: 'Hàn Quốc đầu tư hợp tác Việt Nam hạ tầng'
+    [방법E 재설계] 약어→풀네임 전환 + 베트남어 패턴 추가:
+           'ADB Vietnam loan' → 'Asian Development Bank Vietnam infrastructure billion'
+           베트남어 신규: 'vốn vay ADB World Bank Việt Nam hạ tầng'
+    [효과] 수집 0건 → 주 2~5건 목표
 
-  ★ 나머지 코드 전체 v8.5 동일 (노이즈 필터, should_collect, 기타 모든 쿼리)
-
-v8.5 변경사항 (2026-05-11):
-  ★ NOISE_PATTERNS 29→50개 확장 + EXCLUDE_EXACT 블록 추가
-
-v8.4 변경사항 (2026-05-09):
-  ★ 한국 공공기관·국제개발금융기관 뉴스 수집 추가 (방법1-D/E)
-  ★ RSS_FEEDS: ADB, World Bank, AIIB, GIZ, Vietnam Briefing, Mekong Eye, WaterWorld
-
-v8.3 변경사항 (2026-05-04):
-  ★ 429 Rate Limit 처리 방식 전면 개선
-
-v8.2 변경사항 (2026-04-25):
-  - 한-베 협력 쿼리 4개 추가
-
-v8.1 변경사항 (2026-04-24):
-  - NEWSDATA_QUERIES: 섹터 14개 + 마스터플랜 16개 + Province 3그룹
-
-영구 제약:
-  - NewsData.io 엔드포인트: /api/1/latest 만 사용 (archive 유료)
-  - 금지 파라미터: domain 단독, from_date, category+domain 조합
-  - 422 오류 시 자동 재시도 (category 제거)
-  - 이메일 시크릿: EMAIL_USERNAME / EMAIL_PASSWORD
-  - 번역: Google Translate only (Anthropic API 금지)
-  - date 키 fallback: article.get('date') or article.get('published_date')
-
-영구 폐쇄 RSS (재추가 금지):
-  theinvestor.vn RSS, vir.com.vn RSS, constructionvietnam.net,
-  monre.gov.vn, vea.gov.vn, mic.gov.vn, smartcity.mobi,
-  baotintuc.vn, kinhtemoitruong.vn, hanoimoi.vn
+  ★ v8.6 유지사항:
+    - 방법D 실행 순서: A(14크레딧) 직후 → 19크레딧 시점 완료 보장
+    - NOISE_PATTERNS 50개 (v8.5)
+    - EXCLUDE_EXACT (v8.5)
 """
 
 import feedparser
@@ -92,12 +71,11 @@ RSS_FEEDS = {
     'Vietnam News (Economy)':  'https://vietnamnews.vn/economy/rss.xml',
     'Vietnam News (Society)':  'https://vietnamnews.vn/society/rss.xml',
 
-    # ── ★ v8.6: VnExpress 카테고리 특화 피드로 교체 ───────────────────
-    # 기존 news.rss (인프라 16%) + business.rss (38%) 제거
-    # → 카테고리 특화 피드 3개로 대체 (예상 인프라 관련률 60~90%)
-    'VnExpress Environment':   'https://e.vnexpress.net/rss/environment.rss',
-    'VnExpress Economy':       'https://e.vnexpress.net/rss/economy.rss',
-    'VnExpress Traffic':       'https://e.vnexpress.net/rss/traffic.rss',
+    # ── ★ v8.7: VnExpress 카테고리 RSS 차단 확인(5/15) → 기존 피드 복원 ──
+    # environment/economy/traffic.rss → GitHub Actions 미국IP 403차단 확인
+    # 무관기사는 ExcelUpdater v4.0 Vietnam 필터로 DB 삽입 단계에서 차단
+    'VnExpress International': 'https://e.vnexpress.net/rss/news.rss',
+    'VnExpress Business':      'https://e.vnexpress.net/rss/business.rss',
 
     # ── 수자원 / 환경 베트남어 ─────────────────────────────────────────
     'Bao Tai nguyen (VN)':     'https://baotainguyenmoitruong.vn/rss/home.rss',
@@ -533,31 +511,53 @@ NEWSDATA_PROVINCE_QUERIES = {
 
 # ── 한국 ODA 기관 쿼리 (방법1-D) ─────────────────────────────────────
 # ★ v8.6: 실행 순서를 방법A 직후로 이동하여 크레딧 소진 전 반드시 실행
+# ★ v8.7: 방법D 쿼리 재설계
+# 문제: 'KOICA'/'KEITI' 단독 단어 → 베트남 언론이 기관 약어 거의 사용 안 함
+#       → 5/11~5/15 3회 실행에도 수집 0건
+# 해결: DB 실제 수집 기사 패턴 분석 후 재설계
+#       ① 'South Korea' + 'Vietnam' + 섹터 맥락 조합
+#       ② 베트남어 보도 패턴 ('Hàn Quốc' + '협력/투자')
+#       ③ 기관 약어 대신 실제 보도 키워드 사용
 NEWSDATA_KOREAN_ODA_QUERIES = [
-    {'q': 'KOICA Vietnam water sanitation infrastructure development',
-     'language': 'en', 'sector': 'Water Supply/Drainage', 'label': 'KOICA-WAT'},
-    {'q': 'KEITI environmental technology export Vietnam',
-     'language': 'en', 'sector': 'Solid Waste', 'label': 'KEITI-ENV'},
-    {'q': 'Korean construction company Vietnam contract award infrastructure',
-     'language': 'en', 'sector': 'Transport', 'label': 'ICAK-CONST'},
-    {'q': 'Korea ODA Vietnam infrastructure development project',
-     'language': 'en', 'sector': 'Bilateral', 'label': 'KR-ODA-INFRA'},
-    {'q': 'Korea international cooperation Vietnam environment water energy',
-     'language': 'en', 'sector': 'Bilateral', 'label': 'KR-COOP-ENV'},
+    # ① 한-베 핵심 협력 (원전/에너지) — 4/25 실제 수집 기사 패턴
+    {'q': 'South Korea Vietnam nuclear power cooperation energy agreement',
+     'language': 'en', 'sector': 'Power', 'label': 'KR-VN-NUCLEAR'},
+    # ② 한국 기업 환경인프라 — The Investor 기사 패턴 (wastewater/recycling)
+    {'q': 'Korean company Vietnam water wastewater environment infrastructure project',
+     'language': 'en', 'sector': 'Waste Water', 'label': 'KR-VN-ENV'},
+    # ③ 한-베 교통/도시인프라 — 4/22 Metro 기사 패턴
+    {'q': 'South Korea Vietnam metro railway urban infrastructure supply',
+     'language': 'en', 'sector': 'Transport', 'label': 'KR-VN-METRO'},
+    # ④ 베트남어 보도 패턴 — 'Hàn Quốc' + 투자/협력 + 인프라 섹터
+    {'q': 'Hàn Quốc đầu tư hợp tác Việt Nam hạ tầng nước năng lượng',
+     'language': 'vi', 'sector': 'Bilateral', 'label': 'KR-VN-VI'},
+    # ⑤ 한국 ODA 통합 — 'Korean' + 'ODA'/'grant' + 'billion' 정밀 조합
+    {'q': 'Korean ODA grant loan Vietnam billion infrastructure industrial',
+     'language': 'en', 'sector': 'Bilateral', 'label': 'KR-ODA-BROAD'},
 ]
 
 # ── 국제개발금융기관 쿼리 (방법1-E) ─────────────────────────────────
+# ★ v8.7: 방법E 쿼리 재설계
+# 문제: 'ADB Vietnam...' → ADB 약어가 베트남 언론에 거의 안 나옴
+#       5/12~5/14 2회 실행에도 수집 0건
+# 해결: 기관 풀네임('Asian Development Bank') + 구체 맥락으로 정밀화
+#       베트남어 ADB 차관 표현('vốn vay ADB') 추가
 NEWSDATA_MDB_QUERIES = [
-    {'q': 'ADB Vietnam infrastructure loan project approval',
-     'language': 'en', 'sector': 'Transport', 'label': 'ADB-INFRA'},
-    {'q': 'World Bank Vietnam water sanitation environment project',
-     'language': 'en', 'sector': 'Waste Water', 'label': 'WB-WAT'},
-    {'q': 'AIIB Vietnam energy infrastructure investment',
-     'language': 'en', 'sector': 'Power', 'label': 'AIIB-ENERGY'},
-    {'q': 'JICA Vietnam ODA infrastructure grant loan',
-     'language': 'en', 'sector': 'Water Supply/Drainage', 'label': 'JICA-ODA'},
-    {'q': 'GIZ Vietnam environment sustainable development',
-     'language': 'en', 'sector': 'Solid Waste', 'label': 'GIZ-ENV'},
+    # ① ADB 풀네임 — 5/4 실제 수집 기사("Vietnam regional bright spot: ADB") 패턴
+    {'q': 'Asian Development Bank Vietnam infrastructure loan billion approved 2026',
+     'language': 'en', 'sector': 'Transport', 'label': 'ADB-FULLNAME'},
+    # ② WB 풀네임 — 구체 섹터(수자원/에너지) 결합
+    {'q': 'World Bank Vietnam water energy transport infrastructure billion 2026',
+     'language': 'en', 'sector': 'Waste Water', 'label': 'WB-FULLNAME'},
+    # ③ AIIB/JICA 통합 — 약어 유지 (국제적으로 통용)
+    {'q': 'AIIB JICA Vietnam renewable energy water infrastructure investment 2026',
+     'language': 'en', 'sector': 'Power', 'label': 'AIIB-JICA'},
+    # ④ 베트남어 국제기관 차관 패턴
+    {'q': 'vốn vay ADB World Bank Việt Nam hạ tầng nước điện giao thông 2026',
+     'language': 'vi', 'sector': 'Bilateral', 'label': 'MDB-VI'},
+    # ⑤ 다자개발은행 통합 — 'multilateral'+'billion'+'Vietnam' 정밀 조합
+    {'q': 'Vietnam multilateral development loan ODA billion project approved infrastructure',
+     'language': 'en', 'sector': 'Bilateral', 'label': 'MDB-BROAD'},
 ]
 
 NEWSDATA_QUERIES = NEWSDATA_SECTOR_QUERIES + NEWSDATA_MASTER_QUERIES
