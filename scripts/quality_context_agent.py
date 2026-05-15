@@ -429,6 +429,27 @@ def run_matching(plans: dict, keyword_dict: list) -> dict:
         if not existing_grade:
             ws2.cell(row=row_num, column=grade_col, value=grade)
 
+    # ★ v3.7 패치: Plan있고 Grade없는 기사 일괄 MEDIUM 설정
+    # ─────────────────────────────────────────────────────────────
+    # 문제: SA-6 run_matching()이 신규 매핑 시 Grade를 설정하지만
+    #       기존에 Plan_ID가 있었던 기사(206건)는 이번 루프에서
+    #       matched_rows에 포함되지 않아 Grade가 영구 공백으로 남음
+    # 영향: Grade=공백 → SA-7 Haiku 우선순위 판단 기준 모호
+    #       → Matched_Plan 요약 보강 대상에서도 제외됨
+    # 해결: wb2.save() 직전에 전체 시트를 스캔하여
+    #       Plan_ID 있고 Grade 없는 행에 일괄 MEDIUM 설정
+    # 특성: 매 실행마다 작동 (일회성 X) → 신규 누락분도 자동 보완
+    #       HIGH/MEDIUM/LOW가 이미 있는 행은 절대 건드리지 않음
+    grade_fixed = 0
+    for row_idx in range(2, ws2.max_row + 1):
+        plan_v  = str(ws2.cell(row=row_idx, column=plan_col).value  or '').strip()
+        grade_v = str(ws2.cell(row=row_idx, column=grade_col).value or '').strip()
+        if plan_v and not grade_v:
+            ws2.cell(row=row_idx, column=grade_col, value='MEDIUM')
+            grade_fixed += 1
+    if grade_fixed > 0:
+        log.info(f"  Grade 일괄보완: Plan있고 Grade없던 {grade_fixed}건 → MEDIUM 설정")
+
     wb.close()
     wb2.save(EXCEL_PATH)
     wb2.close()
