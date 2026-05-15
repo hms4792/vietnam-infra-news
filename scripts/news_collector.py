@@ -1,45 +1,37 @@
 """
-news_collector.py  — v8.5
+news_collector.py  — v8.6
 ==========================
 베트남 인프라 뉴스 수집기
 
+v8.6 변경사항 (2026-05-15):
+  ★ 변경 1: VnExpress RSS 카테고리 특화 교체
+    [문제] 종합 피드(news.rss, business.rss)가 인프라 무관 기사 62~84% 공급
+           bulldog, cruise, quantum computing, halal 등 매일 새 유형 혼입
+    [변경] news.rss(인프라 16%) → environment.rss(예상 85%)
+           business.rss(38%)  → economy.rss(예상 60%) + traffic.rss(예상 90%)
+    [효과] 무관 기사 65% → 목표 30% 이하
+
+  ★ 변경 2: NewsData.io 방법1-D 실행 순서 변경 (한국 ODA 크레딧 보장)
+    [문제] 현재 순서: A(14) → B(30) → C-A(7) → C-B(5) → D(5)
+           → 5/11 실측: 60크레딧 소진으로 D가 단 한 번도 실행 안 됨
+    [변경] 새 순서:   A(14) → D(5,홀수일) → B(30) → C-A(7) → C-B(5) → C-C(월목)
+           → D는 19크레딧 시점에 확실히 실행 보장
+    [효과] KOICA·KEITI·KIND·ICAK 관련 기사 매일(홀수일) 수집 시작
+
+  ★ 나머지 코드 전체 v8.5 동일 (노이즈 필터, should_collect, 기타 모든 쿼리)
+
 v8.5 변경사항 (2026-05-11):
-  ★ 무관 기사 필터 강화 (품질 개선)
-
-  [변경 1] NOISE_PATTERNS 확장
-    - 기존 29개 → 50개로 확장
-    - 추가: ruby, casino, esport, IPL, cricket, robotaxi,
-            game developer, psychonauts, keralam, nobitex 등
-    - 효과: 무관 기사 48% → 목표 25% 이하
-
-  [변경 2] should_collect()에 EXCLUDE_EXACT 블록 추가
-    - 기존 정규식 체크 이전에 단순 문자열 즉시 제외 로직 추가
-    - 처리 속도 향상 + 정확도 향상
-    - 기존 4단계 게이트 구조 완전 보존
-
-  ★ 나머지 코드 전체 v8.4 동일 (RSS_FEEDS, fetch_newsdata,
-    NEWSDATA_QUERIES, collect_news 등 변경 없음)
+  ★ NOISE_PATTERNS 29→50개 확장 + EXCLUDE_EXACT 블록 추가
 
 v8.4 변경사항 (2026-05-09):
-  ★ 한국 공공기관·국제개발금융기관 뉴스 수집 추가
-
-  [배경]
-  - KEITI(환경산업기술원), KOICA, KIND, 해외건설협회 공식 사이트는
-    GitHub Actions 미국 IP에서 HTTP 403 전면 차단 → 직접 크롤링 불가
-  - 해결책: 해당 기관 사업을 보도하는 국제기관 RSS + NewsData.io 쿼리로 우회 수집
-
-  [추가 내용]
-  1. RSS_FEEDS: 국제개발금융기관 공식 RSS 7개 추가
-     - ADB, World Bank, AIIB, GIZ, Vietnam Briefing, Mekong Eye, WaterWorld
-  2. fetch_newsdata() 내 방법1-D/E 블록 추가
-     - 방법1-D: 한국 ODA 기관 뉴스 (KOICA·KIND·KEITI·ICAK) — 홀수일
-     - 방법1-E: 국제개발금융 베트남 인프라 (ADB·WB·AIIB·JICA·GIZ) — 짝수일
+  ★ 한국 공공기관·국제개발금융기관 뉴스 수집 추가 (방법1-D/E)
+  ★ RSS_FEEDS: ADB, World Bank, AIIB, GIZ, Vietnam Briefing, Mekong Eye, WaterWorld
 
 v8.3 변경사항 (2026-05-04):
-  ★ 429 Rate Limit 처리 방식 전면 개선 (무료 플랜 안전 운영)
+  ★ 429 Rate Limit 처리 방식 전면 개선
 
 v8.2 변경사항 (2026-04-25):
-  - NEWSDATA_MASTER_QUERIES에 한-베 협력 쿼리 4개 추가
+  - 한-베 협력 쿼리 4개 추가
 
 v8.1 변경사항 (2026-04-24):
   - NEWSDATA_QUERIES: 섹터 14개 + 마스터플랜 16개 + Province 3그룹
@@ -77,7 +69,8 @@ logging.basicConfig(
 log = logging.getLogger('news_collector')
 
 # ══════════════════════════════════════════════════════════════════════════
-#  RSS 소스 목록 (v8.4 그대로 유지)
+#  RSS 소스 목록
+#  ★ v8.6: VnExpress 종합(news/business) → 카테고리 특화(environment/economy/traffic)
 # ══════════════════════════════════════════════════════════════════════════
 RSS_FEEDS = {
     # ── 환경 인프라 ────────────────────────────────────────────────────
@@ -98,13 +91,20 @@ RSS_FEEDS = {
     'Vietnam News (Env)':      'https://vietnamnews.vn/environment/rss.xml',
     'Vietnam News (Economy)':  'https://vietnamnews.vn/economy/rss.xml',
     'Vietnam News (Society)':  'https://vietnamnews.vn/society/rss.xml',
-    'VnExpress International': 'https://e.vnexpress.net/rss/news.rss',
-    'VnExpress Business':      'https://e.vnexpress.net/rss/business.rss',
+
+    # ── ★ v8.6: VnExpress 카테고리 특화 피드로 교체 ───────────────────
+    # 기존 news.rss (인프라 16%) + business.rss (38%) 제거
+    # → 카테고리 특화 피드 3개로 대체 (예상 인프라 관련률 60~90%)
+    'VnExpress Environment':   'https://e.vnexpress.net/rss/environment.rss',
+    'VnExpress Economy':       'https://e.vnexpress.net/rss/economy.rss',
+    'VnExpress Traffic':       'https://e.vnexpress.net/rss/traffic.rss',
 
     # ── 수자원 / 환경 베트남어 ─────────────────────────────────────────
     'Bao Tai nguyen (VN)':     'https://baotainguyenmoitruong.vn/rss/home.rss',
 
     # ── v8.4: 국제개발금융·한국 ODA 베트남 관련 RSS ────────────────────
+    # GitHub Actions 미국 IP에서 전부 빈 피드(403 차단)
+    # → 방법1-D/E NewsData.io 쿼리로 우회 수집
     'ADB Vietnam':             'https://www.adb.org/news/rss.xml',
     'World Bank VN News':      'https://feeds.worldbank.org/en/rss/vietnam',
     'AIIB News':               'https://www.aiib.org/en/news-events/rss.xml',
@@ -115,7 +115,7 @@ RSS_FEEDS = {
 }
 
 # ══════════════════════════════════════════════════════════════════════════
-#  섹터 키워드 (v8.4 그대로 유지)
+#  섹터 키워드 (v8.5 그대로)
 # ══════════════════════════════════════════════════════════════════════════
 SECTOR_KEYWORDS = {
     'Waste Water': [
@@ -172,7 +172,7 @@ SECTOR_KEYWORDS = {
 }
 
 # ══════════════════════════════════════════════════════════════════════════
-#  노이즈 필터 — v8.5: 기존 29개 + 신규 21개 = 50개
+#  노이즈 필터 (v8.5 그대로 — 50개)
 # ══════════════════════════════════════════════════════════════════════════
 NOISE_PATTERNS = [
     # ── 기존 v8.4 패턴 (29개) ─────────────────────────────────────────
@@ -185,22 +185,16 @@ NOISE_PATTERNS = [
     r'thể thao', r'giải trí', r'ca nhạc', r'phim', r'làm đẹp',
     r'khuyến mãi', r'giảm giá',
 
-    # ── v8.5 신규 패턴 (21개) — 무관 기사 추가 제거 ─────────────────
-    # 귀금속·도박·게임
+    # ── v8.5 신규 패턴 (21개) ─────────────────────────────────────────
     r'\bruby\b', r'\bdiamonds?\b', r'\bcasino\b', r'\blottery\b',
-    # 스포츠·이스포츠
     r'\besport\b', r'\bgaming\b', r'\bIPL\b', r'\bcricket\b',
     r'\bfifa\b', r'\bolympic\b',
-    # 연예·인물
     r'\bactor\b', r'\bsinger\b', r'\binfluencer\b',
-    # 사건사고 (인프라 무관)
     r'\brobotaxi\b', r'\bgame developer\b', r'\bgame studio\b',
     r'\bpsychonauts\b',
-    # 해외 정치 (베트남 무관)
     r'\bkeralam\b', r'\bcpi\(m\)\b', r'\bpinarayi\b',
-    # 금융 제재 (인프라 무관)
     r'\bnobitex\b', r'\bofac blacklist\b',
-    # ★ v8.5 추가 (5/11 신규 발견 유형)
+    # v8.5 추가 (5/11 신규 발견 유형)
     r'\bhantavirus\b', r'\bwild bird\b', r'\bmigratory bird\b',
     r'\bdurian\b', r'\bmorning digest\b', r'\bdaily digest\b',
     r'\bnetanyahu\b', r'\btrump iran\b',
@@ -208,11 +202,9 @@ NOISE_PATTERNS = [
 ]
 
 # ══════════════════════════════════════════════════════════════════════════
-#  v8.5 신규: EXCLUDE_EXACT — 단순 문자열 즉시 제외 키워드
-#  (NOISE_PATTERNS 정규식보다 빠른 전처리용)
+#  EXCLUDE_EXACT (v8.5 그대로)
 # ══════════════════════════════════════════════════════════════════════════
 EXCLUDE_EXACT = [
-    # 명백히 무관한 제목 패턴 (부분 문자열 매칭)
     'myanmar ruby', 'myanmar unearths', '11,000-carat',
     'singapore airlines flight', '319 people stuck',
     'waymo robotaxi', 'luggage at san jose',
@@ -228,7 +220,7 @@ EXCLUDE_EXACT = [
     'mitsubishi xpander recall',
     'gastric cancer journal',
     'uk institution campus',
-    # ★ v8.5 추가 (5/11 로그 기반 신규 무관 유형)
+    # v8.5 추가 (5/11 로그 기반)
     'hantavirus', 'wild bird', 'migratory bird', 'bảo vệ chim',
     'durian price', 'fruit price', 'durian export',
     'morning digest', 'daily digest', 'evening digest',
@@ -246,7 +238,7 @@ VIETNAM_KEYWORDS = [
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  v8.2 신규: 제목 기반 sector 추론 (v8.4 그대로)
+#  제목 기반 sector 추론 (v8.5 그대로)
 # ══════════════════════════════════════════════════════════════════════════
 def _infer_sector_from_title(title: str, summary: str = '') -> str:
     text = (title + ' ' + summary).lower()
@@ -280,7 +272,7 @@ def _infer_sector_from_title(title: str, summary: str = '') -> str:
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  1단계: should_collect() — v8.5: EXCLUDE_EXACT 블록 추가
+#  should_collect() (v8.5 그대로)
 # ══════════════════════════════════════════════════════════════════════════
 def should_collect(title: str, summary: str = '', source: str = '') -> tuple:
     text = (title + ' ' + summary).lower()
@@ -288,19 +280,18 @@ def should_collect(title: str, summary: str = '', source: str = '') -> tuple:
     if len(title.strip()) < 10:
         return False, 'TITLE_TOO_SHORT'
 
-    # ★ v8.5 신규: EXCLUDE_EXACT 즉시 제외 (정규식보다 빠른 전처리)
-    # 명백히 무관한 키워드가 제목에 있으면 즉시 제외
+    # v8.5: EXCLUDE_EXACT 즉시 제외
     title_lower = title.lower()
     for exc in EXCLUDE_EXACT:
         if exc.lower() in title_lower:
             return False, f'EXCLUDE_EXACT:{exc[:30]}'
 
-    # 기존 NOISE_PATTERNS 체크 (v8.4 동일)
+    # NOISE_PATTERNS 체크
     for pat in NOISE_PATTERNS:
         if re.search(pat, text, re.IGNORECASE):
             return False, f'NOISE:{pat}'
 
-    # v8.4: 국제개발금융·ODA 소스는 베트남 필터 완화
+    # ODA 소스 베트남 필터 완화
     ODA_SOURCES = ['adb', 'world bank', 'aiib', 'giz', 'jica', 'koica',
                    'vietnam briefing', 'mekong eye', 'waterworld', 'water world']
     is_oda_source = any(s in source.lower() for s in ODA_SOURCES)
@@ -336,7 +327,7 @@ def should_collect(title: str, summary: str = '', source: str = '') -> tuple:
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  2단계: RSS 수집 (v8.4 그대로)
+#  RSS 수집 (v8.5 그대로)
 # ══════════════════════════════════════════════════════════════════════════
 def fetch_rss_articles(hours_back: int = 24) -> list:
     cutoff    = datetime.now() - timedelta(hours=hours_back)
@@ -404,7 +395,7 @@ def fetch_rss_articles(hours_back: int = 24) -> list:
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  3단계: NEWSDATA_QUERIES (v8.4 그대로 — 변경 없음)
+#  NEWSDATA 쿼리 목록 (v8.5 그대로)
 # ══════════════════════════════════════════════════════════════════════════
 
 NEWSDATA_SECTOR_QUERIES = [
@@ -540,6 +531,8 @@ NEWSDATA_PROVINCE_QUERIES = {
     ],
 }
 
+# ── 한국 ODA 기관 쿼리 (방법1-D) ─────────────────────────────────────
+# ★ v8.6: 실행 순서를 방법A 직후로 이동하여 크레딧 소진 전 반드시 실행
 NEWSDATA_KOREAN_ODA_QUERIES = [
     {'q': 'KOICA Vietnam water sanitation infrastructure development',
      'language': 'en', 'sector': 'Water Supply/Drainage', 'label': 'KOICA-WAT'},
@@ -553,6 +546,7 @@ NEWSDATA_KOREAN_ODA_QUERIES = [
      'language': 'en', 'sector': 'Bilateral', 'label': 'KR-COOP-ENV'},
 ]
 
+# ── 국제개발금융기관 쿼리 (방법1-E) ─────────────────────────────────
 NEWSDATA_MDB_QUERIES = [
     {'q': 'ADB Vietnam infrastructure loan project approval',
      'language': 'en', 'sector': 'Transport', 'label': 'ADB-INFRA'},
@@ -570,7 +564,11 @@ NEWSDATA_QUERIES = NEWSDATA_SECTOR_QUERIES + NEWSDATA_MASTER_QUERIES
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  fetch_newsdata() — v8.4 그대로 유지
+#  fetch_newsdata()
+#  ★ v8.6 핵심 변경: 실행 순서 재배치
+#    변경 전: A → B → C-A → C-B(홀) → C-C(월목) → D(홀) → E(짝)
+#    변경 후: A → D(홀수일) → B → C-A → C-B(홀) → C-C(월목) → E(짝)
+#    효과: D(한국ODA)가 19크레딧 시점에 확실히 실행됨
 # ══════════════════════════════════════════════════════════════════════════
 def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
     if not api_key:
@@ -675,8 +673,8 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
             'ctx_plans':      plan_id if plan_id else '',
         }
 
-    # ── A: 섹터 기본 쿼리 ────────────────────────────────────────────
-    log.info('[NewsData.io] 방법1-A: 섹터 기본 쿼리')
+    # ── A: 섹터 기본 쿼리 (매일) — 14크레딧 ─────────────────────────
+    log.info('[NewsData.io] 방법1-A: 섹터 기본 쿼리 (14크레딧)')
     for q_info in NEWSDATA_SECTOR_QUERIES:
         if credit_exhausted or credit_used >= CREDIT_MAX: break
         results = call_api(q_info['q'], q_info['language'])
@@ -685,8 +683,24 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
             if parsed: articles.append(parsed)
         time.sleep(0.3)
 
-    # ── B: 마스터플랜 전용 쿼리 ──────────────────────────────────────
-    log.info('[NewsData.io] 방법1-B: 마스터플랜 쿼리')
+    # ── ★ D: 한국 ODA 기관 쿼리 (홀수일) — 방법A 직후로 이동 ─────────
+    # v8.6 핵심: A(14크레딧) 소비 직후 D(5크레딧) 실행
+    # → 19크레딧 시점에 D 완료 보장 (크레딧 소진 전)
+    # → KOICA·KEITI·KIND·ICAK 관련 기사 수집 보장
+    if day_odd and not credit_exhausted:
+        log.info('[NewsData.io] 방법1-D: 한국 ODA 기관 베트남 뉴스 (홀수일) ★순서변경★')
+        for q_info in NEWSDATA_KOREAN_ODA_QUERIES:
+            if credit_exhausted or credit_used >= CREDIT_MAX: break
+            results = call_api(q_info['q'], q_info['language'])
+            for raw in results:
+                parsed = parse_result(raw, sector=q_info.get('sector', 'Bilateral'),
+                                      plan_id=q_info.get('plan_id', ''))
+                if parsed: articles.append(parsed)
+            time.sleep(0.3)
+        log.info(f'[NewsData.io] 방법1-D 완료 — 누적 {credit_used}크레딧 사용')
+
+    # ── B: 마스터플랜 전용 쿼리 (매일) — 30크레딧 ───────────────────
+    log.info('[NewsData.io] 방법1-B: 마스터플랜 쿼리 (30크레딧)')
     for q_info in NEWSDATA_MASTER_QUERIES:
         if credit_exhausted or credit_used >= CREDIT_MAX: break
         results = call_api(q_info['q'], q_info['language'])
@@ -696,7 +710,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
             if parsed: articles.append(parsed)
         time.sleep(0.3)
 
-    # ── C-A: Province Group A ─────────────────────────────────────────
+    # ── C-A: Province Group A (매일) — 7크레딧 ───────────────────────
     log.info('[NewsData.io] 방법1-C: Province Group A')
     for q_info in NEWSDATA_PROVINCE_QUERIES['group_a']:
         if credit_exhausted or credit_used >= CREDIT_MAX: break
@@ -706,7 +720,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
             if parsed: articles.append(parsed)
         time.sleep(0.3)
 
-    # ── C-B: Province Group B (홀수일) ───────────────────────────────
+    # ── C-B: Province Group B (홀수일) — 5크레딧 ─────────────────────
     if day_odd and not credit_exhausted:
         log.info('[NewsData.io] 방법1-C: Province Group B (홀수일)')
         for q_info in NEWSDATA_PROVINCE_QUERIES['group_b']:
@@ -717,7 +731,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
                 if parsed: articles.append(parsed)
             time.sleep(0.3)
 
-    # ── C-C: Province Group C (월·목) ────────────────────────────────
+    # ── C-C: Province Group C (월·목) — 3크레딧 ─────────────────────
     if day_mon_thu and not credit_exhausted:
         log.info('[NewsData.io] 방법1-C: Province Group C (월·목)')
         for q_info in NEWSDATA_PROVINCE_QUERIES['group_c']:
@@ -728,19 +742,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
                 if parsed: articles.append(parsed)
             time.sleep(0.3)
 
-    # ── D: 한국 ODA 기관 쿼리 (홀수일) ──────────────────────────────
-    if day_odd and not credit_exhausted:
-        log.info('[NewsData.io] 방법1-D: 한국 ODA 기관 베트남 뉴스 (홀수일)')
-        for q_info in NEWSDATA_KOREAN_ODA_QUERIES:
-            if credit_exhausted or credit_used >= CREDIT_MAX: break
-            results = call_api(q_info['q'], q_info['language'])
-            for raw in results:
-                parsed = parse_result(raw, sector=q_info.get('sector', 'Bilateral'),
-                                      plan_id=q_info.get('plan_id', ''))
-                if parsed: articles.append(parsed)
-            time.sleep(0.3)
-
-    # ── E: 국제개발금융기관 베트남 인프라 (짝수일) ───────────────────
+    # ── E: 국제개발금융기관 (짝수일) — 5크레딧 ──────────────────────
     if not day_odd and not credit_exhausted:
         log.info('[NewsData.io] 방법1-E: 국제개발금융 베트남 인프라 (짝수일)')
         for q_info in NEWSDATA_MDB_QUERIES:
@@ -766,7 +768,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
 
 
 # ══════════════════════════════════════════════════════════════════════════
-#  메인 수집 함수 (v8.4 그대로)
+#  메인 수집 함수 (v8.5 그대로)
 # ══════════════════════════════════════════════════════════════════════════
 def collect_news(hours_back: int = 24) -> list:
     log.info(f'=== 뉴스 수집 시작 (hours_back={hours_back}) ===')
