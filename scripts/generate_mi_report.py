@@ -630,6 +630,9 @@ def copy_to_reports(pptx_path, docx_path):
     for src in [pptx_path, docx_path]:
         if src and Path(src).exists():
             dst = REPORTS_DIR / Path(src).name
+            if Path(src).resolve() == dst.resolve():
+                log.info(f'보고서 복사 스킵 (동일 경로): {dst}')
+                continue
             shutil.copy2(src, dst)
             log.info(f'보고서 복사: {dst}')
 
