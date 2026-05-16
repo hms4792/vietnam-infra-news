@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15 12:39",
+  "generated_at": "2026-05-16 04:39",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -31,17 +31,24 @@
       "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
       "stage_history": [
         {
           "date": "2026-05-15",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Lam Dong의 수상 태양광 발전에 4조 4천억 VND 투자 제안"
+        },
+        {
+          "date": "2026-05-14",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "VnExpress Business",
+          "title_ko": "베트남, EU에 대한 용과 수출을 유지하기 위한 노력 강화"
         },
         {
           "date": "2026-05-14",
@@ -52,31 +59,17 @@
         },
         {
           "date": "2026-05-12",
-          "stage": "UNKNOWN",
-          "milestone": "인프라 사업과 무관",
-          "source": "VnExpress Business",
-          "title_ko": "세계 2위의 커피 수출국인 동남아시아 국가는 어디일까요?"
-        },
-        {
-          "date": "2026-05-12",
           "stage": "OPERATION",
-          "milestone": "옥상태양광 운영 중, 피크시즌 전력공급 안정화",
+          "milestone": "옥상태양광 운영 중, 피크 시즌 전력 안정화 기여",
           "source": "Moi truong & Cuoc song",
           "title_ko": "옥상 태양광발전, 성수기 전력압박 완화에 기여"
-        },
-        {
-          "date": "2026-05-08",
-          "stage": "UNKNOWN",
-          "milestone": "태국 PM2.5 오염 관리 진행",
-          "source": "VnExpress International",
-          "title_ko": "태국, PM2.5 오염 관리 진전 보고"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-15",
-      "article_count": 6,
-      "haiku_count": 4,
+      "article_count": 5,
+      "haiku_count": 3,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-LNG": {
@@ -106,23 +99,16 @@
         {
           "date": "2026-05-12",
           "stage": "UNKNOWN",
-          "milestone": "해당 없음",
+          "milestone": "비해당",
           "source": "VnExpress Business",
           "title_ko": "세계 2위의 커피 수출국인 동남아시아 국가는 어디일까요?"
-        },
-        {
-          "date": "2026-05-08",
-          "stage": "UNKNOWN",
-          "milestone": "태국 PM2.5 오염 관리 진전",
-          "source": "VnExpress International",
-          "title_ko": "태국, PM2.5 오염 관리 진전 보고"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-14",
-      "article_count": 4,
-      "haiku_count": 3,
+      "article_count": 3,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-NUCLEAR": {
@@ -150,18 +136,18 @@
           "title_ko": "미국에서 추방된 베트남인 수백 명이 본국으로 돌아가 지원을 받습니다."
         },
         {
-          "date": "2026-05-08",
+          "date": "2026-05-12",
           "stage": "UNKNOWN",
-          "milestone": "태국 대기질 관리 정책",
-          "source": "VnExpress International",
-          "title_ko": "태국, PM2.5 오염 관리 진전 보고"
+          "milestone": "해당사항 없음",
+          "source": "VnExpress Business",
+          "title_ko": "세계 2위의 커피 수출국인 동남아시아 국가는 어디일까요?"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-14",
-      "article_count": 4,
-      "haiku_count": 3,
+      "article_count": 3,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-OG-2030": {
@@ -177,7 +163,7 @@
         {
           "date": "2026-05-14",
           "stage": "UNKNOWN",
-          "milestone": "인프라 사업과 무관",
+          "milestone": "없음",
           "source": "VnExpress Business",
           "title_ko": "휘발유 가격 하락"
         },
@@ -196,8 +182,8 @@
           "title_ko": "오일 쇼크 스트립 글로벌 공급 쿠션 Arabian Post"
         }
       ],
-      "next_watch": "VN-OG-2030 관련 기사 추적 필요",
-      "latest_insight": "본 기사는 휘발유 가격 변동에 관한 시장 뉴스로, 베트남 인프라 사업과 직접적 관련 없음",
+      "next_watch": "없음",
+      "latest_insight": "기사는 베트남 인프라 사업(VN-OG-2030)과 무관한 에너지 시장 뉴스이며 특정 건설·운영 프로젝트 정보를 포함하지 않음",
       "latest_article_date": "2026-05-14",
       "article_count": 6,
       "haiku_count": 1,
@@ -269,19 +255,12 @@
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Can Tho의 대형 병원은 처리되지 않은 폐수를 환경으로 배출합니다."
-        },
-        {
-          "date": "2026-05-08",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "[VIDEO] 베트남 물환경협회, 새로운 농촌조정중앙사무소와 협력: 깨끗한 물과 새로운 농촌환경에 대한 조정 강화"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-12",
-      "article_count": 3,
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -290,11 +269,18 @@
       "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
+        {
+          "date": "2026-05-16",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "만연한 건설 폐기물 투기: 응에안(Nghe An)의 어려운 문제"
+        },
         {
           "date": "2026-05-09",
           "stage": "PLANNING",
@@ -303,9 +289,9 @@
           "title_ko": "None"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-05-09",
+      "latest_article_date": "2026-05-16",
       "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": []
@@ -315,30 +301,30 @@
       "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
       "stage_history": [
+        {
+          "date": "2026-05-16",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "동나이의 미처리 폐수를 환경으로 배출하는 고무 라텍스 처리 시설 감지"
+        },
         {
           "date": "2026-05-11",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "en_prnasisa",
           "title_ko": "YOFC, 2025년 온실가스 배출 강도 13% 감소, 새로운 ESG 보고서 공개"
-        },
-        {
-          "date": "2026-05-08",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "[동영상] 르 민 쑤언 산업단지 (Le Minh Xuan Industrial Park) 호치민시): 사람들은 장기간에 걸친 오염으로 인해 계속해서 \"도움을 요청\" 합니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-11",
-      "article_count": 4,
+      "latest_article_date": "2026-05-16",
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -360,25 +346,32 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
-          "date": "2026-05-14",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "date": "2026-05-15",
+          "stage": "CONSTRUCTION",
+          "milestone": "광닝성 공공투자사업 진행 중",
           "source": "vietnamplus",
-          "title_ko": "인텔, 베트남 반도체 산업에 대한 참여 확대"
+          "title_ko": "Quang Ninh, 공공 투자 지출 주도"
         },
         {
-          "date": "2026-05-08",
-          "stage": "TENDERING",
-          "milestone": "10억 달러 규모 투자 유치 진행 중",
-          "source": "vietnamnews_vn",
-          "title_ko": "HCM City의 데이터 인프라에 수십억 달러의 투자가 쏟아집니다."
+          "date": "2026-05-15",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vir_vn",
+          "title_ko": "Lite On Technology, 베트남에 1억 4900만 달러 추가 투자"
+        },
+        {
+          "date": "2026-05-14",
+          "stage": "PLANNING",
+          "milestone": "인텔-베트남 정부 반도체산업 협력 협의 진행",
+          "source": "vietnamplus",
+          "title_ko": "인텔, 베트남 반도체 산업에 대한 참여 확대"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
       "article_count": 6,
-      "haiku_count": 1,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-TRAN-2055": {
@@ -386,11 +379,32 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
+        {
+          "date": "2026-05-11",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "sggp_org_vn",
+          "title_ko": "호치민시는 해양 스포츠의 잠재력을 실현합니다"
+        },
+        {
+          "date": "2026-05-11",
+          "stage": "OPERATION",
+          "milestone": "중동 관광객 유입 전략 시행 중",
+          "source": "channelnewsasia",
+          "title_ko": "중동 분쟁으로 인해 동남아시아는 이 지역 여행자를 중심으로 활동하지만 격차는 여전히 남아 있습니다."
+        },
+        {
+          "date": "2026-05-10",
+          "stage": "UNKNOWN",
+          "milestone": "보건 검역 강화 조치",
+          "source": "VnExpress International",
+          "title_ko": "베트남, 캄보디아, 한타바이러스 공항 검역 강화"
+        },
         {
           "date": "2026-05-09",
           "stage": "COMPLETION",
@@ -404,34 +418,13 @@
           "milestone": "정책·법령 발표",
           "source": "nhandan_vn",
           "title_ko": "베트남, 2026년부터 매년 동남아시아 e스포츠 네이션스컵 개최"
-        },
-        {
-          "date": "2026-05-08",
-          "stage": "UNKNOWN",
-          "milestone": "역사 철도역 관광 명소화",
-          "source": "vietnamplus",
-          "title_ko": "None"
-        },
-        {
-          "date": "2026-05-08",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "vietnamplus",
-          "title_ko": "베트남 항공, 콜롬보 노선으로 남아시아 네트워크 확장"
-        },
-        {
-          "date": "2026-05-08",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "VnExpress Business",
-          "title_ko": "싱가포르 창이 공항 터미널 3 근처에 6층 사무실 건물 계획"
         }
       ],
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-05-09",
+      "latest_article_date": "2026-05-11",
       "article_count": 8,
-      "haiku_count": 1,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-URB-METRO-2030": {
@@ -439,20 +432,20 @@
       "title_ko": "베트남 도시철도(메트로) 개발 계획",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-05-11",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "vietnamplus",
           "title_ko": "베트남, 콜롬보 스마트 항구 도시 모델 연구"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-11",
       "article_count": 1,
@@ -464,20 +457,20 @@
       "title_ko": "베트남 스마트시티 개발 프로그램 2030",
       "sector": "",
       "area": "",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
           "date": "2026-05-11",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
           "source": "vietnamplus",
           "title_ko": "동남아시아 최대 규모의 종합 스포츠 이벤트 주간이 다낭에서 마무리됩니다"
         }
       ],
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "latest_insight": "",
       "latest_article_date": "2026-05-11",
       "article_count": 1,
