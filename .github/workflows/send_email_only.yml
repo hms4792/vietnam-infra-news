@@ -1,0 +1,39 @@
+# ============================================================
+# send_email_only.yml — 이메일 단독 발송 워크플로우
+# .github/workflows/send_email_only.yml
+#
+# 용도: 워크플로우 재실행 없이 이메일만 발송할 때 수동 실행
+# 실행: GitHub → Actions 탭 → "Send Weekly Email Only" → Run workflow
+# ============================================================
+
+name: Send Weekly Email Only
+
+on:
+  workflow_dispatch:   # 수동 실행 전용
+
+jobs:
+  send-email:
+    name: 이메일 발송 (보고서 첨부)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # Step 1: 저장소 체크아웃 (보고서 파일 접근용)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 2: Python 설정
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Step 3: 이메일 발송 스크립트 실행
+      - name: Send weekly MI report email
+        env:
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: |
+          python3 scripts/send_weekly_email.py
