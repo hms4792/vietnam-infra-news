@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19 14:01",
+  "generated_at": "2026-05-20 13:41",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -12,11 +12,11 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-05-18",
+          "date": "2026-05-20",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "Quang Ninh, 최초의 해상 풍력 발전소 원칙적으로 승인"
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "2026~2030년 동안 에너지 개발에 관한 구체적인 메커니즘을 시행하는 법령을 긴급히 완료하세요."
         },
         {
           "date": "2026-05-18",
@@ -28,7 +28,7 @@
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-18",
+      "latest_article_date": "2026-05-20",
       "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": []
@@ -38,15 +38,15 @@
       "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
       "sector": "",
       "area": "",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
           "date": "2026-05-19",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Son La는 수력 발전 호수 바닥에서 800MW 수상 태양광 발전 프로젝트를 시작했습니다."
         },
@@ -63,27 +63,13 @@
           "milestone": "해당 없음",
           "source": "VnExpress International",
           "title_ko": "미국에서 추방된 베트남인 수백 명이 본국으로 돌아가 지원을 받습니다."
-        },
-        {
-          "date": "2026-05-12",
-          "stage": "UNKNOWN",
-          "milestone": "기사는 베트남 커피 수출 현황 소개",
-          "source": "VnExpress Business",
-          "title_ko": "세계 2위의 커피 수출국인 동남아시아 국가는 어디일까요?"
-        },
-        {
-          "date": "2026-05-12",
-          "stage": "OPERATION",
-          "milestone": "옥상태양광 성수기 전력공급 안정화 운영 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "옥상 태양광발전, 성수기 전력압박 완화에 기여"
         }
       ],
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-05-19",
-      "article_count": 6,
-      "haiku_count": 3,
+      "article_count": 4,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-LNG": {
@@ -106,23 +92,16 @@
         {
           "date": "2026-05-14",
           "stage": "UNKNOWN",
-          "milestone": "해당 없음",
+          "milestone": "해당 사항 없음",
           "source": "VnExpress International",
           "title_ko": "미국에서 추방된 베트남인 수백 명이 본국으로 돌아가 지원을 받습니다."
-        },
-        {
-          "date": "2026-05-12",
-          "stage": "UNKNOWN",
-          "milestone": "인프라 사업과 무관",
-          "source": "VnExpress Business",
-          "title_ko": "세계 2위의 커피 수출국인 동남아시아 국가는 어디일까요?"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-14",
-      "article_count": 3,
-      "haiku_count": 2,
+      "article_count": 2,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-GRID": {
@@ -178,8 +157,8 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-14",
-      "article_count": 3,
-      "haiku_count": 2,
+      "article_count": 2,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-OG-2030": {
@@ -198,19 +177,12 @@
           "milestone": "해당 없음",
           "source": "VnExpress Business",
           "title_ko": "휘발유 가격 하락"
-        },
-        {
-          "date": "2026-05-12",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "vietnamnews_vn",
-          "title_ko": "2026년 1분기 에너지 수입 급증"
         }
       ],
       "next_watch": "해당 없음",
-      "latest_insight": "본 기사는 휘발유 가격 변동에 관한 일반 시장 뉴스로, VN-OG-2030 인프라 사업과 무관합니다.",
+      "latest_insight": "베트남 인프라 사업과 무관한 에너지 가격 뉴스로, VN-OG-2030 마스터플랜 진행상황 분석에 활용 불가",
       "latest_article_date": "2026-05-14",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 1,
       "kpi_targets": []
     },
@@ -261,31 +233,6 @@
       "latest_insight": "",
       "latest_article_date": "2026-05-18",
       "article_count": 2,
-      "haiku_count": 0,
-      "kpi_targets": []
-    },
-    "VN-WAT-URBAN": {
-      "plan_id": "VN-WAT-URBAN",
-      "title_ko": "도시 배수·침수 방지 마스터플랜",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-05-12",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Can Tho의 대형 병원은 처리되지 않은 폐수를 환경으로 배출합니다."
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-12",
-      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -365,17 +312,31 @@
         },
         {
           "date": "2026-05-15",
-          "stage": "CONSTRUCTION",
-          "milestone": "2026년 공공투자 집행 진행 중",
+          "stage": "PLANNING",
+          "milestone": "광닝성 공공투자 집행 선도 중",
           "source": "vietnamplus",
           "title_ko": "Quang Ninh, 공공 투자 지출 주도"
+        },
+        {
+          "date": "2026-05-15",
+          "stage": "CONSTRUCTION",
+          "milestone": "2단계 2028년 완공, 2030년 최종 완성",
+          "source": "vir_vn",
+          "title_ko": "Lite On Technology, 베트남에 1억 4900만 달러 추가 투자"
+        },
+        {
+          "date": "2026-05-14",
+          "stage": "PLANNING",
+          "milestone": "Intel-베트남정부 반도체협력 MOU 체결",
+          "source": "vietnamplus",
+          "title_ko": "인텔, 베트남 반도체 산업에 대한 참여 확대"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
       "article_count": 5,
-      "haiku_count": 1,
+      "haiku_count": 3,
       "kpi_targets": []
     },
     "VN-TRAN-2055": {
@@ -383,11 +344,18 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
+        {
+          "date": "2026-05-14",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "sggp_org_vn",
+          "title_ko": "NA 부회장, Long Thanh 공항 프로젝트 진행 상황 점검"
+        },
         {
           "date": "2026-05-13",
           "stage": "TENDERING",
@@ -401,20 +369,13 @@
           "milestone": "정책·법령 발표",
           "source": "vietnamplus",
           "title_ko": "혼다베트남, 하이브리드, 전기자동차 생산을 위한 투자 인센티브 제안"
-        },
-        {
-          "date": "2026-05-12",
-          "stage": "UNKNOWN",
-          "milestone": "국경간 결제 정책 개선",
-          "source": "sggp_org_vn",
-          "title_ko": "국제 자본 흐름에 대한 국경 간 결제 개방"
         }
       ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-05-13",
+      "latest_article_date": "2026-05-14",
       "article_count": 8,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": []
     },
     "VN-URB-METRO-2030": {
@@ -458,19 +419,12 @@
           "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "[영상] 하노이는 7월 1일부터 위반 건축물에 대한 전기와 물 공급을 중단했다."
-        },
-        {
-          "date": "2026-05-12",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "하노이, 홍강 홍수 전환 구역 폐지 후 홍수 예방 계획 조정"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-05-13",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": []
     }
