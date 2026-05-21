@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20 13:41",
+  "generated_at": "2026-05-21 14:07",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -38,15 +38,29 @@
       "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
       "stage_history": [
         {
+          "date": "2026-05-21",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Nikkei Asia",
+          "title_ko": "베트남 태양광 스타트업, 이란과 관련된 에너지 쇼크 속에서 1,500만 달러 모금"
+        },
+        {
+          "date": "2026-05-20",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "vir_vn",
+          "title_ko": "Searefico, 산업 및 재생 에너지 발자국 확대"
+        },
+        {
           "date": "2026-05-19",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Son La는 수력 발전 호수 바닥에서 800MW 수상 태양광 발전 프로젝트를 시작했습니다."
         },
@@ -65,10 +79,10 @@
           "title_ko": "미국에서 추방된 베트남인 수백 명이 본국으로 돌아가 지원을 받습니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-19",
-      "article_count": 4,
+      "latest_article_date": "2026-05-21",
+      "article_count": 6,
       "haiku_count": 1,
       "kpi_targets": []
     },
@@ -92,7 +106,7 @@
         {
           "date": "2026-05-14",
           "stage": "UNKNOWN",
-          "milestone": "해당 사항 없음",
+          "milestone": "해당 없음",
           "source": "VnExpress International",
           "title_ko": "미국에서 추방된 베트남인 수백 명이 본국으로 돌아가 지원을 받습니다."
         }
@@ -180,7 +194,7 @@
         }
       ],
       "next_watch": "해당 없음",
-      "latest_insight": "베트남 인프라 사업과 무관한 에너지 가격 뉴스로, VN-OG-2030 마스터플랜 진행상황 분석에 활용 불가",
+      "latest_insight": "휘발유 가격 변동은 VN-OG-2030 인프라 사업과 무관한 에너지 시장 뉴스",
       "latest_article_date": "2026-05-14",
       "article_count": 1,
       "haiku_count": 1,
@@ -304,39 +318,25 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
+          "date": "2026-05-20",
+          "stage": "PLANNING",
+          "milestone": "산업 지원 인프라 맵 출시",
+          "source": "vietnamplus",
+          "title_ko": "글로벌 공급망 통합을 촉진하기 위해 지원 산업 인프라 맵 출시"
+        },
+        {
           "date": "2026-05-18",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "vietnamplus",
           "title_ko": "베트남 섬유산업, 친환경적이고 스마트한 변화 속에 첨단기술 FDI 유치"
-        },
-        {
-          "date": "2026-05-15",
-          "stage": "PLANNING",
-          "milestone": "광닝성 공공투자 집행 선도 중",
-          "source": "vietnamplus",
-          "title_ko": "Quang Ninh, 공공 투자 지출 주도"
-        },
-        {
-          "date": "2026-05-15",
-          "stage": "CONSTRUCTION",
-          "milestone": "2단계 2028년 완공, 2030년 최종 완성",
-          "source": "vir_vn",
-          "title_ko": "Lite On Technology, 베트남에 1억 4900만 달러 추가 투자"
-        },
-        {
-          "date": "2026-05-14",
-          "stage": "PLANNING",
-          "milestone": "Intel-베트남정부 반도체협력 MOU 체결",
-          "source": "vietnamplus",
-          "title_ko": "인텔, 베트남 반도체 산업에 대한 참여 확대"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 5,
-      "haiku_count": 3,
+      "article_count": 6,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-TRAN-2055": {
@@ -344,11 +344,18 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-05-15",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "nhipsongkinhdoanh",
+          "title_ko": "UAE, 인프라 및 에너지 분야에 850억 달러 투자 촉진"
+        },
         {
           "date": "2026-05-14",
           "stage": "CONSTRUCTION",
@@ -357,25 +364,18 @@
           "title_ko": "NA 부회장, Long Thanh 공항 프로젝트 진행 상황 점검"
         },
         {
-          "date": "2026-05-13",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "tienphong_vn",
-          "title_ko": "도시 구조조정, 어떤 분야가 새로운 성장축을 형성할 것인가?"
-        },
-        {
-          "date": "2026-05-13",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "혼다베트남, 하이브리드, 전기자동차 생산을 위한 투자 인센티브 제안"
+          "date": "2026-05-14",
+          "stage": "UNKNOWN",
+          "milestone": "해당 사항 없음",
+          "source": "vietnamnews_vn",
+          "title_ko": "사업 여건 폐기 제안으로 자동차업계 분할"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-14",
+      "latest_article_date": "2026-05-15",
       "article_count": 8,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-URB-METRO-2030": {
@@ -403,27 +403,27 @@
       "haiku_count": 0,
       "kpi_targets": []
     },
-    "HN-URBAN-INFRA": {
-      "plan_id": "HN-URBAN-INFRA",
-      "title_ko": "하노이 도시 인프라 개발 계획 2030",
+    "VN-SC-2030": {
+      "plan_id": "VN-SC-2030",
+      "title_ko": "베트남 스마트시티 개발 프로그램 2030",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
-          "date": "2026-05-13",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "[영상] 하노이는 7월 1일부터 위반 건축물에 대한 전기와 물 공급을 중단했다."
+          "date": "2026-05-21",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "en_prnasisa",
+          "title_ko": "여행 열정과 지역 행동이 중국을 제외한 아시아 태평양 전역의 호텔 충성도를 재편하고 있다고 새로운 Marriott Bonvoy 보고서에서 밝혀졌습니다"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-05-13",
+      "latest_article_date": "2026-05-21",
       "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": []
