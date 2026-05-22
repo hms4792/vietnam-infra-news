@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21 14:07",
+  "generated_at": "2026-05-22 13:33",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -52,70 +52,24 @@
         },
         {
           "date": "2026-05-20",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "vir_vn",
           "title_ko": "Searefico, 산업 및 재생 에너지 발자국 확대"
         },
         {
           "date": "2026-05-19",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Son La는 수력 발전 호수 바닥에서 800MW 수상 태양광 발전 프로젝트를 시작했습니다."
-        },
-        {
-          "date": "2026-05-15",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Lam Dong의 수상 태양광 발전에 4조 4천억 VND 투자 제안"
-        },
-        {
-          "date": "2026-05-14",
-          "stage": "UNKNOWN",
-          "milestone": "해당 없음",
-          "source": "VnExpress International",
-          "title_ko": "미국에서 추방된 베트남인 수백 명이 본국으로 돌아가 지원을 받습니다."
         }
       ],
       "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-21",
-      "article_count": 6,
-      "haiku_count": 1,
-      "kpi_targets": []
-    },
-    "VN-PWR-PDP8-LNG": {
-      "plan_id": "VN-PWR-PDP8-LNG",
-      "title_ko": "PDP8 LNG 가스발전",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-05-14",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "VnExpress Business",
-          "title_ko": "베트남, EU에 대한 용과 수출을 유지하기 위한 노력 강화"
-        },
-        {
-          "date": "2026-05-14",
-          "stage": "UNKNOWN",
-          "milestone": "해당 없음",
-          "source": "VnExpress International",
-          "title_ko": "미국에서 추방된 베트남인 수백 명이 본국으로 돌아가 지원을 받습니다."
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-14",
-      "article_count": 2,
-      "haiku_count": 1,
+      "article_count": 4,
+      "haiku_count": 0,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-GRID": {
@@ -141,63 +95,6 @@
       "latest_article_date": "2026-05-19",
       "article_count": 1,
       "haiku_count": 0,
-      "kpi_targets": []
-    },
-    "VN-PWR-PDP8-NUCLEAR": {
-      "plan_id": "VN-PWR-PDP8-NUCLEAR",
-      "title_ko": "PDP8 원전 재개",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-05-14",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "VnExpress Business",
-          "title_ko": "베트남, EU에 대한 용과 수출을 유지하기 위한 노력 강화"
-        },
-        {
-          "date": "2026-05-14",
-          "stage": "UNKNOWN",
-          "milestone": "해당 없음",
-          "source": "VnExpress International",
-          "title_ko": "미국에서 추방된 베트남인 수백 명이 본국으로 돌아가 지원을 받습니다."
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-14",
-      "article_count": 2,
-      "haiku_count": 1,
-      "kpi_targets": []
-    },
-    "VN-OG-2030": {
-      "plan_id": "VN-OG-2030",
-      "title_ko": "베트남 석유가스 분야 전략 2030",
-      "sector": "",
-      "area": "",
-      "current_stage": "UNKNOWN",
-      "stage_label_ko": "단계 미확정",
-      "stage_color": "9CA3AF",
-      "stage_order": 0,
-      "stage_history": [
-        {
-          "date": "2026-05-14",
-          "stage": "UNKNOWN",
-          "milestone": "해당 없음",
-          "source": "VnExpress Business",
-          "title_ko": "휘발유 가격 하락"
-        }
-      ],
-      "next_watch": "해당 없음",
-      "latest_insight": "휘발유 가격 변동은 VN-OG-2030 인프라 사업과 무관한 에너지 시장 뉴스",
-      "latest_article_date": "2026-05-14",
-      "article_count": 1,
-      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-WW-2030": {
@@ -236,18 +133,25 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-05-18",
+          "date": "2026-05-22",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "농촌의 깨끗한 물 공급의 디지털화 촉진"
+          "title_ko": "다가오는 워크숍 - 토론 \"중부-중부 고원의 농업, 신농촌 및 녹색 에너지와 관련된 수자원 개발에 대한 관리, 이용 및 투자 촉진\""
+        },
+        {
+          "date": "2026-05-22",
+          "stage": "UNKNOWN",
+          "milestone": "해당 없음",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "산업 폐수 오염으로 인해 라오까이의 농업 생산이 위협받고 있습니다."
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-18",
-      "article_count": 2,
-      "haiku_count": 0,
+      "latest_article_date": "2026-05-22",
+      "article_count": 5,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-SWM-NATIONAL-2030": {
@@ -318,13 +222,6 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
-          "date": "2026-05-20",
-          "stage": "PLANNING",
-          "milestone": "산업 지원 인프라 맵 출시",
-          "source": "vietnamplus",
-          "title_ko": "글로벌 공급망 통합을 촉진하기 위해 지원 산업 인프라 맵 출시"
-        },
-        {
           "date": "2026-05-18",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
@@ -336,7 +233,7 @@
       "latest_insight": "",
       "latest_article_date": "None",
       "article_count": 6,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": []
     },
     "VN-TRAN-2055": {
@@ -344,38 +241,52 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
+        {
+          "date": "2026-05-17",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "nhandan_vn",
+          "title_ko": "UTH는 기술을 습득하고 디지털 시대에 적응할 수 있는 인재를 제공할 준비가 되어 있습니다."
+        },
+        {
+          "date": "2026-05-17",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamplus",
+          "title_ko": "결의안 68은 민간 부문의 성장을 위한 투명한 메커니즘을 촉진합니다."
+        },
         {
           "date": "2026-05-15",
           "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "milestone": "UAE 정부 850억 USD 투자 계획 공식화",
           "source": "nhipsongkinhdoanh",
           "title_ko": "UAE, 인프라 및 에너지 분야에 850억 달러 투자 촉진"
         },
         {
-          "date": "2026-05-14",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "date": "2026-05-15",
+          "stage": "OPERATION",
+          "milestone": "연간 170만 명 관광객 수용 목표 달성",
           "source": "sggp_org_vn",
-          "title_ko": "NA 부회장, Long Thanh 공항 프로젝트 진행 상황 점검"
+          "title_ko": "항공료는 여전히 전체 여행경비에서 큰 비중을 차지"
         },
         {
-          "date": "2026-05-14",
-          "stage": "UNKNOWN",
-          "milestone": "해당 사항 없음",
-          "source": "vietnamnews_vn",
-          "title_ko": "사업 여건 폐기 제안으로 자동차업계 분할"
+          "date": "2026-05-15",
+          "stage": "CONSTRUCTION",
+          "milestone": "2027년 준공 목표, 급행열차 운영 개시",
+          "source": "VnExpress International",
+          "title_ko": "호치민시-롱탄 공항 통근 시간이 2027년까지 3시간에서 30분으로 단축: 차관"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-05-15",
+      "latest_article_date": "2026-05-17",
       "article_count": 8,
-      "haiku_count": 1,
+      "haiku_count": 3,
       "kpi_targets": []
     },
     "VN-URB-METRO-2030": {
@@ -408,20 +319,20 @@
       "title_ko": "베트남 스마트시티 개발 프로그램 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-05-21",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "en_prnasisa",
           "title_ko": "여행 열정과 지역 행동이 중국을 제외한 아시아 태평양 전역의 호텔 충성도를 재편하고 있다고 새로운 Marriott Bonvoy 보고서에서 밝혀졌습니다"
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-21",
       "article_count": 1,
