@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-24 13:26",
+  "generated_at": "2026-05-24 22:36",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -31,7 +31,28 @@
       "latest_article_date": "2026-05-20",
       "article_count": 3,
       "haiku_count": 0,
-      "kpi_targets": []
+      "kpi_targets": [
+        {
+          "indicator": "총 발전설비 (2030)",
+          "target": "150,489 MW",
+          "current": "80,555 MW (2024)"
+        },
+        {
+          "indicator": "재생에너지 비중 (2030)",
+          "target": "30~39%",
+          "current": "13.7% (2024)"
+        },
+        {
+          "indicator": "해상풍력 (2030)",
+          "target": "17,032 MW",
+          "current": "0 MW (계획 중)"
+        },
+        {
+          "indicator": "석탄발전 단계적 폐지",
+          "target": "2050년 0%",
+          "current": "34% (2024)"
+        }
+      ]
     },
     "VN-PWR-PDP8-RENEWABLE": {
       "plan_id": "VN-PWR-PDP8-RENEWABLE",
@@ -52,8 +73,8 @@
         },
         {
           "date": "2026-05-20",
-          "stage": "CONSTRUCTION",
-          "milestone": "2026년 2분기말 다낭 호아카인 산업단지 씨어리 산업빌딩 준공",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "vir_vn",
           "title_ko": "Searefico, 산업 및 재생 에너지 발자국 확대"
         },
@@ -69,8 +90,29 @@
       "latest_insight": "",
       "latest_article_date": "2026-05-23",
       "article_count": 4,
-      "haiku_count": 1,
-      "kpi_targets": []
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "해상풍력(2030)",
+          "target": "17,032 MW",
+          "current": "6,000MW → 3배 상향 확정"
+        },
+        {
+          "indicator": "육상풍력(2030)",
+          "target": "38,029 MW",
+          "current": "21,880MW (PDP8 원안) 대폭 상향"
+        },
+        {
+          "indicator": "태양광(2030)",
+          "target": "73 GW",
+          "current": "26,046MW → 대폭 상향"
+        },
+        {
+          "indicator": "BESS 배터리(2030)",
+          "target": "10,000 MW",
+          "current": "300MW → 33배 상향"
+        }
+      ]
     },
     "VN-PWR-PDP8-GRID": {
       "plan_id": "VN-PWR-PDP8-GRID",
@@ -95,7 +137,23 @@
       "latest_article_date": "2026-05-19",
       "article_count": 1,
       "haiku_count": 0,
-      "kpi_targets": []
+      "kpi_targets": [
+        {
+          "indicator": "신규 송전선 구축",
+          "target": "22,000km",
+          "current": "진행 중"
+        },
+        {
+          "indicator": "765kV 신규 노선",
+          "target": "3개",
+          "current": "1개"
+        },
+        {
+          "indicator": "스마트그리드 전환",
+          "target": "2030년",
+          "current": "파일럿"
+        }
+      ]
     },
     "VN-OG-2030": {
       "plan_id": "VN-OG-2030",
@@ -120,7 +178,23 @@
       "latest_article_date": "2026-05-22",
       "article_count": 1,
       "haiku_count": 0,
-      "kpi_targets": []
+      "kpi_targets": [
+        {
+          "indicator": "원유 생산량",
+          "target": "8~10백만 톤/년",
+          "current": "11백만 톤/년 (유지 목표)"
+        },
+        {
+          "indicator": "가스 생산량",
+          "target": "13~15억 m³/년",
+          "current": "10억 m³/년"
+        },
+        {
+          "indicator": "LNG 수입 의존도",
+          "target": "국내 가스 우선 활용",
+          "current": "2백만 톤/년 수입"
+        }
+      ]
     },
     "VN-WW-2030": {
       "plan_id": "VN-WW-2030",
@@ -145,7 +219,23 @@
       "latest_article_date": "None",
       "article_count": 1,
       "haiku_count": 0,
-      "kpi_targets": []
+      "kpi_targets": [
+        {
+          "indicator": "도시 폐수처리율",
+          "target": "85%",
+          "current": "~29% → 50% (하노이 옌짜 준공)"
+        },
+        {
+          "indicator": "신규 WWTP 용량",
+          "target": "2,900,000 m³/일",
+          "current": "약 800,000 m³/일 운영"
+        },
+        {
+          "indicator": "ODA 연계 투자",
+          "target": "$2.5B+",
+          "current": "JICA $690M (옌짜 준공 확정)"
+        }
+      ]
     },
     "VN-WAT-RESOURCES": {
       "plan_id": "VN-WAT-RESOURCES",
@@ -170,13 +260,6 @@
           "milestone": "입찰·계약 진행",
           "source": "Moi truong & Cuoc song",
           "title_ko": "새로운 농촌 프로그램과 관련된 고산지 및 물 부족 지역에 대한 물 공급 솔루션"
-        },
-        {
-          "date": "2026-05-22",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "산업 폐수 오염으로 인해 라오까이의 농업 생산이 위협받고 있습니다."
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
@@ -184,57 +267,105 @@
       "latest_article_date": "2026-05-23",
       "article_count": 7,
       "haiku_count": 0,
-      "kpi_targets": []
+      "kpi_targets": [
+        {
+          "indicator": "지하수 관리 대수층",
+          "target": "전국 27개 완전 관리",
+          "current": "12개 관리 중"
+        },
+        {
+          "indicator": "중복 댐·저수지 안전진단",
+          "target": "100% 완료",
+          "current": "65% 완료"
+        },
+        {
+          "indicator": "홍수 피해 GDP 비중",
+          "target": "0.5% 미만으로 감소",
+          "current": "연평균 1.2%"
+        }
+      ]
     },
     "VN-WAT-URBAN": {
       "plan_id": "VN-WAT-URBAN",
       "title_ko": "도시 배수·침수 방지 마스터플랜",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-05-23",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "환경치료와 신농촌개발의 녹색전환"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-23",
       "article_count": 1,
       "haiku_count": 0,
-      "kpi_targets": []
+      "kpi_targets": [
+        {
+          "indicator": "도시 안전 상수 보급률",
+          "target": "100%",
+          "current": "95% 수준 (2025)"
+        },
+        {
+          "indicator": "1인당 공급량",
+          "target": "150 L/일",
+          "current": "120 L/일 (2025 목표)"
+        },
+        {
+          "indicator": "누수율",
+          "target": "15% 이하",
+          "current": "20% 이하 (2025 목표)"
+        }
+      ]
     },
     "VN-SWM-NATIONAL-2030": {
       "plan_id": "VN-SWM-NATIONAL-2030",
       "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-05-24",
-          "stage": "OPERATION",
-          "milestone": "칸호아성 폐기물 관리 체계 운영 중",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Khanh Hoa: 자발적인 쓰레기 소각은 많은 도시 도로에서 심각한 오염을 초래합니다."
         }
       ],
-      "next_watch": "무단 소각 방지 및 적절한 폐기물 처리 시설 확충 필요",
-      "latest_insight": "VN-SWM-NATIONAL-2030 마스터플랜의 기초 폐기물 관리 인프라 부족으로 인한 운영 과제 노출. 지방 정부의 관리 강화 및 시설 투자 필요",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-05-24",
       "article_count": 1,
-      "haiku_count": 1,
-      "kpi_targets": []
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "도시 폐기물 수거율",
+          "target": "100%",
+          "current": "95% (2025 목표 수준)"
+        },
+        {
+          "indicator": "WtE 소각 비율",
+          "target": "50%",
+          "current": "30% 목표 (2025), 속선 WtE 가동"
+        },
+        {
+          "indicator": "매립 의존율",
+          "target": "30% 이하",
+          "current": "속선 WtE 가동으로 현저히 감소 중"
+        }
+      ]
     },
     "VN-IP-NORTH-2030": {
       "plan_id": "VN-IP-NORTH-2030",
@@ -273,7 +404,68 @@
       "latest_article_date": "None",
       "article_count": 6,
       "haiku_count": 0,
-      "kpi_targets": []
+      "kpi_targets": [
+        {
+          "indicator": "VSIP 단지 수",
+          "target": "25개 이상",
+          "current": "19개 운영 (타이빈 신규 착공)"
+        },
+        {
+          "indicator": "첨단산업 비중",
+          "target": "40% 이상",
+          "current": "전자·반도체 집중 육성"
+        },
+        {
+          "indicator": "FDI 유입",
+          "target": "연 $20B 이상",
+          "current": "2025년 $18B 수준"
+        },
+        {
+          "indicator": "배터리·반도체 거점",
+          "target": "특화 클러스터 3개",
+          "current": "박닌·하이퐁 중심"
+        },
+        {
+          "indicator": "일자리 창출",
+          "target": "400만 명",
+          "current": "250만 명 (2024)"
+        },
+        {
+          "indicator": "하이퐁 신규 단지",
+          "target": "15개 단지",
+          "current": "DEEP C 등 10개 운영"
+        },
+        {
+          "indicator": "타이응우옌 확장",
+          "target": "삼성 EV 전환",
+          "current": "삼성 SDI 배터리 투자"
+        },
+        {
+          "indicator": "박장 클러스터",
+          "target": "반도체 특화",
+          "current": "Foxconn 확장"
+        },
+        {
+          "indicator": "흥옌 신도시",
+          "target": "",
+          "current": ""
+        },
+        {
+          "indicator": "환경 기준 강화",
+          "target": "ISO 14001 의무화",
+          "current": "2025년 시범 도입"
+        },
+        {
+          "indicator": "신재생에너지 공급",
+          "target": "30% RE 달성",
+          "current": "DPPA 활용 추진"
+        },
+        {
+          "indicator": "스마트 물류 허브",
+          "target": "5개 허브 구축",
+          "current": "라크후옌 항구 연계"
+        }
+      ]
     },
     "VN-TRAN-2055": {
       "plan_id": "VN-TRAN-2055",
@@ -288,7 +480,7 @@
         {
           "date": "2026-05-19",
           "stage": "OPERATION",
-          "milestone": "Metro 2호선 Tham Luong-Ben Thanh-Thu Thiem 구간 통합 운영 개시",
+          "milestone": "Metro 2호선 Tham Luong-Ben Thanh-Thu Thiem 구간 통합 운영 (2026.05)",
           "source": "danviet",
           "title_ko": "Thu Thiem 역은 동부 부동산 시장 구조 조정에 대한 기대를 불러일으킵니다."
         },
@@ -309,24 +501,45 @@
         {
           "date": "2026-05-18",
           "stage": "UNKNOWN",
-          "milestone": "태국 해군 함정 친선방문",
+          "milestone": "태국 해군 친선방문",
           "source": "nhandan_vn",
           "title_ko": "태국 해군 함정, 호치민시 우호방문"
         },
         {
           "date": "2026-05-17",
           "stage": "UNKNOWN",
-          "milestone": "정책 방향 발표 및 에너지 전환 로드맵",
+          "milestone": "해당 없음",
           "source": "vietnamplus",
           "title_ko": "제11차 전국VFF대회: 국민대단결 강화를 위한 혁신"
         }
       ],
-      "next_watch": "Thu Thiem역 TOD 기반 부동산개발 진전 및 수익성 모니터링",
-      "latest_insight": "Metro 2호선 완전 운영 단계 진입으로 동부지역 부동산시장 재편 가시화. TOD 모델 기반 상업·서비스 확대로 장기 수익성 개선 기대",
+      "next_watch": "롱탄공항철도 연결 및 남북고속철도 통합 일정 모니터링",
+      "latest_insight": "Thu Thiem역 개통으로 메트로 2호선 실운영 단계 진입. 롱탄공항철도 연결 시 공항-도심간 다중 교통망 형성으로 인프라 가치 상승 예상",
       "latest_article_date": "2026-05-19",
       "article_count": 8,
       "haiku_count": 3,
-      "kpi_targets": []
+      "kpi_targets": [
+        {
+          "indicator": "고속도로 총연장",
+          "target": "5,000 km",
+          "current": "1,892 km (2025 실적)"
+        },
+        {
+          "indicator": "롱탄공항 개항",
+          "target": "25M PAX/년 (1단계)",
+          "current": "2026.06 상업운항 목표"
+        },
+        {
+          "indicator": "공항 네트워크",
+          "target": "30개 공항",
+          "current": "22개 운영"
+        },
+        {
+          "indicator": "항만 처리 용량",
+          "target": "1,100M 톤/년",
+          "current": "600M 톤/년"
+        }
+      ]
     },
     "VN-MEKONG-DELTA-2030": {
       "plan_id": "VN-MEKONG-DELTA-2030",
@@ -351,7 +564,23 @@
       "latest_article_date": "2026-05-23",
       "article_count": 1,
       "haiku_count": 0,
-      "kpi_targets": []
+      "kpi_targets": [
+        {
+          "indicator": "2030년까지 고속도로 760km",
+          "target": "",
+          "current": ""
+        },
+        {
+          "indicator": "메콩 수계 통합 관리",
+          "target": "",
+          "current": ""
+        },
+        {
+          "indicator": "Can Tho 교량 2호 건설",
+          "target": "",
+          "current": ""
+        }
+      ]
     },
     "VN-URB-METRO-2030": {
       "plan_id": "VN-URB-METRO-2030",
@@ -376,7 +605,23 @@
       "latest_article_date": "2026-05-18",
       "article_count": 1,
       "haiku_count": 0,
-      "kpi_targets": []
+      "kpi_targets": [
+        {
+          "indicator": "하노이 메트로 목표",
+          "target": "15개 노선",
+          "current": "2A·3호선 운영, 1·2B 건설"
+        },
+        {
+          "indicator": "호치민 메트로 목표",
+          "target": "8개 노선",
+          "current": "1호선 2024.12 개통"
+        },
+        {
+          "indicator": "전국 도시철도 목표",
+          "target": "46개 노선 3,045km",
+          "current": "약 5개 노선 운영/건설"
+        }
+      ]
     },
     "VN-SC-2030": {
       "plan_id": "VN-SC-2030",
@@ -401,7 +646,28 @@
       "latest_article_date": "2026-05-21",
       "article_count": 1,
       "haiku_count": 0,
-      "kpi_targets": []
+      "kpi_targets": [
+        {
+          "indicator": "스마트시티 시범 도시",
+          "target": "6개 (2025)",
+          "current": "6개 (2024 진행 중)"
+        },
+        {
+          "indicator": "전국 확산",
+          "target": "30개 (2030)",
+          "current": "12개 (2024)"
+        },
+        {
+          "indicator": "디지털정부 지수",
+          "target": "top 50 (UN EGDI)",
+          "current": "86위 (2024)"
+        },
+        {
+          "indicator": "5G 커버리지",
+          "target": "도시 100% (2030)",
+          "current": "15개 도시 (2024)"
+        }
+      ]
     }
   }
 }
