@@ -491,8 +491,15 @@ def assemble_payload(ki, plans, grouped_arts, all_articles, kpi_changes):
         arts = grouped_arts.get(pid, [])
 
         # Layer1 KPI 정규화 (절대 삭제 금지)
-        # knowledge_index 실제 필드: kpis[].indicator / kpi_targets[].label 양쪽 대응
+        # knowledge_index 실제 필드: kpi_targets[].indicator / kpis[] / key_targets[] 모두 대응
+        # ★ key_targets는 문자열 배열 → dict로 변환하여 통일
         kpi_source = pdata.get('kpi_targets') or pdata.get('kpis') or []
+        if not kpi_source:
+            raw_kt = pdata.get('key_targets') or []
+            kpi_source = [
+                {'indicator': str(t), 'target': '', 'current': ''}
+                for t in raw_kt if t
+            ]
         norm_kpis = []
         for k in kpi_source:
             if isinstance(k, dict):
@@ -531,6 +538,22 @@ def assemble_payload(ki, plans, grouped_arts, all_articles, kpi_changes):
                 'isNew':      bool(a.get('isNew', False)),
             })
 
+        # ★ description_ko fallback: 없으면 title_ko + decision + key_targets로 구성
+        _desc = (pdata.get('description_ko') or pdata.get('overview') or
+                 pdata.get('description') or '')
+        if not _desc:
+            _parts = []
+            if pdata.get('title_ko'):
+                _parts.append(pdata['title_ko'])
+            if pdata.get('decision'):
+                _parts.append(f"근거: {pdata['decision']}")
+            if pdata.get('period'):
+                _parts.append(f"기간: {pdata['period']}")
+            raw_kt = pdata.get('key_targets') or []
+            if raw_kt:
+                _parts.append('주요 목표: ' + ' / '.join(str(t) for t in raw_kt[:4]))
+            _desc = '\n'.join(_parts)
+
         plans_payload[pid] = {
             'plan_name_ko': (pdata.get('name_ko') or pdata.get('plan_name_ko') or pid),
             'sector':       (pdata.get('sector') or
@@ -540,9 +563,7 @@ def assemble_payload(ki, plans, grouped_arts, all_articles, kpi_changes):
             'decision':     (pdata.get('decision') or pdata.get('legal') or
                              pdata.get('legal_basis') or ''),
             # ★ Layer1 필수 필드 — 절대 삭제/변경 금지
-            # knowledge_index: 'overview' 필드, 페이로드: 'description_ko' 필드
-            'description_ko': (pdata.get('description_ko') or pdata.get('overview') or
-                               pdata.get('description') or ''),
+            'description_ko': _desc,
             'kpi_targets':    norm_kpis,
             'key_projects':   norm_projs,
             # Layer2
