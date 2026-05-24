@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23 04:49",
+  "generated_at": "2026-05-24 13:26",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -44,16 +44,16 @@
       "stage_order": 2,
       "stage_history": [
         {
-          "date": "2026-05-21",
+          "date": "2026-05-23",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
-          "source": "Nikkei Asia",
-          "title_ko": "베트남 태양광 스타트업, 이란과 관련된 에너지 쇼크 속에서 1,500만 달러 모금"
+          "source": "vietnamplus",
+          "title_ko": "옥상 태양광 발전은 투자 효율성을 제공합니다"
         },
         {
           "date": "2026-05-20",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "CONSTRUCTION",
+          "milestone": "2026년 2분기말 다낭 호아카인 산업단지 씨어리 산업빌딩 준공",
           "source": "vir_vn",
           "title_ko": "Searefico, 산업 및 재생 에너지 발자국 확대"
         },
@@ -67,9 +67,9 @@
       ],
       "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-21",
-      "article_count": 3,
-      "haiku_count": 0,
+      "latest_article_date": "2026-05-23",
+      "article_count": 4,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-GRID": {
@@ -162,7 +162,7 @@
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "[생방송] 워크숍 - 토론: 중부고원의 농업, 신농촌 및 녹색에너지와 관련된 수자원 개발을 위한 관리, 이용 및 투자 촉진"
+          "title_ko": "[동영상] 워크숍 - 토론: 중부고원의 농업, 신농촌 및 녹색 에너지와 관련된 수자원 개발을 위한 관리, 이용 및 투자 촉진"
         },
         {
           "date": "2026-05-23",
@@ -182,7 +182,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-23",
-      "article_count": 6,
+      "article_count": 7,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -216,49 +216,24 @@
       "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
-          "date": "2026-05-16",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "date": "2026-05-24",
+          "stage": "OPERATION",
+          "milestone": "칸호아성 폐기물 관리 체계 운영 중",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "만연한 건설 폐기물 투기: 응에안(Nghe An)의 어려운 문제"
+          "title_ko": "Khanh Hoa: 자발적인 쓰레기 소각은 많은 도시 도로에서 심각한 오염을 초래합니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-16",
+      "next_watch": "무단 소각 방지 및 적절한 폐기물 처리 시설 확충 필요",
+      "latest_insight": "VN-SWM-NATIONAL-2030 마스터플랜의 기초 폐기물 관리 인프라 부족으로 인한 운영 과제 노출. 지방 정부의 관리 강화 및 시설 투자 필요",
+      "latest_article_date": "2026-05-24",
       "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": []
-    },
-    "VN-ENV-IND-1894": {
-      "plan_id": "VN-ENV-IND-1894",
-      "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
-      "sector": "",
-      "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
-      "stage_history": [
-        {
-          "date": "2026-05-16",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "동나이의 미처리 폐수를 환경으로 배출하는 고무 라텍스 처리 시설 감지"
-        }
-      ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-16",
-      "article_count": 1,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-IP-NORTH-2030": {
@@ -277,6 +252,13 @@
           "milestone": "착공·건설 진행 중",
           "source": "Hanoi Times",
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
+        },
+        {
+          "date": "2026-05-20",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "vietnamplus",
+          "title_ko": "글로벌 공급망 통합을 촉진하기 위해 지원 산업 인프라 맵 출시"
         },
         {
           "date": "2026-05-18",
@@ -306,7 +288,7 @@
         {
           "date": "2026-05-19",
           "stage": "OPERATION",
-          "milestone": "메트로 2호선 Tham Luong-Ben Thanh-Thu Thiem 구간 통합 운영 개시",
+          "milestone": "Metro 2호선 Tham Luong-Ben Thanh-Thu Thiem 구간 통합 운영 개시",
           "source": "danviet",
           "title_ko": "Thu Thiem 역은 동부 부동산 시장 구조 조정에 대한 기대를 불러일으킵니다."
         },
@@ -334,13 +316,13 @@
         {
           "date": "2026-05-17",
           "stage": "UNKNOWN",
-          "milestone": "해당 없음",
+          "milestone": "정책 방향 발표 및 에너지 전환 로드맵",
           "source": "vietnamplus",
           "title_ko": "제11차 전국VFF대회: 국민대단결 강화를 위한 혁신"
         }
       ],
-      "next_watch": "Thu Thiem역 중심 TOD 프로젝트 상용화 진행 및 동부지역 부동산시장 재편 추이",
-      "latest_insight": "메트로 2호선 운영 개시로 Thu Thiem역이 교통허브로 기능 중. 55,000조 동 규모 TOD 개발을 통한 동부지역 부동산 재편 가시화 단계. 상업·서비스 확대 기대",
+      "next_watch": "Thu Thiem역 TOD 기반 부동산개발 진전 및 수익성 모니터링",
+      "latest_insight": "Metro 2호선 완전 운영 단계 진입으로 동부지역 부동산시장 재편 가시화. TOD 모델 기반 상업·서비스 확대로 장기 수익성 개선 기대",
       "latest_article_date": "2026-05-19",
       "article_count": 8,
       "haiku_count": 3,
@@ -401,24 +383,24 @@
       "title_ko": "베트남 스마트시티 개발 프로그램 2030",
       "sector": "",
       "area": "",
-      "current_stage": "UNKNOWN",
-      "stage_label_ko": "단계 미확정",
-      "stage_color": "9CA3AF",
-      "stage_order": 0,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
           "date": "2026-05-21",
-          "stage": "UNKNOWN",
-          "milestone": "기사 콘텐츠 불가용",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
           "source": "en_prnasisa",
           "title_ko": "여행 열정과 지역 행동이 중국을 제외한 아시아 태평양 전역의 호텔 충성도를 재편하고 있다고 새로운 Marriott Bonvoy 보고서에서 밝혀졌습니다"
         }
       ],
-      "next_watch": "유효한 인프라 관련 기사 재제공 필요",
-      "latest_insight": "마리옷 호텔 충성도 보고서는 베트남 인프라 사업(VN-SC-2030)과 무관한 관광·숙박 산업 기사로, 인프라 프로젝트 분석 대상 외",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
       "latest_article_date": "2026-05-21",
       "article_count": 1,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": []
     }
   }
