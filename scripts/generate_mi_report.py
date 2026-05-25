@@ -25,7 +25,7 @@ v3.1 버그픽스 (2026-05-10):
   [Fix 5] ★ kpi_dashboard Excel DB에서 읽어 채움
 
 영구 제약 (변경 불가):
-  - Anthropic API: GitHub Actions 사용 불가 → Google/MyMemory 번역만
+  - Anthropic API: 번역 금지 -- 분석(Layer2/Executive Summary)에만 사용
   - EMAIL_USERNAME / EMAIL_PASSWORD 시크릿
   - ExcelUpdater.update_all() 메서드명
   - docs/index.html 은 Claude 전용, docs/genspark/ 는 Genspark 전용
@@ -36,6 +36,12 @@ import json
 import logging
 import os
 import shutil
+
+# Anthropic Haiku 설정 (SA-6/SA-7과 동일 패턴, 번역 금지)
+ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages'
+HAIKU_MODEL       = 'claude-haiku-4-5-20251001'  # 절대 변경 금지
+HAIKU_TIMEOUT     = 45
+
 import subprocess
 import sys
 import re
@@ -446,6 +452,102 @@ def detect_kpi_changes(plans):
 # ══════════════════════════════════════════════════════════════════════════
 # 5. 페이로드 조립
 # ══════════════════════════════════════════════════════════════════════════
+
+# ============================================================
+# Layer2 AI 분석 생성 함수 (SA-8 v3.2 신규)
+# ============================================================
+
+def _call_haiku_sa8(system_prompt, user_prompt, api_key):
+    """SA-6/SA-7과 동일한 Haiku 호출 패턴 -- 번역 금지, 분석 전용"""
+    import json as _j
+    import urllib.request
+    try:
+        headers = {
+            'Content-Type':      'application/json',
+            'x-api-key':         api_key,
+            'anthropic-version': '2023-06-01',
+        }
+        body = _j.dumps({
+            'model':    HAIKU_MODEL,
+            'max_tokens': 600,
+            'system':   system_prompt,
+            'messages': [{'role': 'user', 'content': user_prompt}],
+        }).encode('utf-8')
+        req = urllib.request.Request(
+            ANTHROPIC_API_URL, data=body, headers=headers, method='POST')
+        with urllib.request.urlopen(req, timeout=HAIKU_TIMEOUT) as resp:
+            data = _j.loads(resp.read().decode('utf-8'))
+            return data['content'][0]['text'].strip()
+    except Exception as e:
+        log.warning(f'  Haiku SA8 호출 오류: {e}')
+        return ''
+
+
+def generate_layer2_analysis(plans_payload, api_key):
+    """플랜별 Layer2 AI 분석 -- 기사 있는 플랜에만 Haiku 호출"""
+    if not api_key:
+        log.warning('[Layer2] ANTHROPIC_API_KEY 없음 -- AI 분석 건너뜀')
+        return
+    system = (
+        '당신은 베트남 인프라 개발 전문 시장정보(MI) 애널리스트입니다. '
+        '수집된 뉴스 기사를 바탕으로 경영진 보고용 인사이트를 한국어로 작성합니다. '
+        '반드시 다음 3개 항목을 포함하세요: '
+        '1. 이번 주 핵심 진행사항 (사업 추진 현황) '
+        '2. 투자 및 사업 기회 시그널 (한국 기업 관점) '
+        '3. 리스크 또는 지연 징후 (없으면 특이사항 없음) '
+        '각 항목은 1~2문장, 전체 250자 이내로 작성하세요.'
+    )
+    targets = {pid: p for pid, p in plans_payload.items() if p.get('articles')}
+    log.info(f'[Layer2] AI 분석 대상: {len(targets)}개 플랜')
+    for pid, pdata in targets.items():
+        arts = pdata.get('articles', [])
+        plan_name = pdata.get('plan_name_ko') or pid
+        art_lines = []
+        for a in arts[:8]:
+            title   = (a.get('title_ko') or '')[:60]
+            summary = (a.get('summary_ko') or '')[:100]
+            date    = (a.get('date') or '')[:10]
+            art_lines.append(f'- [{date}] {title}: {summary}')
+        user = (
+            f'마스터플랜: {plan_name}\n'
+            f'수집 기사 ({len(arts)}건):\n' + '\n'.join(art_lines) +
+            '\n\n위 기사를 분석하여 경영진 보고용 인사이트 3개 항목을 작성하세요.'
+        )
+        result = _call_haiku_sa8(system, user, api_key)
+        if result:
+            pdata['analysis_ko'] = result
+            log.info(f'  [Layer2] {pid}: {len(result)}자')
+        else:
+            log.warning(f'  [Layer2] {pid}: 생성 실패')
+
+
+def generate_executive_summary(plans_payload, new_articles, api_key):
+    """Executive Summary -- 신규 기사 기반 Haiku 1회 호출"""
+    if not api_key or not new_articles:
+        return ''
+    system = (
+        '당신은 베트남 인프라 MI 애널리스트입니다. '
+        '이번 주 베트남 인프라 동향을 경영진에게 보고하는 요약문을 한국어로 작성합니다. '
+        '형식: [이번 주 3대 주요 동향] 1. 2. 3. '
+        '[섹터별 주요 움직임] Power/에너지: / 환경인프라: / 교통산업단지: '
+        '전체 400자 이내, 사실 기반으로만 작성하세요.'
+    )
+    art_lines = []
+    for a in new_articles[:15]:
+        title   = (a.get('title_ko') or a.get('tit_ko') or '')[:60]
+        summary = (a.get('summary_ko') or a.get('sum_ko') or '')[:80]
+        sector  = (a.get('sector') or '')
+        art_lines.append(f'- [{sector}] {title}: {summary}')
+    user = (
+        f'이번 주 신규 수집 기사 ({len(new_articles)}건):\n' +
+        '\n'.join(art_lines) +
+        '\n\n위 기사를 종합하여 경영진 보고용 Executive Summary를 작성하세요.'
+    )
+    result = _call_haiku_sa8(system, user, api_key)
+    log.info(f'[Exec Summary] {len(result)}자' if result else '[Exec Summary] 생성 실패')
+    return result
+
+
 def assemble_payload(ki, plans, grouped_arts, all_articles, kpi_changes):
     today_str     = datetime.now().strftime('%Y-%m-%d')
     period_start  = (datetime.now() - timedelta(days=13)).strftime('%Y-%m-%d')
@@ -784,6 +886,16 @@ def main():
 
     # Step 5: 페이로드 조립
     payload = assemble_payload(ki, plans, grouped_arts, all_articles, kpi_changes)
+
+    # Step 5-a: Layer2 AI 분석 + Executive Summary (Haiku) -- SA-8 v3.2
+    _api_key = os.environ.get('ANTHROPIC_API_KEY', '').strip()
+    if _api_key:
+        generate_layer2_analysis(payload['plans'], _api_key)
+        _new_arts = [a for a in all_articles if a.get('isNew', False)]
+        payload['executive_summary_ko'] = generate_executive_summary(
+            payload['plans'], _new_arts, _api_key)
+    else:
+        log.warning('[SA-8] ANTHROPIC_API_KEY 없음 -- Layer2 분석 건너뜀')
 
     # 이전 payload 백업
     if PAYLOAD_FILE.exists():
