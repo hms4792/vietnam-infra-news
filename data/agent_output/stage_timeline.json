@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25 14:06",
+  "generated_at": "2026-05-26 13:57",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -29,7 +29,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-05-25",
-      "article_count": 4,
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -59,11 +59,18 @@
       "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-05-25",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vir_vn",
+          "title_ko": "하노이, APAC 최고의 풍력 에너지 행사 개최"
+        },
         {
           "date": "2026-05-23",
           "stage": "OPERATION",
@@ -79,13 +86,6 @@
           "title_ko": "베트남 태양광 스타트업, 이란과 관련된 에너지 쇼크 속에서 1,500만 달러 모금"
         },
         {
-          "date": "2026-05-20",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vir_vn",
-          "title_ko": "Searefico, 산업 및 재생 에너지 발자국 확대"
-        },
-        {
           "date": "2026-05-19",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
@@ -93,10 +93,10 @@
           "title_ko": "Son La는 수력 발전 호수 바닥에서 800MW 수상 태양광 발전 프로젝트를 시작했습니다."
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-23",
-      "article_count": 4,
+      "latest_article_date": "2026-05-25",
+      "article_count": 5,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -272,7 +272,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-23",
-      "article_count": 7,
+      "article_count": 6,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -392,24 +392,24 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
+          "date": "2026-05-26",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "VnExpress Business",
+          "title_ko": "Stavian Industrial Park는 Khanh Hoa 프로젝트의 투자자로 승인되었습니다."
+        },
+        {
           "date": "2026-05-20",
           "stage": "COMPLETION",
           "milestone": "준공·운영 개시",
           "source": "vietnamplus",
           "title_ko": "글로벌 공급망 통합을 촉진하기 위해 지원 산업 인프라 맵 출시"
-        },
-        {
-          "date": "2026-05-18",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "베트남 섬유산업, 친환경적이고 스마트한 변화 속에 첨단기술 FDI 유치"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 6,
+      "article_count": 7,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -479,45 +479,38 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
+        {
+          "date": "2026-05-20",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamplus",
+          "title_ko": "지하철 2호선 Ben Thanh-Thu Thiem을 통한 인프라 강화"
+        },
+        {
+          "date": "2026-05-20",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "nhandan_vn",
+          "title_ko": "포럼, 베트남-한국 공급망 연결 촉진"
+        },
         {
           "date": "2026-05-19",
           "stage": "OPERATION",
-          "milestone": "Metro 2호선 Thu Thiem역 통합운영 개시(2026.05)",
+          "milestone": "메트로2호선 Thu Thiem역 통합 운영 개시(2026년 5월)",
           "source": "danviet",
           "title_ko": "Thu Thiem 역은 동부 부동산 시장 구조 조정에 대한 기대를 불러일으킵니다."
-        },
-        {
-          "date": "2026-05-19",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "tienphong_vn",
-          "title_ko": "주요 프로젝트는 응에안의 얼굴을 변화시킵니다"
-        },
-        {
-          "date": "2026-05-19",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "menafn",
-          "title_ko": "한국이 미·중 갈등의 물류기지로 자리매김"
-        },
-        {
-          "date": "2026-05-18",
-          "stage": "UNKNOWN",
-          "milestone": "태국 해군 친선방문",
-          "source": "nhandan_vn",
-          "title_ko": "태국 해군 함정, 호치민시 우호방문"
         }
       ],
-      "next_watch": "남북고속철도·롱탄공항철도 연계 운영 시작 예정",
-      "latest_insight": "Thu Thiem역 통합운영으로 메트로·고속철·공항철도 다중수송 네트워크 완성. 동부지역 TOD기반 부동산개발 촉발로 인프라 투자 수익성 강화 예상.",
-      "latest_article_date": "2026-05-19",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-05-20",
       "article_count": 8,
-      "haiku_count": 2,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -579,47 +572,6 @@
           "indicator": "Can Tho 교량 2호 건설",
           "target": "",
           "current": ""
-        }
-      ]
-    },
-    "VN-URB-METRO-2030": {
-      "plan_id": "VN-URB-METRO-2030",
-      "title_ko": "베트남 도시철도(메트로) 개발 계획",
-      "sector": "",
-      "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
-      "stage_history": [
-        {
-          "date": "2026-05-18",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "VnExpress International",
-          "title_ko": "7월 2일 이전에 호치민에서 롱탄 공항까지 지하철 노선 건설 시작"
-        }
-      ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-18",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "하노이 메트로 목표",
-          "target": "15개 노선",
-          "current": "2A·3호선 운영, 1·2B 건설"
-        },
-        {
-          "indicator": "호치민 메트로 목표",
-          "target": "8개 노선",
-          "current": "1호선 2024.12 개통"
-        },
-        {
-          "indicator": "전국 도시철도 목표",
-          "target": "46개 노선 3,045km",
-          "current": "약 5개 노선 운영/건설"
         }
       ]
     },
