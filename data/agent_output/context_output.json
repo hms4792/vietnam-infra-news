@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-05-26 13:57",
+  "generated_at": "2026-05-26 14:10",
   "model": "claude-haiku-4-5-20251001",
   "total_articles": 35,
-  "haiku_used": 1,
+  "haiku_used": 2,
   "stage_summary": {
-    "PLANNING": 18,
+    "PLANNING": 17,
     "TENDERING": 3,
-    "CONSTRUCTION": 10,
+    "CONSTRUCTION": 11,
     "COMPLETION": 1,
     "OPERATION": 3,
     "UNKNOWN": 0
@@ -34,7 +34,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-25",
@@ -42,7 +42,7 @@
       "sector": "General",
       "title_ko": "2026년 폭염 피크: EVN은 전기 공급을 보장하고 전기 절약에 대한 지침을 제공하기 위해 많은 솔루션을 배포합니다.",
       "title_en": "Heat peak in 2026: EVN deploys many solutions to ensure electricity supply and provide instructions on saving electricity",
-      "summary_ko": "①2026년 하계 전력수급 대응 ②구체적 규모 미제시 ③운영 단계 ④발주처: EVN(베트남전력공사), 정부 ⑤2026년 여름 피크 대비 전력공급 안정화 및 절전 지침 제공. PDP8 전력 마스터플랜에 따라 EVN이 다각적 해결방안 배포 중",
+      "summary_ko": "사업명: 2026년 폭염 대비 전력공급 안정화 사업\n사업규모: 구체적 규모 미상\n진행단계: 운영 중\n주요기관: EVN(베트남 전력공사)\n핵심일정: 2026년 5월 폭염 시기 전력수급 관리 및 절전 지도 실시. EVN은 전력 공급 안정성 확보를 위한 다양한 대책을 추진 중.",
       "summary_en": "In the face of the hot weather season in 2026, Vietnam Electricity Group (EVN) has requested Power Corporations to synchronously deploy many solutions to ensure safe and stable electricity supply, and at the same time propagate and guide the economical and effective use of electricity.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/cao-diem-nang-nong-2026-evn-trien-khai-nhieu-giai-phap-bao-dam-cung-cap-dien-huong-dan-tiet-kiem-dien-99710.html",
@@ -58,7 +58,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.70)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-19",
@@ -82,7 +82,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.82)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-20",
@@ -106,7 +106,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-21",
@@ -130,7 +130,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.67)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-23",
@@ -138,7 +138,7 @@
       "sector": "Power",
       "title_ko": "옥상 태양광 발전은 투자 효율성을 제공합니다",
       "title_en": "Rooftop solar power delivers investment efficiency",
-      "summary_ko": "①옥상태양광발전 사업 ②구체적 규모 미기재 ③계획/추진 단계 ④베트남 정부(에너지부) ⑤지속적 확대 추진. 베트남 재정에너지개발계획(PDP8) 재생에너지 부문에서 옥상태양광의 투자수익성을 강조하며 분산형 재생에너지 확대를 추진 중.",
+      "summary_ko": "①옥상태양광발전사업 ②구체적 규모 미기재 ③계획/운영 단계 ④베트남 정부·에너지부 ⑤투자수익률 향상을 통한 확대 추진 예정. VN-PWR-PDP8-RENEWABLE 재정에너지계획에 포함되어 분산형 재생에너지 확대 중",
       "summary_en": "As early summer heat pushes electricity demand higher during peak hours, rooftop solar power is proving increasingly effective in providing on-site energy. The model not only helps ease pressure on the national grid, but also cuts costs for households and businesses while promoting greener and more",
       "source": "vietnamplus",
       "url": "https://en.vietnamplus.vn/rooftop-solar-power-delivers-investment-efficiency-post343310.vnp",
@@ -146,15 +146,15 @@
       "ctx_plans": "VN-PWR-PDP8-RENEWABLE",
       "plan_id": "VN-PWR-PDP8-RENEWABLE",
       "rule_stage": "OPERATION",
-      "rule_conf": 0.769,
+      "rule_conf": 0.705,
       "stage": "OPERATION",
-      "confidence": 0.769,
+      "confidence": 0.705,
       "milestone": "운영 성과 업데이트",
       "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.77)",
+      "stage_reason": "규칙기반 (신뢰도 0.71)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-25",
@@ -162,7 +162,7 @@
       "sector": "Industrial Parks",
       "title_ko": "하노이, APAC 최고의 풍력 에너지 행사 개최",
       "title_en": "Hanoi to host APAC s premier wind energy event",
-      "summary_ko": "하노이에서 6월 9-11일 APAC 풍력에너지 정상회담 2026이 개최된다. 글로벌 풍력에너지위원회가 주최하며 아시아태평양 지역의 정책입안자, 산업지도자, 투자자 등 1,000명 이상이 참석할 예정이다. 풍력 에너지의 경제 성장 역할과 공급망 확대를 논의한다.",
+      "summary_ko": "①APAC 풍력에너지 정상(APAC Wind Energy Summit 2026) ②1,000명 이상 참가 예상 ③계획 단계(6월 9-11일 개최) ④주최: GWEC, 참가: PTSC·Copenhagen Infrastructure Partners·Suzlon Energy 등 ⑤5월 26일 미디어 브리핑, 6월 9-11일 하노이 국가컨벤션센터에서 개최. 아시아태평양 풍력 산업의 상업 플랫폼으로 정책입안자·기업 지도자·투자자 등이 참여해 파트너십 창출 기대",
       "summary_en": "Media briefing on APAC Wind Energy Summit 2026 will take place at em VIR em s headquarters on May 26 highlighting the growing role of wind energy in powering economic growth and industrial transformation",
       "source": "vir_vn",
       "url": "https://vir.com.vn/hanoi-to-host-apacs-premier-wind-energy-event-153381.html",
@@ -170,15 +170,15 @@
       "ctx_plans": "VN-PWR-PDP8-RENEWABLE",
       "plan_id": "VN-PWR-PDP8-RENEWABLE",
       "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
+      "rule_conf": 0.644,
       "stage": "PLANNING",
-      "confidence": 1.0,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "confidence": 0.9,
+      "milestone": "APAC 풍력에너지 정상회담 개최(6월 9-11일)",
+      "next_watch": "정상회담 결과 및 파트너십 체결 현황 모니터링",
+      "insight": "베트남 풍력 산업의 글로벌 네트워킹 플랫폼 구축. 주요 투자자·시공사·정책입안자 참여로 PDP8 재생에너지 목표 달성을 위한 민관협력 기반 마련 중",
+      "stage_reason": "산업 네트워킹·협력 기반 조성 단계, 구체적 사업 입찰 미개시",
+      "haiku_used": true,
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-19",
@@ -202,7 +202,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.85)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-22",
@@ -210,7 +210,7 @@
       "sector": "Industrial Parks",
       "title_ko": "페트로베트남은 에너지 협력 강화를 위해 Vitol Asia와 MOU를 체결했습니다.",
       "title_en": "Petrovietnam signs MoU with Vitol Asia to boost energy cooperation",
-      "summary_ko": "①페트로베트남-Vitol Asia 에너지협력 MoU ②구체적 규모 미명시, 글로벌 13억달러 인프라투자 규모 참고 ③계획단계(MoU 체결) ④발주처: 페트로베트남, 협력사: Vitol Asia ⑤2026년 5월 21일 MoU 체결, 향후 유류·LNG·인프라협력 논의 예정",
+      "summary_ko": "①페트로베트남-비톨아시아 에너지협력 양해각서 ②구체적 규모 미정 ③계획단계 ④발주처: 베트남석유공사(Petrovietnam), 협력사: 비톨아시아(Vitol Asia) ⑤향후 원유·석유제품·LNG 국제거래, 유·가스 인프라 개발, 탈탄소 프로젝트 협력 논의 예정. 국제에너지시장 진출 및 에너지안보 강화 목표",
       "summary_en": "Vietnam National Industry Energy Group Petrovietnam has signed an MoU with Vitol Asia Pte Ltd to cooperate in the energy sector and related areas marking a strategically significant step for the Vietnamese state energy group",
       "source": "vir_vn",
       "url": "https://vir.com.vn/petrovietnam-signs-mou-with-vitol-asia-to-boost-energy-cooperation-153234.html",
@@ -226,7 +226,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "None",
@@ -250,7 +250,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-22",
@@ -274,7 +274,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-22",
@@ -298,7 +298,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-22",
@@ -322,7 +322,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-23",
@@ -346,7 +346,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.85)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-23",
@@ -354,7 +354,7 @@
       "sector": "General",
       "title_ko": "[생방송] 워크숍 - 토론: 중부고원의 농업, 신농촌 및 녹색에너지와 관련된 수자원 개발을 위한 관리, 이용 및 투자 촉진",
       "title_en": "[Live] Workshop - Discussion: Management, use and promotion of investment in developing water resources associated with agriculture, new rural areas and green energy in the Central - Central Highlands",
-      "summary_ko": "①중부-서부고원지역 수자원 개발 투자 촉진 워크숍 ②구체적 예산·규모 미명시 ③계획·정책 논의 단계 ④베트남 국회과학기술환경위원회, 닥락성 인민위원회, 베트남수자원환경협회, 국가수자원계획조사센터(NAWAPI) ⑤2026년 5월 23일 개최된 워크숍으로 농업·신농촌·재생에너지 연계 수자원 관리 및 투자 전략 논의",
+      "summary_ko": "①중부-타이응우옌 지역 수자원 관리·활용·투자 촉진 워크숍 ②구체적 사업규모 미제시 ③계획·논의 단계 ④베트남 수자원환경협회, 국가수자원계획조사센터(NAWAPI), 닥락성·람동성 정부 ⑤2026년 5월 23일 개최 완료, 향후 투자 촉진 방안 수립 예정",
       "summary_en": "On May 23, 2026, in Buon Ma Thuot (Dak Lak), the Vietnam Water and Environment Association coordinated with the Central New Rural Coordination Office, the National Center for Water Resources Planning and Investigation and the People's Committee of Dak Lak province to organize a Workshop - Discussion \"Managing, using and promoting investment in developing water resources associated with agriculture, new rural areas and green energy in the Central - Central Highlands\". The conference is a forum connecting managers, experts, and businesses to find effective financial management solutions",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/truc-tiep-hoi-thao-toa-dam-quan-ly-su-dung-va-xuc-tien-dau-tu-phat-trien-tai-nguyen-nuoc-gan-voi-nong-nghiep-nong-thon-moi-va-nang-luong-xanh-mien-trung-tay-nguyen-99654.html",
@@ -370,7 +370,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-23",
@@ -378,7 +378,7 @@
       "sector": "Water Supply/Drainage",
       "title_ko": "새로운 농촌 프로그램과 관련된 고산지 및 물 부족 지역에 대한 물 공급 솔루션",
       "title_en": "Water supply solutions for high mountainous areas and water scarce areas associated with the new rural program",
-      "summary_ko": "①산악지역·물부족지역 신농촌사업 연계 상수도공급 ②구체적 예산·규모 미기재 ③계획단계 ④발주:베트남농업환경부, 국가수자원기획조사센터 ⑤신농촌프로그램 효율적 이행을 위해 지역별 맞춤형 수도시스템 구축 및 디지털 기반 운영관리 추진 필요",
+      "summary_ko": "① 산악지역 및 물 부족지역 식수공급 솔루션 ② 구체적 예산 미명시 ③ 계획 단계 ④ 베트남 농업환경부, 국가수자원계획조사센터 ⑤ 신농촌프로그램과 연계하여 지역별 맞춤형 모델 선정 및 디지털화 기반 운영관리 추진",
       "summary_en": "Faced with the need to ensure security and effectively implement the National Target Program on building new rural areas, it is necessary to choose a water supply model suitable for each area, while promoting the application of digital transformation in project management and operation.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/giai-phap-cap-nuoc-cho-vung-nui-cao-vung-khan-hiem-nuoc-gan-voi-chuong-trinh-nong-thon-moi-99666.html",
@@ -394,7 +394,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-23",
@@ -402,23 +402,23 @@
       "sector": "General",
       "title_ko": "환경치료와 신농촌개발의 녹색전환",
       "title_en": "Green transformation in environmental treatment and new rural development",
-      "summary_ko": "① 녹색 전환 환경처리 및 신농촌개발 프로젝트\n② 재정규모 미명시, 신재생에너지·정수처리·폐기물 자원화·녹색위생 등 다층포트폴리오\n③ 계획 단계\n④ 베트남 정부, 환경부\n⑤ 2026년 지속가능발전목표 달성을 위한 녹색기술·디지털화 동시 추진",
+      "summary_ko": "①녹색 환경 처리 및 신농촌 개발 사업 ②구체적 규모 미기재 ③계획단계 ④베트남 정부·환경부·지방정부 ⑤재생에너지·정수처리·폐기물 자원화·녹색위생 시설 등 2026년 이후 단계적 추진. 디지털화를 통한 환경관리 고도화 추구",
       "summary_en": "Focusing on green technology, renewable energy, clean water and wastewater treatment and green toilet models, comprehensive environmental solutions associated with digital transformation are opening a sustainable path for circular economic development and new rural construction in Vietnam in the period 2026–2050.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/chuyen-doi-xanh-trong-xu-ly-moi-truong-va-phat-trien-nong-thon-moi-99670.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-WAT-URBAN",
       "plan_id": "VN-WAT-URBAN",
-      "rule_stage": "PLANNING",
-      "rule_conf": 0.806,
-      "stage": "PLANNING",
-      "confidence": 0.806,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "rule_stage": "CONSTRUCTION",
+      "rule_conf": 0.695,
+      "stage": "CONSTRUCTION",
+      "confidence": 0.695,
+      "milestone": "착공·건설 진행 중",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.81)",
+      "stage_reason": "규칙기반 (신뢰도 0.70)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-24",
@@ -426,7 +426,7 @@
       "sector": "Solid Waste",
       "title_ko": "Khanh Hoa: 자발적인 쓰레기 소각은 많은 도시 도로에서 심각한 오염을 초래합니다.",
       "title_en": "Khanh Hoa: Spontaneous garbage burning causes serious pollution in many urban roads",
-      "summary_ko": "①사업명: 카인호아성 도시 폐기물 관리 ②규모: 미상(도시 도로 다수 구간) ③진행단계: 운영 중 ④주요기관: 카인호아성 인민위원회, 환경부 ⑤일정: 즉각적 개선 필요 - 자발적 쓰레기 소각으로 인한 심각한 대기오염 발생으로 국가 폐기물관리 계획(VN-SWM-NATIONAL-2030) 목표 달성을 위한 긴급 조치 필요",
+      "summary_ko": "①카인호아성 도시도로 자발적 쓰레기 소각 문제 ②특정 규모 미제시 ③문제 발생 단계(해결 필요) ④카인호아성 정부·환경부처 ⑤자발적 쓰레기 소각으로 인한 대기오염 심화, 즉각적 관리 강화 필요. 국가 폐기물관리계획(VN-SWM-NATIONAL-2030)과 연계하여 도시 폐기물 처리 인프라 개선 및 단속 강화 시급",
       "summary_en": "Illegal open dumping and burning of garbage in Tay Nha Trang and South Nha Trang wards, Nha Trang province is causing many consequences for the environment and urban aesthetics.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/khanh-hoa-dot-rac-tu-phat-gay-o-nhiem-nghiem-trong-tai-nhieu-tuyen-duong-do-thi-99633.html",
@@ -434,15 +434,15 @@
       "ctx_plans": "VN-SWM-NATIONAL-2030",
       "plan_id": "VN-SWM-NATIONAL-2030",
       "rule_stage": "PLANNING",
-      "rule_conf": 0.867,
+      "rule_conf": 1.0,
       "stage": "PLANNING",
-      "confidence": 0.867,
+      "confidence": 1.0,
       "milestone": "정책·법령 발표",
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.87)",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-20",
@@ -466,7 +466,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.69)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-21",
@@ -490,7 +490,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-22",
@@ -498,7 +498,7 @@
       "sector": "Industrial Parks",
       "title_ko": "6억개 규모의 전자 부품 공장 건설 시작",
       "title_en": "Construction begins on 600 million electronics component plant",
-      "summary_ko": "①AVC 전자부품 제조 공장 ②6억 달러 규모, 연 8,400만개 생산능력 ③착공 단계 ④AVC 베트남과학기술(AVC 그룹 자회사), 닌빈성 경제구역청 ⑤2027년 1월 전 가동 개시, 2만명 고용 창출 예상. 닌빈성 김방1산업단지 46.1만㎡ 부지에 서버 냉각 부품 등 생산",
+      "summary_ko": "①AVC 전자부품 제조공장 ②총 6억 달러 투자, 461,000㎡ 부지, 연 8,400만 개 생산능력 ③착공 ④AVC 베트남(대만 AVC그룹 자회사), 닌빈성 경제특구청 ⑤2027년 1월 전 운영 개시, 20,000명 고용 창출 예정",
       "summary_en": "On May 22 AVC Vietnam Science and Technology Co Ltd a subsidiary of AVC Group a leading Taiwanese corporation held a groundbreaking ceremony for the construction of an electronic component manufacturing plant with a total investment of up to 600 million",
       "source": "vir_vn",
       "url": "https://vir.com.vn/construction-begins-on-600-million-electronics-component-plant-153262.html",
@@ -514,7 +514,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-22",
@@ -538,7 +538,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-25",
@@ -546,7 +546,7 @@
       "sector": "Industrial Parks",
       "title_ko": "업계 협회, 회원사에 대한 보다 실질적인 지원 제공 기대",
       "title_en": "Business associations expected to deliver more practical support for members",
-      "summary_ko": "베트남 상공회의소가 개최한 전국 사업가협회 회의에서 협회들이 네트워킹과 컨퍼런스 개최를 넘어 기업의 공급망 강화, 경쟁력 향상, 정책 참여 등 실질적 지원을 제공할 것을 촉구했다. 2024-2026년간 협회들의 정책 피드백이 행정절차 개선과 사업 환경 조성에 기여했다.",
+      "summary_ko": "베트남상공회의소가 주최한 전국 기업협회 회의에서 기업협회들이 네트워킹과 회의 개최를 넘어 기업들에 실질적 지원을 제공할 것을 촉구했다. 정책 피드백, 공급망 강화, 경쟁력 개선 등을 통해 기업과 정부 간 효과적인 가교 역할을 해야 한다고 강조했다.",
       "summary_en": "Resolution 68-NQ/TW on private sector development is opening new opportunities for the business community and associations to play a greater role in the country’s economic growth.",
       "source": "vietnamnews_vn",
       "url": "https://vietnamnews.vn/economy/1782056/business-associations-expected-to-deliver-more-practical-support-for-members.html",
@@ -562,7 +562,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-26",
@@ -586,7 +586,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "None",
@@ -610,7 +610,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-19",
@@ -629,12 +629,12 @@
       "rule_conf": 0.6,
       "stage": "OPERATION",
       "confidence": 0.95,
-      "milestone": "메트로2호선 Thu Thiem역 통합 운영 개시(2026년 5월)",
-      "next_watch": "남북고속철도·롱탄공항철도 연결 일정 및 TOD 프로젝트 실행",
-      "insight": "Thu Thiem역 개통으로 메트로·고속철·공항철도 허브 기능 본격화. 동부지역 부동산·상업시설 개발 가속화 예상. 총 55,000조동 투자규모 TOD 모델 실행 단계",
-      "stage_reason": "2026년 5월 메트로2호선 실제 운영 중 확인, 허브 통합 진행",
+      "milestone": "메트로2호선 Tham Luong-Ben Thanh-Thu Thiem 구간 통합 운영 개시",
+      "next_watch": "롱탄공항철도 연계 운영 및 TOD 개발 사업 진행",
+      "insight": "Thu Thiem역 중심 다중운송 네트워크(메트로·남북철도·공항철도) 통합으로 교통 접근성 대폭 개선. TOD 기반 부동산·상업개발로 동부지역 성장축 형성. 55,000조 동 규모 투자로 민간 참여 확대 시장 창출.",
+      "stage_reason": "메트로2호선 구간 운영 중, 공항철도 연계 준비 단계",
       "haiku_used": true,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-19",
@@ -658,7 +658,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-19",
@@ -682,7 +682,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.82)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-19",
@@ -706,7 +706,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-19",
@@ -730,7 +730,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-19",
@@ -754,7 +754,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.83)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-20",
@@ -778,7 +778,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-20",
@@ -802,7 +802,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.82)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-23",
@@ -810,7 +810,7 @@
       "sector": "General",
       "title_ko": "[지난주의 관점]: 물 - 환경 - 에너지: 중부고원지의 지속가능한 발전의 문제",
       "title_en": "[Last week's perspective]: Water - Environment - Energy: The problem of sustainable development in the Central - Central Highlands",
-      "summary_ko": "①중부-타이응우엔 지역 물-환경-에너지 지속가능발전 계획 ②구체적 규모 미기재 ③계획단계 ④베트남 정부 환경부처, PetroVN ⑤지속가능발전을 위한 통합관리 방안 수립 필요. 물 자원, 에너지, 환경 보호의 균형있는 발전 추진",
+      "summary_ko": "중부-고지대 물-환경-에너지 지속가능발전 종합계획. 규모: 미정(종합정책). 현재 진행단계: 계획. 주요기관: 베트남 환경부, 관련 지방정부. 핵심 일정: 2030년 목표 달성을 위한 중장기 전략 추진 중. 수자원 안보, 환경보호, 에너지 효율화의 통합적 접근.",
       "summary_en": "Climate change, drought, water shortage and environmental pollution are placing the Central - Central Highlands region before many major challenges in sustainable development. In that context, the problem of integrating water - environment - energy is considered the key to the region's green transformation, ensuring water security and creating motivation for sustainable economic development in the future.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/goc-nhin-tuan-qua-nuoc-moi-truong-nang-luong-bai-toan-phat-trien-ben-vung-mien-trung-tay-nguyen-99642.html",
@@ -826,7 +826,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     },
     {
       "date": "2026-05-21",
@@ -850,7 +850,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-26 13:57"
+      "analyzed_at": "2026-05-26 14:10"
     }
   ]
 }
