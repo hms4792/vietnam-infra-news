@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26 14:10",
+  "generated_at": "2026-05-26 14:27",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -67,30 +67,16 @@
         {
           "date": "2026-05-25",
           "stage": "PLANNING",
-          "milestone": "APAC 풍력에너지 정상회담 개최(6월 9-11일)",
+          "milestone": "정책·법령 발표",
           "source": "vir_vn",
           "title_ko": "하노이, APAC 최고의 풍력 에너지 행사 개최"
         },
         {
           "date": "2026-05-23",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "vietnamplus",
-          "title_ko": "옥상 태양광 발전은 투자 효율성을 제공합니다"
-        },
-        {
-          "date": "2026-05-21",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
-          "source": "Nikkei Asia",
-          "title_ko": "베트남 태양광 스타트업, 이란과 관련된 에너지 쇼크 속에서 1,500만 달러 모금"
-        },
-        {
-          "date": "2026-05-20",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vir_vn",
-          "title_ko": "Searefico, 산업 및 재생 에너지 발자국 확대"
+          "source": "vietnamplus",
+          "title_ko": "옥상 태양광 발전은 투자 효율성을 제공합니다"
         },
         {
           "date": "2026-05-19",
@@ -100,11 +86,11 @@
           "title_ko": "Son La는 수력 발전 호수 바닥에서 800MW 수상 태양광 발전 프로젝트를 시작했습니다."
         }
       ],
-      "next_watch": "정상회담 결과 및 파트너십 체결 현황 모니터링",
-      "latest_insight": "베트남 풍력 산업의 글로벌 네트워킹 플랫폼 구축. 주요 투자자·시공사·정책입안자 참여로 PDP8 재생에너지 목표 달성을 위한 민관협력 기반 마련 중",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-05-25",
       "article_count": 5,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "해상풍력(2030)",
@@ -174,11 +160,18 @@
       "title_ko": "베트남 석유가스 분야 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
       "stage_history": [
+        {
+          "date": "2026-05-26",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "menafn",
+          "title_ko": "Kharge 슬램 센터, 저렴한 원유 가격에도 불구하고 연료 가격 중심"
+        },
         {
           "date": "2026-05-22",
           "stage": "TENDERING",
@@ -187,10 +180,10 @@
           "title_ko": "페트로베트남은 에너지 협력 강화를 위해 Vitol Asia와 MOU를 체결했습니다."
         }
       ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
       "latest_insight": "",
-      "latest_article_date": "2026-05-22",
-      "article_count": 1,
+      "latest_article_date": "2026-05-26",
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -304,20 +297,20 @@
       "title_ko": "도시 배수·침수 방지 마스터플랜",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-05-23",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "환경치료와 신농촌개발의 녹색전환"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-23",
       "article_count": 1,
@@ -345,24 +338,24 @@
       "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
           "date": "2026-05-24",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "OPERATION",
+          "milestone": "칸호아성 폐기물 관리 체계 운영 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Khanh Hoa: 자발적인 쓰레기 소각은 많은 도시 도로에서 심각한 오염을 초래합니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
+      "next_watch": "무단 소각 단속 강화 및 WtE 시설 연계 확대",
+      "latest_insight": "국가 WtE 전략(속선 2025년 준공)과 지역 실행 간 격차 존재. 체계적 폐기물 처리 인프라 확충 시급한 상황 반영.",
       "latest_article_date": "2026-05-24",
       "article_count": 1,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "도시 폐기물 수거율",
@@ -508,7 +501,7 @@
         {
           "date": "2026-05-19",
           "stage": "OPERATION",
-          "milestone": "메트로2호선 Tham Luong-Ben Thanh-Thu Thiem 구간 통합 운영 개시",
+          "milestone": "Thu Thiem역 2026년 5월 운영 개시, 메트로 2호선 통합 운영",
           "source": "danviet",
           "title_ko": "Thu Thiem 역은 동부 부동산 시장 구조 조정에 대한 기대를 불러일으킵니다."
         }
