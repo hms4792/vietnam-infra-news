@@ -36,6 +36,7 @@ import json
 import logging
 import os
 import shutil
+import time
 
 # Anthropic Haiku 설정 (SA-6/SA-7과 동일 패턴, 번역 금지)
 ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages'
@@ -556,6 +557,7 @@ def generate_layer2_analysis(plans_payload, api_key):
             if result:
                 pdata['analysis_ko'] = result
                 log.info(f'  [Layer2/Gemini] {pid}: {len(result)}자')
+                time.sleep(4)  # Rate Limit 방지
                 continue
         result = _call_haiku_sa8(system, user, api_key)
         if result:
@@ -563,6 +565,8 @@ def generate_layer2_analysis(plans_payload, api_key):
             log.info(f'  [Layer2/Haiku] {pid}: {len(result)}자')
         else:
             log.warning(f'  [Layer2] {pid}: 생성 실패')
+        # Gemini Rate Limit 방지 — 플랜 간 4초 대기 (15 req/min 초과 방지)
+        time.sleep(4)
 
 
 def generate_executive_summary(plans_payload, new_articles, api_key):
@@ -889,7 +893,7 @@ def send_email(pptx_path, docx_path, payload, kpi_changes):
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description='SA-8 MI 보고서 생성기 v3.1')
+    parser = argparse.ArgumentParser(description='SA-8 MI 보고서 생성기 v3.3')
     parser.add_argument('--days-back',  type=int, default=14,
                         help='기사 수집 기간(일) [기본: 14]')
     parser.add_argument('--send-email', action='store_true',
@@ -915,7 +919,7 @@ def main():
     docx_path  = REPORTS_DIR / f'VN_Infra_MI_Weekly_Report_{today_tag}.docx'
 
     log.info('=' * 60)
-    log.info('SA-8 MI 보고서 생성기 v3.1 시작')
+    log.info('SA-8 MI 보고서 생성기 v3.3 시작')
     log.info('=' * 60)
 
     # Step 1: knowledge_index 로드
