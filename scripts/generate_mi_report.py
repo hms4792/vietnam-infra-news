@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-generate_mi_report.py  ── SA-8 보고서 생성기 v3.1
+generate_mi_report.py  ── SA-8 보고서 생성기 v3.3
 ===================================================
 역할: knowledge_index.json + Excel DB → PPT + Word 보고서 생성 + 이메일 발송
 
@@ -41,6 +41,11 @@ import shutil
 ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages'
 HAIKU_MODEL       = 'claude-haiku-4-5-20251001'  # 절대 변경 금지
 HAIKU_TIMEOUT     = 45
+
+# Gemini API 설정 (SA-8 v3.3 추가 -- 번역 금지, Layer2 분석 전용)
+GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models'
+GEMINI_MODEL   = 'gemini-2.5-flash-lite'   # 무료 티어 — 2.0 Flash 2026-06-01 종료로 교체
+GEMINI_TIMEOUT = 60
 
 import subprocess
 import sys
@@ -483,6 +488,37 @@ def _call_haiku_sa8(system_prompt, user_prompt, api_key):
         return ''
 
 
+def _call_gemini_sa8(system_prompt, user_prompt, gemini_key, use_search=True):
+    """Gemini Flash 호출 -- 번역 금지, Layer2 분석 전용
+    use_search=True: Google Search Grounding (정부발표·ADB 등 실시간 보완)
+    """
+    import json as _j
+    import urllib.request
+    try:
+        url = (f'{GEMINI_API_URL}/{GEMINI_MODEL}:generateContent'
+               f'?key={gemini_key}')
+        tools = [{'google_search': {}}] if use_search else []
+        payload = {
+            'system_instruction': {'parts': [{'text': system_prompt}]},
+            'contents': [{'parts': [{'text': user_prompt}], 'role': 'user'}],
+            'generationConfig': {'maxOutputTokens': 800, 'temperature': 0.3},
+        }
+        if tools:
+            payload['tools'] = tools
+        body = _j.dumps(payload).encode('utf-8')
+        req = urllib.request.Request(
+            url, data=body,
+            headers={'Content-Type': 'application/json'},
+            method='POST'
+        )
+        with urllib.request.urlopen(req, timeout=GEMINI_TIMEOUT) as resp:
+            data = _j.loads(resp.read().decode('utf-8'))
+            return data['candidates'][0]['content']['parts'][0]['text'].strip()
+    except Exception as e:
+        log.warning(f'  Gemini SA8 호출 오류: {e}')
+        return ''
+
+
 def generate_layer2_analysis(plans_payload, api_key):
     """플랜별 Layer2 AI 분석 -- 기사 있는 플랜에만 Haiku 호출"""
     if not api_key:
@@ -513,10 +549,18 @@ def generate_layer2_analysis(plans_payload, api_key):
             f'수집 기사 ({len(arts)}건):\n' + '\n'.join(art_lines) +
             '\n\n위 기사를 분석하여 경영진 보고용 인사이트 3개 항목을 작성하세요.'
         )
+        # Gemini 우선 -> 실패 시 Haiku fallback
+        gemini_key = os.environ.get('GEMINI_API_KEY', '').strip()
+        if gemini_key:
+            result = _call_gemini_sa8(system, user, gemini_key, use_search=True)
+            if result:
+                pdata['analysis_ko'] = result
+                log.info(f'  [Layer2/Gemini] {pid}: {len(result)}자')
+                continue
         result = _call_haiku_sa8(system, user, api_key)
         if result:
             pdata['analysis_ko'] = result
-            log.info(f'  [Layer2] {pid}: {len(result)}자')
+            log.info(f'  [Layer2/Haiku] {pid}: {len(result)}자')
         else:
             log.warning(f'  [Layer2] {pid}: 생성 실패')
 
@@ -543,8 +587,15 @@ def generate_executive_summary(plans_payload, new_articles, api_key):
         '\n'.join(art_lines) +
         '\n\n위 기사를 종합하여 경영진 보고용 Executive Summary를 작성하세요.'
     )
+    # Gemini 우선 (Search Grounding으로 최신 동향 반영) -> Haiku fallback
+    gemini_key = os.environ.get('GEMINI_API_KEY', '').strip()
+    if gemini_key:
+        result = _call_gemini_sa8(system, user, gemini_key, use_search=True)
+        if result:
+            log.info(f'[Exec Summary/Gemini] {len(result)}자')
+            return result
     result = _call_haiku_sa8(system, user, api_key)
-    log.info(f'[Exec Summary] {len(result)}자' if result else '[Exec Summary] 생성 실패')
+    log.info(f'[Exec Summary/Haiku] {len(result)}자' if result else '[Exec Summary] 생성 실패')
     return result
 
 
