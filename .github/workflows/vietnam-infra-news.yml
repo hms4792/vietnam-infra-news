@@ -99,6 +99,7 @@ jobs:
           NEWSDATA_API_KEY: ${{ secrets.NEWSDATA_API_KEY }}
           EMAIL_USERNAME:   ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:   ${{ secrets.EMAIL_PASSWORD }}
+          GEMINI_API_KEY:   ${{ secrets.GEMINI_API_KEY }}
         run: |
           python3 scripts/main.py --hours ${{ github.event.inputs.hours_back || '168' }}
 
