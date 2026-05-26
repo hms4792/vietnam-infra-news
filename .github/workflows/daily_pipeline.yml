@@ -213,6 +213,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           EMAIL_USERNAME:    ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:    ${{ secrets.EMAIL_PASSWORD }}
+          GEMINI_API_KEY:    ${{ secrets.GEMINI_API_KEY }}
 
       # ─────────────────────────────────────────────────────────────
       # ── Step 14 [v7.5 신규]: MI Dashboard 데이터 빌드 ─────────────
