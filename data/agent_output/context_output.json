@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-05-27 01:34",
+  "generated_at": "2026-05-27 14:27",
   "model": "claude-haiku-4-5-20251001",
-  "total_articles": 37,
-  "haiku_used": 3,
+  "total_articles": 38,
+  "haiku_used": 4,
   "stage_summary": {
-    "PLANNING": 21,
+    "PLANNING": 22,
     "TENDERING": 4,
-    "CONSTRUCTION": 6,
+    "CONSTRUCTION": 5,
     "COMPLETION": 2,
-    "OPERATION": 2,
+    "OPERATION": 3,
     "UNKNOWN": 2
   },
   "articles": [
@@ -34,7 +34,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-25",
@@ -42,7 +42,7 @@
       "sector": "General",
       "title_ko": "2026년 폭염 피크: EVN은 전기 공급을 보장하고 전기 절약에 대한 지침을 제공하기 위해 많은 솔루션을 배포합니다.",
       "title_en": "Heat peak in 2026: EVN deploys many solutions to ensure electricity supply and provide instructions on saving electricity",
-      "summary_ko": "①2026년 하절기 전력 공급 대책 ②구체적 수치 미기재 ③운영 중 ④EVN(베트남전력공사) ⑤2026년 하절기 피크 대비 다층 솔루션 배포 중. PDP8 마스터플랜에 따라 EVN이 전력 안정 공급 및 절전 지침 시행 추진",
+      "summary_ko": "①2026년 전력수급 대응 계획 ②구체적 규모 미기재 ③운영 중 ④EVN(베트남전력공사), 베트남 정부 ⑤2026년 하계 전력피크 대비. EVN이 극한 폭염 시 전력공급 안정성 확보와 국민 절전 지침을 제시하며 다양한 솔루션 전개 중(PDP8 연계)",
       "summary_en": "In the face of the hot weather season in 2026, Vietnam Electricity Group (EVN) has requested Power Corporations to synchronously deploy many solutions to ensure safe and stable electricity supply, and at the same time propagate and guide the economical and effective use of electricity.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/cao-diem-nang-nong-2026-evn-trien-khai-nhieu-giai-phap-bao-dam-cung-cap-dien-huong-dan-tiet-kiem-dien-99710.html",
@@ -53,12 +53,12 @@
       "rule_conf": 0.524,
       "stage": "OPERATION",
       "confidence": 0.85,
-      "milestone": "2026년 하절기 전력 공급 안정화",
-      "next_watch": "재생에너지 확충 진행 상황 및 석탄발전 폐지 속도",
-      "insight": "PDP8 목표 달성을 위해 기존 설비 운영 효율화와 신규 프로젝트 병행 중. 재생에너지 비중 13.7%→50% 달성 시간 제약으로 단기 전력 수급 관리 중요",
-      "stage_reason": "운영 중인 발전소 활용한 전력 공급 대책 시행",
+      "milestone": "2026년 하계 전력피크 대응 운영",
+      "next_watch": "재생에너지 확대에 따른 계통안정성 관리 체계 고도화",
+      "insight": "PDP8 목표 달성을 위한 실시간 전력수급 관리 체계 구축 중. 폭염 대응 운영 경험이 향후 재생에너지 통합 시 계통운영 능력 강화에 활용될 전망",
+      "stage_reason": "EVN의 2026년 실시간 전력공급 운영 및 절전 지침 시행",
       "haiku_used": true,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-20",
@@ -82,7 +82,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-21",
@@ -106,7 +106,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.67)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-23",
@@ -130,7 +130,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.71)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-25",
@@ -138,23 +138,47 @@
       "sector": "Industrial Parks",
       "title_ko": "하노이, APAC 최고의 풍력 에너지 행사 개최",
       "title_en": "Hanoi to host APAC s premier wind energy event",
-      "summary_ko": "① APAC 풍력에너지 정상회담 2026\n② 1,000명 이상 참가 예상\n③ 계획·준비 단계\n④ 주최: 글로벌 풍력에너지위원회(GWEC), 참가: PTSC·Copenhagen Infrastructure Partners·Suzlon Energy·IPC E&C 등\n⑤ 2026년 6월 9-11일 하노이 국가컨벤션센터 개최",
+      "summary_ko": "하노이에서 2026년 5월 27일 아태 지역 최대 풍력에너지 행사 개최. 베트남의 재생에너지 확대 전략(VN-PWR-PDP8-RENEWABLE)과 연계하여 풍력산업 발전을 촉진하는 국제 컨퍼런스. 정부 정책 홍보 및 투자자 연결의 장으로 기능하며, 베트남의 재생에너지 목표 달성에 중요한 역할 수행 예정.",
       "summary_en": "Media briefing on APAC Wind Energy Summit 2026 will take place at em VIR em s headquarters on May 26 highlighting the growing role of wind energy in powering economic growth and industrial transformation",
       "source": "vir_vn",
       "url": "https://vir.com.vn/hanoi-to-host-apacs-premier-wind-energy-event-153381.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-PWR-PDP8-RENEWABLE",
       "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "rule_stage": "CONSTRUCTION",
-      "rule_conf": 0.695,
-      "stage": "CONSTRUCTION",
-      "confidence": 0.695,
-      "milestone": "착공·건설 진행 중",
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "rule_stage": "PLANNING",
+      "rule_conf": 1.0,
+      "stage": "PLANNING",
+      "confidence": 1.0,
+      "milestone": "정책·법령 발표",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.70)",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
+    },
+    {
+      "date": "2026-05-27",
+      "province": "",
+      "sector": "General",
+      "title_ko": "전기부하는 지속적으로 새로운 최고점을 기록하고 있으며 산업통상자원부는 전기 사용시간 조정을 제안하고 있습니다.",
+      "title_en": "Electricity load continuously sets new peaks, the Ministry of Industry and Trade proposes to adjust electricity usage hours",
+      "summary_ko": "베트남 전력 부하가 지속적으로 사상 최고치를 기록하면서 산업통상부가 전력 사용 시간 조정을 제안했다. 전력 수요 증가에 대응하기 위한 정책 개선 방안으로 추진 중이다.",
+      "summary_en": "In order to reduce pressure on the electricity system during times of high load while still ensuring conditions for production, the Ministry of Industry and Trade proposed shifting electricity use times to avoid peak hours.",
+      "source": "Moi truong & Cuoc song",
+      "url": "https://moitruong.net.vn/phu-tai-dien-lien-tuc-lap-dinh-moi-bo-cong-thuong-de-xuat-dieu-chinh-gio-su-dung-dien-99746.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-PWR-PDP8-GRID",
+      "plan_id": "VN-PWR-PDP8-GRID",
+      "rule_stage": "PLANNING",
+      "rule_conf": 1.0,
+      "stage": "PLANNING",
+      "confidence": 1.0,
+      "milestone": "정책·법령 발표",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-26",
@@ -162,7 +186,7 @@
       "sector": "Power",
       "title_ko": "중국의 SE 아시아 전략에서 다음 권력 이동은 핵이다",
       "title_en": "Next power move in China’s SE Asia strategy is nuclear",
-      "summary_ko": "①Ninh Thuan 1 원전 ②규모 미정(다수국 소형모듈원전 검토 중) ③계획 단계 ④발주: 베트남·러시아 정부, 시공: 러시아 로사톰 ⑤2026년 3월 협약 체결, 2030년대 초 필리핀·인도네시아 가동 목표. 중국이 자금·기술·정부 지원으로 동남아 핵에너지 파트너로 부상 중.",
+      "summary_ko": "①닌투안1호 원전 ②용량 미상(대형원전) ③계획/승인단계 ④베트남-러시아 협약, 중국 참여 ⑤2026년 3월 협약 체결, 2030년대 초 운영 목표. 중국이 동남아 원전산업의 주요 파트너로 부상하며 지정학적 영향력 확대 중",
       "summary_en": "China’s expanding nuclear industry is becoming a new instrument of geopolitical influence across Southeast Asia. From Vietnam to Indonesia, governments increasingly view nuclear energy as necessary to sustain industrial growth, AI infrastructure and rising electricity demand while reducing dependenc",
       "source": "asiatimes",
       "url": "https://asiatimes.com/2026/05/next-power-move-in-chinas-se-asia-strategy-is-nuclear/",
@@ -178,7 +202,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-22",
@@ -186,7 +210,7 @@
       "sector": "Industrial Parks",
       "title_ko": "페트로베트남은 에너지 협력 강화를 위해 Vitol Asia와 MOU를 체결했습니다.",
       "title_en": "Petrovietnam signs MoU with Vitol Asia to boost energy cooperation",
-      "summary_ko": "①페트로베트남-비톨아시아 에너지협력 양해각서 ②구체적 규모 미명시 ③양해각서 체결(협력계획 단계) ④발주처: 페트로베트남, 협력사: 비톨아시아 ⑤원유·석유제품·LNG 국제거래, 유·가스 인프라개발, 저탄소 프로젝트 협력 추진 예정(VN-OG-2030 연계)",
+      "summary_ko": "① 페트로베트남-비톨 아시아 에너지협력 양해각서\n② 구체적 규모 미기재\n③ 계획 단계\n④ 페트로베트남, 비톨 아시아\n⑤ 추가 협력 체결 예정\n\n페트로베트남과 글로벌 에너지 거래업체 비톨 아시아가 에너지협력 강화 양해각서를 체결했다. VN-OG-2030 마스터플랜 추진과 관련된 석유·가스 부문 국제협력 확대 움직임으로, 향후 구체적 사업 협약 체결이 예상된다.",
       "summary_en": "Vietnam National Industry Energy Group Petrovietnam has signed an MoU with Vitol Asia Pte Ltd to cooperate in the energy sector and related areas marking a strategically significant step for the Vietnamese state energy group",
       "source": "vir_vn",
       "url": "https://vir.com.vn/petrovietnam-signs-mou-with-vitol-asia-to-boost-energy-cooperation-153234.html",
@@ -202,7 +226,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-26",
@@ -210,7 +234,7 @@
       "sector": "Oil & Gas",
       "title_ko": "바쿠, 탈원유 시대를 위해 석유 굴착 장치를 스마트 팜으로 교체하는 것을 목표로 함",
       "title_en": "Baku Aims To Replace Oil Rigs With Smart Farms For Post-Crude Era",
-      "summary_ko": "아제르바이잔이 석유 의존 경제에서 벗어나 농업 중심으로 전환하고 있습니다. 2026-2030 국가 프로그램을 통해 식량 주권 확보를 목표로 2030년까지 낙농 생산 10%, 육류 생산 20% 증대를 추진 중입니다.",
+      "summary_ko": "아제르바이잔이 석유 중심 경제에서 벗어나 2026-2030년 농업 발전 프로그램을 추진 중입니다. 식량 자급률 향상을 목표로 2030년까지 우유 생산 10%, 육류 생산 20% 증대를 계획하고 있으며, 스마트팜 등 고기술 농업을 전략적 산업으로 육성하려 합니다.",
       "summary_en": "(MENAFN - AzerNews) Qabil Ashirov Read more For decades, Azerbaijan's economic narrative has been dominated by the hum of oil rigs and the strategic flow of pipelines. While petroleum has undeniably ...",
       "source": "menafn",
       "url": "https://menafn.com/1111168139/Baku-Aims-To-Replace-Oil-Rigs-With-Smart-Farms-For-Post-Crude-Era",
@@ -226,7 +250,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-26",
@@ -234,7 +258,7 @@
       "sector": "Oil & Gas",
       "title_ko": "Kharge 슬램 센터, 저렴한 원유 가격에도 불구하고 연료 가격 중심",
       "title_en": "Kharge Slams Centre Over Fuel Prices Despite Cheaper Crude Oil Prices",
-      "summary_ko": "인도 정치인 카르그가 유가 하락에도 불구하고 연료 가격이 인상되고 있다며 중앙정부를 비판했습니다. 저유가 상황에서 소비자 부담이 증가하고 있는 현황을 지적하고 있습니다.",
+      "summary_ko": "이 기사는 인도 정치인 카르게가 원유 가격 하락에도 불구하고 연료 가격이 내려가지 않는다고 정부를 비판하는 내용입니다. 베트남 인프라와 무관한 인도 국내 정치 이슈입니다.",
       "summary_en": "(MENAFN - AsiaNet News) Congress President Mallikarjun Kharge on Tuesday attacked the Centre over rising fuel prices, questioning the rise in petrol and diesel rates despite a decline in global ...",
       "source": "menafn",
       "url": "https://menafn.com/1111166806/Kharge-Slams-Centre-Over-Fuel-Prices-Despite-Cheaper-Crude-Oil-Prices",
@@ -250,7 +274,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "None",
@@ -274,7 +298,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-22",
@@ -298,7 +322,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-22",
@@ -322,7 +346,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-22",
@@ -346,7 +370,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-23",
@@ -370,7 +394,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.85)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-23",
@@ -394,7 +418,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-23",
@@ -418,7 +442,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-23",
@@ -442,7 +466,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-24",
@@ -450,23 +474,23 @@
       "sector": "Solid Waste",
       "title_ko": "Khanh Hoa: 자발적인 쓰레기 소각은 많은 도시 도로에서 심각한 오염을 초래합니다.",
       "title_en": "Khanh Hoa: Spontaneous garbage burning causes serious pollution in many urban roads",
-      "summary_ko": "①사업명: 카인호아성 도시지역 폐기물 자발적 소각 방지 사업 ②규모: 구체적 규모 미기재 ③진행단계: 계획/추진 중 ④주요기관: 카인호아성 정부, 환경부 ⑤핵심일정: 즉시 도시도로 다중 지역 폐기물 자발적 소각으로 인한 심각한 오염 문제 해결 필요",
+      "summary_ko": "①Khanh Hoa 도시도로 자연발화 쓰레기 소각 오염 문제\n②특정 규모 미기재\n③현황 보고 단계\n④Khanh Hoa 지방정부, 환경부처\n⑤지속적인 모니터링 및 단속 강화 필요",
       "summary_en": "Illegal open dumping and burning of garbage in Tay Nha Trang and South Nha Trang wards, Nha Trang province is causing many consequences for the environment and urban aesthetics.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/khanh-hoa-dot-rac-tu-phat-gay-o-nhiem-nghiem-trong-tai-nhieu-tuyen-duong-do-thi-99633.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-SWM-NATIONAL-2030",
       "plan_id": "VN-SWM-NATIONAL-2030",
-      "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
-      "stage": "PLANNING",
-      "confidence": 1.0,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "rule_stage": "UNKNOWN",
+      "rule_conf": 0.0,
+      "stage": "OPERATION",
+      "confidence": 0.65,
+      "milestone": "Khanh Hoa 지역 폐기물 관리 현황 점검",
+      "next_watch": "지역별 WtE 시설 확대 및 불법 소각 단속 강화 추이",
+      "insight": "속선 WtE 가동(2025.10) 이후 전국 폐기물 관리 격차 심화. Khanh Hoa 등 지방도시의 WtE 인프라 부족으로 인한 불법 소각 문제 발생. 추가 WtE 시설 투자 필요성 증대.",
+      "stage_reason": "전국 전략 실행 단계에서 지역 관리 현황 보고. 마스터플랜 추진 중 드러나는 운영 단계 과제.",
+      "haiku_used": true,
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-20",
@@ -490,7 +514,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.69)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-21",
@@ -514,7 +538,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-22",
@@ -522,7 +546,7 @@
       "sector": "Industrial Parks",
       "title_ko": "6억개 규모의 전자 부품 공장 건설 시작",
       "title_en": "Construction begins on 600 million electronics component plant",
-      "summary_ko": "①AVC 전자부품 제조 공장 ②6억 달러, 46.1만㎡, 연 8,400만 개 생산 ③착공 ④AVC 베트남(타이완 AVC Group 자회사), 닌빈성 경제구청 ⑤2027년 1월 전 운영 개시 예정, 2만 명 일자리 창출 목표",
+      "summary_ko": "① AVC 베트남 전자부품 제조 공장\n② 총투자액 6억 달러, 부지면적 46.1만㎡, 연간 생산능력 8,400만개(310만톤)\n③ 착공\n④ AVC Group(대만), 닌빈성 김방1산업단지\n⑤ 2027년 1월 전 운영 개시 목표",
       "summary_en": "On May 22 AVC Vietnam Science and Technology Co Ltd a subsidiary of AVC Group a leading Taiwanese corporation held a groundbreaking ceremony for the construction of an electronic component manufacturing plant with a total investment of up to 600 million",
       "source": "vir_vn",
       "url": "https://vir.com.vn/construction-begins-on-600-million-electronics-component-plant-153262.html",
@@ -538,7 +562,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-22",
@@ -562,7 +586,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-25",
@@ -570,7 +594,7 @@
       "sector": "Industrial Parks",
       "title_ko": "업계 협회, 회원사에 대한 보다 실질적인 지원 제공 기대",
       "title_en": "Business associations expected to deliver more practical support for members",
-      "summary_ko": "베트남 상공회의소(VCCI)가 주최한 전국 기업협회 회의에서 기업협회들이 네트워킹과 컨퍼런스 개최를 넘어 공급망 강화, 경쟁력 향상, 정책 참여 등 실질적 지원을 제공할 것을 촉구했다. 2024-2026년 기간 기업협회의 정책 피드백이 행정절차 개선에 기여했으며, Resolution 68을 통해 민간부문의 역할이 확대되고 있다.",
+      "summary_ko": "베트남 상공회의소가 주최한 전국 사업가협회 회의에서 협회들이 네트워킹 역할을 넘어 기업들을 위한 실질적 지원을 강화할 것을 촉구했다. 공급망 강화, 정책 건의, 경쟁력 개선 등 구체적 지원 필요성이 강조되었으며, Resolution 68-NQ/TW을 통해 민간부문의 역할 확대 기회가 열렸다.",
       "summary_en": "Resolution 68-NQ/TW on private sector development is opening new opportunities for the business community and associations to play a greater role in the country’s economic growth.",
       "source": "vietnamnews_vn",
       "url": "https://vietnamnews.vn/economy/1782056/business-associations-expected-to-deliver-more-practical-support-for-members.html",
@@ -586,7 +610,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-26",
@@ -594,7 +618,7 @@
       "sector": "Industrial Parks",
       "title_ko": "Amata City Halong은 반도체 공급망의 새로운 프로젝트를 환영합니다",
       "title_en": "Amata City Halong welcomes new project in semiconductor supply chain",
-      "summary_ko": "①아마타시티 할롱(Amata City Halong) 반도체 공급망 프로젝트 ②구체적 규모 미기재 ③계획/승인 단계 ④발주: 아마타(Amata), 위치: 할롱시 ⑤2026년 5월 발표, 향후 사업 진전 예정. VN-IP-NORTH-2030 마스터플랜 연계 북부지역 산업단지 개발의 일환으로 반도체 공급망 구축",
+      "summary_ko": "아마타시티 하롱(Amata City Halong)이 반도체 공급망 신규 프로젝트를 유치했습니다. 북부 산업단지 개발 마스터플랜(VN-IP-NORTH-2030)에 포함된 이 사업은 반도체 부품·소재 공급망 구축을 목표로 하고 있습니다. 발주처는 베트남 정부이며, 현재 프로젝트 승인 단계입니다. 2026년 5월 발표되었으며 추후 산업단지 입주사 모집이 예정되어 있습니다.",
       "summary_en": "On May 25 Thai backed developer Amata City Halong signed an agreement with Mutek Technology Vietnam to develop a manufacturing project serving the semiconductor industry reinforcing the appeal of Song Khoai Industrial Park as a destination for high tech foreign direct investment in Quang Ninh provin",
       "source": "vir_vn",
       "url": "https://vir.com.vn/amata-city-halong-welcomes-new-project-in-semiconductor-supply-chain-153390.html",
@@ -610,7 +634,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-26",
@@ -618,7 +642,7 @@
       "sector": "Industrial Parks",
       "title_ko": "싱가포르 언론은 베트남-싱가포르 관계의 중요성이 커지고 있음을 강조합니다.",
       "title_en": "Singaporean media highlights growing importance of Vietnam-Singapore ties",
-      "summary_ko": "기사는 싱가포르 매체가 베트남-싱가포르 관계의 중요성 증대를 보도한 내용입니다. 구체적 사업 정보(①사업명, ②규모, ③진행단계, ④주요기관, ⑤일정)가 기사 전문에 제시되지 않았으므로, 양국 간 무역 관계 강화 및 경제 협력 확대의 정책적 동향만 확인됩니다. 마스터플랜 VN-IP-NORTH-2030과 연계된 지역개발 협력이 암시되어 있습니다.",
+      "summary_ko": "기사는 베트남-싱가포르 관계의 중요성을 다루고 있으나, 구체적인 인프라 사업 정보는 제공되지 않습니다. 2025년 양국 무역액이 약 40억 SGD(31.3억 USD)로 전년 대비 26.2% 증가했으며, 싱가포르의 베트남 對투자가 활발히 진행 중입니다. VN-IP-NORTH-2030 마스터플랜과 연계한 구체적인 인프라 협력 프로젝트 세부사항은 기사에 미포함되어 있습니다.",
       "summary_en": "Trade ties between the two countries have also recorded strong growth in recent years. In 2025, bilateral trade reached nearly 40 billion SGD (31.3 billion USD), up 26.2% from 2024, making Vietnam Singapore’s 10th-largest trading partner globally. Notably, Singapore’s imports from Vietnam rose by mo",
       "source": "vietnamplus",
       "url": "https://en.vietnamplus.vn/singaporean-media-highlights-growing-importance-of-vietnam-singapore-ties-post343428.vnp",
@@ -634,7 +658,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-26",
@@ -658,7 +682,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-20",
@@ -682,7 +706,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-20",
@@ -706,7 +730,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.82)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-20",
@@ -726,11 +750,11 @@
       "stage": "UNKNOWN",
       "confidence": 0.95,
       "milestone": "인프라 사업과 무관한 외교 뉴스",
-      "next_watch": "VN-TRAN-2055 관련 공식 인프라 발표 모니터링",
-      "insight": "기사는 베트남-영국 외교관계와 국제정치 이슈만 다루며, 교통인프라 마스터플랜 진행 상황과 관련 정보 부재",
-      "stage_reason": "교통인프라와 완전히 무관한 외교 관계 기사",
+      "next_watch": "VN-TRAN-2055 관련 공식 사업 진행 소식 모니터링",
+      "insight": "본 기사는 베트남-영국 외교관계 및 국제정치 이슈를 다루며 교통인프라 마스터플랜과 직접적 연관성 없음. 투자자는 공식 발표된 사업 프로젝트 뉴스에 집중 필요.",
+      "stage_reason": "인프라 사업 내용 전무",
       "haiku_used": true,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-20",
@@ -754,7 +778,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.91)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-20",
@@ -778,7 +802,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.86)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-20",
@@ -802,7 +826,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-20",
@@ -826,7 +850,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-20",
@@ -844,13 +868,13 @@
       "rule_stage": "UNKNOWN",
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
-      "confidence": 0.95,
-      "milestone": "공항 범죄 적발 사건",
-      "next_watch": "인프라 사업과 무관",
-      "insight": "기사는 탄손누트 공항의 인신매매 사건으로, VN-TRAN-2055 교통인프라 마스터플랜과 무관한 범죄 뉴스입니다.",
-      "stage_reason": "인프라 사업과 완전히 무관한 범죄 기사",
+      "confidence": 0.0,
+      "milestone": "해당 없음",
+      "next_watch": "해당 없음",
+      "insight": "본 기사는 공항 보안·밀수 적발 사건으로 인프라 사업 진행과 무관한 범죄 뉴스입니다.",
+      "stage_reason": "인프라 사업과 완전 무관한 기사",
       "haiku_used": true,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-23",
@@ -874,7 +898,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     },
     {
       "date": "2026-05-21",
@@ -898,7 +922,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-05-27 01:34"
+      "analyzed_at": "2026-05-27 14:27"
     }
   ]
 }
