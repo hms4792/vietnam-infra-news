@@ -557,7 +557,7 @@ def generate_layer2_analysis(plans_payload, api_key):
             if result:
                 pdata['analysis_ko'] = result
                 log.info(f'  [Layer2/Gemini] {pid}: {len(result)}자')
-                time.sleep(4)  # Rate Limit 방지
+                time.sleep(7)  # Rate Limit 방지
                 continue
         result = _call_haiku_sa8(system, user, api_key)
         if result:
@@ -565,8 +565,8 @@ def generate_layer2_analysis(plans_payload, api_key):
             log.info(f'  [Layer2/Haiku] {pid}: {len(result)}자')
         else:
             log.warning(f'  [Layer2] {pid}: 생성 실패')
-        # Gemini Rate Limit 방지 — 플랜 간 4초 대기 (15 req/min 초과 방지)
-        time.sleep(4)
+        # Gemini Rate Limit 방지 — 플랜 간 7초 대기 (15 req/min 초과 방지)
+        time.sleep(7)
 
 
 def generate_executive_summary(plans_payload, new_articles, api_key):
