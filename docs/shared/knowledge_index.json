@@ -1359,101 +1359,99 @@
       "description_ko": "북부 산업단지 클러스터(하이퐁·박닌·타이응우옌·박장·흥옌)는 삼성·LG·인텔·폭스콘 등 글로벌 전자·반도체 공급망의 핵심 기지다. VSIP(베트남-싱가포르 산업단지)는 19개 단지를 운영 중이며, 타이빈성 신규 착공으로 확장 중이다. 2025~2030년 반도체·배터리·첨단제조 클러스터 집중 육성이 정책 방향이다.",
       "kpi_targets": [
         {
-          "indicator": "VSIP 단지 수",
-          "target": "25개 이상",
-          "current": "19개 운영 (타이빈 신규 착공)"
+          "indicator": "북부 산업용지 총 공급",
+          "target": "28,000 ha 이상 (2030)",
+          "current": "23,990 ha (2025년 4분기, +42.8% YoY)"
         },
         {
-          "indicator": "첨단산업 비중",
-          "target": "40% 이상",
-          "current": "전자·반도체 집중 육성"
+          "indicator": "북부 산업단지 평균 입주율",
+          "target": "80% 이상",
+          "current": "65.74% (박닌 74.1%, 하노이 100%)"
         },
         {
-          "indicator": "FDI 유입",
-          "target": "연 $20B 이상",
-          "current": "2025년 $18B 수준"
+          "indicator": "FDI 유치 (베트남 전체)",
+          "target": "$200억/년 이상",
+          "current": "$276억 (2025년, 5년 최고) / 2026년 1~4월 $74억"
         },
         {
-          "indicator": "배터리·반도체 거점",
-          "target": "특화 클러스터 3개",
-          "current": "박닌·하이퐁 중심"
+          "indicator": "RBF(기성 공장) 공급 증가",
+          "target": "1,000,000 m² (2026~2029)",
+          "current": "2026년 643,000 m² 공급 예정"
         },
         {
-          "indicator": "일자리 창출",
-          "target": "400만 명",
-          "current": "250만 명 (2024)"
+          "indicator": "Eco-IP(친환경 산업단지) 전환율",
+          "target": "신규 프로젝트 30% 이상",
+          "current": "2025~2027년 신규 프로젝트 30% 이상 녹색 기준 충족"
         },
         {
-          "indicator": "하이퐁 신규 단지",
-          "target": "15개 단지",
-          "current": "DEEP C 등 10개 운영"
-        },
-        {
-          "indicator": "타이응우옌 확장",
-          "target": "삼성 EV 전환",
-          "current": "삼성 SDI 배터리 투자"
-        },
-        {
-          "indicator": "박장 클러스터",
-          "target": "반도체 특화",
-          "current": "Foxconn 확장"
-        },
-        {
-          "indicator": "흥옌 신도시",
-          "target": "",
-          "current": ""
-        },
-        {
-          "indicator": "환경 기준 강화",
-          "target": "ISO 14001 의무화",
-          "current": "2025년 시범 도입"
-        },
-        {
-          "indicator": "신재생에너지 공급",
-          "target": "30% RE 달성",
-          "current": "DPPA 활용 추진"
-        },
-        {
-          "indicator": "스마트 물류 허브",
-          "target": "5개 허브 구축",
-          "current": "라크후옌 항구 연계"
+          "indicator": "산업단지 내 중앙집중식 폐수처리장 설치율",
+          "target": "100%",
+          "current": "92% (2026년, Gemini 검색 기반)"
         }
       ],
       "key_projects": [
         {
-          "name": "VSIP 타이빈 (신규)",
-          "location": "타이빈성",
-          "capacity": "신규 착공",
-          "note": "19번째 VSIP 단지",
-          "status": ""
+          "name": "옌퐁 II 산업단지 (Yen Phong II)",
+          "location": "박닌성 옌퐁",
+          "capacity": "1,200 ha (공업 1,000 ha + 도시 200 ha)",
+          "note": "삼성 위성 공장 허브. 3개 구역(A/B/C) 운영 중",
+          "status": "공사중"
         },
         {
-          "name": "DEEP C 하이퐁",
-          "location": "하이퐁",
-          "capacity": "1,300 ha",
-          "note": "외국인 투자 선호 1순위",
-          "status": ""
+          "name": "VSIP 박닌 (Vietnam-Singapore IP)",
+          "location": "박닌성 투선",
+          "capacity": "700 ha (산업+주거 복합)",
+          "note": "캐논·파나소닉·삼성·LG·폭스콘 입주. DPPA 계약 추진",
+          "status": "공사중"
         },
         {
-          "name": "삼성 SDI 배터리",
-          "location": "타이응우옌",
-          "capacity": "EV 배터리",
-          "note": "스마트폰→EV 공급망 전환",
-          "status": ""
+          "name": "VSIP 타이빈 (VSIP Thai Binh)",
+          "location": "타이빈성 타이투이 구",
+          "capacity": "333 ha / $221M",
+          "note": "전자부품·정밀기계·신재생에너지 대상. 2026년 산업용지 인도 예정",
+          "status": "공사중"
         },
         {
-          "name": "폭스콘 박장 확장",
-          "location": "박장성",
-          "capacity": "반도체 부품",
-          "note": "애플 공급망 핵심 거점",
-          "status": ""
+          "name": "VSIP 랑선 (VSIP Lang Son)",
+          "location": "랑선성 후루 구",
+          "capacity": "600 ha / $250M (3개 phase)",
+          "note": "1phase 2025년 3Q 완공, 2phase 2026년 9월 완공 예정. 4만명 고용",
+          "status": "공사중"
         },
         {
-          "name": "인텔 하이퐁",
-          "location": "하이퐁",
-          "capacity": "반도체 패키징",
-          "note": "최대 외투 반도체 시설",
-          "status": ""
+          "name": "VSIP 흥옌·하이퐁·하이즈엉 확장",
+          "location": "흥옌·하이퐁·하이즈엉 (북부 3개 성)",
+          "capacity": "미정 (MoU 체결)",
+          "note": "Becamex IDC-Sembcorp Development 4개 MoU. 녹색 산업단지 계획",
+          "status": "계획"
+        },
+        {
+          "name": "존슨헬스텍 투안타인 2공장",
+          "location": "박닌성 투안타인 I IP",
+          "capacity": "20 ha / $100M",
+          "note": "2025년 1Q 착공, 2026년 가동 예정. 2,000~3,000명 고용",
+          "status": "공사중"
+        },
+        {
+          "name": "기아빈 국제공항 개발",
+          "location": "박닌성 기아빈",
+          "capacity": "산업단지 물류 연계 인프라",
+          "note": "북부 산업단지 물류 허브 재편 핵심. 2026년 개발 추진 중",
+          "status": "계획"
+        },
+        {
+          "name": "딥씨 하이퐁 산업단지 (DEEP C)",
+          "location": "하이퐁시",
+          "capacity": "중공업·자동차 특화",
+          "note": "빈패스트(VinFast) 입주. 항만 직접 연계",
+          "status": "공사중"
+        },
+        {
+          "name": "삼성전자 반도체 후공정 테스트 공장",
+          "location": "박닌성",
+          "capacity": "$15억 투자 / DRAM·NAND 후공정 테스트",
+          "note": "2027년 11월 가동 예정. 북부 반도체 공급망 고도화 핵심 (Gemini 검색 기반)",
+          "status": "공사중"
         }
       ]
     },
