@@ -1225,95 +1225,69 @@
         "4개 섹터 집중: Solid Waste, Waste Water, Water Supply, Industrial Parks"
       ],
       "score_threshold": 40,
-      "description_ko": "베트남 환경산업 기술 자립화 프로그램. 폐수처리·배기가스·고형폐기물 기술 국산화. 2030년 폐수처리 기술 국산화율 70~80%, 배기가스 처리 60~70% 목표. ⚠ 주의: 인프라 건설 사업이 아닌 MOIT 주관 기술산업 육성 프로그램. 2025년 9월 4일 총리가 환경산업 발전 프로그램(2025~2030)을 승인한 결정으로 즉시 발효. 환경산업을 그린성장 핵심 산업·국가 사회·경제 발전전략의 핵심 구성요소로 격상하고, 향후 별도 ‘환경산업 발전 정부령’ 제정을 위한 법·제도적 토대를 마련하는 것이 목적. 순환경제, 녹색전환, 2050년 넷제로(Net-Zero) 이행을 뒷받침하는 전략 산업으로 정의.",
+      "description_ko": "베트남 국가 환경산업 육성 프로그램(2025~2030, 결정문 1894/QĐ-TTg)은 환경산업을 독자적인 경제 부문으로 육성하고 녹색 전환과 순환경제를 촉진하는 것을 목표로 한다. 2026년 현재 국가 환경산업 센터 구축 및 재활용 산업단지(IP) 개발을 위한 법적 기틀이 마련 중이다. 한국 등 해외 협력을 통한 자원순환형 산업단지 도입이 추진되고 있으며, 확장된 생산자 책임(EPR) 제도의 의무 재활용 대상 확대 및 환경보호법 개정이 본 플랜의 강력한 실행 동력으로 작용하고 있다.",
       "kpi_targets": [
         {
-          "indicator": "폐수처리 기술 국산화",
-          "target": "70~80% (2030)",
-          "current": "2025년 기준 ~30%"
+          "indicator": "하수처리 기술 및 장비 국내 수요 충족률",
+          "target": "70%~80%",
+          "current": "조사 중"
         },
         {
-          "indicator": "배기가스 처리 국산화",
-          "target": "60~70% (2030)",
-          "current": "2025년 기준 ~25%"
+          "indicator": "배출가스/폐가스 처리 기술 및 장비 국내 수요 충족률",
+          "target": "60%~70%",
+          "current": "조사 중"
         },
         {
-          "indicator": "고형폐기물 처리 국산화",
-          "target": "50~60% (2030)",
-          "current": "2025년 기준 ~20%"
+          "indicator": "고형 및 유해 폐기물 수거·운반 국내 수요 충족률",
+          "target": "50%~60%",
+          "current": "조사 중"
         },
         {
-          "indicator": "환경 모니터링 장비 국산화",
-          "target": "20% (2030)",
-          "current": "2025년 기준 ~5%"
+          "indicator": "고형 및 유해 폐기물 분류·재활용 국내 수요 충족률",
+          "target": "60%~70%",
+          "current": "조사 중"
         },
         {
-          "indicator": "재활용 산업단지 파일럿",
-          "target": "구축 (2027)",
-          "current": "법적 근거 미비"
-        },
-        {
-          "indicator": "WtE(폐기물 에너지화)",
-          "target": "2,270MW 확대",
-          "current": "기술 구축 단계"
+          "indicator": "환경 모니터링 장비 국내 수요 충족률",
+          "target": "20%",
+          "current": "조사 중"
         }
       ],
       "key_projects": [
         {
-          "name": "VAMM (베트남이륜차제조사협회)",
-          "location": "빈푹성",
-          "capacity": "축전지·타이어·윤활유·운송수단 폐기물",
-          "note": "위임 재활용 기관",
-          "status": ""
+          "name": "스타비안 플라스틱 재활용 복합단지",
+          "location": "탄호아성 응이선 경제구역 (Nghi Son EZ)",
+          "capacity": "17,000 톤/년 (rPET 칩 생산)",
+          "note": "2025년 4Q 착공, 2027년 1Q 상업가동 예정. Starlinger(오스트리아)·AMUT(이탈리아) 기술 도입",
+          "status": "공사중"
         },
         {
-          "name": "PRO Vietnam",
-          "location": "호치민시",
-          "capacity": "포장재 재활용",
-          "note": "위임 재활용 기관",
-          "status": ""
+          "name": "박닌 자원순환형 산업단지",
+          "location": "박닌성 반하 북송구 (Bắc Sông Cầu)",
+          "capacity": "약 200 ha 규모",
+          "note": "한국 환경부-베트남 MAE MoU 체결(2024.7). KEITI 마스터플랜 수립 중. 산업공생(Eco-IP) 모델",
+          "status": "계획"
         },
         {
-          "name": "ALBA Asia + VietCycle 합작 PET/HDPE 재활용 공장",
-          "location": "베트남",
-          "capacity": "연간 48,000톤 / $50M",
-          "note": "독일 협력 / rPET 첨단 기술",
-          "status": ""
+          "name": "비와세-시티오일필드 RGO 화학재활용 공장",
+          "location": "빈증성 고형폐기물 처리단지",
+          "capacity": "폐플라스틱→산업용 정제유 (RGO) 추출",
+          "note": "한국 시티오일필드 저온촉매분해 기술 적용. EPR 연계 가공시설 기초공사 진행",
+          "status": "공사중"
         },
         {
-          "name": "한-베 자원재활용 산업단지 (KEITI MOU)",
-          "location": "미정",
-          "capacity": "폐기물 처리 시스템 현대화",
-          "note": "2024.7 MOU / 한국 환경부·KEITI 공동 시행",
-          "status": ""
+          "name": "남빈증 폐기물 에너지화(WtE) 확장",
+          "location": "빈증성 남부 처리지구",
+          "capacity": "퇴비화 840톤/일 + WtE 소각 200톤/일",
+          "note": "ADB 2,000만 달러 차관 승인 완료. 소각로 가동 준비 단계",
+          "status": "공사중"
         },
         {
-          "name": "JICA 다낭 3R 프로젝트",
-          "location": "다낭시 하이쩌우/타인케구",
-          "capacity": "109억 동 (2단계)",
-          "note": "2021.11~2025.2 / 일본 ODA",
-          "status": ""
-        },
-        {
-          "name": "Thuan Thanh Environment JSC",
-          "location": "박닌성",
-          "capacity": "알루미늄/PET 경질 포장재",
-          "note": "재활용 수행 업체",
-          "status": ""
-        },
-        {
-          "name": "Duy Tan Recycling",
-          "location": "롱안성",
-          "capacity": "PET·HDPE·PP 플라스틱",
-          "note": "재활용 수행 업체",
-          "status": ""
-        },
-        {
-          "name": "Mien Dong Environment JSC",
-          "location": "빈푹성",
-          "capacity": "축전지·플라스틱·전자 폐기물",
-          "note": "종합 재활용",
-          "status": ""
+          "name": "국가 환경산업 혁신 센터 구축",
+          "location": "전국 (주요 하이테크 경제구역·대학 내)",
+          "capacity": "환경산업 보육 네트워크 구성",
+          "note": "연구·전환·혁신 센터 건립 및 vườn ươm(보육네트워크) 운영 계획 확정",
+          "status": "계획"
         }
       ]
     },
