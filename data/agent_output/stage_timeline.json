@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-05-27 00:32",
+  "generated_at": "2026-05-27 01:34",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
       "title_ko": "베트남 제8차 국가전력개발계획",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
           "date": "2026-05-25",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "OPERATION",
+          "milestone": "2026년 하절기 전력 공급 안정화",
           "source": "Moi truong & Cuoc song",
           "title_ko": "2026년 폭염 피크: EVN은 전기 공급을 보장하고 전기 절약에 대한 지침을 제공하기 위해 많은 솔루션을 배포합니다."
         },
@@ -26,11 +26,11 @@
           "title_ko": "2026~2030년 동안 에너지 개발에 관한 구체적인 메커니즘을 시행하는 법령을 긴급히 완료하세요."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
+      "next_watch": "재생에너지 확충 진행 상황 및 석탄발전 폐지 속도",
+      "latest_insight": "PDP8 목표 달성을 위해 기존 설비 운영 효율화와 신규 프로젝트 병행 중. 재생에너지 비중 13.7%→50% 달성 시간 제약으로 단기 전력 수급 관리 중요",
       "latest_article_date": "2026-05-25",
       "article_count": 2,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "총 발전설비 (2030)",
@@ -59,17 +59,24 @@
       "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
           "date": "2026-05-25",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
           "source": "vir_vn",
           "title_ko": "하노이, APAC 최고의 풍력 에너지 행사 개최"
+        },
+        {
+          "date": "2026-05-23",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "vietnamplus",
+          "title_ko": "옥상 태양광 발전은 투자 효율성을 제공합니다"
         },
         {
           "date": "2026-05-21",
@@ -77,9 +84,16 @@
           "milestone": "입찰·계약 진행",
           "source": "Nikkei Asia",
           "title_ko": "베트남 태양광 스타트업, 이란과 관련된 에너지 쇼크 속에서 1,500만 달러 모금"
+        },
+        {
+          "date": "2026-05-20",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vir_vn",
+          "title_ko": "Searefico, 산업 및 재생 에너지 발자국 확대"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-05-25",
       "article_count": 4,
@@ -379,31 +393,17 @@
       "title_ko": "북부 베트남 산업단지 개발 계획 2030",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
-        {
-          "date": "2026-05-26",
-          "stage": "CONSTRUCTION",
-          "milestone": "무텍 테크 반도체 장비공장 2027년 말 준공",
-          "source": "vir_vn",
-          "title_ko": "Amata City Halong은 반도체 공급망의 새로운 프로젝트를 환영합니다"
-        },
-        {
-          "date": "2026-05-26",
-          "stage": "UNKNOWN",
-          "milestone": "베트남-싱가포르 관계 강화 논의",
-          "source": "vietnamplus",
-          "title_ko": "싱가포르 언론은 베트남-싱가포르 관계의 중요성이 커지고 있음을 강조합니다."
-        },
         {
           "date": "2026-05-26",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "VnExpress Business",
-          "title_ko": "Stavian Industrial Park는 Khanh Hoa 프로젝트의 투자자로 승인되었습니다."
+          "source": "vir_vn",
+          "title_ko": "Amata City Halong은 반도체 공급망의 새로운 프로젝트를 환영합니다"
         },
         {
           "date": "2026-05-22",
@@ -420,11 +420,11 @@
           "title_ko": "글로벌 공급망 통합을 촉진하기 위해 지원 산업 인프라 맵 출시"
         }
       ],
-      "next_watch": "2027년 말 준공 및 2028년 Q1 상업운영 개시 여부",
-      "latest_insight": "하이퐁 Amata City 할롱에서 반도체 장비 제조 생태계 구축 진행. 400만 달러 투가가 첨단제조 클러스터 성장을 뒷받침하며 북부 산업단지 고도화 추진 중.",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-05-26",
       "article_count": 8,
-      "haiku_count": 2,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "VSIP 단지 수",
@@ -515,7 +515,7 @@
         {
           "date": "2026-05-20",
           "stage": "UNKNOWN",
-          "milestone": "외교 관계 강화",
+          "milestone": "인프라 사업과 무관한 외교 뉴스",
           "source": "vietnamplus",
           "title_ko": "베트남은 영국과의 관계를 매우 중요하게 생각합니다: PM"
         },
@@ -529,7 +529,7 @@
         {
           "date": "2026-05-20",
           "stage": "UNKNOWN",
-          "milestone": "인프라 사업과 무관",
+          "milestone": "공항 범죄 적발 사건",
           "source": "VnExpress International",
           "title_ko": "공항에서 2kg의 금을 소지한 여성이 적발되어 1,100만 달러 규모의 초국가적 인신매매 조직 적발"
         }
