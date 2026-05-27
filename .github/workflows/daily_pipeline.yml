@@ -253,4 +253,8 @@ jobs:
           git add data/ docs/ || true
           git diff --staged --quiet || git commit -m \
             "chore: daily pipeline $(date +'%Y-%m-%d') [automated]"
+          git stash || true
+          git pull --rebase origin main || true
+          git stash pop || true
+          git push origin main
           git push || true
