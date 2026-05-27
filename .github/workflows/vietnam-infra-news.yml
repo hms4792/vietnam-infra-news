@@ -90,6 +90,20 @@ jobs:
           cd ..
         continue-on-error: true
 
+      # ── SA-9: Gemini Search 보완 수집 (차단 소스 우회) ──────────────
+      - name: SA-9 Gemini Search supplement collection
+        if: ${{ env.GEMINI_API_KEY != '' }}
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -f scripts/gemini_collector.py ]; then
+            python3 scripts/gemini_collector.py
+          else
+            echo "gemini_collector.py 없음 — SA-9 건너뜀"
+          fi
+        continue-on-error: true
+
+
       # ── Step 6: SA-1~4 메인 파이프라인 ──────────────────────────
       # Step1: collect_news(hours_back) → Step2: AISummarizer
       # Step3: ExcelUpdater.update_all() → Step4: build_dashboard
