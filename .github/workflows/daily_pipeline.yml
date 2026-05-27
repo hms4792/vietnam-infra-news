@@ -69,7 +69,7 @@ jobs:
 
       # ── Step 3: Node.js 18 설정 (SA-8 docx/pptx 빌더용) ──────────
       - name: Set up Node.js 18
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
