@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26 14:27",
+  "generated_at": "2026-05-27 00:32",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -72,24 +72,17 @@
           "title_ko": "하노이, APAC 최고의 풍력 에너지 행사 개최"
         },
         {
-          "date": "2026-05-23",
+          "date": "2026-05-21",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
-          "source": "vietnamplus",
-          "title_ko": "옥상 태양광 발전은 투자 효율성을 제공합니다"
-        },
-        {
-          "date": "2026-05-19",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Son La는 수력 발전 호수 바닥에서 800MW 수상 태양광 발전 프로젝트를 시작했습니다."
+          "source": "Nikkei Asia",
+          "title_ko": "베트남 태양광 스타트업, 이란과 관련된 에너지 쇼크 속에서 1,500만 달러 모금"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-25",
-      "article_count": 5,
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -114,44 +107,44 @@
         }
       ]
     },
-    "VN-PWR-PDP8-GRID": {
-      "plan_id": "VN-PWR-PDP8-GRID",
-      "title_ko": "PDP8 송배전망 확충",
+    "VN-PWR-PDP8-NUCLEAR": {
+      "plan_id": "VN-PWR-PDP8-NUCLEAR",
+      "title_ko": "PDP8 원전 재개",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-05-19",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "송전 인프라 확장, Lai Chau가 새로운 에너지 성장 극을 향해 나아가다"
+          "date": "2026-05-26",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "asiatimes",
+          "title_ko": "중국의 SE 아시아 전략에서 다음 권력 이동은 핵이다"
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-19",
+      "latest_article_date": "2026-05-26",
       "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
-          "indicator": "신규 송전선 구축",
-          "target": "22,000km",
-          "current": "진행 중"
+          "indicator": "원자력 발전 용량(2035)",
+          "target": "4,000 MW (2035 목표)",
+          "current": "Decision 768 신규 추가"
         },
         {
-          "indicator": "765kV 신규 노선",
-          "target": "3개",
-          "current": "1개"
+          "indicator": "닌투언 1호기",
+          "target": "2,000 MW",
+          "current": "Rosatom, 재개 확정"
         },
         {
-          "indicator": "스마트그리드 전환",
-          "target": "2030년",
-          "current": "파일럿"
+          "indicator": "닌투언 2호기",
+          "target": "2,000 MW",
+          "current": "일본 컨소시엄, 협의 중"
         }
       ]
     },
@@ -160,11 +153,18 @@
       "title_ko": "베트남 석유가스 분야 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-05-26",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "menafn",
+          "title_ko": "바쿠, 탈원유 시대를 위해 석유 굴착 장치를 스마트 팜으로 교체하는 것을 목표로 함"
+        },
         {
           "date": "2026-05-26",
           "stage": "COMPLETION",
@@ -180,10 +180,10 @@
           "title_ko": "페트로베트남은 에너지 협력 강화를 위해 Vitol Asia와 MOU를 체결했습니다."
         }
       ],
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-26",
-      "article_count": 2,
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -338,24 +338,24 @@
       "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-05-24",
-          "stage": "OPERATION",
-          "milestone": "칸호아성 폐기물 관리 체계 운영 중",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Khanh Hoa: 자발적인 쓰레기 소각은 많은 도시 도로에서 심각한 오염을 초래합니다."
         }
       ],
-      "next_watch": "무단 소각 단속 강화 및 WtE 시설 연계 확대",
-      "latest_insight": "국가 WtE 전략(속선 2025년 준공)과 지역 실행 간 격차 존재. 체계적 폐기물 처리 인프라 확충 시급한 상황 반영.",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-05-24",
       "article_count": 1,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "도시 폐기물 수거율",
@@ -385,11 +385,18 @@
       "stage_order": 3,
       "stage_history": [
         {
-          "date": "None",
+          "date": "2026-05-26",
           "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Hanoi Times",
-          "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
+          "milestone": "무텍 테크 반도체 장비공장 2027년 말 준공",
+          "source": "vir_vn",
+          "title_ko": "Amata City Halong은 반도체 공급망의 새로운 프로젝트를 환영합니다"
+        },
+        {
+          "date": "2026-05-26",
+          "stage": "UNKNOWN",
+          "milestone": "베트남-싱가포르 관계 강화 논의",
+          "source": "vietnamplus",
+          "title_ko": "싱가포르 언론은 베트남-싱가포르 관계의 중요성이 커지고 있음을 강조합니다."
         },
         {
           "date": "2026-05-26",
@@ -399,6 +406,13 @@
           "title_ko": "Stavian Industrial Park는 Khanh Hoa 프로젝트의 투자자로 승인되었습니다."
         },
         {
+          "date": "2026-05-22",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vir_vn",
+          "title_ko": "6억개 규모의 전자 부품 공장 건설 시작"
+        },
+        {
           "date": "2026-05-20",
           "stage": "COMPLETION",
           "milestone": "준공·운영 개시",
@@ -406,11 +420,11 @@
           "title_ko": "글로벌 공급망 통합을 촉진하기 위해 지원 산업 인프라 맵 출시"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
-      "latest_article_date": "None",
-      "article_count": 7,
-      "haiku_count": 0,
+      "next_watch": "2027년 말 준공 및 2028년 Q1 상업운영 개시 여부",
+      "latest_insight": "하이퐁 Amata City 할롱에서 반도체 장비 제조 생태계 구축 진행. 400만 달러 투가가 첨단제조 클러스터 성장을 뒷받침하며 북부 산업단지 고도화 추진 중.",
+      "latest_article_date": "2026-05-26",
+      "article_count": 8,
+      "haiku_count": 2,
       "kpi_targets": [
         {
           "indicator": "VSIP 단지 수",
@@ -499,18 +513,32 @@
           "title_ko": "포럼, 베트남-한국 공급망 연결 촉진"
         },
         {
-          "date": "2026-05-19",
-          "stage": "OPERATION",
-          "milestone": "Thu Thiem역 2026년 5월 운영 개시, 메트로 2호선 통합 운영",
-          "source": "danviet",
-          "title_ko": "Thu Thiem 역은 동부 부동산 시장 구조 조정에 대한 기대를 불러일으킵니다."
+          "date": "2026-05-20",
+          "stage": "UNKNOWN",
+          "milestone": "외교 관계 강화",
+          "source": "vietnamplus",
+          "title_ko": "베트남은 영국과의 관계를 매우 중요하게 생각합니다: PM"
+        },
+        {
+          "date": "2026-05-20",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "vietnamplus",
+          "title_ko": "베트남은 지속 가능한 성장을 위해 고품질의 외국인 투자를 추구합니다"
+        },
+        {
+          "date": "2026-05-20",
+          "stage": "UNKNOWN",
+          "milestone": "인프라 사업과 무관",
+          "source": "VnExpress International",
+          "title_ko": "공항에서 2kg의 금을 소지한 여성이 적발되어 1,100만 달러 규모의 초국가적 인신매매 조직 적발"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-05-20",
       "article_count": 8,
-      "haiku_count": 1,
+      "haiku_count": 2,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
