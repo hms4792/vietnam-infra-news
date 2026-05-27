@@ -252,5 +252,7 @@ jobs:
           git commit -m \
             "chore: weekly pipeline $(date +'%Y-%m-%d') — SA-6/7/8 MI report [automated]"
           # ★ v6.2: rebase 후 push (fetch first 오류 방지)
+          git stash || true
           git pull --rebase origin main || true
+          git stash pop || true
           git push origin main
