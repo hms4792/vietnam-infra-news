@@ -251,10 +251,14 @@ jobs:
           git config user.email "actions@github.com"
           git config user.name  "GitHub Actions"
           git add data/ docs/ || true
-          git diff --staged --quiet || git commit -m \
-            "chore: daily pipeline $(date +'%Y-%m-%d') [automated]"
-          git stash || true
+          # 변경사항 없으면 조용히 종료
+          git diff --staged --quiet && echo "변경사항 없음" && exit 0
+
+          # 변경사항이 있으면 커밋
+          git commit -m "chore: daily pipeline $(date +'%Y-%m-%d') [automated]" || true
+
+          # 원격 변경사항 병합 (rebase)
           git pull --rebase origin main || true
-          git stash pop || true
-          git push origin main
-          git push || true
+
+          # 푸시
+          git push origin main || true
