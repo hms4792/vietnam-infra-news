@@ -1,36 +1,29 @@
 {
-  "generated_at": "2026-05-27 14:27",
+  "generated_at": "2026-05-28 14:39",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
       "title_ko": "베트남 제8차 국가전력개발계획",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
           "date": "2026-05-25",
-          "stage": "OPERATION",
-          "milestone": "2026년 하계 전력피크 대응 운영",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "2026년 폭염 피크: EVN은 전기 공급을 보장하고 전기 절약에 대한 지침을 제공하기 위해 많은 솔루션을 배포합니다."
-        },
-        {
-          "date": "2026-05-20",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "2026~2030년 동안 에너지 개발에 관한 구체적인 메커니즘을 시행하는 법령을 긴급히 완료하세요."
         }
       ],
-      "next_watch": "재생에너지 확대에 따른 계통안정성 관리 체계 고도화",
-      "latest_insight": "PDP8 목표 달성을 위한 실시간 전력수급 관리 체계 구축 중. 폭염 대응 운영 경험이 향후 재생에너지 통합 시 계통운영 능력 강화에 활용될 전망",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
       "latest_article_date": "2026-05-25",
-      "article_count": 2,
-      "haiku_count": 1,
+      "article_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "총 발전설비 (2030)",
@@ -89,7 +82,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-25",
-      "article_count": 4,
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -351,6 +344,13 @@
       "stage_order": 1,
       "stage_history": [
         {
+          "date": "2026-05-28",
+          "stage": "PLANNING",
+          "milestone": "Thanh Hóa 폐수처리 기반시설 확대 추진",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Thanh Hoa는 도시 생활 폐수 수집 및 처리를 촉진합니다."
+        },
+        {
           "date": "2026-05-23",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
@@ -358,11 +358,11 @@
           "title_ko": "환경치료와 신농촌개발의 녹색전환"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-23",
-      "article_count": 1,
-      "haiku_count": 0,
+      "next_watch": "폐수처리장 건설 계획 발표 및 예산 승인 현황",
+      "latest_insight": "VN-WAT-URBAN의 수질 관리 부문 강화. 도시 상수도 공급과 연계한 폐수처리 인프라 투자 기회 증대 예상",
+      "latest_article_date": "2026-05-28",
+      "article_count": 2,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "도시 안전 상수 보급률",
@@ -394,13 +394,13 @@
         {
           "date": "2026-05-24",
           "stage": "OPERATION",
-          "milestone": "Khanh Hoa 지역 폐기물 관리 현황 점검",
+          "milestone": "속선 WtE 발전소 준공(2025.10) 이후 운영 단계 진입",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Khanh Hoa: 자발적인 쓰레기 소각은 많은 도시 도로에서 심각한 오염을 초래합니다."
         }
       ],
-      "next_watch": "지역별 WtE 시설 확대 및 불법 소각 단속 강화 추이",
-      "latest_insight": "속선 WtE 가동(2025.10) 이후 전국 폐기물 관리 격차 심화. Khanh Hoa 등 지방도시의 WtE 인프라 부족으로 인한 불법 소각 문제 발생. 추가 WtE 시설 투자 필요성 증대.",
+      "next_watch": "카인호아성 등 지방 소각시설 확대 및 불법 소각 관리체계 강화",
+      "latest_insight": "마스터플랜 2025년 목표 달성 후 지역별 WtE 인프라 확충 필요. 비공식 폐기물 처리 규제 강화로 재투자 기회 발생",
       "latest_article_date": "2026-05-24",
       "article_count": 1,
       "haiku_count": 1,
@@ -427,38 +427,45 @@
       "title_ko": "북부 베트남 산업단지 개발 계획 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
+          "date": "None",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Hanoi Times",
+          "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
+        },
+        {
           "date": "2026-05-26",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
           "source": "vir_vn",
           "title_ko": "Amata City Halong은 반도체 공급망의 새로운 프로젝트를 환영합니다"
         },
         {
-          "date": "2026-05-22",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "vir_vn",
-          "title_ko": "6억개 규모의 전자 부품 공장 건설 시작"
+          "date": "2026-05-26",
+          "stage": "UNKNOWN",
+          "milestone": "기사 본문 부재로 인프라 사업 정보 확인 불가",
+          "source": "vietnamplus",
+          "title_ko": "싱가포르 언론은 베트남-싱가포르 관계의 중요성이 커지고 있음을 강조합니다."
         },
         {
-          "date": "2026-05-20",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "vietnamplus",
-          "title_ko": "글로벌 공급망 통합을 촉진하기 위해 지원 산업 인프라 맵 출시"
+          "date": "2026-05-26",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "VnExpress Business",
+          "title_ko": "Stavian Industrial Park는 Khanh Hoa 프로젝트의 투자자로 승인되었습니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-05-26",
+      "latest_article_date": "None",
       "article_count": 8,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "북부 산업용지 총 공급",
@@ -503,46 +510,32 @@
       "stage_order": 3,
       "stage_history": [
         {
-          "date": "2026-05-20",
+          "date": "2026-05-22",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
-          "source": "vietnamplus",
-          "title_ko": "지하철 2호선 Ben Thanh-Thu Thiem을 통한 인프라 강화"
+          "source": "sggp_org_vn",
+          "title_ko": "호치민시, 주요 지역 간 연결 운송 프로젝트의 장애물 제거"
         },
         {
-          "date": "2026-05-20",
+          "date": "2026-05-22",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "nhandan_vn",
-          "title_ko": "포럼, 베트남-한국 공급망 연결 촉진"
+          "source": "sggp_org_vn",
+          "title_ko": "미술시장의 지속가능한 성장을 위한 지원정책 필요"
         },
         {
-          "date": "2026-05-20",
-          "stage": "UNKNOWN",
-          "milestone": "인프라 사업과 무관한 외교 뉴스",
-          "source": "vietnamplus",
-          "title_ko": "베트남은 영국과의 관계를 매우 중요하게 생각합니다: PM"
-        },
-        {
-          "date": "2026-05-20",
+          "date": "2026-05-21",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
-          "source": "vietnamplus",
-          "title_ko": "베트남은 지속 가능한 성장을 위해 고품질의 외국인 투자를 추구합니다"
-        },
-        {
-          "date": "2026-05-20",
-          "stage": "UNKNOWN",
-          "milestone": "해당 없음",
-          "source": "VnExpress International",
-          "title_ko": "공항에서 2kg의 금을 소지한 여성이 적발되어 1,100만 달러 규모의 초국가적 인신매매 조직 적발"
+          "source": "asiatimes",
+          "title_ko": "배신적인 제국"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-05-20",
+      "latest_article_date": "2026-05-22",
       "article_count": 8,
-      "haiku_count": 2,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
