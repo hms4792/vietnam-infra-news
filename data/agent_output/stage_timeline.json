@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-28 14:39",
+  "generated_at": "2026-05-29 14:05",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -63,26 +63,12 @@
           "milestone": "정책·법령 발표",
           "source": "vir_vn",
           "title_ko": "하노이, APAC 최고의 풍력 에너지 행사 개최"
-        },
-        {
-          "date": "2026-05-23",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "vietnamplus",
-          "title_ko": "옥상 태양광 발전은 투자 효율성을 제공합니다"
-        },
-        {
-          "date": "2026-05-21",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "Nikkei Asia",
-          "title_ko": "베트남 태양광 스타트업, 이란과 관련된 에너지 쇼크 속에서 1,500만 달러 모금"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-25",
-      "article_count": 3,
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -338,15 +324,15 @@
       "title_ko": "도시 배수·침수 방지 마스터플랜",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
         {
           "date": "2026-05-28",
-          "stage": "PLANNING",
-          "milestone": "Thanh Hóa 폐수처리 기반시설 확대 추진",
+          "stage": "UNKNOWN",
+          "milestone": "해당 없음",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Thanh Hoa는 도시 생활 폐수 수집 및 처리를 촉진합니다."
         },
@@ -358,8 +344,8 @@
           "title_ko": "환경치료와 신농촌개발의 녹색전환"
         }
       ],
-      "next_watch": "폐수처리장 건설 계획 발표 및 예산 승인 현황",
-      "latest_insight": "VN-WAT-URBAN의 수질 관리 부문 강화. 도시 상수도 공급과 연계한 폐수처리 인프라 투자 기회 증대 예상",
+      "next_watch": "청화시 오수처리 사업 세부 진행현황 추적",
+      "latest_insight": "제공된 기사는 상수도 인프라(VN-WAT-URBAN)와 무관한 오수처리 사업으로, 마스터플랜 분석 대상 외",
       "latest_article_date": "2026-05-28",
       "article_count": 2,
       "haiku_count": 1,
@@ -386,24 +372,24 @@
       "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-05-24",
-          "stage": "OPERATION",
-          "milestone": "속선 WtE 발전소 준공(2025.10) 이후 운영 단계 진입",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Khanh Hoa: 자발적인 쓰레기 소각은 많은 도시 도로에서 심각한 오염을 초래합니다."
         }
       ],
-      "next_watch": "카인호아성 등 지방 소각시설 확대 및 불법 소각 관리체계 강화",
-      "latest_insight": "마스터플랜 2025년 목표 달성 후 지역별 WtE 인프라 확충 필요. 비공식 폐기물 처리 규제 강화로 재투자 기회 발생",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-05-24",
       "article_count": 1,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "도시 폐기물 수거율",
@@ -419,6 +405,57 @@
           "indicator": "매립 의존율",
           "target": "30% 이하",
           "current": "속선 WtE 가동으로 현저히 감소 중"
+        }
+      ]
+    },
+    "VN-ENV-IND-1894": {
+      "plan_id": "VN-ENV-IND-1894",
+      "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
+      "sector": "",
+      "area": "",
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
+      "stage_history": [
+        {
+          "date": "2026-05-29",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "하이퐁(Hai Phong)은 2026년에 환경 보호 및 생물다양성 보호를 시작합니다."
+        }
+      ],
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "latest_insight": "",
+      "latest_article_date": "2026-05-29",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "하수처리 기술 및 장비 국내 수요 충족률",
+          "target": "70%~80%",
+          "current": "조사 중"
+        },
+        {
+          "indicator": "배출가스/폐가스 처리 기술 및 장비 국내 수요 충족률",
+          "target": "60%~70%",
+          "current": "조사 중"
+        },
+        {
+          "indicator": "고형 및 유해 폐기물 수거·운반 국내 수요 충족률",
+          "target": "50%~60%",
+          "current": "조사 중"
+        },
+        {
+          "indicator": "고형 및 유해 폐기물 분류·재활용 국내 수요 충족률",
+          "target": "60%~70%",
+          "current": "조사 중"
+        },
+        {
+          "indicator": "환경 모니터링 장비 국내 수요 충족률",
+          "target": "20%",
+          "current": "조사 중"
         }
       ]
     },
@@ -441,30 +478,23 @@
         },
         {
           "date": "2026-05-26",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
+          "stage": "PLANNING",
+          "milestone": "반도체 공급망 프로젝트 계획 승인",
           "source": "vir_vn",
           "title_ko": "Amata City Halong은 반도체 공급망의 새로운 프로젝트를 환영합니다"
         },
         {
           "date": "2026-05-26",
-          "stage": "UNKNOWN",
-          "milestone": "기사 본문 부재로 인프라 사업 정보 확인 불가",
-          "source": "vietnamplus",
-          "title_ko": "싱가포르 언론은 베트남-싱가포르 관계의 중요성이 커지고 있음을 강조합니다."
-        },
-        {
-          "date": "2026-05-26",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "VnExpress Business",
-          "title_ko": "Stavian Industrial Park는 Khanh Hoa 프로젝트의 투자자로 승인되었습니다."
+          "source": "vietnamplus",
+          "title_ko": "싱가포르 언론은 베트남-싱가포르 관계의 중요성이 커지고 있음을 강조합니다."
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 8,
+      "article_count": 7,
       "haiku_count": 1,
       "kpi_targets": [
         {
@@ -504,11 +534,25 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-05-23",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "sggp_org_vn",
+          "title_ko": "동나이, 호치민시 순환도로 4의 구성요소 프로젝트 승인"
+        },
+        {
+          "date": "2026-05-23",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "sggp_org_vn",
+          "title_ko": "호치민시, 신성장 생태계 조성 선도"
+        },
         {
           "date": "2026-05-22",
           "stage": "CONSTRUCTION",
@@ -518,24 +562,17 @@
         },
         {
           "date": "2026-05-22",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "sggp_org_vn",
-          "title_ko": "미술시장의 지속가능한 성장을 위한 지원정책 필요"
-        },
-        {
-          "date": "2026-05-21",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "asiatimes",
-          "title_ko": "배신적인 제국"
+          "stage": "UNKNOWN",
+          "milestone": "벤처캐피탈 활성화 정책 추진",
+          "source": "vietnamnews_vn",
+          "title_ko": "베트남, 혁신을 위해 벤처캐피탈 활용: 재무부 차관"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-22",
+      "latest_article_date": "2026-05-23",
       "article_count": 8,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -600,49 +637,85 @@
         }
       ]
     },
-    "VN-SC-2030": {
-      "plan_id": "VN-SC-2030",
-      "title_ko": "베트남 스마트시티 개발 프로그램 2030",
+    "VN-URB-METRO-2030": {
+      "plan_id": "VN-URB-METRO-2030",
+      "title_ko": "베트남 도시철도(메트로) 개발 계획",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
         {
-          "date": "2026-05-21",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "date": "2026-05-29",
+          "stage": "UNKNOWN",
+          "milestone": "AI 데이터센터 전력 솔루션",
           "source": "en_prnasisa",
-          "title_ko": "여행 열정과 지역 행동이 중국을 제외한 아시아 태평양 전역의 호텔 충성도를 재편하고 있다고 새로운 Marriott Bonvoy 보고서에서 밝혀졌습니다"
+          "title_ko": "인피니언, 차세대 AI 서버 랙을 위한 전력 공급 아키텍처 혁신을 위해 NVIDIA의 MGXTM AI 팩토리 에코시스템에 합류"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-21",
+      "next_watch": "베트남 인프라와 무관",
+      "latest_insight": "본 기사는 반도체·AI 데이터센터 기술 관련 사항으로 베트남 도시철도 인프라 사업과 완전히 무관합니다.",
+      "latest_article_date": "2026-05-29",
       "article_count": 1,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
-          "indicator": "스마트시티 시범 도시",
-          "target": "6개 (2025)",
-          "current": "6개 (2024 진행 중)"
+          "indicator": "하노이 메트로 목표",
+          "target": "15개 노선",
+          "current": "2A·3호선 운영, 1·2B 건설"
         },
         {
-          "indicator": "전국 확산",
-          "target": "30개 (2030)",
-          "current": "12개 (2024)"
+          "indicator": "호치민 메트로 목표",
+          "target": "8개 노선",
+          "current": "1호선 2024.12 개통"
         },
         {
-          "indicator": "디지털정부 지수",
-          "target": "top 50 (UN EGDI)",
-          "current": "86위 (2024)"
+          "indicator": "전국 도시철도 목표",
+          "target": "46개 노선 3,045km",
+          "current": "약 5개 노선 운영/건설"
+        }
+      ]
+    },
+    "HN-URBAN-INFRA": {
+      "plan_id": "HN-URBAN-INFRA",
+      "title_ko": "하노이 도시 인프라 개발 계획 2030",
+      "sector": "",
+      "area": "",
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
+      "stage_history": [
+        {
+          "date": "2026-05-28",
+          "stage": "TENDERING",
+          "milestone": "Metro 2A 확장 프로젝트 $1.5B 입찰 공고 예정",
+          "source": "vietnamplus",
+          "title_ko": "하노이, 15억 달러 규모의 Metro 2A 확장 프로젝트 착수 준비"
+        }
+      ],
+      "next_watch": "입찰 일정 공시 및 컨소시엄 참여 모집 시작",
+      "latest_insight": "마스터플랜 15개 메트로 노선 중 핵심 사업 진행. 2026년 착공 시점으로 볼 때 입찰 단계 진입이 임박했으며, HN-URBAN-INFRA 투자 본격화 신호",
+      "latest_article_date": "2026-05-28",
+      "article_count": 1,
+      "haiku_count": 1,
+      "kpi_targets": [
+        {
+          "indicator": "도시개발 총투자",
+          "target": "$2.5T (2026~2045)",
+          "current": "Decision 1668 확정"
         },
         {
-          "indicator": "5G 커버리지",
-          "target": "도시 100% (2030)",
-          "current": "15개 도시 (2024)"
+          "indicator": "인구 수용 목표",
+          "target": "16M명 (2045)",
+          "current": "현재 8.5M명"
+        },
+        {
+          "indicator": "링로드4 완공",
+          "target": "2027년 전체 완공",
+          "current": "착공 진행"
         }
       ]
     }
