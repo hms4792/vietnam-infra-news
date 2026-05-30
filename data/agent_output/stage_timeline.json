@@ -1,25 +1,25 @@
 {
-  "generated_at": "2026-05-29 14:05",
+  "generated_at": "2026-05-30 05:01",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
       "title_ko": "베트남 제8차 국가전력개발계획",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-05-25",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "2026년 폭염 피크: EVN은 전기 공급을 보장하고 전기 절약에 대한 지침을 제공하기 위해 많은 솔루션을 배포합니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-25",
       "article_count": 1,
@@ -63,13 +63,20 @@
           "milestone": "정책·법령 발표",
           "source": "vir_vn",
           "title_ko": "하노이, APAC 최고의 풍력 에너지 행사 개최"
+        },
+        {
+          "date": "2026-05-23",
+          "stage": "OPERATION",
+          "milestone": "옥상태양광 운영 중, PDP8 목표 달성 핵심사업 확정",
+          "source": "vietnamplus",
+          "title_ko": "옥상 태양광 발전은 투자 효율성을 제공합니다"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-25",
       "article_count": 2,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "해상풍력(2030)",
@@ -198,19 +205,12 @@
           "milestone": "준공·운영 개시",
           "source": "menafn",
           "title_ko": "Kharge 슬램 센터, 저렴한 원유 가격에도 불구하고 연료 가격 중심"
-        },
-        {
-          "date": "2026-05-22",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "vir_vn",
-          "title_ko": "페트로베트남은 에너지 협력 강화를 위해 Vitol Asia와 MOU를 체결했습니다."
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-26",
-      "article_count": 3,
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -299,7 +299,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-05-23",
-      "article_count": 6,
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -332,7 +332,7 @@
         {
           "date": "2026-05-28",
           "stage": "UNKNOWN",
-          "milestone": "해당 없음",
+          "milestone": "해당 사항 없음",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Thanh Hoa는 도시 생활 폐수 수집 및 처리를 촉진합니다."
         },
@@ -344,8 +344,8 @@
           "title_ko": "환경치료와 신농촌개발의 녹색전환"
         }
       ],
-      "next_watch": "청화시 오수처리 사업 세부 진행현황 추적",
-      "latest_insight": "제공된 기사는 상수도 인프라(VN-WAT-URBAN)와 무관한 오수처리 사업으로, 마스터플랜 분석 대상 외",
+      "next_watch": "상수도 사업과의 연계성 모니터링",
+      "latest_insight": "기사는 하수처리 사업으로 VN-WAT-URBAN 상수도 마스터플랜과 직접 무관함. 상수도 인프라 분석 대상 외",
       "latest_article_date": "2026-05-28",
       "article_count": 2,
       "haiku_count": 1,
@@ -413,24 +413,24 @@
       "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
       "sector": "",
       "area": "",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
           "date": "2026-05-29",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
+          "stage": "OPERATION",
+          "milestone": "하이퐁시 환경보호 사업 2026년 지속추진",
           "source": "Moi truong & Cuoc song",
           "title_ko": "하이퐁(Hai Phong)은 2026년에 환경 보호 및 생물다양성 보호를 시작합니다."
         }
       ],
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
-      "latest_insight": "",
+      "next_watch": "환경산업 센터 구축 및 재활용산업단지 개발 진행",
+      "latest_insight": "VN-ENV-IND-1894 마스터플랜 일환으로 지역 차원의 운영 단계 사업 진행 중. 국가 환경산업 육성과 연계된 실행 기반 구축",
       "latest_article_date": "2026-05-29",
       "article_count": 1,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "하수처리 기술 및 장비 국내 수요 충족률",
@@ -477,25 +477,18 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
-          "date": "2026-05-26",
-          "stage": "PLANNING",
-          "milestone": "반도체 공급망 프로젝트 계획 승인",
-          "source": "vir_vn",
-          "title_ko": "Amata City Halong은 반도체 공급망의 새로운 프로젝트를 환영합니다"
-        },
-        {
-          "date": "2026-05-26",
+          "date": "2026-05-29",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "싱가포르 언론은 베트남-싱가포르 관계의 중요성이 커지고 있음을 강조합니다."
+          "source": "sggp_org_vn",
+          "title_ko": "호치민시는 2026년 FDI 목표 달성에 가까워졌습니다."
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 7,
-      "haiku_count": 1,
+      "article_count": 6,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "북부 산업용지 총 공급",
@@ -540,11 +533,25 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-05-23",
+          "date": "2026-05-24",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "sggp_org_vn",
-          "title_ko": "동나이, 호치민시 순환도로 4의 구성요소 프로젝트 승인"
+          "source": "vietnamplus",
+          "title_ko": "이라크, 시리아를 통과하는 1,200km 육로 무역로 추진"
+        },
+        {
+          "date": "2026-05-24",
+          "stage": "UNKNOWN",
+          "milestone": "암 환자 지원 기금 모금 완료",
+          "source": "vietnamplus",
+          "title_ko": "밝은 미래 기금은 암 환자 지원을 위해 2조 2천억 VND 이상을 받습니다"
+        },
+        {
+          "date": "2026-05-24",
+          "stage": "UNKNOWN",
+          "milestone": "인프라 사업과 무관",
+          "source": "vietnamplus",
+          "title_ko": "United World Wrestling의 U17 및 U23 아시아 선수권 대회 2026이 다낭에서 열립니다."
         },
         {
           "date": "2026-05-23",
@@ -554,25 +561,25 @@
           "title_ko": "호치민시, 신성장 생태계 조성 선도"
         },
         {
-          "date": "2026-05-22",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "sggp_org_vn",
-          "title_ko": "호치민시, 주요 지역 간 연결 운송 프로젝트의 장애물 제거"
+          "date": "2026-05-23",
+          "stage": "UNKNOWN",
+          "milestone": "베트남 전자상거래 디지털화 추진",
+          "source": "vietnamplus",
+          "title_ko": "전통에서 디지털화로: 베트남 상품의 향상"
         },
         {
-          "date": "2026-05-22",
+          "date": "2026-05-23",
           "stage": "UNKNOWN",
-          "milestone": "벤처캐피탈 활성화 정책 추진",
-          "source": "vietnamnews_vn",
-          "title_ko": "베트남, 혁신을 위해 벤처캐피탈 활용: 재무부 차관"
+          "milestone": "기사 내용 불완전",
+          "source": "vietnamplus",
+          "title_ko": "베트남, 자본시장, 금융센터 개발 분야에서 영국과의 협력 증진 모색"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-23",
+      "latest_article_date": "2026-05-24",
       "article_count": 8,
-      "haiku_count": 1,
+      "haiku_count": 4,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -642,24 +649,24 @@
       "title_ko": "베트남 도시철도(메트로) 개발 계획",
       "sector": "",
       "area": "",
-      "current_stage": "UNKNOWN",
-      "stage_label_ko": "단계 미확정",
-      "stage_color": "9CA3AF",
-      "stage_order": 0,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-05-29",
-          "stage": "UNKNOWN",
-          "milestone": "AI 데이터센터 전력 솔루션",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "en_prnasisa",
           "title_ko": "인피니언, 차세대 AI 서버 랙을 위한 전력 공급 아키텍처 혁신을 위해 NVIDIA의 MGXTM AI 팩토리 에코시스템에 합류"
         }
       ],
-      "next_watch": "베트남 인프라와 무관",
-      "latest_insight": "본 기사는 반도체·AI 데이터센터 기술 관련 사항으로 베트남 도시철도 인프라 사업과 완전히 무관합니다.",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-05-29",
       "article_count": 1,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "하노이 메트로 목표",
@@ -683,23 +690,30 @@
       "title_ko": "하노이 도시 인프라 개발 계획 2030",
       "sector": "",
       "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
+          "date": "2026-05-30",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "하노이는 장마철과 폭풍우가 오기 전에 배수 프로젝트를 건설하기 위해 초과 근무를 하고 있습니다."
+        },
+        {
           "date": "2026-05-28",
-          "stage": "TENDERING",
-          "milestone": "Metro 2A 확장 프로젝트 $1.5B 입찰 공고 예정",
+          "stage": "PLANNING",
+          "milestone": "Metro 2A 확장 타당성조사 및 설계 진행",
           "source": "vietnamplus",
           "title_ko": "하노이, 15억 달러 규모의 Metro 2A 확장 프로젝트 착수 준비"
         }
       ],
-      "next_watch": "입찰 일정 공시 및 컨소시엄 참여 모집 시작",
-      "latest_insight": "마스터플랜 15개 메트로 노선 중 핵심 사업 진행. 2026년 착공 시점으로 볼 때 입찰 단계 진입이 임박했으며, HN-URBAN-INFRA 투자 본격화 신호",
-      "latest_article_date": "2026-05-28",
-      "article_count": 1,
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-05-30",
+      "article_count": 2,
       "haiku_count": 1,
       "kpi_targets": [
         {
