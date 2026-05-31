@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-gemini_collector.py — SA-9 Gemini 보완 수집기 v1.5 (v1beta + 모델 경로 최적화)
+gemini_collector.py — SA-9 Gemini 보완 수집기 v1.5 (API URL 표준화)
+===========================================================
+역할: 최신 인프라 뉴스 수집을 위한 Gemini API 호출 모듈
+      API URL 구조를 v1 표준으로 완전 교정
 """
 
 import json
@@ -12,6 +15,7 @@ from datetime import datetime
 from pathlib import Path
 from urllib.error import HTTPError
 
+# 로그 설정
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [SA-9/Gemini] %(message)s',
@@ -22,11 +26,12 @@ log = logging.getLogger('gemini_collector')
 _ROOT       = Path(__file__).parent.parent
 OUTPUT_FILE = _ROOT / 'data' / 'agent_output' / 'gemini_collector_output.json'
 
-# ★ 수정: v1 대신 v1beta를 사용하고, models 경로를 명시합니다.
-GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta/models'
-GEMINI_MODEL    = 'gemini-1.5-flash'
+# ★ API 구조 표준화: base + model + method
+GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1'
+GEMINI_MODEL    = 'models/gemini-1.5-flash'
 GEMINI_TIMEOUT  = 60
 
+# 수집 대상 쿼리 (기존과 동일)
 SEARCH_QUERIES = [
     {'query': 'Vietnam Ministry of Environment MONRE wastewater water treatment project 2026', 'sector': 'Waste Water', 'source_hint': 'monre.gov.vn'},
     {'query': 'Vietnam solid waste management regulation enforcement 2026', 'sector': 'Solid Waste', 'source_hint': 'vea.gov.vn'},
@@ -41,7 +46,7 @@ SEARCH_QUERIES = [
 ]
 
 def _call_gemini_api(query: str, gemini_key: str) -> str:
-    # ★ 수정: 모델 앞에 'models/'를 붙여서 전체 경로 완성
+    # ★ 수정: URL 구성 방식을 표준 REST API 규격으로 변경
     url = f'{GEMINI_API_BASE}/{GEMINI_MODEL}:generateContent?key={gemini_key}'
     
     payload = {
@@ -82,8 +87,8 @@ def collect_gemini_articles(gemini_key: str) -> list:
         raw = _call_gemini_api(q['query'], gemini_key)
         
         try:
-            clean_json = raw.strip().replace('
-```json', '').replace('```', '').strip()
+            # 줄바꿈 문제 해결: 85행 수정
+            clean_json = raw.strip().replace('```json', '').replace('```', '').strip()
             articles = json.loads(clean_json)
             
             for art in (articles if isinstance(articles, list) else []):
