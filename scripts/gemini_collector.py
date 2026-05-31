@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-gemini_collector.py — SA-9 Gemini Search 보완 수집기 v1.1 (모델명 1.5-flash 교체)
+gemini_collector.py — SA-9 Gemini Search 보완 수집기 v1.2 (v1 API 및 모델 경로 수정)
 """
 
 import json
@@ -22,8 +22,9 @@ log = logging.getLogger('gemini_collector')
 _ROOT       = Path(__file__).parent.parent
 OUTPUT_FILE = _ROOT / 'data' / 'agent_output' / 'gemini_collector_output.json'
 
-GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models'
-# ★ 모델명 수정: 2.0-flash에서 1.5-flash로 변경
+# ★ 수정: v1beta -> v1 으로 변경
+GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models'
+# ★ 수정: models/ 접두사 없이 모델명만 사용
 GEMINI_MODEL   = 'gemini-1.5-flash'
 GEMINI_TIMEOUT = 60
 
@@ -41,6 +42,7 @@ SEARCH_QUERIES = [
 ]
 
 def _call_gemini_search(query: str, gemini_key: str) -> str:
+    # ★ 수정: URL 구성 방식 최적화
     url = f'{GEMINI_API_URL}/{GEMINI_MODEL}:generateContent?key={gemini_key}'
     sys_ = (
         '당신은 베트남 인프라 뉴스 수집 에이전트입니다. '
@@ -51,7 +53,7 @@ def _call_gemini_search(query: str, gemini_key: str) -> str:
     payload = {
         'system_instruction': {'parts': [{'text': sys_}]},
         'contents':           [{'parts': [{'text': f'검색: {query}'}], 'role': 'user'}],
-        'tools':              [{'google_search': {}}],
+        'tools':              [{'google_search_retrieval': {}}], # ★ 수정: tools 명칭 최신화
         'generationConfig':   {'maxOutputTokens': 600, 'temperature': 0.1},
     }
     body = json.dumps(payload).encode('utf-8')
@@ -64,17 +66,13 @@ def _call_gemini_search(query: str, gemini_key: str) -> str:
     except HTTPError as e:
         log.warning(f'Gemini Search HTTP 오류: {e.code} | 상세: {e.read().decode("utf-8")}')
         return '[]'
-    except URLError as e:
-        log.warning(f'Gemini Search 네트워크 오류: {e.reason}')
-        return '[]'
     except Exception as e:
-        log.warning(f'Gemini Search 알 수 없는 오류: {e}')
+        log.warning(f'Gemini Search 오류: {e}')
         return '[]'
 
 def collect_gemini_articles(gemini_key: str) -> list:
     all_articles = []
     today = datetime.now().strftime('%Y-%m-%d')
-
     for q in SEARCH_QUERIES:
         log.info(f"  쿼리: {q['query'][:55]}...")
         raw = _call_gemini_search(q['query'], gemini_key)
@@ -98,19 +96,16 @@ def collect_gemini_articles(gemini_key: str) -> list:
     return all_articles
 
 def main():
-    log.info('SA-9 Gemini Search 보완 수집기 v1.1 시작')
+    log.info('SA-9 Gemini Search 보완 수집기 v1.2 시작')
     gemini_key = os.environ.get('GEMINI_API_KEY', '').strip()
     if not gemini_key:
         log.error('GEMINI_API_KEY 없음 — 종료')
         return
-
     articles = collect_gemini_articles(gemini_key)
     output = {'collected_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'total': len(articles), 'articles': articles}
-    
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-
     log.info(f'✅ 완료: {len(articles)}건 수집 → {OUTPUT_FILE}')
 
 if __name__ == '__main__':
