@@ -1,29 +1,29 @@
 {
-  "generated_at": "2026-05-30 05:01",
+  "generated_at": "2026-05-31 12:40",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
       "title_ko": "베트남 제8차 국가전력개발계획",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
           "date": "2026-05-25",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "OPERATION",
+          "milestone": "2026년 폭염 대비 전력공급 안정화 운영",
           "source": "Moi truong & Cuoc song",
           "title_ko": "2026년 폭염 피크: EVN은 전기 공급을 보장하고 전기 절약에 대한 지침을 제공하기 위해 많은 솔루션을 배포합니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
+      "next_watch": "PDP8 목표(2030년 150GW) 달성을 위한 재생에너지 확대 진행 상황",
+      "latest_insight": "EVN의 기존 발전설비(80,555MW)로 현재 수급 관리 중. PDP8 이행을 통한 신규 설비 증설(해상풍력, 태양광, LNG)이 2027년 이후 전력공급 여유율 확대의 핵심",
       "latest_article_date": "2026-05-25",
       "article_count": 1,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "총 발전설비 (2030)",
@@ -58,25 +58,25 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-05-25",
+          "date": "2026-05-31",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vir_vn",
-          "title_ko": "하노이, APAC 최고의 풍력 에너지 행사 개최"
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Gia Lai는 1조 6천억 VND 이상의 Chu Phuong 풍력 발전 프로젝트에 대한 투자를 승인했습니다."
         },
         {
-          "date": "2026-05-23",
-          "stage": "OPERATION",
-          "milestone": "옥상태양광 운영 중, PDP8 목표 달성 핵심사업 확정",
-          "source": "vietnamplus",
-          "title_ko": "옥상 태양광 발전은 투자 효율성을 제공합니다"
+          "date": "2026-05-30",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "베트남-핀란드, 녹색경제 및 청정에너지 분야 협력 증진"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-25",
-      "article_count": 2,
-      "haiku_count": 1,
+      "latest_article_date": "2026-05-31",
+      "article_count": 3,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "해상풍력(2030)",
@@ -187,30 +187,30 @@
       "title_ko": "베트남 석유가스 분야 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
       "stage_history": [
+        {
+          "date": "2026-05-30",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "menafn",
+          "title_ko": "엑손과 쉐브론은 이란 전쟁으로 인해 비축량이 '정말 낮은 수준'으로 밀려나면서 유가가 160달러에 도달할 수 있다고 경고했습니다."
+        },
         {
           "date": "2026-05-26",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "menafn",
           "title_ko": "바쿠, 탈원유 시대를 위해 석유 굴착 장치를 스마트 팜으로 교체하는 것을 목표로 함"
-        },
-        {
-          "date": "2026-05-26",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "menafn",
-          "title_ko": "Kharge 슬램 센터, 저렴한 원유 가격에도 불구하고 연료 가격 중심"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
       "latest_insight": "",
-      "latest_article_date": "2026-05-26",
-      "article_count": 2,
+      "latest_article_date": "2026-05-30",
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -271,54 +271,6 @@
         }
       ]
     },
-    "VN-WAT-RESOURCES": {
-      "plan_id": "VN-WAT-RESOURCES",
-      "title_ko": "베트남 수자원 개발 전략 2030",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-05-23",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "[동영상] 워크숍 - 토론: 중부고원의 농업, 신농촌 및 녹색 에너지와 관련된 수자원 개발을 위한 관리, 이용 및 투자 촉진"
-        },
-        {
-          "date": "2026-05-23",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "새로운 농촌 프로그램과 관련된 고산지 및 물 부족 지역에 대한 물 공급 솔루션"
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-23",
-      "article_count": 3,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "지하수 관리 대수층",
-          "target": "전국 27개 완전 관리",
-          "current": "12개 관리 중"
-        },
-        {
-          "indicator": "중복 댐·저수지 안전진단",
-          "target": "100% 완료",
-          "current": "65% 완료"
-        },
-        {
-          "indicator": "홍수 피해 GDP 비중",
-          "target": "0.5% 미만으로 감소",
-          "current": "연평균 1.2%"
-        }
-      ]
-    },
     "VN-WAT-URBAN": {
       "plan_id": "VN-WAT-URBAN",
       "title_ko": "도시 배수·침수 방지 마스터플랜",
@@ -332,22 +284,15 @@
         {
           "date": "2026-05-28",
           "stage": "UNKNOWN",
-          "milestone": "해당 사항 없음",
+          "milestone": "청호아성 오수 수집·처리 사업 추진",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Thanh Hoa는 도시 생활 폐수 수집 및 처리를 촉진합니다."
-        },
-        {
-          "date": "2026-05-23",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "환경치료와 신농촌개발의 녹색전환"
         }
       ],
-      "next_watch": "상수도 사업과의 연계성 모니터링",
-      "latest_insight": "기사는 하수처리 사업으로 VN-WAT-URBAN 상수도 마스터플랜과 직접 무관함. 상수도 인프라 분석 대상 외",
+      "next_watch": "상수도 사업과의 연계성 확인 필요",
+      "latest_insight": "기사는 폐수처리 사업으로 VN-WAT-URBAN 상수도 마스터플랜과 직접 연계되지 않음. 상수도 공급 인프라와 구분되는 별도 사업.",
       "latest_article_date": "2026-05-28",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 1,
       "kpi_targets": [
         {
@@ -378,18 +323,39 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-05-24",
+          "date": "2026-05-31",
+          "stage": "PLANNING",
+          "milestone": "까마우성 폐기물 처리 인프라 투자 계획 수립",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Ca Mau, 폐기물 처리 인프라에 대한 투자 가속화"
+        },
+        {
+          "date": "2026-05-31",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "다낭은 환경 관리를 강화하고 잔해물 불법 투기를 엄격히 처벌합니다."
+        },
+        {
+          "date": "2026-05-31",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "Khanh Hoa: 자발적인 쓰레기 소각은 많은 도시 도로에서 심각한 오염을 초래합니다."
+          "title_ko": "도시. 호치민시, 생활폐기물 이송정류장 시스템 계획 검토 및 조정"
+        },
+        {
+          "date": "2026-05-30",
+          "stage": "PLANNING",
+          "milestone": "지역 폐기물 수거체계 강화 추진",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Dien Bien은 농촌 지역의 폐기물 수집 및 처리 속도를 높이기 위해 노력합니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-24",
-      "article_count": 1,
-      "haiku_count": 0,
+      "next_watch": "구체적 WtE 시설 입찰 공고 및 투자 규모 공시",
+      "latest_insight": "속선 WtE 준공(2025.10) 이후 메콩 델타 지역으로 WtE 확산 단계. 까마우의 인프라 투자는 전국 2030 목표 달성을 위한 지역 거점 확충으로 평가됨.",
+      "latest_article_date": "2026-05-31",
+      "article_count": 5,
+      "haiku_count": 2,
       "kpi_targets": [
         {
           "indicator": "도시 폐기물 수거율",
@@ -413,24 +379,31 @@
       "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
+          "date": "2026-05-31",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "약 12,000m3의 건설 폐기물을 불법적으로 환경에 버리는 두 기업이 적발되었습니다."
+        },
+        {
           "date": "2026-05-29",
-          "stage": "OPERATION",
-          "milestone": "하이퐁시 환경보호 사업 2026년 지속추진",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "하이퐁(Hai Phong)은 2026년에 환경 보호 및 생물다양성 보호를 시작합니다."
         }
       ],
-      "next_watch": "환경산업 센터 구축 및 재활용산업단지 개발 진행",
-      "latest_insight": "VN-ENV-IND-1894 마스터플랜 일환으로 지역 차원의 운영 단계 사업 진행 중. 국가 환경산업 육성과 연계된 실행 기반 구축",
-      "latest_article_date": "2026-05-29",
-      "article_count": 1,
-      "haiku_count": 1,
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-05-31",
+      "article_count": 2,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "하수처리 기술 및 장비 국내 수요 충족률",
@@ -477,18 +450,32 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
+          "date": "2026-05-30",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "vir_vn",
+          "title_ko": "VSIP 합작회사, 5개 신규 산업단지에 대한 승인 획득"
+        },
+        {
           "date": "2026-05-29",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "sggp_org_vn",
           "title_ko": "호치민시는 2026년 FDI 목표 달성에 가까워졌습니다."
+        },
+        {
+          "date": "2026-05-26",
+          "stage": "OPERATION",
+          "milestone": "베트남-싱가포르 경제협력 강화 및 VSIP 확장 추진",
+          "source": "vietnamplus",
+          "title_ko": "싱가포르 언론은 베트남-싱가포르 관계의 중요성이 커지고 있음을 강조합니다."
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 6,
-      "haiku_count": 0,
+      "article_count": 8,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "북부 산업용지 총 공급",
@@ -533,16 +520,23 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-05-24",
+          "date": "2026-05-25",
+          "stage": "PLANNING",
+          "milestone": "응에안성 산업단지 FDI 유치 본격화 (22억달러)",
+          "source": "tienphong_vn",
+          "title_ko": "대기업은 응에안을 목적지로 선택합니다"
+        },
+        {
+          "date": "2026-05-25",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "vietnamplus",
-          "title_ko": "이라크, 시리아를 통과하는 1,200km 육로 무역로 추진"
+          "title_ko": "공공 요구에 부응하는 전략적 부문의 임대 주택: PM"
         },
         {
           "date": "2026-05-24",
           "stage": "UNKNOWN",
-          "milestone": "암 환자 지원 기금 모금 완료",
+          "milestone": "인프라 사업과 무관함",
           "source": "vietnamplus",
           "title_ko": "밝은 미래 기금은 암 환자 지원을 위해 2조 2천억 VND 이상을 받습니다"
         },
@@ -554,32 +548,25 @@
           "title_ko": "United World Wrestling의 U17 및 U23 아시아 선수권 대회 2026이 다낭에서 열립니다."
         },
         {
-          "date": "2026-05-23",
+          "date": "2026-05-24",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
-          "source": "sggp_org_vn",
-          "title_ko": "호치민시, 신성장 생태계 조성 선도"
+          "source": "tienphong_vn",
+          "title_ko": "호치민시, 2030년까지 지하철 투자 촉진, 총 자본금은 거의 100조 VND"
         },
         {
-          "date": "2026-05-23",
-          "stage": "UNKNOWN",
-          "milestone": "베트남 전자상거래 디지털화 추진",
-          "source": "vietnamplus",
-          "title_ko": "전통에서 디지털화로: 베트남 상품의 향상"
-        },
-        {
-          "date": "2026-05-23",
-          "stage": "UNKNOWN",
-          "milestone": "기사 내용 불완전",
-          "source": "vietnamplus",
-          "title_ko": "베트남, 자본시장, 금융센터 개발 분야에서 영국과의 협력 증진 모색"
+          "date": "2026-05-24",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamnews_vn",
+          "title_ko": "BSR, 매월 100,000cu.m의 E10 휘발유 공급"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-24",
+      "next_watch": "VSIP공단 확대조성 착공 일정 및 교통인프라 연계성",
+      "latest_insight": "응에안성 경제특구 개발과 교통인프라(VN-TRAN-2055)의 동시 추진으로 베트남 북중부 거점 형성. 외자유치 증가는 인프라 완공 시점의 수요 창출 신호",
+      "latest_article_date": "2026-05-25",
       "article_count": 8,
-      "haiku_count": 4,
+      "haiku_count": 3,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -600,47 +587,6 @@
           "indicator": "항만 처리 용량",
           "target": "1,100M 톤/년",
           "current": "600M 톤/년"
-        }
-      ]
-    },
-    "VN-MEKONG-DELTA-2030": {
-      "plan_id": "VN-MEKONG-DELTA-2030",
-      "title_ko": "메콩 델타 인프라 개발 계획 2030",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-05-23",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "[지난주의 관점]: 물 - 환경 - 에너지: 중부고원지의 지속가능한 발전의 문제"
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-05-23",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "2030년까지 고속도로 760km",
-          "target": "",
-          "current": ""
-        },
-        {
-          "indicator": "메콩 수계 통합 관리",
-          "target": "",
-          "current": ""
-        },
-        {
-          "indicator": "Can Tho 교량 2호 건설",
-          "target": "",
-          "current": ""
         }
       ]
     },
@@ -701,20 +647,13 @@
           "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "하노이는 장마철과 폭풍우가 오기 전에 배수 프로젝트를 건설하기 위해 초과 근무를 하고 있습니다."
-        },
-        {
-          "date": "2026-05-28",
-          "stage": "PLANNING",
-          "milestone": "Metro 2A 확장 타당성조사 및 설계 진행",
-          "source": "vietnamplus",
-          "title_ko": "하노이, 15억 달러 규모의 Metro 2A 확장 프로젝트 착수 준비"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-05-30",
       "article_count": 2,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "도시개발 총투자",
