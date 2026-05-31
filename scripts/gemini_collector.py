@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-gemini_collector.py — SA-9 Gemini 보완 수집기 v1.8 (모델명 수정)
+gemini_collector.py — SA-9 Gemini 보완 수집기 v1.9 (모델명 최신화)
 ===========================================================
-역할: 확인된 모델명 gemini-2.0-flash 사용
+역할: 최신 사용 가능 모델인 gemini-2.5-flash로 모델 교체
 """
 
 import json
@@ -24,9 +24,9 @@ log = logging.getLogger('gemini_collector')
 _ROOT       = Path(__file__).parent.parent
 OUTPUT_FILE = _ROOT / 'data' / 'agent_output' / 'gemini_collector_output.json'
 
-# ★ 검증된 모델명으로 교체: gemini-2.0-flash
+# ★ 최신 사용 가능 모델명으로 교체: gemini-2.5-flash
 GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta'
-GEMINI_MODEL    = 'gemini-2.0-flash'
+GEMINI_MODEL    = 'gemini-2.5-flash'
 GEMINI_TIMEOUT  = 60
 
 SEARCH_QUERIES = [
