@@ -681,7 +681,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
         for raw in results:
             parsed = parse_result(raw, sector=q_info.get('sector', ''))
             if parsed: articles.append(parsed)
-        time.sleep(0.3)
+        time.sleep(1.2)
 
     # ── ★ D: 한국 ODA 기관 쿼리 (홀수일) — 방법A 직후로 이동 ─────────
     # v8.6 핵심: A(14크레딧) 소비 직후 D(5크레딧) 실행
@@ -696,7 +696,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
                 parsed = parse_result(raw, sector=q_info.get('sector', 'Bilateral'),
                                       plan_id=q_info.get('plan_id', ''))
                 if parsed: articles.append(parsed)
-            time.sleep(0.3)
+            time.sleep(1.2)
         log.info(f'[NewsData.io] 방법1-D 완료 — 누적 {credit_used}크레딧 사용')
 
     # ── B: 마스터플랜 전용 쿼리 (매일) — 30크레딧 ───────────────────
@@ -708,7 +708,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
             parsed = parse_result(raw, sector=q_info.get('sector', ''),
                                   plan_id=q_info.get('plan_id', ''))
             if parsed: articles.append(parsed)
-        time.sleep(0.3)
+        time.sleep(1.2)
 
     # ── C-A: Province Group A (매일) — 7크레딧 ───────────────────────
     log.info('[NewsData.io] 방법1-C: Province Group A')
@@ -718,7 +718,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
         for raw in results:
             parsed = parse_result(raw, province=q_info.get('province', ''))
             if parsed: articles.append(parsed)
-        time.sleep(0.3)
+        time.sleep(1.2)
 
     # ── C-B: Province Group B (홀수일) — 5크레딧 ─────────────────────
     if day_odd and not credit_exhausted:
@@ -729,7 +729,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
             for raw in results:
                 parsed = parse_result(raw, province=q_info.get('province', ''))
                 if parsed: articles.append(parsed)
-            time.sleep(0.3)
+            time.sleep(1.2)
 
     # ── C-C: Province Group C (월·목) — 3크레딧 ─────────────────────
     if day_mon_thu and not credit_exhausted:
@@ -740,7 +740,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
             for raw in results:
                 parsed = parse_result(raw, province=q_info.get('province', ''))
                 if parsed: articles.append(parsed)
-            time.sleep(0.3)
+            time.sleep(1.2)
 
     # ── E: 국제개발금융기관 (짝수일) — 5크레딧 ──────────────────────
     if not day_odd and not credit_exhausted:
@@ -752,7 +752,7 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
                 parsed = parse_result(raw, sector=q_info.get('sector', 'Bilateral'),
                                       plan_id=q_info.get('plan_id', ''))
                 if parsed: articles.append(parsed)
-            time.sleep(0.3)
+            time.sleep(1.2)
 
     if credit_exhausted:
         log.warning(
