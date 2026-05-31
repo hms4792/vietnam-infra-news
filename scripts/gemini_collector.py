@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-gemini_collector.py — SA-9 Gemini 보완 수집기 v1.7 (최종 디버깅)
+gemini_collector.py — SA-9 Gemini 보완 수집기 v1.8 (모델명 수정)
 ===========================================================
-역할: 모델명 자동 진단 및 뉴스 수집
+역할: 확인된 모델명 gemini-2.0-flash 사용
 """
 
 import json
@@ -24,9 +24,9 @@ log = logging.getLogger('gemini_collector')
 _ROOT       = Path(__file__).parent.parent
 OUTPUT_FILE = _ROOT / 'data' / 'agent_output' / 'gemini_collector_output.json'
 
-# ★ 최신 안정 모델로 교체: gemini-1.5-flash-002
+# ★ 검증된 모델명으로 교체: gemini-2.0-flash
 GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta'
-GEMINI_MODEL    = 'gemini-1.5-flash-002'
+GEMINI_MODEL    = 'gemini-2.0-flash'
 GEMINI_TIMEOUT  = 60
 
 SEARCH_QUERIES = [
@@ -41,17 +41,6 @@ SEARCH_QUERIES = [
     {'query': 'Vietnam transport expressway Long Thanh airport metro 2026', 'sector': 'Transport', 'source_hint': 'specialist'},
     {'query': 'Vietnam smart city digital infrastructure IOC 2026', 'sector': 'Smart City', 'source_hint': 'specialist'},
 ]
-
-def list_available_models(gemini_key: str):
-    """사용 가능한 모델 목록을 출력하여 404 에러의 근본 원인을 진단"""
-    url = f'{GEMINI_API_BASE}/models?key={gemini_key}'
-    try:
-        with urllib.request.urlopen(url, timeout=10) as resp:
-            data = json.loads(resp.read().decode('utf-8'))
-            model_names = [m['name'] for m in data.get('models', [])]
-            log.info(f"사용 가능한 모델 목록: {model_names}")
-    except Exception as e:
-        log.warning(f"모델 목록 조회 실패: {e}")
 
 def _call_gemini_api(query: str, gemini_key: str) -> str:
     url = f'{GEMINI_API_BASE}/models/{GEMINI_MODEL}:generateContent?key={gemini_key}'
@@ -75,8 +64,6 @@ def _call_gemini_api(query: str, gemini_key: str) -> str:
     except HTTPError as e:
         error_msg = e.read().decode("utf-8")
         log.warning(f'API 호출 실패 (코드 {e.code}): {error_msg}')
-        if e.code == 404:
-            list_available_models(gemini_key) # 404시 모델 목록 진단
         return '[]'
     except Exception as e:
         log.warning(f'Gemini API 연결 오류: {e}')
