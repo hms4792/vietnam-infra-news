@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-gemini_collector.py — SA-9 Gemini 보완 수집기 v1.4 (Final)
+gemini_collector.py — SA-9 Gemini 보완 수집기 v1.5 (API URL 표준화)
 ===========================================================
 역할: 최신 인프라 뉴스 수집을 위한 Gemini API 호출 모듈
-      tools 필드 제거 및 표준 v1 API 호출 구조 적용
+      API URL 구조를 v1 표준으로 완전 교정
 """
 
 import json
@@ -26,12 +26,12 @@ log = logging.getLogger('gemini_collector')
 _ROOT       = Path(__file__).parent.parent
 OUTPUT_FILE = _ROOT / 'data' / 'agent_output' / 'gemini_collector_output.json'
 
-# 표준 v1 엔드포인트 및 모델 설정
-GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models'
-GEMINI_MODEL   = 'gemini-1.5-flash'
-GEMINI_TIMEOUT = 60
+# ★ API 구조 표준화: base + model + method
+GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1'
+GEMINI_MODEL    = 'models/gemini-1.5-flash'
+GEMINI_TIMEOUT  = 60
 
-# 수집 대상 쿼리
+# 수집 대상 쿼리 (기존과 동일)
 SEARCH_QUERIES = [
     {'query': 'Vietnam Ministry of Environment MONRE wastewater water treatment project 2026', 'sector': 'Waste Water', 'source_hint': 'monre.gov.vn'},
     {'query': 'Vietnam solid waste management regulation enforcement 2026', 'sector': 'Solid Waste', 'source_hint': 'vea.gov.vn'},
@@ -46,10 +46,9 @@ SEARCH_QUERIES = [
 ]
 
 def _call_gemini_api(query: str, gemini_key: str) -> str:
-    """Gemini API에 요청을 보내고 결과를 반환"""
-    url = f'{GEMINI_API_URL}/{GEMINI_MODEL}:generateContent?key={gemini_key}'
+    # ★ 수정: URL 구성 방식을 표준 REST API 규격으로 변경
+    url = f'{GEMINI_API_BASE}/{GEMINI_MODEL}:generateContent?key={gemini_key}'
     
-    # tools 없이 순수 텍스트 생성 페이로드 구성
     payload = {
         "contents": [{
             "parts": [{
@@ -71,8 +70,12 @@ def _call_gemini_api(query: str, gemini_key: str) -> str:
         with urllib.request.urlopen(req, timeout=GEMINI_TIMEOUT) as resp:
             data = json.loads(resp.read().decode('utf-8'))
             return data['candidates'][0]['content']['parts'][0]['text'].strip()
+    except HTTPError as e:
+        # [디버깅] 상세 에러 확인
+        log.warning(f'API 호출 실패 (코드 {e.code}): {e.read().decode("utf-8")}')
+        return '[]'
     except Exception as e:
-        log.warning(f'Gemini API 호출 실패: {e}')
+        log.warning(f'Gemini API 연결 오류: {e}')
         return '[]'
 
 def collect_gemini_articles(gemini_key: str) -> list:
@@ -84,7 +87,6 @@ def collect_gemini_articles(gemini_key: str) -> list:
         raw = _call_gemini_api(q['query'], gemini_key)
         
         try:
-            # 출력물에서 불필요한 Markdown 기호 제거
             clean_json = raw.strip().replace('```json', '').replace('```', '').strip()
             articles = json.loads(clean_json)
             
