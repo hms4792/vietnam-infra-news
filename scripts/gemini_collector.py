@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-gemini_collector.py — SA-9 Gemini Search 보완 수집기 v1.0 (디버깅 반영)
+gemini_collector.py — SA-9 Gemini Search 보완 수집기 v1.1 (모델명 1.5-flash 교체)
 """
 
 import json
@@ -10,8 +10,6 @@ import os
 import urllib.request
 from datetime import datetime
 from pathlib import Path
-
-# [디버깅용] HTTP 오류 처리를 위한 import 추가
 from urllib.error import HTTPError, URLError
 
 logging.basicConfig(
@@ -25,7 +23,8 @@ _ROOT       = Path(__file__).parent.parent
 OUTPUT_FILE = _ROOT / 'data' / 'agent_output' / 'gemini_collector_output.json'
 
 GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models'
-GEMINI_MODEL   = 'gemini-2.0-flash'
+# ★ 모델명 수정: 2.0-flash에서 1.5-flash로 변경
+GEMINI_MODEL   = 'gemini-1.5-flash'
 GEMINI_TIMEOUT = 60
 
 SEARCH_QUERIES = [
@@ -58,7 +57,6 @@ def _call_gemini_search(query: str, gemini_key: str) -> str:
     body = json.dumps(payload).encode('utf-8')
     req  = urllib.request.Request(url, data=body, headers={'Content-Type': 'application/json'}, method='POST')
 
-    # [디버깅 코드 적용]
     try:
         with urllib.request.urlopen(req, timeout=GEMINI_TIMEOUT) as resp:
             data = json.loads(resp.read().decode('utf-8'))
@@ -80,12 +78,10 @@ def collect_gemini_articles(gemini_key: str) -> list:
     for q in SEARCH_QUERIES:
         log.info(f"  쿼리: {q['query'][:55]}...")
         raw = _call_gemini_search(q['query'], gemini_key)
-
         try:
             raw_clean = raw.strip().lstrip('`').rstrip('`')
             if raw_clean.startswith('json'): raw_clean = raw_clean[4:].strip()
             articles = json.loads(raw_clean)
-
             for art in (articles if isinstance(articles, list) else []):
                 norm = {
                     'title_en': art.get('title_en', '').strip(), 'title_ko': '',
@@ -102,7 +98,7 @@ def collect_gemini_articles(gemini_key: str) -> list:
     return all_articles
 
 def main():
-    log.info('SA-9 Gemini Search 보완 수집기 v1.0 시작')
+    log.info('SA-9 Gemini Search 보완 수집기 v1.1 시작')
     gemini_key = os.environ.get('GEMINI_API_KEY', '').strip()
     if not gemini_key:
         log.error('GEMINI_API_KEY 없음 — 종료')
