@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-gemini_collector.py — SA-9 Gemini 보완 수집기 v1.5 (API URL 표준화)
+gemini_collector.py — SA-9 Gemini 보완 수집기 v1.7 (최종 디버깅)
 ===========================================================
-역할: 최신 인프라 뉴스 수집을 위한 Gemini API 호출 모듈
-      API URL 구조를 v1 표준으로 완전 교정
+역할: 모델명 자동 진단 및 뉴스 수집
 """
 
 import json
@@ -15,7 +14,6 @@ from datetime import datetime
 from pathlib import Path
 from urllib.error import HTTPError
 
-# 로그 설정
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [SA-9/Gemini] %(message)s',
@@ -26,12 +24,11 @@ log = logging.getLogger('gemini_collector')
 _ROOT       = Path(__file__).parent.parent
 OUTPUT_FILE = _ROOT / 'data' / 'agent_output' / 'gemini_collector_output.json'
 
-# ★ API 구조 표준화: base + model + method
-GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1'
-GEMINI_MODEL    = 'models/gemini-1.5-flash'
+# ★ 최신 안정 모델로 교체: gemini-1.5-flash-002
+GEMINI_API_BASE = 'https://generativelanguage.googleapis.com/v1beta'
+GEMINI_MODEL    = 'gemini-1.5-flash-002'
 GEMINI_TIMEOUT  = 60
 
-# 수집 대상 쿼리 (기존과 동일)
 SEARCH_QUERIES = [
     {'query': 'Vietnam Ministry of Environment MONRE wastewater water treatment project 2026', 'sector': 'Waste Water', 'source_hint': 'monre.gov.vn'},
     {'query': 'Vietnam solid waste management regulation enforcement 2026', 'sector': 'Solid Waste', 'source_hint': 'vea.gov.vn'},
@@ -45,22 +42,27 @@ SEARCH_QUERIES = [
     {'query': 'Vietnam smart city digital infrastructure IOC 2026', 'sector': 'Smart City', 'source_hint': 'specialist'},
 ]
 
+def list_available_models(gemini_key: str):
+    """사용 가능한 모델 목록을 출력하여 404 에러의 근본 원인을 진단"""
+    url = f'{GEMINI_API_BASE}/models?key={gemini_key}'
+    try:
+        with urllib.request.urlopen(url, timeout=10) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+            model_names = [m['name'] for m in data.get('models', [])]
+            log.info(f"사용 가능한 모델 목록: {model_names}")
+    except Exception as e:
+        log.warning(f"모델 목록 조회 실패: {e}")
+
 def _call_gemini_api(query: str, gemini_key: str) -> str:
-    # ★ 수정: URL 구성 방식을 표준 REST API 규격으로 변경
-    url = f'{GEMINI_API_BASE}/{GEMINI_MODEL}:generateContent?key={gemini_key}'
+    url = f'{GEMINI_API_BASE}/models/{GEMINI_MODEL}:generateContent?key={gemini_key}'
     
     payload = {
-        "contents": [{
-            "parts": [{
-                "text": (
-                    "당신은 베트남 인프라 뉴스 수집 전문가입니다. 다음 쿼리에 대해 "
-                    "2026년 기준 최신 정보를 바탕으로 뉴스 기사 최대 3건을 추출하여 JSON 형식으로 작성하세요. "
-                    "출력 형식: [{\"title_en\":\"제목\",\"summary_en\":\"100자 이내 요약\",\"source\":\"출처\",\"date\":\"YYYY-MM-DD\",\"url\":\"URL\"}] "
-                    "반드시 JSON 배열 형태로만 출력하고 다른 설명은 생략하세요. "
-                    "검색 쿼리: " + query
-                )
-            }]
-        }]
+        "contents": [{"parts": [{"text": (
+            "당신은 인프라 뉴스 전문가입니다. "
+            "다음 쿼리에 대해 2026년 최신 정보를 바탕으로 뉴스 기사 최대 3건을 JSON 배열로 출력하세요. "
+            "출력 형식: [{\"title_en\":\"제목\",\"summary_en\":\"100자 이내 요약\",\"source\":\"출처\",\"date\":\"YYYY-MM-DD\",\"url\":\"URL\"}] "
+            "반드시 JSON 배열만 출력하세요. 검색 쿼리: " + query
+        )}]}]
     }
     
     body = json.dumps(payload).encode('utf-8')
@@ -71,8 +73,10 @@ def _call_gemini_api(query: str, gemini_key: str) -> str:
             data = json.loads(resp.read().decode('utf-8'))
             return data['candidates'][0]['content']['parts'][0]['text'].strip()
     except HTTPError as e:
-        # [디버깅] 상세 에러 확인
-        log.warning(f'API 호출 실패 (코드 {e.code}): {e.read().decode("utf-8")}')
+        error_msg = e.read().decode("utf-8")
+        log.warning(f'API 호출 실패 (코드 {e.code}): {error_msg}')
+        if e.code == 404:
+            list_available_models(gemini_key) # 404시 모델 목록 진단
         return '[]'
     except Exception as e:
         log.warning(f'Gemini API 연결 오류: {e}')
@@ -87,7 +91,6 @@ def collect_gemini_articles(gemini_key: str) -> list:
         raw = _call_gemini_api(q['query'], gemini_key)
         
         try:
-            # 줄바꿈 문제 해결: 85행 수정
             clean_json = raw.strip().replace('```json', '').replace('```', '').strip()
             articles = json.loads(clean_json)
             
@@ -106,7 +109,6 @@ def collect_gemini_articles(gemini_key: str) -> list:
                     all_articles.append(norm)
         except Exception as e:
             log.warning(f'데이터 파싱 오류: {e}')
-            
     return all_articles
 
 def main():
@@ -117,12 +119,7 @@ def main():
         return
         
     articles = collect_gemini_articles(key)
-    
-    output = {
-        'collected_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'total': len(articles),
-        'articles': articles
-    }
+    output = {'collected_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'total': len(articles), 'articles': articles}
     
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
