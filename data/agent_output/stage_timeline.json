@@ -1,28 +1,35 @@
 {
-  "generated_at": "2026-05-31 13:36",
+  "generated_at": "2026-06-01 16:44",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
       "title_ko": "베트남 제8차 국가전력개발계획",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-05-31",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamplus",
+          "title_ko": "해상 풍력-수소 통합으로 투자 효율성 최적화"
+        },
         {
           "date": "2026-05-25",
           "stage": "OPERATION",
-          "milestone": "2026년 여름 폭염 대비 전력수급 안정화",
+          "milestone": "2026년 폭염 대비 전력공급 안정화",
           "source": "Moi truong & Cuoc song",
           "title_ko": "2026년 폭염 피크: EVN은 전기 공급을 보장하고 전기 절약에 대한 지침을 제공하기 위해 많은 솔루션을 배포합니다."
         }
       ],
-      "next_watch": "재생에너지 비중 확대 및 해상풍력 준공 일정",
-      "latest_insight": "PDP8 이행으로 전력공급 안정성 확보 중. 2030년 재생에너지 50% 목표 달성을 위한 프로젝트 추진 진전 모니터링 필수",
-      "latest_article_date": "2026-05-25",
-      "article_count": 1,
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-05-31",
+      "article_count": 2,
       "haiku_count": 1,
       "kpi_targets": [
         {
@@ -63,13 +70,6 @@
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Gia Lai는 1조 6천억 VND 이상의 Chu Phuong 풍력 발전 프로젝트에 대한 투자를 승인했습니다."
-        },
-        {
-          "date": "2026-05-30",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "베트남-핀란드, 녹색경제 및 청정에너지 분야 협력 증진"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
@@ -187,15 +187,15 @@
       "title_ko": "베트남 석유가스 분야 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
         {
           "date": "2026-05-30",
-          "stage": "PLANNING",
-          "milestone": "글로벌 유가 급등으로 PVN 심해 탐사 경제성 재평가",
+          "stage": "UNKNOWN",
+          "milestone": "글로벌 유가 변동성 분석",
           "source": "menafn",
           "title_ko": "엑손과 쉐브론은 이란 전쟁으로 인해 비축량이 '정말 낮은 수준'으로 밀려나면서 유가가 160달러에 도달할 수 있다고 경고했습니다."
         },
@@ -214,8 +214,8 @@
           "title_ko": "Kharge 슬램 센터, 저렴한 원유 가격에도 불구하고 연료 가격 중심"
         }
       ],
-      "next_watch": "이란 분쟁 진전 및 유가 추이 모니터링",
-      "latest_insight": "유가 상승은 VN-OG-2030 심해 탐사·LNG 공급망 사업의 경제적 타당성을 높이나, 기사는 글로벌 공급망 위기만 다루며 베트남 사업 진행상황 정보 부재",
+      "next_watch": "베트남 PVN의 유가 상승 대응 전략 모니터링",
+      "latest_insight": "이란 지역 분쟁으로 인한 유가 급등은 VN-OG-2030의 경제성 개선 요인이나, 기사는 베트남 사업 진행상황과 무관한 글로벌 유가 전망 보도",
       "latest_article_date": "2026-05-30",
       "article_count": 3,
       "haiku_count": 1,
@@ -330,11 +330,11 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-05-31",
+          "date": "2026-06-01",
           "stage": "PLANNING",
-          "milestone": "Ca Mau 폐기물 처리 인프라 확충 사업 계획 수립",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "Ca Mau, 폐기물 처리 인프라에 대한 투자 가속화"
+          "title_ko": "TP.HCM rà soát, quy hoạch lại hе thống trạm trung chuyển rác sinh hoạt"
         },
         {
           "date": "2026-05-31",
@@ -342,20 +342,13 @@
           "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "다낭은 환경 관리를 강화하고 잔해물 불법 투기를 엄격히 처벌합니다."
-        },
-        {
-          "date": "2026-05-31",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "도시. 호치민시, 생활폐기물 이송정류장 시스템 계획 검토 및 조정"
         }
       ],
-      "next_watch": "구체적 투자규모·일정 공개, 입찰 공고 예상",
-      "latest_insight": "메콩삼각주 지역 WtE 확대 전략의 일환. 속선 WtE(2025.10) 준공 이후 지역별 매립 의존도 감축 가속화 예상. 장기 재활용 기반 강화 투자 기회",
-      "latest_article_date": "2026-05-31",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-06-01",
       "article_count": 5,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "도시 폐기물 수거율",
@@ -394,7 +387,7 @@
         {
           "date": "2026-05-29",
           "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "milestone": "하이퐁시 환경보호 프로젝트 2026년 착공 공식 발동",
           "source": "Moi truong & Cuoc song",
           "title_ko": "하이퐁(Hai Phong)은 2026년에 환경 보호 및 생물다양성 보호를 시작합니다."
         }
@@ -403,7 +396,7 @@
       "latest_insight": "",
       "latest_article_date": "2026-05-31",
       "article_count": 2,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "하수처리 기술 및 장비 국내 수요 충족률",
@@ -437,18 +430,11 @@
       "title_ko": "북부 베트남 산업단지 개발 계획 2030",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
-        {
-          "date": "None",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Hanoi Times",
-          "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
-        },
         {
           "date": "2026-05-30",
           "stage": "TENDERING",
@@ -462,20 +448,13 @@
           "milestone": "정책·법령 발표",
           "source": "sggp_org_vn",
           "title_ko": "호치민시는 2026년 FDI 목표 달성에 가까워졌습니다."
-        },
-        {
-          "date": "2026-05-26",
-          "stage": "PLANNING",
-          "milestone": "Amata City Halong 반도체 공급망 신규 프로젝트 승인",
-          "source": "vir_vn",
-          "title_ko": "Amata City Halong은 반도체 공급망의 새로운 프로젝트를 환영합니다"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "",
       "latest_insight": "",
-      "latest_article_date": "None",
+      "latest_article_date": "2026-06-01",
       "article_count": 8,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "북부 산업용지 총 공급",
@@ -514,11 +493,18 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-05-26",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamplus",
+          "title_ko": "베트남, 라오스, 무역 및 운송 연결 촉진"
+        },
         {
           "date": "2026-05-25",
           "stage": "TENDERING",
@@ -528,38 +514,17 @@
         },
         {
           "date": "2026-05-25",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
           "source": "vietnamplus",
-          "title_ko": "공공 요구에 부응하는 전략적 부문의 임대 주택: PM"
-        },
-        {
-          "date": "2026-05-24",
-          "stage": "UNKNOWN",
-          "milestone": "인프라 사업과 무관한 의료기금 기사",
-          "source": "vietnamplus",
-          "title_ko": "밝은 미래 기금은 암 환자 지원을 위해 2조 2천억 VND 이상을 받습니다"
-        },
-        {
-          "date": "2026-05-24",
-          "stage": "UNKNOWN",
-          "milestone": "인프라 사업과 무관한 스포츠 행사",
-          "source": "vietnamplus",
-          "title_ko": "United World Wrestling의 U17 및 U23 아시아 선수권 대회 2026이 다낭에서 열립니다."
-        },
-        {
-          "date": "2026-05-24",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "vietnamnews_vn",
-          "title_ko": "BSR, 매월 100,000cu.m의 E10 휘발유 공급"
+          "title_ko": "베트남, 최초로 BPI 출시"
         }
       ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-05-25",
+      "latest_article_date": "2026-05-26",
       "article_count": 8,
-      "haiku_count": 2,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
