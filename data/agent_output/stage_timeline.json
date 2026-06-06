@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05 14:01",
+  "generated_at": "2026-06-06 05:06",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -67,7 +67,7 @@
         {
           "date": "2026-05-30",
           "stage": "PLANNING",
-          "milestone": "베트남-핀란드 청정에너지 협력체계 구축",
+          "milestone": "베트남-핀란드 양국 협력 체계 구축",
           "source": "Moi truong & Cuoc song",
           "title_ko": "베트남-핀란드, 녹색경제 및 청정에너지 분야 협력 증진"
         }
@@ -100,88 +100,6 @@
         }
       ]
     },
-    "VN-PWR-PDP8-LNG": {
-      "plan_id": "VN-PWR-PDP8-LNG",
-      "title_ko": "PDP8 LNG 가스발전",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-06-04",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "2030년 이전에 베트남 해상풍력이 가동될 시나리오는 무엇입니까?"
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-04",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "LNG 수입 터미널",
-          "target": "8개소",
-          "current": "2개소 운영 중"
-        },
-        {
-          "indicator": "LNG 발전 용량",
-          "target": "23,900 MW",
-          "current": "약 3,000 MW"
-        },
-        {
-          "indicator": "연간 LNG 수입량",
-          "target": "14백만 톤",
-          "current": "2백만 톤"
-        }
-      ]
-    },
-    "VN-PWR-PDP8-NUCLEAR": {
-      "plan_id": "VN-PWR-PDP8-NUCLEAR",
-      "title_ko": "PDP8 원전 재개",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-06-04",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "2030년 이전에 베트남 해상풍력이 가동될 시나리오는 무엇입니까?"
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-04",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "원자력 발전 용량(2035)",
-          "target": "4,000 MW (2035 목표)",
-          "current": "Decision 768 신규 추가"
-        },
-        {
-          "indicator": "닌투언 1호기",
-          "target": "2,000 MW",
-          "current": "Rosatom, 재개 확정"
-        },
-        {
-          "indicator": "닌투언 2호기",
-          "target": "2,000 MW",
-          "current": "일본 컨소시엄, 협의 중"
-        }
-      ]
-    },
     "VN-OG-2030": {
       "plan_id": "VN-OG-2030",
       "title_ko": "베트남 석유가스 분야 전략 2030",
@@ -195,13 +113,13 @@
         {
           "date": "2026-05-30",
           "stage": "PLANNING",
-          "milestone": "글로벌 유류 시장 재고 위기 모니터링",
+          "milestone": "글로벌 유가 급등에 따른 국내 에너지 공급 전략 재검토",
           "source": "menafn",
           "title_ko": "엑손과 쉐브론은 이란 전쟁으로 인해 비축량이 '정말 낮은 수준'으로 밀려나면서 유가가 160달러에 도달할 수 있다고 경고했습니다."
         }
       ],
-      "next_watch": "국제 유가 급등에 따른 베트남 LNG 수입 비용 증가 추이",
-      "latest_insight": "국제유가 상승(배럴당 $150-160)은 베트남의 LNG 수입 의존도 완화 필요성 강화. 국내 가스전 개발·LNG 공급망 구축 전략의 시급성 증대. 심해 탐사 가속화 검토 필요.",
+      "next_watch": "베트남 심해 블록 탐사 일정 조정 및 LNG 수입 계약 협상",
+      "latest_insight": "국제유가 상승은 VN-OG-2030의 경제성 개선 요인이나, 지정학적 리스크로 인한 글로벌 공급 불안정이 국내 에너지 정책 우선순위 재조정 압박 가능",
       "latest_article_date": "2026-05-30",
       "article_count": 1,
       "haiku_count": 1,
@@ -310,11 +228,18 @@
       "title_ko": "도시 배수·침수 방지 마스터플랜",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
+        {
+          "date": "2026-06-06",
+          "stage": "UNKNOWN",
+          "milestone": "폐수 자원화 정책 수립 단계",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "폐수를 도시의 미래를 위한 새로운 자원으로 전환"
+        },
         {
           "date": "2026-06-04",
           "stage": "CONSTRUCTION",
@@ -323,11 +248,11 @@
           "title_ko": "박닌(Bac Ninh)은 우기와 폭풍우 기간 동안 홍수를 방지하기 위해 배수 시스템을 긴급하게 개조했습니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-04",
-      "article_count": 1,
-      "haiku_count": 0,
+      "next_watch": "상수도 통합 마스터플랜과의 연계 여부 모니터링",
+      "latest_insight": "폐수 처리와 상수도 확충은 별개 사업으로, VN-WAT-URBAN 상수도 사업과 직접 연관성 없음. 도시 수자원 통합관리 정책 수준의 논의",
+      "latest_article_date": "2026-06-06",
+      "article_count": 2,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "도시 안전 상수 보급률",
@@ -420,8 +345,8 @@
         },
         {
           "date": "2026-06-03",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "박닌(Bac Ninh)은 2026년 세계 환경의 날에 대한 대응을 시작했습니다."
         },
@@ -431,19 +356,12 @@
           "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "약 12,000m3의 건설 폐기물을 불법적으로 환경에 버리는 두 기업이 적발되었습니다."
-        },
-        {
-          "date": "2026-05-29",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "하이퐁(Hai Phong)은 2026년에 환경 보호 및 생물다양성 보호를 시작합니다."
         }
       ],
       "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "latest_insight": "",
       "latest_article_date": "2026-06-04",
-      "article_count": 4,
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -484,16 +402,37 @@
       "stage_order": 3,
       "stage_history": [
         {
-          "date": "2026-06-04",
+          "date": "2026-06-05",
           "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "milestone": "호찌민시 첨단기술 FDI $6.6억 착공·확장 진행",
+          "source": "vietnamnews_vn",
+          "title_ko": "호치민시는 66억 달러 유입으로 아시아의 기술 FDI 자석이 되었습니다"
+        },
+        {
+          "date": "2026-06-04",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "vietnamplus",
           "title_ko": "호치민시는 66억 달러 유입으로 아시아의 기술 FDI 자석이 되었습니다."
         },
         {
+          "date": "2026-06-04",
+          "stage": "CONSTRUCTION",
+          "milestone": "랑선성 국경게이트 물류시설 현대화 진행",
+          "source": "vietnamplus",
+          "title_ko": "현대 물류는 Lang Son의 국경 관문 경제에 새로운 성장 기회를 창출합니다."
+        },
+        {
+          "date": "2026-06-04",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "menafn",
+          "title_ko": "인프라 지출로 FY27E 시멘트 생산량 6~7% 증가: 보고서"
+        },
+        {
           "date": "2026-06-03",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Can Tho: 고형 폐기물 처리에 관심을 갖고 친환경 산업단지로 이동"
         },
@@ -512,11 +451,11 @@
           "title_ko": "VSIP 합작회사, 5개 신규 산업단지에 대한 승인 획득"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-04",
+      "next_watch": "2026년 하반기 준공 현황, 반도체·데이터센터 가동률",
+      "latest_insight": "호찌민시가 남부 기술 FDI 거점으로 부상 중. 북부 산업단지 클러스터와의 공급망 통합 가능성 주목. 베트남 전체 FDI 분산 추세 확인 필요.",
+      "latest_article_date": "2026-06-05",
       "article_count": 8,
-      "haiku_count": 0,
+      "haiku_count": 2,
       "kpi_targets": [
         {
           "indicator": "북부 산업용지 총 공급",
@@ -575,18 +514,18 @@
           "title_ko": "동남아시아에서 가장 역동적인 물류 시장 중 하나인 베트남: 설문조사"
         },
         {
+          "date": "2026-06-01",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "menafn",
+          "title_ko": "트랜스코스모스, 베트남 지역 사회 내에서 지속 가능한 가치를 전파하는 내부 프로그램 시작"
+        },
+        {
           "date": "2026-05-30",
           "stage": "COMPLETION",
           "milestone": "준공·운영 개시",
           "source": "VnExpress International",
           "title_ko": "롱탄 공항과 호치민 고속도로를 연결하는 대형 인터체인지가 부분적으로 개통됩니다"
-        },
-        {
-          "date": "2026-05-29",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "nhandan_vn",
-          "title_ko": "비엣콤은행과 아시아인프라투자은행(AIIB)이 협력 기회 모색"
         }
       ],
       "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
@@ -645,7 +584,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-03",
-      "article_count": 3,
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -678,13 +617,13 @@
         {
           "date": "2026-06-03",
           "stage": "OPERATION",
-          "milestone": "북하노이 스마트시티 운영 개시 및 상 수상",
+          "milestone": "북하노이 스마트시티 운영 중, 주요 상 수상",
           "source": "Moi truong & Cuoc song",
           "title_ko": "BRG 그룹과 North Hanoi Smart City Company가 주요 상을 받았습니다."
         }
       ],
-      "next_watch": "북하노이 스마트시티 확산 및 다른 5개 핵심도시 완성도",
-      "latest_insight": "VN-SC-2030 6개 핵심도시 중 하노이 구간 운영 진입. 2025년 목표 달성 궤도 진행. 한국 기업 참여 확대 기회",
+      "next_watch": "2025년 6개 핵심도시 완성 목표 대비 진행률 모니터링",
+      "latest_insight": "북하노이 스마트시티가 운영 단계 진입으로 VN-SC-2030 마스터플랜 실행 가속화. 한국 기업의 2단계 확산 프로젝트(12개→30개 도시) 수주 기회 확대.",
       "latest_article_date": "2026-06-03",
       "article_count": 1,
       "haiku_count": 1,
