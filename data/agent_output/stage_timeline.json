@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-09 13:49",
+  "generated_at": "2026-06-10 14:33",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -12,17 +12,17 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-06-05",
+          "date": "2026-06-10",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "호치민시는 매년 3%의 전기를 절약하기 위해 노력하고 있습니다."
+          "title_ko": "에너지 전환: 두 자릿수 경제 성장 목표를 위한 활용"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-05",
-      "article_count": 1,
+      "latest_article_date": "2026-06-10",
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -52,11 +52,18 @@
       "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
       "stage_history": [
+        {
+          "date": "2026-06-10",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Nikkei Asia",
+          "title_ko": "Apple과 Nvidia 공급업체 Foxconn, 베트남 태양광, 풍력 발전에 투자"
+        },
         {
           "date": "2026-06-04",
           "stage": "PLANNING",
@@ -65,10 +72,10 @@
           "title_ko": "2030년 이전에 베트남 해상풍력이 가동될 시나리오는 무엇입니까?"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-04",
-      "article_count": 1,
+      "latest_article_date": "2026-06-10",
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -180,11 +187,18 @@
       "title_ko": "베트남 수자원 개발 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
+        {
+          "date": "2026-06-10",
+          "stage": "UNKNOWN",
+          "milestone": "의료기관 폐수 규제 위반 사건",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "기준치의 310배를 초과하는 폐수를 배출한 Can Tho의 한 병원은 20억 VND 이상의 벌금을 부과 받았습니다."
+        },
         {
           "date": "2026-06-09",
           "stage": "PLANNING",
@@ -200,11 +214,11 @@
           "title_ko": "[영상] 2026년 건기에도 물과 에너지 안보 확보"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-09",
-      "article_count": 2,
-      "haiku_count": 0,
+      "next_watch": "수질오염 규제 강화 정책 및 집행 현황",
+      "latest_insight": "VN-WAT-RESOURCES의 핵심인 오염자부담 원칙 강화 추진 중. 의료·산업 폐수 규제 강화로 인한 인프라 수요 증가 예상. 수처리시설 투자 기회 확대",
+      "latest_article_date": "2026-06-10",
+      "article_count": 3,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "지하수 관리 대수층",
@@ -276,24 +290,17 @@
       "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-06-09",
-          "stage": "OPERATION",
-          "milestone": "응에안성 불법 투기 지역 정비",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Nghe An: Can Linh Pagoda 고가도로 아래의 폐기물 핫스팟을 대폭 처리"
-        },
-        {
-          "date": "2026-06-05",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "건설폐기물을 되메움재로 재활용하자는 제안"
+          "title_ko": "Nghe An: Can Linh Pagoda 고가도로 아래의 폐기물 핫스팟을 대폭 처리"
         },
         {
           "date": "2026-06-04",
@@ -303,11 +310,11 @@
           "title_ko": "매립지가 너무 적어 하노이는 수백만 톤의 건설 잔해에 빠져있습니다."
         }
       ],
-      "next_watch": "지역별 폐기물 수거율 개선 추이 모니터링",
-      "latest_insight": "속선 WtE 가동(2025.10) 이후 전국 폐기물 관리 체계 개선 단계. 지역 핫스팟 처리는 2030 목표 달성의 핵심 운영 과제",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-06-09",
       "article_count": 3,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "도시 폐기물 수거율",
@@ -331,24 +338,24 @@
       "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
+        {
+          "date": "2026-06-10",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Quang Ngai는 기준을 초과하는 배출량으로 인해 목재 펠릿 공장 운영을 중단하도록 요청했습니다."
+        },
         {
           "date": "2026-06-08",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "응에안(Nghe An): 2026년 환경 행동의 달에 대응하기 위한 흥미로운 활동"
-        },
-        {
-          "date": "2026-06-04",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "세계 환경의 날을 맞아 꾸라오참(Cu Lao Cham) 어부들은 폐기물을 해안으로 다시 가져오기 위해 노력하고 있습니다."
         },
         {
           "date": "2026-06-03",
@@ -358,10 +365,10 @@
           "title_ko": "박닌(Bac Ninh)은 2026년 세계 환경의 날에 대한 대응을 시작했습니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-06-08",
-      "article_count": 3,
+      "latest_article_date": "2026-06-10",
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -409,6 +416,13 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
+          "date": "2026-06-09",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "vietnamplus",
+          "title_ko": "Can Tho는 싱가포르 기업을 산업, 에너지, 물류에 투자하도록 초대합니다."
+        },
+        {
           "date": "2026-06-05",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
@@ -416,25 +430,18 @@
           "title_ko": "호치민시는 66억 달러 유입으로 아시아의 기술 FDI 자석이 되었습니다"
         },
         {
-          "date": "2026-06-04",
+          "date": "2026-06-03",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "호치민시는 66억 달러 유입으로 아시아의 기술 FDI 자석이 되었습니다."
-        },
-        {
-          "date": "2026-06-02",
-          "stage": "UNKNOWN",
-          "milestone": "해당 없음",
-          "source": "vietnamplus",
-          "title_ko": "글로벌 고무 가격 급등, 베트남 수출업체에 대한 희망 증가"
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Can Tho: 고형 폐기물 처리에 관심을 갖고 친환경 산업단지로 이동"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
       "article_count": 7,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "북부 산업용지 총 공급",
@@ -473,15 +480,43 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "UNKNOWN",
-      "stage_label_ko": "단계 미확정",
-      "stage_color": "9CA3AF",
-      "stage_order": 0,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
+        {
+          "date": "2026-06-05",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "sggp_org_vn",
+          "title_ko": "노동생산성 두 자릿수 성장의 열쇠: PM"
+        },
+        {
+          "date": "2026-06-05",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "VnExpress International",
+          "title_ko": "호치민시, 중국 회사가 사무실을 열면서 지하철 네트워크 확장을 위해 파트너십을 맺고 있음"
+        },
+        {
+          "date": "2026-06-04",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamplus",
+          "title_ko": "호치민시의 지하철 시스템 - 지속 가능한 도시 개발을 위한 지렛대"
+        },
+        {
+          "date": "2026-06-04",
+          "stage": "UNKNOWN",
+          "milestone": "철도 복합재료 글로벌 시장 전망",
+          "source": "menafn",
+          "title_ko": "철도 복합재 시장 규모, 점유율, 성장, 분석, 보고서(2034년)"
+        },
         {
           "date": "2026-06-03",
           "stage": "UNKNOWN",
-          "milestone": "호치민시 기층 디지털 전환 사업",
+          "milestone": "해당 없음",
           "source": "sggp_org_vn",
           "title_ko": "호치민시, 풀뿌리 수준에서 디지털 혁신을 지원하기 위해 408명의 인력 배치"
         },
@@ -498,20 +533,13 @@
           "milestone": "준공·운영 개시",
           "source": "vietnamplus",
           "title_ko": "수산물은 미국 시장 점유율을 유지하는 데 어려움을 겪고 있습니다."
-        },
-        {
-          "date": "2026-06-02",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "sggp_org_vn",
-          "title_ko": "호치민시, 건축자재 가격 관리 강화"
         }
       ],
-      "next_watch": "디지털 인프라 통합 현황 모니터링",
-      "latest_insight": "해당 기사는 교통인프라 마스터플랜(VN-TRAN-2055)과 무관한 디지털 행정 사업으로, 사업 평가 대상 외임",
-      "latest_article_date": "2026-06-03",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-06-05",
       "article_count": 8,
-      "haiku_count": 1,
+      "haiku_count": 2,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -540,34 +568,27 @@
       "title_ko": "베트남 도시철도(메트로) 개발 계획",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-06-09",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "스마트시티는 디지털시대 모든 시민의 마음의 평화와 행복입니다"
         },
         {
           "date": "2026-06-08",
           "stage": "UNKNOWN",
-          "milestone": "한국 안산 데이터센터 사업",
+          "milestone": "기사 내용이 인프라와 무관함",
           "source": "en_prnasisa",
           "title_ko": "Digital Edge, 전력이 제한된 한국의 안산 데이터센터 사이트를 완벽하게 보호하고 확장을 추진"
-        },
-        {
-          "date": "2026-06-03",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "nhandan_vn",
-          "title_ko": "롱탄 국제공항을 연결하는 버스 노선 구성 연구"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-09",
       "article_count": 3,
@@ -636,44 +657,85 @@
         }
       ]
     },
-    "HN-URBAN-NORTH": {
-      "plan_id": "HN-URBAN-NORTH",
-      "title_ko": "하노이 북부 도시개발 (동아인, 메린)",
+    "VN-EV-2030": {
+      "plan_id": "VN-EV-2030",
+      "title_ko": "베트남 전기차·친환경 교통 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
-          "date": "2026-06-02",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "date": "2026-06-10",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "스마트시티 북하노이: 베트남-일본 우호의 상징"
+          "title_ko": "유지 보수 및 수리 비용이 너무 저렴하여 VinFast 전기차 소유자는 오랫동안 자동차를 소유하는 데 안정감을 느낄 수 있습니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-06-02",
+      "latest_article_date": "2026-06-10",
       "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
-          "indicator": "신도시 부지",
-          "target": "4,200 ha",
-          "current": "계획·인허가 단계"
+          "indicator": "EV 신규 판매 비율",
+          "target": "100% (2030)",
+          "current": "~10%"
         },
         {
-          "indicator": "인구 수용",
-          "target": "30~40만 (2045)",
-          "current": "약 4.2만 (2024)"
+          "indicator": "충전 인프라",
+          "target": "25만 충전소",
+          "current": "~5,000개소"
         },
         {
-          "indicator": "투자 규모",
-          "target": "$4B+ (BRG-Sumitomo)",
-          "current": "단계별 진입"
+          "indicator": "바이오연료 혼합률",
+          "target": "E10 100% 보급",
+          "current": "파일럿"
+        }
+      ]
+    },
+    "HN-URBAN-INFRA": {
+      "plan_id": "HN-URBAN-INFRA",
+      "title_ko": "하노이 도시 인프라 개발 계획 2030",
+      "sector": "",
+      "area": "",
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
+      "stage_history": [
+        {
+          "date": "2026-06-10",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "폭우가 내린 후 많은 \"핫스팟\"이 더 이상 침수되지 않으며 하노이의 배수 시스템이 효과적입니다."
+        }
+      ],
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-06-10",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "도시개발 총투자",
+          "target": "$2.5T (2026~2045)",
+          "current": "Decision 1668 확정"
+        },
+        {
+          "indicator": "인구 수용 목표",
+          "target": "16M명 (2045)",
+          "current": "현재 8.5M명"
+        },
+        {
+          "indicator": "링로드4 완공",
+          "target": "2027년 전체 완공",
+          "current": "착공 진행"
         }
       ]
     }
