@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12 14:11",
+  "generated_at": "2026-06-13 05:34",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -29,7 +29,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-06-11",
-      "article_count": 5,
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -146,24 +146,24 @@
       "title_ko": "베트남 석유가스 분야 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "UNKNOWN",
-      "stage_label_ko": "단계 미확정",
-      "stage_color": "9CA3AF",
-      "stage_order": 0,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
           "date": "2026-06-12",
-          "stage": "UNKNOWN",
-          "milestone": "해당 없음",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
           "source": "VnExpress Business",
           "title_ko": "휘발유 가격은 1.21% 하락"
         }
       ],
-      "next_watch": "PVN 심해탐사·LNG 공급망 진행상황 모니터링",
-      "latest_insight": "휘발유 가격 변동은 유가 연동 현상으로, VN-OG-2030 마스터플랜의 장기 가스·LNG 사업 전략과 무관한 단기 유가 뉴스임.",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "latest_insight": "",
       "latest_article_date": "2026-06-12",
       "article_count": 1,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "원유 생산량",
@@ -236,7 +236,7 @@
         {
           "date": "2026-06-11",
           "stage": "OPERATION",
-          "milestone": "2026년 우기·홍수 시즌 대응 준비 완료",
+          "milestone": "2026년 우기 홍수 대응 태세 완료",
           "source": "Moi truong & Cuoc song",
           "title_ko": "다이닌 수력발전소는 2026년 우기와 홍수 시즌에 대응할 준비가 되어 있습니다."
         },
@@ -248,8 +248,8 @@
           "title_ko": "기준치의 310배를 초과하는 폐수를 배출한 Can Tho의 한 병원은 20억 VND 이상의 벌금을 부과 받았습니다."
         }
       ],
-      "next_watch": "2026년 우기 시즌 홍수 제어 성과 모니터링",
-      "latest_insight": "다이닌 수력발전소가 운영 중으로 수자원 관리 및 홍수 제어 기능 수행. VN-WAT-RESOURCES 마스터플랜의 구체적 이행 사례로, 홍수 피해 GDP 비중 감소에 기여 예상.",
+      "next_watch": "저수지 운영 효율성 및 홍수 피해 감소율 모니터링",
+      "latest_insight": "다이닌 수력발전소의 운영 단계 전환으로 IWRM 실행 가시화. 홍수 시즌 저수지 운영 최적화를 통한 피해 경감 성과 추적 필요",
       "latest_article_date": "2026-06-11",
       "article_count": 3,
       "haiku_count": 1,
@@ -340,7 +340,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-09",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -436,25 +436,18 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
+          "date": "2026-06-12",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamplus",
+          "title_ko": "Phu Tho는 차세대 FDI 유입으로 인한 기회를 기대합니다."
+        },
+        {
           "date": "2026-06-10",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
           "source": "vietnamplus",
           "title_ko": "싱가포르 기업은 VSIP Can Tho에서 투자 기회를 모색합니다."
-        },
-        {
-          "date": "2026-06-10",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "베트남, 광물 가공 산업 활성화를 위해 세금 인센티브 계획"
-        },
-        {
-          "date": "2026-06-05",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "vietnamnews_vn",
-          "title_ko": "호치민시는 66억 달러 유입으로 아시아의 기술 FDI 자석이 되었습니다"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
@@ -506,39 +499,60 @@
       "stage_order": 1,
       "stage_history": [
         {
+          "date": "2026-06-09",
+          "stage": "PLANNING",
+          "milestone": "호찌민시 해안 고속도로 연결 사업 계획 승인",
+          "source": "sggp_org_vn",
+          "title_ko": "새로운 고속도로는 해안 지역을 더 가깝게 만듭니다."
+        },
+        {
+          "date": "2026-06-08",
+          "stage": "UNKNOWN",
+          "milestone": "관광산업 활성화",
+          "source": "vietnamplus",
+          "title_ko": "다낭, 여름 관광 활동 강화"
+        },
+        {
+          "date": "2026-06-08",
+          "stage": "UNKNOWN",
+          "milestone": "인프라 사업과 무관",
+          "source": "sggp_org_vn",
+          "title_ko": "호치민시 청소년, 2026년 시험 지원 프로그램에 참여"
+        },
+        {
+          "date": "2026-06-08",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "nhandan_vn",
+          "title_ko": "캄보디아 언론은 크메르 문화유산을 보존하고 홍보하려는 베트남의 노력을 강조합니다."
+        },
+        {
+          "date": "2026-06-08",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "vietnamplus",
+          "title_ko": "2026년 첫 5개월 동안 무역 회전율 25% 증가"
+        },
+        {
+          "date": "2026-06-07",
+          "stage": "OPERATION",
+          "milestone": "노이바이 공항 일상 운영 중",
+          "source": "VnExpress International",
+          "title_ko": "드론 목격으로 하노이 공항 항공편 16편 지연"
+        },
+        {
           "date": "2026-06-06",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "vietnamplus",
           "title_ko": "하노이, 경제 활성화를 위해 항공 네트워크에 투자"
-        },
-        {
-          "date": "2026-06-06",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "VnExpress International",
-          "title_ko": "말레이시아, 전국 공항 네트워크 업그레이드에 27억 달러 이상 할당"
-        },
-        {
-          "date": "2026-06-05",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "VnExpress International",
-          "title_ko": "호치민시, 중국 회사가 사무실을 열면서 지하철 네트워크 확장을 위해 파트너십을 맺고 있음"
-        },
-        {
-          "date": "2026-06-05",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "sggp_org_vn",
-          "title_ko": "미쉐린 가이드 2026, 베트남 요리 현장에 주목"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-06",
+      "next_watch": "구체적 투자 규모, 타당성 조사, 입찰 공고 시점",
+      "latest_insight": "호찌민 링로드3·고가도로 등 진행 중인 도시 인프라와 연계 가능성. 해안 지역 연결성 강화는 라크후옌 항구 확장과 시너지 기대",
+      "latest_article_date": "2026-06-09",
       "article_count": 8,
-      "haiku_count": 0,
+      "haiku_count": 4,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
