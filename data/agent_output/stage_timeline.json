@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-13 05:34",
+  "generated_at": "2026-06-15 16:24",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -100,9 +100,9 @@
         }
       ]
     },
-    "VN-PWR-PDP8-NUCLEAR": {
-      "plan_id": "VN-PWR-PDP8-NUCLEAR",
-      "title_ko": "PDP8 원전 재개",
+    "VN-OG-2030": {
+      "plan_id": "VN-OG-2030",
+      "title_ko": "베트남 석유가스 분야 전략 2030",
       "sector": "",
       "area": "",
       "current_stage": "PLANNING",
@@ -111,55 +111,14 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-06-07",
+          "date": "2026-06-12",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "sggp_org_vn",
-          "title_ko": "베트남, 러시아, 주요 정부 간 회의 준비"
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-07",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "원자력 발전 용량(2035)",
-          "target": "4,000 MW (2035 목표)",
-          "current": "Decision 768 신규 추가"
-        },
-        {
-          "indicator": "닌투언 1호기",
-          "target": "2,000 MW",
-          "current": "Rosatom, 재개 확정"
-        },
-        {
-          "indicator": "닌투언 2호기",
-          "target": "2,000 MW",
-          "current": "일본 컨소시엄, 협의 중"
-        }
-      ]
-    },
-    "VN-OG-2030": {
-      "plan_id": "VN-OG-2030",
-      "title_ko": "베트남 석유가스 분야 전략 2030",
-      "sector": "",
-      "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
-      "stage_history": [
-        {
-          "date": "2026-06-12",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
           "source": "VnExpress Business",
           "title_ko": "휘발유 가격은 1.21% 하락"
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-12",
       "article_count": 1,
@@ -236,7 +195,7 @@
         {
           "date": "2026-06-11",
           "stage": "OPERATION",
-          "milestone": "2026년 우기 홍수 대응 태세 완료",
+          "milestone": "2026년 우기 홍수 대응 체계 가동",
           "source": "Moi truong & Cuoc song",
           "title_ko": "다이닌 수력발전소는 2026년 우기와 홍수 시즌에 대응할 준비가 되어 있습니다."
         },
@@ -248,8 +207,8 @@
           "title_ko": "기준치의 310배를 초과하는 폐수를 배출한 Can Tho의 한 병원은 20억 VND 이상의 벌금을 부과 받았습니다."
         }
       ],
-      "next_watch": "저수지 운영 효율성 및 홍수 피해 감소율 모니터링",
-      "latest_insight": "다이닌 수력발전소의 운영 단계 전환으로 IWRM 실행 가시화. 홍수 시즌 저수지 운영 최적화를 통한 피해 경감 성과 추적 필요",
+      "next_watch": "홍수 시즌 저수지 방류 운영 효과 모니터링",
+      "latest_insight": "메콩델타 홍수 위험 감소로 IWRM 정책 효과성 검증 단계. 유역통합관리 고도화 사업으로 발전 가능성 높음",
       "latest_article_date": "2026-06-11",
       "article_count": 3,
       "haiku_count": 1,
@@ -287,19 +246,12 @@
           "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "건설부는 기후변화 적응을 위해 물 공급과 도시 홍수 예방에 관한 두 가지 주요 프로젝트를 제안했습니다."
-        },
-        {
-          "date": "2026-06-06",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "폐수를 도시의 미래를 위한 새로운 자원으로 전환"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-06-08",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -501,9 +453,30 @@
         {
           "date": "2026-06-09",
           "stage": "PLANNING",
-          "milestone": "호찌민시 해안 고속도로 연결 사업 계획 승인",
+          "milestone": "해안 고속도로 네트워크 마스터플랜 수립",
           "source": "sggp_org_vn",
           "title_ko": "새로운 고속도로는 해안 지역을 더 가깝게 만듭니다."
+        },
+        {
+          "date": "2026-06-09",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "vietnamplus",
+          "title_ko": "녹색 전환은 베트남-캐나다 파트너십을 위한 새로운 기회를 창출합니다"
+        },
+        {
+          "date": "2026-06-09",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamnews_vn",
+          "title_ko": "ASEAN의 다음 성장 장은 베트남에 새로운 길을 열어준다"
+        },
+        {
+          "date": "2026-06-09",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamplus",
+          "title_ko": "당 고위 간부가 동남아시아 정당 대표들을 만나다"
         },
         {
           "date": "2026-06-08",
@@ -521,38 +494,17 @@
         },
         {
           "date": "2026-06-08",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "nhandan_vn",
-          "title_ko": "캄보디아 언론은 크메르 문화유산을 보존하고 홍보하려는 베트남의 노력을 강조합니다."
-        },
-        {
-          "date": "2026-06-08",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
           "source": "vietnamplus",
           "title_ko": "2026년 첫 5개월 동안 무역 회전율 25% 증가"
-        },
-        {
-          "date": "2026-06-07",
-          "stage": "OPERATION",
-          "milestone": "노이바이 공항 일상 운영 중",
-          "source": "VnExpress International",
-          "title_ko": "드론 목격으로 하노이 공항 항공편 16편 지연"
-        },
-        {
-          "date": "2026-06-06",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "하노이, 경제 활성화를 위해 항공 네트워크에 투자"
         }
       ],
-      "next_watch": "구체적 투자 규모, 타당성 조사, 입찰 공고 시점",
-      "latest_insight": "호찌민 링로드3·고가도로 등 진행 중인 도시 인프라와 연계 가능성. 해안 지역 연결성 강화는 라크후옌 항구 확장과 시너지 기대",
+      "next_watch": "구체적 노선·규모 공시 및 입찰 일정 공고",
+      "latest_insight": "2030년 5,000km 목표 달성을 위한 고속도로 확충이 계획 단계. 해안지역 연결성 강화는 경제회랑 전략의 일환으로 중장기 BOT 민간투자 기회 예상",
       "latest_article_date": "2026-06-09",
       "article_count": 8,
-      "haiku_count": 4,
+      "haiku_count": 3,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -642,17 +594,17 @@
       "stage_order": 5,
       "stage_history": [
         {
-          "date": "2026-06-11",
+          "date": "2026-06-15",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "전기자동차를 운행하는 서비스 기사는 유지비부터 충전비까지 비용을 절감할 수 있습니다."
+          "title_ko": "Feliz II 클로즈업 - VinFast의 100만 번째 전기 오토바이: 빠른 배터리 교체, 아름다운 외관, 풍부한 기술"
         }
       ],
       "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-06-11",
-      "article_count": 2,
+      "latest_article_date": "2026-06-15",
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
