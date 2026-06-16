@@ -1,32 +1,25 @@
 {
-  "generated_at": "2026-06-15 16:24",
+  "generated_at": "2026-06-16 16:00",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
       "title_ko": "베트남 제8차 국가전력개발계획",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
-        {
-          "date": "2026-06-11",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "sggp_org_vn",
-          "title_ko": "Long Thanh 공항의 전력 공급 시스템이 성공적으로 가동되었습니다"
-        },
         {
           "date": "2026-06-11",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vir_vn",
-          "title_ko": "베트남, 최대 17GW의 해상 풍력 발전 용량 목표"
+          "source": "sggp_org_vn",
+          "title_ko": "Long Thanh 공항의 전력 공급 시스템이 성공적으로 가동되었습니다"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-11",
       "article_count": 4,
@@ -97,6 +90,47 @@
           "indicator": "BESS 배터리(2030)",
           "target": "10,000 MW",
           "current": "300MW → 33배 상향"
+        }
+      ]
+    },
+    "VN-PWR-PDP8-NUCLEAR": {
+      "plan_id": "VN-PWR-PDP8-NUCLEAR",
+      "title_ko": "PDP8 원전 재개",
+      "sector": "",
+      "area": "",
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
+      "stage_history": [
+        {
+          "date": "2026-06-15",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "vir_vn",
+          "title_ko": "PV Power Services 수산, 발전소 기술 서비스 확대 위해 협력"
+        }
+      ],
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-06-15",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "원자력 발전 용량(2035)",
+          "target": "4,000 MW (2035 목표)",
+          "current": "Decision 768 신규 추가"
+        },
+        {
+          "indicator": "닌투언 1호기",
+          "target": "2,000 MW",
+          "current": "Rosatom, 재개 확정"
+        },
+        {
+          "indicator": "닌투언 2호기",
+          "target": "2,000 MW",
+          "current": "일본 컨소시엄, 협의 중"
         }
       ]
     },
@@ -195,7 +229,7 @@
         {
           "date": "2026-06-11",
           "stage": "OPERATION",
-          "milestone": "2026년 우기 홍수 대응 체계 가동",
+          "milestone": "2026년 우기 시즌 홍수 대응 체계 완성",
           "source": "Moi truong & Cuoc song",
           "title_ko": "다이닌 수력발전소는 2026년 우기와 홍수 시즌에 대응할 준비가 되어 있습니다."
         },
@@ -207,8 +241,8 @@
           "title_ko": "기준치의 310배를 초과하는 폐수를 배출한 Can Tho의 한 병원은 20억 VND 이상의 벌금을 부과 받았습니다."
         }
       ],
-      "next_watch": "홍수 시즌 저수지 방류 운영 효과 모니터링",
-      "latest_insight": "메콩델타 홍수 위험 감소로 IWRM 정책 효과성 검증 단계. 유역통합관리 고도화 사업으로 발전 가능성 높음",
+      "next_watch": "다이닌 댐의 실제 홍수 조절 성과 및 피해 GDP 비중 감소 추이",
+      "latest_insight": "베트남 주요 수력발전 인프라가 안정적 운영 단계 진입. IWRM 기반 유역통합관리 실효성 검증 중. 메콩델타 수자원 위기 대응의 핵심 인프라 가동 확인.",
       "latest_article_date": "2026-06-11",
       "article_count": 3,
       "haiku_count": 1,
@@ -227,47 +261,6 @@
           "indicator": "홍수 피해 GDP 비중",
           "target": "0.5% 미만으로 감소",
           "current": "연평균 1.2%"
-        }
-      ]
-    },
-    "VN-WAT-URBAN": {
-      "plan_id": "VN-WAT-URBAN",
-      "title_ko": "도시 배수·침수 방지 마스터플랜",
-      "sector": "",
-      "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
-      "stage_history": [
-        {
-          "date": "2026-06-08",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "건설부는 기후변화 적응을 위해 물 공급과 도시 홍수 예방에 관한 두 가지 주요 프로젝트를 제안했습니다."
-        }
-      ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-08",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "도시 안전 상수 보급률",
-          "target": "100%",
-          "current": "95% 수준 (2025)"
-        },
-        {
-          "indicator": "1인당 공급량",
-          "target": "150 L/일",
-          "current": "120 L/일 (2025 목표)"
-        },
-        {
-          "indicator": "누수율",
-          "target": "15% 이하",
-          "current": "20% 이하 (2025 목표)"
         }
       ]
     },
@@ -328,19 +321,12 @@
           "milestone": "운영 성과 업데이트",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Quang Ngai는 기준을 초과하는 배출량으로 인해 목재 펠릿 공장 운영을 중단하도록 요청했습니다."
-        },
-        {
-          "date": "2026-06-08",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "응에안(Nghe An): 2026년 환경 행동의 달에 대응하기 위한 흥미로운 활동"
         }
       ],
       "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "latest_insight": "",
       "latest_article_date": "2026-06-10",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -388,11 +374,11 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
-          "date": "2026-06-12",
+          "date": "2026-06-15",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "Phu Tho는 차세대 FDI 유입으로 인한 기회를 기대합니다."
+          "source": "sggp_org_vn",
+          "title_ko": "첨단산업이 수출 성장 견인"
         },
         {
           "date": "2026-06-10",
@@ -405,7 +391,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 6,
+      "article_count": 7,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -445,24 +431,38 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
       "stage_history": [
         {
-          "date": "2026-06-09",
+          "date": "2026-06-10",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "tienphong_vn",
+          "title_ko": "Can Tho에 자본, 기술 및 공급망을 가져오려면 '독수리'가 필요합니다."
+        },
+        {
+          "date": "2026-06-10",
           "stage": "PLANNING",
-          "milestone": "해안 고속도로 네트워크 마스터플랜 수립",
-          "source": "sggp_org_vn",
-          "title_ko": "새로운 고속도로는 해안 지역을 더 가깝게 만듭니다."
+          "milestone": "정책·법령 발표",
+          "source": "tienphong_vn",
+          "title_ko": "Viettel 캄보디아는 물류를 담당하고 있으며 Cao Manh Duc CEO는 '스타트업 정신을 유지해야 한다'고 확언했습니다."
+        },
+        {
+          "date": "2026-06-10",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "nhandan_vn",
+          "title_ko": "노동력 공급과 수요를 연결하여 경제적 혁신을 주도합니다."
         },
         {
           "date": "2026-06-09",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "vietnamplus",
-          "title_ko": "녹색 전환은 베트남-캐나다 파트너십을 위한 새로운 기회를 창출합니다"
+          "stage": "PLANNING",
+          "milestone": "해안지역 고속도로 네트워크 계획 수립",
+          "source": "sggp_org_vn",
+          "title_ko": "새로운 고속도로는 해안 지역을 더 가깝게 만듭니다."
         },
         {
           "date": "2026-06-09",
@@ -470,41 +470,13 @@
           "milestone": "착공·건설 진행 중",
           "source": "vietnamnews_vn",
           "title_ko": "ASEAN의 다음 성장 장은 베트남에 새로운 길을 열어준다"
-        },
-        {
-          "date": "2026-06-09",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "당 고위 간부가 동남아시아 정당 대표들을 만나다"
-        },
-        {
-          "date": "2026-06-08",
-          "stage": "UNKNOWN",
-          "milestone": "관광산업 활성화",
-          "source": "vietnamplus",
-          "title_ko": "다낭, 여름 관광 활동 강화"
-        },
-        {
-          "date": "2026-06-08",
-          "stage": "UNKNOWN",
-          "milestone": "인프라 사업과 무관",
-          "source": "sggp_org_vn",
-          "title_ko": "호치민시 청소년, 2026년 시험 지원 프로그램에 참여"
-        },
-        {
-          "date": "2026-06-08",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "vietnamplus",
-          "title_ko": "2026년 첫 5개월 동안 무역 회전율 25% 증가"
         }
       ],
-      "next_watch": "구체적 노선·규모 공시 및 입찰 일정 공고",
-      "latest_insight": "2030년 5,000km 목표 달성을 위한 고속도로 확충이 계획 단계. 해안지역 연결성 강화는 경제회랑 전략의 일환으로 중장기 BOT 민간투자 기회 예상",
-      "latest_article_date": "2026-06-09",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-06-10",
       "article_count": 8,
-      "haiku_count": 3,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -551,20 +523,13 @@
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "스마트시티는 디지털시대 모든 시민의 마음의 평화와 행복입니다"
-        },
-        {
-          "date": "2026-06-08",
-          "stage": "UNKNOWN",
-          "milestone": "한국 안산 데이터센터 개발",
-          "source": "en_prnasisa",
-          "title_ko": "Digital Edge, 전력이 제한된 한국의 안산 데이터센터 사이트를 완벽하게 보호하고 확장을 추진"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-06-11",
-      "article_count": 3,
-      "haiku_count": 1,
+      "article_count": 2,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "하노이 메트로 목표",
@@ -588,20 +553,27 @@
       "title_ko": "베트남 전기차·친환경 교통 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-06-15",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Feliz II 클로즈업 - VinFast의 100만 번째 전기 오토바이: 빠른 배터리 교체, 아름다운 외관, 풍부한 기술"
+        },
+        {
+          "date": "2026-06-11",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "Feliz II 클로즈업 - VinFast의 100만 번째 전기 오토바이: 빠른 배터리 교체, 아름다운 외관, 풍부한 기술"
+          "title_ko": "전기자동차를 운행하는 서비스 기사는 유지비부터 충전비까지 비용을 절감할 수 있습니다."
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-15",
       "article_count": 3,
@@ -629,11 +601,18 @@
       "title_ko": "하노이 도시 인프라 개발 계획 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-06-16",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "하노이는 벨트 1 버스 티켓을 면제하고 빈곤 가구에 최대 2천만 VND까지 전기 자동차 구입을 지원합니다."
+        },
         {
           "date": "2026-06-10",
           "stage": "OPERATION",
@@ -642,10 +621,10 @@
           "title_ko": "폭우가 내린 후 많은 \"핫스팟\"이 더 이상 침수되지 않으며 하노이의 배수 시스템이 효과적입니다."
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-10",
-      "article_count": 1,
+      "latest_article_date": "2026-06-16",
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
