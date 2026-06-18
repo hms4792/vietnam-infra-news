@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-17 14:37",
+  "generated_at": "2026-06-18 14:08",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -14,30 +14,23 @@
         {
           "date": "2026-06-17",
           "stage": "PLANNING",
-          "milestone": "IEA 권고안 기반 정책 강화 필요",
-          "source": "asianewsnetwork",
-          "title_ko": "동남아시아는 에너지 안보를 강화하고 값비싼 연료 수입을 줄이기 위한 과감한 조치가 필요합니다: 국제에너지기구(International Energy Agency)"
+          "milestone": "정책·법령 발표",
+          "source": "vietnamnews_vn",
+          "title_ko": "영국, 베트남의 녹색 전환을 지원하기 위해 두 가지 새로운 기후 이니셔티브 출시"
         },
         {
-          "date": "2026-06-11",
+          "date": "2026-06-17",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
-          "source": "sggp_org_vn",
-          "title_ko": "Long Thanh 공항의 전력 공급 시스템이 성공적으로 가동되었습니다"
-        },
-        {
-          "date": "2026-06-11",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vir_vn",
-          "title_ko": "베트남, 최대 17GW의 해상 풍력 발전 용량 목표"
+          "source": "asianewsnetwork",
+          "title_ko": "동남아시아는 에너지 안보를 강화하고 값비싼 연료 수입을 줄이기 위한 과감한 조치가 필요합니다: 국제에너지기구(International Energy Agency)"
         }
       ],
-      "next_watch": "베트남 에너지 안보 강화 정책 공식화 및 재정 배분",
-      "latest_insight": "동남아 에너지 위기 심화로 PDP8의 재생에너지·핵에너지 확대 정책이 정치적 우선순위 상승. 투자 재원 확보 가능성 높음",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-06-17",
       "article_count": 5,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "총 발전설비 (2030)",
@@ -58,52 +51,6 @@
           "indicator": "석탄발전 단계적 폐지",
           "target": "2050년 0%",
           "current": "34% (2024)"
-        }
-      ]
-    },
-    "VN-PWR-PDP8-RENEWABLE": {
-      "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
-      "sector": "",
-      "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
-      "stage_history": [
-        {
-          "date": "2026-06-10",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "Nikkei Asia",
-          "title_ko": "Apple과 Nvidia 공급업체 Foxconn, 베트남 태양광, 풍력 발전에 투자"
-        }
-      ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-10",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "해상풍력(2030)",
-          "target": "17,032 MW",
-          "current": "6,000MW → 3배 상향 확정"
-        },
-        {
-          "indicator": "육상풍력(2030)",
-          "target": "38,029 MW",
-          "current": "21,880MW (PDP8 원안) 대폭 상향"
-        },
-        {
-          "indicator": "태양광(2030)",
-          "target": "73 GW",
-          "current": "26,046MW → 대폭 상향"
-        },
-        {
-          "indicator": "BESS 배터리(2030)",
-          "target": "10,000 MW",
-          "current": "300MW → 33배 상향"
         }
       ]
     },
@@ -291,22 +238,15 @@
         {
           "date": "2026-06-11",
           "stage": "OPERATION",
-          "milestone": "2026년 우기 시즌 대응 준비 완료",
+          "milestone": "2026년 우기 대비 운영 준비 완료",
           "source": "Moi truong & Cuoc song",
           "title_ko": "다이닌 수력발전소는 2026년 우기와 홍수 시즌에 대응할 준비가 되어 있습니다."
-        },
-        {
-          "date": "2026-06-10",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "기준치의 310배를 초과하는 폐수를 배출한 Can Tho의 한 병원은 20억 VND 이상의 벌금을 부과 받았습니다."
         }
       ],
-      "next_watch": "우기 시즌 운영 성과 모니터링 및 홍수 피해 저감률 평가",
-      "latest_insight": "다이닌 수력발전소는 운영 중이며 2026년 우기 대비 체계적 준비 완료. 메콩델타 홍수 위험 완화에 실질적 기여 예상. 향후 유역통합관리 체계 내 역할 확대 주목.",
+      "next_watch": "홍수 시즌 수자원 관리 성과 모니터링",
+      "latest_insight": "기존 수력발전소의 적극적 운영으로 홍수 피해 완화와 에너지 공급 이중화 달성. 메콩델타 IWRM 강화와 연계된 선제적 대응 전략",
       "latest_article_date": "2026-06-11",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 1,
       "kpi_targets": [
         {
@@ -323,57 +263,6 @@
           "indicator": "홍수 피해 GDP 비중",
           "target": "0.5% 미만으로 감소",
           "current": "연평균 1.2%"
-        }
-      ]
-    },
-    "VN-ENV-IND-1894": {
-      "plan_id": "VN-ENV-IND-1894",
-      "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
-      "sector": "",
-      "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
-      "stage_history": [
-        {
-          "date": "2026-06-10",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Quang Ngai는 기준을 초과하는 배출량으로 인해 목재 펠릿 공장 운영을 중단하도록 요청했습니다."
-        }
-      ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-10",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "하수처리 기술 및 장비 국내 수요 충족률",
-          "target": "70%~80%",
-          "current": "조사 중"
-        },
-        {
-          "indicator": "배출가스/폐가스 처리 기술 및 장비 국내 수요 충족률",
-          "target": "60%~70%",
-          "current": "조사 중"
-        },
-        {
-          "indicator": "고형 및 유해 폐기물 수거·운반 국내 수요 충족률",
-          "target": "50%~60%",
-          "current": "조사 중"
-        },
-        {
-          "indicator": "고형 및 유해 폐기물 분류·재활용 국내 수요 충족률",
-          "target": "60%~70%",
-          "current": "조사 중"
-        },
-        {
-          "indicator": "환경 모니터링 장비 국내 수요 충족률",
-          "target": "20%",
-          "current": "조사 중"
         }
       ]
     },
@@ -400,19 +289,12 @@
           "milestone": "정책·법령 발표",
           "source": "en_prnasisa",
           "title_ko": "InfoComm Asia, 2026년 아시아태평양 프로 AV 시장 플레이북 출시, 지역의 디지털 미래를 재편하는 기술, 시장 및 기회 공개"
-        },
-        {
-          "date": "2026-06-10",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "vietnamplus",
-          "title_ko": "싱가포르 기업은 VSIP Can Tho에서 투자 기회를 모색합니다."
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 7,
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -465,25 +347,39 @@
           "title_ko": "베트남, 2050년까지 35개 공항으로 확장 계획"
         },
         {
-          "date": "2026-06-10",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "tienphong_vn",
-          "title_ko": "Can Tho에 자본, 기술 및 공급망을 가져오려면 '독수리'가 필요합니다."
+          "date": "2026-06-11",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamplus",
+          "title_ko": "Tay Ninh은 Moc Bai 국경 관문 경제 구역에서 물류 프로젝트를 시행합니다."
         },
         {
-          "date": "2026-06-10",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "nhandan_vn",
-          "title_ko": "노동력 공급과 수요를 연결하여 경제적 혁신을 주도합니다."
+          "date": "2026-06-11",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "vietnamplus",
+          "title_ko": "베트남 민간 경제 부문의 안정적인 시작, 강력한 돌파구"
+        },
+        {
+          "date": "2026-06-11",
+          "stage": "UNKNOWN",
+          "milestone": "베트남-독일 제조업 협력",
+          "source": "vietnamplus",
+          "title_ko": "베트남-독일 협력으로 지속 가능한 제조를 위한 새로운 기회 창출"
+        },
+        {
+          "date": "2026-06-11",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "vietnamnews_vn",
+          "title_ko": "항만물류허브화를 위한 투자유치"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-11",
       "article_count": 8,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -576,7 +472,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-17",
-      "article_count": 4,
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -601,29 +497,29 @@
       "title_ko": "하노이 도시 인프라 개발 계획 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
       "stage_history": [
+        {
+          "date": "2026-06-18",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "16개 지역 홍수 예방 지점을 완료하여 하노이는 배수 시스템에 대한 압력을 줄입니다."
+        },
         {
           "date": "2026-06-16",
           "stage": "OPERATION",
-          "milestone": "벨트1 버스요금 면제 및 저소득층 전기차 지원 정책 시행",
+          "milestone": "벨트1 버스 무료화 및 전기차 구매 지원 프로그램 시행",
           "source": "Moi truong & Cuoc song",
           "title_ko": "하노이는 벨트 1 버스 티켓을 면제하고 빈곤 가구에 최대 2천만 VND까지 전기 자동차 구입을 지원합니다."
-        },
-        {
-          "date": "2026-06-10",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "폭우가 내린 후 많은 \"핫스팟\"이 더 이상 침수되지 않으며 하노이의 배수 시스템이 효과적입니다."
         }
       ],
-      "next_watch": "링로드4 및 15개 메트로 노선 건설 진행률 모니터링",
-      "latest_insight": "도시 운영 단계 진입으로 대중교통·친환경차 인프라 정책 활성화. 마스터플랜 공모 통한 도시권 연계 강화 예상",
-      "latest_article_date": "2026-06-16",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "latest_insight": "",
+      "latest_article_date": "2026-06-18",
       "article_count": 2,
       "haiku_count": 1,
       "kpi_targets": [
