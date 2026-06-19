@@ -1,34 +1,41 @@
 {
-  "generated_at": "2026-06-18 14:08",
+  "generated_at": "2026-06-19 14:11",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
       "title_ko": "베트남 제8차 국가전력개발계획",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
+        {
+          "date": "2026-06-19",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "VnExpress International",
+          "title_ko": "베트남과 러시아가 원전 협상을 진행 중이다."
+        },
+        {
+          "date": "2026-06-19",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "스마트폰만 있으면 독일인들은 전기를 절약한 대가로 돈을 받을 수 있다"
+        },
         {
           "date": "2026-06-17",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "vietnamnews_vn",
           "title_ko": "영국, 베트남의 녹색 전환을 지원하기 위해 두 가지 새로운 기후 이니셔티브 출시"
-        },
-        {
-          "date": "2026-06-17",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "asianewsnetwork",
-          "title_ko": "동남아시아는 에너지 안보를 강화하고 값비싼 연료 수입을 줄이기 위한 과감한 조치가 필요합니다: 국제에너지기구(International Energy Agency)"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-06-17",
+      "latest_article_date": "2026-06-19",
       "article_count": 5,
       "haiku_count": 0,
       "kpi_targets": [
@@ -141,11 +148,25 @@
       "title_ko": "베트남 석유가스 분야 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-06-19",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "asianewsnetwork",
+          "title_ko": "말레이시아가 원유 수입 의존도를 줄이기 위해 더 많은 팜유를 디젤에 혼합하는 방법"
+        },
+        {
+          "date": "2026-06-18",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "petrotimes",
+          "title_ko": "Petrovietnam Huawei, 디지털 혁신 AI 에너지 기술 협력 논의"
+        },
         {
           "date": "2026-06-16",
           "stage": "COMPLETION",
@@ -161,10 +182,10 @@
           "title_ko": "휘발유 가격은 1.21% 하락"
         }
       ],
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-16",
-      "article_count": 2,
+      "latest_article_date": "2026-06-19",
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -225,44 +246,54 @@
         }
       ]
     },
-    "VN-WAT-RESOURCES": {
-      "plan_id": "VN-WAT-RESOURCES",
-      "title_ko": "베트남 수자원 개발 전략 2030",
+    "VN-ENV-IND-1894": {
+      "plan_id": "VN-ENV-IND-1894",
+      "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-06-11",
-          "stage": "OPERATION",
-          "milestone": "2026년 우기 대비 운영 준비 완료",
+          "date": "2026-06-19",
+          "stage": "PLANNING",
+          "milestone": "환경산업 정책 인식 제고",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "다이닌 수력발전소는 2026년 우기와 홍수 시즌에 대응할 준비가 되어 있습니다."
+          "title_ko": "환경 저널리즘: 지속 가능한 개발을 위한 목소리"
         }
       ],
-      "next_watch": "홍수 시즌 수자원 관리 성과 모니터링",
-      "latest_insight": "기존 수력발전소의 적극적 운영으로 홍수 피해 완화와 에너지 공급 이중화 달성. 메콩델타 IWRM 강화와 연계된 선제적 대응 전략",
-      "latest_article_date": "2026-06-11",
+      "next_watch": "국가 환경산업 센터 구축 및 재활용산업단지 개발 진전",
+      "latest_insight": "기사는 환경 저널리즘의 역할을 다루며 VN-ENV-IND-1894 사업과의 직접적 연관성이 제한적입니다. 환경산업 육성 정책 환경 조성에는 긍정적 영향.",
+      "latest_article_date": "2026-06-19",
       "article_count": 1,
       "haiku_count": 1,
       "kpi_targets": [
         {
-          "indicator": "지하수 관리 대수층",
-          "target": "전국 27개 완전 관리",
-          "current": "12개 관리 중"
+          "indicator": "하수처리 기술 및 장비 국내 수요 충족률",
+          "target": "70%~80%",
+          "current": "조사 중"
         },
         {
-          "indicator": "중복 댐·저수지 안전진단",
-          "target": "100% 완료",
-          "current": "65% 완료"
+          "indicator": "배출가스/폐가스 처리 기술 및 장비 국내 수요 충족률",
+          "target": "60%~70%",
+          "current": "조사 중"
         },
         {
-          "indicator": "홍수 피해 GDP 비중",
-          "target": "0.5% 미만으로 감소",
-          "current": "연평균 1.2%"
+          "indicator": "고형 및 유해 폐기물 수거·운반 국내 수요 충족률",
+          "target": "50%~60%",
+          "current": "조사 중"
+        },
+        {
+          "indicator": "고형 및 유해 폐기물 분류·재활용 국내 수요 충족률",
+          "target": "60%~70%",
+          "current": "조사 중"
+        },
+        {
+          "indicator": "환경 모니터링 장비 국내 수요 충족률",
+          "target": "20%",
+          "current": "조사 중"
         }
       ]
     },
@@ -284,18 +315,25 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
-          "date": "2026-06-17",
+          "date": "2026-06-18",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "en_prnasisa",
-          "title_ko": "InfoComm Asia, 2026년 아시아태평양 프로 AV 시장 플레이북 출시, 지역의 디지털 미래를 재편하는 기술, 시장 및 기회 공개"
+          "source": "vietnamplus",
+          "title_ko": "박닌(Bac Ninh)은 지아빈(Gia Binh) 공항과 연결된 5,000ha 자유무역지대를 계획하고 있다"
+        },
+        {
+          "date": "2026-06-18",
+          "stage": "UNKNOWN",
+          "milestone": "베트남-EU 무역협력(EVFTA)",
+          "source": "vietnamnews_vn",
+          "title_ko": "경제 역풍 속에서 베트남의 EU와의 무역 흑자 확대"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 4,
-      "haiku_count": 0,
+      "article_count": 6,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "북부 산업용지 총 공급",
@@ -340,46 +378,46 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-06-11",
+          "date": "2026-06-12",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "nhandan_vn",
-          "title_ko": "베트남, 2050년까지 35개 공항으로 확장 계획"
-        },
-        {
-          "date": "2026-06-11",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
           "source": "vietnamplus",
-          "title_ko": "Tay Ninh은 Moc Bai 국경 관문 경제 구역에서 물류 프로젝트를 시행합니다."
+          "title_ko": "호치민시는 물류 개발에서 전략적 연계를 유지하고 있습니다"
         },
         {
-          "date": "2026-06-11",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "vietnamplus",
-          "title_ko": "베트남 민간 경제 부문의 안정적인 시작, 강력한 돌파구"
-        },
-        {
-          "date": "2026-06-11",
-          "stage": "UNKNOWN",
-          "milestone": "베트남-독일 제조업 협력",
-          "source": "vietnamplus",
-          "title_ko": "베트남-독일 협력으로 지속 가능한 제조를 위한 새로운 기회 창출"
-        },
-        {
-          "date": "2026-06-11",
+          "date": "2026-06-12",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
-          "source": "vietnamnews_vn",
-          "title_ko": "항만물류허브화를 위한 투자유치"
+          "source": "vietnamplus",
+          "title_ko": "베트남 경제는 비용 압박과 외부 불확실성 속에서도 회복력을 보여줍니다: UOB"
+        },
+        {
+          "date": "2026-06-12",
+          "stage": "OPERATION",
+          "milestone": "Vietjet 지속가능경영 인정 (Top 50 수상)",
+          "source": "nhandan_vn",
+          "title_ko": "Vietjet은 Top 50 Corporate Sustainability Awards에서 인정을 받았습니다."
+        },
+        {
+          "date": "2026-06-12",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "vietnamplus",
+          "title_ko": "23개의 베트남 최대 기업이 약 1,440억 달러를 벌어들입니다."
+        },
+        {
+          "date": "2026-06-12",
+          "stage": "UNKNOWN",
+          "milestone": "해당 없음",
+          "source": "sggp_org_vn",
+          "title_ko": "독일, 베트남 기업, 순환 제조 관계 심화"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-11",
+      "latest_article_date": "2026-06-12",
       "article_count": 8,
-      "haiku_count": 1,
+      "haiku_count": 2,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -408,22 +446,22 @@
       "title_ko": "베트남 도시철도(메트로) 개발 계획",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
       "stage_history": [
         {
-          "date": "2026-06-11",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "vir_vn",
-          "title_ko": "호치민시, 도시철도 4개 노선 착공"
+          "date": "2026-06-18",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "nhandan_vn",
+          "title_ko": "도시철도 발전을 위한 민관협력"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-11",
+      "latest_article_date": "2026-06-18",
       "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
@@ -449,11 +487,18 @@
       "title_ko": "베트남 전기차·친환경 교통 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
+        {
+          "date": "2026-06-19",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "호치민시, 점차 녹색교통 생태계 구축"
+        },
         {
           "date": "2026-06-17",
           "stage": "PLANNING",
@@ -469,9 +514,9 @@
           "title_ko": "Feliz II 클로즈업 - VinFast의 100만 번째 전기 오토바이: 빠른 배터리 교체, 아름다운 외관, 풍부한 기술"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-06-17",
+      "latest_article_date": "2026-06-19",
       "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
@@ -511,8 +556,8 @@
         },
         {
           "date": "2026-06-16",
-          "stage": "OPERATION",
-          "milestone": "벨트1 버스 무료화 및 전기차 구매 지원 프로그램 시행",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "하노이는 벨트 1 버스 티켓을 면제하고 빈곤 가구에 최대 2천만 VND까지 전기 자동차 구입을 지원합니다."
         }
@@ -521,7 +566,7 @@
       "latest_insight": "",
       "latest_article_date": "2026-06-18",
       "article_count": 2,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "도시개발 총투자",
