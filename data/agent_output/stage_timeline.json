@@ -1,16 +1,23 @@
 {
-  "generated_at": "2026-06-22 15:59",
+  "generated_at": "2026-06-23 13:49",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
       "title_ko": "베트남 제8차 국가전력개발계획",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-06-23",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamnews_vn",
+          "title_ko": "에너지 보존, 전기 절약은 국가의 주요 전략적 우선순위로 남아 있습니다."
+        },
         {
           "date": "2026-06-19",
           "stage": "CONSTRUCTION",
@@ -24,27 +31,13 @@
           "milestone": "입찰·계약 진행",
           "source": "Moi truong & Cuoc song",
           "title_ko": "스마트폰만 있으면 독일인들은 전기를 절약한 대가로 돈을 받을 수 있다"
-        },
-        {
-          "date": "2026-06-17",
-          "stage": "PLANNING",
-          "milestone": "UK-베트남 해상풍력 가속화 파트너십 공식 출범 (2026.6)",
-          "source": "vietnamnews_vn",
-          "title_ko": "영국, 베트남의 녹색 전환을 지원하기 위해 두 가지 새로운 기후 이니셔티브 출시"
-        },
-        {
-          "date": "2026-06-17",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "asianewsnetwork",
-          "title_ko": "동남아시아는 에너지 안보를 강화하고 값비싼 연료 수입을 줄이기 위한 과감한 조치가 필요합니다: 국제에너지기구(International Energy Agency)"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-19",
-      "article_count": 5,
-      "haiku_count": 1,
+      "latest_article_date": "2026-06-23",
+      "article_count": 7,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "총 발전설비 (2030)",
@@ -152,47 +145,6 @@
           "indicator": "스마트그리드 전환",
           "target": "2030년",
           "current": "파일럿"
-        }
-      ]
-    },
-    "VN-PWR-PDP8-NUCLEAR": {
-      "plan_id": "VN-PWR-PDP8-NUCLEAR",
-      "title_ko": "PDP8 원전 재개",
-      "sector": "",
-      "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
-      "stage_history": [
-        {
-          "date": "2026-06-15",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "vir_vn",
-          "title_ko": "PV Power Services 수산, 발전소 기술 서비스 확대 위해 협력"
-        }
-      ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-15",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "원자력 발전 용량(2035)",
-          "target": "4,000 MW (2035 목표)",
-          "current": "Decision 768 신규 추가"
-        },
-        {
-          "indicator": "닌투언 1호기",
-          "target": "2,000 MW",
-          "current": "Rosatom, 재개 확정"
-        },
-        {
-          "indicator": "닌투언 2호기",
-          "target": "2,000 MW",
-          "current": "일본 컨소시엄, 협의 중"
         }
       ]
     },
@@ -354,11 +306,11 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
-          "date": "2026-06-19",
+          "date": "2026-06-22",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "sggp_org_vn",
-          "title_ko": "호치민시, 공급망 경쟁력 강화를 위해 산업단지 재구성"
+          "source": "vietnamplus",
+          "title_ko": "호치민시는 산업단지 구조조정을 통해 스마트 제조 혁신을 모색하고 있습니다."
         },
         {
           "date": "2026-06-18",
@@ -411,66 +363,52 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
-          "date": "2026-06-16",
+          "date": "2026-06-17",
+          "stage": "OPERATION",
+          "milestone": "청해성-베트남 직결 전용열차 운영 개시 (2026.06)",
+          "source": "nhandan_vn",
+          "title_ko": "철도는 베트남-중국 물류망의 핵심 역할을 확인합니다."
+        },
+        {
+          "date": "2026-06-17",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamplus",
+          "title_ko": "혼코아이(Hon Khoai) 교통 프로젝트는 장마철의 어려움에도 불구하고 속도를 높이고 있습니다."
+        },
+        {
+          "date": "2026-06-17",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "sggp_org_vn",
+          "title_ko": "베트남, 첨단기술 FDI로 전환하여 자본 유입에서 새로운 기록을 세움"
+        },
+        {
+          "date": "2026-06-17",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "vietnamplus",
-          "title_ko": "호치민공산청년동맹 제13차 전국대표대회가 다음주에 개최됩니다."
+          "title_ko": "베트남, 새로운 결의안으로 FDI 품질에 대해 더 엄격한 기준 설정"
         },
         {
-          "date": "2026-06-15",
+          "date": "2026-06-16",
           "stage": "COMPLETION",
           "milestone": "준공·운영 개시",
-          "source": "VnExpress International",
-          "title_ko": "베트남, 연말 기한 이전에 대규모 공항 롱탄(Long Thanh) 완공을 위해 군대 요청"
-        },
-        {
-          "date": "2026-06-15",
-          "stage": "UNKNOWN",
-          "milestone": "베트남 스타트업 생태계 글로벌 경쟁력 강화",
-          "source": "vietnamplus",
-          "title_ko": "베트남 스타트업 생태계, 탄력을 받아 글로벌 경쟁력 주목"
-        },
-        {
-          "date": "2026-06-15",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "vietnamplus",
-          "title_ko": "도시철도 발전의 핵심은 민관협력"
-        },
-        {
-          "date": "2026-06-15",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "vietnamplus",
-          "title_ko": "수출은 첨단 기술 성장 동력으로 탄력을 얻습니다."
-        },
-        {
-          "date": "2026-06-15",
-          "stage": "UNKNOWN",
-          "milestone": "디지털경제 2030 계획 수립",
-          "source": "vietnamplus",
-          "title_ko": "베트남, 2030년까지 디지털 경제가 GDP의 30% 기여할 것으로 예상"
-        },
-        {
-          "date": "2026-06-15",
-          "stage": "OPERATION",
-          "milestone": "기존 공항 운영 능력 확충 및 혼잡 관리",
-          "source": "Nikkei Asia",
-          "title_ko": "베트남, 관광 붐으로 인해 공항에 부담이 가중됨에 따라 건강 검진 추가"
+          "source": "sggp_org_vn",
+          "title_ko": "리엔크엉 국제공항, 예상보다 일찍 재개장"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-16",
+      "next_watch": "추가 전용열차 노선 확충 및 연간 화물운송량 증가 추이 모니터링",
+      "latest_insight": "베트남-중국 철도 물류망이 상업운영 단계 진입. 2025년 143만톤 처리 실적으로 공급망 통합 가속화. PPP 기반 네트워크 확대로 마스터플랜 목표 달성 기여도 높음.",
+      "latest_article_date": "2026-06-17",
       "article_count": 8,
-      "haiku_count": 3,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -558,19 +496,12 @@
           "milestone": "정책·법령 발표",
           "source": "Nikkei Asia",
           "title_ko": "하노이, 단계적 출시로 가솔린 오토바이 연석 완화"
-        },
-        {
-          "date": "2026-06-15",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Feliz II 클로즈업 - VinFast의 100만 번째 전기 오토바이: 빠른 배터리 교체, 아름다운 외관, 풍부한 기술"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-06-19",
-      "article_count": 3,
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
