@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-24 13:23",
+  "generated_at": "2026-06-25 13:23",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -12,11 +12,11 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-06-23",
+          "date": "2026-06-25",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamnews_vn",
-          "title_ko": "에너지 보존, 전기 절약은 국가의 주요 전략적 우선순위로 남아 있습니다."
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "에너지와 환경기술을 연결하고, Green Transformation을 촉진합니다."
         },
         {
           "date": "2026-06-19",
@@ -35,8 +35,8 @@
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-23",
-      "article_count": 6,
+      "latest_article_date": "2026-06-25",
+      "article_count": 5,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -72,17 +72,17 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-06-20",
+          "date": "2026-06-25",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "배출을 줄이고 환경을 보호하기 위한 바이오 연료 개발"
+          "title_ko": "혁신 – 그린 에너지 전환의 원동력"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-20",
-      "article_count": 1,
+      "latest_article_date": "2026-06-25",
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -107,69 +107,42 @@
         }
       ]
     },
-    "VN-PWR-PDP8-GRID": {
-      "plan_id": "VN-PWR-PDP8-GRID",
-      "title_ko": "PDP8 송배전망 확충",
-      "sector": "",
-      "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
-      "stage_history": [
-        {
-          "date": "2026-06-17",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "산업통상부는 홍수와 비에 대한 긴급 대응을 지시하여 전력 시스템과 주요 프로젝트의 안전을 보호합니다."
-        }
-      ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-17",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "신규 송전선 구축",
-          "target": "22,000km",
-          "current": "진행 중"
-        },
-        {
-          "indicator": "765kV 신규 노선",
-          "target": "3개",
-          "current": "1개"
-        },
-        {
-          "indicator": "스마트그리드 전환",
-          "target": "2030년",
-          "current": "파일럿"
-        }
-      ]
-    },
     "VN-OG-2030": {
       "plan_id": "VN-OG-2030",
       "title_ko": "베트남 석유가스 분야 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
+        {
+          "date": "2026-06-24",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "astroawani",
+          "title_ko": "더 많은 좌초된 유조선이 호르무즈를 떠나 전 세계 공급량을 늘립니다."
+        },
         {
           "date": "2026-06-24",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "석유법 개정: 페트로베트남이 녹색 성장 기둥을 창출하는 열쇠"
+        },
+        {
+          "date": "2026-06-18",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "petrotimes",
+          "title_ko": "Petrovietnam Huawei, 디지털 혁신 AI 에너지 기술 협력 논의"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "latest_insight": "",
       "latest_article_date": "2026-06-24",
-      "article_count": 3,
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -227,6 +200,47 @@
           "indicator": "ODA 연계 투자",
           "target": "$2.5B+",
           "current": "JICA $690M (옌짜 준공 확정)"
+        }
+      ]
+    },
+    "VN-SWM-NATIONAL-2030": {
+      "plan_id": "VN-SWM-NATIONAL-2030",
+      "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
+      "sector": "",
+      "area": "",
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
+      "stage_history": [
+        {
+          "date": "2026-06-24",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamplus",
+          "title_ko": "Gia Lai에 6,070만 달러 규모의 폐기물 에너지 플랜트 건설 시작"
+        }
+      ],
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-06-24",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "도시 폐기물 수거율",
+          "target": "100%",
+          "current": "95% (2025 목표 수준)"
+        },
+        {
+          "indicator": "WtE 소각 비율",
+          "target": "50%",
+          "current": "30% 목표 (2025), 속선 WtE 가동"
+        },
+        {
+          "indicator": "매립 의존율",
+          "target": "30% 이하",
+          "current": "속선 WtE 가동으로 현저히 감소 중"
         }
       ]
     },
@@ -316,7 +330,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 6,
+      "article_count": 5,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -356,43 +370,50 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
       "stage_history": [
         {
-          "date": "2026-06-17",
-          "stage": "OPERATION",
-          "milestone": "청해성-베트남 직결 전용열차 운영 개시 (2026.06)",
+          "date": "2026-06-19",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
           "source": "nhandan_vn",
-          "title_ko": "철도는 베트남-중국 물류망의 핵심 역할을 확인합니다."
+          "title_ko": "매력적인 투자처이자 부동산 시장의 기회인 하이퐁"
         },
         {
-          "date": "2026-06-17",
+          "date": "2026-06-19",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
           "source": "vietnamplus",
-          "title_ko": "혼코아이(Hon Khoai) 교통 프로젝트는 장마철의 어려움에도 불구하고 속도를 높이고 있습니다."
+          "title_ko": "베트남에서 가장 오래된 국립공원, 한국 파트너와 협력 강화"
         },
         {
-          "date": "2026-06-17",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "sggp_org_vn",
-          "title_ko": "베트남, 첨단기술 FDI로 전환하여 자본 유입에서 새로운 기록을 세움"
-        },
-        {
-          "date": "2026-06-17",
+          "date": "2026-06-18",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
+          "source": "vir_vn",
+          "title_ko": "투자 지원을 위해 철도 행정 절차 개정"
+        },
+        {
+          "date": "2026-06-18",
+          "stage": "OPERATION",
+          "milestone": "2026년 상반기 환경모니터링 강화 완료",
           "source": "vietnamplus",
-          "title_ko": "베트남, 새로운 결의안으로 FDI 품질에 대해 더 엄격한 기준 설정"
+          "title_ko": "부총리는 특별한 관심이 필요한 세 가지 주요 환경 문제를 식별합니다."
+        },
+        {
+          "date": "2026-06-18",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "VnExpress International",
+          "title_ko": "베트남은 롱탄 신공항에 고속철도와 지하철 2개를 연결하고 있다"
         }
       ],
-      "next_watch": "추가 전용열차 노선 개설, 물동량 목표 달성 추이 모니터링",
-      "latest_insight": "베트남-중국 물류망 확충 가속화. 2025년 143만톤 실적 기반 철도 화물운송 인프라 전환기. 교통 마스터플랜의 국제 네트워크 확장 달성",
-      "latest_article_date": "2026-06-17",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-06-19",
       "article_count": 8,
       "haiku_count": 1,
       "kpi_targets": [
@@ -482,19 +503,12 @@
           "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "호치민시, 점차 녹색교통 생태계 구축"
-        },
-        {
-          "date": "2026-06-17",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Nikkei Asia",
-          "title_ko": "하노이, 단계적 출시로 가솔린 오토바이 연석 완화"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-06-19",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -532,11 +546,11 @@
           "title_ko": "총리, 하노이 임대주택 및 지하철 노선 프로젝트 착공식 참석"
         },
         {
-          "date": "2026-06-22",
+          "date": "2026-06-18",
           "stage": "COMPLETION",
           "milestone": "준공·운영 개시",
-          "source": "vietnamplus",
-          "title_ko": "총리, 하노이 임대주택, 지하철 노선 프로젝트 착공식 참석"
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "16개 지역 홍수 예방 지점을 완료하여 하노이는 배수 시스템에 대한 압력을 줄입니다."
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
