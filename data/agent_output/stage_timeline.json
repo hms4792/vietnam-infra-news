@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-25 13:23",
+  "generated_at": "2026-06-26 13:16",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -107,42 +107,110 @@
         }
       ]
     },
+    "VN-PWR-PDP8-GRID": {
+      "plan_id": "VN-PWR-PDP8-GRID",
+      "title_ko": "PDP8 송배전망 확충",
+      "sector": "",
+      "area": "",
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
+      "stage_history": [
+        {
+          "date": "2026-06-26",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "스마트 에너지 인프라: 녹색 변혁과 지속가능한 성장을 위한 기반"
+        }
+      ],
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-06-26",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "신규 송전선 구축",
+          "target": "22,000km",
+          "current": "진행 중"
+        },
+        {
+          "indicator": "765kV 신규 노선",
+          "target": "3개",
+          "current": "1개"
+        },
+        {
+          "indicator": "스마트그리드 전환",
+          "target": "2030년",
+          "current": "파일럿"
+        }
+      ]
+    },
+    "VN-PWR-PDP8-NUCLEAR": {
+      "plan_id": "VN-PWR-PDP8-NUCLEAR",
+      "title_ko": "PDP8 원전 재개",
+      "sector": "",
+      "area": "",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-06-26",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "기록적인 폭염으로 인해 프랑스는 원자력 발전 용량을 줄였습니다."
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-06-26",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "원자력 발전 용량(2035)",
+          "target": "4,000 MW (2035 목표)",
+          "current": "Decision 768 신규 추가"
+        },
+        {
+          "indicator": "닌투언 1호기",
+          "target": "2,000 MW",
+          "current": "Rosatom, 재개 확정"
+        },
+        {
+          "indicator": "닌투언 2호기",
+          "target": "2,000 MW",
+          "current": "일본 컨소시엄, 협의 중"
+        }
+      ]
+    },
     "VN-OG-2030": {
       "plan_id": "VN-OG-2030",
       "title_ko": "베트남 석유가스 분야 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
-        {
-          "date": "2026-06-24",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "astroawani",
-          "title_ko": "더 많은 좌초된 유조선이 호르무즈를 떠나 전 세계 공급량을 늘립니다."
-        },
         {
           "date": "2026-06-24",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "석유법 개정: 페트로베트남이 녹색 성장 기둥을 창출하는 열쇠"
-        },
-        {
-          "date": "2026-06-18",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "petrotimes",
-          "title_ko": "Petrovietnam Huawei, 디지털 혁신 AI 에너지 기술 협력 논의"
+          "source": "astroawani",
+          "title_ko": "더 많은 좌초된 유조선이 호르무즈를 떠나 전 세계 공급량을 늘립니다."
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-24",
-      "article_count": 4,
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -200,6 +268,47 @@
           "indicator": "ODA 연계 투자",
           "target": "$2.5B+",
           "current": "JICA $690M (옌짜 준공 확정)"
+        }
+      ]
+    },
+    "VN-WAT-RESOURCES": {
+      "plan_id": "VN-WAT-RESOURCES",
+      "title_ko": "베트남 수자원 개발 전략 2030",
+      "sector": "",
+      "area": "",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-06-26",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Binh Long 수력발전소는 상류에 폭우로 인해 긴급 홍수 배출을 발표했습니다."
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-06-26",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "지하수 관리 대수층",
+          "target": "전국 27개 완전 관리",
+          "current": "12개 관리 중"
+        },
+        {
+          "indicator": "중복 댐·저수지 안전진단",
+          "target": "100% 완료",
+          "current": "65% 완료"
+        },
+        {
+          "indicator": "홍수 피해 GDP 비중",
+          "target": "0.5% 미만으로 감소",
+          "current": "연평균 1.2%"
         }
       ]
     },
@@ -313,24 +422,17 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
-          "date": "2026-06-22",
+          "date": "2026-06-25",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "vietnamplus",
-          "title_ko": "호치민시는 산업단지 구조조정을 통해 스마트 제조 혁신을 모색하고 있습니다."
-        },
-        {
-          "date": "2026-06-18",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "vietnamnews_vn",
-          "title_ko": "경제 역풍 속에서 베트남의 EU와의 무역 흑자 확대"
+          "title_ko": "부총리, 수출증대를 위한 핵심방안 제시"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 5,
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -370,11 +472,18 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-06-22",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamplus",
+          "title_ko": "호치민시, 134개의 무료 버스 노선 발표"
+        },
         {
           "date": "2026-06-19",
           "stage": "TENDERING",
@@ -388,34 +497,13 @@
           "milestone": "착공·건설 진행 중",
           "source": "vietnamplus",
           "title_ko": "베트남에서 가장 오래된 국립공원, 한국 파트너와 협력 강화"
-        },
-        {
-          "date": "2026-06-18",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vir_vn",
-          "title_ko": "투자 지원을 위해 철도 행정 절차 개정"
-        },
-        {
-          "date": "2026-06-18",
-          "stage": "OPERATION",
-          "milestone": "2026년 상반기 환경모니터링 강화 완료",
-          "source": "vietnamplus",
-          "title_ko": "부총리는 특별한 관심이 필요한 세 가지 주요 환경 문제를 식별합니다."
-        },
-        {
-          "date": "2026-06-18",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "VnExpress International",
-          "title_ko": "베트남은 롱탄 신공항에 고속철도와 지하철 2개를 연결하고 있다"
         }
       ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-19",
+      "latest_article_date": "2026-06-22",
       "article_count": 8,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -455,19 +543,12 @@
           "milestone": "정책·법령 발표",
           "source": "nhandan_vn",
           "title_ko": "새로운 개발공간 조성: 도시와 농촌이 새로운 시대를 맞이하다"
-        },
-        {
-          "date": "2026-06-18",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "nhandan_vn",
-          "title_ko": "도시철도 발전을 위한 민관협력"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-23",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -533,30 +614,44 @@
       "title_ko": "하노이 도시 인프라 개발 계획 2030",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-06-22",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "nhandan_vn",
-          "title_ko": "총리, 하노이 임대주택 및 지하철 노선 프로젝트 착공식 참석"
+          "date": "2026-06-26",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "6월 29일 하노이는 100년 비전을 담은 수도계획을 발표했다."
         },
         {
-          "date": "2026-06-18",
+          "date": "2026-06-26",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "오늘(6월 25일)부터 하노이에서는 버스와 지하철 전자티켓을 운영합니다."
+        },
+        {
+          "date": "2026-06-26",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "하노이에서는 건설 현장의 먼지 오염을 엄격하게 통제해야 합니다."
+        },
+        {
+          "date": "2026-06-22",
           "stage": "COMPLETION",
           "milestone": "준공·운영 개시",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "16개 지역 홍수 예방 지점을 완료하여 하노이는 배수 시스템에 대한 압력을 줄입니다."
+          "source": "vietnamplus",
+          "title_ko": "총리, 하노이 임대주택, 지하철 노선 프로젝트 착공식 참석"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-22",
-      "article_count": 4,
+      "latest_article_date": "2026-06-26",
+      "article_count": 6,
       "haiku_count": 0,
       "kpi_targets": [
         {
