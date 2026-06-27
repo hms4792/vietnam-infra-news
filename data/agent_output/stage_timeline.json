@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-26 13:16",
+  "generated_at": "2026-06-27 05:03",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -17,26 +17,12 @@
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "에너지와 환경기술을 연결하고, Green Transformation을 촉진합니다."
-        },
-        {
-          "date": "2026-06-19",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "VnExpress International",
-          "title_ko": "베트남과 러시아가 원전 협상을 진행 중이다."
-        },
-        {
-          "date": "2026-06-19",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "스마트폰만 있으면 독일인들은 전기를 절약한 대가로 돈을 받을 수 있다"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-25",
-      "article_count": 5,
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -210,7 +196,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-24",
-      "article_count": 3,
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -353,57 +339,6 @@
         }
       ]
     },
-    "VN-ENV-IND-1894": {
-      "plan_id": "VN-ENV-IND-1894",
-      "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
-      "sector": "",
-      "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
-      "stage_history": [
-        {
-          "date": "2026-06-19",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "환경 저널리즘: 지속 가능한 개발을 위한 목소리"
-        }
-      ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-19",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "하수처리 기술 및 장비 국내 수요 충족률",
-          "target": "70%~80%",
-          "current": "조사 중"
-        },
-        {
-          "indicator": "배출가스/폐가스 처리 기술 및 장비 국내 수요 충족률",
-          "target": "60%~70%",
-          "current": "조사 중"
-        },
-        {
-          "indicator": "고형 및 유해 폐기물 수거·운반 국내 수요 충족률",
-          "target": "50%~60%",
-          "current": "조사 중"
-        },
-        {
-          "indicator": "고형 및 유해 폐기물 분류·재활용 국내 수요 충족률",
-          "target": "60%~70%",
-          "current": "조사 중"
-        },
-        {
-          "indicator": "환경 모니터링 장비 국내 수요 충족률",
-          "target": "20%",
-          "current": "조사 중"
-        }
-      ]
-    },
     "VN-IP-NORTH-2030": {
       "plan_id": "VN-IP-NORTH-2030",
       "title_ko": "북부 베트남 산업단지 개발 계획 2030",
@@ -432,7 +367,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 4,
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -478,30 +413,30 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-06-22",
+          "date": "2026-06-23",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "호치민시, 134개의 무료 버스 노선 발표"
+          "source": "tienphong_vn",
+          "title_ko": "6개월 만에 80억 달러의 FDI 자본이 타이응웬에 쏟아졌습니다."
         },
         {
-          "date": "2026-06-19",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "nhandan_vn",
-          "title_ko": "매력적인 투자처이자 부동산 시장의 기회인 하이퐁"
-        },
-        {
-          "date": "2026-06-19",
+          "date": "2026-06-23",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
+          "source": "tienphong_vn",
+          "title_ko": "동나이는 일련의 주요 교통 인프라 프로젝트 건설을 곧 시작할 예정입니다."
+        },
+        {
+          "date": "2026-06-22",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
           "source": "vietnamplus",
-          "title_ko": "베트남에서 가장 오래된 국립공원, 한국 파트너와 협력 강화"
+          "title_ko": "베트남 야전병원, 남수단 초등학교의 질병 예방 활동 지원"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-22",
+      "latest_article_date": "2026-06-23",
       "article_count": 8,
       "haiku_count": 0,
       "kpi_targets": [
@@ -573,22 +508,22 @@
       "title_ko": "베트남 전기차·친환경 교통 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
       "stage_history": [
         {
-          "date": "2026-06-19",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "호치민시, 점차 녹색교통 생태계 구축"
+          "date": "2026-06-26",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Nikkei Asia",
+          "title_ko": "베트남은 석유 위험이 증가하고 우려가 커지면서 바이오 연료 추진을 가속화합니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-19",
+      "latest_article_date": "2026-06-26",
       "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
