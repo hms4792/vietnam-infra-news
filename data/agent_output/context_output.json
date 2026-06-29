@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-06-27 05:03",
+  "generated_at": "2026-06-29 14:55",
   "model": "claude-haiku-4-5-20251001",
   "total_articles": 31,
-  "haiku_used": 0,
+  "haiku_used": 1,
   "stage_summary": {
-    "PLANNING": 19,
+    "PLANNING": 18,
     "TENDERING": 1,
     "CONSTRUCTION": 8,
     "COMPLETION": 1,
-    "OPERATION": 2,
+    "OPERATION": 3,
     "UNKNOWN": 0
   },
   "articles": [
@@ -34,7 +34,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-23",
@@ -58,7 +58,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-25",
@@ -66,7 +66,7 @@
       "sector": "General",
       "title_ko": "에너지와 환경기술을 연결하고, Green Transformation을 촉진합니다.",
       "title_en": "Connecting energy and environmental technology, promoting green transformation",
-      "summary_ko": "①에너지-환경 기술 연계 녹색전환 사업 ②구체적 규모 미기재 ③계획 단계 ④베트남 정부 환경부·에너지부 ⑤2026년 상반기 추진 중인 녹색 에너지 기술 통합 정책으로, PDP8 전력개발계획과 연동한 환경친화적 에너지 전환 추진",
+      "summary_ko": "① 에너지-환경기술 연계 녹색전환 추진 사업 ② 규모 미상 ③ 계획 단계 ④ 베트남 환경부·에너지 관련 정부부처 ⑤ 일정 미정, 녹색 기술 연계를 통한 에너지 효율화 및 환경보호 전략 추진 중",
       "summary_en": "Gathering more than 200 domestic and international businesses and hundreds of advanced technology solutions, the Hanoi 2026 International Energy and Environment Technology Exhibition is expected to contribute to promoting energy transition, developing environmental technology, strengthening Vietnam - Korea cooperation and realizing the capital's goal of green growth and sustainable development.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/ket-noi-cong-nghe-nang-luong-moi-truong-thuc-day-chuyen-doi-xanh-100432.html",
@@ -74,39 +74,15 @@
       "ctx_plans": "VN-PWR-PDP8",
       "plan_id": "VN-PWR-PDP8",
       "rule_stage": "PLANNING",
-      "rule_conf": 0.806,
+      "rule_conf": 0.665,
       "stage": "PLANNING",
-      "confidence": 0.806,
+      "confidence": 0.665,
       "milestone": "정책·법령 발표",
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.81)",
+      "stage_reason": "규칙기반 (신뢰도 0.67)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
-    },
-    {
-      "date": "2026-06-20",
-      "province": "",
-      "sector": "General",
-      "title_ko": "배출을 줄이고 환경을 보호하기 위한 바이오 연료 개발",
-      "title_en": "Developing biofuels to reduce emissions and protect the environment",
-      "summary_ko": "사업명: 바이오연료 개발 사업(VN-PWR-PDP8-RENEWABLE), 사업규모: 미명시, 진행단계: 계획, 주요기관: 베트남 환경부·에너지부, 핵심목표: 배출량 감소 및 환경보호. 재생에너지 전환 전략의 일환으로 바이오연료 개발을 추진 중이며, 차후 구체적 일정 및 예산 공시 예정",
-      "summary_en": "The nationwide deployment of E10 biofuel not only marks an important step forward in the green energy transition roadmap but also opens up opportunities to form a circular economic ecosystem, creating livelihoods for millions of people and contributing to ensuring national energy security.",
-      "source": "Moi truong & Cuoc song",
-      "url": "https://moitruong.net.vn/phat-trien-nhien-lieu-sinh-hoc-de-giam-phat-thai-va-bao-ve-moi-truong-100255.html",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "VN-PWR-PDP8-RENEWABLE",
-      "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
-      "stage": "PLANNING",
-      "confidence": 1.0,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-25",
@@ -114,7 +90,7 @@
       "sector": "General",
       "title_ko": "혁신 – 그린 에너지 전환의 원동력",
       "title_en": "Innovation – the driving force for green energy transition",
-      "summary_ko": "①재생에너지 전환 혁신 프로젝트 ②구체적 규모 미기재 ③계획/정책 단계 ④베트남 정부(에너지부), 환경통신사 ⑤2026년 진행 중인 녹색에너지 전환 추진",
+      "summary_ko": "① 녹색에너지 전환을 위한 혁신 사업\n② 구체적 규모 미기재\n③ 계획 단계\n④ 베트남 환경부, 정부 관련 부처\n⑤ 2026년 환경의 날(6월 5일) 기준 진행 중\n\n베트남이 녹색에너지 전환을 위해 혁신을 핵심 동력으로 추진 중. PDP8 재생에너지 계획의 일환으로 기술혁신을 통한 지속가능한 에너지 전환 강조.",
       "summary_en": "Vietnam Energy Transition Forum 2026 is held in the context of Resolution No. 57-NQ/TW, which identifies the development of new energy, clean energy and modern energy infrastructure as an important foundation for the development of science, technology and strategic industries of the country.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/doi-moi-sang-tao-dong-luc-cho-chuyen-dich-nang-luong-xanh-100440.html",
@@ -122,15 +98,15 @@
       "ctx_plans": "VN-PWR-PDP8-RENEWABLE",
       "plan_id": "VN-PWR-PDP8-RENEWABLE",
       "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
+      "rule_conf": 0.998,
       "stage": "PLANNING",
-      "confidence": 1.0,
+      "confidence": 0.998,
       "milestone": "정책·법령 발표",
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-26",
@@ -138,7 +114,7 @@
       "sector": "General",
       "title_ko": "스마트 에너지 인프라: 녹색 변혁과 지속가능한 성장을 위한 기반",
       "title_en": "Smart energy infrastructure: Foundation for green transformation and sustainable growth",
-      "summary_ko": "스마트 에너지 인프라 구축 (VN-PWR-PDP8-GRID). 베트남의 녹색 전환과 지속가능한 성장을 위한 기반 마련을 목표로 함. 전력망 지능화 사업으로 에너지 효율성 증대 및 재생에너지 통합 추진. 발주처는 전력에너지부(EVN 등 산하기관). 현재 계획 및 정책 추진단계로 2026년 중점사업으로 추진 중.",
+      "summary_ko": "①스마트 에너지 인프라 구축 ②구체적 규모 미기재 ③계획 단계 ④베트남 정부(에너지부), 관련 부처 ⑤녹색 전환 및 지속가능한 성장 추진을 위한 스마트 전력망 인프라 개발 추진 중. PDP8 전력개발계획 기반 그리드 현대화 프로젝트로 재생에너지 연계 스마트 그리드 구축이 핵심",
       "summary_en": "In the context of Vietnam promoting energy transition, implementing the commitment to net zero emissions by 2050 and promoting national digital transformation, developing smart energy infrastructure is considered a prerequisite to ensure energy security, improve resource use efficiency and move towards a green economy.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/ha-tang-nang-luong-thong-minh-nen-tang-cho-chuyen-doi-xanh-va-tang-truong-ben-vung-100475.html",
@@ -154,7 +130,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-26",
@@ -162,7 +138,7 @@
       "sector": "General",
       "title_ko": "기록적인 폭염으로 인해 프랑스는 원자력 발전 용량을 줄였습니다.",
       "title_en": "Record heat forced France to cut nuclear power capacity",
-      "summary_ko": "[Jina] 제목: 기록적인 폭염으로 프랑스의 원자력 발전 용량 감축 URL 출처: https://moitruong.net.vn/nang-nong-ky-luc-buoc-phap-cat-giam-cong-suat-dien-hat-nhan-100459.html 이메일: [[email protected]](https://moitruong.net.vn/cdn-cgi/l/email-protection)",
+      "summary_ko": "①프랑스 원자력발전소 냉각수 부족 사태 ②명시된 용량 없음 ③운영 중(감용) ④프랑스 전력회사(EDF) ⑤지속적인 폭염으로 인한 발전용량 감축 지속 예상. 베트남의 핵발전 계획(VN-PWR-PDP8-NUCLEAR)과 달리 선진국도 기후변화로 인한 냉각수 부족 문제 직면 중",
       "summary_en": "The extreme heat wave gripping Europe is not only pushing hundreds of millions of people into dangerous temperatures, but is also putting great pressure on the energy system. In France, many nuclear reactors have had to temporarily shut down to protect the environment and ensure the safety of rivers used to cool the plants.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/nang-nong-ky-luc-buoc-phap-cat-giam-cong-suat-dien-hat-nhan-100459.html",
@@ -170,15 +146,15 @@
       "ctx_plans": "VN-PWR-PDP8-NUCLEAR",
       "plan_id": "VN-PWR-PDP8-NUCLEAR",
       "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
+      "rule_conf": 0.867,
       "stage": "PLANNING",
-      "confidence": 1.0,
+      "confidence": 0.867,
       "milestone": "정책·법령 발표",
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "stage_reason": "규칙기반 (신뢰도 0.87)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-24",
@@ -202,7 +178,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.70)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-24",
@@ -226,7 +202,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "None",
@@ -250,7 +226,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-26",
@@ -258,7 +234,7 @@
       "sector": "General",
       "title_ko": "Binh Long 수력발전소는 상류에 폭우로 인해 긴급 홍수 배출을 발표했습니다.",
       "title_en": "Binh Long Hydropower Plant announced an emergency flood discharge due to heavy rain upstream",
-      "summary_ko": "① 빈롱 수력발전소(Binh Long Hydropower Plant) ② 구체적 규모 미명시 ③ 운영 중 ④ 빈롱 수력발전소 운영사 ⑤ 상류 집중호우로 긴급 방류 실시 중 (2026년 6월 26일)",
+      "summary_ko": "①빈롱수력발전소(Binh Long Hydropower Plant) ②용량미기재(기사에서 구체적 규모 미제시) ③운영중 ④베트남 수력발전소 운영사 ⑤상류 집중호우로 인한 긴급 방류 실시(2026년 6월 26일 공지). 수자원 관리계획(VN-WAT-RESOURCES) 범위 내 운영 중인 시설로, 강우에 따른 홍수 관리 역할 수행.",
       "summary_en": "Due to heavy to very heavy rain in the upstream basin, Binh Long Hydropower Plant (Cao Bang) announced to increase discharge flow from 4:00 a.m. on June 26 to ensure reservoir safety. People in the downstream area are advised not to go to the river and take proactive measures to prevent it.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/thuy-dien-binh-long-thong-bao-xa-lu-khan-cap-do-mua-lon-thuong-nguon-100477.html",
@@ -274,7 +250,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
+    },
+    {
+      "date": "2026-06-29",
+      "province": "",
+      "sector": "Water Supply/Drainage",
+      "title_ko": "Can Tho는 37개의 깨끗한 물 공급 지점을 무료로 유지하며 엘니뇨에 적극적으로 대응합니다.",
+      "title_en": "Can Tho maintains 37 free clean water supply points, proactively responding to El Nino",
+      "summary_ko": "캔 토 시는 엘니뇨 대응을 위해 37개의 무료 정수 공급 지점을 유지 중입니다. 주민들에게 안정적인 깨끗한 물 공급을 보장하며 기후변화에 선제적으로 대응하고 있습니다.",
+      "summary_en": "In the context that the El Nino phenomenon is forecast to return with strong intensity from the last months of 2026, Can Tho City is proactively implementing many solutions to ensure domestic water sources for people. One of the key solutions is to maintain and be ready to expand 37 free clean water supply points in areas at risk of water shortage.",
+      "source": "Moi truong & Cuoc song",
+      "url": "https://moitruong.net.vn/can-tho-duy-tri-37-diem-cap-nuoc-sach-mien-phi-chu-dong-ung-pho-el-nino-100431.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-WAT-RESOURCES",
+      "plan_id": "VN-WAT-RESOURCES",
+      "rule_stage": "UNKNOWN",
+      "rule_conf": 0.0,
+      "stage": "OPERATION",
+      "confidence": 0.75,
+      "milestone": "캔토시 37개 정수공급지점 운영 중",
+      "next_watch": "메콩델타 수자원 인프라 확충 계획 및 추가 지점 개발",
+      "insight": "운영 단계 수자원 서비스 제공으로 지역 물 공급 안정화 진행 중. 기후변화 대응 인프라 구축의 실질적 성과 창출 단계",
+      "stage_reason": "무료 정수 공급지점 37개 운영 중으로 이미 준공 후 서비스 개시",
+      "haiku_used": true,
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-24",
@@ -298,7 +298,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-22",
@@ -322,7 +322,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-25",
@@ -346,7 +346,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.87)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "None",
@@ -370,7 +370,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-22",
@@ -394,7 +394,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-22",
@@ -418,7 +418,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-22",
@@ -442,7 +442,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-23",
@@ -466,7 +466,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-23",
@@ -490,7 +490,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-23",
@@ -514,7 +514,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-23",
@@ -538,7 +538,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-23",
@@ -562,7 +562,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-23",
@@ -586,7 +586,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-26",
@@ -594,7 +594,7 @@
       "sector": "General",
       "title_ko": "베트남은 석유 위험이 증가하고 우려가 커지면서 바이오 연료 추진을 가속화합니다.",
       "title_en": "Vietnam accelerates biofuel push as oil risks rise and concerns mount",
-      "summary_ko": "베트남이 중동 석유 위기와 미국 무역 압박으로 인해 수송용 바이오연료 확대를 가속화하고 있다. 에탄올 혼합유 보급이 확대되는 가운데 운전자들의 불만이 제기되고 있으며, 그 실효성에 대한 의문도 제기되고 있다.",
+      "summary_ko": "① 베트남 바이오연료 확대 사업\n② 에탄올 혼합유 전국 도입 (구체적 규모 미명시)\n③ 추진 단계 (정책 가속화 중)\n④ 베트남 정부, 에너지 관련 부처\n⑤ 중동 유가 위기와 미국 무역압박으로 긴급성 증대, 에탄올 혼합유 보급 확대 진행 중",
       "summary_en": "",
       "source": "Nikkei Asia",
       "url": "https://asia.nikkei.com/business/energy/vietnam-accelerates-biofuel-push-as-oil-risks-rise-and-concerns-mount",
@@ -610,7 +610,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-22",
@@ -634,7 +634,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-22",
@@ -658,7 +658,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.84)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-22",
@@ -682,7 +682,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-26",
@@ -690,7 +690,7 @@
       "sector": "General",
       "title_ko": "6월 29일 하노이는 100년 비전을 담은 수도계획을 발표했다.",
       "title_en": "On June 29, Hanoi announced the Capital Planning with a 100-year vision",
-      "summary_ko": "①하노이 수도 100년 비전 도시계획 ②구체적 예산/규모 미기재 ③계획 단계(2026년 6월 29일 공표 예정) ④하노이시 정부 ⑤2026년 6월 29일 공식 발표 예정",
+      "summary_ko": "① 하노이 수도 종합계획(100년 비전) ② 규모 미정(100년 장기 비전 계획) ③ 계획 단계 ④ 하노이시 정부 주관 ⑤ 2026년 6월 29일 공식 발표 예정. 하노이시가 100년 장기 비전을 담은 수도 종합계획을 수립 중이며, 곧 공식 발표할 예정이다.",
       "summary_en": "On June 29, Hanoi will officially announce the Capital Planning with a 100-year vision at the Conference announcing the Planning and Investment Promotion in 2026. The highlight of the event is the first time the planning project is introduced using modern digital technology, helping people, businesses and investors have intuitive access to the long-term development orientation of the Capital.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/ngay-29-6-ha-noi-cong-bo-quy-hoach-thu-do-tam-nhin-100-nam-100468.html",
@@ -706,7 +706,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-26",
@@ -714,7 +714,7 @@
       "sector": "Transport",
       "title_ko": "오늘(6월 25일)부터 하노이에서는 버스와 지하철 전자티켓을 운영합니다.",
       "title_en": "From today (June 25), Hanoi operates electronic tickets for buses and metro",
-      "summary_ko": "① 하노이 버스·지하철 통합 전자티켓 시스템\n② 하노이 전 버스노선·지하철 1호선 적용\n③ 운영 중 (2026년 6월 25일 시작)\n④ 하노이시 교통당국\n⑤ 즉시 운영 개시, 시민 이용 시작",
+      "summary_ko": "① 하노이 버스·지하철 전자통합 승차권 시스템 ② 버스·지하철 네트워크 통합 ③ 운영 중(2026년 6월 25일부터 운영 개시) ④ 하노이시 교통 당국 ⑤ 2026년 6월 25일 전자 승차권 시스템 본격 운영 시작",
       "summary_en": "Today (June 25), Hanoi City will begin operating a multi-modal electronic ticket card system for the entire public transportation system.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/tu-hom-nay-25-6-ha-noi-van-hanh-ve-dien-tu-lien-thong-cho-xe-buyt-metro-100464.html",
@@ -730,7 +730,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     },
     {
       "date": "2026-06-26",
@@ -738,7 +738,7 @@
       "sector": "General",
       "title_ko": "하노이에서는 건설 현장의 먼지 오염을 엄격하게 통제해야 합니다.",
       "title_en": "Hanoi requires strict control of dust pollution at construction sites",
-      "summary_ko": "①하노이 건설현장 먼지오염 관리 강화 ②특정 규모 미지정 ③계획/정책 단계 ④하노이시 환경부처 주관 ⑤즉시 시행 필요 - 건설 현장의 엄격한 먼지 오염 관제를 요구하는 하노이시 방침. 도시 인프라(HN-URBAN-INFRA) 마스터플랜 범위 내 건설 사업 전반의 환경 관리 강화 지시.",
+      "summary_ko": "①하노이 건설현장 먼지오염 관리강화 ②구체적 규모 미제시 ③계획/정책단계 ④하노이시 정부(발주처), 환경부처 ⑤즉시 시행 필요. HN-URBAN-INFRA 마스터플랜 연계 도시인프라 사업의 환경관리 강화정책으로, 건설현장 먼지배출 규제 기준 준수 및 모니터링 체계 구축이 핵심. 도시환경개선을 위한 선제적 오염관리 추진",
       "summary_en": "City People's Committee. Hanoi has just asked departments, branches and localities to strengthen control of dust pollution in demolition and construction activities; At the same time, accelerate the progress of wastewater and solid waste collection and treatment projects to improve the quality of the urban environment.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/ha-noi-yeu-cau-kiem-soat-nghiem-o-nhiem-bui-tai-cac-cong-trinh-xay-dung-100472.html",
@@ -754,7 +754,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-06-27 05:03"
+      "analyzed_at": "2026-06-29 14:55"
     }
   ]
 }

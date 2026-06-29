@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27 05:03",
+  "generated_at": "2026-06-29 14:55",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -68,7 +68,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-25",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -262,11 +262,18 @@
       "title_ko": "베트남 수자원 개발 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
+        {
+          "date": "2026-06-29",
+          "stage": "OPERATION",
+          "milestone": "캔토시 37개 정수공급지점 운영 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Can Tho는 37개의 깨끗한 물 공급 지점을 무료로 유지하며 엘니뇨에 적극적으로 대응합니다."
+        },
         {
           "date": "2026-06-26",
           "stage": "PLANNING",
@@ -275,11 +282,11 @@
           "title_ko": "Binh Long 수력발전소는 상류에 폭우로 인해 긴급 홍수 배출을 발표했습니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-26",
-      "article_count": 1,
-      "haiku_count": 0,
+      "next_watch": "메콩델타 수자원 인프라 확충 계획 및 추가 지점 개발",
+      "latest_insight": "운영 단계 수자원 서비스 제공으로 지역 물 공급 안정화 진행 중. 기후변화 대응 인프라 구축의 실질적 성과 창출 단계",
+      "latest_article_date": "2026-06-29",
+      "article_count": 2,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "지하수 관리 대수층",
