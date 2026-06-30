@@ -1,16 +1,23 @@
 {
-  "generated_at": "2026-06-29 14:55",
+  "generated_at": "2026-06-30 13:15",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
       "title_ko": "베트남 제8차 국가전력개발계획",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
       "stage_history": [
+        {
+          "date": "2026-06-30",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "에너지 절약 문제에 대한 해결책 찾기"
+        },
         {
           "date": "2026-06-25",
           "stage": "PLANNING",
@@ -19,9 +26,9 @@
           "title_ko": "에너지와 환경기술을 연결하고, Green Transformation을 촉진합니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
       "latest_insight": "",
-      "latest_article_date": "2026-06-25",
+      "latest_article_date": "2026-06-30",
       "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
@@ -58,17 +65,17 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-06-25",
+          "date": "2026-06-29",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "혁신 – 그린 에너지 전환의 원동력"
+          "source": "vir_vn",
+          "title_ko": "VinEnergo SunAsia Energy, 필리핀 수중 양식 프로젝트에 태양광 발전 협력"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-25",
-      "article_count": 1,
+      "latest_article_date": "2026-06-29",
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -232,13 +239,20 @@
           "milestone": "정책·법령 발표",
           "source": "Unknown",
           "title_ko": "None"
+        },
+        {
+          "date": "2026-06-30",
+          "stage": "OPERATION",
+          "milestone": "An Lỏ 지역 폐수처리시설 상업운전 개시(2026.06)",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "100가구 및 안로시장 폐수처리시설 가동"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 1,
-      "haiku_count": 0,
+      "article_count": 2,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "도시 폐수처리율",
@@ -270,7 +284,7 @@
         {
           "date": "2026-06-29",
           "stage": "OPERATION",
-          "milestone": "캔토시 37개 정수공급지점 운영 중",
+          "milestone": "37개 급수 지점 운영 개시",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Can Tho는 37개의 깨끗한 물 공급 지점을 무료로 유지하며 엘니뇨에 적극적으로 대응합니다."
         },
@@ -282,8 +296,8 @@
           "title_ko": "Binh Long 수력발전소는 상류에 폭우로 인해 긴급 홍수 배출을 발표했습니다."
         }
       ],
-      "next_watch": "메콩델타 수자원 인프라 확충 계획 및 추가 지점 개발",
-      "latest_insight": "운영 단계 수자원 서비스 제공으로 지역 물 공급 안정화 진행 중. 기후변화 대응 인프라 구축의 실질적 성과 창출 단계",
+      "next_watch": "엘니뇨 극한 기후 대응 효과성 모니터링 및 확장 계획",
+      "latest_insight": "메콩델타 IWRM 기본 인프라 구축 완료. 지역 용수 안정성 개선으로 식수 접근성 향상. 기후 복원력 강화 사업의 선도 모델 평가",
       "latest_article_date": "2026-06-29",
       "article_count": 2,
       "haiku_count": 1,
@@ -346,6 +360,57 @@
         }
       ]
     },
+    "VN-ENV-IND-1894": {
+      "plan_id": "VN-ENV-IND-1894",
+      "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
+      "sector": "",
+      "area": "",
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
+      "stage_history": [
+        {
+          "date": "2026-06-30",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "KCN Gia Lộc đuợc vinh danh Top 10 Khu công nghiep ESG Viet Nam Xanh 2026"
+        }
+      ],
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "latest_insight": "",
+      "latest_article_date": "2026-06-30",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "하수처리 기술 및 장비 국내 수요 충족률",
+          "target": "70%~80%",
+          "current": "조사 중"
+        },
+        {
+          "indicator": "배출가스/폐가스 처리 기술 및 장비 국내 수요 충족률",
+          "target": "60%~70%",
+          "current": "조사 중"
+        },
+        {
+          "indicator": "고형 및 유해 폐기물 수거·운반 국내 수요 충족률",
+          "target": "50%~60%",
+          "current": "조사 중"
+        },
+        {
+          "indicator": "고형 및 유해 폐기물 분류·재활용 국내 수요 충족률",
+          "target": "60%~70%",
+          "current": "조사 중"
+        },
+        {
+          "indicator": "환경 모니터링 장비 국내 수요 충족률",
+          "target": "20%",
+          "current": "조사 중"
+        }
+      ]
+    },
     "VN-IP-NORTH-2030": {
       "plan_id": "VN-IP-NORTH-2030",
       "title_ko": "북부 베트남 산업단지 개발 계획 2030",
@@ -362,6 +427,13 @@
           "milestone": "착공·건설 진행 중",
           "source": "Hanoi Times",
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
+        },
+        {
+          "date": "2026-06-29",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "vietnamplus",
+          "title_ko": "한국 파트너는 UAV 생태계 개발에서 Tay Ninh을 지원합니다"
         },
         {
           "date": "2026-06-25",
@@ -432,13 +504,6 @@
           "milestone": "착공·건설 진행 중",
           "source": "tienphong_vn",
           "title_ko": "동나이는 일련의 주요 교통 인프라 프로젝트 건설을 곧 시작할 예정입니다."
-        },
-        {
-          "date": "2026-06-22",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "vietnamplus",
-          "title_ko": "베트남 야전병원, 남수단 초등학교의 질병 예방 활동 지원"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
@@ -480,17 +545,17 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-06-23",
+          "date": "2026-06-30",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "nhandan_vn",
-          "title_ko": "새로운 개발공간 조성: 도시와 농촌이 새로운 시대를 맞이하다"
+          "source": "en_prnasisa",
+          "title_ko": "DayOne, 글로벌 성장의 다음 단계를 지원하기 위해 Chengkang Yan을 최고재무책임자(CFO)로 임명"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-23",
-      "article_count": 1,
+      "latest_article_date": "2026-06-30",
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -556,11 +621,18 @@
       "title_ko": "하노이 도시 인프라 개발 계획 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
+        {
+          "date": "2026-06-30",
+          "stage": "OPERATION",
+          "milestone": "배수시스템 운영 효율성 입증",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "하노이에는 비가 많이 내리지만 홍수가 발생하지 않으며 배수 시스템이 효과적으로 작동합니다."
+        },
         {
           "date": "2026-06-26",
           "stage": "PLANNING",
@@ -581,20 +653,13 @@
           "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "하노이에서는 건설 현장의 먼지 오염을 엄격하게 통제해야 합니다."
-        },
-        {
-          "date": "2026-06-22",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "vietnamplus",
-          "title_ko": "총리, 하노이 임대주택, 지하철 노선 프로젝트 착공식 참석"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-26",
-      "article_count": 6,
-      "haiku_count": 0,
+      "next_watch": "홍강 양안 신도시 배수 인프라 통합 현황",
+      "latest_insight": "마스터플랜 도시기반시설 운영단계 진입 신호. 링로드4 착공과 병행한 배수 시스템 고도화로 16M 수용 목표 달성 가능성 향상",
+      "latest_article_date": "2026-06-30",
+      "article_count": 4,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "도시개발 총투자",
