@@ -1,35 +1,28 @@
 {
-  "generated_at": "2026-06-30 13:15",
+  "generated_at": "2026-07-01 13:44",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
       "title_ko": "베트남 제8차 국가전력개발계획",
       "sector": "",
       "area": "",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-06-30",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "에너지 절약 문제에 대한 해결책 찾기"
-        },
-        {
-          "date": "2026-06-25",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "에너지와 환경기술을 연결하고, Green Transformation을 촉진합니다."
+          "title_ko": "에너지 절약 문제에 대한 해결책 찾기"
         }
       ],
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-30",
-      "article_count": 3,
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -65,17 +58,17 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-06-29",
+          "date": "2026-07-01",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vir_vn",
-          "title_ko": "VinEnergo SunAsia Energy, 필리핀 수중 양식 프로젝트에 태양광 발전 협력"
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "옥상 태양광 발전은 잉여 전력의 50%로 판매됩니다."
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-29",
-      "article_count": 2,
+      "latest_article_date": "2026-07-01",
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -187,11 +180,18 @@
       "title_ko": "베트남 석유가스 분야 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
+        {
+          "date": "2026-07-01",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "channelnewsasia",
+          "title_ko": "이란-미국 회담 결렬로 공급 우려가 높아지면서 유가 상승"
+        },
         {
           "date": "2026-06-24",
           "stage": "PLANNING",
@@ -200,10 +200,10 @@
           "title_ko": "더 많은 좌초된 유조선이 호르무즈를 떠나 전 세계 공급량을 늘립니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-06-24",
-      "article_count": 2,
+      "latest_article_date": "2026-07-01",
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -242,8 +242,8 @@
         },
         {
           "date": "2026-06-30",
-          "stage": "OPERATION",
-          "milestone": "An Lỏ 지역 폐수처리시설 상업운전 개시(2026.06)",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "100가구 및 안로시장 폐수처리시설 가동"
         }
@@ -252,7 +252,7 @@
       "latest_insight": "",
       "latest_article_date": "None",
       "article_count": 2,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "도시 폐수처리율",
@@ -284,7 +284,7 @@
         {
           "date": "2026-06-29",
           "stage": "OPERATION",
-          "milestone": "37개 급수 지점 운영 개시",
+          "milestone": "운영 성과 업데이트",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Can Tho는 37개의 깨끗한 물 공급 지점을 무료로 유지하며 엘니뇨에 적극적으로 대응합니다."
         },
@@ -296,11 +296,11 @@
           "title_ko": "Binh Long 수력발전소는 상류에 폭우로 인해 긴급 홍수 배출을 발표했습니다."
         }
       ],
-      "next_watch": "엘니뇨 극한 기후 대응 효과성 모니터링 및 확장 계획",
-      "latest_insight": "메콩델타 IWRM 기본 인프라 구축 완료. 지역 용수 안정성 개선으로 식수 접근성 향상. 기후 복원력 강화 사업의 선도 모델 평가",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "latest_insight": "",
       "latest_article_date": "2026-06-29",
       "article_count": 2,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "지하수 관리 대수층",
@@ -316,6 +316,47 @@
           "indicator": "홍수 피해 GDP 비중",
           "target": "0.5% 미만으로 감소",
           "current": "연평균 1.2%"
+        }
+      ]
+    },
+    "VN-WAT-URBAN": {
+      "plan_id": "VN-WAT-URBAN",
+      "title_ko": "도시 배수·침수 방지 마스터플랜",
+      "sector": "",
+      "area": "",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-07-01",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "호치민시는 2030년까지 도시 폐수의 80%를 수집하는 것을 목표로 하고 있습니다."
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-07-01",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "도시 안전 상수 보급률",
+          "target": "100%",
+          "current": "95% 수준 (2025)"
+        },
+        {
+          "indicator": "1인당 공급량",
+          "target": "150 L/일",
+          "current": "120 L/일 (2025 목표)"
+        },
+        {
+          "indicator": "누수율",
+          "target": "15% 이하",
+          "current": "20% 이하 (2025 목표)"
         }
       ]
     },
@@ -429,24 +470,24 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
+          "date": "2026-06-30",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vir_vn",
+          "title_ko": "하노이는 고품질 일본 자본을 유치할 수 있는 더 많은 기회를 제공"
+        },
+        {
           "date": "2026-06-29",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
           "source": "vietnamplus",
           "title_ko": "한국 파트너는 UAV 생태계 개발에서 Tay Ninh을 지원합니다"
-        },
-        {
-          "date": "2026-06-25",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "부총리, 수출증대를 위한 핵심방안 제시"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 3,
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -486,29 +527,36 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
-          "date": "2026-06-23",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "tienphong_vn",
-          "title_ko": "6개월 만에 80억 달러의 FDI 자본이 타이응웬에 쏟아졌습니다."
-        },
-        {
-          "date": "2026-06-23",
+          "date": "2026-06-25",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
-          "source": "tienphong_vn",
-          "title_ko": "동나이는 일련의 주요 교통 인프라 프로젝트 건설을 곧 시작할 예정입니다."
+          "source": "nhandan_vn",
+          "title_ko": "점차적으로 현대적인 도시철도망을 형성"
+        },
+        {
+          "date": "2026-06-25",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "sggp_org_vn",
+          "title_ko": "저작권은 AI 생성 콘텐츠의 중심에 있어야 합니다."
+        },
+        {
+          "date": "2026-06-24",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "vietnamplus",
+          "title_ko": "80억 달러라는 이정표를 달성한 Thai Nguyen은 FDI 자본 유치 분야에서 국가를 선도하고 있습니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-06-23",
+      "latest_article_date": "2026-06-25",
       "article_count": 8,
       "haiku_count": 0,
       "kpi_targets": [
@@ -555,7 +603,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-06-30",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -629,7 +677,7 @@
         {
           "date": "2026-06-30",
           "stage": "OPERATION",
-          "milestone": "배수시스템 운영 효율성 입증",
+          "milestone": "배수시스템 운영 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "하노이에는 비가 많이 내리지만 홍수가 발생하지 않으며 배수 시스템이 효과적으로 작동합니다."
         },
@@ -655,8 +703,8 @@
           "title_ko": "하노이에서는 건설 현장의 먼지 오염을 엄격하게 통제해야 합니다."
         }
       ],
-      "next_watch": "홍강 양안 신도시 배수 인프라 통합 현황",
-      "latest_insight": "마스터플랜 도시기반시설 운영단계 진입 신호. 링로드4 착공과 병행한 배수 시스템 고도화로 16M 수용 목표 달성 가능성 향상",
+      "next_watch": "링로드4 착공 및 홍강 양안 신도시 개발 진행률",
+      "latest_insight": "도시 인프라 기초 운영 안정화. 마스터플랜 2045/2065 추진 초기 인구 수용 체계 구축 중. 향후 메트로 노선 및 신도시 개발 투자 가시성 주목",
       "latest_article_date": "2026-06-30",
       "article_count": 4,
       "haiku_count": 1,
