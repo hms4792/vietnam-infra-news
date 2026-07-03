@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-02 13:07",
+  "generated_at": "2026-07-03 13:04",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -12,16 +12,16 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-07-01",
+          "date": "2026-07-02",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "vietnamnews_vn",
-          "title_ko": "에너지 산업은 전략적 프로젝트의 속도를 높이기 위해 개혁을 촉구합니다."
+          "title_ko": "​​​​​​​그린수소와 통합된 해상풍력섬, 투자 효율성 최적화 가능"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-07-01",
+      "latest_article_date": "2026-07-02",
       "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
@@ -66,8 +66,8 @@
         },
         {
           "date": "2026-06-29",
-          "stage": "PLANNING",
-          "milestone": "필리핀 태양광-수상양식 통합 프로젝트 422MWp 입찰 준비",
+          "stage": "UNKNOWN",
+          "milestone": "필리핀 수중양식 태양광 프로젝트",
           "source": "vir_vn",
           "title_ko": "VinEnergo SunAsia Energy, 필리핀 수중 양식 프로젝트에 태양광 발전 협력"
         }
@@ -75,7 +75,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-07-01",
-      "article_count": 3,
+      "article_count": 2,
       "haiku_count": 1,
       "kpi_targets": [
         {
@@ -202,7 +202,7 @@
         {
           "date": "2026-07-01",
           "stage": "UNKNOWN",
-          "milestone": "베트남 인프라 사업과 무관",
+          "milestone": "해당 사항 없음",
           "source": "channelnewsasia",
           "title_ko": "이란-미국 회담 결렬로 공급 우려가 높아지면서 유가 상승"
         }
@@ -283,30 +283,30 @@
       "title_ko": "베트남 수자원 개발 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-07-03",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "사우디아라비아는 처리된 폐수를 전략적 자원으로 간주합니다."
+        },
         {
           "date": "2026-06-29",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Can Tho는 37개의 깨끗한 물 공급 지점을 무료로 유지하며 엘니뇨에 적극적으로 대응합니다."
-        },
-        {
-          "date": "2026-06-26",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Binh Long 수력발전소는 상류에 폭우로 인해 긴급 홍수 배출을 발표했습니다."
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-29",
-      "article_count": 2,
+      "latest_article_date": "2026-07-03",
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -443,13 +443,6 @@
           "title_ko": "Quang Ninh, 전략 계획 공개, 국가 도시 허브가 되는 목표 설정"
         },
         {
-          "date": "2026-07-01",
-          "stage": "OPERATION",
-          "milestone": "글로벌 바이어 네트워크 구축 및 국제 비즈니스 연계",
-          "source": "sggp_org_vn",
-          "title_ko": "업계 컨퍼런스 지원으로 글로벌 바이어 연결"
-        },
-        {
           "date": "2026-06-29",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
@@ -460,8 +453,8 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 6,
-      "haiku_count": 1,
+      "article_count": 5,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "북부 산업용지 총 공급",
@@ -500,11 +493,25 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
+        {
+          "date": "2026-06-28",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vnexpress",
+          "title_ko": "Newtecons vào top 10 doanh nghiep ESG ngành xây dựng"
+        },
+        {
+          "date": "2026-06-27",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "VnExpress Business",
+          "title_ko": "싱가포르 창이공항 크라운플라자호텔 3억8500만달러에 매각"
+        },
         {
           "date": "2026-06-26",
           "stage": "PLANNING",
@@ -513,30 +520,23 @@
           "title_ko": "말랑·조가오 프로젝트 주민을 위한 주거지원 제공"
         },
         {
-          "date": "2026-06-25",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "nhandan_vn",
-          "title_ko": "점차적으로 현대적인 도시철도망을 형성"
-        },
-        {
-          "date": "2026-06-25",
+          "date": "2026-06-26",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 불명확",
+          "milestone": "해당 없음",
           "source": "vietnamplus",
-          "title_ko": "국토부, 유류세 ​​인하 연장 제안"
+          "title_ko": "호치민시, 우정과 창의성을 기념하는 Kids Fest 2026 개최"
         },
         {
-          "date": "2026-06-25",
-          "stage": "UNKNOWN",
-          "milestone": "베트남 인프라와 무관",
-          "source": "en_prnasisa",
-          "title_ko": "OUE REIT, 감정가 대비 1.3% 높은 가격으로 Crowne Plaza Changi Airport 매각"
+          "date": "2026-06-26",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "vir_vn",
+          "title_ko": "롯데그룹 팟닷(Phat Dat), 투티엠 에코 스마트시티 계약 체결"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-06-26",
+      "latest_article_date": "2026-06-28",
       "article_count": 8,
       "haiku_count": 2,
       "kpi_targets": [
@@ -573,11 +573,11 @@
       "stage_order": 2,
       "stage_history": [
         {
-          "date": "2026-07-01",
+          "date": "2026-07-02",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
-          "source": "en_prnasisa",
-          "title_ko": "Green Skyline은 베트남의 도시 주거 시장이 모멘텀을 얻음에 따라 대만 지역 투자자들의 관심을 끌고 있습니다."
+          "source": "vir_vn",
+          "title_ko": "베트남의 그린 스카이라인(Green Skyline) 프로젝트, 도시 주택 성장에 따라 대만 투자자들의 관심 불러일으키다"
         },
         {
           "date": "2026-06-30",
@@ -589,8 +589,8 @@
       ],
       "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-07-01",
-      "article_count": 2,
+      "latest_article_date": "2026-07-02",
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -615,11 +615,18 @@
       "title_ko": "베트남 전기차·친환경 교통 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-07-03",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "VinFast는 기존 고객에게 큰 선물을 제공합니다. 사용자는 전기 자동차로 전환할 때 수억 동의 \"이중 특권\"을 누립니다."
+        },
         {
           "date": "2026-06-26",
           "stage": "TENDERING",
@@ -628,10 +635,10 @@
           "title_ko": "베트남은 석유 위험이 증가하고 우려가 커지면서 바이오 연료 추진을 가속화합니다."
         }
       ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-26",
-      "article_count": 1,
+      "latest_article_date": "2026-07-03",
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -656,15 +663,15 @@
       "title_ko": "하노이 도시 인프라 개발 계획 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
           "date": "2026-06-30",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "하노이에는 비가 많이 내리지만 홍수가 발생하지 않으며 배수 시스템이 효과적으로 작동합니다."
         },
@@ -677,13 +684,13 @@
         },
         {
           "date": "2026-06-26",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "하노이에서는 건설 현장의 먼지 오염을 엄격하게 통제해야 합니다."
+          "title_ko": "오늘(6월 25일)부터 하노이에서는 버스와 지하철 전자티켓을 운영합니다."
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-06-30",
       "article_count": 4,
