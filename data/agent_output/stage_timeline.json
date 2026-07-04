@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-03 13:04",
+  "generated_at": "2026-07-04 04:45",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -17,13 +17,20 @@
           "milestone": "정책·법령 발표",
           "source": "vietnamnews_vn",
           "title_ko": "​​​​​​​그린수소와 통합된 해상풍력섬, 투자 효율성 최적화 가능"
+        },
+        {
+          "date": "2026-06-30",
+          "stage": "PLANNING",
+          "milestone": "에너지 절감 솔루션 종합계획 수립",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "에너지 절약 문제에 대한 해결책 찾기"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-07-02",
       "article_count": 3,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "총 발전설비 (2030)",
@@ -63,20 +70,13 @@
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "옥상 태양광 발전은 잉여 전력의 50%로 판매됩니다."
-        },
-        {
-          "date": "2026-06-29",
-          "stage": "UNKNOWN",
-          "milestone": "필리핀 수중양식 태양광 프로젝트",
-          "source": "vir_vn",
-          "title_ko": "VinEnergo SunAsia Energy, 필리핀 수중 양식 프로젝트에 태양광 발전 협력"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-07-01",
       "article_count": 2,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "해상풍력(2030)",
@@ -100,88 +100,6 @@
         }
       ]
     },
-    "VN-PWR-PDP8-GRID": {
-      "plan_id": "VN-PWR-PDP8-GRID",
-      "title_ko": "PDP8 송배전망 확충",
-      "sector": "",
-      "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
-      "stage_history": [
-        {
-          "date": "2026-06-26",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "스마트 에너지 인프라: 녹색 변혁과 지속가능한 성장을 위한 기반"
-        }
-      ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-26",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "신규 송전선 구축",
-          "target": "22,000km",
-          "current": "진행 중"
-        },
-        {
-          "indicator": "765kV 신규 노선",
-          "target": "3개",
-          "current": "1개"
-        },
-        {
-          "indicator": "스마트그리드 전환",
-          "target": "2030년",
-          "current": "파일럿"
-        }
-      ]
-    },
-    "VN-PWR-PDP8-NUCLEAR": {
-      "plan_id": "VN-PWR-PDP8-NUCLEAR",
-      "title_ko": "PDP8 원전 재개",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-06-26",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "기록적인 폭염으로 인해 프랑스는 원자력 발전 용량을 줄였습니다."
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-06-26",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "원자력 발전 용량(2035)",
-          "target": "4,000 MW (2035 목표)",
-          "current": "Decision 768 신규 추가"
-        },
-        {
-          "indicator": "닌투언 1호기",
-          "target": "2,000 MW",
-          "current": "Rosatom, 재개 확정"
-        },
-        {
-          "indicator": "닌투언 2호기",
-          "target": "2,000 MW",
-          "current": "일본 컨소시엄, 협의 중"
-        }
-      ]
-    },
     "VN-OG-2030": {
       "plan_id": "VN-OG-2030",
       "title_ko": "베트남 석유가스 분야 전략 2030",
@@ -201,8 +119,8 @@
         },
         {
           "date": "2026-07-01",
-          "stage": "UNKNOWN",
-          "milestone": "해당 사항 없음",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "channelnewsasia",
           "title_ko": "이란-미국 회담 결렬로 공급 우려가 높아지면서 유가 상승"
         }
@@ -211,7 +129,7 @@
       "latest_insight": "",
       "latest_article_date": "2026-07-01",
       "article_count": 2,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "원유 생산량",
@@ -306,7 +224,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-07-03",
-      "article_count": 3,
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -436,11 +354,18 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
-          "date": "2026-07-01",
+          "date": "2026-07-03",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "vietnamplus",
-          "title_ko": "Quang Ninh, 전략 계획 공개, 국가 도시 허브가 되는 목표 설정"
+          "title_ko": "산업 성장을 견인할 지원 산업"
+        },
+        {
+          "date": "2026-07-01",
+          "stage": "OPERATION",
+          "milestone": "북부 지원산업 컨퍼런스 2026년 7월 개최",
+          "source": "sggp_org_vn",
+          "title_ko": "업계 컨퍼런스 지원으로 글로벌 바이어 연결"
         },
         {
           "date": "2026-06-29",
@@ -453,8 +378,8 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 5,
-      "haiku_count": 0,
+      "article_count": 6,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "북부 산업용지 총 공급",
@@ -493,52 +418,38 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-06-29",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamplus",
+          "title_ko": "Dong Thap은 약 2조 7,500억 VND 규모의 석유 및 가스 산업단지 프로젝트를 승인했습니다."
+        },
+        {
+          "date": "2026-06-29",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "vietnamplus",
+          "title_ko": "베트남 장교 124명, 베네수엘라 지진 구호 임무 위해 출국"
+        },
         {
           "date": "2026-06-28",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
           "source": "vnexpress",
           "title_ko": "Newtecons vào top 10 doanh nghiep ESG ngành xây dựng"
-        },
-        {
-          "date": "2026-06-27",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "VnExpress Business",
-          "title_ko": "싱가포르 창이공항 크라운플라자호텔 3억8500만달러에 매각"
-        },
-        {
-          "date": "2026-06-26",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "sggp_org_vn",
-          "title_ko": "말랑·조가오 프로젝트 주민을 위한 주거지원 제공"
-        },
-        {
-          "date": "2026-06-26",
-          "stage": "UNKNOWN",
-          "milestone": "해당 없음",
-          "source": "vietnamplus",
-          "title_ko": "호치민시, 우정과 창의성을 기념하는 Kids Fest 2026 개최"
-        },
-        {
-          "date": "2026-06-26",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "vir_vn",
-          "title_ko": "롯데그룹 팟닷(Phat Dat), 투티엠 에코 스마트시티 계약 체결"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-28",
+      "latest_article_date": "2026-06-29",
       "article_count": 8,
-      "haiku_count": 2,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -580,6 +491,13 @@
           "title_ko": "베트남의 그린 스카이라인(Green Skyline) 프로젝트, 도시 주택 성장에 따라 대만 투자자들의 관심 불러일으키다"
         },
         {
+          "date": "2026-07-01",
+          "stage": "PLANNING",
+          "milestone": "Green Skyline 주거단지 개발 계획 승인",
+          "source": "en_prnasisa",
+          "title_ko": "Green Skyline은 베트남의 도시 주거 시장이 모멘텀을 얻음에 따라 대만 지역 투자자들의 관심을 끌고 있습니다."
+        },
+        {
           "date": "2026-06-30",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
@@ -591,7 +509,7 @@
       "latest_insight": "",
       "latest_article_date": "2026-07-02",
       "article_count": 3,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "하노이 메트로 목표",
@@ -615,30 +533,23 @@
       "title_ko": "베트남 전기차·친환경 교통 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
           "date": "2026-07-03",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "VinFast는 기존 고객에게 큰 선물을 제공합니다. 사용자는 전기 자동차로 전환할 때 수억 동의 \"이중 특권\"을 누립니다."
-        },
-        {
-          "date": "2026-06-26",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "Nikkei Asia",
-          "title_ko": "베트남은 석유 위험이 증가하고 우려가 커지면서 바이오 연료 추진을 가속화합니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-07-03",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -663,37 +574,23 @@
       "title_ko": "하노이 도시 인프라 개발 계획 2030",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
           "date": "2026-06-30",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "하노이에는 비가 많이 내리지만 홍수가 발생하지 않으며 배수 시스템이 효과적으로 작동합니다."
-        },
-        {
-          "date": "2026-06-26",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "6월 29일 하노이는 100년 비전을 담은 수도계획을 발표했다."
-        },
-        {
-          "date": "2026-06-26",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "오늘(6월 25일)부터 하노이에서는 버스와 지하철 전자티켓을 운영합니다."
+          "title_ko": "하노이에는 비가 많이 내리지만 홍수가 발생하지 않으며 배수 시스템이 효과적으로 작동합니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "latest_insight": "",
       "latest_article_date": "2026-06-30",
-      "article_count": 4,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
