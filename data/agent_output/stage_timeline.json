@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-04 04:45",
+  "generated_at": "2026-07-06 14:30",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -21,7 +21,7 @@
         {
           "date": "2026-06-30",
           "stage": "PLANNING",
-          "milestone": "에너지 절감 솔루션 종합계획 수립",
+          "milestone": "에너지 절감 종합솔루션 개발",
           "source": "Moi truong & Cuoc song",
           "title_ko": "에너지 절약 문제에 대한 해결책 찾기"
         }
@@ -70,13 +70,20 @@
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "옥상 태양광 발전은 잉여 전력의 50%로 판매됩니다."
+        },
+        {
+          "date": "2026-06-29",
+          "stage": "CONSTRUCTION",
+          "milestone": "필리핀 3개 프로젝트 2027-2028년 운영 개시",
+          "source": "vir_vn",
+          "title_ko": "VinEnergo SunAsia Energy, 필리핀 수중 양식 프로젝트에 태양광 발전 협력"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-07-01",
       "article_count": 2,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "해상풍력(2030)",
@@ -119,8 +126,8 @@
         },
         {
           "date": "2026-07-01",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "UNKNOWN",
+          "milestone": "베트남 인프라 사업과 무관",
           "source": "channelnewsasia",
           "title_ko": "이란-미국 회담 결렬로 공급 우려가 높아지면서 유가 상승"
         }
@@ -129,7 +136,7 @@
       "latest_insight": "",
       "latest_article_date": "2026-07-01",
       "article_count": 2,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "원유 생산량",
@@ -354,16 +361,16 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
-          "date": "2026-07-03",
+          "date": "2026-07-05",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "산업 성장을 견인할 지원 산업"
+          "source": "vir_vn",
+          "title_ko": "산업용 부동산 주식은 FDI와 정책 지원으로 새로운 모멘텀을 얻습니다."
         },
         {
           "date": "2026-07-01",
           "stage": "OPERATION",
-          "milestone": "북부 지원산업 컨퍼런스 2026년 7월 개최",
+          "milestone": "글로벌 바이어 네트워킹 플랫폼 구축",
           "source": "sggp_org_vn",
           "title_ko": "업계 컨퍼런스 지원으로 글로벌 바이어 연결"
         },
@@ -378,7 +385,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 6,
+      "article_count": 7,
       "haiku_count": 1,
       "kpi_targets": [
         {
@@ -424,11 +431,11 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-06-29",
+          "date": "2026-06-30",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "vietnamplus",
-          "title_ko": "Dong Thap은 약 2조 7,500억 VND 규모의 석유 및 가스 산업단지 프로젝트를 승인했습니다."
+          "title_ko": "To Lam 사무총장 겸 사장은 FDI 자본을 활용한 8가지 경제 발전 과제를 발표했습니다."
         },
         {
           "date": "2026-06-29",
@@ -436,18 +443,11 @@
           "milestone": "준공·운영 개시",
           "source": "vietnamplus",
           "title_ko": "베트남 장교 124명, 베네수엘라 지진 구호 임무 위해 출국"
-        },
-        {
-          "date": "2026-06-28",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "vnexpress",
-          "title_ko": "Newtecons vào top 10 doanh nghiep ESG ngành xây dựng"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-06-29",
+      "latest_article_date": "2026-06-30",
       "article_count": 8,
       "haiku_count": 0,
       "kpi_targets": [
@@ -478,22 +478,22 @@
       "title_ko": "베트남 도시철도(메트로) 개발 계획",
       "sector": "",
       "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-07-02",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
+          "stage": "PLANNING",
+          "milestone": "호치민 그린 스카이라인 프로젝트 계획·승인 단계",
           "source": "vir_vn",
           "title_ko": "베트남의 그린 스카이라인(Green Skyline) 프로젝트, 도시 주택 성장에 따라 대만 투자자들의 관심 불러일으키다"
         },
         {
           "date": "2026-07-01",
           "stage": "PLANNING",
-          "milestone": "Green Skyline 주거단지 개발 계획 승인",
+          "milestone": "그린스퀘어 39헥타르 통합개발 계획 승인",
           "source": "en_prnasisa",
           "title_ko": "Green Skyline은 베트남의 도시 주거 시장이 모멘텀을 얻음에 따라 대만 지역 투자자들의 관심을 끌고 있습니다."
         },
@@ -505,11 +505,11 @@
           "title_ko": "DayOne, 글로벌 성장의 다음 단계를 지원하기 위해 Chengkang Yan을 최고재무책임자(CFO)로 임명"
         }
       ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
-      "latest_insight": "",
+      "next_watch": "TBS Land의 착공 시점과 대만 투자자 펀딩 규모 추적",
+      "latest_insight": "도시주택 부족에 따른 고층 주거단지 개발 확대. 메트로 1호선 2024년 개통으로 도시철도 접근성 향상이 부동산 투자 매력도 제고 중",
       "latest_article_date": "2026-07-02",
       "article_count": 3,
-      "haiku_count": 1,
+      "haiku_count": 2,
       "kpi_targets": [
         {
           "indicator": "하노이 메트로 목표",
@@ -533,20 +533,20 @@
       "title_ko": "베트남 전기차·친환경 교통 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-07-03",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "VinFast는 기존 고객에게 큰 선물을 제공합니다. 사용자는 전기 자동차로 전환할 때 수억 동의 \"이중 특권\"을 누립니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-07-03",
       "article_count": 1,
