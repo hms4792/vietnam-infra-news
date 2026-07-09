@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-08 12:25",
+  "generated_at": "2026-07-09 13:54",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -29,7 +29,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-07-08",
-      "article_count": 4,
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -75,7 +75,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-07-08",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -105,31 +105,24 @@
       "title_ko": "베트남 석유가스 분야 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-07-01",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "channelnewsasia",
-          "title_ko": "이란이 미국 특사 만나기를 거부하면서 휴전 희망이 어두워지면서 유가는 상승했습니다."
-        },
-        {
-          "date": "2026-07-01",
-          "stage": "UNKNOWN",
-          "milestone": "베트남 사업 무관",
-          "source": "channelnewsasia",
-          "title_ko": "이란-미국 회담 결렬로 공급 우려가 높아지면서 유가 상승"
+          "date": "2026-07-08",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "en_prnasisa",
+          "title_ko": "2026년 세계 해양 주간(World Offshore Week), 아시아 해양 석유, 에너지, 해양 부문을 싱가포르에서 한자리에 모다"
         }
       ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-07-01",
-      "article_count": 2,
-      "haiku_count": 1,
+      "latest_article_date": "2026-07-08",
+      "article_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "원유 생산량",
@@ -230,9 +223,9 @@
         }
       ]
     },
-    "VN-WAT-URBAN": {
-      "plan_id": "VN-WAT-URBAN",
-      "title_ko": "도시 배수·침수 방지 마스터플랜",
+    "VN-SWM-NATIONAL-2030": {
+      "plan_id": "VN-SWM-NATIONAL-2030",
+      "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
       "sector": "",
       "area": "",
       "current_stage": "PLANNING",
@@ -241,33 +234,33 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-07-01",
+          "date": "2026-07-09",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "호치민시는 2030년까지 도시 폐수의 80%를 수집하는 것을 목표로 하고 있습니다."
+          "title_ko": "호치민시, 하루 1,000톤 규모의 폐기물 발전소 추가 배치"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-07-01",
+      "latest_article_date": "2026-07-09",
       "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": [
         {
-          "indicator": "도시 안전 상수 보급률",
+          "indicator": "도시 폐기물 수거율",
           "target": "100%",
-          "current": "95% 수준 (2025)"
+          "current": "95% (2025 목표 수준)"
         },
         {
-          "indicator": "1인당 공급량",
-          "target": "150 L/일",
-          "current": "120 L/일 (2025 목표)"
+          "indicator": "WtE 소각 비율",
+          "target": "50%",
+          "current": "30% 목표 (2025), 속선 WtE 가동"
         },
         {
-          "indicator": "누수율",
-          "target": "15% 이하",
-          "current": "20% 이하 (2025 목표)"
+          "indicator": "매립 의존율",
+          "target": "30% 이하",
+          "current": "속선 WtE 가동으로 현저히 감소 중"
         }
       ]
     },
@@ -350,7 +343,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 6,
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -396,11 +389,18 @@
       "stage_order": 3,
       "stage_history": [
         {
-          "date": "2026-07-02",
+          "date": "2026-07-03",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
-          "source": "nhandan_vn",
-          "title_ko": "Long Thanh 공항 건설이 완료 목표 달성을 위해 가속화됩니다"
+          "source": "sggp_org_vn",
+          "title_ko": "Lam Dong, 두 개의 고속도로 프로젝트에 자재 공급 확보"
+        },
+        {
+          "date": "2026-07-03",
+          "stage": "UNKNOWN",
+          "milestone": "기사 내용: 열대성 폭풍 마이삭 대비",
+          "source": "vietnamplus",
+          "title_ko": "베트남 북부가 홍수에 대비하면서 폭풍 메이삭이 통킹 만에 가까워졌습니다."
         },
         {
           "date": "2026-07-02",
@@ -410,32 +410,25 @@
           "title_ko": "호치민시, 화려한 불꽃놀이로 50주년 기념"
         },
         {
-          "date": "2026-07-01",
+          "date": "2026-07-02",
+          "stage": "UNKNOWN",
+          "milestone": "인프라 사업과 무관한 기사",
+          "source": "VnExpress International",
+          "title_ko": "호주서 헤로인 소지한 승무원 적발, 태국 공항 단속"
+        },
+        {
+          "date": "2026-07-02",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "nhandan_vn",
-          "title_ko": "국내, 국제 항공사는 Long Thanh 공항에서 운항하기를 원합니다."
-        },
-        {
-          "date": "2026-07-01",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "asiatimes",
-          "title_ko": "CPEC는 발루치스탄에 도로와 전력을 제공했습니다. CPEC 2.0은 일자리를 제공해야 합니다"
-        },
-        {
-          "date": "2026-07-01",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "vietnamplus",
-          "title_ko": "하이퐁 항구, 6개월간 화물 처리량 11% 증가 기록"
+          "source": "VnExpress International",
+          "title_ko": "세계 최대 군도는 늪지대와 외딴 섬을 가로지르는 39개의 새로운 공항을 계획하고 있습니다."
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-07-02",
+      "latest_article_date": "2026-07-03",
       "article_count": 8,
-      "haiku_count": 0,
+      "haiku_count": 2,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -489,19 +482,12 @@
           "milestone": "그린 스카이라인 프로젝트 운영 중",
           "source": "vir_vn",
           "title_ko": "베트남의 그린 스카이라인(Green Skyline) 프로젝트, 도시 주택 성장에 따라 대만 투자자들의 관심 불러일으키다"
-        },
-        {
-          "date": "2026-07-01",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "en_prnasisa",
-          "title_ko": "Green Skyline은 베트남의 도시 주거 시장이 모멘텀을 얻음에 따라 대만 지역 투자자들의 관심을 끌고 있습니다."
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-07-07",
-      "article_count": 4,
+      "article_count": 3,
       "haiku_count": 1,
       "kpi_targets": [
         {
@@ -559,6 +545,47 @@
           "indicator": "바이오연료 혼합률",
           "target": "E10 100% 보급",
           "current": "파일럿"
+        }
+      ]
+    },
+    "HN-URBAN-INFRA": {
+      "plan_id": "HN-URBAN-INFRA",
+      "title_ko": "하노이 도시 인프라 개발 계획 2030",
+      "sector": "",
+      "area": "",
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
+      "stage_history": [
+        {
+          "date": "2026-07-09",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "하노이는 홍수, 오염, 폐수, 쓰레기 등 가장 시급한 문제를 해결하는 데 초점을 맞춰야 한다"
+        }
+      ],
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-07-09",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "도시개발 총투자",
+          "target": "$2.5T (2026~2045)",
+          "current": "Decision 1668 확정"
+        },
+        {
+          "indicator": "인구 수용 목표",
+          "target": "16M명 (2045)",
+          "current": "현재 8.5M명"
+        },
+        {
+          "indicator": "링로드4 완공",
+          "target": "2027년 전체 완공",
+          "current": "착공 진행"
         }
       ]
     }
