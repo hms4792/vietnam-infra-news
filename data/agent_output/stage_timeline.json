@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-10 13:16",
+  "generated_at": "2026-07-11 04:24",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -111,17 +111,17 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-07-08",
+          "date": "2026-07-10",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "en_prnasisa",
-          "title_ko": "2026년 세계 해양 주간(World Offshore Week), 아시아 해양 석유, 에너지, 해양 부문을 싱가포르에서 한자리에 모다"
+          "source": "astroawani",
+          "title_ko": "이란 긴장 고조로 호르무즈 해협 통과 교통 정체"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-07-08",
-      "article_count": 1,
+      "latest_article_date": "2026-07-10",
+      "article_count": 2,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -187,15 +187,22 @@
       "title_ko": "베트남 수자원 개발 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
       "stage_history": [
         {
+          "date": "2026-07-11",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "호아빈(Hoa Binh) 수력발전소는 7월 11일 오전 11시부터 바닥 배출구를 열었습니다."
+        },
+        {
           "date": "2026-07-10",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
           "title_ko": "홍수와 비로 인해 Son La와 Dien Bien에 큰 피해가 발생했습니다."
         },
@@ -205,18 +212,11 @@
           "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Nhue - Day 강, Bac Hung Hai 복원 시 폐수 처리를 우선시하자는 제안"
-        },
-        {
-          "date": "2026-07-03",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "사우디아라비아는 처리된 폐수를 전략적 자원으로 간주합니다."
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
       "latest_insight": "",
-      "latest_article_date": "2026-07-10",
+      "latest_article_date": "2026-07-11",
       "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": [
@@ -250,16 +250,16 @@
         {
           "date": "2026-07-10",
           "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
+          "milestone": "2026년 우기 대비 배수시스템 긴급 운영 개시",
           "source": "Moi truong & Cuoc song",
           "title_ko": "폭우로 인해 지역 홍수 발생, 하노이 긴급 배수 시스템 가동"
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
-      "latest_insight": "",
+      "next_watch": "하노이 배수시스템 확장사업 진행 현황 및 누수율 개선 추이",
+      "latest_insight": "도시 수관리 인프라가 운영 단계 진입. 폭우 대응으로 기존 시스템 가동 중. 향후 용량 확충과 효율성 개선에 투자 필요.",
       "latest_article_date": "2026-07-10",
       "article_count": 1,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "도시 안전 상수 보급률",
@@ -388,24 +388,17 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
-          "date": "2026-07-07",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "vietnamplus",
-          "title_ko": "태국 베트남 전시회로 무역, 투자 기회 열려"
-        },
-        {
-          "date": "2026-07-06",
+          "date": "2026-07-10",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "베트남은 수출 성장을 유지하기 위해 더 강력한 국내 제조업을 추구합니다"
+          "source": "vietnamnews_vn",
+          "title_ko": "차세대 산업단지는 고품질 투자자를 유치해야 합니다: 정상회담"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 5,
+      "article_count": 6,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -445,38 +438,31 @@
       "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
       "sector": "",
       "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-07-06",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "vir_vn",
-          "title_ko": "지속 가능한 산업 생태계 구축을 담당하는 Stavian IP 책임자"
-        },
-        {
-          "date": "2026-07-06",
+          "date": "2026-07-07",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "베트남, 에너지 효율성을 위한 세계적인 노력에 동참"
+          "source": "tienphong_vn",
+          "title_ko": "부총리: 다낭은 돌파구를 마련할 절호의 기회에 직면해 있습니다."
         },
         {
-          "date": "2026-07-03",
-          "stage": "UNKNOWN",
-          "milestone": "기사는 인프라 사업과 무관",
-          "source": "vietnamplus",
-          "title_ko": "베트남 북부가 홍수에 대비하면서 폭풍 메이삭이 통킹 만에 가까워졌습니다."
+          "date": "2026-07-07",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "sggp_org_vn",
+          "title_ko": "베트남, 투명한 탄소 시장 기반 마련"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-07-06",
+      "latest_article_date": "2026-07-07",
       "article_count": 8,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -511,11 +497,11 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-07-07",
+          "date": "2026-07-10",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "VnExpress International",
-          "title_ko": "베트남 롱탄(Long Thanh) 거대 공항, 붕타우(Vung Tau) 해변에서 직행 지하철 노선 개통 예정"
+          "source": "sggp_org_vn",
+          "title_ko": "호치민 순환도로 4 프로젝트에 대한 타당성 조사 보고서 10개 중 8개 승인"
         },
         {
           "date": "2026-07-07",
@@ -527,8 +513,8 @@
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-07-07",
-      "article_count": 2,
+      "latest_article_date": "2026-07-10",
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": [
         {
@@ -553,24 +539,24 @@
       "title_ko": "베트남 스마트시티 개발 프로그램 2030",
       "sector": "",
       "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-07-09",
-          "stage": "OPERATION",
-          "milestone": "롱안항 스마트그린항 국제상 수상",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "vietnamplus",
           "title_ko": "롱안항, 베트남 기업 최초로 아시아태평양 스마트 그린 포트상 수상"
         }
       ],
-      "next_watch": "항만 스마트시티 확산 속도, 타 항만 시범 추진 여부",
-      "latest_insight": "VN-SC-2030의 스마트시티 확산 단계 진입 신호. 항만 부문 녹색 IoT 기술 도입 가속화로 타 도시 모델 제시 가능성 높음",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-07-09",
       "article_count": 1,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": [
         {
           "indicator": "스마트시티 시범 도시",
@@ -594,9 +580,9 @@
         }
       ]
     },
-    "VN-EV-2030": {
-      "plan_id": "VN-EV-2030",
-      "title_ko": "베트남 전기차·친환경 교통 전략 2030",
+    "HN-URBAN-INFRA": {
+      "plan_id": "HN-URBAN-INFRA",
+      "title_ko": "하노이 도시 인프라 개발 계획 2030",
       "sector": "",
       "area": "",
       "current_stage": "PLANNING",
@@ -605,55 +591,14 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-07-03",
+          "date": "2026-07-09",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "VinFast는 기존 고객에게 큰 선물을 제공합니다. 사용자는 전기 자동차로 전환할 때 수억 동의 \"이중 특권\"을 누립니다."
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-07-03",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "EV 신규 판매 비율",
-          "target": "100% (2030)",
-          "current": "~10%"
-        },
-        {
-          "indicator": "충전 인프라",
-          "target": "25만 충전소",
-          "current": "~5,000개소"
-        },
-        {
-          "indicator": "바이오연료 혼합률",
-          "target": "E10 100% 보급",
-          "current": "파일럿"
-        }
-      ]
-    },
-    "HN-URBAN-INFRA": {
-      "plan_id": "HN-URBAN-INFRA",
-      "title_ko": "하노이 도시 인프라 개발 계획 2030",
-      "sector": "",
-      "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
-      "stage_history": [
-        {
-          "date": "2026-07-09",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "하노이는 홍수, 오염, 폐수, 쓰레기 등 가장 시급한 문제를 해결하는 데 초점을 맞춰야 한다"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-07-09",
       "article_count": 1,
