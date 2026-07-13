@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-11 04:24",
+  "generated_at": "2026-07-13 13:24",
   "plans": {
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
@@ -105,24 +105,31 @@
       "title_ko": "베트남 석유가스 분야 전략 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
         {
           "date": "2026-07-10",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "UNKNOWN",
+          "milestone": "호르무즈 해협 통과 교통 정체",
           "source": "astroawani",
           "title_ko": "이란 긴장 고조로 호르무즈 해협 통과 교통 정체"
+        },
+        {
+          "date": "2026-07-08",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "en_prnasisa",
+          "title_ko": "2026년 세계 해양 주간(World Offshore Week), 아시아 해양 석유, 에너지, 해양 부문을 싱가포르에서 한자리에 모다"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
+      "next_watch": "이란 긴장 완화 및 해상 안보 상황 모니터링",
+      "latest_insight": "VN-OG-2030 석유가스 수입·수출 물류 경로인 호르무즈 해협 통과 위험 증대. 대체 해로 검토 및 LNG 공급망 안정성 재평가 필요.",
       "latest_article_date": "2026-07-10",
       "article_count": 2,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "원유 생산량",
@@ -201,15 +208,15 @@
         },
         {
           "date": "2026-07-10",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "OPERATION",
+          "milestone": "2026년 홍수 대응·복구 중, 인프라 강화 필요",
           "source": "Moi truong & Cuoc song",
           "title_ko": "홍수와 비로 인해 Son La와 Dien Bien에 큰 피해가 발생했습니다."
         },
         {
           "date": "2026-07-10",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "PLANNING",
+          "milestone": "누에-데이강·박흥하이 유역 수질복구 사업 계획 수립",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Nhue - Day 강, Bac Hung Hai 복원 시 폐수 처리를 우선시하자는 제안"
         }
@@ -218,7 +225,7 @@
       "latest_insight": "",
       "latest_article_date": "2026-07-11",
       "article_count": 3,
-      "haiku_count": 0,
+      "haiku_count": 2,
       "kpi_targets": [
         {
           "indicator": "지하수 관리 대수층",
@@ -250,13 +257,13 @@
         {
           "date": "2026-07-10",
           "stage": "OPERATION",
-          "milestone": "2026년 우기 대비 배수시스템 긴급 운영 개시",
+          "milestone": "하노이 도시 배수시스템 긴급 가동 운영",
           "source": "Moi truong & Cuoc song",
           "title_ko": "폭우로 인해 지역 홍수 발생, 하노이 긴급 배수 시스템 가동"
         }
       ],
-      "next_watch": "하노이 배수시스템 확장사업 진행 현황 및 누수율 개선 추이",
-      "latest_insight": "도시 수관리 인프라가 운영 단계 진입. 폭우 대응으로 기존 시스템 가동 중. 향후 용량 확충과 효율성 개선에 투자 필요.",
+      "next_watch": "시스템 확장 범위 및 누수율 개선 사업 추진",
+      "latest_insight": "마스터플랜 상수도·배수 통합 운영 단계 진입. 도시 인프라 안정화로 민간 투자 환경 개선 신호",
       "latest_article_date": "2026-07-10",
       "article_count": 1,
       "haiku_count": 1,
@@ -294,6 +301,13 @@
           "milestone": "착공·건설 진행 중",
           "source": "VnExpress International",
           "title_ko": "세계 최고의 목적지가 폐기물 처리를 위한 최초의 폐기물 에너지화 공장 착공"
+        },
+        {
+          "date": "2026-07-09",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "호치민시, 하루 1,000톤 규모의 폐기물 발전소 추가 배치"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
@@ -388,11 +402,25 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
+          "date": "2026-07-11",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "vietnamplus",
+          "title_ko": "차세대 산업단지는 고품질 투자자를 유치해야 합니다: Summit"
+        },
+        {
           "date": "2026-07-10",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "vietnamplus",
+          "title_ko": "Suntory PepsiCo, Tay Ninh성 남부에 3억 달러 규모의 공장 준공"
+        },
+        {
+          "date": "2026-07-06",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamnews_vn",
-          "title_ko": "차세대 산업단지는 고품질 투자자를 유치해야 합니다: 정상회담"
+          "source": "vietnamplus",
+          "title_ko": "베트남은 수출 성장을 유지하기 위해 더 강력한 국내 제조업을 추구합니다"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
@@ -452,17 +480,31 @@
         },
         {
           "date": "2026-07-07",
+          "stage": "UNKNOWN",
+          "milestone": "기사 내용이 교통인프라와 무관함",
+          "source": "nhandan_vn",
+          "title_ko": "2026년 하노이, 500만 번째 해외 방문객 맞이"
+        },
+        {
+          "date": "2026-07-07",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
           "source": "sggp_org_vn",
           "title_ko": "베트남, 투명한 탄소 시장 기반 마련"
+        },
+        {
+          "date": "2026-07-07",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "vietnamplus",
+          "title_ko": "하노이는 7월 6일부터 무료 칩 지원 버스 카드 등록을 시작합니다."
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-07-07",
       "article_count": 8,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "고속도로 총연장",
@@ -486,9 +528,9 @@
         }
       ]
     },
-    "VN-URB-METRO-2030": {
-      "plan_id": "VN-URB-METRO-2030",
-      "title_ko": "베트남 도시철도(메트로) 개발 계획",
+    "VN-MEKONG-DELTA-2030": {
+      "plan_id": "VN-MEKONG-DELTA-2030",
+      "title_ko": "메콩 델타 인프라 개발 계획 2030",
       "sector": "",
       "area": "",
       "current_stage": "PLANNING",
@@ -497,23 +539,64 @@
       "stage_order": 1,
       "stage_history": [
         {
+          "date": "2026-07-13",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Can Tho의 토네이도로 인해 15채의 집이 지붕을 잃었고 많은 구조물이 손상되었습니다."
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-07-13",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": [
+        {
+          "indicator": "2030년까지 고속도로 760km",
+          "target": "",
+          "current": ""
+        },
+        {
+          "indicator": "메콩 수계 통합 관리",
+          "target": "",
+          "current": ""
+        },
+        {
+          "indicator": "Can Tho 교량 2호 건설",
+          "target": "",
+          "current": ""
+        }
+      ]
+    },
+    "VN-URB-METRO-2030": {
+      "plan_id": "VN-URB-METRO-2030",
+      "title_ko": "베트남 도시철도(메트로) 개발 계획",
+      "sector": "",
+      "area": "",
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
+      "stage_history": [
+        {
+          "date": "2026-07-13",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamplus",
+          "title_ko": "롱탄 국제공항, 최종 건설 전력에 돌입"
+        },
+        {
           "date": "2026-07-10",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "sggp_org_vn",
           "title_ko": "호치민 순환도로 4 프로젝트에 대한 타당성 조사 보고서 10개 중 8개 승인"
-        },
-        {
-          "date": "2026-07-07",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Nikkei Asia",
-          "title_ko": "Vingroup, 호치민시 지역을 연결하는 35억 달러 규모의 해상 교량 건설"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-07-10",
+      "latest_article_date": "2026-07-13",
       "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": [
@@ -539,24 +622,24 @@
       "title_ko": "베트남 스마트시티 개발 프로그램 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
           "date": "2026-07-09",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "OPERATION",
+          "milestone": "아시아태평양 스마트그린항만상 수상(2026.07)",
           "source": "vietnamplus",
           "title_ko": "롱안항, 베트남 기업 최초로 아시아태평양 스마트 그린 포트상 수상"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
+      "next_watch": "롱안항 스마트항만 운영 확대 및 국내 타항만 확산 추이",
+      "latest_insight": "베트남 항만의 스마트화·친환경화 진행 중. VN-SC-2030과 연계하여 스마트인프라 투자 확대 신호. 한국 항만/물류 기업의 참여 기회 증가.",
       "latest_article_date": "2026-07-09",
       "article_count": 1,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": [
         {
           "indicator": "스마트시티 시범 도시",
@@ -585,20 +668,20 @@
       "title_ko": "하노이 도시 인프라 개발 계획 2030",
       "sector": "",
       "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
           "date": "2026-07-09",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
           "source": "Moi truong & Cuoc song",
           "title_ko": "하노이는 홍수, 오염, 폐수, 쓰레기 등 가장 시급한 문제를 해결하는 데 초점을 맞춰야 한다"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-07-09",
       "article_count": 1,
