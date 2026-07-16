@@ -4,6 +4,11 @@
 #
 # 스케줄: 평일만(월~금) UTC 11:00 = KST 20:00
 #
+# v7.6 업데이트 (2026-07-16):
+#   - knowledge_index.json 보호: 커밋 단계에서 docs/shared/knowledge_index.json을
+#     스테이징 제외 처리하여, 파이프라인이 MI 애널리스트의 수동 갱신 내용
+#     (마스터플랜 description/kpi/project)을 자동 덮어쓰지 않도록 조치
+#
 # v7.4 업데이트 (2026-04-24):
 #   - SA-7 context_analyzer.py (맥락분석, 규칙+Haiku 2단계)
 #   - Stage Timeline Builder (SA-7 결과 → Excel 누적 기록)
@@ -28,9 +33,11 @@
 #   - ExcelUpdater: update_all(articles) 메서드 사용
 #   - date 키 fallback: article.get('date') or article.get('published_date')
 #   - ExcelUpdater 클래스 / NewsCollector 클래스 없음
+#   - docs/shared/knowledge_index.json: 파이프라인 자동 커밋 대상에서 제외
+#     (MI 애널리스트가 수동 관리 — 2026-07-16 추가)
 # ============================================================
 
-name: Daily Vietnam Infra News Pipeline v7.5
+name: Daily Vietnam Infra News Pipeline v7.6
 
 on:
   schedule:
@@ -251,6 +258,11 @@ jobs:
           git config user.email "actions@github.com"
           git config user.name  "GitHub Actions"
           git add data/ docs/ || true
+          # ★ v7.6 추가 (2026-07-16): knowledge_index.json 보호
+          #   MI 애널리스트가 수동으로 갱신한 마스터플랜 콘텐츠(description/kpi/project)를
+          #   자동 파이프라인(특히 export_shared.py)이 덮어쓰지 않도록, 커밋 대상에서 제외합니다.
+          #   (이 파일이 로컬에서 바뀌어도 실제 저장소에는 반영되지 않음 — 원인 스크립트 불문 안전장치)
+          git restore --staged docs/shared/knowledge_index.json 2>/dev/null || true
           # 변경사항 없으면 조용히 종료
           git diff --staged --quiet && echo "변경사항 없음" && exit 0
 
