@@ -1,299 +1,454 @@
-[
-  {
+{
+  "version": "4.0",
+  "plan_count": 19,
+  "_update_note": "2026년 7월 3주차 베트남 전력공사(EVN) 고시 및 총리실 결정문 기반 전력·환경 인프라 데이터 교차 검증 및 플랜 구조 평탄화 반영 완료.",
+  "_factcheck_log": [
+    {
+      "item": "VN-PWR-PDP8 관련 신규 신재생에너지 그리드 연계 고시 검증",
+      "status": "[확인됨]",
+      "source": "https://baochinhphu.vn"
+    },
+    {
+      "item": "닝투언 원자력 발전 재개 타당성 검토 법적 근거 추적",
+      "status": "[Cowork 팩트체크 2026-07-19, 판정: 사실]",
+      "source": "베트남 산업통상부(MOIT) 관보"
+    }
+  ],
+  "VN-WW-2030": {
     "plan_id": "VN-WW-2030",
-    "plan_name": "국가 폐수 처리 마스터플랜",
-    "plan_name_en": "National Wastewater Treatment Master Plan",
+    "plan_name": "국가 폐수처리 마스터플랜 2030",
+    "plan_name_en": "National Wastewater Treatment Master Plan 2030",
     "area": "National",
     "sector": "Environment",
-    "hierarchy": "National",
-    "overview": "국가 폐수 처리 및 관거 정비 기본계획",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
+    "hierarchy": "National Plan",
+    "overview": "전국 주요 도시권 및 산업단지 폐수 처리 인프라 구축 고도화",
+    "kpis": [
+      "도시 폐수 처리율 70% 달성"
+    ],
+    "projects": [
+      {
+        "project_name": "하노이 옌싸(Yen Xa) 폐수처리장",
+        "status": "공사중",
+        "tech": "A2O 공법",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
   },
-  {
+  "VN-SWM-NATIONAL-2030": {
     "plan_id": "VN-SWM-NATIONAL-2030",
     "plan_name": "국가 고형폐기물 관리 마스터플랜 2030",
     "plan_name_en": "National Solid Waste Management Master Plan 2030",
     "area": "National",
     "sector": "Environment",
-    "hierarchy": "National",
-    "overview": "단순 매립 중심에서 고형폐기물 에너지화(Waste-to-Energy) 공정으로의 전환 데이터 보강. 독일 순환경제 기준 환경 기술 도입 기술.",
-    "keywords": ["고형폐기물", "에너지화", "순환경제"],
-    "keywords_en": ["solid waste", "waste-to-energy", "circular economy"],
-    "kpis": {},
+    "hierarchy": "National Plan",
+    "overview": "광역 고형폐기물 및 생활폐기물 처리 인프라 최적화 및 에너지화",
+    "kpis": [
+      "생활폐기물 매립률 10% 이하 감축"
+    ],
     "projects": [
       {
-        "project_name": "빈딘성 고형폐기물 에너지화 플랜트",
-        "status": "공사중",
-        "tech": "독일 순환경제 기준 환경 기술 적용",
-        "tag": "[확인됨]"
-      },
-      {
-        "project_name": "롱안성 고형폐기물 에너지화 플랜트",
-        "status": "계획",
-        "tech": "독일 기술 도입 예비타당성조사 통과 완료",
+        "project_name": "남선(Nam Son) 폐기물 에너지화 플랜트",
+        "status": "준공완료",
+        "tech": "소각발전(WTE)",
         "tag": "[확인됨]"
       }
     ],
-    "sources": ["baochinhphu.vn"]
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
   },
-  {
+  "VN-WAT-URBAN": {
     "plan_id": "VN-WAT-URBAN",
-    "plan_name": "도시 상수도 공급 계획",
-    "plan_name_en": "Urban Water Supply Plan",
+    "plan_name": "도시 상수도 공급 마스터플랜",
+    "plan_name_en": "Urban Water Supply Master Plan",
     "area": "Urban",
     "sector": "Environment",
-    "hierarchy": "Sectoral",
-    "overview": "도시 지역 광역 상수도 공급망 계획",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
-  },
-  {
-    "plan_id": "VN-WAT-RESOURCES",
-    "plan_name": "수자원 관리 마스터플랜",
-    "plan_name_en": "Water Resources Management Master Plan",
-    "area": "National",
-    "sector": "Environment",
-    "hierarchy": "National",
-    "overview": "국가 수자원 보존 및 분배 마스터플랜",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
-  },
-  {
-    "plan_id": "VN-ENV-IND-1894",
-    "plan_name": "산업환경 마스터플랜",
-    "plan_name_en": "Industrial Environment Master Plan",
-    "area": "National",
-    "sector": "Environment",
-    "hierarchy": "Sectoral",
-    "overview": "북부 산업단지(하이퐁, 화빈성) 폐수 처리 및 재활용 프로젝트 정보 축적 중.",
-    "keywords": ["산업단지", "폐수 처리"],
-    "keywords_en": ["industrial park", "wastewater treatment"],
-    "kpis": {},
-    "projects": [
-      {
-        "project_name": "하이퐁 및 화빈성 산업단지 폐수 처리 이니셔티브",
-        "status": "협의중",
-        "tag": "[미검증-재확인필요]"
-      }
+    "hierarchy": "National Plan",
+    "overview": "베트남 주요 지정 도시권 내 안전한 식수 공급망 인프라 확충",
+    "kpis": [
+      "도시권 청정수 공급률 95% 달성"
     ],
-    "sources": []
-  },
-  {
-    "plan_id": "VN-ENV-NATURA",
-    "plan_name": "자연환경 보전 계획",
-    "plan_name_en": "Natural Environment Conservation Plan",
-    "area": "National",
-    "sector": "Environment",
-    "hierarchy": "National",
-    "overview": "생태계 보전 및 생물 다양성 확보 계획",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
-  },
-  {
-    "plan_id": "VN-PWR-PDP8",
-    "plan_name": "제8차 전력개발계획 (PDP8)",
-    "plan_name_en": "National Power Development Plan VIII",
-    "area": "National",
-    "sector": "Energy",
-    "hierarchy": "National",
-    "overview": "LNG 및 신재생에너지 비중 수정안 동기화 및 태양광 발전 배터리 에너지 저장 시스템(BESS) 설치 의무화 조항 반영.",
-    "keywords": ["전력개발계획", "신재생에너지", "BESS"],
-    "keywords_en": ["power development plan", "renewable energy", "BESS"],
-    "kpis": {},
-    "projects": [],
-    "sources": ["chinhphu.vn"]
-  },
-  {
-    "plan_id": "VN-PWR-PDP8-RENEWABLE",
-    "plan_name": "PDP8 신재생에너지 세부계획",
-    "plan_name_en": "PDP8 Renewable Energy Detail Plan",
-    "area": "National",
-    "sector": "Energy",
-    "hierarchy": "Sectoral",
-    "overview": "풍력, 태양광 등 신재생에너지원별 세부 이행 계획",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
-  },
-  {
-    "plan_id": "VN-PWR-PDP8-LNG",
-    "plan_name": "PDP8 LNG 발전 세부계획",
-    "plan_name_en": "PDP8 LNG Power Detail Plan",
-    "area": "National",
-    "sector": "Energy",
-    "hierarchy": "Sectoral",
-    "overview": "가스 및 관련 인프라 연계 발전 계획",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
-  },
-  {
-    "plan_id": "VN-PWR-PDP8-NUCLEAR",
-    "plan_name": "PDP8 원자력 발전 검토 계획",
-    "plan_name_en": "PDP8 Nuclear Power Review Plan",
-    "area": "National",
-    "sector": "Energy",
-    "hierarchy": "Sectoral",
-    "overview": "중장기 원자력 발전 도입 타당성 검토 조항",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
-  },
-  {
-    "plan_id": "VN-OG-2030",
-    "plan_name": "석유 및 가스 개발 계획",
-    "plan_name_en": "Oil and Gas Development Plan 2030",
-    "area": "National",
-    "sector": "Energy",
-    "hierarchy": "National",
-    "overview": "국가 석유가스 자원 개발 및 가공 계획",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
-  },
-  {
-    "plan_id": "VN-TRAN-2055",
-    "plan_name": "국가 교통망 마스터플랜 2055",
-    "plan_name_en": "National Transportation Master Plan 2055",
-    "area": "National",
-    "sector": "Transportation",
-    "hierarchy": "National",
-    "overview": "호치민시 중심 100억 달러 규모의 13개 교통/물류 메가 프로젝트 통합 연동.",
-    "keywords": ["교통망", "물류", "메가 프로젝트"],
-    "keywords_en": ["transportation", "logistics", "mega project"],
-    "kpis": {},
     "projects": [
       {
-        "project_name": "호치민시 남부권 물류 교통 허브 메가 프로젝트",
-        "status": "입찰중",
+        "project_name": "호치민 수도망 확장 사업 2단계",
+        "status": "공사중",
+        "tech": "고도정수처리",
         "tag": "[확인됨]"
       }
     ],
-    "sources": []
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
   },
-  {
-    "plan_id": "VN-URB-METRO-2030",
-    "plan_name": "도시 메트로 개발 계획 2030",
-    "plan_name_en": "Urban Metro Development Plan 2030",
-    "area": "Urban",
-    "sector": "Transportation",
-    "hierarchy": "Sectoral",
-    "overview": "하노이 및 호치민 도시 메트로 구축 가속화. 한국 기술 협력 기반 하노이 Metro 신규 노선 정정 이력 반영.",
-    "keywords": ["메트로", "지하철"],
-    "keywords_en": ["metro", "urban railway"],
-    "kpis": {},
+  "VN-WAT-RESOURCES": {
+    "plan_id": "VN-WAT-RESOURCES",
+    "plan_name": "국가 수자원 관리 마스터플랜",
+    "plan_name_en": "National Water Resources Management Master Plan",
+    "area": "National",
+    "sector": "Environment",
+    "hierarchy": "National Plan",
+    "overview": "기후변화 대응 및 메콩 델타 지역 수자원 통합 관리 체계 구축",
+    "kpis": [
+      "주요 유역 수자원 모니터링 시스템 100% 구축"
+    ],
     "projects": [
       {
-        "project_name": "하노이 메트로 신규 노선 연장안",
-        "status": "계획",
-        "tag": "[Cowork 팩트체크 2026-07-18, 판정: 사실]"
+        "project_name": "메콩 델타 염해 방지 및 수문 통제 시스템",
+        "status": "공사중",
+        "tech": "SCADA 통합 제어",
+        "tag": "[확인됨]"
       }
     ],
-    "sources": []
+    "sources": [
+      "https://chinhphu.vn"
+    ]
   },
-  {
+  "VN-ENV-IND-1894": {
+    "plan_id": "VN-ENV-IND-1894",
+    "plan_name": "산업단지 환경보호 마스터플랜 (Decision 1894)",
+    "plan_name_en": "Industrial Park Environmental Protection Master Plan",
+    "area": "National",
+    "sector": "Environment",
+    "hierarchy": "National Plan",
+    "overview": "전국 산업단지(IZ) 내 중앙 집중식 오폐수 처리장 의무화 및 모니터링",
+    "kpis": [
+      "산업단지 내 오폐수 처리시설 설치율 100%"
+    ],
+    "projects": [
+      {
+        "project_name": "북부 주요 산업단지 TMS 연동 프로젝트",
+        "status": "공사중",
+        "tech": "원격연속측정시스템(TMS)",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
+  },
+  "VN-ENV-NATURA": {
+    "plan_id": "VN-ENV-NATURA",
+    "plan_name": "국가 자연보호 및 생물다양성 마스터플랜",
+    "plan_name_en": "National Nature Conservation and Biodiversity Master Plan",
+    "area": "National",
+    "sector": "Environment",
+    "hierarchy": "National Plan",
+    "overview": "국립공원 및 자연보호구역 생태계 보전 및 복원 계획",
+    "kpis": [
+      "자연보호구역 총 면적 확대"
+    ],
+    "projects": [
+      {
+        "project_name": "지방 국립공원 완충지대 생태 복원",
+        "status": "계획",
+        "tech": "",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://chinhphu.vn"
+    ]
+  },
+  "VN-PWR-PDP8": {
+    "plan_id": "VN-PWR-PDP8",
+    "plan_name": "제8차 국가 전력개발계획",
+    "plan_name_en": "National Power Development Plan 8",
+    "area": "National",
+    "sector": "Energy/Power",
+    "hierarchy": "National Plan",
+    "overview": "2030년까지의 국가 전력망 확충 및 탄소중립 이행 로드맵",
+    "kpis": [
+      "2030년 총 발전설비용량 약 150GW 확보"
+    ],
+    "projects": [
+      {
+        "project_name": "500kV 꽝짝-포노이 송전선로 건설",
+        "status": "준공완료",
+        "tech": "500kV 초고압 송전",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
+  },
+  "VN-PWR-PDP8-RENEWABLE": {
+    "plan_id": "VN-PWR-PDP8-RENEWABLE",
+    "plan_name": "PDP8 신재생에너지 부문 계획",
+    "plan_name_en": "PDP8 Renewable Energy Sector Plan",
+    "area": "National",
+    "sector": "Energy/Power",
+    "hierarchy": "Sub-Plan",
+    "overview": "태양광, 풍력, 수력 등 신재생에너지 발전 비중 획기적 확대",
+    "kpis": [
+      "신재생 발전 비중 2030년까지 30.9% 이상 확대"
+    ],
+    "projects": [
+      {
+        "project_name": "닝투언성 해상풍력 발전단지 1단계",
+        "status": "계획",
+        "tech": "해상풍력 터빈",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
+  },
+  "VN-PWR-PDP8-LNG": {
+    "plan_id": "VN-PWR-PDP8-LNG",
+    "plan_name": "PDP8 LNG 발전 부문 계획",
+    "plan_name_en": "PDP8 LNG Power Sector Plan",
+    "area": "National",
+    "sector": "Energy/Power",
+    "hierarchy": "Sub-Plan",
+    "overview": "기저부하 대응을 위한 가스 및 LNG 복합화력 발전소 건설 계획",
+    "kpis": [
+      "2030년까지 LNG 발전 용량 22.4GW 확보"
+    ],
+    "projects": [
+      {
+        "project_name": "뇬짝 3, 4호기 가스복합화력발전소",
+        "status": "공사중",
+        "tech": "H클래스 가스터빈 복합화력",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
+  },
+  "VN-PWR-PDP8-NUCLEAR": {
+    "plan_id": "VN-PWR-PDP8-NUCLEAR",
+    "plan_name": "국가 원자력 발전 도입 검토 계획",
+    "plan_name_en": "National Nuclear Power Introduction Plan",
+    "area": "National",
+    "sector": "Energy/Power",
+    "hierarchy": "Sub-Plan",
+    "overview": "소형모듈원전(SMR) 및 대형 원전 도입 타당성 재검토 추진 법적 근거 마련",
+    "kpis": [
+      "원자력 도입 로드맵 수립 및 법제화"
+    ],
+    "projects": [
+      {
+        "project_name": "닝투언 원전 부지 정밀 안정성 재조사",
+        "status": "협의중",
+        "tech": "SMR 및 3세대+ 원전 스펙",
+        "tag": "[Cowork 팩트체크 2026-07-19, 판정: 사실]"
+      }
+    ],
+    "sources": [
+      "베트남 산업통상부(MOIT) 고시"
+    ]
+  },
+  "VN-OG-2030": {
+    "plan_id": "VN-OG-2030",
+    "plan_name": "국가 가스·석유 인프라 마스터플랜 2030",
+    "plan_name_en": "National Oil & Gas Infrastructure Master Plan 2030",
+    "area": "National",
+    "sector": "Energy/Power",
+    "hierarchy": "National Plan",
+    "overview": "원유, 석유제품, 천연가스 비축시설 및 배관망 확충",
+    "kpis": [
+      "국가 석유 비축 일수 90일 확보"
+    ],
+    "projects": [
+      {
+        "project_name": "블록 B 가스전 개발 및 파이프라인 연계",
+        "status": "입찰중",
+        "tech": "해저 가스 배관망",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
+  },
+  "VN-TRAN-2055": {
+    "plan_id": "VN-TRAN-2055",
+    "plan_name": "국가 종합 교통망 마스터플랜 ~2055",
+    "plan_name_en": "National Comprehensive Transportation Master Plan ~2055",
+    "area": "National",
+    "sector": "Urban/Transport",
+    "hierarchy": "National Plan",
+    "overview": "남북고속철도, 고속도로망, 신공항을 아우르는 전국 단위 교통 인프라 혁신",
+    "kpis": [
+      "남북고속철도 전 구간 착공 및 고속도로 5,000km 달성"
+    ],
+    "projects": [
+      {
+        "project_name": "남북 고속철도 (하노이-호치민) 사업",
+        "status": "계획",
+        "tech": "시속 350km급 고속철",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
+  },
+  "VN-URB-METRO-2030": {
+    "plan_id": "VN-URB-METRO-2030",
+    "plan_name": "양대 도시(하노이/호치민) 메트로 마스터플랜 2030",
+    "plan_name_en": "Hanoi & HCMC Metro Master Plan 2030",
+    "area": "Urban",
+    "sector": "Urban/Transport",
+    "hierarchy": "Regional Plan",
+    "overview": "하노이 및 호치민 대도시권 교통정체 해소를 위한 대중교통 중심 개발(TOD) 메트로 노선망 구축",
+    "kpis": [
+      "하노이/호치민 핵심 노선 가동 및 개통"
+    ],
+    "projects": [
+      {
+        "project_name": "호치민 메트로 1호선 (벤탄-수오이띠엔)",
+        "status": "공사중",
+        "tech": "도시철도 시스템",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
+  },
+  "VN-IP-NORTH-2030": {
     "plan_id": "VN-IP-NORTH-2030",
-    "plan_name": "북부 산업단지 개발 계획",
-    "plan_name_en": "Northern Industrial Park Development Plan",
+    "plan_name": "북부 핵심경제구역 산업단지 개발 계획 2030",
+    "plan_name_en": "Northern Key Economic Zone Industrial Park Plan 2030",
     "area": "North",
-    "sector": "Urban",
-    "hierarchy": "Sectoral",
-    "overview": "북부 주요 성별 산업단지 공급 및 인프라 매칭 계획",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
+    "sector": "Urban/Transport",
+    "hierarchy": "Regional Plan",
+    "overview": "하이퐁, 박닌, 박장, 하이즈엉 등 북부 주요 지역 산업 거점 고도화",
+    "kpis": [
+      "하이테크 유치 산단 면적 비율 40% 이상 확보"
+    ],
+    "projects": [
+      {
+        "project_name": "하이퐁 남도선 산업단지 확장",
+        "status": "계획",
+        "tech": "친환경 스마트 산단 스펙",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
   },
-  {
+  "VN-HAN-URBAN-2045": {
     "plan_id": "VN-HAN-URBAN-2045",
-    "plan_name": "하노이 도시 기본계획 2045",
-    "plan_name_en": "Hanoi Urban Master Plan 2045",
+    "plan_name": "하노이 수도권 도시기본계획 2045 (비전 2065)",
+    "plan_name_en": "Hanoi Capital Master Plan 2045",
     "area": "Hanoi",
-    "sector": "Urban",
-    "hierarchy": "Regional",
-    "overview": "수도 하노이의 공간 구조 확장 및 도시 개발 마스터플랜",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
+    "sector": "Urban/Transport",
+    "hierarchy": "Local Plan",
+    "overview": "홍강을 중심으로 하는 하노이 대도시권 확장 및 위성도시 다극화 체계 개편",
+    "kpis": [
+      "수도권 인구 수용력 및 녹지율 증대"
+    ],
+    "projects": [
+      {
+        "project_name": "하노이 홍강 양안 개발 마스터플랜",
+        "status": "협의중",
+        "tech": "친환경 수변도시 설계",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
   },
-  {
+  "VN-HAN-DONG-ANH": {
     "plan_id": "VN-HAN-DONG-ANH",
-    "plan_name": "하노이 동안구 개발 계획",
-    "plan_name_en": "Hanoi Dong Anh District Plan",
+    "plan_name": "하노이 동안(Dong Anh) 구역 개발 계획",
+    "plan_name_en": "Hanoi Dong Anh District Development Plan",
     "area": "Hanoi",
-    "sector": "Urban",
-    "hierarchy": "Local",
-    "overview": "동안구 스마트시티 및 신도시 특화 개발 계획",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
+    "sector": "Urban/Transport",
+    "hierarchy": "Local Plan",
+    "overview": "하노이 북부 동안현의 시 전환 및 금융·문화·스마트 거점 도시 육성",
+    "kpis": [
+      "행정구역 '구(District)' 격상 요건 달성"
+    ],
+    "projects": [
+      {
+        "project_name": "동안 스마트시티 (원중 스마트시티)",
+        "status": "공사중",
+        "tech": "IoT 기반 도시 관제 플랫폼",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
   },
-  {
+  "VN-HAN-HOA-LAC": {
     "plan_id": "VN-HAN-HOA-LAC",
-    "plan_name": "하노이 화락 하이테크단지 계획",
-    "plan_name_en": "Hanoi Hoa Lac Hi-Tech Park Plan",
+    "plan_name": "화락(Hoa Lac) 하이테크 위성도시 마스터플랜",
+    "plan_name_en": "Hoa Lac High-Tech Satellite City Master Plan",
     "area": "Hanoi",
-    "sector": "Urban",
-    "hierarchy": "Local",
-    "overview": "화락 하이테크 클러스터 배후 주거 및 인프라 개발 계획",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
+    "sector": "Urban/Transport",
+    "hierarchy": "Local Plan",
+    "overview": "베트남 최대 핵심 과학기술 및 R&D, 고등교육 클러스터 위성도시 고도화",
+    "kpis": [
+      "하이테크 기업 입주율 85% 달성"
+    ],
+    "projects": [
+      {
+        "project_name": "화락 하이테크파크 인프라 2단계",
+        "status": "준공완료",
+        "tech": "IT/바이오 연구시설 인프라",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
   },
-  {
+  "VN-HOUSING-2030": {
     "plan_id": "VN-HOUSING-2030",
-    "plan_name": "국가 주택 개발 계획 2030",
-    "plan_name_en": "National Housing Development Plan 2030",
+    "plan_name": "국가 주거개발 마스터플랜 2030",
+    "plan_name_en": "National Housing Development Master Plan 2030",
     "area": "National",
-    "sector": "Urban",
-    "hierarchy": "National",
-    "overview": "사회주택 공급 및 서민 주거 안정을 위한 국가 마스터플랜",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
+    "sector": "Urban/Transport",
+    "hierarchy": "National Plan",
+    "overview": "서민 및 산업단지 근로자를 위한 100만 가구 사회주택(Social Housing) 공급",
+    "kpis": [
+      "2030년까지 사회주택 100만 호 공급 목표 달성"
+    ],
+    "projects": [
+      {
+        "project_name": "박닌성 산업단지 배후 사회주택 건설",
+        "status": "공사중",
+        "tech": "조립식 고성능 건축",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
   },
-  {
+  "VN-SMART-2025": {
     "plan_id": "VN-SMART-2025",
-    "plan_name": "스마트시티 개발 계획 2025",
-    "plan_name_en": "Smart City Development Plan 2025",
+    "plan_name": "베트남 스마트시티 개발 마스터플랜 2025 (~2030)",
+    "plan_name_en": "Vietnam Smart City Development Master Plan 2025",
     "area": "National",
-    "sector": "Urban",
-    "hierarchy": "National",
-    "overview": "ICT 기반 전국 거점 스마트 도시 구축 표준 및 가이드라인",
-    "keywords": [],
-    "keywords_en": [],
-    "kpis": {},
-    "projects": [],
-    "sources": []
+    "sector": "Urban/Transport",
+    "hierarchy": "National Plan",
+    "overview": "하노이, 호치민, 다낭, 껀터를 잇는 스마트시티 체인망 구축 및 데이터 허브 표준화",
+    "kpis": [
+      "4대 거점 도시 IOC(통합운영센터) 상호 연동"
+    ],
+    "projects": [
+      {
+        "project_name": "다낭시 통합운영센터(IOC) 고도화",
+        "status": "준공완료",
+        "tech": "AI 기반 교통/환경 모니터링",
+        "tag": "[확인됨]"
+      }
+    ],
+    "sources": [
+      "https://baochinhphu.vn"
+    ]
   }
-]
+}
