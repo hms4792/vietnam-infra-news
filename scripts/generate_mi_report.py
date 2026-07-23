@@ -467,7 +467,7 @@ def detect_kpi_changes(plans):
 
 def _call_gemini_fallback(prompt: str) -> str:
     if not GEMINI_API_KEY:
-        logger.error("GEMINI_API_KEY가 존재하지 않습니다.")
+        log.error("GEMINI_API_KEY가 존재하지 않습니다.")
         return ""
     headers = {"Content-Type": "application/json"}
     params = {"key": GEMINI_API_KEY}
@@ -486,7 +486,7 @@ def _call_gemini_fallback(prompt: str) -> str:
                 return parts[0].get("text", "").strip()
         return ""
     except Exception as e:
-        logger.error(f"Gemini API 호출 실패: {e}")
+        log.error(f"Gemini API 호출 실패: {e}")
         return ""
 
 def _call_haiku_sa8(system_prompt, user_prompt, api_key):
@@ -512,7 +512,7 @@ def _call_haiku_sa8(system_prompt, user_prompt, api_key):
             return data['content'][0]['text'].strip()
     except Exception as e:
         log.warning(f'  Haiku SA8 호출 오류: {e}')
-        logger.warning("Anthropic API 실패 -> Gemini API로 대체 호출합니다.")
+        log.warning("Anthropic API 실패 -> Gemini API로 대체 호출합니다.")
         combined_prompt = f"{system_prompt}\n\n{user_prompt}"
         return _call_gemini_fallback(prompt)
     
