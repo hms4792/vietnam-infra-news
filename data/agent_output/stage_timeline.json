@@ -1,151 +1,11 @@
 {
-  "generated_at": "2026-07-15 12:20",
+  "generated_at": "2026-07-23 14:07",
   "plans": {
-    "VN-PWR-PDP8": {
-      "plan_id": "VN-PWR-PDP8",
-      "title_ko": "베트남 제8차 국가전력개발계획",
-      "sector": "",
-      "area": "",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
-      "stage_history": [
-        {
-          "date": "2026-07-08",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "스마트 에너지 인프라 구축: 베트남 Net Zero 목표의 핵심"
-        },
-        {
-          "date": "2026-07-08",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Pham Gia Tuc 부총리: 전원 계획 VIII 조정은 새로운 개발 요구 사항을 충족해야 합니다."
-        }
-      ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
-      "latest_article_date": "2026-07-08",
-      "article_count": 2,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "총 발전설비 (2030)",
-          "target": "150,489 MW",
-          "current": "80,555 MW (2024)"
-        },
-        {
-          "indicator": "재생에너지 비중 (2030)",
-          "target": "30~39%",
-          "current": "13.7% (2024)"
-        },
-        {
-          "indicator": "해상풍력 (2030)",
-          "target": "17,032 MW",
-          "current": "0 MW (계획 중)"
-        },
-        {
-          "indicator": "석탄발전 단계적 폐지",
-          "target": "2050년 0%",
-          "current": "34% (2024)"
-        }
-      ]
-    },
-    "VN-PWR-PDP8-RENEWABLE": {
-      "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "title_ko": "PDP8 재생에너지 (해상풍력·태양광)",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-07-14",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "해상 풍력 발전 투자에 대한 새로운 규정"
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-07-14",
-      "article_count": 2,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "해상풍력(2030)",
-          "target": "17,032 MW",
-          "current": "6,000MW → 3배 상향 확정"
-        },
-        {
-          "indicator": "육상풍력(2030)",
-          "target": "38,029 MW",
-          "current": "21,880MW (PDP8 원안) 대폭 상향"
-        },
-        {
-          "indicator": "태양광(2030)",
-          "target": "73 GW",
-          "current": "26,046MW → 대폭 상향"
-        },
-        {
-          "indicator": "BESS 배터리(2030)",
-          "target": "10,000 MW",
-          "current": "300MW → 33배 상향"
-        }
-      ]
-    },
-    "VN-OG-2030": {
-      "plan_id": "VN-OG-2030",
-      "title_ko": "베트남 석유가스 분야 전략 2030",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-07-10",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "astroawani",
-          "title_ko": "이란 긴장 고조로 호르무즈 해협 통과 교통 정체"
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-07-10",
-      "article_count": 2,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "원유 생산량",
-          "target": "8~10백만 톤/년",
-          "current": "11백만 톤/년 (유지 목표)"
-        },
-        {
-          "indicator": "가스 생산량",
-          "target": "13~15억 m³/년",
-          "current": "10억 m³/년"
-        },
-        {
-          "indicator": "LNG 수입 의존도",
-          "target": "국내 가스 우선 활용",
-          "current": "2백만 톤/년 수입"
-        }
-      ]
-    },
     "VN-WW-2030": {
       "plan_id": "VN-WW-2030",
-      "title_ko": "베트남 국가 하수처리 프로그램 2030",
-      "sector": "",
-      "area": "",
+      "title_ko": "VN-WW-2030",
+      "sector": "Environment",
+      "area": "National",
       "current_stage": "PLANNING",
       "stage_label_ko": "계획·승인 단계",
       "stage_color": "3B82F6",
@@ -162,226 +22,214 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 1,
+      "article_count": 2,
       "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "도시 폐수처리율",
-          "target": "85%",
-          "current": "~29% → 50% (하노이 옌짜 준공)"
-        },
-        {
-          "indicator": "신규 WWTP 용량",
-          "target": "2,900,000 m³/일",
-          "current": "약 800,000 m³/일 운영"
-        },
-        {
-          "indicator": "ODA 연계 투자",
-          "target": "$2.5B+",
-          "current": "JICA $690M (옌짜 준공 확정)"
-        }
-      ]
-    },
-    "VN-WAT-RESOURCES": {
-      "plan_id": "VN-WAT-RESOURCES",
-      "title_ko": "베트남 수자원 개발 전략 2030",
-      "sector": "",
-      "area": "",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
-      "stage_history": [
-        {
-          "date": "2026-07-11",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "호아빈(Hoa Binh) 수력발전소는 7월 11일 오전 11시부터 바닥 배출구를 열었습니다."
-        },
-        {
-          "date": "2026-07-10",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "홍수와 비로 인해 Son La와 Dien Bien에 큰 피해가 발생했습니다."
-        },
-        {
-          "date": "2026-07-10",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Nhue - Day 강, Bac Hung Hai 복원 시 폐수 처리를 우선시하자는 제안"
-        }
-      ],
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
-      "latest_insight": "",
-      "latest_article_date": "2026-07-11",
-      "article_count": 3,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "지하수 관리 대수층",
-          "target": "전국 27개 완전 관리",
-          "current": "12개 관리 중"
-        },
-        {
-          "indicator": "중복 댐·저수지 안전진단",
-          "target": "100% 완료",
-          "current": "65% 완료"
-        },
-        {
-          "indicator": "홍수 피해 GDP 비중",
-          "target": "0.5% 미만으로 감소",
-          "current": "연평균 1.2%"
-        }
-      ]
-    },
-    "VN-WAT-URBAN": {
-      "plan_id": "VN-WAT-URBAN",
-      "title_ko": "도시 배수·침수 방지 마스터플랜",
-      "sector": "",
-      "area": "",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
-      "stage_history": [
-        {
-          "date": "2026-07-10",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "폭우로 인해 지역 홍수 발생, 하노이 긴급 배수 시스템 가동"
-        }
-      ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
-      "latest_insight": "",
-      "latest_article_date": "2026-07-10",
-      "article_count": 1,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "도시 안전 상수 보급률",
-          "target": "100%",
-          "current": "95% 수준 (2025)"
-        },
-        {
-          "indicator": "1인당 공급량",
-          "target": "150 L/일",
-          "current": "120 L/일 (2025 목표)"
-        },
-        {
-          "indicator": "누수율",
-          "target": "15% 이하",
-          "current": "20% 이하 (2025 목표)"
-        }
-      ]
+      "kpi_targets": []
     },
     "VN-SWM-NATIONAL-2030": {
       "plan_id": "VN-SWM-NATIONAL-2030",
-      "title_ko": "베트남 국가 고형폐기물 관리 전략 2030",
-      "sector": "",
-      "area": "",
+      "title_ko": "VN-SWM-NATIONAL-2030",
+      "sector": "Environment",
+      "area": "National",
       "current_stage": "CONSTRUCTION",
       "stage_label_ko": "건설·시공 단계",
       "stage_color": "EF4444",
       "stage_order": 3,
       "stage_history": [
         {
-          "date": "2026-07-09",
+          "date": "2026-07-23",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
-          "source": "VnExpress International",
-          "title_ko": "세계 최고의 목적지가 폐기물 처리를 위한 최초의 폐기물 에너지화 공장 착공"
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "건설 폐기물 관리의 격차 - 교훈 5: 건설 폐기물을 순환 경제를 위한 자원으로 바꾸는 솔루션"
         },
         {
-          "date": "2026-07-09",
+          "date": "2026-07-23",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "호치민시, 하루 1,000톤 규모의 폐기물 발전소 추가 배치"
+          "title_ko": "박닌(Bac Ninh)은 현대적이고 지속 가능한 방향으로 고형 폐기물 관리를 촉진합니다."
+        },
+        {
+          "date": "2026-07-17",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "브라질: 폐기물을 에너지원이자 탄소배출권의 \"금광\"으로 전환"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-07-09",
-      "article_count": 2,
+      "latest_article_date": "2026-07-23",
+      "article_count": 4,
       "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "도시 폐기물 수거율",
-          "target": "100%",
-          "current": "95% (2025 목표 수준)"
-        },
-        {
-          "indicator": "WtE 소각 비율",
-          "target": "50%",
-          "current": "30% 목표 (2025), 속선 WtE 가동"
-        },
-        {
-          "indicator": "매립 의존율",
-          "target": "30% 이하",
-          "current": "속선 WtE 가동으로 현저히 감소 중"
-        }
-      ]
+      "kpi_targets": []
     },
-    "VN-ENV-IND-1894": {
-      "plan_id": "VN-ENV-IND-1894",
-      "title_ko": "베트남 환경산업 발전 프로그램 (결정문 1894/QĐ-TTg 2024)",
-      "sector": "",
-      "area": "",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
+    "VN-PWR-PDP8": {
+      "plan_id": "VN-PWR-PDP8",
+      "title_ko": "VN-PWR-PDP8",
+      "sector": "Energy/Power",
+      "area": "National",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-07-15",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "지속 가능한 발전을 촉진하기 위해 공공 조달에서 녹색 및 에너지 절약 기술을 우선시합니다."
+          "date": "2026-07-18",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamnews_vn",
+          "title_ko": "해상풍력 장애물을 제거해야 한다"
         }
       ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-07-15",
+      "latest_article_date": "2026-07-18",
       "article_count": 1,
       "haiku_count": 0,
-      "kpi_targets": [
+      "kpi_targets": []
+    },
+    "VN-PWR-PDP8-LNG": {
+      "plan_id": "VN-PWR-PDP8-LNG",
+      "title_ko": "VN-PWR-PDP8-LNG",
+      "sector": "Energy/Power",
+      "area": "National",
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
+      "stage_history": [
         {
-          "indicator": "하수처리 기술 및 장비 국내 수요 충족률",
-          "target": "70%~80%",
-          "current": "조사 중"
-        },
-        {
-          "indicator": "배출가스/폐가스 처리 기술 및 장비 국내 수요 충족률",
-          "target": "60%~70%",
-          "current": "조사 중"
-        },
-        {
-          "indicator": "고형 및 유해 폐기물 수거·운반 국내 수요 충족률",
-          "target": "50%~60%",
-          "current": "조사 중"
-        },
-        {
-          "indicator": "고형 및 유해 폐기물 분류·재활용 국내 수요 충족률",
-          "target": "60%~70%",
-          "current": "조사 중"
-        },
-        {
-          "indicator": "환경 모니터링 장비 국내 수요 충족률",
-          "target": "20%",
-          "current": "조사 중"
+          "date": "2026-07-23",
+          "stage": "UNKNOWN",
+          "milestone": "기사 내용이 인프라 사업과 무관",
+          "source": "VnExpress Business",
+          "title_ko": "휘발유 가격 인상"
         }
-      ]
+      ],
+      "next_watch": "VN-PWR-PDP8-LNG 사업 관련 공식 발표 모니터링",
+      "latest_insight": "휘발유 가격 뉴스는 LNG 발전 인프라 사업 진행도와 직접 연관성 없음. 에너지 정책 변화만 간접 모니터링 권장",
+      "latest_article_date": "2026-07-23",
+      "article_count": 1,
+      "haiku_count": 1,
+      "kpi_targets": []
+    },
+    "VN-PWR-PDP8-NUCLEAR": {
+      "plan_id": "VN-PWR-PDP8-NUCLEAR",
+      "title_ko": "VN-PWR-PDP8-NUCLEAR",
+      "sector": "Energy/Power",
+      "area": "National",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-07-21",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamplus",
+          "title_ko": "베트남은 2035년까지 수만 명의 원자력 인력이 필요하다"
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-07-21",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "VN-OG-2030": {
+      "plan_id": "VN-OG-2030",
+      "title_ko": "VN-OG-2030",
+      "sector": "Energy/Power",
+      "area": "National",
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
+      "stage_history": [
+        {
+          "date": "2026-07-21",
+          "stage": "OPERATION",
+          "milestone": "해양 석유가스 산업 전략적 역할 재확인",
+          "source": "vietnamplus",
+          "title_ko": "베트남의 석유 및 가스 산업은 해양 경제를 주도하는 역할을 재확인합니다."
+        },
+        {
+          "date": "2026-07-17",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "petrotimes",
+          "title_ko": "페트로베트남, 캐나다와 에너지 파트너십 확대 모색"
+        },
+        {
+          "date": "2026-07-16",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "asiatimes",
+          "title_ko": "시베리아 2의 교착상태는 러시아-중국의 '무제한' 협정을 거짓으로 만든다"
+        }
+      ],
+      "next_watch": "해양경제 정책 로드맵 및 신규 개발 프로젝트 공시",
+      "latest_insight": "기존 석유가스 생산시설의 운영 최적화 및 해양자원 개발 확대 추진 단계. 에너지 공급 안정화와 경제 성장 연계 강화 예상",
+      "latest_article_date": "2026-07-21",
+      "article_count": 3,
+      "haiku_count": 1,
+      "kpi_targets": []
+    },
+    "VN-TRAN-2055": {
+      "plan_id": "VN-TRAN-2055",
+      "title_ko": "VN-TRAN-2055",
+      "sector": "Urban/Transport",
+      "area": "National",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-07-17",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "nhandan_vn",
+          "title_ko": "응에안(Nghe An)은 \"2자릿수\" 성장 목표를 달성하기 위해 에뮬레이션 운동을 시작합니다."
+        },
+        {
+          "date": "2026-07-17",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "vietnamplus",
+          "title_ko": "총리, 북부산간지역 집중호우에 선제적 대응 지시"
+        },
+        {
+          "date": "2026-07-16",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "vietnamplus",
+          "title_ko": "최고 지도자는 Son La에게 농산물 가공, 관광 허브가 될 것을 요청"
+        },
+        {
+          "date": "2026-07-16",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "VnExpress Business",
+          "title_ko": "세계 최고 공항에 첫 단독 사무용 건물 2년만에 완공"
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-07-17",
+      "article_count": 8,
+      "haiku_count": 0,
+      "kpi_targets": []
     },
     "VN-IP-NORTH-2030": {
       "plan_id": "VN-IP-NORTH-2030",
-      "title_ko": "북부 베트남 산업단지 개발 계획 2030",
-      "sector": "",
-      "area": "",
+      "title_ko": "VN-IP-NORTH-2030",
+      "sector": "Urban/Transport",
+      "area": "North",
       "current_stage": "CONSTRUCTION",
       "stage_label_ko": "건설·시공 단계",
       "stage_color": "EF4444",
@@ -393,309 +241,39 @@
           "milestone": "착공·건설 진행 중",
           "source": "Hanoi Times",
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
-        },
-        {
-          "date": "2026-07-13",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "vir_vn",
-          "title_ko": "녹색산업단지 전환을 위한 자금조달 핵심과제"
-        },
-        {
-          "date": "2026-07-10",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "vietnamplus",
-          "title_ko": "Suntory PepsiCo, Tay Ninh성 남부에 3억 달러 규모의 공장 준공"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 5,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "북부 산업용지 총 공급",
-          "target": "28,000 ha 이상 (2030)",
-          "current": "23,990 ha (2025년 4분기, +42.8% YoY)"
-        },
-        {
-          "indicator": "북부 산업단지 평균 입주율",
-          "target": "80% 이상",
-          "current": "65.74% (박닌 74.1%, 하노이 100%)"
-        },
-        {
-          "indicator": "FDI 유치 (베트남 전체)",
-          "target": "$200억/년 이상",
-          "current": "$276억 (2025년, 5년 최고) / 2026년 1~4월 $74억"
-        },
-        {
-          "indicator": "RBF(기성 공장) 공급 증가",
-          "target": "1,000,000 m² (2026~2029)",
-          "current": "2026년 643,000 m² 공급 예정"
-        },
-        {
-          "indicator": "Eco-IP(친환경 산업단지) 전환율",
-          "target": "신규 프로젝트 30% 이상",
-          "current": "2025~2027년 신규 프로젝트 30% 이상 녹색 기준 충족"
-        },
-        {
-          "indicator": "산업단지 내 중앙집중식 폐수처리장 설치율",
-          "target": "100%",
-          "current": "92% (2026년, Gemini 검색 기반)"
-        }
-      ]
-    },
-    "VN-TRAN-2055": {
-      "plan_id": "VN-TRAN-2055",
-      "title_ko": "베트남 교통 인프라 마스터플랜 2021-2030 (비전 2050)",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-07-09",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vir_vn",
-          "title_ko": "개정된 항공 계획에 따라 하노이 지역에 두 번째 공항이 생긴다"
-        },
-        {
-          "date": "2026-07-09",
-          "stage": "UNKNOWN",
-          "milestone": "기사 내용: 대학 순위 평가",
-          "source": "vietnamplus",
-          "title_ko": "하노이 베트남 국립대학교, 아시아 175위: Webometrics"
-        },
-        {
-          "date": "2026-07-09",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "vietnamplus",
-          "title_ko": "삼성전자, AI·반도체 인력 강화 위해 베트남 인재 활용"
-        },
-        {
-          "date": "2026-07-09",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "sggp_org_vn",
-          "title_ko": "과학기술부-WEF, AI·반도체 파트너십 강화"
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-07-09",
-      "article_count": 8,
-      "haiku_count": 1,
-      "kpi_targets": [
-        {
-          "indicator": "고속도로 총연장",
-          "target": "5,000 km",
-          "current": "1,892 km (2025 실적)"
-        },
-        {
-          "indicator": "롱탄공항 개항",
-          "target": "25M PAX/년 (1단계)",
-          "current": "2026.06 상업운항 목표"
-        },
-        {
-          "indicator": "공항 네트워크",
-          "target": "30개 공항",
-          "current": "22개 운영"
-        },
-        {
-          "indicator": "항만 처리 용량",
-          "target": "1,100M 톤/년",
-          "current": "600M 톤/년"
-        }
-      ]
-    },
-    "VN-MEKONG-DELTA-2030": {
-      "plan_id": "VN-MEKONG-DELTA-2030",
-      "title_ko": "메콩 델타 인프라 개발 계획 2030",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-07-13",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Can Tho의 토네이도로 인해 15채의 집이 지붕을 잃었고 많은 구조물이 손상되었습니다."
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-07-13",
       "article_count": 1,
       "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "2030년까지 고속도로 760km",
-          "target": "",
-          "current": ""
-        },
-        {
-          "indicator": "메콩 수계 통합 관리",
-          "target": "",
-          "current": ""
-        },
-        {
-          "indicator": "Can Tho 교량 2호 건설",
-          "target": "",
-          "current": ""
-        }
-      ]
+      "kpi_targets": []
     },
-    "VN-URB-METRO-2030": {
-      "plan_id": "VN-URB-METRO-2030",
-      "title_ko": "베트남 도시철도(메트로) 개발 계획",
-      "sector": "",
-      "area": "",
+    "VN-HAN-URBAN-2045": {
+      "plan_id": "VN-HAN-URBAN-2045",
+      "title_ko": "VN-HAN-URBAN-2045",
+      "sector": "Urban/Transport",
+      "area": "Hanoi",
       "current_stage": "PLANNING",
       "stage_label_ko": "계획·승인 단계",
       "stage_color": "3B82F6",
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-07-13",
+          "date": "2026-07-22",
           "stage": "PLANNING",
-          "milestone": "호치민시 특별행정단위 도입 사업 계획 수립",
-          "source": "sggp_org_vn",
-          "title_ko": "호치민시는 성장을 촉진하기 위해 특별 도시 행정 단위를 평가합니다."
-        },
-        {
-          "date": "2026-07-13",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "milestone": "정책·법령 발표",
           "source": "vietnamplus",
-          "title_ko": "롱탄 국제공항, 최종 건설 전력에 돌입"
-        },
-        {
-          "date": "2026-07-10",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "sggp_org_vn",
-          "title_ko": "호치민 순환도로 4 프로젝트에 대한 타당성 조사 보고서 10개 중 8개 승인"
-        }
-      ],
-      "next_watch": "특별행정단위 설립 인가 및 도시철도 연계 계획 발표",
-      "latest_insight": "특별행정단위 도입이 도시성장 촉진과 함께 메트로 확장 기반이 될 가능성. 향후 2B·5호선 등 신규 노선 개발 추진 시점 주목",
-      "latest_article_date": "2026-07-13",
-      "article_count": 3,
-      "haiku_count": 1,
-      "kpi_targets": [
-        {
-          "indicator": "하노이 메트로 목표",
-          "target": "15개 노선",
-          "current": "2A·3호선 운영, 1·2B 건설"
-        },
-        {
-          "indicator": "호치민 메트로 목표",
-          "target": "8개 노선",
-          "current": "1호선 2024.12 개통"
-        },
-        {
-          "indicator": "전국 도시철도 목표",
-          "target": "46개 노선 3,045km",
-          "current": "약 5개 노선 운영/건설"
-        }
-      ]
-    },
-    "VN-SC-2030": {
-      "plan_id": "VN-SC-2030",
-      "title_ko": "베트남 스마트시티 개발 프로그램 2030",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-07-15",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Khanh Hoa는 2030년부터 친환경 및 스마트 항구 개발을 촉진합니다."
+          "title_ko": "베트남 여행 선택에 영향을 미치는 음식: 아고다(Agoda) 보고서"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-07-15",
-      "article_count": 2,
-      "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "스마트시티 시범 도시",
-          "target": "6개 (2025)",
-          "current": "6개 (2024 진행 중)"
-        },
-        {
-          "indicator": "전국 확산",
-          "target": "30개 (2030)",
-          "current": "12개 (2024)"
-        },
-        {
-          "indicator": "디지털정부 지수",
-          "target": "top 50 (UN EGDI)",
-          "current": "86위 (2024)"
-        },
-        {
-          "indicator": "5G 커버리지",
-          "target": "도시 100% (2030)",
-          "current": "15개 도시 (2024)"
-        }
-      ]
-    },
-    "HN-URBAN-INFRA": {
-      "plan_id": "HN-URBAN-INFRA",
-      "title_ko": "하노이 도시 인프라 개발 계획 2030",
-      "sector": "",
-      "area": "",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-07-09",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "하노이는 홍수, 오염, 폐수, 쓰레기 등 가장 시급한 문제를 해결하는 데 초점을 맞춰야 한다"
-        }
-      ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-07-09",
+      "latest_article_date": "2026-07-22",
       "article_count": 1,
       "haiku_count": 0,
-      "kpi_targets": [
-        {
-          "indicator": "도시개발 총투자",
-          "target": "$2.5T (2026~2045)",
-          "current": "Decision 1668 확정"
-        },
-        {
-          "indicator": "인구 수용 목표",
-          "target": "16M명 (2045)",
-          "current": "현재 8.5M명"
-        },
-        {
-          "indicator": "링로드4 완공",
-          "target": "2027년 전체 완공",
-          "current": "착공 진행"
-        }
-      ]
+      "kpi_targets": []
     }
   }
 }
