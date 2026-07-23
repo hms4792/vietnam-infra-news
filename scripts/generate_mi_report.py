@@ -43,9 +43,14 @@ ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages'
 HAIKU_MODEL       = 'claude-haiku-4-5-20251001'  # 절대 변경 금지
 HAIKU_TIMEOUT     = 45
 
+# 기존 ANTHROPIC_API_KEY 아래에 추가
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL = "gemini-3.6-flash"
+GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
+
 # Gemini API 설정 (SA-8 v3.3 추가 -- 번역 금지, Layer2 분석 전용)
 GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models'
-GEMINI_MODEL   = 'gemini-2.5-flash-lite'   # 무료 티어 — 2.0 Flash 2026-06-01 종료로 교체
+GEMINI_MODEL   = 'gemini-3.6-flash-lite'   # 무료 티어 — 2.0 Flash 2026-06-01 종료로 교체
 GEMINI_TIMEOUT = 60
 
 import subprocess
@@ -486,8 +491,32 @@ def _call_haiku_sa8(system_prompt, user_prompt, api_key):
             return data['content'][0]['text'].strip()
     except Exception as e:
         log.warning(f'  Haiku SA8 호출 오류: {e}')
-        return ''
-
+        logger.warning("Anthropic API 실패 -> Gemini API로 대체 호출합니다.")
+        return _call_gemini_fallback(prompt)
+    
+def _call_gemini_fallback(prompt: str) -> str:
+    if not GEMINI_API_KEY:
+        logger.error("GEMINI_API_KEY가 존재하지 않습니다.")
+        return ""
+    headers = {"Content-Type": "application/json"}
+    params = {"key": GEMINI_API_KEY}
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {"temperature": 0.3, "maxOutputTokens": 2048}
+    }
+    try:
+        import requests
+        res = requests.post(GEMINI_API_URL, headers=headers, params=params, json=payload, timeout=60)
+        res.raise_for_status()
+        candidates = res.json().get("candidates", [])
+        if candidates:
+            parts = candidates[0].get("content", {}).get("parts", [])
+            if parts:
+                return parts[0].get("text", "").strip()
+        return ""
+    except Exception as e:
+        logger.error(f"Gemini API 호출 실패: {e}")
+        return ""
 
 def _call_gemini_sa8(system_prompt, user_prompt, gemini_key, use_search=True):
     """Gemini Flash 호출 -- 번역 금지, Layer2 분석 전용
