@@ -110,6 +110,7 @@ jobs:
         run: python3 scripts/diagnose_api_key.py
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
     
       # ── Step 7: 메인 파이프라인 ──────────────────────────────────
       # 실행 순서 절대 변경 금지:
@@ -137,6 +138,7 @@ jobs:
         run: python3 scripts/quality_context_agent.py
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           EXCEL_PATH: ${{ env.EXCEL_PATH }}
         continue-on-error: true
 
@@ -172,6 +174,7 @@ jobs:
         continue-on-error: true
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       # ─────────────────────────────────────────────────────────────
       # ── Step 11: Stage Timeline 기록 (SA-7 결과 → Excel) ─────────
@@ -218,6 +221,7 @@ jobs:
         continue-on-error: true
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           EMAIL_USERNAME:    ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:    ${{ secrets.EMAIL_PASSWORD }}
           GEMINI_API_KEY:    ${{ secrets.GEMINI_API_KEY }}
