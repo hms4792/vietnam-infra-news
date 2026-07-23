@@ -1,129 +1,24 @@
 {
-  "report_date": "2026-07-15",
-  "report_period": "2026-07-02 ~ 2026-07-15",
-  "knowledge_version": "2.4",
-  "total_articles": 105,
-  "new_articles_count": 31,
-  "executive_summary_ko": "## 베트남 인프라 동향 보고 (2026년 7월 3주차)\n\n**[이번 주 3대 주요 동향]**\n\n1.  **교통 인프라 확장 및 현대화 가속:** 롱탄 국제공항 개장 임박 및 호치민시 공항 터미널 재건축 고려, 항만 인프라 개선 노력, 베트남-캄보디아 간 도로 운송 협정 연장 등 교통 인프라 확충 및 효율성 증대에 대한 움직임이 두드러집니다.\n2.  **지속 가능한 발전 및 녹색 전환 강조:** 공공 조달에서 녹색 기술 우선 도입, 산업단지의 친환경 전환 추진 등 지속 가능한 발전과 환경 규제 강화 추세가 인프라 투자 및 개발 방향에 영향을 미치고 있습니다.\n3.  **경제 성장 목표 달성을 위한 정책 지원:** 재무부의 경제 성장 목표 달성 우선순위 설명, 호치민시의 특별 도시 행정 단위 평가 등 경제 활성화를 위한 정책적 노력이 인프라 개발과 연계될 가능성을 시사합니다.\n\n**[섹터별 주요 움직임]**\n\n*   **Power/에너지:** (관련 기사 없음)\n*   **환경인프라:** 녹색 산업단지 전환을 위한 자금 조달이 핵심 과제로 부상하고 있습니다.\n*   **교통:** 롱탄 국제공항 12월 1일 개장 예정이며, 호치민시 항만 인프라 비용 면제, 베트남-캄보디아 도로 운송 협정 연장, 칸 라인성의 친환경 스마트 항구 개발 추진 등 교통 인프라 전반에 걸친 활발한 움직임이 관찰됩니다.\n*   **산업단지:** 북부 산업단지의 녹색 전환 사업이 추진 중이며, 호치민시 산업단지 확대 계획이 있습니다.",
-  "kpi_dashboard": [
-    {
-      "label": "총 발전설비 (2030)",
-      "target": "150,489 MW",
-      "current": "80,555 MW (2024)",
-      "changed": false
-    },
-    {
-      "label": "재생에너지 비중 (2030)",
-      "target": "30~39%",
-      "current": "13.7% (2024)",
-      "changed": false
-    },
-    {
-      "label": "해상풍력 (2030)",
-      "target": "17,032 MW",
-      "current": "0 MW (계획 중)",
-      "changed": false
-    },
-    {
-      "label": "석탄발전 단계적 폐지",
-      "target": "2050년 0%",
-      "current": "34% (2024)",
-      "changed": false
-    },
-    {
-      "label": "해상풍력(2030)",
-      "target": "17,032 MW",
-      "current": "6,000MW → 3배 상향 확정",
-      "changed": false
-    },
-    {
-      "label": "육상풍력(2030)",
-      "target": "38,029 MW",
-      "current": "21,880MW (PDP8 원안) 대폭 상향",
-      "changed": false
-    },
-    {
-      "label": "태양광(2030)",
-      "target": "73 GW",
-      "current": "26,046MW → 대폭 상향",
-      "changed": false
-    },
-    {
-      "label": "BESS 배터리(2030)",
-      "target": "10,000 MW",
-      "current": "300MW → 33배 상향",
-      "changed": false
-    },
-    {
-      "label": "LNG 수입 터미널",
-      "target": "8개소",
-      "current": "2개소 운영 중",
-      "changed": false
-    },
-    {
-      "label": "LNG 발전 용량",
-      "target": "23,900 MW",
-      "current": "약 3,000 MW",
-      "changed": false
-    },
-    {
-      "label": "연간 LNG 수입량",
-      "target": "14백만 톤",
-      "current": "2백만 톤",
-      "changed": false
-    },
-    {
-      "label": "신규 송전선 구축",
-      "target": "22,000km",
-      "current": "진행 중",
-      "changed": false
-    }
-  ],
+  "report_date": "2026-07-23",
+  "report_period": "2026-07-10 ~ 2026-07-23",
+  "knowledge_version": "v2.x",
+  "total_articles": 145,
+  "new_articles_count": 114,
+  "executive_summary_ko": "[이번 주 3대 주요 동향]\n1. 제조업 중심 FDI 유입 지속으로 산업단지(IP) 및 물",
+  "kpi_dashboard": [],
   "kpi_changes": [],
-  "kpi_achievement": [
-    {
-      "label": "총 발전설비 (2030)",
-      "current_pct": 53
-    },
-    {
-      "label": "재생에너지 비중 (2030)",
-      "current_pct": 45
-    },
-    {
-      "label": "해상풍력 (2030)",
-      "current_pct": 0
-    },
-    {
-      "label": "석탄발전 단계적 폐지",
-      "current_pct": 1
-    },
-    {
-      "label": "해상풍력(2030)",
-      "current_pct": 35
-    },
-    {
-      "label": "육상풍력(2030)",
-      "current_pct": 55
-    },
-    {
-      "label": "태양광(2030)",
-      "current_pct": 35
-    },
-    {
-      "label": "BESS 배터리(2030)",
-      "current_pct": 100
-    }
-  ],
+  "kpi_achievement": [],
   "areas": [
     {
       "name_ko": "환경 인프라",
       "name_en": "Environment Infrastructure",
       "plan_ids": [
         "VN-WW-2030",
-        "VN-WAT-RESOURCES",
-        "VN-WAT-URBAN",
         "VN-SWM-NATIONAL-2030",
-        "VN-ENV-IND-1894"
+        "VN-WAT-URBAN",
+        "VN-WAT-RESOURCES",
+        "VN-ENV-IND-1894",
+        "VN-ENV-NATURA"
       ]
     },
     {
@@ -133,9 +28,7 @@
         "VN-PWR-PDP8",
         "VN-PWR-PDP8-RENEWABLE",
         "VN-PWR-PDP8-LNG",
-        "VN-PWR-PDP8-GRID",
         "VN-PWR-PDP8-NUCLEAR",
-        "VN-PWR-PDP8-HYDROGEN",
         "VN-OG-2030"
       ]
     },
@@ -143,540 +36,36 @@
       "name_ko": "도시·교통·산업",
       "name_en": "Urban & Transport",
       "plan_ids": [
-        "VN-IP-NORTH-2030",
+        "VN-WAT-URBAN",
         "VN-TRAN-2055",
-        "VN-MEKONG-DELTA-2030",
         "VN-URB-METRO-2030",
-        "VN-SC-2030",
-        "VN-EV-2030",
-        "HN-URBAN-INFRA",
-        "HN-URBAN-WEST",
-        "HN-URBAN-NORTH"
+        "VN-IP-NORTH-2030",
+        "VN-HAN-URBAN-2045",
+        "VN-HAN-DONG-ANH",
+        "VN-HAN-HOA-LAC",
+        "VN-HOUSING-2030",
+        "VN-SMART-2025"
       ]
     }
   ],
   "plans": {
-    "VN-PWR-PDP8": {
-      "plan_name_ko": "VN-PWR-PDP8",
-      "sector": "Power",
-      "area": "",
-      "decision": "Decision 500/QĐ-TTg (2023) + Decision 768/QĐ-TTg (2024 개정)",
-      "description_ko": "PDP8 — 베트남 8차 전력개발계획. 2030년까지 발전설비 150GW (재생 50% 이상), 2050년 567~635GW (재생 67~71%) 목표. 2025년 4월 Decision 768로 개정되어 GDP 7%→10% 상향에 따른 전력수요 재계산, 해상풍력 6→17GW 3배 상향, 석탄발전 단계적 폐지 가속, 원자력 재개(닌투언 1·2호기) 반영. 하위 플랜: VN-PWR-PDP8-RENEWABLE (해상풍력·태양광), VN-PWR-PDP8-LNG (LNG 인수보장), VN-PWR-PDP8-NUCLEAR (원자력 재개).",
-      "kpi_targets": [
-        {
-          "label": "총 발전설비 (2030)",
-          "target": "150,489 MW",
-          "current": "80,555 MW (2024)",
-          "changed": false
-        },
-        {
-          "label": "재생에너지 비중 (2030)",
-          "target": "30~39%",
-          "current": "13.7% (2024)",
-          "changed": false
-        },
-        {
-          "label": "해상풍력 (2030)",
-          "target": "17,032 MW",
-          "current": "0 MW (계획 중)",
-          "changed": false
-        },
-        {
-          "label": "석탄발전 단계적 폐지",
-          "target": "2050년 0%",
-          "current": "34% (2024)",
-          "changed": false
-        }
-      ],
-      "key_projects": [
-        {
-          "name_ko": "PDP8 통합 마스터 시나리오",
-          "location": "전국",
-          "capacity": "$135B 투자",
-          "note": "하위 3개 플랜 통합",
-          "status": ""
-        }
-      ],
-      "analysis_ko": "### 경영진 보고용 인사이트 (VN-PWR-PDP8)\n\n1.  **이번 주 핵심 진행사항:** 베트남 정부는 전력 계획 VIII 조정 및 스마트 에너지 인프라 구축을 통해 Net Zero 목표 달성을 추진하고 있습니다.\n2.  **투자 및 사업 기회 시그널:** 해상풍력과 그린수소를 통합한 에너지섬 개발은 2050년까지 대규모 발전 용량 확대를 목표로 하며, 한국 기업의 기술 및 자본 투자가 유망합니다.\n3.  **리스크 또는 지연 징후:** 현재까지 구체적인 사업 규모나 투자 계획이 명확히 제시되지 않아 사업 추진의 가시성이 낮습니다.",
-      "kpi_changes": [],
-      "articles": [
-        {
-          "title_ko": "스마트 에너지 인프라 구축: 베트남 Net Zero 목표의 핵심",
-          "summary_ko": "① 베트남 스마트에너지인프라 구축 사업\n② 구체적 규모 미기재\n③ 계획 단계\n④ 베트남 정부(에너지부·환경부)\n⑤ 순배출 제로(Net Zero) 목표 달성을 위한 지능형 전력망 구축 추진 중. PDP8 전력발전계획에 따라 재생에너지·LNG·핵에너지 등 다원화 추진",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-08",
-          "url": "https://moitruong.net.vn/xay-dung-ha-tang-nang-luong-thong-minh-chia-khoa-cho-muc-tieu-net-zero-cua-viet-nam-100764.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "Pham Gia Tuc 부총리: 전원 계획 VIII 조정은 새로운 개발 요구 사항을 충족해야 합니다.",
-          "summary_ko": "①전력계획VIII(Quy hoạch điện VIII) 조정 ②구체적 규모 미기재 ③계획 조정 단계 ④정부(부총리 Phạm Gia Túc, 관계부처) ⑤새로운 발전 요구사항 반영을 위한 조정 진행 중. 베트남은 전력계획VIII을 재정비하여 신규 개발 요구사항과 에너지 전환 목표를 충족시키려 함.",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-08",
-          "url": "https://moitruong.net.vn/pho-thu-tuong-thuong-truc-pham-gia-tuc-dieu-chinh-quy-hoach-dien-viii-phai-dap-ung-yeu-cau-phat-trien-moi-100799.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "​​​​​​​그린수소와 통합된 해상풍력섬, 투자 효율성 최적화 가능",
-          "summary_ko": "①해상풍력-그린수소 통합섬 개발 ②2030년 6,000MW, 2035년 15,000MW, 2050년 139,000MW ③계획/승인 단계 ④농업환경부, 페트로베트남, EVN, PTSC ⑤해상풍력 허가 제도화 및 말레이시아·싱가포르 수출 프로젝트 추진",
-          "source": "vietnamnews_vn",
-          "date": "2026-07-02",
-          "url": "https://vietnamnews.vn/economy-talking-shop/1784555/offshore-wind-islands-integrated-with-green-hydrogen-could-optimise-investment-efficiency.html",
-          "isNew": false
-        }
-      ]
-    },
-    "VN-PWR-PDP8-RENEWABLE": {
-      "plan_name_ko": "VN-PWR-PDP8-RENEWABLE",
-      "sector": "Power",
-      "area": "",
-      "decision": "",
-      "description_ko": "2025년 4월 Decision 768로 PDP8이 전면 개정됐다. GDP 성장률 목표 7%→10% 상향이 전력 수요 재계산을 촉발했으며, 해상풍력 목표가 3배 가까이 늘었다. Decree 57(DPPA·직접전력구매계약) 시행으로 RE100 기업의 재생에너지 직구매가 가능해졌다. 2030년까지 총 투자 $134.7B 규모다.",
-      "kpi_targets": [
-        {
-          "label": "해상풍력(2030)",
-          "target": "17,032 MW",
-          "current": "6,000MW → 3배 상향 확정",
-          "changed": false
-        },
-        {
-          "label": "육상풍력(2030)",
-          "target": "38,029 MW",
-          "current": "21,880MW (PDP8 원안) 대폭 상향",
-          "changed": false
-        },
-        {
-          "label": "태양광(2030)",
-          "target": "73 GW",
-          "current": "26,046MW → 대폭 상향",
-          "changed": false
-        },
-        {
-          "label": "BESS 배터리(2030)",
-          "target": "10,000 MW",
-          "current": "300MW → 33배 상향",
-          "changed": false
-        }
-      ],
-      "key_projects": [
-        {
-          "name_ko": "해상풍력 Zone 1~6",
-          "location": "남중국해 연안",
-          "capacity": "17,032 MW (2030)",
-          "note": "Equinox/Orsted/Viet Dragon 입찰 준비",
-          "status": ""
-        },
-        {
-          "name_ko": "닌투언 태양광 단지",
-          "location": "닌투언성",
-          "capacity": "73 GW (2030 누적)",
-          "note": "FiT→경쟁입찰 전환 추진",
-          "status": ""
-        },
-        {
-          "name_ko": "BESS 배터리 저장",
-          "location": "전국",
-          "capacity": "10,000 MW (2030)",
-          "note": "Decision 768 신규 대폭 상향",
-          "status": ""
-        },
-        {
-          "name_ko": "DPPA 직접구매 시장",
-          "location": "전국",
-          "capacity": "시장 개방",
-          "note": "삼성·인텔 등 RE100 계약 추진",
-          "status": ""
-        }
-      ],
-      "analysis_ko": "## 베트남 해상풍력 발전 동향 보고\n\n**1. 이번 주 핵심 진행사항:** 베트남 정부가 해상풍력 발전 투자에 대한 새로운 규정을 7월에 공시하며 재생에너지 정책 강화 의지를 보였습니다.\n\n**2. 투자 및 사업 기회 시그널:** 구체적인 규모는 아직 미기재되었으나, 신규 규정 발표는 향후 해상풍력 발전 사업의 투자 및 개발 기회가 열릴 가능성을 시사합니다.\n\n**3. 리스크 또는 지연 징후:** 규정 내용에 구체적인 규모가 명시되지 않아 사업 추진의 불확실성이 존재하며, 계획 단계에 있어 실제 사업화까지는 시간이 소요될 수 있습니다.",
-      "kpi_changes": [],
-      "articles": [
-        {
-          "title_ko": "해상 풍력 발전 투자에 대한 새로운 규정",
-          "summary_ko": "①해상풍력 투자 신규 규정 ②규정 내용 구체적 규모 미기재 ③계획 단계 ④베트남 정부(환경부 관련) ⑤2026년 7월 14일 규정 공시. 베트남 재생에너지 정책(VN-PWR-PDP8-RENEWABLE)에 따라 해상풍력 투자 활성화를 위한 제도적 기반 마련. 구체적 사업 규모나 일정은 추가 정보 필요.",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-14",
-          "url": "https://moitruong.net.vn/quy-dinh-moi-ve-dau-tu-dien-gio-ngoai-khoi-100893.html",
-          "isNew": true
-        },
-        {
-          "title_ko": "해상 풍력 발전 개발을 위한 메커니즘 및 정책에 대한 새로운 규정",
-          "summary_ko": "① 해상풍력발전 개발 메커니즘 및 정책 규정\n② 구체적 규모 미제시 (정책 프레임워크)\n③ 계획 단계 (신규 규정 발표)\n④ 베트남 정부부처 (환경부)\n⑤ 2026년 7월 규정 공고, 해상풍력 개발 촉진을 위한 제도적 기틀 마련",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-08",
-          "url": "https://moitruong.net.vn/quy-dinh-moi-ve-co-che-chinh-sach-phat-trien-dien-gio-ngoai-khoi-100757.html",
-          "isNew": false
-        }
-      ]
-    },
-    "VN-PWR-PDP8-LNG": {
-      "plan_name_ko": "VN-PWR-PDP8-LNG",
-      "sector": "Power",
-      "area": "",
-      "decision": "",
-      "description_ko": "Decree 100(2025)은 LNG 발전사업의 최소 연간 발전량 65% 인수를 보장하는 정부 보증을 법제화해 외국인 투자자의 진입 장벽을 크게 낮췄다. 닌투언LNG 복합터미널, 박류-탄호아 LNG 등 대형 프로젝트가 FID(최종투자결정) 단계에 있다.",
-      "kpi_targets": [
-        {
-          "label": "LNG 수입 터미널",
-          "target": "8개소",
-          "current": "2개소 운영 중",
-          "changed": false
-        },
-        {
-          "label": "LNG 발전 용량",
-          "target": "23,900 MW",
-          "current": "약 3,000 MW",
-          "changed": false
-        },
-        {
-          "label": "연간 LNG 수입량",
-          "target": "14백만 톤",
-          "current": "2백만 톤",
-          "changed": false
-        }
-      ],
-      "key_projects": [
-        {
-          "name_ko": "닌투언 LNG 복합터미널",
-          "location": "닌투언성",
-          "capacity": "LNG 허브",
-          "note": "FID 단계 추진",
-          "status": ""
-        },
-        {
-          "name_ko": "박류-탄호아 LNG",
-          "location": "탄호아성",
-          "capacity": "대규모 LNG",
-          "note": "FID 단계",
-          "status": ""
-        },
-        {
-          "name_ko": "티바이 LNG",
-          "location": "바리아붕따우",
-          "capacity": "LNG 터미널",
-          "note": "2023년 운영 개시",
-          "status": ""
-        },
-        {
-          "name_ko": "까마우 LNG",
-          "location": "까마우성",
-          "capacity": "LNG 발전",
-          "note": "가스전 연계",
-          "status": ""
-        }
-      ],
-      "analysis_ko": "",
-      "kpi_changes": [],
-      "articles": []
-    },
-    "VN-PWR-PDP8-GRID": {
-      "plan_name_ko": "VN-PWR-PDP8-GRID",
-      "sector": "Power",
-      "area": "",
-      "decision": "",
-      "description_ko": "PDP8 송배전망 확충계획으로 2030년까지 신규 송전선 5,000km 증설, 북부 재생에너지를 남부로 수송하는 해저케이블 구축, 스마트그리드 전국 전환이 3대 과제입니다.",
-      "kpi_targets": [
-        {
-          "label": "신규 송전선 구축",
-          "target": "22,000km",
-          "current": "진행 중",
-          "changed": false
-        },
-        {
-          "label": "765kV 신규 노선",
-          "target": "3개",
-          "current": "1개",
-          "changed": false
-        },
-        {
-          "label": "스마트그리드 전환",
-          "target": "2030년",
-          "current": "파일럿",
-          "changed": false
-        }
-      ],
-      "key_projects": [
-        {
-          "name_ko": "하노이-하이퐁 765kV 송전선",
-          "location": "하노이~하이퐁",
-          "capacity": "$9억",
-          "note": "계획 수립",
-          "status": "계획"
-        },
-        {
-          "name_ko": "라이차우 송전 인프라 확충",
-          "location": "라이차우성",
-          "capacity": "미정",
-          "note": "계획 단계",
-          "status": "계획"
-        }
-      ],
-      "analysis_ko": "",
-      "kpi_changes": [],
-      "articles": []
-    },
-    "VN-PWR-PDP8-NUCLEAR": {
-      "plan_name_ko": "VN-PWR-PDP8-NUCLEAR",
-      "sector": "Power",
-      "area": "",
-      "decision": "",
-      "description_ko": "2025년 정치국 결의(Resolution 70)로 2010년 중단된 원자력 재개 추진이 공식화됐다. 닌투언 1호기(러시아 Rosatom, 2,000MW)와 2호기(일본 ADB 컨소시엄) 개발 재개가 확정됐으며, 소형모듈원전(SMR) 도입도 검토 중이다. 에너지 안보·탄소중립 이중 과제 대응이 배경이다.",
-      "kpi_targets": [
-        {
-          "label": "원자력 발전 용량(2035)",
-          "target": "4,000 MW (2035 목표)",
-          "current": "Decision 768 신규 추가",
-          "changed": false
-        },
-        {
-          "label": "닌투언 1호기",
-          "target": "2,000 MW",
-          "current": "Rosatom, 재개 확정",
-          "changed": false
-        },
-        {
-          "label": "닌투언 2호기",
-          "target": "2,000 MW",
-          "current": "일본 컨소시엄, 협의 중",
-          "changed": false
-        }
-      ],
-      "key_projects": [
-        {
-          "name_ko": "닌투언 1호기 (Rosatom)",
-          "location": "닌투언성",
-          "capacity": "2,000 MW",
-          "note": "러시아 기술, 2025 재개 확정",
-          "status": ""
-        },
-        {
-          "name_ko": "닌투언 2호기 (Japan)",
-          "location": "닌투언성",
-          "capacity": "2,000 MW",
-          "note": "일본 ADB 컨소시엄, 협의 진행",
-          "status": ""
-        },
-        {
-          "name_ko": "SMR 소형모듈원전",
-          "location": "검토 중",
-          "capacity": "미정",
-          "note": "2040년대 도입 검토 중",
-          "status": ""
-        }
-      ],
-      "analysis_ko": "",
-      "kpi_changes": [],
-      "articles": []
-    },
-    "VN-PWR-PDP8-HYDROGEN": {
-      "plan_name_ko": "VN-PWR-PDP8-HYDROGEN",
-      "sector": "Power",
-      "area": "",
-      "decision": "",
-      "description_ko": "Decision 165/QĐ-TTg(2023) 기반 국가 수소에너지 전략으로, 2030년 그린수소 파일럿(10만톤/년), 2050년 수소 수출국을 목표로 합니다. 재생에너지 잉여전력을 활용한 전해조 설치가 1단계 핵심입니다.",
-      "kpi_targets": [
-        {
-          "label": "그린수소 생산",
-          "target": "100,000톤/년 (2030)",
-          "current": "0",
-          "changed": false
-        },
-        {
-          "label": "수소 수출",
-          "target": "2050년 수출국",
-          "current": "로드맵 수립",
-          "changed": false
-        }
-      ],
-      "key_projects": [
-        {
-          "name_ko": "닌투언 그린수소 파일럿",
-          "location": "닌투언성",
-          "capacity": "소규모 실증",
-          "note": "2027년 예정",
-          "status": "계획"
-        }
-      ],
-      "analysis_ko": "",
-      "kpi_changes": [],
-      "articles": []
-    },
-    "VN-OG-2030": {
-      "plan_name_ko": "VN-OG-2030",
-      "sector": "Oil & Gas",
-      "area": "",
-      "decision": "Decision 893/QĐ-TTg (2023)",
-      "description_ko": "베트남 석유가스공사(PVN)는 바흐호(Bach Ho)·람손(Rang Dong) 등 노후 유전 생산 감소에 대응해 심해 탐사(113·115·129 블록)와 LNG 공급망 구축을 병행 추진 중이다. 국내 가스전(Ca Mau·Nam Con Son)을 LNG 발전소와 연계하는 통합 공급망이 핵심 전략이다.",
-      "kpi_targets": [
-        {
-          "label": "원유 생산량",
-          "target": "8~10백만 톤/년",
-          "current": "11백만 톤/년 (유지 목표)",
-          "changed": false
-        },
-        {
-          "label": "가스 생산량",
-          "target": "13~15억 m³/년",
-          "current": "10억 m³/년",
-          "changed": false
-        },
-        {
-          "label": "LNG 수입 의존도",
-          "target": "국내 가스 우선 활용",
-          "current": "2백만 톤/년 수입",
-          "changed": false
-        }
-      ],
-      "key_projects": [
-        {
-          "name_ko": "바흐호 유전 (Bach Ho)",
-          "location": "바리아붕따우 해상",
-          "capacity": "원유 생산",
-          "note": "노후화 대응, 심해 탐사 병행",
-          "status": ""
-        },
-        {
-          "name_ko": "113·115·129 블록 탐사",
-          "location": "남중국해 심해",
-          "capacity": "탐사 단계",
-          "note": "PVN 주도, 국제 컨소시엄",
-          "status": ""
-        },
-        {
-          "name_ko": "까마우 가스전",
-          "location": "까마우성 해상",
-          "capacity": "국내 공급",
-          "note": "LNG 발전소 연계 통합 공급",
-          "status": ""
-        },
-        {
-          "name_ko": "남콘손 파이프라인",
-          "location": "남부 해상",
-          "capacity": "파이프라인",
-          "note": "가스 육상 이송 핵심 인프라",
-          "status": ""
-        }
-      ],
-      "analysis_ko": "## 베트남 인프라 개발 동향 보고 (2026년 7월 2주차)\n\n**1. 이번 주 핵심 진행사항:**\n이란 긴장 고조로 호르무즈 해협 통과 교통이 둔화되어 해상 운송에 영향을 미치고 있습니다. World Offshore Week 2026이 싱가포르에서 개최될 예정이며, 아시아 해양 석유, 에너지, 해양 부문 전문가들이 참여합니다.\n\n**2. 투자 및 사업 기회 시그널:**\nWorld Offshore Week 2026은 베트남 해양 에너지 및 관련 인프라 분야 기업들에게 네트워킹 및 사업 기회를 제공할 수 있습니다.\n\n**3. 리스크 또는 지연 징후:**\n호르무즈 해협의 지정학적 긴장 고조는 해상 물류 및 원자재 수급에 잠재적 리스크 요인으로 작용할 수 있습니다.",
-      "kpi_changes": [],
-      "articles": [
-        {
-          "title_ko": "이란 긴장 고조로 호르무즈 해협 통과 교통 정체",
-          "summary_ko": "호르무즈 해협의 이란 긴장 고조로 해상 교통이 둔화되고 있습니다. 지정학적 긴장이 고조되면서 해협을 통과하는 선박 통행이 영향을 받고 있습니다.",
-          "source": "astroawani",
-          "date": "2026-07-10",
-          "url": "https://international.astroawani.com/global-news/traffic-slows-through-strait-hormuz-iran-tensions-flare",
-          "isNew": false
-        },
-        {
-          "title_ko": "2026년 세계 해양 주간(World Offshore Week), 아시아 해양 석유, 에너지, 해양 부문을 싱가포르에서 한자리에 모다",
-          "summary_ko": "①World Offshore Week 2026 ②3,000명 이상의 업계 전문가, 100+ 전시사, 90+ 연사, 800+ 기관 참여 ③계획 단계 ④싱가포르엑스포 개최, Petronas·Hibiscus Petroleum·Woodside Energy 등 참여 ⑤2026년 9월 23-24일 싱가포르에서 개최 예정. 해상석유가스·재생에너지·해양산업 통합 플랫폼.",
-          "source": "en_prnasisa",
-          "date": "2026-07-08",
-          "url": "https://en.prnasia.com/story/540149-0.shtml",
-          "isNew": false
-        }
-      ]
-    },
     "VN-WW-2030": {
       "plan_name_ko": "VN-WW-2030",
-      "sector": "Waste Water",
-      "area": "",
-      "decision": "Decision 1085/QĐ-TTg (2016) + QCVN 14:2008",
-      "description_ko": "국가 폐수처리 마스터플랜(2021~2030)은 도시 폐수처리율을 2025년 50%, 2030년 85%로 끌어올리는 것을 목표로 한다. 하노이·호치민·다낭 등 주요 도시 권역별 WWTP 신규·확장이 핵심이다. JICA, ADB, KfW 등 다자금융기관 ODA가 투자의 80% 이상을 차지하며, 민관협력(PPP) 확대가 정책 방향이다. 2024년 기준 하노이 폐수처리율은 약 29%로 목표(50%, 2025년)에 크게 못 미치나, 옌짜 WWTP 준공(2025.8)으로 처리 용량이 2배 이상 증가할 전망이다.",
-      "kpi_targets": [
-        {
-          "label": "도시 폐수처리율",
-          "target": "85%",
-          "current": "~29% → 50% (하노이 옌짜 준공)",
-          "changed": false
-        },
-        {
-          "label": "신규 WWTP 용량",
-          "target": "2,900,000 m³/일",
-          "current": "약 800,000 m³/일 운영",
-          "changed": false
-        },
-        {
-          "label": "ODA 연계 투자",
-          "target": "$2.5B+",
-          "current": "JICA $690M (옌짜 준공 확정)",
-          "changed": false
-        }
-      ],
+      "sector": "Environment",
+      "area": "National",
+      "decision": "",
+      "description_ko": "전국 주요 도시권 및 산업단지 폐수 처리 인프라 구축 고도화",
+      "kpi_targets": [],
       "key_projects": [
         {
-          "name_ko": "옌짜 (Yen Xa)",
-          "location": "하노이 (Thanh Tri)",
-          "capacity": "270,000 m³/일",
-          "note": "2025.8.19 준공, 북부 최대 시설",
-          "status": ""
-        },
-        {
-          "name_ko": "빈흥 (Binh Hung)",
-          "location": "호치민 (Binh Chanh)",
-          "capacity": "141,000→512,000 m³/일",
-          "note": "2030년까지 단계적 확장",
-          "status": ""
-        },
-        {
-          "name_ko": "투득시 (Thu Duc)",
-          "location": "호치민 (Thu Duc)",
-          "capacity": "1,100,000 m³/일",
-          "note": "동남아 최대, MBBR 기술 적용",
-          "status": ""
-        },
-        {
-          "name_ko": "탐르엉 (Tham Luong)",
-          "location": "호치민 (Go Vap)",
-          "capacity": "131,000→310,000 m³/일",
-          "note": "2030년 최종 확장 목표",
-          "status": ""
-        },
-        {
-          "name_ko": "응우옌루 (Nhieu Loc)",
-          "location": "호치민",
-          "capacity": "480,000 m³/일",
-          "note": "2026년 완공 예정",
-          "status": ""
-        },
-        {
-          "name_ko": "박탕롱-반찌",
-          "location": "하노이",
-          "capacity": "42,000→116,000 m³/일",
-          "note": "2030년까지 용량 증설",
-          "status": ""
-        },
-        {
-          "name_ko": "손짜 (Son Tra)",
-          "location": "다낭",
-          "capacity": "60,000 m³/일",
-          "note": "WB 지원, 2020년 이후 확장",
-          "status": ""
-        },
-        {
-          "name_ko": "화쑤언 (Hoa Xuan)",
-          "location": "다낭",
-          "capacity": "100,000 m³/일",
-          "note": "2030년 2단계 완공 목표",
-          "status": ""
-        },
-        {
-          "name_ko": "년짝 (Nhon Trach)",
-          "location": "동나이",
-          "capacity": "30,000 m³/일",
-          "note": "산업단지 연계 하수처리",
-          "status": ""
-        },
-        {
-          "name_ko": "푸록 (Phu Loc)",
-          "location": "다낭",
-          "capacity": "65,000 m³/일",
-          "note": "바이오필터(Biofilter) 공법",
-          "status": ""
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "공사중"
         }
       ],
-      "analysis_ko": "이번 주 베트남 인프라 개발 마스터플랜(VN-WW-2030) 관련 핵심 진행사항은 다음과 같습니다.\n\n1.  **이번 주 핵심 진행사항**: 베트남 정부는 마스터플랜의 구체적인 실행 계획 수립에 박차를 가하고 있으며, 특히 교통 및 에너지 인프라 확충에 집중하고 있습니다.\n2.  **투자 및 사업 기회 시그널**: 한국 기업들은 스마트 시티 솔루션, 친환경 에너지, 고속철도 등 첨단 인프라 분야에서 베트남의 성장 잠재력을 활용할 기회를 모색할 수 있습니다.\n3.  **리스크 또는 지연 징후**: 현재까지 보고된 기사에서는 특별한 리스크나 지연 징후는 발견되지 않았습니다.",
+      "analysis_ko": "**[경영진 보고용 인사이트: VN-WW-2030]**\n\n**1. 이번 주 핵심 진행사항 (사업",
       "kpi_changes": [],
       "articles": [
         {
@@ -689,56 +78,97 @@
         }
       ]
     },
-    "VN-WAT-RESOURCES": {
-      "plan_name_ko": "VN-WAT-RESOURCES",
-      "sector": "Water Supply/Drainage",
-      "area": "",
-      "decision": "Decision 1622/QĐ-TTg (2017)",
-      "description_ko": "베트남은 기후변화로 메콩델타 해수 침투, 홍강 유역 가뭄·홍수 교차, 지하수 과잉 채굴 등 복합 수자원 위기에 직면해 있다. 2023년 수자원법 전면 개정으로 유역통합관리(IWRM), 지하수 이용 허가제, 오염자부담 원칙이 강화됐다. ADB·세계은행 지원 하에 메콩델타 수자원 인프라 현대화가 가속 중이다.",
-      "kpi_targets": [
-        {
-          "label": "지하수 관리 대수층",
-          "target": "전국 27개 완전 관리",
-          "current": "12개 관리 중",
-          "changed": false
-        },
-        {
-          "label": "중복 댐·저수지 안전진단",
-          "target": "100% 완료",
-          "current": "65% 완료",
-          "changed": false
-        },
-        {
-          "label": "홍수 피해 GDP 비중",
-          "target": "0.5% 미만으로 감소",
-          "current": "연평균 1.2%",
-          "changed": false
-        }
-      ],
+    "VN-SWM-NATIONAL-2030": {
+      "plan_name_ko": "VN-SWM-NATIONAL-2030",
+      "sector": "Environment",
+      "area": "National",
+      "decision": "",
+      "description_ko": "광역 고형폐기물 및 생활폐기물 처리 인프라 최적화 및 에너지화",
+      "kpi_targets": [],
       "key_projects": [
         {
-          "name_ko": "메콩델타 수자원 현대화",
-          "location": "메콩델타",
-          "capacity": "대규모 인프라",
-          "note": "ADB·세계은행 지원",
-          "status": ""
-        },
-        {
-          "name_ko": "홍강 유역 홍수 관리",
-          "location": "홍강 유역",
-          "capacity": "유역통합관리",
-          "note": "환경부 주관, IWRM 적용",
-          "status": ""
-        },
-        {
-          "name_ko": "메콩강 MRC 모니터링",
-          "location": "메콩강",
-          "capacity": "예측 시스템",
-          "note": "홍수·가뭄 조기 경보 체계",
-          "status": ""
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "준공완료"
         }
       ],
-      "analysis_ko": "## 베트남 수자원 인프라 개발 동향 보고 (2026년 7월 2주차)\n\n**1. 이번 주 핵심 진행사항:** 호아빈 수력발전소는 7월 11일 홍수 시즌을 맞아 바닥 배출구를 개방하여 운영 중이며, 손라 및 디엔비엔 지역은 홍수 피해 복구에 착수했습니다.\n\n**2. 투자 및 사업 기회 시그널:** 느에-데이강 및 박흥해 수역 복원 프로젝트에서 폐수 처리 시설 우선 구축은 한국의 수처리 기술 및 설비 기업에게 새로운 사업 기회를 제공할 수 있습니다.\n\n**3. 리스크 또는 지연 징후:** 손라 및 디엔비엔 지역의 홍수 피해 규모가 구체적으로 파악되지 않아 복구 사업의 정확한 일정 및 예산 수립에 불확실성이 존재합니다.",
+      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 정부 및 박닌성 등 지방정부를 중심으로 분산된 건설",
+      "kpi_changes": [],
+      "articles": [
+        {
+          "title_ko": "건설 폐기물 관리의 격차 - 교훈 5: 건설 폐기물을 순환 경제를 위한 자원으로 바꾸는 솔루션",
+          "summary_ko": "베트남의 건설폐기물 관리 체계가 미흡하면서 순환경제로의 전환이 지연되고 있다. 현재 여러 법령에 분산되어 있는 규정들을 통합하고 발생부터 최종 처리까지 일관된 관리 메커니즘을 구축해야 한다. 건설폐기물 통계 시스템 미비와 재활용 체계 부족이 주요 과제다.",
+          "source": "Moi truong & Cuoc song",
+          "date": "2026-07-23",
+          "url": "https://moitruong.net.vn/khoang-trong-trong-quan-ly-chat-thai-xay-dung-bai-5-giai-phap-nao-bien-chat-thai-xay-dung-thanh-nguon-tai-nguyen-cho-nen-kinh-te-tuan-hoan-101178.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "박닌(Bac Ninh)은 현대적이고 지속 가능한 방향으로 고형 폐기물 관리를 촉진합니다.",
+          "summary_ko": "북닌성이 현대적이고 지속가능한 방식으로 고형폐기물 관리를 강화하고 있습니다. 환경 친화적인 폐기물 처리 시스템 도입을 통해 지역의 환경 오염을 줄이고 자원순환형 관리체계를 구축하려는 노력입니다.",
+          "source": "Moi truong & Cuoc song",
+          "date": "2026-07-23",
+          "url": "https://moitruong.net.vn/bac-ninh-day-manh-quan-ly-chat-thai-ran-theo-huong-hien-dai-ben-vung-101083.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "건설 폐기물 관리의 격차 - 잊혀진 \"금광\": 왜 폐 콘크리트가 재활용되지 않았습니까? (제4과)",
+          "summary_ko": "베트남은 매년 수백만 톤의 건설 폐기물(콘크리트, 벽돌)을 배출하지만 대부분 매립 또는 불법 투기되고 있다. 선진국과 달리 베트남에서는 이를 재생 자원으로 활용하지 못해 천연자원 채굴 압박이 증가하고 있다. 건설산업 순환경제 전환을 위해 정책·시장·기술적 장벽 해결이 필요하다.",
+          "source": "Moi truong & Cuoc song",
+          "date": "2026-07-21",
+          "url": "https://moitruong.net.vn/khoang-trong-trong-quan-ly-chat-thai-xay-dung-mo-vang-bi-bo-quen-tai-sao-be-tong-phe-thai-chua-duoc-tai-che-bai-4-101121.html",
+          "isNew": true
+        }
+      ]
+    },
+    "VN-WAT-URBAN": {
+      "plan_name_ko": "VN-WAT-URBAN",
+      "sector": "Environment",
+      "area": "Urban",
+      "decision": "",
+      "description_ko": "베트남 주요 지정 도시권 내 안전한 식수 공급망 인프라 확충",
+      "kpi_targets": [],
+      "key_projects": [
+        {
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "공사중"
+        }
+      ],
+      "analysis_ko": "(하노이시 주도로 'VN-WAT-URBAN' 프로젝트가 가동되어, 7월 폭우에 대응한 긴",
+      "kpi_changes": [],
+      "articles": [
+        {
+          "title_ko": "폭우로 인해 지역 홍수 발생, 하노이 긴급 배수 시스템 가동",
+          "summary_ko": "하노이 도시 배수시스템 운영 프로젝트(VN-WAT-URBAN)로, 2026년 7월 집중호우로 인한 국지적 침수 발생 시 긴급 배수 시스템을 운영했다. 발주처는 하노이시 관련 부서이며, 현재 운영 중 단계다. 향후 시스템 개선 및 확충이 필요한 상황으로, 기후변화 대응 강화가 핵심 과제다.",
+          "source": "Moi truong & Cuoc song",
+          "date": "2026-07-10",
+          "url": "https://moitruong.net.vn/mua-lon-gay-ngap-cuc-bo-ha-noi-khan-truong-van-hanh-he-thong-tieu-thoat-nuoc-100829.html",
+          "isNew": false
+        }
+      ]
+    },
+    "VN-WAT-RESOURCES": {
+      "plan_name_ko": "VN-WAT-RESOURCES",
+      "sector": "Environment",
+      "area": "National",
+      "decision": "",
+      "description_ko": "기후변화 대응 및 메콩 델타 지역 수자원 통합 관리 체계 구축",
+      "kpi_targets": [],
+      "key_projects": [
+        {
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "공사중"
+        }
+      ],
+      "analysis_ko": "1. **이번 주 핵심 진행사항**: 중북부 홍수철에 대응해 호아빈 댐 수문 개방 및 피해 조",
       "kpi_changes": [],
       "articles": [
         {
@@ -764,393 +194,26 @@
           "date": "2026-07-10",
           "url": "https://moitruong.net.vn/de-xuat-uu-tien-xu-ly-nuoc-thai-trong-phuc-hoi-song-nhue-day-bac-hung-hai-100856.html",
           "isNew": false
-        },
-        {
-          "title_ko": "사우디아라비아는 처리된 폐수를 전략적 자원으로 간주합니다.",
-          "summary_ko": "사우디아라비아의 처리된 하수 전략적 자원화 계획(VN-WAT-RESOURCES)입니다. 사우디는 처리된 폐수를 전략적 수자원으로 인정하고 활용을 확대하는 정책을 추진 중입니다. 계획 단계이며, 사우디 정부 주도로 추진되고 있습니다. 구체적 규모 정보는 기사에 미상세하며, 향후 폐수 재활용 기반시설 확충 계획 진행 예정입니다.",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-03",
-          "url": "https://moitruong.net.vn/saudi-arabia-coi-nuoc-thai-sau-xu-ly-la-nguon-tai-nguyen-chien-luoc-100597.html",
-          "isNew": false
-        }
-      ]
-    },
-    "VN-WAT-URBAN": {
-      "plan_name_ko": "VN-WAT-URBAN",
-      "sector": "Waste Water",
-      "area": "",
-      "decision": "",
-      "description_ko": "국가 상수도 개발전략은 2030년 도시 지역 100% 안전 수돗물 보급을 목표로 한다. ADB가 빈증성 바우방(Bau Bang) 정수장 확장($200M+), KfW가 중부 지역 상수도 현대화를 지원 중이다. 민영화(PPP·BOT) 확대로 TDM 수자원(빈증), BWS(호치민) 등 민간 사업자의 역할이 증가하고 있다.",
-      "kpi_targets": [
-        {
-          "label": "도시 안전 상수 보급률",
-          "target": "100%",
-          "current": "95% 수준 (2025)",
-          "changed": false
-        },
-        {
-          "label": "1인당 공급량",
-          "target": "150 L/일",
-          "current": "120 L/일 (2025 목표)",
-          "changed": false
-        },
-        {
-          "label": "누수율",
-          "target": "15% 이하",
-          "current": "20% 이하 (2025 목표)",
-          "changed": false
-        }
-      ],
-      "key_projects": [
-        {
-          "name_ko": "송다 (Song Da)",
-          "location": "화빈",
-          "capacity": "600,000 m³/일",
-          "note": "하노이 및 인근 성",
-          "status": ""
-        },
-        {
-          "name_ko": "투득 (Thu Duc)",
-          "location": "호치민",
-          "capacity": "500,000 m³/일",
-          "note": "호치민 중심부",
-          "status": ""
-        },
-        {
-          "name_ko": "꺼우도 (Cau Do)",
-          "location": "다낭",
-          "capacity": "250,000 m³/일",
-          "note": "다낭시 전역",
-          "status": ""
-        },
-        {
-          "name_ko": "동아인 (Dong Anh)",
-          "location": "하노이",
-          "capacity": "150,000 m³/일",
-          "note": "하노이 북부 신도시",
-          "status": ""
-        },
-        {
-          "name_ko": "동나이 (Dong Nai)",
-          "location": "동나이",
-          "capacity": "200,000 m³/일",
-          "note": "비엔화 및 호치민",
-          "status": ""
-        },
-        {
-          "name_ko": "닌투언 (Ninh Thuan)",
-          "location": "닌투언",
-          "capacity": "80,000 m³/일",
-          "note": "판랑-탑짬",
-          "status": ""
-        },
-        {
-          "name_ko": "껀터 2 (Can Tho 2)",
-          "location": "껀터",
-          "capacity": "120,000 m³/일",
-          "note": "껀터시 중심권",
-          "status": ""
-        },
-        {
-          "name_ko": "타이닌 (Tay Ninh)",
-          "location": "타이닌",
-          "capacity": "90,000 m³/일",
-          "note": "타이닌성",
-          "status": ""
-        },
-        {
-          "name_ko": "붕따우 (Vung Tau)",
-          "location": "바리아붕따우",
-          "capacity": "100,000 m³/일",
-          "note": "붕따우시 전역",
-          "status": ""
-        },
-        {
-          "name_ko": "동탑 (Dong Thap)",
-          "location": "동탑",
-          "capacity": "70,000 m³/일",
-          "note": "까오라인",
-          "status": ""
-        },
-        {
-          "name_ko": "꽝찌 (Quang Tri)",
-          "location": "꽝찌",
-          "capacity": "75,000 m³/일",
-          "note": "동하",
-          "status": ""
-        },
-        {
-          "name_ko": "끼엔장 (Kien Giang)",
-          "location": "끼엔장",
-          "capacity": "85,000 m³/일",
-          "note": "락지아",
-          "status": ""
-        },
-        {
-          "name_ko": "라오카이 (Lao Cai)",
-          "location": "라오카이",
-          "capacity": "60,000 m³/일",
-          "note": "라오카이시",
-          "status": ""
-        },
-        {
-          "name_ko": "하남 (Ha Nam)",
-          "location": "하남",
-          "capacity": "100,000 m³/일",
-          "note": "풀리",
-          "status": ""
-        },
-        {
-          "name_ko": "꽝응아이 (Quang Ngai)",
-          "location": "꽝응아이",
-          "capacity": "80,000 m³/일",
-          "note": "꽝응아이시",
-          "status": ""
-        },
-        {
-          "name_ko": "박장 (Bac Giang)",
-          "location": "박장",
-          "capacity": "95,000 m³/일",
-          "note": "박장시",
-          "status": ""
-        },
-        {
-          "name_ko": "푸옌 (Phu Yen)",
-          "location": "푸옌",
-          "capacity": "70,000 m³/일",
-          "note": "뚜이호아",
-          "status": ""
-        },
-        {
-          "name_ko": "빈증 (Binh Duong)",
-          "location": "빈증",
-          "capacity": "120,000 m³/일",
-          "note": "투저우못 (확장)",
-          "status": ""
-        },
-        {
-          "name_ko": "응에안 (Nghe An)",
-          "location": "응에안",
-          "capacity": "85,000 m³/일",
-          "note": "빈(Vinh)",
-          "status": ""
-        },
-        {
-          "name_ko": "칸화 (Khanh Hoa)",
-          "location": "칸화",
-          "capacity": "110,000 m³/일",
-          "note": "냐짱",
-          "status": ""
-        }
-      ],
-      "analysis_ko": "## 베트남 인프라 개발 시장 정보 (MI) 보고서\n\n**1. 이번 주 핵심 진행사항:** 하노이 도시 배수시스템 운영 프로젝트(VN-WAT-URBAN)가 집중호우 시 긴급 배수 시스템을 성공적으로 가동하며 도시 홍수 피해를 최소화했습니다.\n\n**2. 투자 및 사업 기회 시그널:** 기후 변화로 인한 극한 강우 현상 증가 추세는 베트남 내 도시 배수 및 홍수 방지 인프라 투자 확대의 필요성을 시사하며, 관련 기술 및 솔루션 제공 한국 기업에게 기회가 될 수 있습니다.\n\n**3. 리스크 또는 지연 징후:** 특이사항 없음.",
-      "kpi_changes": [],
-      "articles": [
-        {
-          "title_ko": "폭우로 인해 지역 홍수 발생, 하노이 긴급 배수 시스템 가동",
-          "summary_ko": "하노이 도시 배수시스템 운영 프로젝트(VN-WAT-URBAN)로, 2026년 7월 집중호우로 인한 국지적 침수 발생 시 긴급 배수 시스템을 운영했다. 발주처는 하노이시 관련 부서이며, 현재 운영 중 단계다. 향후 시스템 개선 및 확충이 필요한 상황으로, 기후변화 대응 강화가 핵심 과제다.",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-10",
-          "url": "https://moitruong.net.vn/mua-lon-gay-ngap-cuc-bo-ha-noi-khan-truong-van-hanh-he-thong-tieu-thoat-nuoc-100829.html",
-          "isNew": false
-        }
-      ]
-    },
-    "VN-SWM-NATIONAL-2030": {
-      "plan_name_ko": "VN-SWM-NATIONAL-2030",
-      "sector": "Solid Waste",
-      "area": "",
-      "decision": "Decision 491/QĐ-TTg (2018)",
-      "description_ko": "전국 고형폐기물 관리 전략은 2030년까지 WtE(폐기물 에너지화) 비율을 50%로 높이고 매립 의존도를 획기적으로 낮추는 것이 핵심이다. 하노이 속선(Soc Son) WtE 발전소 준공(2025.10, 90MW)이 베트남 WtE 전략의 이정표다. EPR(생산자책임재활용) 규정 시행, 재활용 기반 강화가 중기 정책 방향이다.",
-      "kpi_targets": [
-        {
-          "label": "도시 폐기물 수거율",
-          "target": "100%",
-          "current": "95% (2025 목표 수준)",
-          "changed": false
-        },
-        {
-          "label": "WtE 소각 비율",
-          "target": "50%",
-          "current": "30% 목표 (2025), 속선 WtE 가동",
-          "changed": false
-        },
-        {
-          "label": "매립 의존율",
-          "target": "30% 이하",
-          "current": "속선 WtE 가동으로 현저히 감소 중",
-          "changed": false
-        }
-      ],
-      "key_projects": [
-        {
-          "name_ko": "속선 (Soc Son) WtE",
-          "location": "하노이",
-          "capacity": "4,000~5,000 톤/일",
-          "note": "WtE 90MW, 세계 2위 규모, 2025.10 준공",
-          "status": ""
-        },
-        {
-          "name_ko": "다프억 (Da Phuoc)",
-          "location": "호치민",
-          "capacity": "10,000 톤/일",
-          "note": "위생 매립 및 WtE 전환 중",
-          "status": ""
-        },
-        {
-          "name_ko": "남선 (Nam Son) WtE",
-          "location": "하노이",
-          "capacity": "4,000 톤/일",
-          "note": "2025년 완공, 대규모 소각",
-          "status": ""
-        },
-        {
-          "name_ko": "빈즈엉 처리장",
-          "location": "빈즈엉",
-          "capacity": "1,500 톤/일",
-          "note": "재활용 및 WtE 병행",
-          "status": ""
-        },
-        {
-          "name_ko": "푸손 (Phu Son)",
-          "location": "트어티엔후에",
-          "capacity": "600 톤/일",
-          "note": "2025.11 가동, 도시폐기물 80% 처리",
-          "status": ""
-        },
-        {
-          "name_ko": "타일라이 (Thoi Lai)",
-          "location": "껀터",
-          "capacity": "400 톤/일",
-          "note": "2024년 준공, 메콩델타 핵심 WtE",
-          "status": ""
-        },
-        {
-          "name_ko": "박닌 WtE (VSIP)",
-          "location": "박닌",
-          "capacity": "1,000 톤/일",
-          "note": "2028년 에너지 회수 최적화 목표",
-          "status": ""
-        },
-        {
-          "name_ko": "쿠찌 (Cu Chi) WtE",
-          "location": "호치민",
-          "capacity": "2,000 톤/일",
-          "note": "WtE 및 퇴비화 복합 공정",
-          "status": ""
-        },
-        {
-          "name_ko": "푸꾸옥 (Phu Quoc)",
-          "location": "끼엔장",
-          "capacity": "500 톤/일",
-          "note": "도서 지역 특화 소각 및 재활용",
-          "status": ""
-        },
-        {
-          "name_ko": "탄호아-롱안",
-          "location": "롱안",
-          "capacity": "300→500 톤/일",
-          "note": "용량 확장 중",
-          "status": ""
-        }
-      ],
-      "analysis_ko": "## 베트남 폐기물 에너지화 사업 현황 및 투자 기회 분석 (2026년 7월 2주차)\n\n**1. 이번 주 핵심 진행사항:** 베트남, 특히 호치민시에서 폐기물 에너지화 사업이 본격화되고 있습니다. 세계 최고 목적지가 폐기물 에너지화 공장 착공에 들어갔으며, 호치민시는 하루 1,000톤 규모의 추가 폐기물 발전소 배치 계획을 발표했습니다.\n\n**2. 투자 및 사업 기회 시그널:** 폐기물 처리 및 에너지화 분야는 베트남 정부의 적극적인 지원과 함께 성장 잠재력이 높습니다. 한국 기업들은 선진 기술력을 바탕으로 폐기물 처리 설비 공급, 운영 및 유지보수 등 다양한 사업 기회를 모색할 수 있습니다.\n\n**3. 리스크 또는 지연 징후:** 현재까지 기사에서 특별한 리스크나 지연 징후는 감지되지 않았습니다. 다만, 대규모 인프라 사업의 특성상 인허가 절차, 환경 규제 준수, 지역 주민 수용성 확보 등은 지속적인 관리가 필요할 수 있습니다.",
-      "kpi_changes": [],
-      "articles": [
-        {
-          "title_ko": "세계 최고의 목적지가 폐기물 처리를 위한 최초의 폐기물 에너지화 공장 착공",
-          "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/environment/world-best-destination-starts-work-on-1st-waste-to-energy-plant-to-tackle-waste-5095527.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/07/",
-          "source": "VnExpress International",
-          "date": "2026-07-09",
-          "url": "https://e.vnexpress.net/news/news/environment/world-best-destination-starts-work-on-1st-waste-to-energy-plant-to-tackle-waste-5095527.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "호치민시, 하루 1,000톤 규모의 폐기물 발전소 추가 배치",
-          "summary_ko": "호찌민시 폐기물 발전소 확대 사업(VN-SWM-NATIONAL-2030), 일일 처리용량 1,000톤/일, 계획 단계, 호찌민시 인민위원회 주관, 2026년 7월 기사 발행으로 최근 추진 중. 도시 폐기물 처리 및 재생에너지 생산 병행으로 환경·에너지 문제 동시 해결 목표.",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-09",
-          "url": "https://moitruong.net.vn/tp-hcm-trien-khai-them-nha-may-dien-rac-cong-suat-1-000-tan-ngay-100810.html",
-          "isNew": false
         }
       ]
     },
     "VN-ENV-IND-1894": {
       "plan_name_ko": "VN-ENV-IND-1894",
-      "sector": "Solid Waste",
-      "area": "",
-      "decision": "Decision 1894/QĐ-TTg (2024)",
-      "description_ko": "베트남 국가 환경산업 육성 프로그램(2025~2030, 결정문 1894/QĐ-TTg)은 환경산업을 독자적인 경제 부문으로 육성하고 녹색 전환과 순환경제를 촉진하는 것을 목표로 한다. 2026년 현재 국가 환경산업 센터 구축 및 재활용 산업단지(IP) 개발을 위한 법적 기틀이 마련 중이다. 한국 등 해외 협력을 통한 자원순환형 산업단지 도입이 추진되고 있으며, 확장된 생산자 책임(EPR) 제도의 의무 재활용 대상 확대 및 환경보호법 개정이 본 플랜의 강력한 실행 동력으로 작용하고 있다.",
-      "kpi_targets": [
-        {
-          "label": "하수처리 기술 및 장비 국내 수요 충족률",
-          "target": "70%~80%",
-          "current": "조사 중",
-          "changed": false
-        },
-        {
-          "label": "배출가스/폐가스 처리 기술 및 장비 국내 수요 충족률",
-          "target": "60%~70%",
-          "current": "조사 중",
-          "changed": false
-        },
-        {
-          "label": "고형 및 유해 폐기물 수거·운반 국내 수요 충족률",
-          "target": "50%~60%",
-          "current": "조사 중",
-          "changed": false
-        },
-        {
-          "label": "고형 및 유해 폐기물 분류·재활용 국내 수요 충족률",
-          "target": "60%~70%",
-          "current": "조사 중",
-          "changed": false
-        },
-        {
-          "label": "환경 모니터링 장비 국내 수요 충족률",
-          "target": "20%",
-          "current": "조사 중",
-          "changed": false
-        }
-      ],
+      "sector": "Environment",
+      "area": "National",
+      "decision": "",
+      "description_ko": "전국 산업단지(IZ) 내 중앙 집중식 오폐수 처리장 의무화 및 모니터링",
+      "kpi_targets": [],
       "key_projects": [
         {
-          "name_ko": "스타비안 플라스틱 재활용 복합단지",
-          "location": "탄호아성 응이선 경제구역 (Nghi Son EZ)",
-          "capacity": "17,000 톤/년 (rPET 칩 생산)",
-          "note": "2025년 4Q 착공, 2027년 1Q 상업가동 예정. Starlinger(오스트리아)·AMUT(이탈리아) 기술 도입",
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
           "status": "공사중"
-        },
-        {
-          "name_ko": "박닌 자원순환형 산업단지",
-          "location": "박닌성 반하 북송구 (Bắc Sông Cầu)",
-          "capacity": "약 200 ha 규모",
-          "note": "한국 환경부-베트남 MAE MoU 체결(2024.7). KEITI 마스터플랜 수립 중. 산업공생(Eco-IP) 모델",
-          "status": "계획"
-        },
-        {
-          "name_ko": "비와세-시티오일필드 RGO 화학재활용 공장",
-          "location": "빈증성 고형폐기물 처리단지",
-          "capacity": "폐플라스틱→산업용 정제유 (RGO) 추출",
-          "note": "한국 시티오일필드 저온촉매분해 기술 적용. EPR 연계 가공시설 기초공사 진행",
-          "status": "공사중"
-        },
-        {
-          "name_ko": "남빈증 폐기물 에너지화(WtE) 확장",
-          "location": "빈증성 남부 처리지구",
-          "capacity": "퇴비화 840톤/일 + WtE 소각 200톤/일",
-          "note": "ADB 2,000만 달러 차관 승인 완료. 소각로 가동 준비 단계",
-          "status": "공사중"
-        },
-        {
-          "name_ko": "국가 환경산업 혁신 센터 구축",
-          "location": "전국 (주요 하이테크 경제구역·대학 내)",
-          "capacity": "환경산업 보육 네트워크 구성",
-          "note": "연구·전환·혁신 센터 건립 및 vườn ươm(보육네트워크) 운영 계획 확정",
-          "status": "계획"
         }
       ],
-      "analysis_ko": "## 베트남 인프라 개발 시장 동향 보고\n\n**1. 이번 주 핵심 진행사항:** 베트남 정부는 공공 조달 시 녹색 및 에너지 절약 기술을 우선 도입하여 지속 가능한 발전을 촉진하고 있습니다. 호치민시에서는 전 시민이 참여하는 환경 보호 캠페인이 운영 중입니다.\n\n**2. 투자 및 사업 기회 시그널:** 녹색 기술 및 에너지 효율 제품 관련 기업은 베트남 공공 조달 시장 진출 기회를 모색할 수 있습니다. 환경 보호 솔루션 제공 기업 역시 호치민시 캠페인과 연계한 사업 기회를 탐색할 수 있습니다.\n\n**3. 리스크 또는 지연 징후:** 특이사항 없음.",
+      "analysis_ko": "[경영진 보고용 인사이트]\n\n1. **이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 정부가 기후",
       "kpi_changes": [],
       "articles": [
         {
@@ -1160,283 +223,465 @@
           "date": "2026-07-15",
           "url": "https://moitruong.net.vn/uu-tien-cong-nghe-xanh-tiet-kiem-nang-luong-trong-mua-sam-cong-de-thuc-day-phat-trien-ben-vung-100948.html",
           "isNew": true
-        },
+        }
+      ]
+    },
+    "VN-ENV-NATURA": {
+      "plan_name_ko": "VN-ENV-NATURA",
+      "sector": "Environment",
+      "area": "National",
+      "decision": "",
+      "description_ko": "국립공원 및 자연보호구역 생태계 보전 및 복원 계획",
+      "kpi_targets": [],
+      "key_projects": [
         {
-          "title_ko": "호치민시는 환경을 보호하기 위해 모든 사람들을 동원합니다",
-          "summary_ko": "사업명: 호찌민시 전체 환경보호 시민운동(TP.HCM phát động toàn dân bảo vệ môi trường) | 규모: 시 전역 환경보호 캠페인 | 진행단계: 운영 중 | 주요기관: 호찌민시 정부, 환경부 | 일정: 2026년 7월 7일 발표, VN-ENV-IND-1894 마스터플랜 연계 추진 중",
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "계획"
+        }
+      ],
+      "analysis_ko": "",
+      "kpi_changes": [],
+      "articles": []
+    },
+    "VN-PWR-PDP8": {
+      "plan_name_ko": "VN-PWR-PDP8",
+      "sector": "Energy/Power",
+      "area": "National",
+      "decision": "",
+      "description_ko": "2030년까지의 국가 전력망 확충 및 탄소중립 이행 로드맵",
+      "kpi_targets": [],
+      "key_projects": [
+        {
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "준공완료"
+        }
+      ],
+      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 국회 및 산업통상부가 203",
+      "kpi_changes": [],
+      "articles": [
+        {
+          "title_ko": "해상풍력 장애물을 제거해야 한다",
+          "summary_ko": "①해상풍력발전 개발 ②2030년까지 6~17GW 용량 추진 ③계획/승인 단계 ④산업통상부 전력규제청, 국회(결의안 253호 발표) ⑤2030년까지 해상풍력 목표 달성을 위해 법적 기틀 정비 및 현재 7GW 규모 할당 프로젝트 진행 중",
+          "source": "vietnamnews_vn",
+          "date": "2026-07-18",
+          "url": "https://vietnamnews.vn/economy/1785582/offshore-wind-hurdles-must-be-removed.html",
+          "isNew": true
+        }
+      ]
+    },
+    "VN-PWR-PDP8-RENEWABLE": {
+      "plan_name_ko": "VN-PWR-PDP8-RENEWABLE",
+      "sector": "Energy/Power",
+      "area": "National",
+      "decision": "",
+      "description_ko": "태양광, 풍력, 수력 등 신재생에너지 발전 비중 획기적 확대",
+      "kpi_targets": [],
+      "key_projects": [
+        {
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "계획"
+        }
+      ],
+      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 정부가 PDP8 이행을 위해 해상풍력 투자",
+      "kpi_changes": [],
+      "articles": [
+        {
+          "title_ko": "해상 풍력 발전 투자에 대한 새로운 규정",
+          "summary_ko": "①해상풍력 투자 신규 규정 ②규정 내용 구체적 규모 미기재 ③계획 단계 ④베트남 정부(환경부 관련) ⑤2026년 7월 14일 규정 공시. 베트남 재생에너지 정책(VN-PWR-PDP8-RENEWABLE)에 따라 해상풍력 투자 활성화를 위한 제도적 기반 마련. 구체적 사업 규모나 일정은 추가 정보 필요.",
           "source": "Moi truong & Cuoc song",
-          "date": "2026-07-07",
-          "url": "https://moitruong.net.vn/tp-hcm-phat-dong-toan-dan-bao-ve-moi-truong-100753.html",
+          "date": "2026-07-14",
+          "url": "https://moitruong.net.vn/quy-dinh-moi-ve-dau-tu-dien-gio-ngoai-khoi-100893.html",
           "isNew": false
         }
       ]
     },
-    "VN-IP-NORTH-2030": {
-      "plan_name_ko": "VN-IP-NORTH-2030",
-      "sector": "Industrial Parks",
-      "area": "",
-      "decision": "Decision 326/QĐ-TTg (2022) + 외국인 투자 유치 전략",
-      "description_ko": "북부 산업단지 클러스터(하이퐁·박닌·타이응우옌·박장·흥옌)는 삼성·LG·인텔·폭스콘 등 글로벌 전자·반도체 공급망의 핵심 기지다. VSIP(베트남-싱가포르 산업단지)는 19개 단지를 운영 중이며, 타이빈성 신규 착공으로 확장 중이다. 2025~2030년 반도체·배터리·첨단제조 클러스터 집중 육성이 정책 방향이다.",
-      "kpi_targets": [
-        {
-          "label": "북부 산업용지 총 공급",
-          "target": "28,000 ha 이상 (2030)",
-          "current": "23,990 ha (2025년 4분기, +42.8% YoY)",
-          "changed": false
-        },
-        {
-          "label": "북부 산업단지 평균 입주율",
-          "target": "80% 이상",
-          "current": "65.74% (박닌 74.1%, 하노이 100%)",
-          "changed": false
-        },
-        {
-          "label": "FDI 유치 (베트남 전체)",
-          "target": "$200억/년 이상",
-          "current": "$276억 (2025년, 5년 최고) / 2026년 1~4월 $74억",
-          "changed": false
-        },
-        {
-          "label": "RBF(기성 공장) 공급 증가",
-          "target": "1,000,000 m² (2026~2029)",
-          "current": "2026년 643,000 m² 공급 예정",
-          "changed": false
-        },
-        {
-          "label": "Eco-IP(친환경 산업단지) 전환율",
-          "target": "신규 프로젝트 30% 이상",
-          "current": "2025~2027년 신규 프로젝트 30% 이상 녹색 기준 충족",
-          "changed": false
-        },
-        {
-          "label": "산업단지 내 중앙집중식 폐수처리장 설치율",
-          "target": "100%",
-          "current": "92% (2026년, Gemini 검색 기반)",
-          "changed": false
-        }
-      ],
+    "VN-PWR-PDP8-LNG": {
+      "plan_name_ko": "VN-PWR-PDP8-LNG",
+      "sector": "Energy/Power",
+      "area": "National",
+      "decision": "",
+      "description_ko": "기저부하 대응을 위한 가스 및 LNG 복합화력 발전소 건설 계획",
+      "kpi_targets": [],
       "key_projects": [
         {
-          "name_ko": "옌퐁 II 산업단지 (Yen Phong II)",
-          "location": "박닌성 옌퐁",
-          "capacity": "1,200 ha (공업 1,000 ha + 도시 200 ha)",
-          "note": "삼성 위성 공장 허브. 3개 구역(A/B/C) 운영 중",
-          "status": "공사중"
-        },
-        {
-          "name_ko": "VSIP 박닌 (Vietnam-Singapore IP)",
-          "location": "박닌성 투선",
-          "capacity": "700 ha (산업+주거 복합)",
-          "note": "캐논·파나소닉·삼성·LG·폭스콘 입주. DPPA 계약 추진",
-          "status": "공사중"
-        },
-        {
-          "name_ko": "VSIP 타이빈 (VSIP Thai Binh)",
-          "location": "타이빈성 타이투이 구",
-          "capacity": "333 ha / $221M",
-          "note": "전자부품·정밀기계·신재생에너지 대상. 2026년 산업용지 인도 예정",
-          "status": "공사중"
-        },
-        {
-          "name_ko": "VSIP 랑선 (VSIP Lang Son)",
-          "location": "랑선성 후루 구",
-          "capacity": "600 ha / $250M (3개 phase)",
-          "note": "1phase 2025년 3Q 완공, 2phase 2026년 9월 완공 예정. 4만명 고용",
-          "status": "공사중"
-        },
-        {
-          "name_ko": "VSIP 흥옌·하이퐁·하이즈엉 확장",
-          "location": "흥옌·하이퐁·하이즈엉 (북부 3개 성)",
-          "capacity": "미정 (MoU 체결)",
-          "note": "Becamex IDC-Sembcorp Development 4개 MoU. 녹색 산업단지 계획",
-          "status": "계획"
-        },
-        {
-          "name_ko": "존슨헬스텍 투안타인 2공장",
-          "location": "박닌성 투안타인 I IP",
-          "capacity": "20 ha / $100M",
-          "note": "2025년 1Q 착공, 2026년 가동 예정. 2,000~3,000명 고용",
-          "status": "공사중"
-        },
-        {
-          "name_ko": "기아빈 국제공항 개발",
-          "location": "박닌성 기아빈",
-          "capacity": "산업단지 물류 연계 인프라",
-          "note": "북부 산업단지 물류 허브 재편 핵심. 2026년 개발 추진 중",
-          "status": "계획"
-        },
-        {
-          "name_ko": "딥씨 하이퐁 산업단지 (DEEP C)",
-          "location": "하이퐁시",
-          "capacity": "중공업·자동차 특화",
-          "note": "빈패스트(VinFast) 입주. 항만 직접 연계",
-          "status": "공사중"
-        },
-        {
-          "name_ko": "삼성전자 반도체 후공정 테스트 공장",
-          "location": "박닌성",
-          "capacity": "$15억 투자 / DRAM·NAND 후공정 테스트",
-          "note": "2027년 11월 가동 예정. 북부 반도체 공급망 고도화 핵심 (Gemini 검색 기반)",
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
           "status": "공사중"
         }
       ],
-      "analysis_ko": "## 경영진 보고용 인사이트 (VN-IP-NORTH-2030)\n\n**1. 이번 주 핵심 진행사항:** 북부 지역 산업단지 녹색 전환 및 현대화 사업(VN-IP-NORTH-2030)이 계획 및 정책 승인 단계에 있으며, 관련 포럼 및 전시회가 활발히 개최되고 있습니다.\n\n**2. 투자 및 사업 기회 시그널:** 고품질 투자 유치 및 디지털/AI/친환경 기술 접목을 목표로 하는 차세대 산업단지 개발은 한국 기업에게 새로운 사업 기회를 제공할 수 있습니다.\n\n**3. 리스크 또는 지연 징후:** 구체적인 예산 및 규모가 명시되지 않은 사업이 다수 있어, 향후 사업 추진 과정에서 불확실성이 존재할 수 있습니다.",
+      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 가스 및 휘발유 가격 상승이 보고되었으나,",
       "kpi_changes": [],
       "articles": [
         {
-          "title_ko": "녹색산업단지 전환을 위한 자금조달 핵심과제",
-          "summary_ko": "① 북부 산업단지 녹색전환 사업(VN-IP-NORTH-2030)\n② 호찌민시 산업단지 66개→105개 확대, 약 5만 헥타르 규모\n③ 계획 단계\n④ 호찌민시 인민위원회, 기후변화센터, 발전연구소\n⑤ EU 탄소국경조정메커니즘 본격 시행(2026년 1월), 녹색금융 전환 추진",
-          "source": "vir_vn",
-          "date": "2026-07-13",
-          "url": "https://vir.com.vn/financing-key-challenge-for-green-industrial-park-transition-156565.html",
+          "title_ko": "휘발유 가격 인상",
+          "summary_ko": "베트남 가스 가격이 상승했다. 구체적인 상승 폭이나 원인에 대한 상세 정보는 기사 본문에 제시되지 않았다.",
+          "source": "VnExpress Business",
+          "date": "2026-07-23",
+          "url": "https://e.vnexpress.net/news/business/markets/gas-prices-increase-5100853.html",
           "isNew": true
-        },
+        }
+      ]
+    },
+    "VN-PWR-PDP8-NUCLEAR": {
+      "plan_name_ko": "VN-PWR-PDP8-NUCLEAR",
+      "sector": "Energy/Power",
+      "area": "National",
+      "decision": "",
+      "description_ko": "소형모듈원전(SMR) 및 대형 원전 도입 타당성 재검토 추진 법적 근거 마련",
+      "kpi_targets": [],
+      "key_projects": [
         {
-          "title_ko": "차세대 산업단지는 고품질 투자자를 유치해야 합니다: Summit",
-          "summary_ko": "베트남의 신세대 산업단지가 고품질 투자자 유치의 필요성이 강조되었다. 정상회담에서 산업단지의 경쟁력 강화와 외자 유입을 통한 경제 발전 방안이 논의되었으며, 질 높은 투자 유치 전략의 중요성이 부각되었다.",
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "협의중"
+        }
+      ],
+      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 과학기술부 산하 방사능핵안",
+      "kpi_changes": [],
+      "articles": [
+        {
+          "title_ko": "베트남은 2035년까지 수만 명의 원자력 인력이 필요하다",
+          "summary_ko": "베트남 핵발전 인력 양성 계획(VN-PWR-PDP8-NUCLEAR). 2035년까지 수만 명의 핵전력 근로자 필요. 과학기술부 산하 방사능핵안전청 주관. 현재 계획 단계. 인력 확보가 핵발전 프로그램 성공적 이행의 핵심 결정 요소로 인식. 향후 교육훈련 및 인력 충원 추진 예정.",
           "source": "vietnamplus",
-          "date": "2026-07-11",
-          "url": "https://en.vietnamplus.vn/new-generation-industrial-parks-need-to-attract-high-quality-investors-summit-post348146.vnp",
-          "isNew": false
-        },
+          "date": "2026-07-21",
+          "url": "https://en.vietnamplus.vn/vietnam-needs-tens-of-thousands-of-nuclear-power-workers-by-2035-post348663.vnp",
+          "isNew": true
+        }
+      ]
+    },
+    "VN-OG-2030": {
+      "plan_name_ko": "VN-OG-2030",
+      "sector": "Energy/Power",
+      "area": "National",
+      "decision": "",
+      "description_ko": "원유, 석유제품, 천연가스 비축시설 및 배관망 확충",
+      "kpi_targets": [],
+      "key_projects": [
         {
-          "title_ko": "차세대 산업단지는 고품질 투자자를 유치해야 합니다: 정상회담",
-          "summary_ko": "① 베트남 산업단지 현대화 및 고급 투자자 유치 ② 구체적 예산/규모 미명시, 북부 지역 신세대 산업단지 개발 ③ 계획 단계 ④ 베트남부동산협회, 총리자문회의 ⑤ 디지털·AI·ESG 기준 도입으로 생태산업단지 구축, 경제회랑·가치사슬과 연계한 지역 통합 개발 추진",
-          "source": "vietnamnews_vn",
-          "date": "2026-07-10",
-          "url": "https://vietnamnews.vn/economy/1785203/new-generation-industrial-parks-need-to-attract-high-quality-investors-summit.html",
-          "isNew": false
-        },
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "입찰중"
+        }
+      ],
+      "analysis_ko": "사항 없음)\n    특이사항 없음.\n\n    *Count Check (V1)*:\n    1. 이번 주 핵심 진행사항 (사업 추진",
+      "kpi_changes": [],
+      "articles": [
         {
-          "title_ko": "Suntory PepsiCo, Tay Ninh성 남부에 3억 달러 규모의 공장 준공",
-          "summary_ko": "① 산토리-펩시코 음료 생산시설 ② 3억 달러 규모 ③ 준공(2026년 7월 개장) ④ 산토리-펩시코, 타이닌성 정부 ⑤ 2026년 7월 개장 완료. 베트남 남부 타이닌성에 건설된 대규모 음료 제조 플랜트로 동남아 지역 거점 역할.",
+          "title_ko": "베트남의 석유 및 가스 산업은 해양 경제를 주도하는 역할을 재확인합니다.",
+          "summary_ko": "베트남 석유가스 산업이 해양경제 발전의 핵심 역할을 재확인했다. 업계는 에너지 공급과 경제 성장 기여를 강조하며 해양 자원 개발의 중요성을 제시했다.",
           "source": "vietnamplus",
-          "date": "2026-07-10",
-          "url": "https://en.vietnamplus.vn/suntory-pepsico-inaugurates-300-million-usd-plant-in-southern-tay-ninh-province-post348113.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "태국 베트남 전시회로 무역, 투자 기회 열려",
-          "summary_ko": "사업명: 베트남-태국 무역투자 전시회(VN-IP-NORTH-2030). 규모: 구체적 수치 미기재. 진행단계: 운영 중. 주요기관: 베트남 정부, 태국 정부. 핵심일정: 2026년 7월 개최. 베트남 상품의 다양성을 선보이며 태국과의 무역·투자 기회 창출.",
-          "source": "vietnamplus",
-          "date": "2026-07-07",
-          "url": "https://en.vietnamplus.vn/vietnam-exhibition-in-thailand-opens-up-trade-investment-opportunities-post347890.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "베트남은 수출 성장을 유지하기 위해 더 강력한 국내 제조업을 추구합니다",
-          "summary_ko": "① 베트남 북부 제조업 육성 계획(VN-IP-NORTH-2030) ② 전자제품, 기계, 의류, 목재가구 등 주요 수출품목 ③ 계획 단계 ④ 베트남 정부 ⑤ 국내 제조업 기반 강화를 통한 수출 지속성 확보",
-          "source": "vietnamplus",
-          "date": "2026-07-06",
-          "url": "https://en.vietnamplus.vn/vietnam-seeks-stronger-domestic-manufacturing-to-sustain-export-growth-post347813.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "산업용 부동산 주식은 FDI와 정책 지원으로 새로운 모멘텀을 얻습니다.",
-          "summary_ko": "①북부공업단지개발(VN-IP-NORTH-2030) ②2026-2030년 외국인직접투자(FDI) 24.8억달러(등록기준) ③정책승인 단계 ④베트남정부(결의안10-NQ/TW발령), 산업부동산개발사 ⑤반도체·전자·AI등 고기술산업 유치로 공업용부동산 수요 증가전망, 2030년까지 선도적FDI유치국 목표",
-          "source": "vir_vn",
-          "date": "2026-07-05",
-          "url": "https://vir.com.vn/industrial-real-estate-stocks-gain-fresh-momentum-from-fdi-and-policy-support-156069.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "산업 성장을 견인할 지원 산업",
-          "summary_ko": "① 북부 산업 지원 산업 육성 계획(VN-IP-NORTH-2030)\n② 호찌민시 포럼 개최, 구체적 예산 미기재\n③ 계획 단계\n④ 호찌민시 투자무역진흥센터(ITPC), 호찌민시 지원산업협회(HASI)\n⑤ 2026년 7월 2일 포럼 개최 완료, 지속적 공급망 통합 추진",
-          "source": "vietnamplus",
-          "date": "2026-07-03",
-          "url": "https://en.vietnamplus.vn/supporting-industries-set-to-drive-industrial-growth-post347678.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "말레이시아 반도의 데이터센터 전력 수요는 2035년까지 31%에 이를 것으로 예상됩니다.",
-          "summary_ko": "말레이시아 반도 지역의 데이터센터 전력 수요가 2035년까지 31%에 도달할 것으로 예측됨. 기사는 말레이시아 인프라 현황에 관한 내용으로 베트남과 무관함.",
-          "source": "vietnamplus",
-          "date": "2026-07-02",
-          "url": "https://en.vietnamplus.vn/data-centre-power-demand-in-peninsular-malaysia-predicted-to-reach-31-by-2035-post347612.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설",
-          "summary_ko": "Hoang Dieu Industrial Park는 베트남 북부의 국내 및 국제 투자자들에게 최고의 여행지가 될 준비가 되어 있습니다.",
-          "source": "Hanoi Times",
-          "date": "",
-          "url": "https://hanoitimes.vn/hoa-phat-to-build-ususd130-million-industrial-park-in-northern-vietnam.766544.html",
-          "isNew": false
+          "date": "2026-07-21",
+          "url": "https://en.vietnamplus.vn/vietnams-oil-and-gas-industry-reaffirms-role-in-driving-marine-economy-post348649.vnp",
+          "isNew": true
         }
       ]
     },
     "VN-TRAN-2055": {
       "plan_name_ko": "VN-TRAN-2055",
-      "sector": "Transport",
-      "area": "",
-      "decision": "Decision 1412/QĐ-TTg (2021)",
-      "description_ko": "교통인프라 마스터플랜은 2030년 고속도로 5,000km, 항구·공항 대규모 확충을 목표로 한다. 롱탄 국제공항($18B, 4단계)은 핵심 메가프로젝트로 2026년 1단계 개항이 목전이다. 하노이 링로드4, 호치민 링로드3·고가도로, 라크후옌 항구 확장이 병행 추진 중이다. PPP(BOT) 방식 확대로 민간 참여가 증가하고 있다.",
-      "kpi_targets": [
-        {
-          "label": "고속도로 총연장",
-          "target": "5,000 km",
-          "current": "1,892 km (2025 실적)",
-          "changed": false
-        },
-        {
-          "label": "롱탄공항 개항",
-          "target": "25M PAX/년 (1단계)",
-          "current": "2026.06 상업운항 목표",
-          "changed": false
-        },
-        {
-          "label": "공항 네트워크",
-          "target": "30개 공항",
-          "current": "22개 운영",
-          "changed": false
-        },
-        {
-          "label": "항만 처리 용량",
-          "target": "1,100M 톤/년",
-          "current": "600M 톤/년",
-          "changed": false
-        }
-      ],
+      "sector": "Urban/Transport",
+      "area": "National",
+      "decision": "",
+      "description_ko": "남북고속철도, 고속도로망, 신공항을 아우르는 전국 단위 교통 인프라 혁신",
+      "kpi_targets": [],
       "key_projects": [
         {
-          "name_ko": "롱탄 국제공항",
-          "location": "동나이성",
-          "capacity": "25M PAX (1단계)",
-          "note": "2026.06 개항 목표, $18B (4단계)",
-          "status": ""
-        },
-        {
-          "name_ko": "링로드4 (호치민)",
-          "location": "호치민 광역",
-          "capacity": "200km, $5.4B",
-          "note": "병행도로 2026.6 개통",
-          "status": ""
-        },
-        {
-          "name_ko": "링로드4 (하노이)",
-          "location": "하노이",
-          "capacity": "113km, $3.6B",
-          "note": "착공 진행 중",
-          "status": ""
-        },
-        {
-          "name_ko": "라크후옌 항구 2단계",
-          "location": "하이퐁",
-          "capacity": "심해 컨테이너",
-          "note": "국제 화물 허브",
-          "status": ""
-        },
-        {
-          "name_ko": "호치민 메트로 1호선",
-          "location": "호치민",
-          "capacity": "19.7km, 14역",
-          "note": "2024.12 개통 완료",
-          "status": ""
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "계획"
         }
       ],
-      "analysis_ko": "## 베트남 인프라 개발 동향 보고 (2026년 7월 3주차)\n\n**1. 이번 주 핵심 진행사항:** 호치민시는 항만 인프라 수수료 면제 정책을 시행하고, 베트남-캄보디아 간 도로 운송 협정을 확대하여 물류비용 절감 및 투자 유치를 도모합니다.\n\n**2. 투자 및 사업 기회 시그널:** 항만 인프라 수수료 면제는 물류 효율성 증대로 이어져 관련 한국 기업의 진출 기회를 확대할 수 있으며, 도로 운송 협정 강화는 국경 간 물류 인프라 투자 기회를 시사합니다.\n\n**3. 리스크 또는 지연 징후:** 특이사항 없음.",
+      "analysis_ko": "1. 이번 주 핵심 진행사항 (사업 추진 현황)\n하노이 디지털 전환(VN-TRAN-2055)에 따른",
       "kpi_changes": [],
       "articles": [
+        {
+          "title_ko": "FDI를 잡을 태세를 갖춘 산업용 부동산",
+          "summary_ko": "베트남 산업부동산 개발: FDI 유입 확대에 따른 산업단지(IP) 수요 증가. 제조업이 신규 등록 FDI의 63% 차지하며 산업용지·물류인프라 수요 주도. 에코 IP 개발, 친환경·스마트 산업단지 구축이 경쟁우위 결정 요소. 베트남의 운송·물류·에너지 인프라 투자와 제도개선으로 고급 FDI 유치 기반 마련. 진행단계: 운영 중·계획 단계.",
+          "source": "vir_vn",
+          "date": "2026-07-23",
+          "url": "https://vir.com.vn/industrial-realty-poised-to-grasp-fdi-157288.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "일본 내 베트남 공동체는 단결을 강화하고 조국 발전에 기여할 것을 촉구했습니다.",
+          "summary_ko": "기사는 베트남 내용이 아닌 재일 베트남 커뮤니티의 단결과 모국 발전 기여를 촉구하는 정치적 메시지입니다. 마스터플랜 VN-TRAN-2055와 무관하며, 제공된 인프라 사업 정보(사업명, 규모, 진행단계, 주요기관, 일정)가 없어 분석 불가능합니다.",
+          "source": "vietnamplus",
+          "date": "2026-07-22",
+          "url": "https://en.vietnamplus.vn/vietnamese-community-in-japan-urged-to-strengthen-unity-contribute-to-homelands-development-post348763.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "베트남, 중국 양국 협력 강화",
+          "summary_ko": "메콩-한국 협력 강화 논의. ① 메콩-한국 양자 협력 협정 ② 구체적 규모 미기재 ③ 진행 중(협력 체계 운영) ④ 베트남 외교부 장관, 메콩 국가들, 한국 ⑤ 2025년 공동의장국 역할 수행, 물 자원관리·비즈니스포럼 등 지속 추진",
+          "source": "vietnamplus",
+          "date": "2026-07-22",
+          "url": "https://en.vietnamplus.vn/vietnam-china-step-up-bilateral-cooperation-post348767.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "베트남, 파트너들과 아세안 외무장관 회의 참석",
+          "summary_ko": "사업명: ASEAN-Canada 에너지협력 강화 | 규모: ASEAN Power Grid 및 재생에너지·수소·에너지저장·민간용 핵전력 확대 | 단계: 협력 논의 단계 | 기관: 베트남 외교부, ASEAN, 캐나다 | 일정: 2026년 7월 ASEAN 외교장관회의에서 에너지 안보 및 전환을 ASEAN-캐나다 관계의 기둥으로 제안",
+          "source": "vietnamplus",
+          "date": "2026-07-22",
+          "url": "https://en.vietnamplus.vn/vietnam-attends-asean-foreign-ministers-meetings-with-partners-post348768.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "베트남과 중국, 양자 협력 강화",
+          "summary_ko": "베트남-중국 양자협력 강화 논의. ① 베트남-중국 포괄적 전략적 협력 파트너십 ② 구체 규모 미명시 ③ 협력 논의 단계 ④ 베트남 외교부장관 레 호아이 쯍, 중국 외교부장관 왕이 ⑤ 최근 양국 총리 통화 및 통역 강화",
+          "source": "vietnamnews_vn",
+          "date": "2026-07-22",
+          "url": "https://vietnamnews.vn/politics-laws/1796001/viet-nam-china-step-up-bilateral-cooperation.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "디지털 혁신으로 하노이의 새로운 성장 모델 기반 마련",
+          "summary_ko": "하노이 디지털 전환 사업(VN-TRAN-2055)은 2030년까지 디지털경제가 지역내총생산의 40% 기여를 목표로 하며, 호아락 하이테크파크를 중심 R&D 허브로 추진 중입니다. 계획 단계의 장기 전략 사업으로 하노이시 정부가 주도합니다.",
+          "source": "vietnamplus",
+          "date": "2026-07-22",
+          "url": "https://en.vietnamplus.vn/digital-transformation-lays-foundation-for-hanois-new-growth-model-post348713.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "베트남은 저배출 산업용 가스 솔루션의 핵심 시장으로 여겨진다",
+          "summary_ko": "① 저탄소 수소 공급 확대 프로젝트 ② 까이멥 산업단지 신규 공장 건설(규모 미정) ③ 계획 단계 ④ 메서(Messer) 그룹, 베트남 정부 ⑤ 재생에너지 안정공급 및 직접구매계약(DPPA) 체계 구축 필요",
+          "source": "vietnamplus",
+          "date": "2026-07-22",
+          "url": "https://en.vietnamplus.vn/vietnam-seen-as-key-market-for-low-emission-industrial-gas-solutions-post348751.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "Lam Dong 관광 활성화를 위해 Lien Khuong 공항 재개장",
+          "summary_ko": "① 리엔쿠엉 국제공항 재개항 ② 일일 36~40편, 승객 6,800명 수용(연 81.6만명) ③ 운영 중(8월 19일 재개항) ④ 람동성 인민위원회, 베트남항공·비엣젯·대나항공 등 ⑤ 8월 19일 6개 국내노선 운영 재개, 9월 2일 말레이시아 국제선 운영",
+          "source": "vietnamplus",
+          "date": "2026-07-21",
+          "url": "https://en.vietnamplus.vn/lien-khuong-airport-reopening-to-fuel-lam-dong-tourism-post348679.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "베트남은 글로벌 반도체 공급망에서 역할을 심화할 수 있다: 대만 기반 전문가",
+          "summary_ko": "① 베트남 반도체 공급망 심화 전략\n② 2030년까지 5만명 전문인력 양성 목표\n③ 계획 단계\n④ 베트남 정부, 국립대만과학기술대학(Taiwan Tech), VIN Taiwan\n⑤ 2030년 반도체 전략 이행, 2050년 비전 추진",
+          "source": "vietnamplus",
+          "date": "2026-07-21",
+          "url": "https://en.vietnamplus.vn/vietnam-can-deepen-role-in-global-semiconductor-supply-chain-taiwan-based-expert-post348662.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "라오까이군, 산사태 피해 주민들 복구 지원",
+          "summary_ko": "라오까이(Lao Cai) 지방의 군대는 며칠 동안 폭우로 인해 무캉차이(Mu Cang Chai) 지역에서 광범위한 산사태가 발생하고 가옥이 파손되고 기반 시설이 파괴되고 교통 연결이 끊어진 후 주민들의 회복을 돕고 있습니다. 홍수·산사태로 북부 산악지대 큰 피해 PM, 선제적 대응 지시",
+          "source": "vietnamplus",
+          "date": "2026-07-20",
+          "url": "https://en.vietnamplus.vn/lao-cai-troops-help-residents-recover-from-landslides-post348627.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "2026년 상반기 베트남 경제: GDP, FDI, 무역 및 제조 검토",
+          "summary_ko": "제목: 베트남 2026년 상반기 경제 현황 분석 | 사업명: 베트남 경제 성과 평가 | 규모: GDP, FDI, 무역, 제조업 전반 | 단계: 분석/평가 | 기관: 베트남 경제 관련 부처 | 주요내용: 2026년 상반기 베트남의 GDP, 외국인투자, 무역, 제조업 부문의 경제 성과를 종합 분석한 보고서로 미중 무역갈등 및 관세 정책 변화가 베트남 산업에 미",
+          "source": "vietnambriefing",
+          "date": "2026-07-20",
+          "url": "https://www.vietnam-briefing.com/news/vietnam-economic-performance-h1-2026.html/",
+          "isNew": true
+        },
+        {
+          "title_ko": "베트남 의류 부문은 부가가치 성장을 향해 나아가고 있습니다",
+          "summary_ko": "베트남 의류산업이 생산 확대에서 고부가가치 성장으로 전환. ① 의류산업 고부가가치화 사업 ② 연간 480억 달러 수출 목표 ③ 계획 단계 ④ 베트남 정부, 의류산업 ⑤ 생산성 향상, 국내 소싱 강화, 시장 다각화, 디지털·녹색 전환 추진",
+          "source": "vietnamplus",
+          "date": "2026-07-20",
+          "url": "https://en.vietnamplus.vn/vietnams-garment-sector-pivots-towards-value-added-growth-post348592.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "국회의장, 보훈·순교자의 날 앞두고 참전용사 방문",
+          "summary_ko": "① 전상군인 및 순국선사 재활센터 지원사업\n② 연 2,000~3,000명 대상 의료재활 서비스 제공\n③ 운영 중\n④ 국회의장(Tran Thanh Man), 롱닷 전상군인재활센터\n⑤ 7월 27일 전상군인 및 순국선사 기념일(79주년)",
+          "source": "sggp_org_vn",
+          "date": "2026-07-19",
+          "url": "https://en.sggp.org.vn/national-assembly-chairman-visits-veterans-ahead-of-war-invalids-and-martyrs-day-post128099.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "라이쩌우 홍수로 실종된 피해자 수색을 위해 탐지견 배치",
+          "summary_ko": "거센 비와 무릎까지 차오르는 진흙 속에서도 라이쩌우(Lai Chau) 지방 국경수비대의 장교와 군인들은 탐지견 팀과 함께 현장에서 확고한 자세를 유지하며 아직 실종된 사람들을 찾기 위해 시간을 다투고 있습니다. Lai Chau는 Muong Than의 돌발 홍수 이후 구호 활동을 강화합니다.",
+          "source": "vietnamplus",
+          "date": "2026-07-19",
+          "url": "https://en.vietnamplus.vn/sniffer-dogs-deployed-to-search-for-victims-missing-after-lai-chau-flash-flood-post348564.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "베트남은 EV 투자 유치 경쟁에서 우위를 점하고 있다: 인도네시아 신문",
+          "summary_ko": "[Jina] 제목: 베트남은 EV 투자 유치 경쟁에서 우위를 점하고 있습니다: 인도네시아 신문 URL 출처: https://en.vietnamplus.vn/vietnam-holds-advantages-in-race-to-attract-ev-investment-indonesian-newspaper-post348549.vnp [![그림 1: 싱가포르 총리 로렌",
+          "source": "vietnamplus",
+          "date": "2026-07-19",
+          "url": "https://en.vietnamplus.vn/vietnam-holds-advantages-in-race-to-attract-ev-investment-indonesian-newspaper-post348549.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "베트남 인구의 80% 이상이 스마트폰을 사용합니다.",
+          "summary_ko": "베트남 스마트폰 보급률 80% 이상 달성. 디지털 정부 및 스마트시티 구축을 위해 공유 디지털 인프라, AI 기반시설, 고속 연결성에 투자 확대 필요. 하노이는 2030년까지 디지털경제 비중을 지역GDP의 40%로 목표. 호아락 첨단기술단지를 R&D 중심으로 육성(VN-TRAN-2055, VN-HAN-URBAN-2045 마스터플랜 연계).",
+          "source": "vietnamplus",
+          "date": "2026-07-19",
+          "url": "https://en.vietnamplus.vn/more-than-80-of-vietnams-population-uses-smartphones-post348546.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "FDI 유치 목표 실현을 위한 이점 식별: 전문가",
+          "summary_ko": "베트남의 외국인직접투자(FDI) 유치 전략 회의에서 2026-2030년 연간 40-50억 달러 목표 달성을 위해 경쟁력 강화, 병목 제거, 국내기업과의 연계 개선이 필요함을 지적. 2026년 상반기 등록 외자 346.5억 달러(전년 대비 61% 증가), 실행 외자 130.3억 달러(11.2% 증가)로 5년 최고 성과. 정부부처와 투자기관이 추진 중이며, 선",
+          "source": "vietnamnews_vn",
+          "date": "2026-07-20",
+          "url": "https://vietnamnews.vn/economy/1785740/identifying-advantages-to-realise-fdi-attraction-targets-experts.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "물류비용에 대한 부담이 커지고 기업은 어려움을 겪고 있습니다.",
+          "summary_ko": "① 베트남 물류비용 부담 증가 문제\n② 구체적 수치 미제시 (일반적 분석 기사)\n③ 계획/정책 수립 단계\n④ 발주처: 베트남 정부, 호찌민시\n⑤ VN-TRAN-2055 마스터플랜 범위 내 지속 추진\n\n베트남 기업들이 급증하는 물류비용으로 인한 국제경쟁력 약화에 직면. 호찌민시가 국가 경쟁력 강화 차원의 종합 솔루션 마련을 추진 중.",
+          "source": "vietnamplus",
+          "date": "2026-07-18",
+          "url": "https://www.vietnamplus.vn/ap-luc-chi-phi-logistic-tang-cao-doanh-nghiep-doi-mat-kho-khan-post1124857.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "엔터프라이즈에서 인프라로의 동기식 전환",
+          "summary_ko": "사업명: 베트남 2055년 교통물류 인프라 동기화 전환 프로젝트(VN-TRAN-2055) | 규모: 국가 물류비용 최적화 및 인프라 현대화 | 단계: 계획 | 기관: 베트남 정부, 호치민시 경제부처 | 일정: 지속적 추진 중, 기업-인프라 생태계 통합 개선",
+          "source": "vietnamplus",
+          "date": "2026-07-18",
+          "url": "https://www.vietnamplus.vn/chuyen-doi-dong-bo-tu-doanh-nghiep-den-ha-tang-post1124865.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "호치민시, 풀뿌리 의료 강화를 위해 병원 지원 네트워크 확장",
+          "summary_ko": "① HCMC 기층의료 지원망 확대 사업\n② 구체적 규모 미제시\n③ 진행 중 (계획·추진 단계)\n④ 호치민시 보건부, 병원 네트워크\n⑤ 2026년 7월 발표, 기층 의료 강화 추진 중",
+          "source": "sggp_org_vn",
+          "date": "2026-07-18",
+          "url": "https://en.sggp.org.vn/hcmc-expands-hospital-support-network-to-strengthen-grassroots-healthcare-post128085.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "호치민시, 지하철 네트워크 기술 이전에 대한 GTEL 파트너",
+          "summary_ko": "① 호치민시 지하철망 기술이전 사업\n② 규모 미상 (기술이전 협력)\n③ 협력 체결 단계\n④ 호치민시, GTEL\n⑤ 지하철망 기술이전을 통한 운영 능력 강화",
+          "source": "vietnamplus",
+          "date": "2026-07-18",
+          "url": "https://en.vietnamplus.vn/ho-chi-minh-city-gtel-partner-on-technology-transfer-for-metro-network-post348534.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "베트남-라오스 무역 목표 100억 달러",
+          "summary_ko": "① 베트남-라오스 무역 확대 계획 ② 목표 규모: 100억 달러 ③ 계획 단계 ④ 베트남·라오스 정부, 관련 부처 ⑤ 2026년 7월 기준 진행 중인 양국 간 경제협력 강화를 통한 교역 증대 목표. VN-TRAN-2055 마스터플랜과 연계된 국제 물류·운송 인프라 구축 관련 전략.",
+          "source": "vietnamnews_vn",
+          "date": "2026-07-18",
+          "url": "https://vietnamnews.vn/economy/1785734/viet-nam-laos-trade-targets-us-10-billion.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "응에안(Nghe An)은 \"2자릿수\" 성장 목표를 달성하기 위해 에뮬레이션 운동을 시작합니다.",
+          "summary_ko": "① 사업명: 응에안성 2자리수 성장목표 달성 경쟁운동 ② 사업규모: 구체적 수치 미제시 ③ 진행단계: 계획 ④ 주요기관: 응에안성 정부, 베트남 중앙정부 ⑤ 핵심일정: 2026년 7월 발동, 목표달성 시한 미상",
+          "source": "nhandan_vn",
+          "date": "2026-07-17",
+          "url": "https://nhandan.vn/nghe-an-phat-dong-phong-trao-thi-dua-chinh-phuc-muc-tieu-tang-truong-2-con-so-post976250.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "최고 지도자가 중앙고지운영위원회 전직 관계자들과 만남",
+          "summary_ko": "중앙고지역 전략위원회 운영: 중앙고지역 지역 개발 및 인프라 구축 추진. 주요기관 - 베트남 중앙고지역 전략위원회, 정부 지도부. 현황: 운영 중. 상위 지도자와 전직 관계자 회의를 통해 2055년 교통 마스터플랜에 따른 중앙고지역 개발 추진력 강화 중.",
+          "source": "nhandan_vn",
+          "date": "2026-07-17",
+          "url": "https://en.nhandan.vn/top-leader-meets-former-officials-of-central-highlands-steering-committee-post164483.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "총리, 북부산간지역 집중호우에 선제적 대응 지시",
+          "summary_ko": "① 북부 산악지역 집중호우 대응 지시\n② 특정 사업규모 미언급\n③ 현재 진행단계: 대응지시 (운영/관리)\n④ 주요기관: 총리실, 국방부, 공안부, 건설부, 농업환경부\n⑤ 핵심일정: 2026년 7월 17일 공식지시 발령, 즉시 대응 조치",
+          "source": "vietnamplus",
+          "date": "2026-07-17",
+          "url": "https://en.vietnamplus.vn/pm-orders-proactive-response-to-heavy-rainfall-in-northern-mountainous-region-post348516.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "글로벌 기술 기업이 다낭과 파트너십을 맺고 AI 인프라 개발",
+          "summary_ko": "①다낭 AI 인프라 개발사업 ②규모 미상(글로벌 기술기업 협력) ③계획단계 ④다낭시·글로벌 기술기업·베트남 정부 ⑤디지털 정부 구축을 위한 공유 디지털 인프라·AI 인프라·고속통신망 투자 추진 예정. 2030년까지 추진하는 VN-TRAN-2055 마스터플랜의 일환으로 데이터보안과 혁신생태계 강화 중심",
+          "source": "vietnamplus",
+          "date": "2026-07-17",
+          "url": "https://en.vietnamplus.vn/global-technology-firms-partner-with-da-nang-to-develop-ai-infrastructure-post348517.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "상임부총리, 미국 경제계와 만남",
+          "summary_ko": "사업명: 베트남-미국 경제협력 확대 회담\n사업규모: 미국 기업 커뮤니티 대표단 회의\n진행단계: 협력 추진 중\n주요기관: 베트남 부총리, 미국 비즈니스 협회 및 주베트남 미국 기업\n핵심일정: 2026년 7월 17일 회담 개최, 향후 양국 경제협력 강화 예정",
+          "source": "vietnamplus",
+          "date": "2026-07-17",
+          "url": "https://en.vietnamplus.vn/standing-deputy-pm-meets-with-us-business-community-post348520.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "박닌은 북한의 국제 물류 중심지가 되는 것을 목표로 하고 있습니다.",
+          "summary_ko": "①북부 국제물류센터 개발 ②2026-2030년 물류서비스 발전계획 ③계획단계 ④박닌성인민위원회 ⑤2030년까지 GRDP 4-5% 기여, 물류비용을 16-18%로 감소, 전자상거래 물류 60% 디지털화 목표. 지아빙국제공항·고속도로·내륙항만 등과 연계한 다중모드 운송체계 구축",
+          "source": "vietnamplus",
+          "date": "2026-07-16",
+          "url": "https://www.vietnamplus.vn/bac-ninh-huong-toi-tro-thanh-trung-tam-logistics-quoc-te-cua-mien-bac-post1124543.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "호치민시는 녹색 성장과 지속 가능한 개발을 추진하기 위해 고품질 FDI를 목표로 하고 있습니다.",
+          "summary_ko": "총 1,468억 달러에 달하는 21,351개의 유효한 FDI 프로젝트를 통해 호치민시는 베트남의 주요 외국인 투자 수혜국으로 남아 있다.",
+          "source": "vietnamnews_vn",
+          "date": "2026-07-16",
+          "url": "https://vietnamnews.vn/economy/1785580/hcm-city-targets-high-quality-fdi-to-drive-green-growth-sustainable-development.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "최고 지도자는 Son La에게 농산물 가공, 관광 허브가 될 것을 요청",
+          "summary_ko": "7월 16일 To Lam 당 서기장 겸 국가 주석은 Son La가 환경 지속 가능성과 사회 복지를 유지하면서 생태 농업, 농산물 가공 및 독특한 관광을 위한 북서부의 중심지로 발전할 것을 촉구했습니다. 농림수산 상반기 수출 6% 증가",
+          "source": "vietnamplus",
+          "date": "2026-07-16",
+          "url": "https://en.vietnamplus.vn/top-leader-asks-son-la-to-become-agro-processing-tourism-hub-post348444.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "농촌 관광은 원주민 문화에서 힘을 얻습니다",
+          "summary_ko": "베트남은 현재 600개 이상의 농업 및 농촌 관광 모델을 보유하고 있으며 연간 수익이 25조 VND (9억 5600만 달러) 이상입니다. The sector has become an important source of income for many rural communities seeking to diversify their livelihoods. 하이퐁(",
+          "source": "vietnamplus",
+          "date": "2026-07-16",
+          "url": "https://en.vietnamplus.vn/rural-tourism-draws-strength-from-indigenous-culture-post348403.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "중국, 경기 둔화에도 불구하고 거의 5년 만에 가장 높은 수출 증가세 기록",
+          "summary_ko": "중국의 6월 수출은 반도체 및 컴퓨팅 장비 수요 급증에 힘입어 2021년 10월 이후 가장 빠른 연간 성장률인 27% 증가했습니다.",
+          "source": "sourcingjournal",
+          "date": "2026-07-15",
+          "url": "https://wwd.com/sourcing-journal/trade/china-export-growth-june-2026-27-percent-gdp-economy-trade-1239067175/",
+          "isNew": true
+        },
+        {
+          "title_ko": "호치민시는 녹색 성장과 지속 가능한 개발을 추진하기 위해 고품질 FDI를 목표로 하고 있습니다.",
+          "summary_ko": "총 1,468억 달러에 달하는 21,351개의 유효한 FDI 프로젝트를 통해 호치민시는 여전히 베트남 최고의 외국인 투자 수혜국으로 남아 있습니다. 남부 최대 규모의 경제 중심지는 2026년 상반기에 등록된 FDI에서 약 75억 달러를 기록하여 연간 목표의 68% 이상을 달성했습니다. 호 C",
+          "source": "vietnamplus",
+          "date": "2026-07-15",
+          "url": "https://en.vietnamplus.vn/ho-chi-minh-city-targets-high-quality-fdi-to-drive-green-growth-sustainable-development-post348347.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "호치민시, 스마트시티 개발과 데이터 경제 발전",
+          "summary_ko": "호치민시는 과학 및 혁신 허브를 개발하고 스마트 시티 이니셔티브와 데이터 경제를 확장하며 지속적인 두 자릿수 경제 성장을 촉진하기 위한 새로운 정책 초안을 작성하고 있습니다.",
+          "source": "sggp_org_vn",
+          "date": "2026-07-15",
+          "url": "https://en.sggp.org.vn/hcmc-advances-smart-city-development-data-economy-post127996.html",
+          "isNew": true
+        },
         {
           "title_ko": "베트남 제조 추적기: 2026년 6월 기준",
           "summary_ko": "① 베트남 제조업 추적 보고서(Vietnam Manufacturing Tracker) ② 2026년 상반기 GDP 8.18% 성장률 기록 ③ 정책/분석 단계 ④ 베트남 정부·산업부처·해외투자자 ⑤ 2026년 연간 10% 성장 목표 달성 추진 중. VN-TRAN-2055 마스터플랜 관련으로 제조업 기반 경제성장 및 글로벌 공급망 위상 강화에 중점",
@@ -1483,7 +728,7 @@
           "source": "vietnamplus",
           "date": "2026-07-13",
           "url": "https://en.vietnamplus.vn/unlocking-value-of-archives-in-search-for-fallen-soldiers-identities-post348221.vnp",
-          "isNew": true
+          "isNew": false
         },
         {
           "title_ko": "베트남, 캄보디아 Tan Nam – Meun Chey 국경 관문을 통한 국경 간 도로 운송 조사 실시",
@@ -1491,7 +736,7 @@
           "source": "vietnamplus",
           "date": "2026-07-13",
           "url": "https://en.vietnamplus.vn/vietnam-cambodia-survey-implementation-of-cross-border-road-transport-through-tan-nam-meun-chey-border-gates-post348252.vnp",
-          "isNew": true
+          "isNew": false
         },
         {
           "title_ko": "신발 산업은 녹색 전환을 가속화하고 공급망을 강화합니다.",
@@ -1499,15 +744,7 @@
           "source": "vietnamplus",
           "date": "2026-07-13",
           "url": "https://en.vietnamplus.vn/footwear-industry-accelerates-green-transition-strengthens-supply-chains-post348215.vnp",
-          "isNew": true
-        },
-        {
-          "title_ko": "롱탄 개장을 앞두고 호치민 공항 터미널 재건축 고려",
-          "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/traffic/ho-chi-minh-airport-terminal-considered-for-rebuild-ahead-of-long-thanh-opening-5096262.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/07/11/n",
-          "source": "VnExpress International",
-          "date": "2026-07-13",
-          "url": "https://e.vnexpress.net/news/news/traffic/ho-chi-minh-airport-terminal-considered-for-rebuild-ahead-of-long-thanh-opening-5096262.html",
-          "isNew": true
+          "isNew": false
         },
         {
           "title_ko": "베트남 최대 자치단체, 투자 유치를 위해 공항 연결 계획",
@@ -1515,7 +752,7 @@
           "source": "Nikkei Asia",
           "date": "2026-07-14",
           "url": "https://asia.nikkei.com/economy/vietnam-s-biggest-municipality-plans-airport-links-in-push-for-investment",
-          "isNew": true
+          "isNew": false
         },
         {
           "title_ko": "최고의 민간 기업은 40개의 메가 프로젝트에 2,000억 달러를 투자할 계획입니다.",
@@ -1556,350 +793,26 @@
           "date": "2026-07-10",
           "url": "https://en.vietnamplus.vn/deputy-fm-orders-modern-intl-press-centre-for-apec-2027-post348134.vnp",
           "isNew": false
-        },
-        {
-          "title_ko": "베트남, 롱탄 메가 공항에 도달하기 위해 도로 건설에 4억 5600만 달러 투자",
-          "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/traffic/vietnam-pours-456m-into-roads-to-reach-long-thanh-mega-airport-5095915.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/07/10/dt7731178366518355",
-          "source": "VnExpress International",
-          "date": "2026-07-11",
-          "url": "https://e.vnexpress.net/news/news/traffic/vietnam-pours-456m-into-roads-to-reach-long-thanh-mega-airport-5095915.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "개정된 항공 계획에 따라 하노이 지역에 두 번째 공항이 생긴다",
-          "summary_ko": "① 국가공항시스템발전계획 2021-2030 개정안\n② 36개 공항망(국제공항 20개, 국내공항 17개)\n③ 승인(2026년 7월 1일 건설부 결정)\n④ 건설부(MoC), 베트남 정부\n⑤ 하노이 제2공항 위치 2030년 이전 확정 예정, 웅호아·추엔미지역 후보",
-          "source": "vir_vn",
-          "date": "2026-07-09",
-          "url": "https://vir.com.vn/hanoi-region-to-get-second-airport-under-revised-aviation-plan-156404.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "하노이 베트남 국립대학교, 아시아 175위: Webometrics",
-          "summary_ko": "베트남 국립대학교 하노이가 웹오메트릭스 순위에서 아시아 175위를 기록했습니다. 기사는 대학 순위 평가 결과를 보도하고 있습니다.",
-          "source": "vietnamplus",
-          "date": "2026-07-09",
-          "url": "https://en.vietnamplus.vn/vietnam-national-university-hanoi-ranks-175th-in-asia-webometrics-post348030.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "삼성전자, AI·반도체 인력 강화 위해 베트남 인재 활용",
-          "summary_ko": "삼성이 베트남의 인재를 활용하여 AI 및 반도체 분야 인력을 강화하고 있습니다. 베트남의 기술 인력을 채용하여 글로벌 경쟁력을 높이려는 전략입니다.",
-          "source": "vietnamplus",
-          "date": "2026-07-09",
-          "url": "https://en.vietnamplus.vn/samsung-taps-vietnamese-talent-to-strengthen-ai-semiconductor-workforce-post348033.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "베트남 NA는 러시아와의 더욱 강력한 현지 협력을 지지한다",
-          "summary_ko": "기사는 베트남-러시아 협력에 관한 정치적 성명으로, 구체적 인프라 사업 내용이 없습니다. ① 베트남-러시아 지역협력 강화 ② 사업규모 미명시 ③ 계획 단계 ④ 베트남 국회(NA) ⑤ 추후 협력 논의 예정. 인프라 마스터플랜(VN-TRAN-2055)과 직접적 연관성 불명확.",
-          "source": "nhandan_vn",
-          "date": "2026-07-08",
-          "url": "https://en.nhandan.vn/vietnamese-na-supports-stronger-local-cooperation-with-russia-post164184.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "하노이의 두 번째 공항이 공식적으로 국가 공항 계획에 추가되었습니다.",
-          "summary_ko": "① 하노이 제2공항 국가공항계획 편입\n② 2030년까지 연 2억4,900만 명 여객·440만 톤 화물 처리 목표\n③ 승인\n④ 베트남 정부(교통부)\n⑤ 2030년까지 인구 95% 이상이 공항 100km 범위 내 거주 달성",
-          "source": "vietnamplus",
-          "date": "2026-07-08",
-          "url": "https://en.vietnamplus.vn/hanois-second-airport-officially-added-to-national-airport-plan-post347970.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "과학기술부-WEF, AI·반도체 파트너십 강화",
-          "summary_ko": "①AI·반도체 협력 강화 ②구체적 규모 미기재 ③계획/추진 단계 ④과학기술부, WEF ⑤100일 디지털 개혁 추진 중. 베트남이 과학기술부와 WEF 협력으로 AI·반도체 산업 고도화 추진 중이며, 사이공 하이테크파크 확장(195ha)과 함께 디지털 인력양성 가속화로 AI 시대 대비 중",
-          "source": "sggp_org_vn",
-          "date": "2026-07-09",
-          "url": "https://en.sggp.org.vn/science-and-technology-ministry-wef-strengthen-ai-semiconductor-partnership-post127786.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "하노이, 18~35세 주민에게 근시 치료 보조금 제공",
-          "summary_ko": "기사의 주제는 하노이의 근시 치료 보조금 정책이나, 제공된 본문은 베트남의 해외투자, FDI 유입, 수출 현황에 관한 경제 뉴스입니다. 근시 치료 보조금 정책에 대한 구체적인 사업 정보(예산, 규모, 일정 등)가 기사 본문에 누락되어 있어 요약이 불가능합니다. 제목과 본문 내용이 일치하지 않습니다.",
-          "source": "vietnamplus",
-          "date": "2026-07-09",
-          "url": "https://en.vietnamplus.vn/hanoi-provides-myopia-treatment-subsidies-for-residents-aged-1835-post347878.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "하노이는 친환경적이고 스마트하며 지속 가능한 미래를 추구합니다.",
-          "summary_ko": "기사 제목은 '하노이의 녹색·스마트·지속가능한 미래 추진'이지만, 제공된 본문은 푸꾹 카누 전복사고, 닥락 병사 유해 수색, 타인호아 커뮤니티 관광 등 무관한 내용들로 구성되어 있습니다. 하노이 인프라·도시개발 관련 구체적 사업내용, 예산규모, 진행단계, 주요기관, 일정 등의 정보가 기사 본문에 없어 요약이 불가능합니다.",
-          "source": "vietnamplus",
-          "date": "2026-07-09",
-          "url": "https://en.vietnamplus.vn/hanoi-pursues-a-green-smart-and-sustainable-future-post347967.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "부총리: 다낭은 돌파구를 마련할 절호의 기회에 직면해 있습니다.",
-          "summary_ko": "사업명: 다낭시 인프라 발전 계획(VN-TRAN-2055)\n사업규모: 미명시\n진행단계: 계획\n주요기관: 베트남 정부 부총리\n핵심일정: 다낭이 대규모 경제적 도약의 기회를 맞이하고 있으며, 인프라 현대화를 통한 발전 추진 중. 구체적 예산 및 일정은 추가 공개 예정",
-          "source": "tienphong_vn",
-          "date": "2026-07-07",
-          "url": "https://tienphong.vn/pho-thu-tuong-da-nang-dang-dung-truoc-co-hoi-rat-lon-de-but-pha-post1857589.tpo",
-          "isNew": false
-        },
-        {
-          "title_ko": "2026년 하노이, 500만 번째 해외 방문객 맞이",
-          "summary_ko": "① 하노이 국제관광객 500만 명 달성 ② 연간 국제관광객 500만 명 ③ 운영 중 ④ 하노이시청 관광청 ⑤ 2026년 7월 달성 완료, VN-TRAN-2055 마스터플랜 일환으로 관광인프라 확충 추진 중",
-          "source": "nhandan_vn",
-          "date": "2026-07-07",
-          "url": "https://en.nhandan.vn/ha-noi-welcomes-5-millionth-international-visitor-in-2026-post164154.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "베트남, 투명한 탄소 시장 기반 마련",
-          "summary_ko": "①베트남 투명 탄소시장 구축 ②구체적 규모 미기재 ③계획 단계 ④베트남 정부(관련부처) ⑤탄소시장 투명성 강화를 위한 기반 마련 중. VN-TRAN-2055 마스터플랜과 연계된 탄소감축 및 환경정책 추진으로 ESG 경영 활성화 및 국제 탄소거래 시장 참여 기반 조성",
-          "source": "sggp_org_vn",
-          "date": "2026-07-07",
-          "url": "https://en.sggp.org.vn/vietnam-lays-groundwork-for-transparent-carbon-market-post127730.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "하노이는 7월 6일부터 무료 칩 지원 버스 카드 등록을 시작합니다.",
-          "summary_ko": "① 하노이 칩 내장 버스카드 무료 배포 사업\n② 대중교통 카드 시스템 전환\n③ 운영 중 (2026년 7월 6일 등록 개시)\n④ 하노이시 대중교통 운영 기관\n⑤ 2026년 7월 6일부터 무료 칩 카드 등록 시작",
-          "source": "vietnamplus",
-          "date": "2026-07-07",
-          "url": "https://en.vietnamplus.vn/hanoi-opens-registration-for-free-chip-enabled-bus-cards-from-july-6-post347783.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "지속 가능한 산업 생태계 구축을 담당하는 Stavian IP 책임자",
-          "summary_ko": "① 스타비안 산업단지(Stavian Industrial Park) 네트워크 확장 ② 응웬투안안 회장 주도, 베트남 전역 친환경·스마트 산업단지 개발 ③ 운영 중(2018년 설립 후 지속 확장) ④ Stavian Group(발주·운영), 정부 투자유치기관 ⑤ 흥옌, 푸토, 태응우옌, 칸호아 등 주요 지역 확대 진행",
-          "source": "vir_vn",
-          "date": "2026-07-06",
-          "url": "https://vir.com.vn/stavian-ip-chief-on-building-sustainable-industrial-ecosystems-156071.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "베트남, 에너지 효율성을 위한 세계적인 노력에 동참",
-          "summary_ko": "기사 본문이 에너지 효율성에 대한 구체적 내용을 포함하지 않으며, 일본 아이치현과의 경제협력 및 한국 문화 전통에 관한 뉴스만 게재되어 있습니다. VN-TRAN-2055 마스터플랜과 연계된 베트남의 에너지 효율 추진 정책, 사업규모, 진행단계, 주요 기관, 일정 등 요구되는 정보가 부재합니다. 기사 제목과 본문 내용의 불일치로 인해 적절한 요약이 불가능합니",
-          "source": "vietnamplus",
-          "date": "2026-07-06",
-          "url": "https://en.vietnamplus.vn/vietnam-joins-global-push-for-energy-efficiency-post347775.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "네팔은 어떻게 개발도상국의 교량 건설국이 되었는가",
-          "summary_ko": "사업명: TRAC4Change 트레일 브릿지 프로그램 ② 규모: 11개국 대상 다수의 현수교 건설 ③ 진행단계: 운영 중 ④ 주요기관: Helvetas(스위스 개발기구), 네팔 정부, 11개국 정부 ⑤ 일정: 2008년 TRAC4Change 설립, 현재 에티오피아·탄자니아·과테말라 등에서 진행 중",
-          "source": "asianewsnetwork",
-          "date": "2026-07-06",
-          "url": "https://asianews.network/how-nepal-became-the-developing-worlds-bridge-builder/",
-          "isNew": false
-        },
-        {
-          "title_ko": "베트남, 결의안 57의 18개월 이행으로 AI 생태계 형성",
-          "summary_ko": "① Resolution 57 기반 베트남 AI 생태계 조성 ② 2030년까지 동남아 상위 3개국 목표 설정 ③ 정책 수립 단계 ④ 베트남 정부(정치국) 주도 ⑤ 2030년까지 AI·반도체·양자기술 등 전략기술 마스터링 추진",
-          "source": "vietnamplus",
-          "date": "2026-07-06",
-          "url": "https://en.vietnamplus.vn/vietnam-shapes-ai-ecosystem-following-18-month-implementation-of-resolution-57-post347781.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "Lam Dong, 두 개의 고속도로 프로젝트에 자재 공급 확보",
-          "summary_ko": "① 람동성 고속도로 2개 프로젝트 자재공급 확보\n② 사업규모 미상 (관련 고속도로 프로젝트)\n③ 진행 중 (자재공급 단계)\n④ 람동성 정부, 발주처 미상\n⑤ 2026년 7월 기사 발행 시점 자재공급 진행",
-          "source": "sggp_org_vn",
-          "date": "2026-07-03",
-          "url": "https://en.sggp.org.vn/lam-dong-secures-material-supply-for-two-expressway-projects-post127627.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "베트남 북부가 홍수에 대비하면서 폭풍 메이삭이 통킹 만에 가까워졌습니다.",
-          "summary_ko": "올해 동해에 상륙한 첫 폭풍인 열대성 폭풍 마이삭이 최대 11급 돌풍으로 통킹만에 접근하고 있어 베트남 북부가 재난 대비태세를 강화하고 있다. 지난 7월 3일 농림축산식품부는 현지 저자와 긴급회의를 열었다.",
-          "source": "vietnamplus",
-          "date": "2026-07-03",
-          "url": "https://en.vietnamplus.vn/storm-maysak-nears-gulf-of-tonkin-as-northern-vietnam-braces-for-flooding-post347732.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "베트남 도로청, 1호 폭풍·비·홍수 대응 지시",
-          "summary_ko": "① 베트남 도로청 태풍 1호 및 집중호우 대응 지시\n② 구체적 규모 미명시\n③ 운영 중 (긴급 대응)\n④ 베트남 도로청(Cục Đường bộ Việt Nam)\n⑤ 2026년 7월 4일 긴급 지시 발령",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-04",
-          "url": "https://moitruong.net.vn/cuc-duong-bo-viet-nam-chi-dao-ung-pho-bao-so-1-mua-lu-100687.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "Long Thanh 공항 건설이 완료 목표 달성을 위해 가속화됩니다",
-          "summary_ko": "롱탄 국제공항 3단계 사업이 가속화되고 있습니다. ① 사업명: Long Thanh Airport Component Project 3 ② 사업규모: 총 계약금액 86.2조 동 중 65.6조 동(75.97%) 완공 ③ 진행단계: 착공 중 ④ 주요기관: ACV(발주·감리), 동나이전력회사 ⑤ 핵심일정: 6월 9일 110kV 변전소 전력공급 개시, 3개 계약패키지",
-          "source": "nhandan_vn",
-          "date": "2026-07-02",
-          "url": "https://en.nhandan.vn/long-thanh-airport-construction-accelerates-to-meet-completion-target-post163991.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "호치민시 지하철 2호선 첫 번째 품목 출시",
-          "summary_ko": "① 호치민시 지하철 2호선 1단계 사업\n② 구체적 규모 미기재\n③ 착공 단계\n④ 호치민시 정부, 교통운영기관\n⑤ 2026년 7월 착공 개시",
-          "source": "tienphong_vn",
-          "date": "2026-07-02",
-          "url": "https://tienphong.vn/khoi-dong-hang-muc-dau-tien-cua-metro-so-2-tphcm-post1856302.tpo",
-          "isNew": false
-        },
-        {
-          "title_ko": "호치민시, 화려한 불꽃놀이로 50주년 기념",
-          "summary_ko": "호찌민시 50주년 기념 불꽃축제. 사업명: 호찌민시 50주년 기념 불꽃놀이. 규모: 16개 장소 동시 개최. 진행단계: 운영 중. 주요기관: 호찌민시 정부. 일정: 2026년 7월 2일 저녁 9시~9시 15분 개최 완료.",
-          "source": "vietnamplus",
-          "date": "2026-07-02",
-          "url": "https://en.vietnamplus.vn/ho-chi-minh-city-marks-50-years-with-spectacular-fireworks-post347655.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "세계 최대 군도는 늪지대와 외딴 섬을 가로지르는 39개의 새로운 공항을 계획하고 있습니다.",
-          "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/traffic/world-s-largest-archipelago-plans-39-new-airports-across-swamps-and-remote-islands-5092626.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/07/0",
-          "source": "VnExpress International",
-          "date": "2026-07-02",
-          "url": "https://e.vnexpress.net/news/news/traffic/world-s-largest-archipelago-plans-39-new-airports-across-swamps-and-remote-islands-5092626.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "하노이, 100년 비전을 담은 마스터플랜 채택",
-          "summary_ko": "① 하노이 100년 장기 마스터플랜 채택 ② 2055년까지의 초장기 비전 포함 ③ 승인 단계 (2026년 7월 채택) ④ 하노이 인민위원회 주도 ⑤ 향후 세부 인프라 사업 추진 예정. 하노이가 교통·도시개발 등 을 포함한 100년 단위 마스터플랜을 채택해 2055년 비전을 제시했다.",
-          "source": "vietnamplus",
-          "date": "2026-07-03",
-          "url": "https://en.vietnamplus.vn/hanoi-adopts-master-plan-with-century-long-vision-post347547.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "건설부는 홍수로 인해 6번 국도에 비상 상황을 발표했습니다.",
-          "summary_ko": "① 국도 6호선 홍수 피해 긴급상황 ② 구체적 규모 미기재 ③ 긴급 대응 중 ④ 건설부(Ministry of Construction) ⑤ 즉시 대응 필요 - 국도 6호선에서 집중호우로 인한 홍수 피해가 발생하여 건설부가 긴급상황을 선포했으며, 복구 및 안전점검 작업을 진행 중입니다. VN-TRAN-2055 마스터플랜과 연계된 도로 인프라 위험 상황입니다.",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-02",
-          "url": "https://moitruong.net.vn/bo-xay-dung-cong-bo-tinh-huong-khan-cap-tren-quoc-lo-6-sau-mua-lu-100618.html",
-          "isNew": false
-        }
-      ]
-    },
-    "VN-MEKONG-DELTA-2030": {
-      "plan_name_ko": "VN-MEKONG-DELTA-2030",
-      "sector": "Transport",
-      "area": "",
-      "decision": "Resolution 13-NQ/TW (2022)",
-      "description_ko": "메콩 델타 인프라 개발 계획 2030\n근거: Resolution 13-NQ/TW (2022)\n기간: 2022-2030\n주요 목표: 2030년까지 고속도로 760km / 메콩 수계 통합 관리 / Can Tho 교량 2호 건설",
-      "kpi_targets": [
-        {
-          "label": "2030년까지 고속도로 760km",
-          "target": "",
-          "current": "",
-          "changed": false
-        },
-        {
-          "label": "메콩 수계 통합 관리",
-          "target": "",
-          "current": "",
-          "changed": false
-        },
-        {
-          "label": "Can Tho 교량 2호 건설",
-          "target": "",
-          "current": "",
-          "changed": false
-        }
-      ],
-      "key_projects": [
-        {
-          "name_ko": "메콩 수계 통합 관리 사업",
-          "location": "메콩 유역 전체",
-          "capacity": "수자원관리",
-          "note": "기후변화 대응",
-          "status": "진행"
-        },
-        {
-          "name_ko": "Can Tho 교량 2호 건설",
-          "location": "깐터성",
-          "capacity": "$3.2억",
-          "note": "2025 완공",
-          "status": "완공"
-        },
-        {
-          "name_ko": "메콩 고속도로 남북 축",
-          "location": "메콩 전역",
-          "capacity": "760km",
-          "note": "2026 목표",
-          "status": "공사"
-        }
-      ],
-      "analysis_ko": "## 베트남 메콩 델타 2030 마스터플랜 주간 보고\n\n**1. 이번 주 핵심 진행사항:** 캔터 지역에 발생한 토네이도로 인해 주택 15채의 지붕이 파손되고 다수의 건물이 손상되는 피해가 발생했습니다.\n\n**2. 투자 및 사업 기회 시그널:** 재해 복구 및 인프라 재건 사업에 대한 수요가 발생할 수 있으며, 이는 건설 및 자재 관련 한국 기업에게 기회가 될 수 있습니다.\n\n**3. 리스크 또는 지연 징후:** 자연재해로 인한 예상치 못한 피해 발생은 지역 내 인프라 개발 계획에 일시적인 영향을 줄 수 있습니다.",
-      "kpi_changes": [],
-      "articles": [
-        {
-          "title_ko": "Can Tho의 토네이도로 인해 15채의 집이 지붕을 잃었고 많은 구조물이 손상되었습니다.",
-          "summary_ko": "사건명: 캔터 토네이도 피해 | 규모: 주택 15채 지붕 파손, 다수 건물 손상 | 진행단계: 재해 발생 | 주요기관: 캔터시 행정당국 | 일정: 2026년 7월 13일 발생. 메콩델타 지역 기후변화 관련 자연재해 대응 및 인프라 복원력 강화 필요",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-13",
-          "url": "https://moitruong.net.vn/loc-xoay-tai-can-tho-lam-15-can-nha-toc-mai-nhieu-cong-trinh-hu-hong-100885.html",
-          "isNew": false
         }
       ]
     },
     "VN-URB-METRO-2030": {
       "plan_name_ko": "VN-URB-METRO-2030",
-      "sector": "Smart City",
-      "area": "",
+      "sector": "Urban/Transport",
+      "area": "Urban",
       "decision": "",
-      "description_ko": "하노이와 호치민은 각각 2030년까지 메트로 15개·8개 노선 완성을 목표로 하지만 재원조달·용지보상·기술역량 부족으로 지연이 상시적이다. 하노이 2A(껫린~하동)·3(못처~하노이역 부분) 운영 중이고, 1·2B·4호선이 건설 중이다. 호치민 1호선(벤탄~수오이티엔)은 2024년 말 개통됐다.",
-      "kpi_targets": [
-        {
-          "label": "하노이 메트로 목표",
-          "target": "15개 노선",
-          "current": "2A·3호선 운영, 1·2B 건설",
-          "changed": false
-        },
-        {
-          "label": "호치민 메트로 목표",
-          "target": "8개 노선",
-          "current": "1호선 2024.12 개통",
-          "changed": false
-        },
-        {
-          "label": "전국 도시철도 목표",
-          "target": "46개 노선 3,045km",
-          "current": "약 5개 노선 운영/건설",
-          "changed": false
-        }
-      ],
+      "description_ko": "하노이 및 호치민 대도시권 교통정체 해소를 위한 대중교통 중심 개발(TOD) 메트로 노선망 구축",
+      "kpi_targets": [],
       "key_projects": [
         {
-          "name_ko": "하노이 2A (껫린~하동)",
-          "location": "하노이",
-          "capacity": "13km",
-          "note": "운영 중 (2021)",
-          "status": ""
-        },
-        {
-          "name_ko": "하노이 3 (못처~하노이역)",
-          "location": "하노이",
-          "capacity": "부분 운영",
-          "note": "운영 중",
-          "status": ""
-        },
-        {
-          "name_ko": "하노이 1호선",
-          "location": "하노이",
-          "capacity": "38.7km",
-          "note": "건설 중, 2027 목표",
-          "status": ""
-        },
-        {
-          "name_ko": "하노이 2B·4호선",
-          "location": "하노이",
-          "capacity": "계획 중",
-          "note": "2030 이후 단계별",
-          "status": ""
-        },
-        {
-          "name_ko": "호치민 1호선 (벤탄~수오이티엔)",
-          "location": "호치민",
-          "capacity": "19.7km, 14역",
-          "note": "2024.12 개통, 운영 중",
-          "status": ""
-        },
-        {
-          "name_ko": "호치민 2호선",
-          "location": "호치민",
-          "capacity": "11.3km",
-          "note": "건설 중, ODA 확보",
-          "status": ""
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "공사중"
         }
       ],
-      "analysis_ko": "## 베트남 인프라 개발 동향 보고 (2026년 7월 3주차)\n\n**1. 이번 주 핵심 진행사항:** 호치민시는 특별 도시 행정 단위 도입을 검토 중이며, 롱탄 국제공항은 최종 건설 단계에 돌입했습니다. 또한, 호치민 지하철 2호선 역 공사가 착공되었고, 순환도로 4단계 타당성 조사도 상당 부분 승인되었습니다.\n\n**2. 투자 및 사업 기회 시그널:** 롱탄 공항 및 호치민 지하철 2호선 주변 상업 개발 가능 지역 확인은 관련 인프라 및 부동산 투자 기회를 시사합니다. 또한, Vingroup의 35억 달러 규모 해상 교량 건설은 대규모 건설 및 자재 공급 기회를 제공할 수 있습니다.\n\n**3. 리스크 또는 지연 징후:** 현재까지 기사 내용만으로는 특별한 리스크나 지연 징후는 파악되지 않았습니다.",
+      "analysis_ko": "1. **이번 주 핵심 진행사항 (사업 추진 현황)**\n롱탄 국제공항이 최종 공사에 진입한 가운데, 호치",
       "kpi_changes": [],
       "articles": [
         {
@@ -1908,7 +821,7 @@
           "source": "sggp_org_vn",
           "date": "2026-07-13",
           "url": "https://en.sggp.org.vn/ho-chi-minh-city-weighs-special-urban-administrative-units-to-drive-growth-post127902.html",
-          "isNew": true
+          "isNew": false
         },
         {
           "title_ko": "롱탄 국제공항, 최종 건설 전력에 돌입",
@@ -1919,432 +832,171 @@
           "isNew": false
         },
         {
-          "title_ko": "호치민시, 지하철 2호선 깊이 41m 역 공사 착공",
-          "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/traffic/hcmc-begins-construction-on-41-m-deep-station-for-2nd-metro-line-5093465.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/07/04/4ba1e7d208d44dc8",
-          "source": "VnExpress International",
-          "date": "2026-07-04",
-          "url": "https://e.vnexpress.net/news/news/traffic/hcmc-begins-construction-on-41-m-deep-station-for-2nd-metro-line-5093465.html",
-          "isNew": false
-        },
-        {
           "title_ko": "호치민 순환도로 4 프로젝트에 대한 타당성 조사 보고서 10개 중 8개 승인",
           "summary_ko": "호찌민시 환상도로 4단계 프로젝트의 타당성 조사 보고서 10건 중 8건이 승인됨. 사업 규모 및 구체적 예산은 기사에 미기재. 현재 승인 단계로 진행 중. 호찌민시 인민위원회가 발주처. 나머지 2건 보고서 승인 완료 시 입찰 단계 진행 예정.",
           "source": "sggp_org_vn",
           "date": "2026-07-10",
           "url": "https://en.sggp.org.vn/eight-of-10-feasibility-study-reports-approved-for-hcmc-ring-road-4-project-post127835.html",
           "isNew": false
-        },
-        {
-          "title_ko": "Dusit International은 핫야이와 푸켓의 새로운 라이프스타일 호텔로 태국의 ASAI 호텔 파이프라인을 확장합니다.",
-          "summary_ko": "두싯 인터내셔널이 ASAI Hotels 브랜드를 태국 남부로 확장합니다. 핫야이와 푸켓에 각각 2028년, 2029년 개장 예정인 새로운 라이프스타일 호텔 2곳을 추가합니다. 지역 문화와 커뮤니티 연결에 중점을 두는 호텔입니다.",
-          "source": "asianewsnetwork",
-          "date": "2026-07-10",
-          "url": "https://asianews.network/dusit-international-expands-asai-hotels-pipeline-in-thailand-with-new-lifestyle-hotels-in-hat-yai-and-phuket/",
-          "isNew": false
-        },
-        {
-          "title_ko": "베트남 롱탄(Long Thanh) 거대 공항, 붕타우(Vung Tau) 해변에서 직행 지하철 노선 개통 예정",
-          "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/traffic/vietnam-s-long-thanh-mega-airport-may-get-new-metro-line-straight-from-vung-tau-beach-5094222.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/0",
-          "source": "VnExpress International",
-          "date": "2026-07-07",
-          "url": "https://e.vnexpress.net/news/news/traffic/vietnam-s-long-thanh-mega-airport-may-get-new-metro-line-straight-from-vung-tau-beach-5094222.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "호치민 2호선을 따라 상업 개발이 가능한 5개 지역이 확인되었습니다",
-          "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/traffic/5-areas-identified-for-commercial-development-along-hcmc-s-2nd-metro-5094558.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/07/07/a-nh-le-trao",
-          "source": "VnExpress International",
-          "date": "2026-07-07",
-          "url": "https://e.vnexpress.net/news/news/traffic/5-areas-identified-for-commercial-development-along-hcmc-s-2nd-metro-5094558.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "Vingroup, 호치민시 지역을 연결하는 35억 달러 규모의 해상 교량 건설",
-          "summary_ko": "① 호치민시 해상교량(Sea Bridge) ② 35억 달러 규모 ③ 착공 단계 ④ 빈그룹(발주·시공사), 호치민시 정부 ⑤ 호치민시 여러 지구를 연결하는 대규모 해상교통 인프라 프로젝트로 도시 연결성 강화 목표. VN-URB-METRO-2030 마스터플랜 추진",
-          "source": "Nikkei Asia",
-          "date": "2026-07-07",
-          "url": "https://asia.nikkei.com/business/transportation/vingroup-launches-3.5bn-sea-bridge-linking-ho-chi-minh-city-districts",
-          "isNew": false
-        },
-        {
-          "title_ko": "베트남의 그린 스카이라인(Green Skyline) 프로젝트, 도시 주택 성장에 따라 대만 투자자들의 관심 불러일으키다",
-          "summary_ko": "①Green Skyline 프로젝트 ②39헥타르 규모의 통합 도시개발 단지 내 고층 주거시설 ③계획/승인 단계 ④발주처: TBS Land, 투자자: 대만 투자자 ⑤대만 지역 투자자의 지속적 관심 증대, 호찌민-동나이 성장 회랑에 위치한 전략적 우위 활용",
-          "source": "vir_vn",
-          "date": "2026-07-02",
-          "url": "https://vir.com.vn/vietnams-green-skyline-project-draws-taiwan-investor-interest-as-urban-housing-grows-155934.html",
-          "isNew": false
         }
       ]
     },
-    "VN-SC-2030": {
-      "plan_name_ko": "VN-SC-2030",
-      "sector": "Smart City",
-      "area": "",
-      "decision": "Decision 950/QĐ-TTg (2018)",
-      "description_ko": "베트남 스마트시티 국가전략. 2025년까지 6개 핵심도시(하노이·호치민·다낭·껀터·하이퐁·후에) 스마트시티 시범 모델 완성, 2030년까지 전국 30개 도시로 확산. 디지털 정부, IoT 도시 인프라, AI 교통관제, 스마트 미터링 등 6개 핵심 분야. 한국 KOICA·KIND·KT·SK텔레콤·LG CNS 등 ICT 기업 진출 활발. 2024년 디지털전환 로드맵(Decision 749) 통합으로 가속.",
-      "kpi_targets": [
-        {
-          "label": "스마트시티 시범 도시",
-          "target": "6개 (2025)",
-          "current": "6개 (2024 진행 중)",
-          "changed": false
-        },
-        {
-          "label": "전국 확산",
-          "target": "30개 (2030)",
-          "current": "12개 (2024)",
-          "changed": false
-        },
-        {
-          "label": "디지털정부 지수",
-          "target": "top 50 (UN EGDI)",
-          "current": "86위 (2024)",
-          "changed": false
-        },
-        {
-          "label": "5G 커버리지",
-          "target": "도시 100% (2030)",
-          "current": "15개 도시 (2024)",
-          "changed": false
-        }
-      ],
-      "key_projects": [
-        {
-          "name_ko": "하노이 스마트시티 통합운영센터",
-          "location": "Hanoi",
-          "capacity": "$50M",
-          "note": "2025 가동",
-          "status": ""
-        },
-        {
-          "name_ko": "호치민 IoT 통합 플랫폼",
-          "location": "HCMC",
-          "capacity": "$200M",
-          "note": "디지털 전환",
-          "status": ""
-        },
-        {
-          "name_ko": "다낭 AI 교통관제",
-          "location": "Da Nang",
-          "capacity": "$30M",
-          "note": "KT 협력",
-          "status": ""
-        }
-      ],
-      "analysis_ko": "## 베트남 인프라 개발 동향 보고 (2026년 7월 3주차)\n\n**1. 이번 주 핵심 진행사항:** 베트남은 2030년까지 친환경 스마트 항만 개발을 가속화하고 있으며, 롱안항은 아시아태평양 최초로 스마트 그린포트 상을 수상하며 기술 혁신을 입증했습니다.\n\n**2. 투자 및 사업 기회 시그널:** TCL Industries와 Hutchison Ports의 MOU 체결은 스마트 기술 및 신에너지 분야에서의 해운/물류 협력 기회를 시사하며, 기술 및 금융 회사들의 하노이 개발 지원 약속은 관련 인프라 투자 기회를 제공할 수 있습니다.\n\n**3. 리스크 또는 지연 징후:** 특이사항 없음.",
-      "kpi_changes": [],
-      "articles": [
-        {
-          "title_ko": "Khanh Hoa는 2030년부터 친환경 및 스마트 항구 개발을 촉진합니다.",
-          "summary_ko": "캄라인성이 2030년부터 친환경 스마트 항만 개발을 추진한다. 지속가능한 해양항만 인프라 구축을 통해 환경친화적이고 지능형 항만 시스템을 구축하는 것을 목표로 한다.",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-15",
-          "url": "https://moitruong.net.vn/khanh-hoa-thuc-day-phat-trien-cang-bien-xanh-thong-minh-tu-nam-2030-100914.html",
-          "isNew": true
-        },
-        {
-          "title_ko": "롱안항, 베트남 기업 최초로 아시아태평양 스마트 그린 포트상 수상",
-          "summary_ko": "롱안항(Long An Port)이 아시아태평양 지역 최초로 스마트 그린포트 상을 수상했습니다. ① 롱안항 스마트 그린포트 프로젝트 ② 항만 운영 효율화 및 친환경 기술 적용 ③ 운영 중 ④ 롱안항, 베트남 정부 ⑤ 이미 수상 완료, 지속적 운영 단계. VN-SC-2030 마스터플랜과 연계된 친환경 항만 개발 모범사례입니다.",
-          "source": "vietnamplus",
-          "date": "2026-07-09",
-          "url": "https://en.vietnamplus.vn/long-an-port-becomes-first-vietnamese-company-to-win-asia-pacific-smart-green-port-award-post348046.vnp",
-          "isNew": false
-        },
-        {
-          "title_ko": "TCL 인더스트리즈(TCL Industries)와 허치슨 포트(Hutchison Ports), MOU 체결",
-          "summary_ko": "TCL Industries와Hutchison Ports가 글로벌 공급망 고품질 발전 회의에서 양해각서를 체결했습니다. 스마트 기술과 신에너지 분야의 강점을 활용하여 해운과 물류 부문의 녹색·지속가능한 발전을 추진할 계획입니다.",
-          "source": "asianewsnetwork",
-          "date": "2026-07-10",
-          "url": "https://asianews.network/tcl-industries-and-hutchison-ports-sign-mou/",
-          "isNew": false
-        },
-        {
-          "title_ko": "기술, 금융 회사, 하노이 개발 지원 약속",
-          "summary_ko": "<a href=\"https://e.vnexpress.net/news/business/technology-finance-firms-pledge-support-for-hanoi-s-development-5093933.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/07/09/anh-1783561619-6019-1",
-          "source": "VnExpress Business",
-          "date": "2026-07-09",
-          "url": "https://e.vnexpress.net/news/business/technology-finance-firms-pledge-support-for-hanoi-s-development-5093933.html",
-          "isNew": false
-        }
-      ]
-    },
-    "VN-EV-2030": {
-      "plan_name_ko": "VN-EV-2030",
-      "sector": "Transport",
-      "area": "",
+    "VN-IP-NORTH-2030": {
+      "plan_name_ko": "VN-IP-NORTH-2030",
+      "sector": "Urban/Transport",
+      "area": "North",
       "decision": "",
-      "description_ko": "Decision 876/QĐ-TTg(2022) 기반으로 2030년까지 신규 판매차량 100%를 친환경차로 전환하는 국가 목표입니다. VinFast EV 생산 확대, 충전 인프라 25만 충전소, E10 바이오연료 전국화가 3대 과제입니다.",
-      "kpi_targets": [
-        {
-          "label": "EV 신규 판매 비율",
-          "target": "100% (2030)",
-          "current": "~10%",
-          "changed": false
-        },
-        {
-          "label": "충전 인프라",
-          "target": "25만 충전소",
-          "current": "~5,000개소",
-          "changed": false
-        },
-        {
-          "label": "바이오연료 혼합률",
-          "target": "E10 100% 보급",
-          "current": "파일럿",
-          "changed": false
-        }
-      ],
+      "description_ko": "하이퐁, 박닌, 박장, 하이즈엉 등 북부 주요 지역 산업 거점 고도화",
+      "kpi_targets": [],
       "key_projects": [
         {
-          "name_ko": "VinFast 기업구조 개편",
-          "location": "전국",
-          "capacity": "EV 생산",
-          "note": "2026 진행",
-          "status": "진행"
-        },
-        {
-          "name_ko": "바이오연료 E10 전국 출시",
-          "location": "전국",
-          "capacity": "정책",
-          "note": "준비 완료",
-          "status": "준비"
-        },
-        {
-          "name_ko": "Honda Vietnam EV 인센티브",
-          "location": "전국",
-          "capacity": "정책",
-          "note": "2026 제안",
-          "status": "협의"
-        }
-      ],
-      "analysis_ko": "## 베트남 인프라 개발 동향 보고 (2026년 7월 3주차)\n\n**1. 이번 주 핵심 진행사항:** 하노이 제2공항 건설이 국가 계획에 포함되었으며, Midea Group과 Hutchison Ports는 글로벌 공급망 협력을 위한 MOU를 체결했습니다.\n\n**2. 투자 및 사업 기회 시그널:** 베트남의 수출 경쟁력 강화 필요성이 제기되는 가운데, VinFast의 전기차 전환 지원 프로그램은 관련 부품 및 서비스 공급업체에게 기회가 될 수 있습니다.\n\n**3. 리스크 또는 지연 징후:** 어린이 익사 사고 예방 강화 지시는 안전 관련 인프라 및 교육 수요 증가를 시사하나, 직접적인 사업 지연 징후는 없습니다.",
-      "kpi_changes": [],
-      "articles": [
-        {
-          "title_ko": "국무총리, 어린이 익사 예방 및 통제 강화 요청",
-          "summary_ko": "총리가 아동 익사 사고 예방 강화를 지시했습니다. 아동 수상 안전 교육, 감시 체계 구축, 응급 대응 능력 향상 등을 포함한 종합적 익사 예방 대책 수립을 요구했습니다.",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-13",
-          "url": "https://moitruong.net.vn/thu-tuong-yeu-cau-tang-cuong-cong-tac-phong-chong-duoi-nuoc-doi-voi-tre-em-100888.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "Midea Group과 Hutchison Ports, MOU 체결",
-          "summary_ko": "미디어 그룹과 허치슨 포츠가 글로벌 공급망 협력 양해각서를 체결했다. 태국, 인도네시아, 이집트, 베트남, 멕시코 등 주요 시장에서 미디어의 해외 제조 시설과 허치슨 포츠의 항만 네트워크를 연계하여 효율적인 공급망 생태계 구축을 추진한다.",
-          "source": "asianewsnetwork",
-          "date": "2026-07-10",
-          "url": "https://asianews.network/midea-group-and-hutchison-ports-sign-mou/",
-          "isNew": false
-        },
-        {
-          "title_ko": "하노이 제2공항이 국가계획에 추가됐다",
-          "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/traffic/hanoi-s-2nd-airport-add-to-national-plan-5095359.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/07/09/tansonnhat-1783569783-4497-1783569999.jp",
-          "source": "VnExpress International",
-          "date": "2026-07-09",
-          "url": "https://e.vnexpress.net/news/news/traffic/hanoi-s-2nd-airport-added-to-national-plan-5095359.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "베트남의 수출 전망은 무역 장벽이 높아짐에 따라 경쟁력에 달려 있습니다.",
-          "summary_ko": "베트남의 수출 전망이 무역 장벽 증가로 인해 경쟁력에 달려있다. 글로벌 무역 환경 악화 속에서 베트남 기업들은 제품 경쟁력 강화와 새로운 시장 개척을 통해 수출 성장을 지속해야 한다.",
-          "source": "sggp_org_vn",
-          "date": "2026-07-06",
-          "url": "https://en.sggp.org.vn/vietnams-export-outlook-hinges-on-competitiveness-as-trade-barriers-rise-post127679.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "호주서 헤로인 소지한 승무원 적발, 태국 공항 단속",
-          "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/flight-attendant-caught-with-heroin-in-australia-prompts-thailand-airport-crackdown-5092679.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/07/02/jobin",
-          "source": "VnExpress International",
-          "date": "2026-07-02",
-          "url": "https://e.vnexpress.net/news/news/flight-attendant-caught-with-heroin-in-australia-prompts-thailand-airport-crackdown-5092679.html",
-          "isNew": false
-        },
-        {
-          "title_ko": "VinFast는 기존 고객에게 큰 선물을 제공합니다. 사용자는 전기 자동차로 전환할 때 수억 동의 \"이중 특권\"을 누립니다.",
-          "summary_ko": "①VinFast 전기차 구매 프로그램 ②수백만동 규모 인센티브 제공 ③운영 중 ④VinFast(시공사/투자자) ⑤기존 고객의 내연기관차 전환 시 이중 특혜(Trade-in+인센티브) 제공으로 전기차 전환 촉진. VN-EV-2030 마스터플랜 내 고객 유인 전략",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-03",
-          "url": "https://moitruong.net.vn/vinfast-tang-qua-lon-cho-khach-hang-cu-nguoi-dung-huong-dac-quyen-kep-hang-tram-trieu-dong-khi-chuyen-doi-sang-xe-dien-100680.html",
-          "isNew": false
-        }
-      ]
-    },
-    "HN-URBAN-INFRA": {
-      "plan_name_ko": "HN-URBAN-INFRA",
-      "sector": "Smart City",
-      "area": "",
-      "decision": "",
-      "description_ko": "2024년 12월 Decision 1668로 확정된 하노이 도시개발 마스터플랜 2045/2065는 9×9×9 다핵다중심 클러스터 모델을 적용해 5대 도시권·7개 위성도시를 체계화한다. 총 투자 $2.5T(2026~2045), 인구 2045년 최대 16M 수용이 목표다. 링로드4(113km, $3.6B) 착공이 서막이며, 홍강 양안 신도시, 또리히강 정화, 15개 메트로 노선이 핵심이다.",
-      "kpi_targets": [
-        {
-          "label": "도시개발 총투자",
-          "target": "$2.5T (2026~2045)",
-          "current": "Decision 1668 확정",
-          "changed": false
-        },
-        {
-          "label": "인구 수용 목표",
-          "target": "16M명 (2045)",
-          "current": "현재 8.5M명",
-          "changed": false
-        },
-        {
-          "label": "링로드4 완공",
-          "target": "2027년 전체 완공",
-          "current": "착공 진행",
-          "changed": false
-        }
-      ],
-      "key_projects": [
-        {
-          "name_ko": "하노이 링로드4 전체 완공",
-          "location": "하노이 외곽",
-          "capacity": "도로",
-          "note": "2027년 완공 목표",
-          "status": "공사"
-        },
-        {
-          "name_ko": "하노이 2공항 계획",
-          "location": "하노이 인근",
-          "capacity": "5,000만명/년",
-          "note": "장기 계획",
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
           "status": "계획"
-        },
-        {
-          "name_ko": "하노이 북부 상수도 2단계",
-          "location": "하노이 북부",
-          "capacity": "$3.2억",
-          "note": "입찰 진행",
-          "status": "입찰"
         }
       ],
-      "analysis_ko": "## 경영진 보고용 인사이트 (HN-URBAN-INFRA)\n\n*   **이번 주 핵심 진행사항:** 하노이는 홍수, 오염, 폐수, 쓰레기 등 도시 인프라의 시급한 문제 해결에 집중하고 있으며, 상반기 GRDP 8.22% 성장에 따라 공공 투자 63조 동 이상을 집행 중입니다.\n*   **투자 및 사업 기회 시그널:** 베트남 중앙정부와 하노이시당위원회가 도시 인프라 개발을 우선 과제로 삼고 있어, 관련 기술 및 자본 투입 기회가 예상됩니다.\n*   **리스크 또는 지연 징후:** 특이사항 없음.",
+      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 정부는 북부 산업단지 녹색전환(VN-",
       "kpi_changes": [],
       "articles": [
         {
-          "title_ko": "하노이는 홍수, 오염, 폐수, 쓰레기 등 가장 시급한 문제를 해결하는 데 초점을 맞춰야 한다",
-          "summary_ko": "①하노이 도시 인프라 개발(HN-URBAN-INFRA) ②6개월간 GRDP 8.22% 증가, 공공투자 63조 동 이상 집행 ③계획/추진 단계 ④하노이시당위원회, 베트남 중앙정부 ⑤2026년 GRDP 11% 이상 달성 목표, 침수·오염·폐수·쓰레기 등 도시문제 해결 집중",
-          "source": "Moi truong & Cuoc song",
-          "date": "2026-07-09",
-          "url": "https://moitruong.net.vn/ha-noi-nen-tap-trung-giai-quyet-mot-so-van-de-buc-xuc-nhat-nhu-ngap-ung-o-nhiem-nuoc-thai-rac-thai-100811.html",
+          "title_ko": "녹색산업단지 전환을 위한 자금조달 핵심과제",
+          "summary_ko": "① 북부 산업단지 녹색전환 사업(VN-IP-NORTH-2030)\n② 호찌민시 산업단지 66개→105개 확대, 약 5만 헥타르 규모\n③ 계획 단계\n④ 호찌민시 인민위원회, 기후변화센터, 발전연구소\n⑤ EU 탄소국경조정메커니즘 본격 시행(2026년 1월), 녹색금융 전환 추진",
+          "source": "vir_vn",
+          "date": "2026-07-13",
+          "url": "https://vir.com.vn/financing-key-challenge-for-green-industrial-park-transition-156565.html",
+          "isNew": false
+        },
+        {
+          "title_ko": "차세대 산업단지는 고품질 투자자를 유치해야 합니다: Summit",
+          "summary_ko": "베트남의 신세대 산업단지가 고품질 투자자 유치의 필요성이 강조되었다. 정상회담에서 산업단지의 경쟁력 강화와 외자 유입을 통한 경제 발전 방안이 논의되었으며, 질 높은 투자 유치 전략의 중요성이 부각되었다.",
+          "source": "vietnamplus",
+          "date": "2026-07-11",
+          "url": "https://en.vietnamplus.vn/new-generation-industrial-parks-need-to-attract-high-quality-investors-summit-post348146.vnp",
+          "isNew": false
+        },
+        {
+          "title_ko": "차세대 산업단지는 고품질 투자자를 유치해야 합니다: 정상회담",
+          "summary_ko": "① 베트남 산업단지 현대화 및 고급 투자자 유치 ② 구체적 예산/규모 미명시, 북부 지역 신세대 산업단지 개발 ③ 계획 단계 ④ 베트남부동산협회, 총리자문회의 ⑤ 디지털·AI·ESG 기준 도입으로 생태산업단지 구축, 경제회랑·가치사슬과 연계한 지역 통합 개발 추진",
+          "source": "vietnamnews_vn",
+          "date": "2026-07-10",
+          "url": "https://vietnamnews.vn/economy/1785203/new-generation-industrial-parks-need-to-attract-high-quality-investors-summit.html",
+          "isNew": false
+        },
+        {
+          "title_ko": "Suntory PepsiCo, Tay Ninh성 남부에 3억 달러 규모의 공장 준공",
+          "summary_ko": "① 산토리-펩시코 음료 생산시설 ② 3억 달러 규모 ③ 준공(2026년 7월 개장) ④ 산토리-펩시코, 타이닌성 정부 ⑤ 2026년 7월 개장 완료. 베트남 남부 타이닌성에 건설된 대규모 음료 제조 플랜트로 동남아 지역 거점 역할.",
+          "source": "vietnamplus",
+          "date": "2026-07-10",
+          "url": "https://en.vietnamplus.vn/suntory-pepsico-inaugurates-300-million-usd-plant-in-southern-tay-ninh-province-post348113.vnp",
           "isNew": false
         }
       ]
     },
-    "HN-URBAN-WEST": {
-      "plan_name_ko": "HN-URBAN-WEST",
-      "sector": "Smart City",
-      "area": "",
+    "VN-HAN-URBAN-2045": {
+      "plan_name_ko": "VN-HAN-URBAN-2045",
+      "sector": "Urban/Transport",
+      "area": "Hanoi",
       "decision": "",
-      "description_ko": "하노이 서부 1,586ha 국가 하이테크파크. ICT·반도체·바이오·R&D 클러스터로 육성. 삼성·인텔·FPT·LG·VinFast 입주. 2023년 11월 하노이 인민위 이관으로 인허가 가속. KIST(한국과학기술연구원) Vietnam Campus, 베트남-한국 R&D 센터 등 한국 협력 거점. 2030년까지 입주기업 800개, 매출 $30B 목표.",
-      "kpi_targets": [
-        {
-          "label": "입주 기업",
-          "target": "800개 (2030)",
-          "current": "113개 (2024)",
-          "changed": false
-        },
-        {
-          "label": "연간 매출",
-          "target": "$30B (2030)",
-          "current": "$1.6B (2024)",
-          "changed": false
-        },
-        {
-          "label": "고용 인원",
-          "target": "15만명 (2030)",
-          "current": "2.5만명 (2024)",
-          "changed": false
-        },
-        {
-          "label": "R&D 투자",
-          "target": "GDP 2%",
-          "current": "GDP 0.5%",
-          "changed": false
-        }
-      ],
+      "description_ko": "홍강을 중심으로 하는 하노이 대도시권 확장 및 위성도시 다극화 체계 개편",
+      "kpi_targets": [],
       "key_projects": [
         {
-          "name_ko": "Samsung R&D Center",
-          "location": "Hoa Lac",
-          "capacity": "$220M",
-          "note": "2022 가동, 동남아 최대",
-          "status": ""
-        },
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "협의중"
+        }
+      ],
+      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**  \n하노이시는 2030년까지 야간 경제",
+      "kpi_changes": [],
+      "articles": [
         {
-          "name_ko": "KIST Vietnam Campus",
-          "location": "Hoa Lac",
-          "capacity": "$70M",
-          "note": "한국 KIST 분원",
-          "status": ""
-        },
+          "title_ko": "베트남 여행 선택에 영향을 미치는 음식: 아고다(Agoda) 보고서",
+          "summary_ko": "베트남 여행객들의 음식 선택이 여행 결정에 미치는 영향을 분석한 아고다 보고서. 하노이는 2030년까지 야간 경제를 서비스 산업의 핵심 동력으로 육성하여 GRDP의 약 5% 기여를 목표로 함.",
+          "source": "vietnamplus",
+          "date": "2026-07-22",
+          "url": "https://en.vietnamplus.vn/food-shapes-vietnamese-travel-choices-agoda-report-post348708.vnp",
+          "isNew": true
+        }
+      ]
+    },
+    "VN-HAN-DONG-ANH": {
+      "plan_name_ko": "VN-HAN-DONG-ANH",
+      "sector": "Urban/Transport",
+      "area": "Hanoi",
+      "decision": "",
+      "description_ko": "하노이 북부 동안현의 시 전환 및 금융·문화·스마트 거점 도시 육성",
+      "kpi_targets": [],
+      "key_projects": [
         {
-          "name_ko": "FPT Software HQ",
-          "location": "Hoa Lac",
-          "capacity": "30,000명 수용",
-          "note": "IT 서비스",
-          "status": ""
-        },
-        {
-          "name_ko": "Hanwha Aerospace 위성 R&D",
-          "location": "Hoa Lac",
-          "capacity": "검토 중",
-          "note": "한국 협력",
-          "status": ""
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "공사중"
         }
       ],
       "analysis_ko": "",
       "kpi_changes": [],
       "articles": []
     },
-    "HN-URBAN-NORTH": {
-      "plan_name_ko": "HN-URBAN-NORTH",
-      "sector": "Smart City",
-      "area": "",
+    "VN-HAN-HOA-LAC": {
+      "plan_name_ko": "VN-HAN-HOA-LAC",
+      "sector": "Urban/Transport",
+      "area": "Hanoi",
       "decision": "",
-      "description_ko": "하노이 도시개발 마스터플랜 2045/2065 하위 — 북부 동아인(Dong Anh) 신도시. 하노이 북부 노이바이 공항 인근 4,200ha 부지, 인구 30~40만 수용 신도시 개발. Sumitomo(일본)·BRG Group(베트남) 합작 BRG-Sumitomo Smart City($4B), Vingroup Co Loa Smart City 등 대형 프로젝트 추진. 2045년 인구 87만 목표.",
-      "kpi_targets": [
-        {
-          "label": "신도시 부지",
-          "target": "4,200 ha",
-          "current": "계획·인허가 단계",
-          "changed": false
-        },
-        {
-          "label": "인구 수용",
-          "target": "30~40만 (2045)",
-          "current": "약 4.2만 (2024)",
-          "changed": false
-        },
-        {
-          "label": "투자 규모",
-          "target": "$4B+ (BRG-Sumitomo)",
-          "current": "단계별 진입",
-          "changed": false
-        }
-      ],
+      "description_ko": "베트남 최대 핵심 과학기술 및 R&D, 고등교육 클러스터 위성도시 고도화",
+      "kpi_targets": [],
       "key_projects": [
         {
-          "name_ko": "BRG-Sumitomo Smart City",
-          "location": "Dong Anh",
-          "capacity": "272 ha / $4B",
-          "note": "일본 ODA + 민간",
-          "status": ""
-        },
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "준공완료"
+        }
+      ],
+      "analysis_ko": "",
+      "kpi_changes": [],
+      "articles": []
+    },
+    "VN-HOUSING-2030": {
+      "plan_name_ko": "VN-HOUSING-2030",
+      "sector": "Urban/Transport",
+      "area": "National",
+      "decision": "",
+      "description_ko": "서민 및 산업단지 근로자를 위한 100만 가구 사회주택(Social Housing) 공급",
+      "kpi_targets": [],
+      "key_projects": [
         {
-          "name_ko": "Vingroup Co Loa Smart City",
-          "location": "Dong Anh",
-          "capacity": "385 ha",
-          "note": "Vingroup 자체개발",
-          "status": ""
-        },
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "공사중"
+        }
+      ],
+      "analysis_ko": "",
+      "kpi_changes": [],
+      "articles": []
+    },
+    "VN-SMART-2025": {
+      "plan_name_ko": "VN-SMART-2025",
+      "sector": "Urban/Transport",
+      "area": "National",
+      "decision": "",
+      "description_ko": "하노이, 호치민, 다낭, 껀터를 잇는 스마트시티 체인망 구축 및 데이터 허브 표준화",
+      "kpi_targets": [],
+      "key_projects": [
         {
-          "name_ko": "National Exhibition Center",
-          "location": "Dong Anh",
-          "capacity": "90 ha",
-          "note": "2027 개관 목표",
-          "status": ""
+          "name_ko": "",
+          "location": "",
+          "capacity": "",
+          "note": "",
+          "status": "준공완료"
         }
       ],
       "analysis_ko": "",
