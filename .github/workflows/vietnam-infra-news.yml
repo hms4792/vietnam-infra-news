@@ -182,10 +182,9 @@ jobs:
         if: ${{ github.event.inputs.skip_sa8 != 'true' }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY:    ${{ secrets.GEMINI_API_KEY }}
           EMAIL_USERNAME:    ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:    ${{ secrets.EMAIL_PASSWORD }}
-          GEMINI_API_KEY:    ${{ secrets.GEMINI_API_KEY }}
         run: |
           if [ -f scripts/generate_mi_report.py ]; then
             python3 scripts/generate_mi_report.py --send-email
