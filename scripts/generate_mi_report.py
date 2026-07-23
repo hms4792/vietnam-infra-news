@@ -43,14 +43,11 @@ ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages'
 HAIKU_MODEL       = 'claude-haiku-4-5-20251001'  # 절대 변경 금지
 HAIKU_TIMEOUT     = 45
 
-# 기존 ANTHROPIC_API_KEY 아래에 추가
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
-GEMINI_MODEL = "gemini-3.6-flash"
-GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent"
-
 # Gemini API 설정 (SA-8 v3.3 추가 -- 번역 금지, Layer2 분석 전용)
-GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models'
-GEMINI_MODEL   = 'gemini-3.6-flash-lite'   # 무료 티어 — 2.0 Flash 2026-06-01 종료로 교체
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
+GEMINI_MODEL   = "gemini-3.6-flash"
+GEMINI_MODEL_LITE = "gemini-3.6-flash-lite"
+GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models"
 GEMINI_TIMEOUT = 60
 
 import subprocess
@@ -468,6 +465,30 @@ def detect_kpi_changes(plans):
 # Layer2 AI 분석 생성 함수 (SA-8 v3.2 신규)
 # ============================================================
 
+def _call_gemini_fallback(prompt: str) -> str:
+    if not GEMINI_API_KEY:
+        logger.error("GEMINI_API_KEY가 존재하지 않습니다.")
+        return ""
+    headers = {"Content-Type": "application/json"}
+    params = {"key": GEMINI_API_KEY}
+    payload = {
+        "contents": [{"parts": [{"text": prompt}]}],
+        "generationConfig": {"temperature": 0.3, "maxOutputTokens": 2048}
+    }
+    try:
+        import requests
+        res = requests.post(GEMINI_API_URL, headers=headers, params=params, json=payload, timeout=60)
+        res.raise_for_status()
+        candidates = res.json().get("candidates", [])
+        if candidates:
+            parts = candidates[0].get("content", {}).get("parts", [])
+            if parts:
+                return parts[0].get("text", "").strip()
+        return ""
+    except Exception as e:
+        logger.error(f"Gemini API 호출 실패: {e}")
+        return ""
+
 def _call_haiku_sa8(system_prompt, user_prompt, api_key):
     """SA-6/SA-7과 동일한 Haiku 호출 패턴 -- 번역 금지, 분석 전용"""
     import json as _j
@@ -492,31 +513,9 @@ def _call_haiku_sa8(system_prompt, user_prompt, api_key):
     except Exception as e:
         log.warning(f'  Haiku SA8 호출 오류: {e}')
         logger.warning("Anthropic API 실패 -> Gemini API로 대체 호출합니다.")
+        combined_prompt = f"{system_prompt}\n\n{user_prompt}"
         return _call_gemini_fallback(prompt)
     
-def _call_gemini_fallback(prompt: str) -> str:
-    if not GEMINI_API_KEY:
-        logger.error("GEMINI_API_KEY가 존재하지 않습니다.")
-        return ""
-    headers = {"Content-Type": "application/json"}
-    params = {"key": GEMINI_API_KEY}
-    payload = {
-        "contents": [{"parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.3, "maxOutputTokens": 2048}
-    }
-    try:
-        import requests
-        res = requests.post(GEMINI_API_URL, headers=headers, params=params, json=payload, timeout=60)
-        res.raise_for_status()
-        candidates = res.json().get("candidates", [])
-        if candidates:
-            parts = candidates[0].get("content", {}).get("parts", [])
-            if parts:
-                return parts[0].get("text", "").strip()
-        return ""
-    except Exception as e:
-        logger.error(f"Gemini API 호출 실패: {e}")
-        return ""
 
 def _call_gemini_sa8(system_prompt, user_prompt, gemini_key, use_search=True):
     """Gemini Flash 호출 -- 번역 금지, Layer2 분석 전용
@@ -550,10 +549,11 @@ def _call_gemini_sa8(system_prompt, user_prompt, gemini_key, use_search=True):
 
 
 def generate_layer2_analysis(plans_payload, api_key):
-    """플랜별 Layer2 AI 분석 -- 기사 있는 플랜에만 Haiku 호출"""
-    if not api_key:
-        log.warning('[Layer2] ANTHROPIC_API_KEY 없음 -- AI 분석 건너뜀')
+    gemini_key = os.environ.get('GEMINI_API_KEY', '').strip() or GEMINI_API_KEY
+    if not api_key and not gemini_key:
+        log.warning('[Layer2] API Key 없음 -- AI 분석 건너뜀')
         return
+
     system = (
         '당신은 베트남 인프라 개발 전문 시장정보(MI) 애널리스트입니다. '
         '수집된 뉴스 기사를 바탕으로 경영진 보고용 인사이트를 한국어로 작성합니다. '
@@ -579,24 +579,22 @@ def generate_layer2_analysis(plans_payload, api_key):
             f'수집 기사 ({len(arts)}건):\n' + '\n'.join(art_lines) +
             '\n\n위 기사를 분석하여 경영진 보고용 인사이트 3개 항목을 작성하세요.'
         )
-        # Gemini 우선 -> 실패 시 Haiku fallback
-        gemini_key = os.environ.get('GEMINI_API_KEY', '').strip()
+        
         if gemini_key:
             result = _call_gemini_sa8(system, user, gemini_key, use_search=True)
             if result:
                 pdata['analysis_ko'] = result
                 log.info(f'  [Layer2/Gemini] {pid}: {len(result)}자')
-                time.sleep(4)  # Rate Limit 방지
+                time.sleep(1)
                 continue
+
         result = _call_haiku_sa8(system, user, api_key)
         if result:
             pdata['analysis_ko'] = result
             log.info(f'  [Layer2/Haiku] {pid}: {len(result)}자')
         else:
             log.warning(f'  [Layer2] {pid}: 생성 실패')
-        # Gemini Rate Limit 방지 — 플랜 간 4초 대기 (15 req/min 초과 방지)
-        time.sleep(4)
-
+        time.sleep(1)
 
 def generate_executive_summary(plans_payload, new_articles, api_key):
     """Executive Summary -- 신규 기사 기반 Haiku 1회 호출"""
