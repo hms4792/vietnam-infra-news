@@ -514,7 +514,7 @@ def _call_haiku_sa8(system_prompt, user_prompt, api_key):
         log.warning(f'  Haiku SA8 호출 오류: {e}')
         log.warning("Anthropic API 실패 -> Gemini API로 대체 호출합니다.")
         combined_prompt = f"{system_prompt}\n\n{user_prompt}"
-        return _call_gemini_fallback(prompt)
+        return _call_gemini_fallback(combined_prompt)
     
 
 def _call_gemini_sa8(system_prompt, user_prompt, gemini_key, use_search=True):
