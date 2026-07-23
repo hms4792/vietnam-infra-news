@@ -129,6 +129,7 @@ jobs:
         run: python3 scripts/quality_context_agent.py
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         continue-on-error: true
         
       - name: Rebuild Dashboard (SA-6 sum_ko 반영)
@@ -157,6 +158,7 @@ jobs:
       - name: SA-7 Context Analyzer (맥락 기반 진행단계 분석)
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           if [ -f scripts/context_analyzer.py ]; then
             if [ "${{ github.event.inputs.rule_only }}" = "true" ]; then
@@ -180,6 +182,7 @@ jobs:
         if: ${{ github.event.inputs.skip_sa8 != 'true' }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           EMAIL_USERNAME:    ${{ secrets.EMAIL_USERNAME }}
           EMAIL_PASSWORD:    ${{ secrets.EMAIL_PASSWORD }}
           GEMINI_API_KEY:    ${{ secrets.GEMINI_API_KEY }}
