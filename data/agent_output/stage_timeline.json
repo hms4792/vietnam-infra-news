@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-23 14:37",
+  "generated_at": "2026-07-24 12:27",
   "plans": {
     "VN-WW-2030": {
       "plan_id": "VN-WW-2030",
@@ -22,7 +22,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -65,6 +65,56 @@
       "haiku_count": 0,
       "kpi_targets": []
     },
+    "VN-WAT-URBAN": {
+      "plan_id": "VN-WAT-URBAN",
+      "title_ko": "VN-WAT-URBAN",
+      "sector": "Environment",
+      "area": "Urban",
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
+      "stage_history": [
+        {
+          "date": "2026-07-24",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Thanh Hoa는 Sam Son의 배수 시스템에 대한 투자를 연구합니다."
+        }
+      ],
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-07-24",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "VN-WAT-RESOURCES": {
+      "plan_id": "VN-WAT-RESOURCES",
+      "title_ko": "VN-WAT-RESOURCES",
+      "sector": "Environment",
+      "area": "National",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-07-24",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "700개 이상의 관개 및 수력 발전 프로젝트에 대한 하류 최소 유량 값 발표"
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-07-24",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
     "VN-PWR-PDP8": {
       "plan_id": "VN-PWR-PDP8",
       "title_ko": "VN-PWR-PDP8",
@@ -95,24 +145,24 @@
       "title_ko": "VN-PWR-PDP8-LNG",
       "sector": "Energy/Power",
       "area": "National",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-07-23",
-          "stage": "OPERATION",
-          "milestone": "LNG 공급체계 운영 중, 국내 가격 조정 시행",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "VnExpress Business",
           "title_ko": "휘발유 가격 인상"
         }
       ],
-      "next_watch": "LNG 수입량·공급 안정성·가격 변동 추이 모니터링",
-      "latest_insight": "마스터플랜이 상업운전 단계 진입. LNG 수입·공급 인프라가 정상 가동 중이며, 국제 가격 연동 메커니즘 작동. 향후 공급 확대·장기 계약 체결 등 성과 관리 단계 주목.",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-07-23",
       "article_count": 1,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-NUCLEAR": {
@@ -145,22 +195,22 @@
       "title_ko": "VN-OG-2030",
       "sector": "Energy/Power",
       "area": "National",
-      "current_stage": "UNKNOWN",
-      "stage_label_ko": "단계 미확정",
-      "stage_color": "9CA3AF",
-      "stage_order": 0,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-07-22",
-          "stage": "UNKNOWN",
-          "milestone": "해당 없음",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "channelnewsasia",
           "title_ko": "거래일: $100 석유 직기"
         },
         {
           "date": "2026-07-21",
           "stage": "OPERATION",
-          "milestone": "해양경제 주도역할 재확인 및 신에너지경제 전환",
+          "milestone": "해양경제전략(2030-2045) 수립 및 석유가스산업 역할 강화",
           "source": "vietnamplus",
           "title_ko": "베트남의 석유 및 가스 산업은 해양 경제를 주도하는 역할을 재확인합니다."
         },
@@ -170,20 +220,13 @@
           "milestone": "입찰·계약 진행",
           "source": "petrotimes",
           "title_ko": "페트로베트남, 캐나다와 에너지 파트너십 확대 모색"
-        },
-        {
-          "date": "2026-07-16",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "asiatimes",
-          "title_ko": "시베리아 2의 교착상태는 러시아-중국의 '무제한' 협정을 거짓으로 만든다"
         }
       ],
-      "next_watch": "베트남 인프라 사업 관련 뉴스 모니터링",
-      "latest_insight": "국제 유가 변동은 베트남 에너지 인프라 사업의 경제성에 영향을 미칠 수 있으나, 해당 기사는 유가 시장 분석으로 특정 인프라 사업과 무관",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-07-22",
-      "article_count": 4,
-      "haiku_count": 2,
+      "article_count": 3,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-TRAN-2055": {
@@ -191,17 +234,24 @@
       "title_ko": "VN-TRAN-2055",
       "sector": "Urban/Transport",
       "area": "National",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
-          "date": "2026-07-17",
+          "date": "2026-07-18",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamplus",
+          "title_ko": "생체 인식 체크인으로 노이바이 공항 경험 향상"
+        },
+        {
+          "date": "2026-07-18",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "nhandan_vn",
-          "title_ko": "응에안(Nghe An)은 \"2자릿수\" 성장 목표를 달성하기 위해 에뮬레이션 운동을 시작합니다."
+          "source": "vietnamplus",
+          "title_ko": "물류비용에 대한 부담이 커지고 기업은 어려움을 겪고 있습니다."
         },
         {
           "date": "2026-07-17",
@@ -211,24 +261,42 @@
           "title_ko": "총리, 북부산간지역 집중호우에 선제적 대응 지시"
         },
         {
-          "date": "2026-07-16",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "vietnamplus",
-          "title_ko": "최고 지도자는 Son La에게 농산물 가공, 관광 허브가 될 것을 요청"
-        },
-        {
-          "date": "2026-07-16",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "VnExpress Business",
-          "title_ko": "세계 최고 공항에 첫 단독 사무용 건물 2년만에 완공"
+          "date": "2026-07-17",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "VnExpress International",
+          "title_ko": "호치민 고속도로 인터체인지가 다시 지연되면서 롱탄(Long Thanh) 공항 접근이 정체 위협에 직면"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-07-17",
+      "latest_article_date": "2026-07-18",
       "article_count": 8,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "VN-URB-METRO-2030": {
+      "plan_id": "VN-URB-METRO-2030",
+      "title_ko": "VN-URB-METRO-2030",
+      "sector": "Urban/Transport",
+      "area": "Urban",
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
+      "stage_history": [
+        {
+          "date": "2026-07-23",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "sggp_org_vn",
+          "title_ko": "호치민시, 북부 기술 도시 지역 FPT 교육 허브로 추진"
+        }
+      ],
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-07-23",
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -262,20 +330,20 @@
       "title_ko": "VN-HAN-URBAN-2045",
       "sector": "Urban/Transport",
       "area": "Hanoi",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
       "stage_history": [
         {
           "date": "2026-07-22",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
           "source": "vietnamplus",
           "title_ko": "베트남 여행 선택에 영향을 미치는 음식: 아고다(Agoda) 보고서"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
       "latest_insight": "",
       "latest_article_date": "2026-07-22",
       "article_count": 1,
