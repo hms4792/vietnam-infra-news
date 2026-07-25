@@ -107,9 +107,16 @@ def load_knowledge_index() -> dict:
         if path.exists():
             with open(path, 'r', encoding='utf-8') as f:
                 ki = json.load(f)
-            plans = ki.get('masterplans', ki)
+            # [Fix D1] 'masterplans'(v4.1) / 'plans'(v3.9) 키 양쪽 대응.
+            # 기존 코드는 'masterplans' 키가 없으면 ki 전체(dict)를 plans로 오인식하여
+            # version/_factcheck_log 등 최상위 키까지 "플랜"으로 순회하다 크래시하는
+            # 결함이 있었음 (p['plan_id']=pid 대입 시 p가 str/int일 경우 TypeError).
+            plans = ki.get('masterplans') or ki.get('plans') or {}
+            if not isinstance(plans, dict):
+                plans = {}
             for pid, p in plans.items():
-                p['plan_id'] = pid
+                if isinstance(p, dict):
+                    p['plan_id'] = pid
             log.info(f"knowledge_index 로드: {len(plans)}개 플랜 [{path.name}]")
             return plans
     log.warning("knowledge_index 없음 — 빈 플랜 사용")
@@ -453,6 +460,10 @@ def assemble_plan_data(
 
         tl_history = tl.get('stage_history', [])
 
+        # [Fix D2] knowledge_index 실제 필드명 fallback 추가.
+        # 기존 코드는 title_ko/description_ko/kpi_targets/key_projects 만 조회했으나
+        # knowledge_index.json의 실제 필드명은 plan_name/overview/kpis/projects여서
+        # 전 플랜에서 항상 빈 값/plan_id로만 표시되던 결함이 있었음.
         result[pid] = {
             'plan_id':    pid,
             'stage':      stage,
@@ -460,13 +471,14 @@ def assemble_plan_data(
             'confidence': ctx.get('confidence', 0.0),
             'haiku_used': ctx.get('haiku_used', False),
 
-            'title_ko':       plan_meta.get('title_ko', pid),
-            'description_ko': plan_meta.get('description_ko', ''),
-            'decision':       plan_meta.get('decision', ''),
+            'title_ko':       (plan_meta.get('title_ko') or plan_meta.get('plan_name') or pid),
+            'description_ko': (plan_meta.get('description_ko') or plan_meta.get('overview') or ''),
+            'decision':       (plan_meta.get('decision') or plan_meta.get('legal_basis') or
+                               plan_meta.get('legal') or ''),
             'sector':         plan_meta.get('sector', ''),
             'area':           plan_meta.get('area', ''),
-            'kpi_targets':    plan_meta.get('kpi_targets', []),
-            'key_projects':   plan_meta.get('key_projects', []),
+            'kpi_targets':    (plan_meta.get('kpi_targets') or plan_meta.get('kpis') or []),
+            'key_projects':   (plan_meta.get('key_projects') or plan_meta.get('projects') or []),
 
             'articles': [
                 {
@@ -604,7 +616,23 @@ def update_mi_dashboard_html(ki_plans: dict, plan_data: dict,
                   old_plan.get('ai_analysis', []))
 
         # 기존 플랜 기반 + 자동 필드만 교체
-        new_plan = dict(old_plan)   # ← overview, kpis, projects 등 보존
+        new_plan = dict(old_plan)   # ← name/legal/short/parent/group 등 대시보드 전용 메타 보존
+
+        # [Fix D3] overview/kpis/projects는 매 빌드마다 knowledge_index.json에서 동기화.
+        # ki_plans 인자가 기존 코드에서는 함수에 전달만 되고 실제로는 한 번도 참조되지 않아,
+        # overview/kpis/projects가 old_plan(=HTML에 과거 한 번 수동 반영된 값)에서만 복사되고
+        # 있었음 -- knowledge_index.json을 아무리 갱신해도 대시보드 화면에는 영구히 반영되지
+        # 않는 구조였다. knowledge_index의 필드명(overview/kpis/projects)이 대시보드
+        # 프론트엔드(mi_dashboard.html renderOverview())가 기대하는 필드명과 1:1 동일하므로,
+        # 값이 존재하고 비어있지 않을 때만 덮어써서 최신화한다(KI 쪽이 비었으면 기존 값 유지).
+        ki_plan = ki_plans.get(pid, {})
+        if ki_plan.get('overview'):
+            new_plan['overview'] = ki_plan['overview']
+        if ki_plan.get('kpis'):
+            new_plan['kpis'] = ki_plan['kpis']
+        if ki_plan.get('projects'):
+            new_plan['projects'] = ki_plan['projects']
+
         new_plan['articles']    = new_articles
         new_plan['stats']       = {
             'total':       len(arts),
