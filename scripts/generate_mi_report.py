@@ -135,7 +135,9 @@ def load_knowledge_index():
             try:
                 with open(kpath, encoding='utf-8') as f:
                     ki = json.load(f)
-                plans = ki.get('masterplans', {})
+                # [Fix 6][SA-8 v3.4] 'masterplans' / 'plans' 키 양쪽 대응
+                # v4.1 계열은 'masterplans', v3.9 계열은 'plans' 사용 -- 둘 다 지원
+                plans = ki.get('masterplans') or ki.get('plans') or {}
                 # v2.0 이전 list 구조 대응
                 if isinstance(plans, list):
                     plans = {p.get('id', p.get('plan_id', f'PLAN_{i}')): p
@@ -431,8 +433,11 @@ def detect_kpi_changes(plans):
         prev_plans = prev.get('plans', {})
         for pid, pdata in plans.items():
             prev_pdata = prev_plans.get(pid, {})
+            # [Fix 7][SA-8 v3.4] pdata는 raw knowledge_index 플랜이므로 kpi_targets가 없고
+            # kpis 필드를 사용함 -- fallback 추가 (prev_pdata는 이미 정규화된 이전 payload이므로 그대로 유지)
+            curr_kpi_source = pdata.get('kpi_targets') or pdata.get('kpis') or []
             curr_kpis = {k.get('label', k.get('indicator', '')): k
-                         for k in pdata.get('kpi_targets', [])}
+                         for k in curr_kpi_source}
             prev_kpis = {k.get('label', k.get('indicator', '')): k
                          for k in prev_pdata.get('kpi_targets', [])}
             for label, curr in curr_kpis.items():
@@ -637,7 +642,8 @@ def assemble_payload(ki, plans, grouped_arts, all_articles, kpi_changes):
     # [Fix 5] kpi_dashboard: knowledge_index에서 주요 KPI 집계
     kpi_dashboard, seen_labels = [], set()
     for pdata in plans.values():
-        for kpi in pdata.get('kpi_targets', []):
+        # [Fix 8][SA-8 v3.4] kpi_targets/kpis 양쪽 대응 (line 680 정규화 로직과 동일 패턴)
+        for kpi in (pdata.get('kpi_targets') or pdata.get('kpis') or []):
             label = (kpi.get('label') or kpi.get('indicator') or
                      kpi.get('indicator_ko') or '').strip()
             if label and label not in seen_labels:
@@ -739,7 +745,9 @@ def assemble_payload(ki, plans, grouped_arts, all_articles, kpi_changes):
             _desc = '\n'.join(_parts)
 
         plans_payload[pid] = {
-            'plan_name_ko': (pdata.get('name_ko') or pdata.get('plan_name_ko') or pid),
+            # [Fix 9][SA-8 v3.4] knowledge_index 실제 필드명 'plan_name' 추가 대응
+            'plan_name_ko': (pdata.get('name_ko') or pdata.get('plan_name_ko') or
+                             pdata.get('plan_name') or pid),
             'sector':       (pdata.get('sector') or
                              (pdata.get('sectors', [''])[0] if pdata.get('sectors') else '')),
             'area':         (pdata.get('area') or ''),
@@ -751,7 +759,13 @@ def assemble_payload(ki, plans, grouped_arts, all_articles, kpi_changes):
             'kpi_targets':    norm_kpis,
             'key_projects':   norm_projs,
             # Layer2
-            'analysis_ko':  pdata.get('analysis_ko') or '',
+            # [Fix 10][SA-8 v3.4] knowledge_index 사전 작성된 'ai_analysis' 필드 fallback 추가
+            # ai_analysis는 list(문자열/객체 배열)일 수 있어 문자열로 정규화
+            'analysis_ko':  (lambda _v: (
+                _v if isinstance(_v, str) else
+                ' '.join(str(x) for x in _v) if isinstance(_v, list) else
+                str(_v) if _v else ''
+            ))(pdata.get('analysis_ko') or pdata.get('ai_analysis') or ''),
             'kpi_changes':  [c for c in kpi_changes if c.get('plan_id') == pid],
             'articles':     arts_payload,
         }
