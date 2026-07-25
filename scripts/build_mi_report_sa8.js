@@ -1,3 +1,7 @@
+자주 사용하는 앱에서 바로 AI를 사용해 보세요 … Gemini를 사용하여 초안을 생성하고 콘텐츠를 다듬고, Google의 차세대 AI가 지원되는 Gemini Pro를 이용하세요.
+build_mi_report_sa8.txt
+1
+100%
 /**
  * build_mi_report_sa8.js  ── SA-8 docx 빌더 v2.0
  * ===================================================
@@ -599,11 +603,19 @@ function buildLayer2Section(planData) {
   elems.push(H2('④ AI 분석 요약 (Layer 2 — 뉴스 인사이트)', C.blue));
 
   // KPI 변동 알림
+  // [Fix E][v2.1] generate_mi_report.py의 detect_kpi_changes()가 실제로 생성하는
+  // 필드는 {plan_id, indicator, from, to, reason} 이며, previous/current/change_pct는
+  // 존재한 적이 없는 필드명이었음 (KPI 변동이 항상 0건이던 상위 버그 때문에 그동안
+  // 드러나지 않았던 잠재 결함 -- kpi_changes가 실제로 채워지기 시작하면
+  // "undefined → undefined (undefined%)"로 깨져서 출력될 상황이었음).
   const kpiChanges = planData.kpi_changes || [];
   if (kpiChanges.length > 0) {
     for (const kc of kpiChanges) {
+      const fromVal = kc.from ?? kc.previous ?? '';
+      const toVal   = kc.to   ?? kc.current  ?? '';
+      const extra   = kc.reason ? ` — ${kc.reason}` : '';
       elems.push(ALERT(
-        `${kc.indicator}: ${kc.previous} → ${kc.current} (${kc.change_pct >= 0 ? '+' : ''}${kc.change_pct}%)`,
+        `${kc.indicator || ''}: ${fromVal} → ${toVal}${extra}`,
         C.yellow, C.yellowD, '📊 KPI 변동 — '
       ));
     }
