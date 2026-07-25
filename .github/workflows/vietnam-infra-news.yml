@@ -6,6 +6,17 @@
 # 역할: 7일치 수집 + SA-6 품질검증 + SA-7 맥락분석 +
 #        SA-8 MI 보고서(docx) + SA-8 PPT + 이메일 발송
 #
+# v6.6 수정사항 (2026-07-25) [Cowork 조치]:
+#   - [Fix A] 중복 대시보드 재빌드 스텝 제거
+#     (기존: "Rebuild Dashboard (SA-6 sum_ko 반영)" + "SA-4 Rebuild dashboard"
+#      가 완전히 동일한 명령을 연속 실행 -- 하나로 통합, 불필요한 실행시간/리스크 제거)
+#   - [Fix B] SA-8(Word) 실행결과 가시성 확보
+#     (기존: continue-on-error: true 로 인해 generate_mi_report.py가
+#      크래시해도 Job이 초록색(성공)으로 표시되어 주간보고서 미생성이
+#      완전히 은폐됨 -- steps.<id>.outcome 체크 + 산출물 존재 확인 단계 추가.
+#      실행은 계속 진행되도록 continue-on-error는 유지하되, 실패 시
+#      ::warning::/::error:: 어노테이션으로 Actions 요약 화면에 노출)
+#
 # v6.5 수정사항 (2026-07-16):
 #   - knowledge_index.json 보호: 커밋 단계에서 docs/shared/knowledge_index.json을
 #     스테이징 제외 처리하여, 파이프라인이 MI 애널리스트의 수동 갱신 내용
@@ -30,7 +41,7 @@
 #     (MI 애널리스트가 수동 관리 — 2026-07-16 추가)
 # ============================================================
 
-name: Weekly Collection v6.5
+name: Weekly Collection v6.6
 
 on:
   schedule:
@@ -131,17 +142,15 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         continue-on-error: true
-        
-      - name: Rebuild Dashboard (SA-6 sum_ko 반영)
+
+      # ── Step 9: 대시보드 재빌드 (SA-6 sum_ko 결과 반영) ──────────
+      # [Fix A][v6.6] 기존 두 스텝("Rebuild Dashboard (SA-6 sum_ko 반영)" +
+      # "SA-4 Rebuild dashboard")이 완전히 동일한 명령(python3 scripts/build_dashboard.py)을
+      # 사이에 다른 데이터 변경 스텝 없이 연속 실행하던 것을 하나로 통합함.
+      - name: Rebuild Dashboard (SA-6 결과 반영)
         run: python3 scripts/build_dashboard.py
         env:
           EXCEL_PATH: ${{ env.EXCEL_PATH }}
-        continue-on-error: true
-
-      # ── Step 9: SA-4 대시보드 재빌드 (SA-6 결과 반영) ──────────
-      # build_dashboard.py v7.2: plan_id/grade 필드 포함
-      - name: SA-4 Rebuild dashboard (SA-6 결과 반영)
-        run: python3 scripts/build_dashboard.py
         continue-on-error: true
 
       # ── Step 10: Genspark 공유 파일 내보내기 ────────────────────
@@ -178,7 +187,9 @@ jobs:
       #   - Claude Haiku API → 플랜별 분석문 생성
       #   - docs/VN_Infra_MI_Weekly_Report_YYYYMMDD.docx 생성
       #   - --send-email: 이메일 첨부 발송
+      # [Fix B][v6.6] id 부여 -- 다음 검증 스텝에서 outcome 참조
       - name: SA-8 MI Report (docx) — Haiku AI analysis + 이메일
+        id: sa8_report
         if: ${{ github.event.inputs.skip_sa8 != 'true' }}
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -190,6 +201,21 @@ jobs:
             python3 scripts/generate_mi_report.py --send-email
           else
             echo "generate_mi_report.py 없음 — SA-8 건너뜀"
+          fi
+        continue-on-error: true
+
+      # ── Step 12-a: SA-8(Word) 결과 가시성 확보 [Fix B][v6.6 신규] ──
+      # continue-on-error로 인해 Job 전체는 계속 진행되지만, 실패 시
+      # GitHub Actions 요약 화면에 명시적 경고/오류를 남겨 "조용한 실패"를 방지한다.
+      - name: SA-8 검증 — Weekly Report 생성 여부 확인
+        if: ${{ always() && github.event.inputs.skip_sa8 != 'true' }}
+        run: |
+          if [ "${{ steps.sa8_report.outcome }}" != "success" ]; then
+            echo "::error::SA-8 generate_mi_report.py 실행이 실패했습니다 (continue-on-error로 job은 계속 진행되지만, 이번 주 MI 보고서는 생성되지 않았을 수 있습니다). 위 SA-8 스텝 로그를 확인하세요."
+          fi
+          if ! ls docs/VN_Infra_MI_Weekly_Report_*.docx >/dev/null 2>&1 && \
+             ! ls docs/reports/VN_Infra_MI_Weekly_Report_*.docx >/dev/null 2>&1; then
+            echo "::warning::금주 Weekly Report(.docx)가 docs/ 또는 docs/reports/ 에 존재하지 않습니다. knowledge_index.json 스키마/파싱 문제일 가능성이 있습니다."
           fi
         continue-on-error: true
 
