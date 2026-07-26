@@ -117,22 +117,41 @@ def load_ki() -> dict:
         if path.exists():
             with open(path, encoding='utf-8') as f:
                 ki = json.load(f)
-            plans = ki.get('masterplans', ki)
-            log.info(f"knowledge_index 로드: {len(plans)}개 플랜 [{path.name}]")
-            return plans
+            
+            # 1. 다양한 루트 키 가능성 자동 탐색
+            plans = None
+            if isinstance(ki, dict):
+                for root_key in ['masterplans', 'plans', 'index', 'data', 'knowledge_index']:
+                    if root_key in ki and isinstance(ki[root_key], dict):
+                        plans = ki[root_key]
+                        break
+                if plans is None:
+                    plans = ki
+            else:
+                plans = {}
+
+            # ★ 2. 핵심 방어: dict 타입인 실제 플랜 데이터만 필터링 (str 등 메타데이터 제거)
+            valid_plans = {k: v for k, v in plans.items() if isinstance(v, dict)}
+            
+            ignored_count = len(plans) - len(valid_plans)
+            log.info(f"knowledge_index 로드: {len(valid_plans)}개 플랜 (메타데이터 {ignored_count}개 제외) [{path.name}]")
+            return valid_plans
+            
     log.warning("knowledge_index 없음")
     return {}
-
-
 # ══════════════════════════════════════════════════════════════════════════
 # 2. 정책 키워드 딕셔너리 빌드 (v3.5 그대로)
 # ══════════════════════════════════════════════════════════════════════════
 def build_keyword_dict(plans: dict) -> list:
     result = []
     for pid, p in plans.items():
+        # ★ 방어 코드: 개별 플랜 객체가 dict가 아니면 안전하게 스킵
+        if not isinstance(p, dict):
+            log.warning(f"  [Skip] 유효하지 않은 플랜 데이터 형식: ID={pid}, Type={type(p).__name__}")
+            continue
+            
         kw_en = p.get('keywords_en', p.get('keywords', []))
         kw_vi = p.get('keywords_vi', [])
-        sector = p.get('sector', '')
 
         # ★ v3.6 패치: SECTOR_SUPPLEMENT 키워드 직접 주입
         # knowledge_index에 keywords_en/vi 없는 플랜도 섹터 키워드로 매핑 가능
