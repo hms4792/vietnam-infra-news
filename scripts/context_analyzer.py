@@ -345,19 +345,27 @@ def call_haiku_stage_analysis(article, plan_data, rule_stage, api_key):
 #  데이터 로더 (v1.1 그대로)
 # ══════════════════════════════════════════════════════════════════════════
 
+import json
+from pathlib import Path
+
 def load_knowledge_index():
-    # 1. JSON 파일이 존재하는 경로를 찾아 안전하게 로드합니다.
+    # 1. 현재 실행 중인 파일 위치를 기준으로 폴더 경로를 스스로 계산합니다. (에러 원천 차단)
+    base_dir = Path(__file__).parent.parent
+    docs_out = base_dir / 'docs' / 'shared'
+    data_dir = base_dir / 'data'
+    
+    # 2. JSON 파일이 존재하는 경로를 찾아 안전하게 로드합니다.
     ki = {}
-    for path in [DOCS_OUT / 'knowledge_index.json', DATA_DIR / 'shared' / 'knowledge_index.json']:
+    for path in [docs_out / 'knowledge_index.json', data_dir / 'shared' / 'knowledge_index.json']:
         if path.exists():
             with open(path, 'r', encoding='utf-8') as f:
                 ki = json.load(f)
             break
             
-    # 2. masterplans 루트 키가 있으면 가져오고, 없으면 전체를 사용합니다.
+    # 3. masterplans 루트 키가 있으면 가져오고, 없으면 전체를 사용합니다.
     plans = ki.get('masterplans', ki)
     
-    # 3. 딕셔너리(dict) 데이터만 추출하여 안전하게 plan_id를 주입합니다.
+    # 4. 딕셔너리(dict) 데이터만 추출하여 안전하게 plan_id를 주입합니다.
     valid_plans = {}
     if isinstance(plans, dict):
         for pid, p in plans.items():
