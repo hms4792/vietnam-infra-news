@@ -145,22 +145,20 @@ def load_ki() -> dict:
 def build_keyword_dict(plans: dict) -> list:
     result = []
     for pid, p in plans.items():
-        # ★ 방어 코드: 개별 플랜 객체가 dict가 아니면 안전하게 스킵
+        # 방어 코드: 딕셔너리 형태가 아니면 건너뜀
         if not isinstance(p, dict):
-            log.warning(f"  [Skip] 유효하지 않은 플랜 데이터 형식: ID={pid}, Type={type(p).__name__}")
             continue
             
+        sector = p.get('sector', '') # sector 변수를 먼저 안전하게 정의
         kw_en = p.get('keywords_en', p.get('keywords', []))
         kw_vi = p.get('keywords_vi', [])
 
-        # ★ v3.6 패치: SECTOR_SUPPLEMENT 키워드 직접 주입
-        # knowledge_index에 keywords_en/vi 없는 플랜도 섹터 키워드로 매핑 가능
+        # SECTOR_SUPPLEMENT 키워드 직접 주입
         if sector in SECTOR_SUPPLEMENT_KEYWORDS:
             extra_en, extra_vi = SECTOR_SUPPLEMENT_KEYWORDS[sector]
             kw_en = list(kw_en) + extra_en
             kw_vi = list(kw_vi) + extra_vi
 
-        # 키워드가 전혀 없는 플랜도 섹터 키워드가 있으면 포함
         if not kw_en and not kw_vi:
             continue
 
