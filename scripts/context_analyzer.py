@@ -346,27 +346,20 @@ def call_haiku_stage_analysis(article, plan_data, rule_stage, api_key):
 # ══════════════════════════════════════════════════════════════════════════
 
 def load_knowledge_index():
-    """knowledge_index.json v2.1+ 로드."""
-    for path in KI_PATHS:
-        if path.exists():
-            with open(path, 'r', encoding='utf-8') as f:
-                ki = json.load(f)
-            if 'masterplans' in ki:
-                plans = ki['masterplans']
-                valid_plans = {k: v for k, v in plans.items() if isinstance(v, dict)}
-                for pid, plan in plans.items():
-                    plan['plan_id'] = pid
-                log.info(f"knowledge_index 로드: {len(plans)}개 플랜 [{path.name}]")
-                return plans
-            else:
-                for pid, plan in ki.items():
-                    plan['plan_id'] = pid
-                log.info(f"layer1_data 로드: {len(ki)}개 플랜 [{path.name}]")
-                return ki
-
-    log.warning("knowledge_index를 찾을 수 없음 — 빈 플랜 사용")
-    return {}
-
+    # 파일 로드 부분 아래에 아래 필터링 로직을 추가합니다.
+    # (예시: ki 파일에서 plans를 가져온 직후)
+    plans = ki.get('masterplans', ki)
+    
+    # ★ 근본 조치: 딕셔너리(dict) 객체만 추출하여 문자열 에러 원천 차단
+    if isinstance(plans, dict):
+        valid_plans = {}
+        for pid, p in plans.items():
+            if isinstance(p, dict):
+                p['plan_id'] = pid  # 안전하게 plan_id 주입
+                valid_plans[pid] = p
+        plans = valid_plans
+    
+    return plans
 
 def load_articles_from_excel(days_back=7):
     """
