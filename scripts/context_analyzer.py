@@ -353,6 +353,7 @@ def load_knowledge_index():
                 ki = json.load(f)
             if 'masterplans' in ki:
                 plans = ki['masterplans']
+                valid_plans = {k: v for k, v in plans.items() if isinstance(v, dict)}
                 for pid, plan in plans.items():
                     plan['plan_id'] = pid
                 log.info(f"knowledge_index 로드: {len(plans)}개 플랜 [{path.name}]")
