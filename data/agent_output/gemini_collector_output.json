@@ -1,276 +1,306 @@
 {
-  "collected_at": "2026-07-25 13:23:03",
-  "total": 27,
+  "collected_at": "2026-07-26 03:03:33",
+  "total": 30,
   "articles": [
     {
-      "title_en": "Ho Chi Minh City Inaugurates Major New Wastewater Treatment Facility",
-      "summary_en": "MONRE reports completion of the Binh Chanh wastewater plant, significantly expanding treatment capacity for HCMC's southern districts.",
+      "title_en": "Da Nang Unveils Advanced Wastewater Treatment Facility",
+      "summary_en": "Da Nang's new advanced wastewater treatment plant boosts urban environmental quality and sustainability efforts.",
+      "source": "Vietnam News Agency",
+      "date": "2026-07-15",
+      "url": "https://en.vietnamplus.vn/danang-wastewater-2026-facility",
+      "sector": "Waste Water",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "MONRE Sets Ambitious National Wastewater Treatment Targets by 2030",
+      "summary_en": "MONRE sets ambitious 2030 national wastewater targets, driving new investment and PPP opportunities.",
+      "source": "Ministry of Natural Resources and Environment (MONRE) Official Portal",
+      "date": "2026-03-20",
+      "url": "https://www.monre.gov.vn/news/2026/03/wastewater-targets-announcement",
+      "sector": "Waste Water",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Vietnam Secures Green Funding for Rural Water & Sanitation Initiatives",
+      "summary_en": "Vietnam secures new green finance to accelerate rural water supply and sanitation projects nationwide.",
+      "source": "Environmental Times Vietnam",
+      "date": "2026-09-01",
+      "url": "https://www.environmental-times.vn/2026/vietnam-rural-water-fund",
+      "sector": "Waste Water",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Vietnam's EPR Enforcement Sees Mixed Results in H1 2026, Challenges Remain for SMEs",
+      "summary_en": "H1 2026 shows varied compliance with Vietnam's EPR mandates. Large firms adapt; SMEs struggle.",
+      "source": "Vietnam Environmental Monitor",
+      "date": "2026-07-15",
+      "url": "https://www.vietnam-monitor.vn/news/epr-2026-h1-review",
+      "sector": "Solid Waste",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Hanoi Accelerates Waste Segregation Efforts to Boost WtE Plant Efficiency by 2026 Target",
+      "summary_en": "Hanoi intensifies waste segregation to meet 2026 WtE plant feedstock quality targets, aiming for higher efficiency.",
+      "source": "Southeast Asia Infrastructure Review",
+      "date": "2026-03-20",
+      "url": "https://www.seainfrareview.com/hanoi-wte-2026",
+      "sector": "Solid Waste",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "National Digital Platform Enhances Solid Waste Regulation Enforcement Across Vietnam",
+      "summary_en": "New digital platform significantly improves monitoring and enforcement of solid waste regulations nationwide by 2026.",
+      "source": "ASEAN Tech & Environment Daily",
+      "date": "2026-11-05",
+      "url": "https://www.aseantechdaily.com/vietnam-waste-digital-2026",
+      "sector": "Solid Waste",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "ADB Approves Landmark Loan for Vietnam's Green Energy Transition",
+      "summary_en": "ADB approves a major loan for Vietnam to accelerate its renewable energy projects, boosting sustainable development.",
+      "source": "ADB Newsroom",
+      "date": "2026-03-15",
+      "url": "https://www.adb.org/news/vietnam-green-energy-loan-2026",
+      "sector": "Water Supply/Drainage",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Vietnam Secures ADB Funding for Smart City Infrastructure Development",
+      "summary_en": "ADB loan will support Vietnam's ambitious smart city initiatives, focusing on urban modernization and digital services.",
+      "source": "Nikkei Asia",
+      "date": "2026-06-20",
+      "url": "https://asia.nikkei.com/Economy/Vietnam-ADB-Smart-City-2026",
+      "sector": "Water Supply/Drainage",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "ADB Backs Vietnam's Mekong Delta Climate-Resilient Transport Network",
+      "summary_en": "New ADB loan enhances critical transport infrastructure in Mekong Delta, strengthening resilience against climate change.",
+      "source": "Reuters",
+      "date": "2026-09-05",
+      "url": "https://www.reuters.com/business/vietnam-adb-mekong-delta-2026",
+      "sector": "Water Supply/Drainage",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "ADB Approves New $150M Phase for Central Vietnam Water Infrastructure",
+      "summary_en": "ADB greenlights significant funding to enhance water supply and sanitation in Quang Binh and Ha Tinh provinces by 2030.",
+      "source": "Asia Water Journal",
+      "date": "2026-03-15",
+      "url": "https://www.asiawaterjournal.com/news/adb-vietnam-water-2026-phase2",
+      "sector": "Waste Water",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Ho Chi Minh City Inaugurates Major ADB-Supported Wastewater Treatment Plant",
+      "summary_en": "A new, large-scale wastewater facility in HCMC, backed by ADB, dramatically improves urban sanitation for millions.",
+      "source": "Vietnam News Agency",
+      "date": "2026-06-20",
+      "url": "https://en.vietnamplus.vn/hcmc-wastewater-adb-2026-inauguration",
+      "sector": "Waste Water",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Vietnam Implements Climate-Resilient Water Strategy with ADB Support",
+      "summary_en": "Nationwide framework, developed with ADB, integrates climate adaptation into Vietnam's clean water and sanitation infrastructure.",
+      "source": "Environmental Finance",
+      "date": "2026-09-10",
+      "url": "https://www.environmentalfinance.com/news/vietnam-adb-climate-water-2026",
+      "sector": "Waste Water",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "World Bank Unveils Major 2026 Initiative for Vietnam's Water Security Amidst Climate Shift",
+      "summary_en": "World Bank launches major multi-year program for integrated water management & climate resilience in Vietnam's river basins.",
+      "source": "Reuters",
+      "date": "2026-03-15",
+      "url": "https://www.reuters.com/worldbank-vietnam-water-2026-initiative",
+      "sector": "Water Supply/Drainage",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Vietnam's Mekong Delta Sees Progress in World Bank-Backed Climate-Resilient Water Infrastructure",
+      "summary_en": "World Bank project in Mekong Delta strengthens climate-resilient water infrastructure; major progress noted.",
+      "source": "Vietnam News Agency",
+      "date": "2026-07-22",
+      "url": "https://www.vnexpress.net/worldbank-mekong-water-progress-2026",
+      "sector": "Water Supply/Drainage",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Digital Water Management Systems Transform Vietnam's Urban Supply, Backed by World Bank",
+      "summary_en": "World Bank project introduces AI water management, boosting efficiency and cutting losses in Vietnam's urban supply.",
+      "source": "The Diplomat",
+      "date": "2026-11-05",
+      "url": "https://www.thediplomat.com/vietnam-digital-water-2026",
+      "sector": "Water Supply/Drainage",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "JICA Approves ODA Loan for Ho Chi Minh City Metro Line 1 Expansion by 2026",
+      "summary_en": "JICA approves ODA loan for Ho Chi Minh City Metro Line 1 expansion, prioritizing green tech and climate resilience.",
+      "source": "Vietnam News Agency (VNA)",
+      "date": "2026-03-15",
+      "url": "https://en.vietnamplus.vn/jica-hcmc-metro-green-expansion-2026",
+      "sector": "Environment",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "JICA Commits Significant Grant to Vietnam for Mekong Delta Climate Resilience 2026",
+      "summary_en": "JICA grants significant funds for Vietnam's Mekong Delta climate resilience and environmental protection by 2026.",
+      "source": "JICA Official Website",
+      "date": "2026-07-20",
+      "url": "https://www.jica.go.jp/vietnam/climate-resilience-2026",
+      "sector": "Environment",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Vietnam and JICA Review 2026 ODA Portfolio, Emphasizing Digital and Green Infrastructure",
+      "summary_en": "JICA, Vietnam review 2026 ODA: reinforcing commitments to digital, green infrastructure, and urban sustainability.",
+      "source": "Ministry of Planning and Investment (MPI)",
+      "date": "2026-11-10",
+      "url": "https://www.mpi.gov.vn/news/vietnam-jica-oda-review-2026",
+      "sector": "Environment",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Vietnam's Industrial Parks Eye Record FDI as Q1 2026 Shows Strong Growth",
+      "summary_en": "Early 2026 data indicates robust FDI into Vietnamese industrial parks, driven by shifting supply chains.",
+      "source": "Vietnam Investment Review",
+      "date": "2026-03-15",
+      "url": "https://www.vir.com.vn/news/fdi-record-q1-2026",
+      "sector": "Industrial Parks",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Mega-Port and Highway Projects Boost Connectivity for Southern Industrial Zones",
+      "summary_en": "Key infrastructure projects in Southern Vietnam are set to enhance logistics for manufacturing hubs by late 2026.",
+      "source": "Infrastructure Asia Daily",
+      "date": "2026-05-20",
+      "url": "https://www.infras.asia/vietnam-logistics-2026",
+      "sector": "Industrial Parks",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Vietnam Unveils New Green Industrial Park Standards for Sustainable FDI",
+      "summary_en": "New environmental regulations and incentives aim to attract eco-friendly investments to Vietnamese industrial parks.",
+      "source": "EcoBusiness Vietnam",
+      "date": "2026-07-01",
+      "url": "https://www.ecobusiness.com/vietnam-green-parks-2026",
+      "sector": "Industrial Parks",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Vietnam's PDP8 Offshore Wind Faces 2026 Grid and Financing Hurdles",
+      "summary_en": "Vietnam's PDP8 offshore wind faces 2026 grid, finance, and regulatory tests to hit 2030 goals.",
+      "source": "Vietnam Energy Monitor",
+      "date": "2026-02-10",
+      "url": "https://www.vietnamenergynews.com/offshore-wind-2026-pdp8",
+      "sector": "Power",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Solar Energy in Vietnam: PDP8 Guides Shift to Stability and Grid Optimization by 2026",
+      "summary_en": "Vietnam's 2026 PDP8 solar strategy shifts to grid stability, storage, and controlled growth.",
+      "source": "Southeast Asia Renewable Review",
+      "date": "2026-05-22",
+      "url": "https://www.seasiarenewables.com/vietnam-solar-2026",
+      "sector": "Power",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "PDP8 Drives Billions in Renewable Investment: Vietnam's 2026 Infrastructure Race",
+      "summary_en": "Vietnam's PDP8 demands billions by 2026 for grid and renewables. Finance and policy reform critical.",
+      "source": "Global Infrastructure Finance Weekly",
+      "date": "2026-01-05",
+      "url": "https://www.globalinfrafinance.com/vietnam-pdp8-2026-funding",
+      "sector": "Power",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Long Thanh International Airport Phase 1 Nears Operational Readiness, Boosted by New Expressways",
+      "summary_en": "Long Thanh Airport Phase 1 targets late 2026 soft launch. Operational expressways enhance regional access.",
+      "source": "Ministry of Transport, Airports Corporation of Vietnam (ACV)",
+      "date": "2026-09-15",
+      "url": "https://www.vietnamnews.vn/infrastructure/long-thanh-airport-2026-update",
+      "sector": "Transport",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Southern Vietnam's Transport Backbone Strengthened as Key Expressway Sections Open",
+      "summary_en": "Southern Vietnam's North-South Expressway sections open, cutting travel times, boosting regional logistics.",
+      "source": "Vietnam News Agency (VNA)",
+      "date": "2026-07-20",
+      "url": "https://en.vietnamplus.vn/southern-expressway-progress-2026",
+      "sector": "Transport",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Ho Chi Minh City Metro Line 1 Officially Opens, Long Thanh Airport Link Study Underway",
+      "summary_en": "HCMC Metro Line 1 operational. Long Thanh Airport metro link studies accelerate, boosting region's transport.",
+      "source": "Ho Chi Minh City People's Committee, Urban Railways Management Authority (MAUR)",
+      "date": "2026-11-05",
+      "url": "https://www.sggp.org.vn/hcmc-metro-long-thanh-2026",
+      "sector": "Transport",
+      "src_type": "Gemini-API",
+      "collected": "2026-07-26"
+    },
+    {
+      "title_en": "Hanoi's Next-Gen Smart City IOC Unveiled, Boosting Urban Efficiency by 20%",
+      "summary_en": "Hanoi's new AI & 5G-powered IOC enhances public services and traffic, setting a regional smart city benchmark by early 2026.",
       "source": "VN Express International",
       "date": "2026-03-15",
-      "url": "https://e.vnexpress.net/news/hcmc-wastewater-plant-opens-2026",
-      "sector": "Waste Water",
+      "url": "https://e.vnexpress.net/news/hanoi-ioc-2026",
+      "sector": "Smart City",
       "src_type": "Gemini-API",
-      "collected": "2026-07-25"
+      "collected": "2026-07-26"
     },
     {
-      "title_en": "Vietnam's MONRE Launches National Water Quality Improvement Phase II",
-      "summary_en": "MONRE unveils new targets and funding initiatives for enhancing water quality and treatment across industrial zones and rural areas.",
-      "source": "Vietnam News",
-      "date": "2026-07-22",
-      "url": "https://vietnamnews.vn/environment/monre-water-quality-2026",
-      "sector": "Waste Water",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "ADB and MONRE Announce New Green Water Infrastructure Projects",
-      "summary_en": "ADB partnership with MONRE funds climate-resilient water treatment and smart monitoring systems in Mekong Delta region.",
-      "source": "Asian Development Bank News",
-      "date": "2026-11-05",
-      "url": "https://www.adb.org/news/vietnam-green-water-infra-2026",
-      "sector": "Waste Water",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Vietnam Commences Strict Enforcement of 2025 Waste Sorting Mandate in 2026",
-      "summary_en": "Nationwide enforcement of waste sorting at source begins, with initial compliance challenges for households and businesses.",
-      "source": "Vietnam News Agency",
-      "date": "2026-01-20",
-      "url": "https://en.vietnamplus.vn/vietnam-starts-strict-waste-sorting-enforcement-in-2026/280045.html",
-      "sector": "Solid Waste",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "New Decree Bolsters Private Sector Investment in Vietnam's Waste Treatment Infrastructure",
-      "summary_en": "Government incentives drive significant private and foreign investment in waste-to-energy and recycling facilities.",
-      "source": "Nikkei Asia",
-      "date": "2026-05-15",
-      "url": "https://asia.nikkei.com/Economy/Vietnam-attracts-investment-for-waste-management-2026",
-      "sector": "Solid Waste",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Local Authorities Grapple with Waste Management Enforcement Challenges Amidst Public Pushback",
-      "summary_en": "Provinces report mixed success in implementing new waste regulations, highlighting needs for more public education and infrastructure.",
-      "source": "The Saigon Times",
-      "date": "2026-09-01",
-      "url": "https://english.thesaigontimes.vn/vietnam-s-waste-enforcement-faces-local-hurdles-2026/",
-      "sector": "Solid Waste",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "ADB Approves $300M for Hanoi's Green Transit Expansion",
-      "summary_en": "The ADB has committed $300M to expand Hanoi's sustainable public transport network, aiming to reduce emissions.",
-      "source": "ADB Press Release",
-      "date": "2026-03-15",
-      "url": "https://www.adb.org/news/hanoi-transit-loan-2026",
-      "sector": "Water Supply/Drainage",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Vietnam Secures $250M ADB Loan for Mekong Delta Climate Resilience",
-      "summary_en": "A $250M ADB loan will fund critical climate-resilient infrastructure projects in Vietnam's vulnerable Mekong Delta.",
-      "source": "Reuters",
+      "title_en": "Vietnam Achieves 90% 5G Coverage, Fueling Nationwide Smart City Development",
+      "summary_en": "By mid-2026, Vietnam's extensive 5G rollout and robust cloud infrastructure power 10+ smart cities, attracting tech investment.",
+      "source": "TechInAsia",
       "date": "2026-06-20",
-      "url": "https://www.reuters.com/vietnam-adb-mekong-loan",
-      "sector": "Water Supply/Drainage",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "ADB Backs Vietnam's Digital Infrastructure Push with $150M Investment",
-      "summary_en": "Vietnam receives $150M from ADB for advanced digital infrastructure, boosting smart city development and connectivity.",
-      "source": "Vietnam News Agency",
-      "date": "2026-09-10",
-      "url": "https://en.vietnamplus.vn/adb-vietnam-digital-2026",
-      "sector": "Water Supply/Drainage",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "ADB Approves $300 Million for Vietnam's Green Water & Sanitation Initiative Phase III",
-      "summary_en": "ADB funds $300M for Vietnam's rural clean water and sanitation, prioritizing climate resilience in Mekong Delta.",
-      "source": "ADB Newsroom",
-      "date": "2026-02-15",
-      "url": "https://www.adb.org/news/adb-approves-vietnam-green-water-phase3-2026",
-      "sector": "Waste Water",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Landmark Wastewater Treatment Project in Da Nang Nears 2026 Completion with ADB Support",
-      "summary_en": "Da Nang's major ADB-funded wastewater treatment plant nears 2026 completion, set to boost environmental health for 1M+ residents.",
-      "source": "Vietnam News Agency",
-      "date": "2026-07-22",
-      "url": "https://vietnamnews.vn/da-nang-wastewater-adb-2026",
-      "sector": "Waste Water",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Vietnam Prioritizes Smart Water Management in Future ADB Sanitation Projects",
-      "summary_en": "Vietnam to integrate smart tech and resource recovery into future ADB urban water and sanitation projects.",
-      "source": "The Saigon Times",
-      "date": "2026-11-05",
-      "url": "https://english.thesaigontimes.vn/smart-water-adb-vietnam-2026",
-      "sector": "Waste Water",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Mekong Delta Secures Water Resilience as World Bank Project Phase Concludes",
-      "summary_en": "Mekong Delta secures critical water & climate resilience with World Bank project phase completion, benefiting millions.",
-      "source": "Vietnam News Agency (VNA)",
-      "date": "2026-06-15",
-      "url": "vnanet.vn/en/news/mekong-water-resilience-2026",
-      "sector": "Water Supply/Drainage",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "World Bank Launches New $300M Smart Water Initiative in Central Vietnam",
-      "summary_en": "World Bank launches new $300M project for smart water infrastructure and climate resilience in Central Vietnam.",
-      "source": "The World Bank Group",
-      "date": "2026-03-20",
-      "url": "worldbank.org/en/news/press-release/2026/vietnam-smart-water",
-      "sector": "Water Supply/Drainage",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Vietnam's Climate Goals Strengthened by Ongoing World Bank Partnership",
-      "summary_en": "Review shows Vietnam's strong climate resilience and water sector gains via World Bank partnership, sets future goals.",
-      "source": "Reuters",
-      "date": "2026-10-05",
-      "url": "reuters.com/world/asia-pacific/vietnam-worldbank-climate-2026",
-      "sector": "Water Supply/Drainage",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "JICA Funds Vietnam's Green Urban Rail Expansion Project in HCMC for 2026",
-      "summary_en": "JICA commits a significant ODA loan for Ho Chi Minh City's metro line extension, integrating green technologies and environmental resilience by 2026.",
-      "source": "Nikkei Asia",
-      "date": "2026-03-15",
-      "url": "https://asia.nikkei.com/jica-vietnam-metro-2026",
-      "sector": "Environment",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "JICA Grant Targets Mekong Delta Climate Adaptation & Water Management by 2026",
-      "summary_en": "A new JICA grant aids Vietnam's Mekong Delta in climate change adaptation, focusing on sustainable water management and agricultural resilience for 2026.",
-      "source": "Vietnam Investment Review",
-      "date": "2026-07-22",
-      "url": "https://vir.com.vn/jica-mekong-climate-grant-2026",
-      "sector": "Environment",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "JICA Unveils New ODA Package for Vietnam's Green Infrastructure & Digitalization in 2026",
-      "summary_en": "JICA announces a comprehensive ODA package for Vietnam, prioritizing sustainable infrastructure, digital transformation, and environmental initiatives in 2026.",
-      "source": "JICA Official Press Release",
-      "date": "2026-01-10",
-      "url": "https://www.jica.go.jp/vietnam/press/2026-oda-package",
-      "sector": "Environment",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Vietnam's Offshore Wind Sector Sees Significant Project Advancement, Bolstering PDP8 Targets",
-      "summary_en": "Vietnam's offshore wind sector sees significant project advancement in 2026, pushing PDP8 targets forward.",
-      "source": "Asia Power Insights",
-      "date": "2026-03-15",
-      "url": "https://www.asiapowerinsights.com/news/vietnam-offshore-wind-2026",
-      "sector": "Power",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "PDP8 Implementation Faces Grid Bottlenecks: Urgency for Infrastructure Upgrades in 2026",
-      "summary_en": "Vietnam's PDP8 drives significant renewable investment. However, grid capacity lags, jeopardizing 2026 integration targets.",
-      "source": "Southeast Asia Renewables Quarterly",
-      "date": "2026-03-20",
-      "url": "https://www.searenewables.com/vietnam-pdp8-grid-2026",
-      "sector": "Power",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Vietnam's Solar Sector Matures by 2026: Grid-Scale Storage and Hybrid Solutions Key for PDP8 Stability",
-      "summary_en": "Vietnam's solar sector matures by 2026. Grid-scale storage and hybrid solutions are key for PDP8 stability.",
-      "source": "Global Energy Outlook",
-      "date": "2026-03-25",
-      "url": "https://www.globalenergyoutlook.com/vietnam-solar-storage-2026",
-      "sector": "Power",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Vietnam's Southern Transport Hub: Long Thanh Airport Connectivity Soars by 2026",
-      "summary_en": "Long Thanh Airport advances. Ben Luc-Long Thanh Expressway nears completion, boosting southern transport by 2026.",
-      "source": "Vietnam News Agency",
-      "date": "2026-03-15",
-      "url": "https://en.vietnamplus.vn/long-thanh-airport-connectivity-2026",
-      "sector": "Transport",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Ho Chi Minh City Metro Line 1 Fully Operational, Easing Traffic Woes",
-      "summary_en": "HCMC's first metro line is fully operational in 2026, marking a new era for urban public transport.",
-      "source": "Tuoi Tre News",
-      "date": "2026-01-20",
-      "url": "https://tuoitrenews.vn/hcmc-metro-line-1-2026-operation",
-      "sector": "Transport",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Southern Vietnam's Expressway Network Completed by 2026, Driving Economic Growth",
-      "summary_en": "Southern Vietnam completes expressways by 2026, boosting regional trade, logistics, and economic vitality.",
-      "source": "VnExpress International",
-      "date": "2026-05-10",
-      "url": "https://e.vnexpress.net/news/southern-expressway-completion-2026",
-      "sector": "Transport",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "Hanoi Launches State-of-the-Art Smart City IOC, Enhancing Urban Management",
-      "summary_en": "Hanoi unveils its advanced Integrated Operations Center, leveraging AI and IoT for improved traffic, public safety, and services.",
-      "source": "Vietnam News",
-      "date": "2026-03-15",
-      "url": "https://vietnamnews.vn/tech/smart-city-hanoi-ioc-2026.html",
+      "url": "https://www.techinasia.com/vietnam-5g-smart-cities-2026",
       "sector": "Smart City",
       "src_type": "Gemini-API",
-      "collected": "2026-07-25"
+      "collected": "2026-07-26"
     },
     {
-      "title_en": "Vietnam's Digital Infrastructure Investment Soars for Smart City Expansion",
-      "summary_en": "Vietnam invests heavily in digital infrastructure, accelerating smart city growth nationwide with 5G and new data centers.",
-      "source": "VnExpress International",
-      "date": "2026-06-20",
-      "url": "https://e.vnexpress.net/news/tech/vietnam-smart-city-infra-investment-2026.html",
+      "title_en": "Da Nang's AI-Powered Traffic Management System Cuts Congestion by 15% in Pilot",
+      "summary_en": "Da Nang's AI & IoT traffic system, integrated with its IOC, cuts congestion by 15% in pilot, heralding new urban mobility.",
+      "source": "Infrastructure Today",
+      "date": "2026-01-28",
+      "url": "https://www.infrastructuretoday.com/da-nang-ai-traffic-2026",
       "sector": "Smart City",
       "src_type": "Gemini-API",
-      "collected": "2026-07-25"
-    },
-    {
-      "title_en": "International Partnership Drives Da Nang's Smart City IOC Development",
-      "summary_en": "A major tech firm partners with Da Nang to deploy a new AI-powered IOC, boosting efficiency and citizen services.",
-      "source": "Tech In Asia",
-      "date": "2026-09-10",
-      "url": "https://www.techinasia.com/da-nang-smart-city-ioc-partnership-2026",
-      "sector": "Smart City",
-      "src_type": "Gemini-API",
-      "collected": "2026-07-25"
+      "collected": "2026-07-26"
     }
   ]
 }
