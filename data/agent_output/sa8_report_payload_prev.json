@@ -1,695 +1,85 @@
 {
-  "report_date": "2026-07-25",
-  "report_period": "2026-07-12 ~ 2026-07-25",
+  "report_date": "2026-07-26",
+  "report_period": "2026-07-13 ~ 2026-07-26",
   "knowledge_version": "v4.1-fixed",
-  "total_articles": 151,
-  "new_articles_count": 90,
-  "executive_summary_ko": "[이번 주 3대 주요 동향]\n1. DHL, 흥옌성에 7,100만 달러 규모 물류 캠",
+  "total_articles": 152,
+  "new_articles_count": 85,
+  "executive_summary_ko": "**[이번 주 3대 주요 동향]**\n1. **물류 인프라 투자 및 공급망 강화**: DHL이 흥옌에",
   "kpi_dashboard": [
     {
       "label": "도시 폐기물 수거율",
       "target": "100%",
       "current": "95% (2025 목표 수준)",
-      "changed": true
+      "changed": false
     },
     {
       "label": "WtE 소각 비율",
       "target": "50%",
       "current": "30% 목표 (2025), 속선(90MW, 5,000톤/일 전체가동 확인)·남선 WtE 가동으로 상승 중",
-      "changed": true
+      "changed": false
     },
     {
       "label": "매립 의존율",
       "target": "30% 이하",
       "current": "속선·다프억 WtE 가동으로 현저히 감소 중",
-      "changed": true
+      "changed": false
     },
     {
       "label": "지하수 관리 대수층",
       "target": "전국 27개 완전 관리",
       "current": "12개 관리 중",
-      "changed": true
+      "changed": false
     },
     {
       "label": "중복 댐·저수지 안전진단",
       "target": "100% 완료",
       "current": "65% 완료",
-      "changed": true
+      "changed": false
     },
     {
       "label": "홍수 피해 GDP 비중",
       "target": "0.5% 미만으로 감소",
       "current": "연평균 1.2%",
-      "changed": true
+      "changed": false
     },
     {
       "label": "메콩델타 건기 염수침투 거리 (4‰ 염분경계선)",
       "target": "관리목표 미상 (신규지표)",
       "current": "[Cowork 팩트체크 확인] 2026.2.28 관측: 16.2km(허우강)~41.6km(끄어다이강), 4개 지류 개별값. 2026.4초 후속보도: 일부 지류 42~70km로 악화. [Cowork 팩트체크 2026-07-16 추가] 2026.7.1 보도: 40~70km 도달, 2030년 55.5km/2050년 62.5km(띠엔강) 전망 [부분사실, 1차출처 교차검증 필요]",
-      "changed": true
+      "changed": false
     },
     {
       "label": "도시 안전 상수 보급률",
       "target": "100% (전 도시, 2025)",
       "current": "95% 수준 (2025)",
-      "changed": true
+      "changed": false
     },
     {
       "label": "1인당 공급량",
       "target": "150 L/일 (평균 목표) / 120 L/일(2502호 명시치)",
       "current": "120 L/일 (2025 목표)",
-      "changed": true
+      "changed": false
     },
     {
       "label": "누수율(NRW)",
       "target": "15% 이하 (2급 이상 도시, 2025)",
       "current": "20% 이하 (2025 목표)",
-      "changed": true
+      "changed": false
     },
     {
       "label": "수질안전계획(Water Safety Plan) 시행률",
       "target": "75% (2025)",
       "current": "조사 중",
-      "changed": true
+      "changed": false
     },
     {
       "label": "도시 폐수처리율",
       "target": "85% (2030)",
       "current": "~29%(2024, 하노이) → 옌짜 준공(2025.8)으로 확대 중, 2025년 목표 50%",
-      "changed": true
+      "changed": false
     }
   ],
-  "kpi_changes": [
-    {
-      "plan_id": "VN-SWM-NATIONAL-2030",
-      "indicator": "도시 폐기물 수거율",
-      "from": "미포함",
-      "to": "100%",
-      "reason": "VN-SWM-NATIONAL-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-SWM-NATIONAL-2030",
-      "indicator": "WtE 소각 비율",
-      "from": "미포함",
-      "to": "50%",
-      "reason": "VN-SWM-NATIONAL-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-SWM-NATIONAL-2030",
-      "indicator": "매립 의존율",
-      "from": "미포함",
-      "to": "30% 이하",
-      "reason": "VN-SWM-NATIONAL-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-WAT-RESOURCES",
-      "indicator": "지하수 관리 대수층",
-      "from": "미포함",
-      "to": "전국 27개 완전 관리",
-      "reason": "VN-WAT-RESOURCES 신규 KPI"
-    },
-    {
-      "plan_id": "VN-WAT-RESOURCES",
-      "indicator": "중복 댐·저수지 안전진단",
-      "from": "미포함",
-      "to": "100% 완료",
-      "reason": "VN-WAT-RESOURCES 신규 KPI"
-    },
-    {
-      "plan_id": "VN-WAT-RESOURCES",
-      "indicator": "홍수 피해 GDP 비중",
-      "from": "미포함",
-      "to": "0.5% 미만으로 감소",
-      "reason": "VN-WAT-RESOURCES 신규 KPI"
-    },
-    {
-      "plan_id": "VN-WAT-RESOURCES",
-      "indicator": "메콩델타 건기 염수침투 거리 (4‰ 염분경계선)",
-      "from": "미포함",
-      "to": "관리목표 미상 (신규지표)",
-      "reason": "VN-WAT-RESOURCES 신규 KPI"
-    },
-    {
-      "plan_id": "VN-WAT-URBAN",
-      "indicator": "도시 안전 상수 보급률",
-      "from": "미포함",
-      "to": "100% (전 도시, 2025)",
-      "reason": "VN-WAT-URBAN 신규 KPI"
-    },
-    {
-      "plan_id": "VN-WAT-URBAN",
-      "indicator": "1인당 공급량",
-      "from": "미포함",
-      "to": "150 L/일 (평균 목표) / 120 L/일(2502호 명시치)",
-      "reason": "VN-WAT-URBAN 신규 KPI"
-    },
-    {
-      "plan_id": "VN-WAT-URBAN",
-      "indicator": "누수율(NRW)",
-      "from": "미포함",
-      "to": "15% 이하 (2급 이상 도시, 2025)",
-      "reason": "VN-WAT-URBAN 신규 KPI"
-    },
-    {
-      "plan_id": "VN-WAT-URBAN",
-      "indicator": "수질안전계획(Water Safety Plan) 시행률",
-      "from": "미포함",
-      "to": "75% (2025)",
-      "reason": "VN-WAT-URBAN 신규 KPI"
-    },
-    {
-      "plan_id": "VN-WW-2030",
-      "indicator": "도시 폐수처리율",
-      "from": "미포함",
-      "to": "85% (2030)",
-      "reason": "VN-WW-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-WW-2030",
-      "indicator": "신규 WWTP 용량",
-      "from": "미포함",
-      "to": "2,900,000 m³/일",
-      "reason": "VN-WW-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-WW-2030",
-      "indicator": "ODA 연계 투자",
-      "from": "미포함",
-      "to": "$2.5B+",
-      "reason": "VN-WW-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-OG-2030",
-      "indicator": "원유 생산량",
-      "from": "미포함",
-      "to": "8~10백만 톤/년",
-      "reason": "VN-OG-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-OG-2030",
-      "indicator": "가스 생산량",
-      "from": "미포함",
-      "to": "13~15억 m³/년",
-      "reason": "VN-OG-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-OG-2030",
-      "indicator": "LNG 수입 의존도",
-      "from": "미포함",
-      "to": "국내 가스 우선 활용",
-      "reason": "VN-OG-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-OG-2030",
-      "indicator": "석유·가스 비축 인프라(순수입일수 기준)",
-      "from": "미포함",
-      "to": "최대 25일 (2030년 이후)",
-      "reason": "VN-OG-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8-LNG",
-      "indicator": "LNG 수입 터미널",
-      "from": "미포함",
-      "to": "8개소",
-      "reason": "VN-PWR-PDP8-LNG 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8-LNG",
-      "indicator": "LNG 발전 용량",
-      "from": "미포함",
-      "to": "23,900 MW (PDP8 목표) / 22,524MW(PDP8 개정치)",
-      "reason": "VN-PWR-PDP8-LNG 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8-LNG",
-      "indicator": "연간 LNG 수입량",
-      "from": "미포함",
-      "to": "14백만 톤",
-      "reason": "VN-PWR-PDP8-LNG 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8-LNG",
-      "indicator": "최소 장기 인수량(Qc, 수입LNG 발전)",
-      "from": "미포함",
-      "to": "65% (다년평균발전량 대비, COD 후 최대 10년)",
-      "reason": "VN-PWR-PDP8-LNG 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8-NUCLEAR",
-      "indicator": "원자력 발전 용량(2035)",
-      "from": "미포함",
-      "to": "4,000 MW (2035 목표)",
-      "reason": "VN-PWR-PDP8-NUCLEAR 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8-NUCLEAR",
-      "indicator": "닌투언 1호기",
-      "from": "미포함",
-      "to": "2,000 MW",
-      "reason": "VN-PWR-PDP8-NUCLEAR 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8-NUCLEAR",
-      "indicator": "닌투언 2호기",
-      "from": "미포함",
-      "to": "2,000 MW",
-      "reason": "VN-PWR-PDP8-NUCLEAR 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "indicator": "해상풍력(2030)",
-      "from": "미포함",
-      "to": "17,032 MW",
-      "reason": "VN-PWR-PDP8-RENEWABLE 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "indicator": "육상풍력(2030)",
-      "from": "미포함",
-      "to": "38,029 MW",
-      "reason": "VN-PWR-PDP8-RENEWABLE 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "indicator": "태양광(2030)",
-      "from": "미포함",
-      "to": "73 GW",
-      "reason": "VN-PWR-PDP8-RENEWABLE 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "indicator": "BESS 배터리(2030)",
-      "from": "미포함",
-      "to": "10,000 MW",
-      "reason": "VN-PWR-PDP8-RENEWABLE 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "indicator": "DPPA 실제 가동 사례",
-      "from": "미포함",
-      "to": "제도 시행(2025.3.3 Decree 57)",
-      "reason": "VN-PWR-PDP8-RENEWABLE 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-URBAN-2045",
-      "indicator": "도시개발 총투자",
-      "from": "미포함",
-      "to": "$2.5T (2026~2045)",
-      "reason": "VN-HAN-URBAN-2045 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-URBAN-2045",
-      "indicator": "인구 수용 목표",
-      "from": "미포함",
-      "to": "16M명 (2045) / 최대 20M(장기)",
-      "reason": "VN-HAN-URBAN-2045 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-URBAN-2045",
-      "indicator": "링로드4 완공",
-      "from": "미포함",
-      "to": "2027년말 전체 완공 (세부: 2.1구간 2026.9, 2.2구간 2026.12, 주요교량 3개 APEC2027 전)",
-      "reason": "VN-HAN-URBAN-2045 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-URBAN-2045",
-      "indicator": "메트로 노선망",
-      "from": "미포함",
-      "to": "14개 이상 노선, 약 624km",
-      "reason": "VN-HAN-URBAN-2045 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-URBAN-2045",
-      "indicator": "GRDP 목표",
-      "from": "미포함",
-      "to": "2035년 약 $200B, 2045년 약 $640B",
-      "reason": "VN-HAN-URBAN-2045 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-URBAN-2045",
-      "indicator": "문화산업 비중",
-      "from": "미포함",
-      "to": "2035년 GRDP 10%, 2065년 15~20%",
-      "reason": "VN-HAN-URBAN-2045 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-URBAN-2045",
-      "indicator": "도시건설용지 비중",
-      "from": "미포함",
-      "to": "2065년까지 55~60%",
-      "reason": "VN-HAN-URBAN-2045 신규 KPI"
-    },
-    {
-      "plan_id": "VN-IP-NORTH-2030",
-      "indicator": "VSIP 단지 수",
-      "from": "미포함",
-      "to": "25개 이상",
-      "reason": "VN-IP-NORTH-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-IP-NORTH-2030",
-      "indicator": "첨단산업 비중",
-      "from": "미포함",
-      "to": "40% 이상",
-      "reason": "VN-IP-NORTH-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-IP-NORTH-2030",
-      "indicator": "FDI 유입",
-      "from": "미포함",
-      "to": "연 $20B 이상",
-      "reason": "VN-IP-NORTH-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-IP-NORTH-2030",
-      "indicator": "삼성 박닌 누적투자",
-      "from": "미포함",
-      "to": "지속 확대",
-      "reason": "VN-IP-NORTH-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-IP-NORTH-2030",
-      "indicator": "홍강델타 지역 GRDP 성장률",
-      "from": "미포함",
-      "to": "9.0~9.5%/년 (2030)",
-      "reason": "VN-IP-NORTH-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-IP-NORTH-2030",
-      "indicator": "홍강델타 GRDP/인당",
-      "from": "미포함",
-      "to": "$11,000~12,000 (2030)",
-      "reason": "VN-IP-NORTH-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-IP-NORTH-2030",
-      "indicator": "일자리 창출",
-      "from": "미포함",
-      "to": "400만 명",
-      "reason": "VN-IP-NORTH-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-TRAN-2055",
-      "indicator": "고속도로 총연장",
-      "from": "미포함",
-      "to": "5,000 km",
-      "reason": "VN-TRAN-2055 신규 KPI"
-    },
-    {
-      "plan_id": "VN-TRAN-2055",
-      "indicator": "롱탄공항 개항",
-      "from": "미포함",
-      "to": "25M PAX/년 (1단계)",
-      "reason": "VN-TRAN-2055 신규 KPI"
-    },
-    {
-      "plan_id": "VN-TRAN-2055",
-      "indicator": "공항 네트워크",
-      "from": "미포함",
-      "to": "30개 공항",
-      "reason": "VN-TRAN-2055 신규 KPI"
-    },
-    {
-      "plan_id": "VN-TRAN-2055",
-      "indicator": "항만 처리 용량",
-      "from": "미포함",
-      "to": "1,100M 톤/년",
-      "reason": "VN-TRAN-2055 신규 KPI"
-    },
-    {
-      "plan_id": "VN-URB-METRO-2030",
-      "indicator": "하노이 메트로 목표",
-      "from": "미포함",
-      "to": "15~17개 노선 (자료별 상이)",
-      "reason": "VN-URB-METRO-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-URB-METRO-2030",
-      "indicator": "호치민 메트로 목표",
-      "from": "미포함",
-      "to": "8개 노선",
-      "reason": "VN-URB-METRO-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-URB-METRO-2030",
-      "indicator": "전국 도시철도 목표",
-      "from": "미포함",
-      "to": "46개 노선 3,045km",
-      "reason": "VN-URB-METRO-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-URB-METRO-2030",
-      "indicator": "하노이·호치민 통합 투자소요",
-      "from": "미포함",
-      "to": "약 VND 3,065,100억",
-      "reason": "VN-URB-METRO-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-URB-METRO-2030",
-      "indicator": "도시철도 국가통일기술표준",
-      "from": "미포함",
-      "to": "2026.7월까지 제정 (신규지표)",
-      "reason": "VN-URB-METRO-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-URB-METRO-2030",
-      "indicator": "메트로 네트워크 적용",
-      "from": "미포함",
-      "to": "하노이 및 호찌민 핵심 노선 가속",
-      "reason": "VN-URB-METRO-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-ENV-IND-1894",
-      "indicator": "폐수처리 기술 국산화",
-      "from": "미포함",
-      "to": "70~80% (2030)",
-      "reason": "VN-ENV-IND-1894 신규 KPI"
-    },
-    {
-      "plan_id": "VN-ENV-IND-1894",
-      "indicator": "배기가스 처리 국산화",
-      "from": "미포함",
-      "to": "60~70% (2030)",
-      "reason": "VN-ENV-IND-1894 신규 KPI"
-    },
-    {
-      "plan_id": "VN-ENV-IND-1894",
-      "indicator": "고형폐기물 처리 국산화",
-      "from": "미포함",
-      "to": "50~60% (2030)",
-      "reason": "VN-ENV-IND-1894 신규 KPI"
-    },
-    {
-      "plan_id": "VN-ENV-IND-1894",
-      "indicator": "환경 모니터링 장비 국산화",
-      "from": "미포함",
-      "to": "20% (2030)",
-      "reason": "VN-ENV-IND-1894 신규 KPI"
-    },
-    {
-      "plan_id": "VN-ENV-IND-1894",
-      "indicator": "재활용 산업단지 파일럿",
-      "from": "미포함",
-      "to": "구축 (2027)",
-      "reason": "VN-ENV-IND-1894 신규 KPI"
-    },
-    {
-      "plan_id": "VN-ENV-IND-1894",
-      "indicator": "WtE(폐기물 에너지화)",
-      "from": "미포함",
-      "to": "2,270MW 확대",
-      "reason": "VN-ENV-IND-1894 신규 KPI"
-    },
-    {
-      "plan_id": "VN-ENV-NATURA",
-      "indicator": "육상 보호구역 비율",
-      "from": "미포함",
-      "to": "9% (2030)",
-      "reason": "VN-ENV-NATURA 신규 KPI"
-    },
-    {
-      "plan_id": "VN-ENV-NATURA",
-      "indicator": "해양 보호구역 비율",
-      "from": "미포함",
-      "to": "3~5% (2030)",
-      "reason": "VN-ENV-NATURA 신규 KPI"
-    },
-    {
-      "plan_id": "VN-ENV-NATURA",
-      "indicator": "적색목록종 복원",
-      "from": "미포함",
-      "to": "50% 회복",
-      "reason": "VN-ENV-NATURA 신규 KPI"
-    },
-    {
-      "plan_id": "VN-ENV-NATURA",
-      "indicator": "REDD+ 산림 탄소축적",
-      "from": "미포함",
-      "to": "15% 증가",
-      "reason": "VN-ENV-NATURA 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8",
-      "indicator": "총 발전설비 (2030)",
-      "from": "미포함",
-      "to": "183,291~236,363 MW (약183~236GW) — 2025.4.16 정부포털 공식 게재, Decision 768/QD-TTg 개정치, 기존 150,489MW에서 상향",
-      "reason": "VN-PWR-PDP8 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8",
-      "indicator": "재생에너지 비중 (2030)",
-      "from": "미포함",
-      "to": "30~39% (태양광 46~73GW·육상풍력 26~38GW 포함)",
-      "reason": "VN-PWR-PDP8 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8",
-      "indicator": "해상풍력 (2030)",
-      "from": "미포함",
-      "to": "17,032 MW",
-      "reason": "VN-PWR-PDP8 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8",
-      "indicator": "석탄발전 단계적 폐지",
-      "from": "미포함",
-      "to": "2050년 0%",
-      "reason": "VN-PWR-PDP8 신규 KPI"
-    },
-    {
-      "plan_id": "VN-PWR-PDP8",
-      "indicator": "2021~2030 전원+송전망 총투자",
-      "from": "미포함",
-      "to": "약 USD 134.7십억 (전원 119.8B + 송전망 15.0B)",
-      "reason": "VN-PWR-PDP8 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-DONG-ANH",
-      "indicator": "신도시 부지",
-      "from": "미포함",
-      "to": "4,200 ha",
-      "reason": "VN-HAN-DONG-ANH 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-DONG-ANH",
-      "indicator": "인구 수용",
-      "from": "미포함",
-      "to": "30~40만 (2045)",
-      "reason": "VN-HAN-DONG-ANH 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-DONG-ANH",
-      "indicator": "투자 규모 (North Hanoi Smart City)",
-      "from": "미포함",
-      "to": "약 $4.2B (2019년 착공식 이래 일관)",
-      "reason": "VN-HAN-DONG-ANH 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-HOA-LAC",
-      "indicator": "입주 프로젝트 수",
-      "from": "미포함",
-      "to": "800개 (2030, 기존 목표)",
-      "reason": "VN-HAN-HOA-LAC 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-HOA-LAC",
-      "indicator": "총 등록 투자자본",
-      "from": "미포함",
-      "to": "$30B (2030, 기존 목표)",
-      "reason": "VN-HAN-HOA-LAC 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-HOA-LAC",
-      "indicator": "상업용지 가동률",
-      "from": "미포함",
-      "to": "확대 목표 (신규지표)",
-      "reason": "VN-HAN-HOA-LAC 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-HOA-LAC",
-      "indicator": "FPT대학교 재학생 수",
-      "from": "미포함",
-      "to": "확장 지속",
-      "reason": "VN-HAN-HOA-LAC 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HAN-HOA-LAC",
-      "indicator": "국내 주요기업 프로젝트 수",
-      "from": "미포함",
-      "to": "확장 지속",
-      "reason": "VN-HAN-HOA-LAC 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HOUSING-2030",
-      "indicator": "1인당 주거면적",
-      "from": "미포함",
-      "to": "30㎡ (2030)",
-      "reason": "VN-HOUSING-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HOUSING-2030",
-      "indicator": "도시화율",
-      "from": "미포함",
-      "to": "50% (2030)",
-      "reason": "VN-HOUSING-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HOUSING-2030",
-      "indicator": "사회주택 공급",
-      "from": "미포함",
-      "to": "100만호 (2030)",
-      "reason": "VN-HOUSING-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HOUSING-2030",
-      "indicator": "주택보급률",
-      "from": "미포함",
-      "to": "95%+ (2030)",
-      "reason": "VN-HOUSING-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-HOUSING-2030",
-      "indicator": "사회주택 우대금리",
-      "from": "미포함",
-      "to": "지속 인하 추진 (신규지표)",
-      "reason": "VN-HOUSING-2030 신규 KPI"
-    },
-    {
-      "plan_id": "VN-SMART-2025",
-      "indicator": "스마트시티 시범 도시",
-      "from": "미포함",
-      "to": "6개 (2025)",
-      "reason": "VN-SMART-2025 신규 KPI"
-    },
-    {
-      "plan_id": "VN-SMART-2025",
-      "indicator": "전국 확산",
-      "from": "미포함",
-      "to": "30개 (2030)",
-      "reason": "VN-SMART-2025 신규 KPI"
-    },
-    {
-      "plan_id": "VN-SMART-2025",
-      "indicator": "디지털정부 지수",
-      "from": "미포함",
-      "to": "top 50 (UN EGDI)",
-      "reason": "VN-SMART-2025 신규 KPI"
-    },
-    {
-      "plan_id": "VN-SMART-2025",
-      "indicator": "5G 커버리지",
-      "from": "미포함",
-      "to": "도시 100% (2030)",
-      "reason": "VN-SMART-2025 신규 KPI"
-    },
-    {
-      "plan_id": "VN-SMART-2025",
-      "indicator": "호치민 스마트도시 개발 조정위원회",
-      "from": "미포함",
-      "to": "2026~2030 사업 추진, 2035 비전",
-      "reason": "VN-SMART-2025 신규 KPI"
-    }
-  ],
+  "kpi_changes": [],
   "kpi_achievement": [
     {
       "label": "도시 폐기물 수거율",
@@ -775,19 +165,19 @@
           "label": "도시 폐기물 수거율",
           "target": "100%",
           "current": "95% (2025 목표 수준)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "WtE 소각 비율",
           "target": "50%",
           "current": "30% 목표 (2025), 속선(90MW, 5,000톤/일 전체가동 확인)·남선 WtE 가동으로 상승 중",
-          "changed": true
+          "changed": false
         },
         {
           "label": "매립 의존율",
           "target": "30% 이하",
           "current": "속선·다프억 WtE 가동으로 현저히 감소 중",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -883,30 +273,8 @@
           "status": "협의중"
         }
       ],
-      "analysis_ko": "사항 없음) (61자)\n사업들이 초기 계획 및 제도 수립 단계에 머물러 있어 실질적인 법",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-SWM-NATIONAL-2030",
-          "indicator": "도시 폐기물 수거율",
-          "from": "미포함",
-          "to": "100%",
-          "reason": "VN-SWM-NATIONAL-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-SWM-NATIONAL-2030",
-          "indicator": "WtE 소각 비율",
-          "from": "미포함",
-          "to": "50%",
-          "reason": "VN-SWM-NATIONAL-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-SWM-NATIONAL-2030",
-          "indicator": "매립 의존율",
-          "from": "미포함",
-          "to": "30% 이하",
-          "reason": "VN-SWM-NATIONAL-2030 신규 KPI"
-        }
-      ],
+      "analysis_ko": "**1. 이번 주 핵심 진행사항**\n베트남 정부 및 지자체(하노이·박닌)가 연",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "건설 폐기물 관리의 격차 - 교훈 5: 건설 폐기물을 순환 경제를 위한 자원으로 바꾸는 솔루션",
@@ -945,25 +313,25 @@
           "label": "지하수 관리 대수층",
           "target": "전국 27개 완전 관리",
           "current": "12개 관리 중",
-          "changed": true
+          "changed": false
         },
         {
           "label": "중복 댐·저수지 안전진단",
           "target": "100% 완료",
           "current": "65% 완료",
-          "changed": true
+          "changed": false
         },
         {
           "label": "홍수 피해 GDP 비중",
           "target": "0.5% 미만으로 감소",
           "current": "연평균 1.2%",
-          "changed": true
+          "changed": false
         },
         {
           "label": "메콩델타 건기 염수침투 거리 (4‰ 염분경계선)",
           "target": "관리목표 미상 (신규지표)",
           "current": "[Cowork 팩트체크 확인] 2026.2.28 관측: 16.2km(허우강)~41.6km(끄어다이강), 4개 지류 개별값. 2026.4초 후속보도: 일부 지류 42~70km로 악화. [Cowork 팩트체크 2026-07-16 추가] 2026.7.1 보도: 40~70km 도달, 2030년 55.5km/2050년 62.5km(띠엔강) 전망 [부분사실, 1차출처 교차검증 필요]",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -1003,37 +371,8 @@
           "status": "계획"
         }
       ],
-      "analysis_ko": "**1. 이번 주 핵심 진행사항**\n베트남 정부가 수자원 관리 강화를 위해 700여 개 관개",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-WAT-RESOURCES",
-          "indicator": "지하수 관리 대수층",
-          "from": "미포함",
-          "to": "전국 27개 완전 관리",
-          "reason": "VN-WAT-RESOURCES 신규 KPI"
-        },
-        {
-          "plan_id": "VN-WAT-RESOURCES",
-          "indicator": "중복 댐·저수지 안전진단",
-          "from": "미포함",
-          "to": "100% 완료",
-          "reason": "VN-WAT-RESOURCES 신규 KPI"
-        },
-        {
-          "plan_id": "VN-WAT-RESOURCES",
-          "indicator": "홍수 피해 GDP 비중",
-          "from": "미포함",
-          "to": "0.5% 미만으로 감소",
-          "reason": "VN-WAT-RESOURCES 신규 KPI"
-        },
-        {
-          "plan_id": "VN-WAT-RESOURCES",
-          "indicator": "메콩델타 건기 염수침투 거리 (4‰ 염분경계선)",
-          "from": "미포함",
-          "to": "관리목표 미상 (신규지표)",
-          "reason": "VN-WAT-RESOURCES 신규 KPI"
-        }
-      ],
+      "analysis_ko": "1. **이번 주 핵심 진행사항 (사업 추진 현황)**  \n베트남 정부가 수자원법 2023 후",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "700개 이상의 관개 및 수력 발전 프로젝트에 대한 하류 최소 유량 값 발표",
@@ -1041,7 +380,7 @@
           "source": "Moi truong & Cuoc song",
           "date": "2026-07-24",
           "url": "https://moitruong.net.vn/cong-bo-gia-tri-dong-chay-toi-thieu-ha-luu-cho-hon-700-cong-trinh-thuy-loi-thuy-dien-101188.html",
-          "isNew": true
+          "isNew": false
         }
       ]
     },
@@ -1056,25 +395,25 @@
           "label": "도시 안전 상수 보급률",
           "target": "100% (전 도시, 2025)",
           "current": "95% 수준 (2025)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "1인당 공급량",
           "target": "150 L/일 (평균 목표) / 120 L/일(2502호 명시치)",
           "current": "120 L/일 (2025 목표)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "누수율(NRW)",
           "target": "15% 이하 (2급 이상 도시, 2025)",
           "current": "20% 이하 (2025 목표)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "수질안전계획(Water Safety Plan) 시행률",
           "target": "75% (2025)",
           "current": "조사 중",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -1219,37 +558,8 @@
           "status": "계획"
         }
       ],
-      "analysis_ko": "특이사항 없음) [32자]\n    현재 초기 투자 연구 단계로, 구체적인 예산 확보 및 승인",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-WAT-URBAN",
-          "indicator": "도시 안전 상수 보급률",
-          "from": "미포함",
-          "to": "100% (전 도시, 2025)",
-          "reason": "VN-WAT-URBAN 신규 KPI"
-        },
-        {
-          "plan_id": "VN-WAT-URBAN",
-          "indicator": "1인당 공급량",
-          "from": "미포함",
-          "to": "150 L/일 (평균 목표) / 120 L/일(2502호 명시치)",
-          "reason": "VN-WAT-URBAN 신규 KPI"
-        },
-        {
-          "plan_id": "VN-WAT-URBAN",
-          "indicator": "누수율(NRW)",
-          "from": "미포함",
-          "to": "15% 이하 (2급 이상 도시, 2025)",
-          "reason": "VN-WAT-URBAN 신규 KPI"
-        },
-        {
-          "plan_id": "VN-WAT-URBAN",
-          "indicator": "수질안전계획(Water Safety Plan) 시행률",
-          "from": "미포함",
-          "to": "75% (2025)",
-          "reason": "VN-WAT-URBAN 신규 KPI"
-        }
-      ],
+      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n타인호아성이 샘손(Sam Son) 지역의",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "Thanh Hoa는 Sam Son의 배수 시스템에 대한 투자를 연구합니다.",
@@ -1257,7 +567,7 @@
           "source": "Moi truong & Cuoc song",
           "date": "2026-07-24",
           "url": "https://moitruong.net.vn/thanh-hoa-nghien-cuu-dau-tu-he-thong-thoat-nuoc-cho-sam-son-101136.html",
-          "isNew": true
+          "isNew": false
         }
       ]
     },
@@ -1272,19 +582,19 @@
           "label": "도시 폐수처리율",
           "target": "85% (2030)",
           "current": "~29%(2024, 하노이) → 옌짜 준공(2025.8)으로 확대 중, 2025년 목표 50%",
-          "changed": true
+          "changed": false
         },
         {
           "label": "신규 WWTP 용량",
           "target": "2,900,000 m³/일",
           "current": "약 800,000 m³/일 기존 운영 + 옌짜 270,000 m³/일 신규 가동(2025.8)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "ODA 연계 투자",
           "target": "$2.5B+",
           "current": "JICA $690M(옌짜, 준공완료) + 호아이득 $16.5M(2026~2029 신규 승인)",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -1380,30 +690,8 @@
           "status": "계획"
         }
       ],
-      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 정부는 '폐수처리 국가 마스터플랜 20",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-WW-2030",
-          "indicator": "도시 폐수처리율",
-          "from": "미포함",
-          "to": "85% (2030)",
-          "reason": "VN-WW-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-WW-2030",
-          "indicator": "신규 WWTP 용량",
-          "from": "미포함",
-          "to": "2,900,000 m³/일",
-          "reason": "VN-WW-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-WW-2030",
-          "indicator": "ODA 연계 투자",
-          "from": "미포함",
-          "to": "$2.5B+",
-          "reason": "VN-WW-2030 신규 KPI"
-        }
-      ],
+      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 정부는 2030 국가 마스터플랜에",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "",
@@ -1426,25 +714,25 @@
           "label": "원유 생산량",
           "target": "8~10백만 톤/년",
           "current": "11백만 톤/년 (유지 목표)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "가스 생산량",
           "target": "13~15억 m³/년",
           "current": "10억 m³/년",
-          "changed": true
+          "changed": false
         },
         {
           "label": "LNG 수입 의존도",
           "target": "국내 가스 우선 활용",
           "current": "2백만 톤/년 수입",
-          "changed": true
+          "changed": false
         },
         {
           "label": "석유·가스 비축 인프라(순수입일수 기준)",
           "target": "최대 25일 (2030년 이후)",
           "current": "20일 (2021~2030년 목표수준)",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -1491,37 +779,8 @@
           "status": "공사중"
         }
       ],
-      "analysis_ko": "특이사항 없음)\n        국제 유가 변동성에 따른 투자 수익성 리스크가 존재하나, 사업 지연 등 직접적인 리",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-OG-2030",
-          "indicator": "원유 생산량",
-          "from": "미포함",
-          "to": "8~10백만 톤/년",
-          "reason": "VN-OG-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-OG-2030",
-          "indicator": "가스 생산량",
-          "from": "미포함",
-          "to": "13~15억 m³/년",
-          "reason": "VN-OG-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-OG-2030",
-          "indicator": "LNG 수입 의존도",
-          "from": "미포함",
-          "to": "국내 가스 우선 활용",
-          "reason": "VN-OG-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-OG-2030",
-          "indicator": "석유·가스 비축 인프라(순수입일수 기준)",
-          "from": "미포함",
-          "to": "최대 25일 (2030년 이후)",
-          "reason": "VN-OG-2030 신규 KPI"
-        }
-      ],
+      "analysis_ko": "[경영진 보고용 인사이트]\n\n**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 정부",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "거래일: $100 석유 직기",
@@ -1552,25 +811,25 @@
           "label": "LNG 수입 터미널",
           "target": "8개소",
           "current": "2개소 운영 중",
-          "changed": true
+          "changed": false
         },
         {
           "label": "LNG 발전 용량",
           "target": "23,900 MW (PDP8 목표) / 22,524MW(PDP8 개정치)",
           "current": "약 3,000 MW",
-          "changed": true
+          "changed": false
         },
         {
           "label": "연간 LNG 수입량",
           "target": "14백만 톤",
           "current": "2백만 톤",
-          "changed": true
+          "changed": false
         },
         {
           "label": "최소 장기 인수량(Qc, 수입LNG 발전)",
           "target": "65% (다년평균발전량 대비, COD 후 최대 10년)",
           "current": "2025.5.8 Decree 100 시행으로 65%/10년 법제화 완료. [Cowork 팩트체크 확인] 75%·15년 확대 개정은 2026.7.13 기준에도 '검토 중' 단계 지속 — 정식 채택 전 (2026.5.13 초안 단계에서 진전 없음)",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -1617,37 +876,8 @@
           "status": "입찰중"
         }
       ],
-      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**  \n베트남 전력당국이 제8차 전력개발계획",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-PWR-PDP8-LNG",
-          "indicator": "LNG 수입 터미널",
-          "from": "미포함",
-          "to": "8개소",
-          "reason": "VN-PWR-PDP8-LNG 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8-LNG",
-          "indicator": "LNG 발전 용량",
-          "from": "미포함",
-          "to": "23,900 MW (PDP8 목표) / 22,524MW(PDP8 개정치)",
-          "reason": "VN-PWR-PDP8-LNG 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8-LNG",
-          "indicator": "연간 LNG 수입량",
-          "from": "미포함",
-          "to": "14백만 톤",
-          "reason": "VN-PWR-PDP8-LNG 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8-LNG",
-          "indicator": "최소 장기 인수량(Qc, 수입LNG 발전)",
-          "from": "미포함",
-          "to": "65% (다년평균발전량 대비, COD 후 최대 10년)",
-          "reason": "VN-PWR-PDP8-LNG 신규 KPI"
-        }
-      ],
+      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**  \n베트남 에너지부 및 관계기관이 제8",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "휘발유 가격 인상",
@@ -1670,19 +900,19 @@
           "label": "원자력 발전 용량(2035)",
           "target": "4,000 MW (2035 목표)",
           "current": "Decision 768 신규 추가",
-          "changed": true
+          "changed": false
         },
         {
           "label": "닌투언 1호기",
           "target": "2,000 MW",
           "current": "Rosatom(러시아) 재개 확정, EVN 투자자 지정. [Cowork 팩트체크 2026-07-16] 부지정리 여전히 부진(최근 1주 0.03ha 처리, 52ha 목표 대비 크게 미달)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "닌투언 2호기",
           "target": "2,000 MW",
           "current": "[Cowork 팩트체크 확인, 부분사실] 일본 철수(2025.11~2026.1경) 후 한국 KEPCO-PVN 비구속 MOU 체결(2026.4.22~30경, 정상회담 계기, 사업타당성조사용) — 최종 EPC 파트너는 2026.7 기준 미확정. [Cowork 팩트체크 2026-07-16 추가] 부지보상 74.6%(2026.6.22 기준, 308.6/413.6ha) 완료, 약 80% 보상금 지급",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -1708,30 +938,8 @@
           "status": "협의중"
         }
       ],
-      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n과학기술부 방사능핵안전청이 닌투언 원",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-PWR-PDP8-NUCLEAR",
-          "indicator": "원자력 발전 용량(2035)",
-          "from": "미포함",
-          "to": "4,000 MW (2035 목표)",
-          "reason": "VN-PWR-PDP8-NUCLEAR 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8-NUCLEAR",
-          "indicator": "닌투언 1호기",
-          "from": "미포함",
-          "to": "2,000 MW",
-          "reason": "VN-PWR-PDP8-NUCLEAR 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8-NUCLEAR",
-          "indicator": "닌투언 2호기",
-          "from": "미포함",
-          "to": "2,000 MW",
-          "reason": "VN-PWR-PDP8-NUCLEAR 신규 KPI"
-        }
-      ],
+      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 과학기술부 방사능핵안전",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "베트남은 2035년까지 수만 명의 원자력 인력이 필요하다",
@@ -1754,31 +962,31 @@
           "label": "해상풍력(2030)",
           "target": "17,032 MW",
           "current": "6,000MW → 3배 상향 확정. [Cowork 팩트체크 2026-07-16] 신규 법적 프레임워크(Decree 272/2026, 2026.7.4 시행)로 조사기관·투자자 자기자본 요건 명문화",
-          "changed": true
+          "changed": false
         },
         {
           "label": "육상풍력(2030)",
           "target": "38,029 MW",
           "current": "21,880MW (PDP8 원안) 대폭 상향",
-          "changed": true
+          "changed": false
         },
         {
           "label": "태양광(2030)",
           "target": "73 GW",
           "current": "26,046MW → 대폭 상향",
-          "changed": true
+          "changed": false
         },
         {
           "label": "BESS 배터리(2030)",
           "target": "10,000 MW",
           "current": "300MW → 33배 상향",
-          "changed": true
+          "changed": false
         },
         {
           "label": "DPPA 실제 가동 사례",
           "target": "제도 시행(2025.3.3 Decree 57)",
           "current": "[Cowork 팩트체크 확인, 부분사실] SEVT(삼성전자베트남타이응우옌)-TTC그룹 득후에2 태양광, 49MWp(41.4MWac), COD 2026.6.1 — 베트남 최초 상업 DPPA 사례로 다수매체 일치확인. 금주(07.09~16) 신규 DPPA 계약 뉴스 없음",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -1818,44 +1026,8 @@
           "status": "계획"
         }
       ],
-      "analysis_ko": "1. 이번 주 핵심 진행사항 (사업 추진 현황)\n    베트남 정부가 PDP8 연계 해상풍력 투자 신규 규",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-PWR-PDP8-RENEWABLE",
-          "indicator": "해상풍력(2030)",
-          "from": "미포함",
-          "to": "17,032 MW",
-          "reason": "VN-PWR-PDP8-RENEWABLE 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8-RENEWABLE",
-          "indicator": "육상풍력(2030)",
-          "from": "미포함",
-          "to": "38,029 MW",
-          "reason": "VN-PWR-PDP8-RENEWABLE 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8-RENEWABLE",
-          "indicator": "태양광(2030)",
-          "from": "미포함",
-          "to": "73 GW",
-          "reason": "VN-PWR-PDP8-RENEWABLE 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8-RENEWABLE",
-          "indicator": "BESS 배터리(2030)",
-          "from": "미포함",
-          "to": "10,000 MW",
-          "reason": "VN-PWR-PDP8-RENEWABLE 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8-RENEWABLE",
-          "indicator": "DPPA 실제 가동 사례",
-          "from": "미포함",
-          "to": "제도 시행(2025.3.3 Decree 57)",
-          "reason": "VN-PWR-PDP8-RENEWABLE 신규 KPI"
-        }
-      ],
+      "analysis_ko": "1. 이번 주 핵심 진행사항 (사업 추진 현황)\n        베트남 정부가 7월 14일 해상풍력",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "해상 풍력 발전 투자에 대한 새로운 규정",
@@ -1878,43 +1050,43 @@
           "label": "도시개발 총투자",
           "target": "$2.5T (2026~2045)",
           "current": "Decision 1668 확정",
-          "changed": true
+          "changed": false
         },
         {
           "label": "인구 수용 목표",
           "target": "16M명 (2045) / 최대 20M(장기)",
           "current": "현재 8.5M명",
-          "changed": true
+          "changed": false
         },
         {
           "label": "링로드4 완공",
           "target": "2027년말 전체 완공 (세부: 2.1구간 2026.9, 2.2구간 2026.12, 주요교량 3개 APEC2027 전)",
           "current": "[Cowork 팩트체크 2026-07-16] 착공 진행 중이나 PPP 3구간 자본조달 약 2%에 그쳐 지연 확인(2026.7.9 도로청 발표)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "메트로 노선망",
           "target": "14개 이상 노선, 약 624km",
           "current": "2개 노선 운영 (2A·3호선 부분)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "GRDP 목표",
           "target": "2035년 약 $200B, 2045년 약 $640B",
           "current": "[Cowork 팩트체크 확인] 2035년 1인당 GRDP $18,800 초과 목표 (baochinhphu.vn 확인)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "문화산업 비중",
           "target": "2035년 GRDP 10%, 2065년 15~20%",
           "current": "[Cowork 팩트체크 확인, 신규] 100년 마스터플랜 명시 목표",
-          "changed": true
+          "changed": false
         },
         {
           "label": "도시건설용지 비중",
           "target": "2065년까지 55~60%",
           "current": "[Cowork 팩트체크 확인, 신규] 100년 마스터플랜 명시 목표",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -1926,58 +1098,8 @@
           "status": "공사중"
         }
       ],
-      "analysis_ko": "[경영진 보고용 인사이트]\n\n1. **이번 주 핵심 진행사항**\n수집된 기사가 여행·음식 관련 보도로",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-HAN-URBAN-2045",
-          "indicator": "도시개발 총투자",
-          "from": "미포함",
-          "to": "$2.5T (2026~2045)",
-          "reason": "VN-HAN-URBAN-2045 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HAN-URBAN-2045",
-          "indicator": "인구 수용 목표",
-          "from": "미포함",
-          "to": "16M명 (2045) / 최대 20M(장기)",
-          "reason": "VN-HAN-URBAN-2045 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HAN-URBAN-2045",
-          "indicator": "링로드4 완공",
-          "from": "미포함",
-          "to": "2027년말 전체 완공 (세부: 2.1구간 2026.9, 2.2구간 2026.12, 주요교량 3개 APEC2027 전)",
-          "reason": "VN-HAN-URBAN-2045 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HAN-URBAN-2045",
-          "indicator": "메트로 노선망",
-          "from": "미포함",
-          "to": "14개 이상 노선, 약 624km",
-          "reason": "VN-HAN-URBAN-2045 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HAN-URBAN-2045",
-          "indicator": "GRDP 목표",
-          "from": "미포함",
-          "to": "2035년 약 $200B, 2045년 약 $640B",
-          "reason": "VN-HAN-URBAN-2045 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HAN-URBAN-2045",
-          "indicator": "문화산업 비중",
-          "from": "미포함",
-          "to": "2035년 GRDP 10%, 2065년 15~20%",
-          "reason": "VN-HAN-URBAN-2045 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HAN-URBAN-2045",
-          "indicator": "도시건설용지 비중",
-          "from": "미포함",
-          "to": "2065년까지 55~60%",
-          "reason": "VN-HAN-URBAN-2045 신규 KPI"
-        }
-      ],
+      "analysis_ko": "1. **이번 주 핵심 진행사항 (사업 추진 현황)**\n금주 수집된 기사는 여행·음식 문화 관련 내용으로,",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "베트남 여행 선택에 영향을 미치는 음식: 아고다(Agoda) 보고서",
@@ -2000,43 +1122,43 @@
           "label": "VSIP 단지 수",
           "target": "25개 이상",
           "current": "19개 운영 (타이빈 신규 착공)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "첨단산업 비중",
           "target": "40% 이상",
           "current": "전자·반도체 집중 육성",
-          "changed": true
+          "changed": false
         },
         {
           "label": "FDI 유입",
           "target": "연 $20B 이상",
           "current": "[Cowork 팩트체크 확인, 정정] 박닌 2026년 1분기 등록자본 기준 $56.9억(전국 2위) — 기존 '$13억/81%'설은 원문 미확인으로 정정. 자본조정 프로젝트 비중 전국 31%로 최다. [Cowork 팩트체크 2026-07-16 참고] 박닌 상반기 누적 약 $20억(2026.6.24 보도, 조사기간 이전 정보이며 1분기치와의 정합성은 재확인 필요)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "삼성 박닌 누적투자",
           "target": "지속 확대",
           "current": "약 $232억 (전국 투자의 약 50%)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "홍강델타 지역 GRDP 성장률",
           "target": "9.0~9.5%/년 (2030)",
           "current": "조사 중",
-          "changed": true
+          "changed": false
         },
         {
           "label": "홍강델타 GRDP/인당",
           "target": "$11,000~12,000 (2030)",
           "current": "조사 중",
-          "changed": true
+          "changed": false
         },
         {
           "label": "일자리 창출",
           "target": "400만 명",
           "current": "250만 명 (2024)",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -2090,58 +1212,8 @@
           "status": "계획"
         }
       ],
-      "analysis_ko": "105개 확대(5만 ha) 계획이 수립 단계에 있습니다.\n    2. 투자 및 사업 기회 시그",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-IP-NORTH-2030",
-          "indicator": "VSIP 단지 수",
-          "from": "미포함",
-          "to": "25개 이상",
-          "reason": "VN-IP-NORTH-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-IP-NORTH-2030",
-          "indicator": "첨단산업 비중",
-          "from": "미포함",
-          "to": "40% 이상",
-          "reason": "VN-IP-NORTH-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-IP-NORTH-2030",
-          "indicator": "FDI 유입",
-          "from": "미포함",
-          "to": "연 $20B 이상",
-          "reason": "VN-IP-NORTH-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-IP-NORTH-2030",
-          "indicator": "삼성 박닌 누적투자",
-          "from": "미포함",
-          "to": "지속 확대",
-          "reason": "VN-IP-NORTH-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-IP-NORTH-2030",
-          "indicator": "홍강델타 지역 GRDP 성장률",
-          "from": "미포함",
-          "to": "9.0~9.5%/년 (2030)",
-          "reason": "VN-IP-NORTH-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-IP-NORTH-2030",
-          "indicator": "홍강델타 GRDP/인당",
-          "from": "미포함",
-          "to": "$11,000~12,000 (2030)",
-          "reason": "VN-IP-NORTH-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-IP-NORTH-2030",
-          "indicator": "일자리 창출",
-          "from": "미포함",
-          "to": "400만 명",
-          "reason": "VN-IP-NORTH-2030 신규 KPI"
-        }
-      ],
+      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n호찌민시의 산업단지 105개(약",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "녹색산업단지 전환을 위한 자금조달 핵심과제",
@@ -2164,25 +1236,25 @@
           "label": "고속도로 총연장",
           "target": "5,000 km",
           "current": "1,892 km (2025 실적)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "롱탄공항 개항",
           "target": "25M PAX/년 (1단계)",
           "current": "[Cowork 팩트체크 2026-07-16, 판정: 확인됨] 당초 2026.6월 목표에서 2026.12월 상업개항으로 공식 연기(2026.6.29 baochinhphu.vn/ACV 확인). 전체 공정률 77%",
-          "changed": true
+          "changed": false
         },
         {
           "label": "공항 네트워크",
           "target": "30개 공항",
           "current": "22개 운영",
-          "changed": true
+          "changed": false
         },
         {
           "label": "항만 처리 용량",
           "target": "1,100M 톤/년",
           "current": "600M 톤/년",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -2243,38 +1315,41 @@
           "status": "협의중"
         }
       ],
-      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**  \n람동성 리엔크엉 공항의",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-TRAN-2055",
-          "indicator": "고속도로 총연장",
-          "from": "미포함",
-          "to": "5,000 km",
-          "reason": "VN-TRAN-2055 신규 KPI"
-        },
-        {
-          "plan_id": "VN-TRAN-2055",
-          "indicator": "롱탄공항 개항",
-          "from": "미포함",
-          "to": "25M PAX/년 (1단계)",
-          "reason": "VN-TRAN-2055 신규 KPI"
-        },
-        {
-          "plan_id": "VN-TRAN-2055",
-          "indicator": "공항 네트워크",
-          "from": "미포함",
-          "to": "30개 공항",
-          "reason": "VN-TRAN-2055 신규 KPI"
-        },
-        {
-          "plan_id": "VN-TRAN-2055",
-          "indicator": "항만 처리 용량",
-          "from": "미포함",
-          "to": "1,100M 톤/년",
-          "reason": "VN-TRAN-2055 신규 KPI"
-        }
-      ],
+      "analysis_ko": "**[경영진 보고용 인사이트]**\n\n**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n리엔크엉 공",
+      "kpi_changes": [],
       "articles": [
+        {
+          "title_ko": "스마트하고 지속 가능한 초점으로 돌아온 베트남의 대표적인 물류 전시회",
+          "summary_ko": "이번 쇼케이스에서는 차세대 물류와 지능형 공급망 기술에 대한 포괄적인 스냅샷을 제공할 것으로 예상됩니다.",
+          "source": "vietnamnews_vn",
+          "date": "2026-07-25",
+          "url": "https://vietnamnews.vn/economy/1796187/viet-nam-s-flagship-logistics-exhibition-returns-with-smart-sustainable-focus.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "리엔크엉 국제공항, 8월 19일 재개장",
+          "summary_ko": "새로 설치된 항법 장비, 조명 시스템 및 기타 기술 시설의 성능을 평가하여 상업 운영이 재개되기 전에 항공 안전 표준을 충족하는지 확인하기 위한 교정 프로그램이 7월 28일까지 실행됩니다.",
+          "source": "vietnamnews_vn",
+          "date": "2026-07-25",
+          "url": "https://vietnamnews.vn/economy/1796185/lien-khuong-international-airport-set-to-reopen-on-august-19.html",
+          "isNew": true
+        },
+        {
+          "title_ko": "DHL, Hung Yen에 7,100만 달러 규모의 물류 캠퍼스 착공",
+          "summary_ko": "DHL 노스 로지스틱스 캠퍼스는 노이바이 국제공항과 하노이, 베트남 북부 최대 심해항인 하이퐁항을 연결하는 하노이-하이퐁 고속도로에 직접 접근할 수 있게 된다. Hung Yen, 상반기 Hung Ye에서 179개 신규 투자 프로젝트 유치",
+          "source": "vietnamplus",
+          "date": "2026-07-25",
+          "url": "https://en.vietnamplus.vn/dhl-begins-work-on-71-million-usd-logistics-campus-in-hung-yen-post348915.vnp",
+          "isNew": true
+        },
+        {
+          "title_ko": "다낭, VSIP 산업단지 투자 1억 3,815만 달러 승인",
+          "summary_ko": "다낭은 Dien Ban Bac Ward에서 249.8헥타르에 걸쳐 건설될 예정인 3조 7300억 VND (1억 3815만 달러) 개발인 VSIP 다낭 산업단지 인프라 프로젝트에 대한 투자 정책 및 투자자를 승인했습니다.",
+          "source": "sggp_org_vn",
+          "date": "2026-07-25",
+          "url": "https://en.sggp.org.vn/da-nang-approves-us13815-million-vsip-industrial-park-investment-post128284.html",
+          "isNew": true
+        },
         {
           "title_ko": "리엔크엉 국제공항, 8월 19일 재개장",
           "summary_ko": "운영이 안정화되면 Lam Dong 중부고원지방에 위치한 Lien Khuong 국제공항은 하루 약 6,800명의 승객을 수용할 것으로 예상됩니다. 이는 임시 폐쇄 전보다 거의 1,000명 증가한 수치입니다. 2026년 마지막 4개월 동안 승객 처리량은",
@@ -2361,7 +1436,7 @@
           "source": "vietnamplus",
           "date": "2026-07-23",
           "url": "https://www.vietnamplus.vn/bac-ninh-chuyen-manh-sang-tang-truong-chat-luong-cao-ben-vung-post1125946.vnp",
-          "isNew": true
+          "isNew": false
         },
         {
           "title_ko": "베트남은 관련 당사자들에게 동해/남중국해에서 DOC를 완전히 이행할 것을 촉구합니다.",
@@ -2369,7 +1444,7 @@
           "source": "nhandan_vn",
           "date": "2026-07-23",
           "url": "https://en.nhandan.vn/viet-nam-calls-on-parties-concerned-to-fully-implement-doc-in-east-seasouth-china-sea-post164682.html",
-          "isNew": true
+          "isNew": false
         },
         {
           "title_ko": "지원 산업의 경쟁력 강화에 주력하는 호치민",
@@ -2377,7 +1452,7 @@
           "source": "sggp_org_vn",
           "date": "2026-07-23",
           "url": "https://en.sggp.org.vn/hcmc-keen-on-strengthening-competitiveness-of-supporting-industries-post128226.html",
-          "isNew": true
+          "isNew": false
         },
         {
           "title_ko": "외교부, 푸꾸옥 카누 전복 피해자 가족 지원 업데이트",
@@ -2385,7 +1460,7 @@
           "source": "vietnamplus",
           "date": "2026-07-23",
           "url": "https://en.vietnamplus.vn/foreign-ministry-updates-support-for-phu-quoc-canoe-capsize-victims-families-post348841.vnp",
-          "isNew": true
+          "isNew": false
         },
         {
           "title_ko": "Shandong Heavy Industry, 하노이 전시회에서 친환경 지능형 장비 선보여",
@@ -2740,14 +1815,6 @@
           "isNew": false
         },
         {
-          "title_ko": "최고의 민간 기업은 40개의 메가 프로젝트에 2,000억 달러를 투자할 계획입니다.",
-          "summary_ko": "제목: 200억 달러 규모 40개 메가프로젝트 추진\n①사업명: 민간기업 40개 메가프로젝트\n②규모: 2000억 달러\n③단계: 계획\n④주요기관: 베트남 민간기업\n⑤일정: 구체적 일정 미기재(에너지 보안 및 저탄소 농업 관련 정책 추진)",
-          "source": "vietnamplus",
-          "date": "2026-07-12",
-          "url": "https://en.vietnamplus.vn/top-private-firms-plan-200-billion-usd-in-40-mega-projects-post348180.vnp",
-          "isNew": false
-        },
-        {
           "title_ko": "2026년 상반기 수출 5개 품목 각각 100억 달러 돌파",
           "summary_ko": "①베트남 수출 5대 품목 각각 100억 달러 초과 ②2026년 상반기 주요 수출품목별 100억 달러 이상 달성 ③운영 중 ④베트남 통계청(GSO), 산업통상부 ⑤2026년 상반기 집계 완료",
           "source": "vietnamplus",
@@ -2768,31 +1835,31 @@
           "label": "하노이 메트로 목표",
           "target": "15~17개 노선 (자료별 상이)",
           "current": "2A·3호선 운영, 1·2B 건설",
-          "changed": true
+          "changed": false
         },
         {
           "label": "호치민 메트로 목표",
           "target": "8개 노선",
           "current": "1호선 2024.12 개통. [Cowork 팩트체크 2026-07-16] 2호선 2026.7.2 첫 주요구간(ST10역) 착공 확인",
-          "changed": true
+          "changed": false
         },
         {
           "label": "전국 도시철도 목표",
           "target": "46개 노선 3,045km",
           "current": "약 5개 노선 운영/건설",
-          "changed": true
+          "changed": false
         },
         {
           "label": "하노이·호치민 통합 투자소요",
           "target": "약 VND 3,065,100억",
           "current": "중앙정부 목표지원 한도: 하노이 최대 215,350억, 호치민 최대 209,500억",
-          "changed": true
+          "changed": false
         },
         {
           "label": "도시철도 국가통일기술표준",
           "target": "2026.7월까지 제정 (신규지표)",
           "current": "[Cowork 팩트체크 2026-07-16] 2026.7.10 부총리 지시 확인, 기존 3개 노선 기술표준 파편화 해소 목적",
-          "changed": true
+          "changed": false
         },
         {
           "label": "메트로 네트워크 적용",
@@ -2859,51 +1926,8 @@
           "status": "계획"
         }
       ],
-      "analysis_ko": "1. 이번 주 핵심 진행사항 (사업 추진 현황)\n호치민시의 기술도시 및 특별행정단위 개발 추진과 함께",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-URB-METRO-2030",
-          "indicator": "하노이 메트로 목표",
-          "from": "미포함",
-          "to": "15~17개 노선 (자료별 상이)",
-          "reason": "VN-URB-METRO-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-URB-METRO-2030",
-          "indicator": "호치민 메트로 목표",
-          "from": "미포함",
-          "to": "8개 노선",
-          "reason": "VN-URB-METRO-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-URB-METRO-2030",
-          "indicator": "전국 도시철도 목표",
-          "from": "미포함",
-          "to": "46개 노선 3,045km",
-          "reason": "VN-URB-METRO-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-URB-METRO-2030",
-          "indicator": "하노이·호치민 통합 투자소요",
-          "from": "미포함",
-          "to": "약 VND 3,065,100억",
-          "reason": "VN-URB-METRO-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-URB-METRO-2030",
-          "indicator": "도시철도 국가통일기술표준",
-          "from": "미포함",
-          "to": "2026.7월까지 제정 (신규지표)",
-          "reason": "VN-URB-METRO-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-URB-METRO-2030",
-          "indicator": "메트로 네트워크 적용",
-          "from": "미포함",
-          "to": "하노이 및 호찌민 핵심 노선 가속",
-          "reason": "VN-URB-METRO-2030 신규 KPI"
-        }
-      ],
+      "analysis_ko": "1. **이번 주 핵심 진행사항 (사업 추진 현황)**\n호치민시의 특별행정단위 도입 및 북부 기술·교육",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "호치민시, 북부 기술 도시 지역 FPT 교육 허브로 추진",
@@ -2911,7 +1935,7 @@
           "source": "sggp_org_vn",
           "date": "2026-07-23",
           "url": "https://en.sggp.org.vn/hcmc-pushes-ahead-with-fpt-education-hub-northern-tech-urban-area-post128225.html",
-          "isNew": true
+          "isNew": false
         },
         {
           "title_ko": "호치민시는 성장을 촉진하기 위해 특별 도시 행정 단위를 평가합니다.",
@@ -2942,37 +1966,37 @@
           "label": "폐수처리 기술 국산화",
           "target": "70~80% (2030)",
           "current": "2025년 기준 ~30%",
-          "changed": true
+          "changed": false
         },
         {
           "label": "배기가스 처리 국산화",
           "target": "60~70% (2030)",
           "current": "2025년 기준 ~25%",
-          "changed": true
+          "changed": false
         },
         {
           "label": "고형폐기물 처리 국산화",
           "target": "50~60% (2030)",
           "current": "2025년 기준 ~20%",
-          "changed": true
+          "changed": false
         },
         {
           "label": "환경 모니터링 장비 국산화",
           "target": "20% (2030)",
           "current": "2025년 기준 ~5%",
-          "changed": true
+          "changed": false
         },
         {
           "label": "재활용 산업단지 파일럿",
           "target": "구축 (2027)",
           "current": "[Cowork 팩트체크 확인, 사실] 스타비안 PET재활용단지(타인호아, 연1.7만톤) IRC 2025.7.24 발급, 2027.1분기 가동 목표 — 파일럿 실현 사례. [Cowork 팩트체크 2026-07-16 추가] Duy Tan Recycling(롱안) 연산 6만→10만톤 확장 추진, SCGC APAC 20만톤/2030 목표 — EPR 정책 불확실성이 투자 걸림돌로 지적됨(2026.7.5 보도)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "WtE(폐기물 에너지화)",
           "target": "2,270MW 확대",
           "current": "기술 구축 단계",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -3040,51 +2064,8 @@
           "status": "계획"
         }
       ],
-      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 정부가 기후변화 대응과 지속 가능한 발전을",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-ENV-IND-1894",
-          "indicator": "폐수처리 기술 국산화",
-          "from": "미포함",
-          "to": "70~80% (2030)",
-          "reason": "VN-ENV-IND-1894 신규 KPI"
-        },
-        {
-          "plan_id": "VN-ENV-IND-1894",
-          "indicator": "배기가스 처리 국산화",
-          "from": "미포함",
-          "to": "60~70% (2030)",
-          "reason": "VN-ENV-IND-1894 신규 KPI"
-        },
-        {
-          "plan_id": "VN-ENV-IND-1894",
-          "indicator": "고형폐기물 처리 국산화",
-          "from": "미포함",
-          "to": "50~60% (2030)",
-          "reason": "VN-ENV-IND-1894 신규 KPI"
-        },
-        {
-          "plan_id": "VN-ENV-IND-1894",
-          "indicator": "환경 모니터링 장비 국산화",
-          "from": "미포함",
-          "to": "20% (2030)",
-          "reason": "VN-ENV-IND-1894 신규 KPI"
-        },
-        {
-          "plan_id": "VN-ENV-IND-1894",
-          "indicator": "재활용 산업단지 파일럿",
-          "from": "미포함",
-          "to": "구축 (2027)",
-          "reason": "VN-ENV-IND-1894 신규 KPI"
-        },
-        {
-          "plan_id": "VN-ENV-IND-1894",
-          "indicator": "WtE(폐기물 에너지화)",
-          "from": "미포함",
-          "to": "2,270MW 확대",
-          "reason": "VN-ENV-IND-1894 신규 KPI"
-        }
-      ],
+      "analysis_ko": "변화 대응과 지속가능 발전을 위해 공공조달 시장 내 친환경·에너지 절감 기술 및 제품을 우선 도입하기로 결정했습니다",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "지속 가능한 발전을 촉진하기 위해 공공 조달에서 녹색 및 에너지 절약 기술을 우선시합니다.",
@@ -3107,25 +2088,25 @@
           "label": "육상 보호구역 비율",
           "target": "9% (2030)",
           "current": "7.6% (2024)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "해양 보호구역 비율",
           "target": "3~5% (2030)",
           "current": "0.24% (2024)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "적색목록종 복원",
           "target": "50% 회복",
           "current": "진행 중",
-          "changed": true
+          "changed": false
         },
         {
           "label": "REDD+ 산림 탄소축적",
           "target": "15% 증가",
           "current": "진행 중",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -3152,36 +2133,7 @@
         }
       ],
       "analysis_ko": "",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-ENV-NATURA",
-          "indicator": "육상 보호구역 비율",
-          "from": "미포함",
-          "to": "9% (2030)",
-          "reason": "VN-ENV-NATURA 신규 KPI"
-        },
-        {
-          "plan_id": "VN-ENV-NATURA",
-          "indicator": "해양 보호구역 비율",
-          "from": "미포함",
-          "to": "3~5% (2030)",
-          "reason": "VN-ENV-NATURA 신규 KPI"
-        },
-        {
-          "plan_id": "VN-ENV-NATURA",
-          "indicator": "적색목록종 복원",
-          "from": "미포함",
-          "to": "50% 회복",
-          "reason": "VN-ENV-NATURA 신규 KPI"
-        },
-        {
-          "plan_id": "VN-ENV-NATURA",
-          "indicator": "REDD+ 산림 탄소축적",
-          "from": "미포함",
-          "to": "15% 증가",
-          "reason": "VN-ENV-NATURA 신규 KPI"
-        }
-      ],
+      "kpi_changes": [],
       "articles": []
     },
     "VN-PWR-PDP8": {
@@ -3195,31 +2147,31 @@
           "label": "총 발전설비 (2030)",
           "target": "183,291~236,363 MW (약183~236GW) — 2025.4.16 정부포털 공식 게재, Decision 768/QD-TTg 개정치, 기존 150,489MW에서 상향",
           "current": "약 87,600 MW (2025년말 EVN 공식실적, 전년대비 +6,400MW, 아세안 2위) — 2030목표 대비 약 37~48% 수준. [Cowork 팩트체크 2026-07-16] 2026 상반기 발전량 171.54억kWh(+9.85% YoY) 확인, 단 설비용량 갱신치는 미확인",
-          "changed": true
+          "changed": false
         },
         {
           "label": "재생에너지 비중 (2030)",
           "target": "30~39% (태양광 46~73GW·육상풍력 26~38GW 포함)",
           "current": "13.7% (2024) → [Cowork 팩트체크 2026-07-16] 2026 상반기 발전믹스 중 재생에너지 12.9%(석탄 54.5%·수력 21%·가스 8%·수입 3.5%)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "해상풍력 (2030)",
           "target": "17,032 MW",
           "current": "0 MW (계획 중)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "석탄발전 단계적 폐지",
           "target": "2050년 0%",
           "current": "34% (2024) → [Cowork 팩트체크 2026-07-16] 2026 상반기 여전히 54.5%로 발전믹스 최대 비중",
-          "changed": true
+          "changed": false
         },
         {
           "label": "2021~2030 전원+송전망 총투자",
           "target": "약 USD 134.7십억 (전원 119.8B + 송전망 15.0B)",
           "current": "계획 집행 중, 연도별 집행률 조사 중",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -3252,44 +2204,8 @@
           "status": "지연"
         }
       ],
-      "analysis_ko": "**1. 이번 주 핵심 진행사항 (사업 추진 현황)**\n베트남 산업통상부와 국회가 2030년",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-PWR-PDP8",
-          "indicator": "총 발전설비 (2030)",
-          "from": "미포함",
-          "to": "183,291~236,363 MW (약183~236GW) — 2025.4.16 정부포털 공식 게재, Decision 768/QD-TTg 개정치, 기존 150,489MW에서 상향",
-          "reason": "VN-PWR-PDP8 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8",
-          "indicator": "재생에너지 비중 (2030)",
-          "from": "미포함",
-          "to": "30~39% (태양광 46~73GW·육상풍력 26~38GW 포함)",
-          "reason": "VN-PWR-PDP8 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8",
-          "indicator": "해상풍력 (2030)",
-          "from": "미포함",
-          "to": "17,032 MW",
-          "reason": "VN-PWR-PDP8 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8",
-          "indicator": "석탄발전 단계적 폐지",
-          "from": "미포함",
-          "to": "2050년 0%",
-          "reason": "VN-PWR-PDP8 신규 KPI"
-        },
-        {
-          "plan_id": "VN-PWR-PDP8",
-          "indicator": "2021~2030 전원+송전망 총투자",
-          "from": "미포함",
-          "to": "약 USD 134.7십억 (전원 119.8B + 송전망 15.0B)",
-          "reason": "VN-PWR-PDP8 신규 KPI"
-        }
-      ],
+      "analysis_ko": "따라 EPC 및 기자재 공급망 분야에서 한국 기업의 시장 진출 기회가 확대될 전망입니다.\n\n3. 리스크 또는 지연",
+      "kpi_changes": [],
       "articles": [
         {
           "title_ko": "해상풍력 장애물을 제거해야 한다",
@@ -3312,19 +2228,19 @@
           "label": "신도시 부지",
           "target": "4,200 ha",
           "current": "계획·인허가 단계",
-          "changed": true
+          "changed": false
         },
         {
           "label": "인구 수용",
           "target": "30~40만 (2045)",
           "current": "약 4.2만 (2024)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "투자 규모 (North Hanoi Smart City)",
           "target": "약 $4.2B (2019년 착공식 이래 일관)",
           "current": "[Cowork 팩트체크 확인] '$4B→$4.2B 확대'설은 근거없음. 실질착공은 2025.8부터(2019착공식 이후 6년 지연). [Cowork 팩트체크 2026-07-16] 2026.5.8 기준 하노이시가 공사가속 지시 — 금주 신규 진척 뉴스 없음",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -3358,29 +2274,7 @@
         }
       ],
       "analysis_ko": "",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-HAN-DONG-ANH",
-          "indicator": "신도시 부지",
-          "from": "미포함",
-          "to": "4,200 ha",
-          "reason": "VN-HAN-DONG-ANH 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HAN-DONG-ANH",
-          "indicator": "인구 수용",
-          "from": "미포함",
-          "to": "30~40만 (2045)",
-          "reason": "VN-HAN-DONG-ANH 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HAN-DONG-ANH",
-          "indicator": "투자 규모 (North Hanoi Smart City)",
-          "from": "미포함",
-          "to": "약 $4.2B (2019년 착공식 이래 일관)",
-          "reason": "VN-HAN-DONG-ANH 신규 KPI"
-        }
-      ],
+      "kpi_changes": [],
       "articles": []
     },
     "VN-HAN-HOA-LAC": {
@@ -3394,31 +2288,31 @@
           "label": "입주 프로젝트 수",
           "target": "800개 (2030, 기존 목표)",
           "current": "[Cowork 팩트체크 2026-07-16, 판정: 확인됨] 113개 (2026.7.13 Nhân Dân 보도, 기존 109개에서 증가)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "총 등록 투자자본",
           "target": "$30B (2030, 기존 목표)",
           "current": "약 VND 116조 (~US$50억, 2025년 보도 기준)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "상업용지 가동률",
           "target": "확대 목표 (신규지표)",
           "current": "[Cowork 팩트체크 2026-07-16] 약 42% (2026.7.13 보도), 87.7ha 미정리",
-          "changed": true
+          "changed": false
         },
         {
           "label": "FPT대학교 재학생 수",
           "target": "확장 지속",
           "current": "3,000명 이상",
-          "changed": true
+          "changed": false
         },
         {
           "label": "국내 주요기업 프로젝트 수",
           "target": "확장 지속",
           "current": "Viettel 5건, Vingroup 3건, FPT Corp 4건, VNPT 2건",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -3466,43 +2360,7 @@
         }
       ],
       "analysis_ko": "",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-HAN-HOA-LAC",
-          "indicator": "입주 프로젝트 수",
-          "from": "미포함",
-          "to": "800개 (2030, 기존 목표)",
-          "reason": "VN-HAN-HOA-LAC 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HAN-HOA-LAC",
-          "indicator": "총 등록 투자자본",
-          "from": "미포함",
-          "to": "$30B (2030, 기존 목표)",
-          "reason": "VN-HAN-HOA-LAC 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HAN-HOA-LAC",
-          "indicator": "상업용지 가동률",
-          "from": "미포함",
-          "to": "확대 목표 (신규지표)",
-          "reason": "VN-HAN-HOA-LAC 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HAN-HOA-LAC",
-          "indicator": "FPT대학교 재학생 수",
-          "from": "미포함",
-          "to": "확장 지속",
-          "reason": "VN-HAN-HOA-LAC 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HAN-HOA-LAC",
-          "indicator": "국내 주요기업 프로젝트 수",
-          "from": "미포함",
-          "to": "확장 지속",
-          "reason": "VN-HAN-HOA-LAC 신규 KPI"
-        }
-      ],
+      "kpi_changes": [],
       "articles": []
     },
     "VN-HOUSING-2030": {
@@ -3516,31 +2374,31 @@
           "label": "1인당 주거면적",
           "target": "30㎡ (2030)",
           "current": "25.6㎡ (2024)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "도시화율",
           "target": "50% (2030)",
           "current": "42% (2024)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "사회주택 공급",
           "target": "100만호 (2030)",
           "current": "약 25만호 누적",
-          "changed": true
+          "changed": false
         },
         {
           "label": "주택보급률",
           "target": "95%+ (2030)",
           "current": "85% (2024)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "사회주택 우대금리",
           "target": "지속 인하 추진 (신규지표)",
           "current": "[Cowork 팩트체크 2026-07-16, 판정: 확인됨] 2026.7.1~12.31 개인 6.5%/시행사 7.0% (SBV 공문 5341/NHNN-CSTT, 결의 33/NQ-CP 근거, 9개 은행 참여)",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -3567,43 +2425,7 @@
         }
       ],
       "analysis_ko": "",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-HOUSING-2030",
-          "indicator": "1인당 주거면적",
-          "from": "미포함",
-          "to": "30㎡ (2030)",
-          "reason": "VN-HOUSING-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HOUSING-2030",
-          "indicator": "도시화율",
-          "from": "미포함",
-          "to": "50% (2030)",
-          "reason": "VN-HOUSING-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HOUSING-2030",
-          "indicator": "사회주택 공급",
-          "from": "미포함",
-          "to": "100만호 (2030)",
-          "reason": "VN-HOUSING-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HOUSING-2030",
-          "indicator": "주택보급률",
-          "from": "미포함",
-          "to": "95%+ (2030)",
-          "reason": "VN-HOUSING-2030 신규 KPI"
-        },
-        {
-          "plan_id": "VN-HOUSING-2030",
-          "indicator": "사회주택 우대금리",
-          "from": "미포함",
-          "to": "지속 인하 추진 (신규지표)",
-          "reason": "VN-HOUSING-2030 신규 KPI"
-        }
-      ],
+      "kpi_changes": [],
       "articles": []
     },
     "VN-SMART-2025": {
@@ -3617,31 +2439,31 @@
           "label": "스마트시티 시범 도시",
           "target": "6개 (2025)",
           "current": "6개 (2024 진행 중)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "전국 확산",
           "target": "30개 (2030)",
           "current": "12개 (2024)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "디지털정부 지수",
           "target": "top 50 (UN EGDI)",
           "current": "86위 (2024)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "5G 커버리지",
           "target": "도시 100% (2030)",
           "current": "15개 도시 (2024) → [Cowork 팩트체크 2026-07-16] 호치민 5G기지국 8,523개, 보급률 95%+ (2026.7.15 보도)",
-          "changed": true
+          "changed": false
         },
         {
           "label": "호치민 스마트도시 개발 조정위원회",
           "target": "2026~2030 사업 추진, 2035 비전",
           "current": "[Cowork 팩트체크 확인] 2026.6.8 설립 완료, 23인 규모, 시장(응우옌반드억) 위원장. [Cowork 팩트체크 2026-07-16] 2026.7.15 '과학기술·혁신·디지털전환 지도위원회'(당서기 주재) 상반기 점검회의 개최 — 동일기구 여부 [미검증-재확인필요]",
-          "changed": true
+          "changed": false
         }
       ],
       "key_projects": [
@@ -3682,43 +2504,7 @@
         }
       ],
       "analysis_ko": "",
-      "kpi_changes": [
-        {
-          "plan_id": "VN-SMART-2025",
-          "indicator": "스마트시티 시범 도시",
-          "from": "미포함",
-          "to": "6개 (2025)",
-          "reason": "VN-SMART-2025 신규 KPI"
-        },
-        {
-          "plan_id": "VN-SMART-2025",
-          "indicator": "전국 확산",
-          "from": "미포함",
-          "to": "30개 (2030)",
-          "reason": "VN-SMART-2025 신규 KPI"
-        },
-        {
-          "plan_id": "VN-SMART-2025",
-          "indicator": "디지털정부 지수",
-          "from": "미포함",
-          "to": "top 50 (UN EGDI)",
-          "reason": "VN-SMART-2025 신규 KPI"
-        },
-        {
-          "plan_id": "VN-SMART-2025",
-          "indicator": "5G 커버리지",
-          "from": "미포함",
-          "to": "도시 100% (2030)",
-          "reason": "VN-SMART-2025 신규 KPI"
-        },
-        {
-          "plan_id": "VN-SMART-2025",
-          "indicator": "호치민 스마트도시 개발 조정위원회",
-          "from": "미포함",
-          "to": "2026~2030 사업 추진, 2035 비전",
-          "reason": "VN-SMART-2025 신규 KPI"
-        }
-      ],
+      "kpi_changes": [],
       "articles": []
     }
   }
