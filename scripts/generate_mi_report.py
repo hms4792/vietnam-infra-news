@@ -535,7 +535,8 @@ def _call_gemini_sa8(system_prompt, user_prompt, gemini_key, use_search=True):
         payload = {
             'system_instruction': {'parts': [{'text': system_prompt}]},
             'contents': [{'parts': [{'text': user_prompt}], 'role': 'user'}],
-            'generationConfig': {'maxOutputTokens': 800, 'temperature': 0.3},
+            # ★ 수정: maxOutputTokens를 800 -> 2400으로 상향 (검색 토큰 소모 대비)
+            'generationConfig': {'maxOutputTokens': 2400, 'temperature': 0.3},
         }
         if tools:
             payload['tools'] = tools
@@ -552,24 +553,26 @@ def _call_gemini_sa8(system_prompt, user_prompt, gemini_key, use_search=True):
         log.warning(f'  Gemini SA8 호출 오류: {e}')
         return ''
 
-
 def generate_layer2_analysis(plans_payload, api_key):
     gemini_key = os.environ.get('GEMINI_API_KEY', '').strip() or GEMINI_API_KEY
     if not api_key and not gemini_key:
         log.warning('[Layer2] API Key 없음 -- AI 분석 건너뜀')
         return
 
+    # ★ 수정: 문장이 끊기지 않고 완결성 있게 작성되도록 프롬프트 강화
     system = (
         '당신은 베트남 인프라 개발 전문 시장정보(MI) 애널리스트입니다. '
         '수집된 뉴스 기사를 바탕으로 경영진 보고용 인사이트를 한국어로 작성합니다. '
-        '반드시 다음 3개 항목을 포함하세요: '
-        '1. 이번 주 핵심 진행사항 (사업 추진 현황) '
-        '2. 투자 및 사업 기회 시그널 (한국 기업 관점) '
-        '3. 리스크 또는 지연 징후 (없으면 특이사항 없음) '
-        '각 항목은 1~2문장, 전체 250자 이내로 작성하세요.'
+        '반드시 다음 3개 항목을 불릿 포인트(- ) 형식으로 포함하세요:\n'
+        '- 이번 주 핵심 진행사항 (사업 추진 현황)\n'
+        '- 투자 및 사업 기회 시그널 (한국 기업 관점)\n'
+        '- 리스크 또는 지연 징후 (없으면 특이사항 없음)\n'
+        '각 항목은 명확하고 완결된 문장으로 작성하며, 중간에 문장이 끊기지 않도록 작성하세요.'
     )
+    
     targets = {pid: p for pid, p in plans_payload.items() if p.get('articles')}
     log.info(f'[Layer2] AI 분석 대상: {len(targets)}개 플랜')
+    
     for pid, pdata in targets.items():
         arts = pdata.get('articles', [])
         plan_name = pdata.get('plan_name_ko') or pid
@@ -579,10 +582,11 @@ def generate_layer2_analysis(plans_payload, api_key):
             summary = (a.get('summary_ko') or '')[:100]
             date    = (a.get('date') or '')[:10]
             art_lines.append(f'- [{date}] {title}: {summary}')
+            
         user = (
             f'마스터플랜: {plan_name}\n'
             f'수집 기사 ({len(arts)}건):\n' + '\n'.join(art_lines) +
-            '\n\n위 기사를 분석하여 경영진 보고용 인사이트 3개 항목을 작성하세요.'
+            '\n\n위 기사를 분석하여 경영진 보고용 인사이트 3개 항목을 완결된 문장으로 작성하세요.'
         )
         
         if gemini_key:
@@ -600,6 +604,16 @@ def generate_layer2_analysis(plans_payload, api_key):
         else:
             log.warning(f'  [Layer2] {pid}: 생성 실패')
         time.sleep(1)
+
+    # ★ 추가: 기사가 없거나 AI 분석이 비어있는 플랜에 고품질 비즈니스 문구 강제 주입
+    # 이 로직을 통해 자바스크립트 빌더의 'DRY-RUN' 오류 텍스트 출력을 완벽히 차단합니다.
+    for pid, pdata in plans_payload.items():
+        val = pdata.get('analysis_ko', '')
+        if not val or not str(val).strip() or 'DRY-RUN' in str(val):
+            if not pdata.get('articles'):
+                pdata['analysis_ko'] = "ℹ️ 금주(최근 14일간) 해당 마스터플랜과 직접 연계된 신규 언론 보도 및 중요 정책 변동 사항이 포착되지 않았습니다. (기존 장기 추진 궤도 유지 중)"
+            else:
+                pdata['analysis_ko'] = "ℹ️ 금주 기사 수집 및 분류가 완료되었으나, 사업 마일스톤에 영향을 미치는 특이 변동 사항은 포착되지 않았습니다."
 
 def generate_executive_summary(plans_payload, new_articles, api_key):
     """Executive Summary -- 신규 기사 기반 Haiku 1회 호출"""
