@@ -1,0 +1,55 @@
+name: 🚀 SA-8 MI 보고서 단독 재생성 (뉴스 수집 생략)
+
+on:
+  workflow_dispatch:
+    inputs:
+      send_email:
+        description: '이메일 발송 여부 (true/false)'
+        required: true
+        default: 'true'
+        type: boolean
+
+jobs:
+  build-report-only:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: 2. Python 환경 설정
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 3. Node.js 환경 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 4. 필수 패키지 설치
+        run: |
+          pip install requests openpyxl beautifulsoup4 lxml deep-translator
+          cd scripts && npm install
+
+      - name: 5. SA-8 보고서 생성 및 이메일 발송
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        run: |
+          if [ "${{ inputs.send_email }}" = "true" ]; then
+            python3 scripts/generate_mi_report.py --send-email
+          else
+            python3 scripts/generate_mi_report.py
+          fi
+          python3 scripts/build_dashboard.py
+          python3 scripts/export_shared.py || true
+
+      - name: 6. 생성된 보고서 깃허브에 자동 커밋 & 푸시
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/ data/ || true
+          git commit -m "chore: SA-8 MI 보고서 수동 단독 재생성 [automated]" || echo "변경 사항 없음"
+          git push
