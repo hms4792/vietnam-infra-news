@@ -29,7 +29,12 @@ jobs:
       - name: 4. 필수 패키지 설치
         run: |
           pip install requests openpyxl beautifulsoup4 lxml deep-translator
-          cd scripts && npm install
+          if [ -f package.json ]; then npm install; fi
+          if [ -f scripts/package.json ]; then
+            cd scripts && npm install
+          else
+            npm install pptxgenjs docx
+          fi
 
       - name: 5. SA-8 보고서 생성 및 이메일 발송
         env:
