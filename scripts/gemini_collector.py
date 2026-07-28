@@ -105,21 +105,23 @@ def collect_gemini_articles(gemini_key: str) -> list:
             log.warning(f'데이터 파싱 오류: {e}')
     return all_articles
 
-def apply_self_cleaning_loop(article):
+def apply_self_cleaning_loop(article: dict) -> dict:
     # 1. 걸러낼 부정적 시그널 키워드 목록 정의
     rejection_signals = [
         "무관함", "부적합합니다", "연관성이 명확하지 않습니다", 
         "직접적 연관성 확인 불가", "진행 상황 파악 불가"
     ]
     
-    # 2. sum_ko 필드에 해당 시그널이 있는지 확인
-    sum_ko_text = article.get('sum_ko', '')
+    # 기본 등급 설정
+    article['QC_Grade'] = 'NORMAL'
+    
+    # 2. summary_en 필드에 해당 시그널이 있는지 확인 (수정: sum_ko -> summary_en)
+    summary_text = article.get('summary_en', '')
     
     for signal in rejection_signals:
-        if signal in sum_ko_text:
-            # 3. 시그널 발견 시, 등급을 강등하고 매핑된 플랜 ID를 삭제 (노이즈 정화)
+        if signal in summary_text:
+            # 3. 시그널 발견 시, 등급을 REJECTED로 변경 (문자열 대입 오류 수정)
             article['QC_Grade'] = 'REJECTED'
-            article = ''
             break  # 하나라도 발견되면 즉시 종료
             
     return article
