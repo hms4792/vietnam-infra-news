@@ -86,7 +86,7 @@ def collect_gemini_articles(gemini_key: str) -> list:
                 norm = {
                     'title_en': art.get('title_en', '').strip(),
                     'summary_en': art.get('summary_en', '')[:300].strip(),
-                    'province': art.get('province', 'Nationwide').strip(), # [추가] 지역 정보 매핑 (없으면 Nationwide)
+                    'province': art.get('province', 'Nationwide').strip(), # 지역 정보 매핑 (없으면 Nationwide)
                     'source': art.get('source', '').strip(),
                     'date': art.get('date', today),
                     'url': art.get('url', ''),
@@ -98,13 +98,7 @@ def collect_gemini_articles(gemini_key: str) -> list:
                 # 자가 정화 필터 함수 통과
                 norm = apply_self_cleaning_loop(norm)
                 
-                if norm['title_en'] and norm['url'] and norm['QC_Grade'] != 'REJECTED':
-                    all_articles.append(norm)
-                
-                # [Step 2 적용] 자가 정화 필터 함수 통과시키기
-                norm = apply_self_cleaning_loop(norm)
-                
-                # REJECTED가 아닌 정상 기사만 최종 목록에 추가
+                # REJECTED가 아닌 정상 기사만 최종 목록에 한 번만 추가
                 if norm['title_en'] and norm['url'] and norm['QC_Grade'] != 'REJECTED':
                     all_articles.append(norm)
                     
