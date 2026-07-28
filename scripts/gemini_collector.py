@@ -91,8 +91,14 @@ def collect_gemini_articles(gemini_key: str) -> list:
                     'src_type': 'Gemini-API',
                     'collected': today,
                 }
-                if norm['title_en'] and norm['url']:
+                
+                # [Step 2 적용] 자가 정화 필터 함수 통과시키기
+                norm = apply_self_cleaning_loop(norm)
+                
+                # REJECTED가 아닌 정상 기사만 최종 목록에 추가
+                if norm['title_en'] and norm['url'] and norm['QC_Grade'] != 'REJECTED':
                     all_articles.append(norm)
+                    
         except Exception as e:
             log.warning(f'데이터 파싱 오류: {e}')
     return all_articles
