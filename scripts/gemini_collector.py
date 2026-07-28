@@ -45,11 +45,11 @@ SEARCH_QUERIES = [
 def _call_gemini_api(query: str, gemini_key: str) -> str:
     url = f'{GEMINI_API_BASE}/models/{GEMINI_MODEL}:generateContent?key={gemini_key}'
     
-    # [수정 완료] 올바른 JSON 페이로드 구조로 변경하고 구글 검색 도구 활성화
+    # [수정] 출력 형식에 province(지역) 항목을 추가하여 Gemini에게 추출 지시
     payload = {
         "contents": [{
             "parts": [{
-                "text": f"반드시 JSON 배열만 출력하세요. 검색 쿼리: {query} 출력 형식: [title_en, summary_en, source, date, url]"
+                "text": f"반드시 JSON 배열만 출력하세요. 검색 쿼리: {query} 출력 형식: [{{\"title_en\":\"제목\",\"summary_en\":\"100자 이내 요약\",\"province\":\"관련 지역(예: Hanoi, Ho Chi Minh, Binh Duong, Da Nang 등, 특정 지역이 없으면 Nationwide)\",\"source\":\"출처\",\"date\":\"YYYY-MM-DD\",\"url\":\"URL\"}}]"
             }]
         }],
         "tools": [{"googleSearch": {}}]
@@ -86,6 +86,7 @@ def collect_gemini_articles(gemini_key: str) -> list:
                 norm = {
                     'title_en': art.get('title_en', '').strip(),
                     'summary_en': art.get('summary_en', '')[:300].strip(),
+                    'province': art.get('province', 'Nationwide').strip(), # [추가] 지역 정보 매핑 (없으면 Nationwide)
                     'source': art.get('source', '').strip(),
                     'date': art.get('date', today),
                     'url': art.get('url', ''),
@@ -93,6 +94,12 @@ def collect_gemini_articles(gemini_key: str) -> list:
                     'src_type': 'Gemini-API',
                     'collected': today,
                 }
+                
+                # 자가 정화 필터 함수 통과
+                norm = apply_self_cleaning_loop(norm)
+                
+                if norm['title_en'] and norm['url'] and norm['QC_Grade'] != 'REJECTED':
+                    all_articles.append(norm)
                 
                 # [Step 2 적용] 자가 정화 필터 함수 통과시키기
                 norm = apply_self_cleaning_loop(norm)
