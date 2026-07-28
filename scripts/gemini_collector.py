@@ -46,14 +46,13 @@ def _call_gemini_api(query: str, gemini_key: str) -> str:
     url = f'{GEMINI_API_BASE}/models/{GEMINI_MODEL}:generateContent?key={gemini_key}'
     
     payload = {
-        "contents": [{"parts": [{"text": (
-            "당신은 인프라 뉴스 전문가입니다. "
-            "다음 쿼리에 대해 2026년 최신 정보를 바탕으로 뉴스 기사 최대 3건을 JSON 배열로 출력하세요. "
-            "출력 형식: [{\"title_en\":\"제목\",\"summary_en\":\"100자 이내 요약\",\"source\":\"출처\",\"date\":\"YYYY-MM-DD\",\"url\":\"URL\"}] "
+        "contents": "
             "반드시 JSON 배열만 출력하세요. 검색 쿼리: " + query
-        )}]}]
+            "출력 형식: [{\"title_en\":\"제목\",\"summary_en\":\"100자 이내 요약\",\"source\":\"출처\",\"date\":\"YYYY-MM-DD\",\"url\":\"URL\"}] "
+        )}]}],
+        "tools":  # 구글 실시간 웹 검색 강제 활성화
     }
-    
+
     body = json.dumps(payload).encode('utf-8')
     req = urllib.request.Request(url, data=body, headers={'Content-Type': 'application/json'}, method='POST')
 
@@ -85,7 +84,7 @@ def collect_gemini_articles(gemini_key: str) -> list:
                 norm = {
                     'title_en': art.get('title_en', '').strip(),
                     'summary_en': art.get('summary_en', '')[:300].strip(),
-                    'source': art.get('source', q['source_hint']),
+                    'source': art.get('source', '').strip(),
                     'date': art.get('date', today),
                     'url': art.get('url', ''),
                     'sector': q['sector'],
@@ -97,6 +96,26 @@ def collect_gemini_articles(gemini_key: str) -> list:
         except Exception as e:
             log.warning(f'데이터 파싱 오류: {e}')
     return all_articles
+
+def apply_self_cleaning_loop(article):
+    # 1. 걸러낼 부정적 시그널 키워드 목록 정의
+    rejection_signals = [
+        "무관함", "부적합합니다", "연관성이 명확하지 않습니다", 
+        "직접적 연관성 확인 불가", "진행 상황 파악 불가"
+    ]
+    
+    # 2. sum_ko 필드에 해당 시그널이 있는지 확인
+    sum_ko_text = article.get('sum_ko', '')
+    
+    for signal in rejection_signals:
+        if signal in sum_ko_text:
+            # 3. 시그널 발견 시, 등급을 강등하고 매핑된 플랜 ID를 삭제 (노이즈 정화)
+            article['QC_Grade'] = 'REJECTED'
+            article = ''
+            break  # 하나라도 발견되면 즉시 종료
+            
+    return article
+
 
 def main():
     log.info('SA-9 Gemini 수집기 시작')
