@@ -192,6 +192,7 @@ def generate_html_dashboard():
             <tr>
                 <th>날짜</th>
                 <th>섹터</th>
+                <th>지역(Province)</th>  <!-- [추가] -->
                 <th>기사 제목 (영문)</th>
                 <th>출처</th>
             </tr>
@@ -203,6 +204,7 @@ def generate_html_dashboard():
             <tr>
                 <td>{row.get('date', '')}</td>
                 <td>{row.get('sector', '')}</td>
+                <td>{row.get('province', '')}</td>  <!-- [추가] -->
                 <td><a href="{row.get('url', '#')}" target="_blank">{row.get('title_en', '')}</a></td>
                 <td>{row.get('source', '')}</td>
             </tr>
