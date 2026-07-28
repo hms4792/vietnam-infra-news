@@ -45,12 +45,14 @@ SEARCH_QUERIES = [
 def _call_gemini_api(query: str, gemini_key: str) -> str:
     url = f'{GEMINI_API_BASE}/models/{GEMINI_MODEL}:generateContent?key={gemini_key}'
     
+    # [수정 완료] 올바른 JSON 페이로드 구조로 변경하고 구글 검색 도구 활성화
     payload = {
-        "contents": "
-            "반드시 JSON 배열만 출력하세요. 검색 쿼리: " + query
-            "출력 형식: [{\"title_en\":\"제목\",\"summary_en\":\"100자 이내 요약\",\"source\":\"출처\",\"date\":\"YYYY-MM-DD\",\"url\":\"URL\"}] "
-        )}]}],
-        "tools":  # 구글 실시간 웹 검색 강제 활성화
+        "contents": [{
+            "parts": [{
+                "text": f"반드시 JSON 배열만 출력하세요. 검색 쿼리: {query} 출력 형식: [title_en, summary_en, source, date, url]"
+            }]
+        }],
+        "tools": [{"googleSearch": {}}]
     }
 
     body = json.dumps(payload).encode('utf-8')
