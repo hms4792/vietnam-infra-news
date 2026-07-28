@@ -124,6 +124,93 @@ def apply_self_cleaning_loop(article):
             
     return article
 
+import pandas as pd  # 파일 맨 위 임포트 영역에 없다면 추가해주세요
+
+# ==========================================
+# Step 3: 최종 엑셀 데이터베이스 업데이트 함수
+# ==========================================
+def update_excel_database(articles: list):
+    # 엑셀 파일이 저장될 경로 설정 (프로젝트 내 data/database 폴더)
+    db_path = _ROOT / 'data' / 'database' / 'Vietnam_Infra_News_Database_Final.xlsx'
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    new_df = pd.DataFrame(articles)
+    
+    if db_path.exists():
+        existing_df = pd.read_excel(db_path)
+        # 기존 데이터와 새 데이터를 합치고, 중복된 URL이 있다면 최신 내용으로 유지
+        combined_df = pd.concat([existing_df, new_df]).drop_duplicates(subset=['url'], keep='last')
+    else:
+        combined_df = new_df
+        
+    combined_df.to_excel(db_path, index=False)
+    log.info(f'Step 3 완료: 엑셀 데이터베이스 갱신됨 (총 {len(combined_df)}건)')
+
+
+# ==========================================
+# Step 4: 웹 대시보드(index.html) 재생성 함수
+# ==========================================
+def generate_html_dashboard():
+    db_path = _ROOT / 'data' / 'database' / 'Vietnam_Infra_News_Database_Final.xlsx'
+    output_html = _ROOT / 'docs' / 'index.html'  # 대시보드가 위치할 경로
+    
+    if not db_path.exists():
+        log.warning('Step 4 스킵: 대시보드를 만들 엑셀 파일이 존재하지 않습니다.')
+        return
+        
+    df = pd.read_excel(db_path)
+    # 날짜 기준 내림차순 정렬 (최신 글이 위로 오도록)
+    df = df.sort_values(by='date', ascending=False)
+    
+    # 웹 브라우저에 보여줄 기본 HTML 구조 작성
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Vietnam Infra News Dashboard</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; margin: 40px; }}
+            table {{ border-collapse: collapse; width: 100%; margin-top: 20px; }}
+            th, td {{ border: 1px solid #ddd; padding: 10px; text-align: left; }}
+            th {{ background-color: #f4f4f4; }}
+        </style>
+    </head>
+    <body>
+        <h1>Vietnam Infrastructure News Dashboard</h1>
+        <p>최종 업데이트 일시: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+        <table>
+            <tr>
+                <th>날짜</th>
+                <th>섹터</th>
+                <th>기사 제목 (영문)</th>
+                <th>출처</th>
+            </tr>
+    """
+    
+    # 상위 50개 기사를 HTML 표 행(row)으로 변환
+    for _, row in df.head(50).iterrows():
+        html_content += f"""
+            <tr>
+                <td>{row.get('date', '')}</td>
+                <td>{row.get('sector', '')}</td>
+                <td><a href="{row.get('url', '#')}" target="_blank">{row.get('title_en', '')}</a></td>
+                <td>{row.get('source', '')}</td>
+            </tr>
+        """
+        
+    html_content += """
+        </table>
+    </body>
+    </html>
+    """
+    
+    output_html.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_html, 'w', encoding='utf-8') as f:
+        f.write(html_content)
+        
+    log.info('Step 4 완료: 웹 대시보드(index.html) 재생성됨')
+    
 
 def main():
     log.info('SA-9 Gemini 수집기 시작')
@@ -132,14 +219,26 @@ def main():
         log.error('GEMINI_API_KEY가 설정되지 않았습니다.')
         return
         
+    # 1. 기사 수집 및 자가 정화 실행
     articles = collect_gemini_articles(key)
     output = {'collected_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'total': len(articles), 'articles': articles}
     
+    # 기존 JSON 파일 저장 로직[cite: 1]
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
         
-    log.info(f'수집 완료: 총 {len(articles)}건 저장됨')
+    log.info(f'수집 완료: 총 {len(articles)}건 JSON 저장됨')
+    
+    # ==========================================
+    # [추가] Step 3 실행: 엑셀 DB 갱신
+    # ==========================================
+    update_excel_database(articles)
+    
+    # ==========================================
+    # [추가] Step 4 실행: 대시보드 HTML 재생성
+    # ==========================================
+    generate_html_dashboard()
 
 if __name__ == '__main__':
     main()
