@@ -69,14 +69,35 @@ def main(hours_back: int = 24):
         logger.warning('수집 기사 없음 — 종료')
         return
 
-    # ── Step 2: 번역/요약 (Google Translate) ─────────────────
-    logger.info('[Step 2/4] 번역/요약 (Google Translate)...')
+    # ── Step 2: 번역/요약 (Google Translate) 및 자가 정화 ─────────
+    logger.info('[Step 2/4] 번역/요약 (Google Translate) 및 자가 정화...')
     try:
         summarizer = AISummarizer()
         articles   = summarizer.process_articles(articles)
-        logger.info('  번역 완료')
+        
+        # --- [추가] Sum_ko 기반 자가 정화 루프 (DB 삽입 전 노이즈 제거) ---
+        rejection_signals = [
+            "무관함", "부적합합니다", "연관성이 명확하지 않습니다", 
+            "직접적 연관성 확인 불가", "진행 상황 파악 불가"
+        ]
+        
+        cleaned_articles = []
+        for art in articles:
+            sum_ko_text = art.get('sum_ko', '')
+            
+            # 요약문에 부정적 시그널이 포함되어 있는지 확인
+            if any(signal in sum_ko_text for signal in rejection_signals):
+                logger.info(f"  [자가 정화] 무관 기사 필터링됨: {art.get('title', '')[:30]}...")
+                continue  # 엑셀에 저장하지 않고 버림
+                
+            cleaned_articles.append(art)
+            
+        articles = cleaned_articles
+        # -----------------------------------------------------------
+        
+        logger.info(f'  번역 및 자가 정화 완료 (최종 {len(articles)}건 통과)')
     except Exception as e:
-        logger.warning(f'번역 일부 실패 (원문 유지): {e}')
+        logger.warning(f'번역 및 정화 일부 실패 (원문 유지): {e}')
 
     # ── Step 3: Excel 업데이트 ───────────────────────────────
     logger.info('[Step 3/4] Excel DB 업데이트...')
