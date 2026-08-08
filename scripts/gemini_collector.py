@@ -45,11 +45,11 @@ SEARCH_QUERIES = [
 def _call_gemini_api(query: str, gemini_key: str) -> str:
     url = f'{GEMINI_API_BASE}/models/{GEMINI_MODEL}:generateContent?key={gemini_key}'
     
-    # [수정] 출력 형식에 province(지역) 항목을 추가하여 Gemini에게 추출 지시
+    # [수정] 기존 항목을 모두 유지하고, tit_ko(한국어 제목)와 sum_ko(한국어 요약)를 추가
     payload = {
         "contents": [{
             "parts": [{
-                "text": f"반드시 JSON 배열만 출력하세요. 검색 쿼리: {query} 출력 형식: [{{\"title_en\":\"제목\",\"summary_en\":\"100자 이내 요약\",\"province\":\"관련 지역(예: Hanoi, Ho Chi Minh, Binh Duong, Da Nang 등, 특정 지역이 없으면 Nationwide)\",\"source\":\"출처\",\"date\":\"YYYY-MM-DD\",\"url\":\"URL\"}}]"
+                "text": f"반드시 JSON 배열만 출력하세요. 검색 쿼리: {query} 출력 형식: [{{\"title_en\":\"영어 제목\",\"summary_en\":\"100자 이내 영어 요약\",\"province\":\"관련 지역(예: Hanoi, Ho Chi Minh, Binh Duong, Da Nang 등, 특정 지역이 없으면 Nationwide)\",\"source\":\"출처\",\"date\":\"YYYY-MM-DD\",\"url\":\"URL\",\"tit_ko\":\"한국어 제목 번역\",\"sum_ko\":\"한국어 3~4문장 상세 요약\"}}]"
             }]
         }],
         "tools": [{"googleSearch": {}}]
@@ -85,8 +85,10 @@ def collect_gemini_articles(gemini_key: str) -> list:
             for art in (articles if isinstance(articles, list) else []):
                 norm = {
                     'title_en': art.get('title_en', '').strip(),
+                    'tit_ko': art.get('tit_ko', '').strip(),      # [추가] 한국어 제목
                     'summary_en': art.get('summary_en', '')[:300].strip(),
-                    'province': art.get('province', 'Nationwide').strip(), # 지역 정보 매핑 (없으면 Nationwide)
+                    'sum_ko': art.get('sum_ko', '').strip(),      # [추가] 한국어 요약
+                    'province': art.get('province', 'Nationwide').strip(),
                     'source': art.get('source', '').strip(),
                     'date': art.get('date', today),
                     'url': art.get('url', ''),
@@ -99,7 +101,7 @@ def collect_gemini_articles(gemini_key: str) -> list:
                 norm = apply_self_cleaning_loop(norm)
                 
                 # REJECTED가 아닌 정상 기사만 최종 목록에 한 번만 추가
-                if norm['title_en'] and norm['url'] and norm['QC_Grade'] != 'REJECTED':
+                if norm['title_en'] and norm['url'] and norm.get('QC_Grade') != 'REJECTED':
                     all_articles.append(norm)
                     
         except Exception as e:
