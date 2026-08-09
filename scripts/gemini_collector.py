@@ -13,6 +13,7 @@ import urllib.request
 from datetime import datetime
 from pathlib import Path
 from urllib.error import HTTPError
+import re  # <--- 이 줄이 추가되었습니다.
 
 logging.basicConfig(
     level=logging.INFO,
@@ -83,6 +84,15 @@ def collect_gemini_articles(gemini_key: str) -> list:
             articles = json.loads(clean_json)
             
             for art in (articles if isinstance(articles, list) else []):
+                
+                # --- [추가/수정된 부분] 날짜 유효성 강력 검증 로직 ---
+                raw_date = str(art.get('date', '')).strip()
+                if re.match(r'^\d{4}-\d{2}-\d{2}$', raw_date) and raw_date != '2026-12-31':
+                    valid_date = raw_date
+                else:
+                    valid_date = today
+                # ------------------------------------------------
+                
                 norm = {
                     'title_en': art.get('title_en', '').strip(),
                     'tit_ko': art.get('tit_ko', '').strip(),      # [추가] 한국어 제목
@@ -90,22 +100,23 @@ def collect_gemini_articles(gemini_key: str) -> list:
                     'sum_ko': art.get('sum_ko', '').strip(),      # [추가] 한국어 요약
                     'province': art.get('province', 'Nationwide').strip(),
                     'source': art.get('source', '').strip(),
-                    'date': art.get('date', today),
+                    'date': valid_date,                           # [수정] 검증된 날짜 변수 적용
                     'url': art.get('url', ''),
                     'sector': q['sector'],
                     'src_type': 'Gemini-API',
                     'collected': today,
                 }
                 
-                # 자가 정화 필터 함수 통과
+                # 자가 정화 필터 함수 통과 (기존 로직 보존)
                 norm = apply_self_cleaning_loop(norm)
                 
-                # REJECTED가 아닌 정상 기사만 최종 목록에 한 번만 추가
+                # REJECTED가 아닌 정상 기사만 최종 목록에 한 번만 추가 (기존 로직 보존)
                 if norm['title_en'] and norm['url'] and norm.get('QC_Grade') != 'REJECTED':
                     all_articles.append(norm)
                     
         except Exception as e:
             log.warning(f'데이터 파싱 오류: {e}')
+            
     return all_articles
 
 def apply_self_cleaning_loop(article: dict) -> dict:
