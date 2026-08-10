@@ -1,4 +1,622 @@
 {
-  "generated_at": "2026-08-08 14:42",
-  "plans": {}
+  "generated_at": "2026-08-10 12:01",
+  "plans": {
+    "VN-SWM-NATIONAL-2030": {
+      "plan_id": "VN-SWM-NATIONAL-2030",
+      "title_ko": "VN-SWM-NATIONAL-2030",
+      "sector": "Solid Waste",
+      "area": "환경 인프라 (Environment)",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-08-03",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "호치민시는 매립을 줄이고 폐기물 연소를 늘려 전기를 생산합니다."
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-08-03",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "VN-WAT-RESOURCES": {
+      "plan_id": "VN-WAT-RESOURCES",
+      "title_ko": "VN-WAT-RESOURCES",
+      "sector": "Water Supply/Drainage",
+      "area": "환경 인프라 (Environment)",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-XX-XX",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Asian Development Bank (ADB)",
+          "title_ko": "베트남의 탄력적인 인프라 및 적응 전략을 위한 AI"
+        },
+        {
+          "date": "2026-08-07",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "호아빈 수력발전소 블로우다운 게이트 오픈, 6개 지역 긴급 대응"
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-XX-XX",
+      "article_count": 2,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "VN-WAT-URBAN": {
+      "plan_id": "VN-WAT-URBAN",
+      "title_ko": "VN-WAT-URBAN",
+      "sector": "Water Supply/Drainage",
+      "area": "환경 인프라 (Environment)",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-XX-XX",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Asian Development Bank (ADB)",
+          "title_ko": "베트남의 탄력적인 인프라 및 적응 전략을 위한 AI"
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-XX-XX",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "VN-WW-2030": {
+      "plan_id": "VN-WW-2030",
+      "title_ko": "VN-WW-2030",
+      "sector": "Waste Water",
+      "area": "환경 인프라 (Environment)",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "Not explic",
+          "stage": "PLANNING",
+          "milestone": "ADB 프로젝트 승인 및 기본설계",
+          "source": "Asian Development Bank",
+          "title_ko": "베트남: 호치민시 폐수 및 배수 시스템 개선 프로젝트"
+        },
+        {
+          "date": "None",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Unknown",
+          "title_ko": "None"
+        },
+        {
+          "date": "2026-12-31",
+          "stage": "PLANNING",
+          "milestone": "ADB 지원 프로젝트 승인 및 자금 지원 결정",
+          "source": "Asian Development Bank",
+          "title_ko": "호치민시 폐수 및 배수 시스템 개선 프로젝트"
+        },
+        {
+          "date": "2026-08-06",
+          "stage": "PLANNING",
+          "milestone": "베트남 건설부-ADB MOU 체결",
+          "source": "Vietnam Investment Review",
+          "title_ko": "지속가능한 도시 개발, 주택 및 인프라를 위한 MOU(ADB 및 건설부)"
+        },
+        {
+          "date": "2026-08-03",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Vietnam Investment Review",
+          "title_ko": "건설부와 ADB, 지속 가능한 도시 개발을 위한 협력 협약 체결"
+        }
+      ],
+      "next_watch": "호치민시 폐수처리 마스터플랜 최종 확정",
+      "latest_insight": "ADB 재원으로 호치민 수처리 인프라 현대화 추진 중. 도시화에 따른 폐수처리 수요 급증 대응 사업으로 장기 확장 기회 있음",
+      "latest_article_date": "Not explic",
+      "article_count": 6,
+      "haiku_count": 3,
+      "kpi_targets": []
+    },
+    "VN-OG-2030": {
+      "plan_id": "VN-OG-2030",
+      "title_ko": "VN-OG-2030",
+      "sector": "Oil & Gas",
+      "area": "에너지·전력 (Energy & Power)",
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
+      "stage_history": [
+        {
+          "date": "2026-08-04",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "vietnamplus",
+          "title_ko": "인도네시아, 원유 수입원 다변화"
+        }
+      ],
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "latest_insight": "",
+      "latest_article_date": "2026-08-04",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "VN-PWR-PDP8-LNG": {
+      "plan_id": "VN-PWR-PDP8-LNG",
+      "title_ko": "VN-PWR-PDP8-LNG",
+      "sector": "Power",
+      "area": "에너지·전력 (Energy & Power)",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-08-07",
+          "stage": "PLANNING",
+          "milestone": "PDP8 조정계획 하에 EVN과 전력인프라 개발 협력 합의",
+          "source": "Theinvestor.vn",
+          "title_ko": "베트남 중부 지방 Dak Lak, EVN은 조정된 전력 개발 계획 VIII에 따라 전력 인프라 개발 조치에 합의"
+        },
+        {
+          "date": "2026-08-06",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "Allens",
+          "title_ko": "베트남 탄소 시장 - 전망과 기회"
+        },
+        {
+          "date": "2026-08-06",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "VnEconomy",
+          "title_ko": "Tay Ninh성에서 450MW 규모의 태양광 발전소 건설 시작"
+        }
+      ],
+      "next_watch": "Dak Lak성 세부 사업계획 수립 및 투자사업 규모 발표",
+      "latest_insight": "베트남 국영 EVN과 지역정부의 협력체계 구축 단계. PDP8 기반 전력망 확충으로 향후 입찰·건설 사업화 예상",
+      "latest_article_date": "2026-08-07",
+      "article_count": 4,
+      "haiku_count": 1,
+      "kpi_targets": []
+    },
+    "VN-PWR-PDP8-NUCLEAR": {
+      "plan_id": "VN-PWR-PDP8-NUCLEAR",
+      "title_ko": "VN-PWR-PDP8-NUCLEAR",
+      "sector": "Power",
+      "area": "에너지·전력 (Energy & Power)",
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
+      "stage_history": [
+        {
+          "date": "2026-08-08",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "베트남, 원자력발전 표준 기반 구축"
+        },
+        {
+          "date": "2026-08-06",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "Allens",
+          "title_ko": "베트남 탄소 시장 - 전망과 기회"
+        },
+        {
+          "date": "2026-08-06",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "sggp_org_vn",
+          "title_ko": "베트남, 원자력 분야에서 수천 명의 숙련된 인력을 찾고 있습니다"
+        }
+      ],
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-08-08",
+      "article_count": 5,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "VN-PWR-PDP8-RENEWABLE": {
+      "plan_id": "VN-PWR-PDP8-RENEWABLE",
+      "title_ko": "VN-PWR-PDP8-RENEWABLE",
+      "sector": "Power",
+      "area": "에너지·전력 (Energy & Power)",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-08-07",
+          "stage": "PLANNING",
+          "milestone": "4개 풍력발전 프로젝트 정부 승인 완료",
+          "source": "Vietnam Plus",
+          "title_ko": "하띤성, 7조8000억VND 규모의 4개 풍력발전 프로젝트 승인"
+        },
+        {
+          "date": "2026-08-05",
+          "stage": "CONSTRUCTION",
+          "milestone": "다우띠엥 5 태양광발전소 착공 (2026년 8월)",
+          "source": "Tuoi Tre News",
+          "title_ko": "베트남, 2억9600만 달러 규모 태양광 발전 프로젝트 건설 시작"
+        },
+        {
+          "date": "2026-08-05",
+          "stage": "OPERATION",
+          "milestone": "10,000가구 이상 태양광 패널 설치·운영 중",
+          "source": "VietNamNet",
+          "title_ko": "베트남 북부의 10,000개 이상의 가구가 태양광 옥상 패널을 보유하고 있습니다."
+        },
+        {
+          "date": "2026-08-05",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Tay Ninh: 약 7조 8천억 VND 규모의 태양광 발전 프로젝트 건설 시작"
+        },
+        {
+          "date": "2026-08-03",
+          "stage": "TENDERING",
+          "milestone": "Envision 하드웨어 공급계약 체결",
+          "source": "Renewables Now",
+          "title_ko": "베트남의 200MW 근해 풍력 발전 단지를 위해 Envision의 하드웨어 선택 - Renewables Now"
+        },
+        {
+          "date": "2026-08-03",
+          "stage": "TENDERING",
+          "milestone": "Envision 풍력터빈 하드웨어 선정",
+          "source": "News Report",
+          "title_ko": "Envision의 하드웨어는 베트남의 200MW 근해 풍력 발전 단지에 선정되었습니다."
+        },
+        {
+          "date": "2026-08-03",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vir_vn",
+          "title_ko": "Envision Energy, 베트남에서 200MW 근해 풍력 프로젝트 확보"
+        }
+      ],
+      "next_watch": "구체적 시공일정 공지 및 입찰 공고 모니터링",
+      "latest_insight": "베트남 재생에너지 확대정책의 일환으로 대규모 풍력발전 사업이 승인되어 TENDERING 단계 진입 예상. 투자자 참여 기회 증가",
+      "latest_article_date": "2026-08-07",
+      "article_count": 8,
+      "haiku_count": 5,
+      "kpi_targets": []
+    },
+    "VN-HAN-URBAN-2045": {
+      "plan_id": "VN-HAN-URBAN-2045",
+      "title_ko": "VN-HAN-URBAN-2045",
+      "sector": "Smart City",
+      "area": "도시·교통 (Urban & Transport)",
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
+      "stage_history": [
+        {
+          "date": "2026-08-07",
+          "stage": "OPERATION",
+          "milestone": "스마트시티 모니터링·운영센터 개시",
+          "source": "People's Army Newspaper Online",
+          "title_ko": "닥락성, 스마트시티 모니터링 및 운영센터 운영"
+        },
+        {
+          "date": "2026-08-07",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vertexaisearch.cloud.google.com",
+          "title_ko": "베트남, 2026년 상반기 디지털 인프라를 위해 하이퍼스케일러, 클라우드 타이탄, AI 플레이어 유치"
+        },
+        {
+          "date": "2026-08-06",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Vietnam Investment Review",
+          "title_ko": "Can Gio의 Vinhomes Green Paradise, ISO 37122 스마트 시티 인증 획득"
+        }
+      ],
+      "next_watch": "데이터센터 확장 및 플랫폼 고도화 추진 현황",
+      "latest_insight": "닥락성 스마트시티 사업이 운영 단계 진입. 지방 데이터센터와 디지털 플랫폼 관리 본격화로 상용화 단계 도달. 향후 서비스 확대 및 수익성 모니터링 필요.",
+      "latest_article_date": "2026-08-07",
+      "article_count": 4,
+      "haiku_count": 1,
+      "kpi_targets": []
+    },
+    "VN-IP-NORTH-2030": {
+      "plan_id": "VN-IP-NORTH-2030",
+      "title_ko": "VN-IP-NORTH-2030",
+      "sector": "Industrial Parks",
+      "area": "도시·교통 (Urban & Transport)",
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
+      "stage_history": [
+        {
+          "date": "None",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Hanoi Times",
+          "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
+        },
+        {
+          "date": "2026-08-07",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "국회는 도시개발법을 검토하여 대도시 및 경제특구에 대한 구체적인 메커니즘을 제안합니다."
+        }
+      ],
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
+      "latest_article_date": "None",
+      "article_count": 4,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "VN-TRAN-2055": {
+      "plan_id": "VN-TRAN-2055",
+      "title_ko": "VN-TRAN-2055",
+      "sector": "Transport",
+      "area": "도시·교통 (Urban & Transport)",
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
+      "stage_history": [
+        {
+          "date": "2026-12-31",
+          "stage": "CONSTRUCTION",
+          "milestone": "2025년 8월 착공, 현재 55% 진행 중",
+          "source": "Tuoi tre news",
+          "title_ko": "호치민시 - 롱탄 - 저우저이(Dau Giay) 고속도로 확장"
+        },
+        {
+          "date": "2026-09-30",
+          "stage": "COMPLETION",
+          "milestone": "활주로·계류장 완공, 여객터미널 내부마감",
+          "source": "Investify",
+          "title_ko": "Ben Luc – Long Thanh 고속도로 개통"
+        },
+        {
+          "date": "2026-09-30",
+          "stage": "COMPLETION",
+          "milestone": "롱탄공항 제2활주로 2026년 9월 준공",
+          "source": "VNA, Vietnam News, Báo Ảnh Việt Nam",
+          "title_ko": "롱탄 공항의 두 번째 활주로는 2026년 9월 완공 예정"
+        },
+        {
+          "date": "2026-08-07",
+          "stage": "CONSTRUCTION",
+          "milestone": "2026년 10월 개통 예정",
+          "source": "Báo Đồng Nai điện tử",
+          "title_ko": "3번 순환도로와 롱탄 국제공항을 연결하는 25C 도로 프로젝트, 2026년 10월 개통 예정"
+        },
+        {
+          "date": "2026-08-03",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "vietnamplus",
+          "title_ko": "Ben Thanh-Suoi Tien 지하철 노선 확장 프로젝트를 위한 토지 취득"
+        },
+        {
+          "date": "2026-08-03",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vir_vn",
+          "title_ko": "Amalga, 베트남에 데뷔해 의료 분야의 디지털 혁신 가속화"
+        },
+        {
+          "date": "2026-08-03",
+          "stage": "OPERATION",
+          "milestone": "다자협력체계 구축 완료, 연 6.5~7% 성장률 달성",
+          "source": "vir_vn",
+          "title_ko": "재무부 장관, 성장 지원을 위한 국제 통합 우선순위 설명"
+        }
+      ],
+      "next_watch": "2027년 준공 목표, 롱탄교 5차선 추가 공사 진행 상황",
+      "latest_insight": "베트남 고속도로공사(VEC) 주관으로 본격 시공 중. 롱탄국제공항 연계 전략적 인프라로 2027년 완공 시 지역 경제 활성화 기대",
+      "latest_article_date": "2026-12-31",
+      "article_count": 8,
+      "haiku_count": 5,
+      "kpi_targets": []
+    },
+    "VN-URB-METRO-2030": {
+      "plan_id": "VN-URB-METRO-2030",
+      "title_ko": "VN-URB-METRO-2030",
+      "sector": "Smart City",
+      "area": "도시·교통 (Urban & Transport)",
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
+      "stage_history": [
+        {
+          "date": "2026-09-02",
+          "stage": "CONSTRUCTION",
+          "milestone": "2026년 4개 도시철도 사업 착공",
+          "source": "DTI News, Tuoi Tre News",
+          "title_ko": "호치민시 투티엠-롱탄 철도 건설"
+        },
+        {
+          "date": "2026-08-07",
+          "stage": "OPERATION",
+          "milestone": "스마트시티 모니터링·운영센터 가동",
+          "source": "People's Army Newspaper Online",
+          "title_ko": "닥락성, 스마트시티 모니터링 및 운영센터 운영"
+        },
+        {
+          "date": "2026-08-06",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Vietnam Investment Review",
+          "title_ko": "Can Gio의 Vinhomes Green Paradise, ISO 37122 스마트 시티 인증 획득"
+        },
+        {
+          "date": "2026-08-03",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Vietnam Economic Times",
+          "title_ko": "호치민시는 2030년까지 세계 50대 스마트시티 목표를 세웠다 - Vietnam Economic Times"
+        }
+      ],
+      "next_watch": "Thu Thiem-Long Thanh 철도 실제 착공 시점 및 공정률 모니터링",
+      "latest_insight": "호찌민시 주요 인프라 사업으로 2026년 착공 예정. 교통 개선 정책의 핵심사업이나 구체적 예산·노선 정보 미공개로 투자 심사 필요",
+      "latest_article_date": "2026-09-02",
+      "article_count": 4,
+      "haiku_count": 2,
+      "kpi_targets": []
+    },
+    "VN-ENV-IND-1894": {
+      "plan_id": "VN-ENV-IND-1894",
+      "title_ko": "VN-ENV-IND-1894",
+      "sector": "Environment",
+      "area": "환경 인프라 (Environment)",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-08-05",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "2026년 환경 보호법 초안 - 7과: EIA와 환경 허가 간의 중복되는 병목 현상 제거: 다층적인 사전 검사에서 위험, 데이터 및 사후 검사를 기반으로 한 환경 관리까지"
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-08-05",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "VN-PWR-PDP8": {
+      "plan_id": "VN-PWR-PDP8",
+      "title_ko": "VN-PWR-PDP8",
+      "sector": "Power",
+      "area": "에너지·전력 (Energy & Power)",
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
+      "stage_history": [
+        {
+          "date": "2026-08-04",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "sggp_org_vn",
+          "title_ko": "국내 에탄올 생산은 E10 휘발유 수요의 25%만을 충족합니다."
+        },
+        {
+          "date": "2026-08-04",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "vietnamnews_vn",
+          "title_ko": "페트로베트남, 탐사위험기금 복원 제안"
+        },
+        {
+          "date": "2026-08-03",
+          "stage": "OPERATION",
+          "milestone": "하노이 50MW/100MWh BESS 상업운전 개시",
+          "source": "Energy Industry Analysis",
+          "title_ko": "베트남의 전력 시스템이 재구축되고 있습니다: 최초의 그리드 배터리는 역사적인 에너지 전환을 신호합니다"
+        },
+        {
+          "date": "2026-08-03",
+          "stage": "OPERATION",
+          "milestone": "베트남 첫 대규모 BESS 50MW/100MWh 준공 및 운영 개시",
+          "source": "Industry Analysis",
+          "title_ko": "베트남의 전력 시스템이 재건되고 있습니다: 첫 번째 그리드 배터리는 역사적인 에너지 전환을 신호합니다"
+        }
+      ],
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-08-04",
+      "article_count": 4,
+      "haiku_count": 2,
+      "kpi_targets": []
+    },
+    "VN-HOUSING-2030": {
+      "plan_id": "VN-HOUSING-2030",
+      "title_ko": "VN-HOUSING-2030",
+      "sector": "Construction",
+      "area": "도시·교통 (Urban & Transport)",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-08-08",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "건설부 제안: 부동산 거래를 위해서는 식별 코드가 있어야 합니다."
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-08-08",
+      "article_count": 1,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "VN-SMART-2025": {
+      "plan_id": "VN-SMART-2025",
+      "title_ko": "VN-SMART-2025",
+      "sector": "Smart City",
+      "area": "도시·교통 (Urban & Transport)",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-08-03",
+          "stage": "PLANNING",
+          "milestone": "호치민시 스마트시티 2026-2030 개발계획 수립",
+          "source": "Tuoi Tre News",
+          "title_ko": "호치민시는 5G/6G 구축 및 새로운 스마트 시티 데이터 및 운영 센터를 포함하여 스마트 시티 추진에서 2030년까지 모두를 위한 무료 공용 Wi-Fi를 목표로 하고 있습니다."
+        },
+        {
+          "date": "2026-08-03",
+          "stage": "PLANNING",
+          "milestone": "2026~2030년 스마트시티 개발 계획 승인",
+          "source": "Vietnam Economic Times",
+          "title_ko": "호치민시, 2030년까지 글로벌 스마트시티 상위 50개를 목표로 2026~2030년 스마트시티 개발 계획 승인"
+        }
+      ],
+      "next_watch": "5G/6G 인프라 구축 입찰공고 및 데이터센터 착공 시점",
+      "latest_insight": "2030년 목표 기반 중기 계획 수립 단계. 5G 95% 커버, 무료 공공 Wi-Fi 등 구체적 KPI 제시로 TENDERING 진입 예상. 통신·데이터센터 관련 사업 수주 기회 주목.",
+      "latest_article_date": "2026-08-03",
+      "article_count": 2,
+      "haiku_count": 2,
+      "kpi_targets": []
+    }
+  }
 }
