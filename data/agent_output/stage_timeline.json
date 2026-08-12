@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-11 11:58",
+  "generated_at": "2026-08-12 11:55",
   "plans": {
     "VN-SWM-NATIONAL-2030": {
       "plan_id": "VN-SWM-NATIONAL-2030",
@@ -117,41 +117,16 @@
         {
           "date": "2026-12-31",
           "stage": "PLANNING",
-          "milestone": "ADB 지원 승인 및 사업 계획 수립",
+          "milestone": "ADB 지원 프로젝트 승인 및 설계 단계",
           "source": "Asian Development Bank",
           "title_ko": "호치민시 폐수 및 배수 시스템 개선 프로젝트"
         }
       ],
-      "next_watch": "호치민시 폐수처리 마스터플랜 발표 및 입찰공고",
-      "latest_insight": "ADB 자금 지원으로 호치민 수처리 인프라 현대화. 동남아 도시 폐수 처리 확대 투자 추세의 일환",
+      "next_watch": "상세설계 용역 발주 및 환경영향평가 진행",
+      "latest_insight": "ADB 재정 지원으로 호치민 도시 인프라 현대화 추진 중. 폐수처리 용량 확대로 도시 환경개선 기대",
       "latest_article_date": "Not explic",
       "article_count": 4,
       "haiku_count": 2,
-      "kpi_targets": []
-    },
-    "VN-OG-2030": {
-      "plan_id": "VN-OG-2030",
-      "title_ko": "VN-OG-2030",
-      "sector": "Oil & Gas",
-      "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
-      "stage_history": [
-        {
-          "date": "2026-08-04",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "vietnamplus",
-          "title_ko": "인도네시아, 원유 수입원 다변화"
-        }
-      ],
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
-      "latest_insight": "",
-      "latest_article_date": "2026-08-04",
-      "article_count": 1,
-      "haiku_count": 0,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-LNG": {
@@ -159,22 +134,29 @@
       "title_ko": "VN-PWR-PDP8-LNG",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
+        {
+          "date": "2026-08-12",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "VnExpress International",
+          "title_ko": "600헥타르의 육지와 바다에 걸친 풍력 발전소가 베트남 남단에 착공되었습니다."
+        },
         {
           "date": "2026-08-11",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "VOVWORLD / VOV5.VN",
-          "title_ko": "해상 풍력 발전이 베트남의 해양 야망을 주도합니다"
+          "source": "VOV5.VN",
+          "title_ko": "해상풍력이 베트남의 해양 야망을 주도하다 | VOV5.VN"
         },
         {
           "date": "2026-08-07",
           "stage": "PLANNING",
-          "milestone": "PDP VIII 조정안에 따른 전력 인프라 개발 협의",
+          "milestone": "PDP8 전력망 인프라 개발 합의 체결",
           "source": "Theinvestor.vn",
           "title_ko": "베트남 중부 지방 Dak Lak, EVN은 조정된 전력 개발 계획 VIII에 따라 전력 인프라 개발 조치에 합의"
         },
@@ -184,19 +166,12 @@
           "milestone": "준공·운영 개시",
           "source": "Allens",
           "title_ko": "베트남 탄소 시장 - 전망과 기회"
-        },
-        {
-          "date": "2026-08-06",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "VnEconomy",
-          "title_ko": "Tay Ninh성에서 450MW 규모의 태양광 발전소 건설 시작"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-08-11",
-      "article_count": 5,
+      "latest_article_date": "2026-08-12",
+      "article_count": 7,
       "haiku_count": 1,
       "kpi_targets": []
     },
@@ -205,24 +180,24 @@
       "title_ko": "VN-PWR-PDP8-NUCLEAR",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
+        {
+          "date": "2026-08-12",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "VnExpress International",
+          "title_ko": "600헥타르의 육지와 바다에 걸친 풍력 발전소가 베트남 남단에 착공되었습니다."
+        },
         {
           "date": "2026-08-11",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "VOVWORLD / VOV5.VN",
-          "title_ko": "해상 풍력 발전이 베트남의 해양 야망을 주도합니다"
-        },
-        {
-          "date": "2026-08-08",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "베트남, 원자력발전 표준 기반 구축"
+          "source": "VOV5.VN",
+          "title_ko": "해상풍력이 베트남의 해양 야망을 주도하다 | VOV5.VN"
         },
         {
           "date": "2026-08-06",
@@ -232,10 +207,10 @@
           "title_ko": "베트남 탄소 시장 - 전망과 기회"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-08-11",
-      "article_count": 6,
+      "latest_article_date": "2026-08-12",
+      "article_count": 8,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -244,15 +219,22 @@
       "title_ko": "VN-PWR-PDP8-RENEWABLE",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
+          "date": "2026-08-10",
+          "stage": "PLANNING",
+          "milestone": "PDP8 해상풍력 용량 목표 상향조정(6,000~17,032MW)",
+          "source": "Viettonkin",
+          "title_ko": "베트남 해상 풍력: PDP8 투자 통로 - Viettonkin"
+        },
+        {
           "date": "2026-08-07",
-          "stage": "CONSTRUCTION",
-          "milestone": "까마우 50MW 풍력발전소 착공 단계 진입",
+          "stage": "PLANNING",
+          "milestone": "하띤성 4개 풍력발전 프로젝트 78억 동 규모 승인",
           "source": "Vietnam Plus",
           "title_ko": "하띤성, 7조8000억VND 규모의 4개 풍력발전 프로젝트 승인"
         },
@@ -280,23 +262,23 @@
         {
           "date": "2026-08-05",
           "stage": "CONSTRUCTION",
-          "milestone": "다우띠엥 5 태양광발전소 착공 (2026년 8월)",
+          "milestone": "다우띠엥 5 태양광발전소 착공 (2026.08)",
           "source": "Tuoi Tre News",
           "title_ko": "베트남, 2억9600만 달러 규모 태양광 발전 프로젝트 건설 시작"
         },
         {
           "date": "2026-08-05",
           "stage": "OPERATION",
-          "milestone": "10,000가구 이상 태양광 옥상패널 설치 완료 및 상업운전 중",
+          "milestone": "10,000가구 이상 태양광 옥상 패널 설치·운영 중",
           "source": "VietNamNet",
           "title_ko": "베트남 북부의 10,000개 이상의 가구가 태양광 옥상 패널을 보유하고 있습니다."
         }
       ],
-      "next_watch": "110kV 송전선 13km 건설 진행 및 운영개시 일정 공시",
-      "latest_insight": "하티엔성 4개 풍력 프로젝트 승인으로 베트남 재생에너지 확대 가시화. 착공 단계 진입으로 향후 2-3년 내 준공 예상",
-      "latest_article_date": "2026-08-07",
+      "next_watch": "영국-베트남 투자 회랑 구체화 및 사업 입찰 공고",
+      "latest_insight": "PDP8 통합으로 해상풍력 투자 기회 확대. 양자협력과 수십억 달러 자금확보로 사업화 가속화 예상. 후속 입찰 단계 주시 필요.",
+      "latest_article_date": "2026-08-10",
       "article_count": 8,
-      "haiku_count": 3,
+      "haiku_count": 4,
       "kpi_targets": []
     },
     "VN-HAN-URBAN-2045": {
@@ -366,7 +348,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 4,
+      "article_count": 5,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -383,62 +365,48 @@
         {
           "date": "2026-12-31",
           "stage": "CONSTRUCTION",
-          "milestone": "2025년 8월 착공, 현재 55% 진행 중",
+          "milestone": "2025년 8월 착공, 현재 55% 진행률",
           "source": "Tuoi tre news",
           "title_ko": "호치민시 - 롱탄 - 저우저이(Dau Giay) 고속도로 확장"
         },
         {
           "date": "2026-09-30",
           "stage": "COMPLETION",
-          "milestone": "활주로·계류장 완공, 여객터미널 내부마감",
+          "milestone": "2026년 Q3 여객터미널 내부마감 완료, 2026년 내 상용운영 개시",
           "source": "Investify",
           "title_ko": "Ben Luc – Long Thanh 고속도로 개통"
         },
         {
           "date": "2026-09-30",
           "stage": "COMPLETION",
-          "milestone": "롱탄공항 제2활주로 2026년 9월 준공",
+          "milestone": "롱탄공항 제2활주로 2026년 9월 완공",
           "source": "VNA, Vietnam News, Báo Ảnh Việt Nam",
           "title_ko": "롱탄 공항의 두 번째 활주로는 2026년 9월 완공 예정"
         },
         {
           "date": "2026-08-07",
-          "stage": "CONSTRUCTION",
+          "stage": "COMPLETION",
           "milestone": "2026년 10월 개통 예정",
           "source": "Báo Đồng Nai điện tử",
           "title_ko": "3번 순환도로와 롱탄 국제공항을 연결하는 25C 도로 프로젝트, 2026년 10월 개통 예정"
         },
         {
-          "date": "2026-08-04",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "Báo Lao Động",
-          "title_ko": "호치민-롱탄 공항 교통을 완화하기 위한 동나이의 8-10차선 도로 25B 및 25C"
-        },
-        {
-          "date": "2026-08-04",
-          "stage": "UNKNOWN",
-          "milestone": "베트남-태국 50주년 외교관계 기념",
-          "source": "vietnamplus",
-          "title_ko": "Can Tho는 베트남-태국 수교 50주년을 기념합니다."
-        },
-        {
-          "date": "2026-08-04",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "총리, 외교 부문에 발전을 위한 유리한 조건 조성 촉구"
-        },
-        {
-          "date": "2026-08-04",
+          "date": "2026-08-05",
           "stage": "COMPLETION",
           "milestone": "준공·운영 개시",
-          "source": "VnExpress International",
-          "title_ko": "인도, 최신 고속도로 19개에서 다수의 실패로 공무원 11명 해고"
+          "source": "Tuoi tre news, Wikipedia, Vietnam News, Tuoi tre news",
+          "title_ko": "롱탄 국제공항 상업 운영 2026년 12월 1일 시작"
+        },
+        {
+          "date": "2026-08-05",
+          "stage": "UNKNOWN",
+          "milestone": "IUU 어업 단속 정책 시행",
+          "source": "vietnamplus",
+          "title_ko": "An Giang은 IUU 어업에 대해 무관용 접근 방식을 취합니다."
         }
       ],
-      "next_watch": "2027년 준공 목표, 롱탄교 5차선 추가 공사 진행",
-      "latest_insight": "VEC 주도로 본격 시공 중이며, 롱탄국제공항 연계 주요 인프라로 전략적 중요도 높음. 공사 진도율 모니터링 필수.",
+      "next_watch": "2027년 준공 목표 달성 여부, 롱탄교 추가 차선 완성",
+      "latest_insight": "호치민-공항 연결 주요 교통로로 경제적 파급효과 크다. 공정률 55%로 일정 진행 중이나 대규모 토목공사로 리스크 모니터링 필요",
       "latest_article_date": "2026-12-31",
       "article_count": 8,
       "haiku_count": 5,
@@ -462,16 +430,23 @@
           "title_ko": "호치민시 투티엠-롱탄 철도 건설"
         },
         {
+          "date": "2026-08-11",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "sggp_org_vn",
+          "title_ko": "호치민시, 교통 전기화 및 배출 억제 전략 초안"
+        },
+        {
           "date": "2026-08-07",
           "stage": "OPERATION",
-          "milestone": "닥락성 스마트시티 모니터링·운영센터 가동",
+          "milestone": "스마트시티 모니터링·운영센터 개시",
           "source": "People's Army Newspaper Online",
           "title_ko": "닥락성, 스마트시티 모니터링 및 운영센터 운영"
         },
         {
           "date": "2026-08-06",
           "stage": "PLANNING",
-          "milestone": "ADB-건설부 MOU 체결, 정책 협력 개시",
+          "milestone": "ADB와 건설부 간 지속가능 도시개발 MOU 체결",
           "source": "Vietnam Investment Review",
           "title_ko": "지속가능한 도시 개발, 주택 및 인프라를 위한 MOU(ADB 및 건설부)"
         },
@@ -483,10 +458,10 @@
           "title_ko": "Can Gio의 Vinhomes Green Paradise, ISO 37122 스마트 시티 인증 획득"
         }
       ],
-      "next_watch": "실제 착공일정 확인 및 초기 공사 진행률 모니터링",
-      "latest_insight": "호찌민시 주도 주요 교통인프라로 정부 지원 강화 예상. 2026년 착공으로 본격 건설단계 진입하며 향후 3-5년 주요 투자기회",
+      "next_watch": "실제 착공 일정 및 시공 진도율 모니터링",
+      "latest_insight": "호찌민시 교통 인프라 확충으로 장기 운영 수익성 기대. 정부 주도 사업으로 정책 리스크 모니터링 필요",
       "latest_article_date": "2026-09-02",
-      "article_count": 4,
+      "article_count": 5,
       "haiku_count": 3,
       "kpi_targets": []
     },
@@ -526,32 +501,25 @@
       "stage_order": 1,
       "stage_history": [
         {
+          "date": "2026-08-12",
+          "stage": "PLANNING",
+          "milestone": "에너지 부문 정책 개혁 추진",
+          "source": "Vietnam News Agency (VNA)",
+          "title_ko": "베트남 에너지 개발 촉진에 중요한 정책 개혁"
+        },
+        {
           "date": "2026-08-10",
           "stage": "PLANNING",
-          "milestone": "PDP8 개정으로 해상풍력 목표 상향(6,000~17,032MW)",
+          "milestone": "2025년 4월 PDP8 개정승인 완료",
           "source": "Viettonkin",
           "title_ko": "베트남 해상 풍력: PDP8 투자 통로"
-        },
-        {
-          "date": "2026-08-04",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "sggp_org_vn",
-          "title_ko": "국내 에탄올 생산은 E10 휘발유 수요의 25%만을 충족합니다."
-        },
-        {
-          "date": "2026-08-04",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vietnamnews_vn",
-          "title_ko": "페트로베트남, 탐사위험기금 복원 제안"
         }
       ],
-      "next_watch": "영국 양자협력 세부약정 및 투자회랑 조건 확정",
-      "latest_insight": "PDP8 개정과 영국과의 협력으로 정책 프레임워크 형성 중. 실제 프로젝트 입찰 단계 진입 전 자금조성 구조 확립이 핵심.",
-      "latest_article_date": "2026-08-10",
-      "article_count": 3,
-      "haiku_count": 1,
+      "next_watch": "구체적 정책안 발표 및 규제 체계 정비 시점",
+      "latest_insight": "에너지 경쟁력 강화를 위한 정책 개혁 추진 중. 신재생·친환경 에너지 전환 정책이 본격화될 가능성 높음. 관련 인프라 사업 투자 기회 증대 예상.",
+      "latest_article_date": "2026-08-12",
+      "article_count": 2,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-HOUSING-2030": {
