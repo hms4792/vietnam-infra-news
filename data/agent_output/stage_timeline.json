@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12 11:55",
+  "generated_at": "2026-08-13 11:58",
   "plans": {
     "VN-SWM-NATIONAL-2030": {
       "plan_id": "VN-SWM-NATIONAL-2030",
@@ -103,7 +103,7 @@
         {
           "date": "Not explic",
           "stage": "PLANNING",
-          "milestone": "ADB 프로젝트 승인 및 자금 조성",
+          "milestone": "ADB 프로젝트 승인 및 재정 구조 설계",
           "source": "Asian Development Bank",
           "title_ko": "베트남: 호치민시 폐수 및 배수 시스템 개선 프로젝트"
         },
@@ -117,16 +117,41 @@
         {
           "date": "2026-12-31",
           "stage": "PLANNING",
-          "milestone": "ADB 지원 프로젝트 승인 및 설계 단계",
+          "milestone": "ADB 지원 프로젝트 승인 및 기본설계",
           "source": "Asian Development Bank",
           "title_ko": "호치민시 폐수 및 배수 시스템 개선 프로젝트"
         }
       ],
-      "next_watch": "상세설계 용역 발주 및 환경영향평가 진행",
-      "latest_insight": "ADB 재정 지원으로 호치민 도시 인프라 현대화 추진 중. 폐수처리 용량 확대로 도시 환경개선 기대",
+      "next_watch": "타당성 조사 완료 및 상세 설계 공고 시점",
+      "latest_insight": "ADB 지원 수인성 인프라 사업으로 베트남 정부의 우선순위 높음. 호치민 도시화에 따른 폐수 처리 수요 증대로 향후 확장 가능성 높음",
       "latest_article_date": "Not explic",
-      "article_count": 4,
+      "article_count": 5,
       "haiku_count": 2,
+      "kpi_targets": []
+    },
+    "VN-OG-2030": {
+      "plan_id": "VN-OG-2030",
+      "title_ko": "VN-OG-2030",
+      "sector": "Oil & Gas",
+      "area": "에너지·전력 (Energy & Power)",
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
+      "stage_history": [
+        {
+          "date": "2026-08-12",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "channelnewsasia",
+          "title_ko": "수요 예측에 따른 유가 하락, 글로벌 주식 상승"
+        }
+      ],
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-08-12",
+      "article_count": 1,
+      "haiku_count": 0,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-LNG": {
@@ -134,11 +159,18 @@
       "title_ko": "VN-PWR-PDP8-LNG",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
+        {
+          "date": "2026-08-12",
+          "stage": "UNKNOWN",
+          "milestone": "해당 사항 없음",
+          "source": "en_prnasisa",
+          "title_ko": "Recurrent Energy는 장기적인 Microsoft PPA에 따라 호주의 Carwarp Energy Park에 전력을 공급합니다."
+        },
         {
           "date": "2026-08-12",
           "stage": "CONSTRUCTION",
@@ -156,7 +188,7 @@
         {
           "date": "2026-08-07",
           "stage": "PLANNING",
-          "milestone": "PDP8 전력망 인프라 개발 합의 체결",
+          "milestone": "PDP VIII 조정안에 따른 닥락성 전력인프라 개발 협의",
           "source": "Theinvestor.vn",
           "title_ko": "베트남 중부 지방 Dak Lak, EVN은 조정된 전력 개발 계획 VIII에 따라 전력 인프라 개발 조치에 합의"
         },
@@ -168,11 +200,11 @@
           "title_ko": "베트남 탄소 시장 - 전망과 기회"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
+      "next_watch": "베트남 인프라와 무관",
+      "latest_insight": "본 기사는 호주 태양광 발전 사업으로 VN-PWR-PDP8-LNG(베트남 LNG 관련 사업)과 무관합니다.",
       "latest_article_date": "2026-08-12",
-      "article_count": 7,
-      "haiku_count": 1,
+      "article_count": 8,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-NUCLEAR": {
@@ -180,17 +212,17 @@
       "title_ko": "VN-PWR-PDP8-NUCLEAR",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
         {
           "date": "2026-08-12",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "VnExpress International",
-          "title_ko": "600헥타르의 육지와 바다에 걸친 풍력 발전소가 베트남 남단에 착공되었습니다."
+          "stage": "UNKNOWN",
+          "milestone": "호주 태양광발전소 준공",
+          "source": "en_prnasisa",
+          "title_ko": "Recurrent Energy는 장기적인 Microsoft PPA에 따라 호주의 Carwarp Energy Park에 전력을 공급합니다."
         },
         {
           "date": "2026-08-11",
@@ -200,6 +232,13 @@
           "title_ko": "해상풍력이 베트남의 해양 야망을 주도하다 | VOV5.VN"
         },
         {
+          "date": "2026-08-08",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "베트남, 원자력발전 표준 기반 구축"
+        },
+        {
           "date": "2026-08-06",
           "stage": "COMPLETION",
           "milestone": "준공·운영 개시",
@@ -207,11 +246,11 @@
           "title_ko": "베트남 탄소 시장 - 전망과 기회"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
+      "next_watch": "베트남 원전사업과 무관",
+      "latest_insight": "본 기사는 호주 태양광 에너지 프로젝트로 베트남 원전사업(VN-PWR-PDP8-NUCLEAR)과 완전히 무관한 내용입니다.",
       "latest_article_date": "2026-08-12",
       "article_count": 8,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-RENEWABLE": {
@@ -225,24 +264,24 @@
       "stage_order": 1,
       "stage_history": [
         {
+          "date": "2026-08-11",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "VOV5.VN",
+          "title_ko": "해상풍력이 베트남의 해양 야망을 주도하다 | VOV5.VN"
+        },
+        {
           "date": "2026-08-10",
           "stage": "PLANNING",
-          "milestone": "PDP8 해상풍력 용량 목표 상향조정(6,000~17,032MW)",
+          "milestone": "2025년 4월 결정 768로 PDP8 해상풍력 계획 개정",
           "source": "Viettonkin",
           "title_ko": "베트남 해상 풍력: PDP8 투자 통로 - Viettonkin"
         },
         {
           "date": "2026-08-07",
           "stage": "PLANNING",
-          "milestone": "하띤성 4개 풍력발전 프로젝트 78억 동 규모 승인",
+          "milestone": "하띤성 정부의 4개 풍력발전 프로젝트 공식 승인",
           "source": "Vietnam Plus",
-          "title_ko": "하띤성, 7조8000억VND 규모의 4개 풍력발전 프로젝트 승인"
-        },
-        {
-          "date": "2026-08-07",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "nhandan_vn",
           "title_ko": "하띤성, 7조8000억VND 규모의 4개 풍력발전 프로젝트 승인"
         },
         {
@@ -258,27 +297,13 @@
           "milestone": "착공·건설 진행 중",
           "source": "VnEconomy",
           "title_ko": "Tay Ninh성에서 450MW 규모의 태양광 발전소 건설 시작"
-        },
-        {
-          "date": "2026-08-05",
-          "stage": "CONSTRUCTION",
-          "milestone": "다우띠엥 5 태양광발전소 착공 (2026.08)",
-          "source": "Tuoi Tre News",
-          "title_ko": "베트남, 2억9600만 달러 규모 태양광 발전 프로젝트 건설 시작"
-        },
-        {
-          "date": "2026-08-05",
-          "stage": "OPERATION",
-          "milestone": "10,000가구 이상 태양광 옥상 패널 설치·운영 중",
-          "source": "VietNamNet",
-          "title_ko": "베트남 북부의 10,000개 이상의 가구가 태양광 옥상 패널을 보유하고 있습니다."
         }
       ],
-      "next_watch": "영국-베트남 투자 회랑 구체화 및 사업 입찰 공고",
-      "latest_insight": "PDP8 통합으로 해상풍력 투자 기회 확대. 양자협력과 수십억 달러 자금확보로 사업화 가속화 예상. 후속 입찰 단계 주시 필요.",
-      "latest_article_date": "2026-08-10",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-08-11",
       "article_count": 8,
-      "haiku_count": 4,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-HAN-URBAN-2045": {
@@ -316,7 +341,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-08-10",
-      "article_count": 5,
+      "article_count": 7,
       "haiku_count": 1,
       "kpi_targets": []
     },
@@ -338,18 +363,25 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
-          "date": "2026-08-07",
+          "date": "2026-08-13",
+          "stage": "OPERATION",
+          "milestone": "산업단지 운영관리 체계 고도화",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "산업단지 운영관리는 부동산 가치 상승의 지렛대"
+        },
+        {
+          "date": "2026-08-12",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "국회는 도시개발법을 검토하여 대도시 및 경제특구에 대한 구체적인 메커니즘을 제안합니다."
+          "source": "vietnamplus",
+          "title_ko": "고품질 FDI는 산업 인프라에 대한 새로운 요구 사항을 제기합니다."
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 5,
-      "haiku_count": 0,
+      "article_count": 7,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-TRAN-2055": {
@@ -365,21 +397,21 @@
         {
           "date": "2026-12-31",
           "stage": "CONSTRUCTION",
-          "milestone": "2025년 8월 착공, 현재 55% 진행률",
+          "milestone": "2025년 8월 착공, 현재 55% 진행 중",
           "source": "Tuoi tre news",
           "title_ko": "호치민시 - 롱탄 - 저우저이(Dau Giay) 고속도로 확장"
         },
         {
           "date": "2026-09-30",
           "stage": "COMPLETION",
-          "milestone": "2026년 Q3 여객터미널 내부마감 완료, 2026년 내 상용운영 개시",
+          "milestone": "2026년 Q3 여객터미널 내부마감 완료",
           "source": "Investify",
           "title_ko": "Ben Luc – Long Thanh 고속도로 개통"
         },
         {
           "date": "2026-09-30",
           "stage": "COMPLETION",
-          "milestone": "롱탄공항 제2활주로 2026년 9월 완공",
+          "milestone": "롱탄공항 제2활주로 2026년 9월 준공",
           "source": "VNA, Vietnam News, Báo Ảnh Việt Nam",
           "title_ko": "롱탄 공항의 두 번째 활주로는 2026년 9월 완공 예정"
         },
@@ -391,25 +423,32 @@
           "title_ko": "3번 순환도로와 롱탄 국제공항을 연결하는 25C 도로 프로젝트, 2026년 10월 개통 예정"
         },
         {
-          "date": "2026-08-05",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "Tuoi tre news, Wikipedia, Vietnam News, Tuoi tre news",
-          "title_ko": "롱탄 국제공항 상업 운영 2026년 12월 1일 시작"
+          "date": "2026-08-07",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Vietnamese News Outlets",
+          "title_ko": "Ben Luc - Long Thanh 고속도로 2026년 9월 개통 예정"
         },
         {
-          "date": "2026-08-05",
-          "stage": "UNKNOWN",
-          "milestone": "IUU 어업 단속 정책 시행",
-          "source": "vietnamplus",
-          "title_ko": "An Giang은 IUU 어업에 대해 무관용 접근 방식을 취합니다."
+          "date": "2026-08-06",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "Dong Nai City",
+          "title_ko": "동나이 순환도로 3 구성요소 프로젝트, 2026년 9월까지 완료"
+        },
+        {
+          "date": "2026-08-06",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "sggp_org_vn",
+          "title_ko": "동나이시는 2026년 10월까지 DT25C 도로 프로젝트 완료를 목표로 하고 있습니다."
         }
       ],
-      "next_watch": "2027년 준공 목표 달성 여부, 롱탄교 추가 차선 완성",
-      "latest_insight": "호치민-공항 연결 주요 교통로로 경제적 파급효과 크다. 공정률 55%로 일정 진행 중이나 대규모 토목공사로 리스크 모니터링 필요",
+      "next_watch": "2027년 준공 예정, 롱탄국제공항 연계 완성도 점검",
+      "latest_insight": "베트남 고속도로공사(VEC) 주도 대규모 확장사업으로 4→8-10차선 확대 중. 롱탄국제공항 연계 전략적 인프라로 물류·관광 수요 증대 예상",
       "latest_article_date": "2026-12-31",
       "article_count": 8,
-      "haiku_count": 5,
+      "haiku_count": 4,
       "kpi_targets": []
     },
     "VN-URB-METRO-2030": {
@@ -439,14 +478,14 @@
         {
           "date": "2026-08-07",
           "stage": "OPERATION",
-          "milestone": "스마트시티 모니터링·운영센터 개시",
+          "milestone": "스마트시티 모니터링·운영센터 가동",
           "source": "People's Army Newspaper Online",
           "title_ko": "닥락성, 스마트시티 모니터링 및 운영센터 운영"
         },
         {
           "date": "2026-08-06",
           "stage": "PLANNING",
-          "milestone": "ADB와 건설부 간 지속가능 도시개발 MOU 체결",
+          "milestone": "베트남 건설부-ADB 간 지속가능 도시개발 MOU 체결",
           "source": "Vietnam Investment Review",
           "title_ko": "지속가능한 도시 개발, 주택 및 인프라를 위한 MOU(ADB 및 건설부)"
         },
@@ -458,8 +497,8 @@
           "title_ko": "Can Gio의 Vinhomes Green Paradise, ISO 37122 스마트 시티 인증 획득"
         }
       ],
-      "next_watch": "실제 착공 일정 및 시공 진도율 모니터링",
-      "latest_insight": "호찌민시 교통 인프라 확충으로 장기 운영 수익성 기대. 정부 주도 사업으로 정책 리스크 모니터링 필요",
+      "next_watch": "투티엠-롱탄 철도 실제 착공 일정 및 공사 진행률",
+      "latest_insight": "호찌민시 교통 개선의 핵심 인프라로 2030 마스터플랜의 주요 사업. 착공 단계 진입으로 향후 3-4년 건설 기간 예상. 완공 시 도심 교통 혼잡 완화 기대.",
       "latest_article_date": "2026-09-02",
       "article_count": 5,
       "haiku_count": 3,
@@ -470,24 +509,31 @@
       "title_ko": "VN-ENV-IND-1894",
       "sector": "Environment",
       "area": "환경 인프라 (Environment)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
         {
-          "date": "2026-08-05",
+          "date": "2026-08-13",
+          "stage": "UNKNOWN",
+          "milestone": "환경오염 위험시설 감독",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "하띤(Ha Tinh), 람동(Lam Dong), 꽝응아이(Quang Ngai) 지역 환경오염 발생 위험이 높은 시설 5개소 감독"
+        },
+        {
+          "date": "2026-08-13",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Moi truong & Cuoc song",
-          "title_ko": "2026년 환경 보호법 초안 - 7과: EIA와 환경 허가 간의 중복되는 병목 현상 제거: 다층적인 사전 검사에서 위험, 데이터 및 사후 검사를 기반으로 한 환경 관리까지"
+          "title_ko": "목록을 작성해야 하는 온실가스 배출 시설 2,441개 목록"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-08-05",
-      "article_count": 1,
-      "haiku_count": 0,
+      "next_watch": "베트남 인프라 사업과 무관한 환경감시 기사",
+      "latest_insight": "제시된 기사는 환경오염 감시 관련 행정조치이며, VN-ENV-IND-1894 마스터플랜의 인프라 사업 진행과 직접적 연관성 없음",
+      "latest_article_date": "2026-08-13",
+      "article_count": 2,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-PWR-PDP8": {
@@ -503,20 +549,20 @@
         {
           "date": "2026-08-12",
           "stage": "PLANNING",
-          "milestone": "에너지 부문 정책 개혁 추진",
+          "milestone": "PDP8 정책개혁 및 에너지 부문 정책 수립 추진",
           "source": "Vietnam News Agency (VNA)",
           "title_ko": "베트남 에너지 개발 촉진에 중요한 정책 개혁"
         },
         {
           "date": "2026-08-10",
           "stage": "PLANNING",
-          "milestone": "2025년 4월 PDP8 개정승인 완료",
+          "milestone": "2025년 4월 Decision 768 승인",
           "source": "Viettonkin",
           "title_ko": "베트남 해상 풍력: PDP8 투자 통로"
         }
       ],
-      "next_watch": "구체적 정책안 발표 및 규제 체계 정비 시점",
-      "latest_insight": "에너지 경쟁력 강화를 위한 정책 개혁 추진 중. 신재생·친환경 에너지 전환 정책이 본격화될 가능성 높음. 관련 인프라 사업 투자 기회 증대 예상.",
+      "next_watch": "정책개혁 완료 후 구체적 사업 입찰 일정 공시 여부",
+      "latest_insight": "거시경제 안정을 위한 금융정책 조정과 에너지 정책개혁이 동시 진행 중. 정책 안정화 후 구체적 투자기회 창출 예상",
       "latest_article_date": "2026-08-12",
       "article_count": 2,
       "haiku_count": 2,
