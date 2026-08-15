@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-14 11:56",
+  "generated_at": "2026-08-15 02:35",
   "model": "claude-haiku-4-5-20251001",
-  "total_articles": 62,
-  "haiku_used": 20,
+  "total_articles": 58,
+  "haiku_used": 16,
   "stage_summary": {
-    "PLANNING": 31,
-    "TENDERING": 3,
-    "CONSTRUCTION": 16,
-    "COMPLETION": 4,
-    "OPERATION": 4,
+    "PLANNING": 27,
+    "TENDERING": 6,
+    "CONSTRUCTION": 13,
+    "COMPLETION": 3,
+    "OPERATION": 5,
     "UNKNOWN": 4
   },
   "articles": [
@@ -34,31 +34,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
-    },
-    {
-      "date": "2026-08-07",
-      "province": "",
-      "sector": "General",
-      "title_ko": "호아빈 수력발전소 블로우다운 게이트 오픈, 6개 지역 긴급 대응",
-      "title_en": "Hoa Binh Hydropower Plant opened the blowdown gate, 6 localities urgently responded",
-      "summary_ko": "①호아빈 수력발전소 방류 대응 ②저수지 방류량(구체 수치 미기재) ③운영 중 ④호아빈 수력발전소, 6개 지방정부 ⑤긴급 방류 대응 진행 중. 호아빈 수력발전소가 저수지 수위 조절을 위해 바닥 방류구를 개방했으며, 하류의 6개 지방정부가 긴급 대응 체계를 가동했다. 수자원 관리 및 재난 대비 차원의 운영 조치로 VN-WAT-RESOURCES 마스터플랜과 연계된 수자원 관리 사업이다.",
-      "summary_en": "Hoa Binh Hydropower Company opened a discharge gate at the bottom of the reservoir from 4:00 p.m. on August 6 under the direction of the Ministry of Agriculture and Environment. Six provinces and cities in the downstream area are required to immediately deploy measures to ensure safety for people and activities on the river.",
-      "source": "Moi truong & Cuoc song",
-      "url": "https://moitruong.net.vn/thuy-dien-hoa-binh-mo-cua-xa-day-6-dia-phuong-khan-truong-ung-pho-101504.html",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "VN-WAT-RESOURCES",
-      "plan_id": "VN-WAT-RESOURCES",
-      "rule_stage": "COMPLETION",
-      "rule_conf": 0.95,
-      "stage": "COMPLETION",
-      "confidence": 0.95,
-      "milestone": "준공·운영 개시",
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.95)",
-      "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-XX-XX",
@@ -82,7 +58,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-08",
@@ -106,7 +82,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-XX-XX",
@@ -130,7 +106,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-13",
@@ -138,7 +114,7 @@
       "sector": "Waste Water",
       "title_ko": "호치민시, Nhieu Loc – Thi Nghe 폐수처리장에 슬러지 처리 센터 계획",
       "title_en": "Ho Chi Minh City plans sludge treatment center for Nhieu Loc – Thi Nghe Wastewater Treatment Plant",
-      "summary_ko": "죄송하지만 제공된 기사 전문이 404 오류로 접근 불가능합니다. 호치민시 Nhieu Loc-Thi Nghe 폐수처리장의 슬러지 처리시설 계획과 관련된 구체적인 정보(사업규모, 진행단계, 주요기관, 일정 등)를 확인할 수 없습니다. 원본 기사의 정상 링크 제공 시 분석 가능합니다.",
+      "summary_ko": "요청된 기사의 URL이 404 오류로 접근 불가능하여 콘텐츠를 확인할 수 없습니다. 호치민시의 Nhieu Loc-Thi Nghe 하수처리장 슬러지 처리센터 계획에 대한 구체적 정보(사업규모, 진행단계, 주요 기관, 일정)를 파악하기 위해서는 유효한 기사 링크가 필요합니다. VN-WW-2030 마스터플랜과 연계된 프로젝트로 추정되나 정확한 분석이 불가능합니다.",
       "summary_en": "HCMC plans a sludge treatment center at Nhieu Loc – Thi Nghe WWTP, with project procedures in 2026-2030 and construction from 2031-2034.",
       "source": "Ho Chi Minh City Urban Infrastructure Construction Investment Project Management Board",
       "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEM7ttAy7YrxR55oF_iOMvPYCcCU3u7q-mFSgfkmVXxAChO0-tulUHIBxkCarxzxENfB9_vDXubxZJYRTj8ajrR0_qjTfRh1qxOZkf75tnZmWBiF6D2j0bmfI0ULOOdVaPBestqAibUgEcChJE4M8YVZYiWcSLECcIa0duOH4Z91JmeNRZdFkKlIUOUToIlH2HZ0PNPRVjDbHfGcGHCHQrtqCqXW6ckNxYRXepS8Q==",
@@ -154,7 +130,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-12-31",
@@ -173,12 +149,12 @@
       "rule_conf": 0.6,
       "stage": "PLANNING",
       "confidence": 0.85,
-      "milestone": "ADB 지원 프로젝트 승인 및 설계단계",
-      "next_watch": "입찰공고 및 시공사 선정 일정 모니터링",
-      "insight": "ADB 국제금융기관 지원으로 자금 확보 가능성 높음. 호치민 환경 인프라 현대화 추진 중",
-      "stage_reason": "프로젝트 개요 단계, 구체적 시공일정 미정",
+      "milestone": "ADB 지원 프로젝트 승인 및 기본설계",
+      "next_watch": "시공사 선정 입찰 공고 및 공사 착공 시기",
+      "insight": "호치민 도시 인프라 현대화의 환경·위생 부문 핵심사업. ADB 자금 지원으로 신뢰성 높음",
+      "stage_reason": "프로젝트 승인 단계, 상세 설계 진행 중",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "None",
@@ -202,7 +178,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "Not explic",
@@ -221,12 +197,12 @@
       "rule_conf": 0.0,
       "stage": "PLANNING",
       "confidence": 0.75,
-      "milestone": "ADB 프로젝트 승인 및 자금 조성",
-      "next_watch": "상세 설계 완료 및 입찰 공고 시점",
-      "insight": "호치민 폐수 인프라 현대화를 위한 대규모 공적개발원조 사업. ADB 지원으로 신뢰성 높음. 향후 타당성조사 및 설계 진행 예상.",
-      "stage_reason": "ADB 프로젝트 공식화 단계, 세부 계획 수립 중",
+      "milestone": "ADB 프로젝트 승인 및 자금 지원 협약",
+      "next_watch": "타당성 조사 및 상세설계 용역 진행 현황",
+      "insight": "호치민시 도시 인프라 현대화의 핵심 사업으로 상수도·폐수 처리 수요 증가에 대응. ADB 자금 지원으로 재정 안정성 높음.",
+      "stage_reason": "ADB 사업 승인 단계, 구체적 시공 정보 부재",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-12",
@@ -234,7 +210,7 @@
       "sector": "General",
       "title_ko": "수요 예측에 따른 유가 하락, 글로벌 주식 상승",
       "title_en": "Oil dips on demand forecasts, global equities gain",
-      "summary_ko": "기사 제목과 본문이 불일치하며, 구체적인 베트남 인프라 프로젝트 정보(사업명, 규모, 진행단계, 기관, 일정)가 부재합니다. 제공된 마크다운 콘텐츠는 웹사이트 네비게이션 요소만 포함되어 있어 기사 본문 분석이 불가능합니다. VN-OG-2030 마스터플랜과의 연관성을 파악하기 위해 실제 기사 본문 제공이 필요합니다.",
+      "summary_ko": "기사는 유류 가격 변동과 글로벌 주식시장 동향을 다루고 있으나, 베트남 인프라 사업과 관련된 구체적 정보가 부재합니다. 마스터플랜 VN-OG-2030과의 직접적 연계 내용, 사업명, 규모, 진행단계, 주요 기관, 일정 등이 기사 본문에 없어 요약 작성이 불가능합니다.",
       "summary_en": "NEW YORK/LONDON, Aug 12 : Global equities were higher on Wednesday after mild inflation data reinforced bets the Federal Reserve will hold interest rates steady, while oil prices dipped as investors balanced lower demand against a deadlock in U.S.-Iran talks.The United States and Yemen's Iran-aligne",
       "source": "channelnewsasia",
       "url": "https://www.channelnewsasia.com/business/oil-dips-demand-forecasts-global-equities-gain-6315521",
@@ -250,31 +226,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.95)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
-    },
-    {
-      "date": "2026-08-07",
-      "province": "Dak Lak",
-      "sector": "Power",
-      "title_ko": "베트남 중부 지방 Dak Lak, EVN은 조정된 전력 개발 계획 VIII에 따라 전력 인프라 개발 조치에 합의",
-      "title_en": "Central Vietnam province Dak Lak, EVN agree on measures to develop power infrastructure under adjusted Power Development Plan VIII",
-      "summary_ko": "① 전력개발계획 VIII(PDP VIII) 조정에 따른 닥락성 전력인프라 개발\n② 구체 규모 미기재\n③ 협의·계획단계\n④ 닥락성 정부, EVN(베트남전력공사)\n⑤ 조정된 전력개발계획 VIII 시행",
-      "summary_en": "Dak Lak province and EVN agreed on PDP8 power infrastructure development, with EVNCPC planning over VND 4.32T investment for 2026-2030.",
-      "source": "Theinvestor.vn",
-      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFd6bl8SYpTncKLkF9LxzsK42qbpU3UlvOE6u3jMgpJbTFJXP2trkyfTJBYvTLc3uuU4YwId75XeWLSoT1AcOKQSp_7jVZGddVDgFVnd4aH48wyXWii62pPliq7PQ4sHW3-7P_AooEvYlsBIlxsS176xCIzwYNxaNrYvIqeZiD-VI1SFERjJCJh0uicWzeI92f8r-2jyOjnaknG4hqwc4I5jj03UfEBhXzfM8i75NKoUnFsN0PMrsaK3NvOe_a_iu31QrVZL07t1eb006N-flcKDIpGhaMJTXzEOBv4UzzzWA==",
-      "ctx_grade": "HIGH",
-      "ctx_plans": "VN-PWR-PDP8-LNG",
-      "plan_id": "VN-PWR-PDP8-LNG",
-      "rule_stage": "PLANNING",
-      "rule_conf": 0.913,
-      "stage": "PLANNING",
-      "confidence": 0.95,
-      "milestone": "PDP VIII 조정안 기반 닥락성 전력인프라 개발 합의",
-      "next_watch": "구체적 사업 규모·투자액·착공 일정 공시 여부 모니터링",
-      "insight": "베트남 PDP VIII 개정에 따른 지역 전력망 재구성 단계. LNG 발전소 포함 대규모 전력 인프라 사업의 초기 계획 단계로, 아직 구체적 사업 규모나 타이밍 미정.",
-      "stage_reason": "협의·합의 단계이며 구체 규모 미기재",
-      "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-10",
@@ -298,7 +250,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-11",
@@ -322,7 +274,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-11",
@@ -346,7 +298,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-12",
@@ -367,10 +319,10 @@
       "confidence": 0.95,
       "milestone": "해당 없음",
       "next_watch": "해당 없음",
-      "insight": "기사는 호주 카워프 태양광 발전소에 관한 내용으로, VN-PWR-PDP8-LNG(베트남 LNG 사업)과 무관합니다.",
-      "stage_reason": "베트남 인프라 사업과 무관한 기사",
+      "insight": "기사는 호주 태양광 사업으로, VN-PWR-PDP8-LNG(베트남 LNG 전력사업)과 무관한 내용입니다.",
+      "stage_reason": "베트남 인프라와 무관한 호주 재생에너지 사업",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-12",
@@ -394,7 +346,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-13",
@@ -418,7 +370,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.95)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-13",
@@ -426,7 +378,7 @@
       "sector": "General",
       "title_ko": "박닌(Bac Ninh), 옥상 태양광 발전 개발에 대한 책임 강화",
       "title_en": "Bac Ninh tightens its responsibility to develop rooftop solar power",
-      "summary_ko": "①박닌성 옥상 태양광 발전 개발 사업 ②구체적 규모 미상 ③계획/추진 단계 ④박닌성 정부 ⑤지속적 책임강화 추진 중. 박닌성이 옥상 태양광 발전 개발 책임을 강화하고 있으며, 이는 PDP8의 신재생에너지 정책과 부합함.",
+      "summary_ko": "① 박닌성 옥상태양광 발전 개발 사업\n② 구체적 규모 미명시\n③ 계획 단계\n④ 박닌성 정부, 베트남 전력공사\n⑤ 옥상태양광 의무화 정책 추진 및 책임 강화 일정 미정",
       "summary_en": "Faced with rising demand for electricity, Bac Ninh is promoting the development of rooftop solar power, while linking implementation progress with the responsibilities of businesses, agencies, localities and leaders.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/bac-ninh-siet-trach-nhiem-phat-trien-dien-mat-troi-mai-nha-101611.html",
@@ -434,15 +386,15 @@
       "ctx_plans": "VN-PWR-PDP8-LNG",
       "plan_id": "VN-PWR-PDP8-LNG",
       "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
+      "rule_conf": 0.806,
       "stage": "PLANNING",
-      "confidence": 1.0,
+      "confidence": 0.806,
       "milestone": "정책·법령 발표",
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "stage_reason": "규칙기반 (신뢰도 0.81)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-08",
@@ -466,7 +418,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-10",
@@ -490,7 +442,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-11",
@@ -514,7 +466,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-11",
@@ -538,7 +490,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-12",
@@ -557,12 +509,12 @@
       "rule_conf": 0.555,
       "stage": "UNKNOWN",
       "confidence": 0.95,
-      "milestone": "해당 없음",
-      "next_watch": "해당 없음",
-      "insight": "베트남 핵전력 사업(VN-PWR-PDP8-NUCLEAR)과 무관한 호주 태양광 사업 기사",
-      "stage_reason": "베트남 인프라와 완전히 무관",
+      "milestone": "호주 카워프 태양광 발전소 완공",
+      "next_watch": "베트남 핵전력 사업과 무관한 호주 재생에너지 프로젝트",
+      "insight": "기사는 베트남 전력개발계획 제8차(VN-PWR-PDP8-NUCLEAR) 핵전력 사업과 완전히 무관한 호주 태양광 프로젝트임",
+      "stage_reason": "핵전력 사업과 무관한 호주 재생에너지 기사",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-12",
@@ -586,7 +538,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-13",
@@ -610,31 +562,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.95)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
-    },
-    {
-      "date": "2026-08-07",
-      "province": "Ha Tinh",
-      "sector": "Power",
-      "title_ko": "하띤성, 7조8000억VND 규모의 4개 풍력발전 프로젝트 승인",
-      "title_en": "Ha Tinh approves four wind power projects worth over 7.8 trillion VND",
-      "summary_ko": "①하티엔 풍력발전 4개 프로젝트 ②총 78억 동 규모 ③승인 단계 ④하티엔성 정부 ⑤향후 착공 예정",
-      "summary_en": "Ha Tinh province approved four wind power projects (225 MW, $298M) aiming to establish an energy hub and boost national energy security.",
-      "source": "Vietnam Plus",
-      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQG7DD5dwzT-x5XBaHPzB-IbfMaGakzh9T-pqUf4zVuEL--01YtmLnTvDKPWuuSj9qjkREvWoY1UDtwkLbLlHJYHdH6poqm4juHq8O_Yi20yxuaaOv_RohK02fUIIZHSkqOg9nFWxIaF9LgsOm1-IbIEYm2tholozeA-PfxYsr13wOPcbUXrMNO0NskagEtKxOFpgh487uooCZlQMkEbhKnSeLJoRfwF1jM=",
-      "ctx_grade": "HIGH",
-      "ctx_plans": "VN-PWR-PDP8-RENEWABLE",
-      "plan_id": "VN-PWR-PDP8-RENEWABLE",
-      "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
-      "stage": "PLANNING",
-      "confidence": 0.95,
-      "milestone": "하띤성 4개 풍력발전 프로젝트 78억VND 규모 승인",
-      "next_watch": "프로젝트별 착공 시점 및 투자계약 체결 현황 모니터링",
-      "insight": "정부 승인 획득으로 계획단계 진입 완료. 향후 입찰/투자 유치 단계로의 진전이 핵심. 재정성 풍력자원 개발에 따른 지역 인프라 수요 증대 예상",
-      "stage_reason": "정부 승인 완료, 착공 전 PLANNING 단계",
-      "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-10",
@@ -642,7 +570,7 @@
       "sector": "Power",
       "title_ko": "베트남 해상 풍력: PDP8 투자 통로 - Viettonkin",
       "title_en": "Vietnam Offshore Wind: The PDP8 Investment Corridor - Viettonkin",
-      "summary_ko": "①베트남 해상풍력 개발 (PDP8 재정 에너지계획) ②2035년 6,000~17,032MW, 2050년 70,000~91,500MW 목표 ③계획 단계 (2025년 4월 개정 승인) ④베트남 정부, 영국 정부, 국제 금융기관 ⑤항만시설·설치선박·계통연계·국산 공급망 구축 추진",
+      "summary_ko": "① 베트남 해상풍력 개발 (PDP8 재정비) ② 2035년까지 6,000~17,032MW 용량 목표 ③ 계획 단계 (2025년 4월 재승인) ④ 베트남 정부, 영국 정부 양자협력 ⑤ 항만시설·설치선박·계통연계·공급망 구축 추진",
       "summary_en": "Vietnam's PDP8 revised target for offshore wind is 6-17 GW by 2035, with 43 projects in development.",
       "source": "Viettonkin",
       "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFH5ers7dqRf-vJTJ7PX9uT1KSiO7q9OhPYNtp0ZzN8Ku3hjgzqwXc3QsDuDWP3C5vCf-h7LMVCLiT3KmmCK_HSMLjwIyWNxK-T7g9A9Bbwfcj5WZT014ymBjaDG8v8Oskzb2FmLeuHSlzLz6vz165cFcPgFRo7zKBIFiwFnbwGmjF7md0k3QxWtFLcaw==",
@@ -653,36 +581,36 @@
       "rule_conf": 1.0,
       "stage": "PLANNING",
       "confidence": 0.95,
-      "milestone": "2025년 4월 PDP8 개정 승인 완료",
-      "next_watch": "항만·설치선박·계통연계 인프라 구축 계획 수립",
-      "insight": "영국·국제금융기관 참여로 자금조달 경로 확보. 2035년 6,000MW 목표 달성을 위해 2026-2027년 입찰 프로세스 시작 예상",
-      "stage_reason": "정부 승인 완료, 본격 투자 사전단계",
+      "milestone": "2025년 4월 PDP8 재승인, 영국과 양자협력 체결",
+      "next_watch": "항만시설·설치선박 확보 및 입찰 공고 시점",
+      "insight": "6,000~17,032MW 용량 목표로 대규모 해상풍력 개발 추진 중. 정부-민간 협력체계 구축 단계로 입찰 준비 임박 예상",
+      "stage_reason": "계획 재승인 완료, 기반구축 추진 중",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
-      "date": "2026-08-07",
-      "province": "Quang Ninh",
-      "sector": "General",
-      "title_ko": "하띤성, 7조8000억VND 규모의 4개 풍력발전 프로젝트 승인",
-      "title_en": "Ha Tinh approves four wind power projects worth over 7.8 trillion VND",
-      "summary_ko": "①하띠성 풍력발전 4개 프로젝트 ②총 78억 동 규모 ③승인 단계 ④하띠성 정부, 재정부 ⑤프로젝트 실행 단계 진행. 베트남 신재생에너지 목표(PDP8) 달성을 위한 주요 풍력사업으로, 중부지역 에너지 공급 확대에 기여",
-      "summary_en": "The People’s Committee of the central province of Ha Tinh has approved the investment policies and investors for four wind power projects with a combined capacity of 225MW and total capital of 7.81 trillion VND (298 million USD). Can Tho: Work begins on two wind power projects with combined investme",
-      "source": "nhandan_vn",
-      "url": "https://en.nhandan.vn/ha-tinh-approves-four-wind-power-projects-worth-over-78-trillion-vnd-post165229.html",
-      "ctx_grade": "MEDIUM",
+      "date": "2026-08-13",
+      "province": "Nationwide",
+      "sector": "Power",
+      "title_ko": "베트남 재생에너지 부문 투자: 외국인 투자자를 위한 시장 진입 가이드",
+      "title_en": "Investing in Vietnam's Renewable Energy Sector: A Market Entry Guide for Foreign Investors",
+      "summary_ko": "베트남의 재생에너지 부문이 빠르게 성장하고 있습니다. 2024년 태양광과 풍력이 설치용량의 25% 이상을 차지했으며, 2025년 승인된 전력개발계획 VIII에 따라 2030년까지 183.3~236.4GW의 발전용량을 목표로 하고 있습니다. 약 1,350~1,360억 달러의 투자가 필요할 것으로 예상됩니다.",
+      "summary_en": "Vietnam's adjusted PDP8 targets significant solar, wind, and storage capacity by 2030, offering investment opportunities.",
+      "source": "ASEAN Briefing",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFv_hTd6oc7_E1BmBe8vfWcMskioGKekvnW6mS0vtqJAfc0PZ6d9hyHbkZq86kbicId-2l2RYImUW5ljVfa4oykRQ28jSj7j0om3TIPCsWKRlmp-HNR62acwJUMTJ3coUaMNR9j-FkwLopFbhI1zTAaEz95FzZJPeJGUBnhqt1h-f4ZK5xaB7ggZ5GkBR8JtAeTRv4HQd4iKnaDuOPeOc_ZC2PJPXJg60WTDCQ4nW_M8soYlPLTVjI=",
+      "ctx_grade": "HIGH",
       "ctx_plans": "VN-PWR-PDP8-RENEWABLE",
       "plan_id": "VN-PWR-PDP8-RENEWABLE",
       "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
+      "rule_conf": 0.849,
       "stage": "PLANNING",
-      "confidence": 1.0,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "confidence": 0.95,
+      "milestone": "2025년 전력개발계획 VIII 승인",
+      "next_watch": "2030년 183.3~236.4GW 목표 달성을 위한 프로젝트별 입찰 공시",
+      "insight": "베트남 재생에너지 부문 1,350~1,360억 달러 규모 투자 기회 본격화. 태양광·풍력 비중 확대로 외국인 투자자 진입 수요 높음.",
+      "stage_reason": "2025년 국가 마스터플랜 공식 승인, 프로젝트 상세 기획 진행 중",
+      "haiku_used": true,
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-10",
@@ -706,7 +634,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-11",
@@ -730,7 +658,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-11",
@@ -754,7 +682,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:55"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-12",
@@ -773,12 +701,12 @@
       "rule_conf": 0.555,
       "stage": "UNKNOWN",
       "confidence": 0.95,
-      "milestone": "호주 태양광 발전소 완공",
-      "next_watch": "베트남 재생에너지 사업과 무관",
-      "insight": "기사는 호주 카워프 태양광 발전소 완공 사례로, VN-PWR-PDP8-RENEWABLE 베트남 사업과 직접 연관 없음",
-      "stage_reason": "베트남 인프라 사업과 무관한 호주 프로젝트",
+      "milestone": "베트남 재생에너지 사업과 무관",
+      "next_watch": "베트남 인프라 사업 기사 추적 필요",
+      "insight": "호주 태양광 프로젝트로 베트남 전력개발사업(VN-PWR-PDP8)과 직접 관련 없음. 비교분석 자료로만 활용 가능",
+      "stage_reason": "베트남 인프라와 무관한 호주 사업",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-12",
@@ -802,103 +730,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
-      "date": "2026-08-07",
-      "province": "Dong Nai",
-      "sector": "Smart City",
-      "title_ko": "동나이, 스마트 거버넌스와 IOC 통합을 위한 디지털 인프라 발전",
-      "title_en": "Dong Nai Advances Digital Infrastructure for Smart Governance and IOC Integration",
-      "summary_ko": "요청된 URL을 찾을 수 없습니다. 404 오류가 발생했으며, 기사 본문이 존재하지 않습니다.",
-      "summary_en": "Dong Nai is integrating specialized databases with its IOC for smart governance by July 2026.",
-      "source": "Báo Đồng Nai điện tử",
-      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFTfHbaeHXjxxT9fdp7FtGYnpgihdJyIpW94T88pkQCpN4yCFLwszIA0TyCwk9IEikIc-TSLcmNY-geBlc2qL7ueCxFjJPCjkcrRnuTrFXWVCvPxICjoYg7G3liyqXTvgtv2YRhP_wZmgD7ik9GRNi0LavoxQNALCZEcHSnJh54ST9mwV5Tnw75JGe9zdFxXXMagOK8LjV6utx25L9aubfJUL1R4qBLOCyyEA=",
-      "ctx_grade": "LOW",
-      "ctx_plans": "VN-HAN-URBAN-2045",
-      "plan_id": "VN-HAN-URBAN-2045",
-      "rule_stage": "CONSTRUCTION",
-      "rule_conf": 1.0,
-      "stage": "CONSTRUCTION",
-      "confidence": 1.0,
-      "milestone": "착공·건설 진행 중",
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
-    },
-    {
-      "date": "2026-08-07",
-      "province": "Dong Nai",
-      "sector": "Smart City",
-      "title_ko": "동나이, 스마트 거버넌스를 위한 디지털 인프라 발전",
-      "title_en": "Dong Nai advances digital infrastructure for smart governance",
-      "summary_ko": "죄송하지만 제공된 기사 전문이 404 오류 페이지로 실제 콘텐츠가 없습니다. 기사 제목은 'Dong Nai advances digital infrastructure for smart governance'이고 마스터플랜 ID는 VN-HAN-URBAN-2045로 표시되어 있으나, 본문 내용을 확인할 수 없어 요청하신 5가지 항목(사업명, 규모, 진행단계, 주요기관, 일정)을 분석할 수 없습니다. 유효한 기사 전문 재제공을 부탁드립니다.",
-      "summary_en": "Dong Nai invests in digital infrastructure for two-tier governance, deploying IOC, shared data, and 5G coverage (84% by 2026).",
-      "source": "Báo Đồng Nai điện tử",
-      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQETuh7t2c_XGw5aw5mjvPfOPwbjM8QXpUotiE7V4Om3mpZTamlSQj-NUz6d4ae7jQ9AQyIUc1QFnu3uRfUtOrje6XiepKqdLlgPnykPwHhdx6MSCNWYsBafk1VCoeWqrUWxcg-Jqr_8ALUlW-jTL-AD65qB2yQJBxmPsezSZpykeAf40_Ba03ucMITBOi1vmYi-VIphxYQX0YltoxVLroe0EwJ694__59k4",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "VN-HAN-URBAN-2045",
-      "plan_id": "VN-HAN-URBAN-2045",
-      "rule_stage": "CONSTRUCTION",
-      "rule_conf": 0.802,
-      "stage": "CONSTRUCTION",
-      "confidence": 0.802,
-      "milestone": "착공·건설 진행 중",
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.80)",
-      "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
-    },
-    {
-      "date": "2026-08-07",
-      "province": "Dak Lak",
-      "sector": "Smart City",
-      "title_ko": "닥락성, 스마트시티 모니터링 및 운영센터 운영",
-      "title_en": "Dak Lak province operates Smart City Monitoring and Operations Centre",
-      "summary_ko": "이 센터는 스마트 시티 운영을 위한 지방 데이터 센터와 공유 디지털 플랫폼을 관리합니다.",
-      "summary_en": "The center manages the provincial data center and shared digital platforms for smart city operations.",
-      "source": "People's Army Newspaper Online",
-      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGYr3SJn1UKk-1yaDGYx2tbx3jsPQrjbwvtyXxlrzb9TFlcN96dXlwp-U2IPxhm6Sy9anXZXlf6klQWOH98UxZAYD0BR3oB2w7L0wjXjrT-j0aDHyrFc2XGQMzi7lLMX3O4208n8tTLFdLPOHE9yPLhZoVY9hLsIyQJUxNWXVYg27hVceMBc_Q9zJa8yvz6-C4HtCb2a6qhQ_CM_w==",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "",
-      "plan_id": "VN-HAN-URBAN-2045",
-      "rule_stage": "UNKNOWN",
-      "rule_conf": 0.0,
-      "stage": "OPERATION",
-      "confidence": 0.85,
-      "milestone": "스마트시티 모니터링·운영센터 가동",
-      "next_watch": "데이터센터 확장 및 플랫폼 고도화 추진",
-      "insight": "닥락성 스마트시티 기반시설이 운영 단계에 진입했으며, 지속적인 디지털 플랫폼 고도화를 통한 도시 관리 효율화가 기대됨",
-      "stage_reason": "운영센터 운영 중 - 상업운전 개시",
-      "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
-    },
-    {
-      "date": "2026-08-07",
+      "date": "2026-08-13",
       "province": "Nationwide",
-      "sector": "Smart City",
-      "title_ko": "베트남, 2026년 상반기 디지털 인프라를 위해 하이퍼스케일러, 클라우드 타이탄, AI 플레이어 유치",
-      "title_en": "Vietnam draws hyperscalers, cloud titans, AI players in H1 2026 for digital infrastructure",
-      "summary_ko": "①베트남 디지털 인프라 개발 ②대규모 데이터센터 구축, 5G 확대 ③계획 단계 ④베트남 정부(정치국), VinSpace, 하이퍼스케일러 등 클라우드 기업 ⑤2026년 상반기 하이퍼스케일러·AI 기업 유입 추진, VinSpace의 SpaceX 위성 발사 계약 진행중",
-      "summary_en": "Significant international investment flowed into Vietnam's digital infrastructure sector, including data centers and AI.",
-      "source": "vertexaisearch.cloud.google.com",
-      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGdGAwJfAhvQKgeOs5c-dTtJ_PWsQRrDJfkixGhAiHadJUpqZ2Jc4On18WN_XZPmgbIj7nUpP9vSWlIFCxNQQYQSNUZZLANsp1l-F3Yca15rklL5bLlYFUDEIHzuWq2nc-A-9JiTkqHF-P3HEnkjtf67ydw-J7j5v-XO3ut-Ql0EcPNKKdUdVks6dh6OiLNHE6W3MHPoA==",
+      "sector": "Power",
+      "title_ko": "베트남 재생에너지 부문에 투자",
+      "title_en": "Investing in Vietnam's Renewable Energy Sector",
+      "summary_ko": "요청한 URL을 찾을 수 없습니다. 404 오류가 발생했습니다.",
+      "summary_en": "The adjusted PDP8 (April 2025) targets 183.3-236.4 GW total power capacity by 2030, with USD 135-136 billion investment. Renewable energy is crucial: 46.5-73.4 GW solar, 26.1-38 GW onshore/nearshore wind, and 10-16.3 GW battery storage by 2030.",
+      "source": "ASEAN Briefing",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHIzusKxHpp39lZg0rlT8OwneQhbS5VezOVcFiznp8G8YnVF-1ZJM15CKQYVfJI-cbge2y0smyzKg14Smum7Df4plWVA_iULzdoV66GQM_mfGT1JEc8otr6g541zSLVNmr8OqobxV3dAQ6NNiF3MujocBk61hLdtF7KyXTsvY7hRamamNZwuyIeBxn2-8OeAJKnG0xfuSAEfv-2rBWcLSPgXHi_LZz0EY_x1tAnM-6wTt3v927UWQ=",
       "ctx_grade": "LOW",
-      "ctx_plans": "VN-HAN-URBAN-2045",
-      "plan_id": "VN-HAN-URBAN-2045",
-      "rule_stage": "CONSTRUCTION",
-      "rule_conf": 0.693,
-      "stage": "CONSTRUCTION",
-      "confidence": 0.693,
-      "milestone": "착공·건설 진행 중",
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "ctx_plans": "",
+      "plan_id": "VN-PWR-PDP8-RENEWABLE",
+      "rule_stage": "TENDERING",
+      "rule_conf": 0.946,
+      "stage": "TENDERING",
+      "confidence": 0.946,
+      "milestone": "입찰·계약 진행",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.69)",
+      "stage_reason": "규칙기반 (신뢰도 0.95)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-10",
@@ -922,7 +778,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.98)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-11",
@@ -930,7 +786,7 @@
       "sector": "Smart City",
       "title_ko": "새로운 개발 시대를 주도하기 위한 디지털 인프라 향상",
       "title_en": "Elevating digital infrastructure to drive new era of development",
-      "summary_ko": "베트남의 디지털 인프라가 급속도로 발전하고 있습니다. 광섬유 네트워크 확대로 대부분 도시지역이 고속 인터넷 접근 가능하며, 5G는 전국 91% 이상 커버합니다. 2026년 4월 모바일 평균속도는 200.54Mbps로 세계 11위, 고정 광대역은 282Mbps로 12위를 기록했습니다.",
+      "summary_ko": "베트남 디지털 인프라 개발(VN-HAN-URBAN-2045). 광섬유망 확충으로 도시지역 고속인터넷 보급, 5G는 91% 인구 커버. 2026년 4월 모바일 속도 200.54Mbps(11위), 고정 광대역 282Mbps(12위)로 동남아 2위 달성. 계획·진행 중 단계. 통신부·정부 주도. 향후 5G·클라우드 기반 스마트팩토리·IoT 확대 예정.",
       "summary_en": "Vietnam's digital infrastructure is rapidly expanding, with 5G covering over 91% and fixed broadband speeds increasing, facilitating digital transformation by 2026.",
       "source": "VietNamNet",
       "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGuwZzK258Ig_--MlPjVTqmA5U6JFDRijY9J-HRFuLVmCTmCjH3rtXGPeq1e4iyP1DKCyHlh4Y7yjDVyAlIA_Q34YAq5cKmUhbm4kTq9MAY9twzkkex4FvF7aBHF57Qlrdi7GS1NhpzXt9foTpb9cVYd31p_URc7Fzh2wK17bocfc-JsgjNungb8heiNMiRkczPoK_PNXLsnBjgpa2y7hdQ6g==",
@@ -938,39 +794,39 @@
       "ctx_plans": "VN-HAN-URBAN-2045",
       "plan_id": "VN-HAN-URBAN-2045",
       "rule_stage": "CONSTRUCTION",
-      "rule_conf": 0.982,
+      "rule_conf": 0.724,
       "stage": "CONSTRUCTION",
-      "confidence": 0.982,
+      "confidence": 0.724,
       "milestone": "착공·건설 진행 중",
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.98)",
+      "stage_reason": "규칙기반 (신뢰도 0.72)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
-      "date": "2026-08-07",
-      "province": "",
+      "date": "2026-08-12",
+      "province": "Ho Chi Minh City, Dong Nai",
       "sector": "Industrial Parks",
-      "title_ko": "국회는 도시개발법을 검토하여 대도시 및 경제특구에 대한 구체적인 메커니즘을 제안합니다.",
-      "title_en": "National Assembly Reviewing the Urban Development Law, the National Assembly proposes a specific mechanism for large urban areas and special economic zones",
-      "summary_ko": "① 도시개발법 검토 및 대도시·경제특구 특별메커니즘 제안\n② 구체적 규모 미기재\n③ 계획 단계 (입법 검토 중)\n④ 국회, 정부부처\n⑤ 도시개발법 개정안 검토 진행 중",
-      "summary_en": "On the morning of August 7, the National Assembly heard the Proposal and Verification Report of the Urban Development Law project. The Draft Law aims to build a stable legal framework, promote decentralization for special urban areas, and establish specific mechanisms and policies to develop special economic zones, creating new growth engines for the economy.",
-      "source": "Moi truong & Cuoc song",
-      "url": "https://moitruong.net.vn/quoc-hoi-xem-xet-luat-phat-trien-do-thi-quoc-hoi-de-xuat-co-che-dac-thu-cho-do-thi-lon-va-khu-kinh-te-dac-biet-101509.html",
+      "title_ko": "호치민시는 2026년 스마트, 친환경 산업단지 및 하이테크 FDI 추진",
+      "title_en": "Ho Chi Minh City's Push for Smart, Eco-Industrial Parks and High-Tech FDI in 2026",
+      "summary_ko": "베트남이 고품질 외국인직접투자(FDI) 유치를 위해 산업인프라 개선에 나서고 있습니다. SCIC가 66개 기업 지분을 매각하고 21개 핵심 기업에 집중 투자하는 한편, 한국과 기술이전 및 투자협력을 논의하며 인프라 고도화를 추진 중입니다.",
+      "summary_en": "Ho Chi Minh City is restructuring its industrial landscape towards smart and eco-industrial park models, prioritizing high-tech value chains. New projects like Song Than 3 Industrial Park are being built to LEED green standards, emphasizing sustainability and efficient logistics for high-quality FDI",
+      "source": "Vietnam Plus, KCN Vietnam",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGSRmojDogaLR3Qv6z-C--lDczQxPvViorB6uW2bBd7ub3a2epeo0WvqckRBLq4oZAzldSQoTB4MrpTbnFfYayvJvB3u5lxQ-rwVP4OTxkzpSh_3ojCPVp3OXkLIgbpitd3qJsD3xgT-ZxII8oXEaps2Y3bFBevZ6TvN-VtHmdjr8rJr2bmxfdkGMDDYHIGkUjlRyQm4fyzCiEXDhmtPQ8DPGgojYX9PYVBEQ==",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-IP-NORTH-2030",
       "plan_id": "VN-IP-NORTH-2030",
-      "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
-      "stage": "PLANNING",
-      "confidence": 1.0,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "rule_stage": "UNKNOWN",
+      "rule_conf": 0.0,
+      "stage": "OPERATION",
+      "confidence": 0.65,
+      "milestone": "산업단지 고도화 및 FDI 유치 전략 추진",
+      "next_watch": "스마트·친환경 산업단지 조성 진전 및 한국 기술이전 협력 실행",
+      "insight": "베트남이 기존 산업인프라 고도화와 고부가가치 FDI 유치로 경제 고도화 단계 진입. SCIC의 전략적 투자 재편과 한국과의 기술협력은 인프라 현대화 가속화 신호.",
+      "stage_reason": "기존 산업단지 운영 중 고도화·확장 추진 단계",
+      "haiku_used": true,
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-12",
@@ -978,7 +834,7 @@
       "sector": "Industrial Parks",
       "title_ko": "고품질 FDI는 산업 인프라에 대한 새로운 요구 사항을 제기합니다.",
       "title_en": "High-quality FDI raises new requirements for industrial infrastructure",
-      "summary_ko": "사업명: 북부 산업인프라 개발(VN-IP-NORTH-2030)\n사업규모: 미상\n진행단계: 계획·추진 중\n주요기관: 베트남 정부, 성·시 인민위원회\n핵심내용: 고품질 FDI 유입에 따른 산업인프라 고도화 요구. 중국 자동차 업체의 진출로 기술·가격 경쟁 심화, 가치사슬 고도화 필요. 정부령 200호로 지방정부의 기업채 감시 강화.",
+      "summary_ko": "북부지역 산업인프라 고도화 계획(VN-IP-NORTH-2030)에 따라 고품질 외자유치에 대응하는 산업기반시설 현대화가 진행 중입니다. 한-베트남 기술이전 및 투자협력 논의, 현대 감응차량의 멕시코·호주 수출 개시 등으로 고급 제조업 기반이 강화되고 있으며, 2025 과학기술혁신법 시행으로 기술자산 자본화가 가능해져 첨단산업 인프라 조성이 가속화되는 단계입니다.",
       "summary_en": "Ho Chi Minh City is restructuring its industrial space towards smart and eco-industrial park models while prioritising high-tech value chains. Vietnam targets higher-quality FDI under Resolution 10 Quang Ninh smashes FDI target with over 1 bln USD inflow Hanoi builds attractive investment ecosystem",
       "source": "vietnamplus",
       "url": "https://en.vietnamplus.vn/high-quality-fdi-raises-new-requirements-for-industrial-infrastructure-post349950.vnp",
@@ -994,7 +850,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.91)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-12",
@@ -1018,7 +874,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-13",
@@ -1026,7 +882,7 @@
       "sector": "Industrial Parks",
       "title_ko": "호치민시, 두 자릿수 성장 목표 달성을 위해 자원 동원",
       "title_en": "Ho Chi Minh City mobilises resources to achieve double-digit growth target",
-      "summary_ko": "호치민시 경제성장 목표 달성을 위한 자원 동원 계획. 사업명: 호치민시 경제성장 전략, 규모: 기업채권 발행 10.5억 달러(상반기), 진행단계: 계획/추진 중, 주요기관: 호치민시 정부·성급 인민위원회, 일정: 2026년 상반기 기업채권 발행 추진 중. 중국 자동차 투자 유입으로 산업 고부가가치화 추진.",
+      "summary_ko": "호치민시 경제성장 목표 달성을 위한 자원 동원 계획. ① 호치민시 경제성장 전략 ② 구체적 수치 미제시 ③ 계획 단계 ④ 호치민시 정부, SCIC(베트남 국영투자회사) ⑤ 향후 5년 내 21개 기업 유지, 66개 기업 매각을 통한 자본 조성",
       "summary_en": "The southern economic hub has identified accelerating public investment disbursement, strongly mobilising private-sector resources, promoting exports and consumption, and removing bottlenecks as key priorities to generate additional growth drivers in the remaining months of the year. These prioritie",
       "source": "vietnamplus",
       "url": "https://en.vietnamplus.vn/ho-chi-minh-city-mobilises-resources-to-achieve-double-digit-growth-target-post350009.vnp",
@@ -1042,7 +898,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-13",
@@ -1050,23 +906,71 @@
       "sector": "General",
       "title_ko": "산업단지 운영관리는 부동산 가치 상승의 지렛대",
       "title_en": "Industrial park operation management is a lever to increase real estate value",
-      "summary_ko": "북부지역 산업단지(KCN) 운영관리 사업. 산업단지의 효율적인 운영관리를 통해 부동산 가치 증대를 도모하는 전략적 사업으로, 북부 산업단지 종합개발 마스터플랜(VN-IP-NORTH-2030)에 포함됨. 현재 운영 중 단계로 진행 중이며, 베트남 정부의 산업단지 육성정책과 연계하여 추진되고 있음.",
+      "summary_ko": "북부 산업단지(VN-IP-NORTH-2030) 운영관리 시스템 개선을 통한 부동산 가치 상승 사업. 구체적 규모는 미정이나 산업단지 운영효율화가 핵심. 현재 운영 중인 기존 산업단지의 관리 체계 고도화 단계. 베트남 산업부처 및 산업단지 운영사가 주요 기관. 운영관리 개선으로 입주 기업 만족도 증대 및 부동산 가치 상승 도모.",
       "summary_en": "Previously, industrial real estate was valued mainly based on land fund, location and infrastructure. However, currently, more and more investors are choosing Industrial Parks (IPs) based on operational management criteria, which is considered a lever to promote sustainable growth in real estate value.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/quan-ly-van-hanh-kcn-la-don-bay-gia-tang-gia-tri-bat-dong-san-101642.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-IP-NORTH-2030",
       "plan_id": "VN-IP-NORTH-2030",
-      "rule_stage": "PLANNING",
-      "rule_conf": 0.594,
+      "rule_stage": "OPERATION",
+      "rule_conf": 0.666,
       "stage": "OPERATION",
-      "confidence": 0.95,
-      "milestone": "북부 산업단지 운영관리 전략 추진 중",
-      "next_watch": "부동산 가치 증대 및 산업 육성정책 연계 성과 모니터링",
-      "insight": "산업단지 효율적 운영관리를 통한 부동산 가치 상승 전략. 정부 정책 연계로 안정적 성장 기대. 운영 효율성 개선이 투자 수익성 결정요인",
-      "stage_reason": "기사에서 '현재 운영 중 단계'로 명시",
-      "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
+      "confidence": 0.666,
+      "milestone": "운영 성과 업데이트",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 0.67)",
+      "haiku_used": false,
+      "analyzed_at": "2026-08-15 02:34"
+    },
+    {
+      "date": "2026-08-14",
+      "province": "Thua Thien Hue (Hue)",
+      "sector": "Industrial Parks",
+      "title_ko": "Hue, 2026년 항만 및 산업지구 업그레이드로 투자 유치 가속화",
+      "title_en": "Hue Accelerates Investment Attraction with Port and Industrial Zone Upgrades in 2026",
+      "summary_ko": "요청한 URL을 찾을 수 없습니다. 404 오류가 발생했습니다.",
+      "summary_en": "Hue (Thua Thien Hue province) is boosting investment in its economic and industrial zones, operating six industrial parks and upgrading Chan May Port. Berth 4 is expected to be completed in September 2026, enhancing logistics for a planned transshipment hub.",
+      "source": "Vietnam Plus",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHqQ-efrOdupBAg8scTQcWe74ZbdcB7CE7FGVbmmDvoIGl3PMrkfLdUjLE_tsry2locivJbciDh7NVyh5ZzVvCB3HnKkBfdxwrthCfHxe0gMHVYy-WPUKUw0qfEbqra_T6a2TxuGhrxe4xegZVVthychVEgKDtoglPLb9z7LTwZFjGS2lW5_Bv2IdkO0z_XNgC_HO6TOsDRmZH0JvabrJZWCVo=",
+      "ctx_grade": "LOW",
+      "ctx_plans": "",
+      "plan_id": "VN-IP-NORTH-2030",
+      "rule_stage": "TENDERING",
+      "rule_conf": 0.996,
+      "stage": "TENDERING",
+      "confidence": 0.996,
+      "milestone": "입찰·계약 진행",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-08-15 02:34"
+    },
+    {
+      "date": "2026-08-14",
+      "province": "Da Nang",
+      "sector": "Industrial Parks",
+      "title_ko": "Hue는 산업 지역을 성장 엔진으로 전환하기 위해 자본을 조달합니다.",
+      "title_en": "Hue courts capital to turn industrial zones into growth engine",
+      "summary_ko": "베트남 후에시가 경제성장 견인을 위해 산업단지 투자유치를 가속화하고 있습니다. 현재 2개 경제특구와 6개 산업단지에서 200개 이상의 투자프로젝트(152조 동) 운영 중이며, 올해 32조 동의 매출을 창출했습니다. 찬마이-랑꼬 경제특구 개발과 찬마이항 확장이 주요 과제입니다.",
+      "summary_en": "The economic and industrial zones in Hue city host more than 200 active investment projects worth over 152 trillion VND (5.84 billion USD), with 139 already operational. Since the start of 2026, they have generated about 32 trillion VND, contributed 4.2 trillion VND to the state budget and brought i",
+      "source": "vietnamplus",
+      "url": "https://en.vietnamplus.vn/hue-courts-capital-to-turn-industrial-zones-into-growth-engine-post350107.vnp",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-IP-NORTH-2030",
+      "plan_id": "VN-IP-NORTH-2030",
+      "rule_stage": "TENDERING",
+      "rule_conf": 0.804,
+      "stage": "TENDERING",
+      "confidence": 0.804,
+      "milestone": "입찰·계약 진행",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 0.80)",
+      "haiku_used": false,
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "None",
@@ -1090,31 +994,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
-    },
-    {
-      "date": "2026-08-07",
-      "province": "Dong Nai, Ho Chi Minh",
-      "sector": "Transport",
-      "title_ko": "3번 순환도로와 롱탄 국제공항을 연결하는 25C 도로 프로젝트, 2026년 10월 개통 예정",
-      "title_en": "25C Road project connecting Ring Road 3 with Long Thanh International Airport to open October 2026",
-      "summary_ko": "① 25C도로(Ring Road 3-Long Thanh국제공항 연결) ② 주요 구간별 다층 인프라 통합 사업 ③ 준공 예정(2026년 10월) ④ Dong Nai성 인민위원회, 중앙정부 ⑤ 2026년 10월 개통 목표. Ring Road 3와 Long Thanh국제공항을 연결하는 전략적 교통축으로 남동부 지역 발전 주도",
-      "summary_en": "The 25C Road project, linking HCMC's Ring Road 3 with Long Thanh International Airport, expected to open Oct 2026.",
-      "source": "Báo Đồng Nai điện tử",
-      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGc6eqOt-ckZnwj1_8gKBQQ6PDG8w3oOeIHJM4tgP8CXcUqRerYHMcWFzg3y0xZ4BbPbnFxcJoUYW4rpZYme7YBwFfxtfMXrArzCQezgEis3tx648XXIa5P4U9Z_53HRU_P9TGM_s9JWTBJ9YirdvtBOV6YcSh7yjHy1sH1V98k8FOFumdMHHPj-5aLgqQdms57yPpjyMUViUk0kMxEWvnKDjbcdCM=",
-      "ctx_grade": "HIGH",
-      "ctx_plans": "VN-TRAN-2055",
-      "plan_id": "VN-TRAN-2055",
-      "rule_stage": "COMPLETION",
-      "rule_conf": 0.979,
-      "stage": "COMPLETION",
-      "confidence": 0.95,
-      "milestone": "2026년 10월 개통 예정",
-      "next_watch": "개통식 및 상업운영 개시 확인",
-      "insight": "롱탄국제공항과 3번순환도로 연결로 남동부 교통축 완성. 공항 접근성 향상으로 향후 운영수익성 기대.",
-      "stage_reason": "2026년 10월 개통 예정으로 준공단계 진입",
-      "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-09-30",
@@ -1134,11 +1014,11 @@
       "stage": "COMPLETION",
       "confidence": 0.95,
       "milestone": "2026년 Q3 여객터미널 내부마감 완료, 2026년 내 상용운영 개시",
-      "next_watch": "터미널 마감공사 진행률, 항공사 운항 노선 확정, 정식 개통 일정 공고",
-      "insight": "주요 토목공사(활주로·계류장) 완료, 준공 단계 진입. 2026년 내 상용운영 예정으로 인프라 개발 최종 단계. 동남아 거점공항으로 지역 경제 파급효과 기대.",
-      "stage_reason": "활주로·계류장 완공, 터미널 내부마감 단계, 2026년 Q3 준공 목표",
+      "next_watch": "터미널 인허가, 항공사 취항 확정, 정식 개통식 일정",
+      "insight": "롱탄공항 1단계 46억 달러 규모 사업이 최종 단계. 활주로·계류장 완공, 여객터미널 내부마감 중. 2026년 내 상용운영 개시 예정으로 주요 인프라 준공 임박.",
+      "stage_reason": "활주로·계류장 완공, 여객터미널 내부마감 단계로 준공 직전",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-09-30",
@@ -1156,13 +1036,13 @@
       "rule_stage": "COMPLETION",
       "rule_conf": 1.0,
       "stage": "COMPLETION",
-      "confidence": 0.95,
+      "confidence": 0.85,
       "milestone": "롱탄공항 제2활주로 2026년 9월 준공",
-      "next_watch": "준공 이후 인증, 상업운전 개시 일정 확인",
-      "insight": "기사 날짜(2026-09-30)와 준공 예정일 일치. 제2활주로 완공 단계 진입으로 공항 용량 확대 단계 도입.",
-      "stage_reason": "준공 예정일과 기사 날짜 일치",
+      "next_watch": "준공 검수 및 운영 개시 시점 확인 필요",
+      "insight": "제2활주로 완성으로 공항 수용 능력 확대. 운영 단계 전환 및 추가 상업운전 일정 모니터링 필요",
+      "stage_reason": "기사 날짜(2026-09-30)와 준공 예정 시점 일치",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-12-31",
@@ -1182,46 +1062,22 @@
       "stage": "CONSTRUCTION",
       "confidence": 0.95,
       "milestone": "2025년 8월 착공, 현재 55% 진행 중",
-      "next_watch": "2027년 준공 목표, 롱탄교 5차선 추가 완료 추적",
-      "insight": "VEC 시공으로 진행 중, 롱탄국제공항 연계 전략적 인프라. 2026년 말 현재 본격 시공 단계로 일정 순조로운 상황",
-      "stage_reason": "2025년 착공 완료, 현재 55% 진행, 본격 시공 중",
+      "next_watch": "2027년 준공 목표, 롱탄교 5차선 추가 공사 진행",
+      "insight": "VEC 주관으로 본격 시공 단계. 2026년 7월 이후 적극적 공사 진행 중이며, 롱탄국제공항 연계 전략 인프라로 상용화 시점 조기 달성 가능성 높음",
+      "stage_reason": "2025년 8월 착공 후 현재 55% 시공 진행",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
-      "date": "2026-08-07",
-      "province": "Ho Chi Minh, Dong Nai, Long An",
-      "sector": "Transport",
-      "title_ko": "Ben Luc - Long Thanh 고속도로 2026년 9월 개통 예정",
-      "title_en": "Ben Luc - Long Thanh Expressway expected to open to traffic in September 2026",
-      "summary_ko": "벤룩-롱탄 고속도로(Ben Luc-Long Thanh Expressway)는 2026년 9월 개통 예정이다. 동나이성 발주로 추진 중인 이 사업은 항공, 항만, 고속도로, 에너지, 산업단지 등 주요 인프라 프로젝트의 일환이다. 지역 경쟁력 강화 및 고성장 동력 제공이 목표이며, 중앙정부 지원과 지자체 조율로 빠르게 진행 중이다.",
-      "summary_en": "The Ben Luc - Long Thanh Expressway is expected to open to traffic in September 2026, improving Long Thanh airport access.",
-      "source": "Vietnamese News Outlets",
-      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGc6eqOt-ckZnwj1_8gKBQQ6PDG8w3oOeIHJM4tgP8CXcUqRerYHMcWFzg3y0xZ4BbPbnFxcJoUYW4rpZYme7YBwFfxtfMXrArzCQezgEis3tx648XXIa5P4U9Z_53HRU_P9TGM_s9JWTBJ9YirdvtBOV6YcSh7yjHy1sH1V98k8FOFumdMHHPj-5aLgqQdms57yPpjyMUViUk0kMxEWvnKDjbcdCM=",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "",
-      "plan_id": "VN-TRAN-2055",
-      "rule_stage": "PLANNING",
-      "rule_conf": 0.8,
-      "stage": "PLANNING",
-      "confidence": 0.8,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.80)",
-      "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
-    },
-    {
-      "date": "2026-08-07",
+      "date": "2026-08-08",
       "province": "",
       "sector": "Transport",
-      "title_ko": "호치민시에서 열리는 제20회 국제 관광 박람회에서 글로벌 연결성을 조명하다",
-      "title_en": "Ho Chi Minh City's 20th international tourism expo to spotlight global connectivity",
-      "summary_ko": "①제20회 호찌민시 국제여행박람회(ITE HCMC 2026) ②520개 이상의 전시업체, 34개 베트남 지역 참여 ③계획/준비 단계(2026년 8월 27-29일 개최 예정) ④호찌민시 관광청, 베트남 관광부 ⑤2026년 8월 27-29일 개최, 아시아태평양 지역 관광협력 플랫폼으로서 역할 강화",
-      "summary_en": "A key feature of this year's event is the expanded public-private partnership model, with airlines, businesses and domestic and international organisations contributing resources for transportation, accommodation, destination surveys and professional activities. Ho Chi Minh City aims to become a “to",
-      "source": "vietnamplus",
-      "url": "https://en.vietnamplus.vn/ho-chi-minh-citys-20th-international-tourism-expo-to-spotlight-global-connectivity-post349670.vnp",
+      "title_ko": "하노이는 기술과 혁신 주도 성장을 뒷받침할 차세대 FDI를 찾고 있습니다.",
+      "title_en": "Hà Nội seeks new generation of FDI to power tech, innovation-led growth",
+      "summary_ko": "하노이는 2030년까지 신규 FDI의 50%를 고기술·혁신·R&D·녹색산업에 유치하고, 2045년까지 아시아태평양 혁신 허브로 도약하는 것을 목표로 하고 있습니다. 현재 373억 달러 규모의 FDI를 유치했으나, 부동산·노동집약적 산업에 편중되어 있어 고기술 투자로의 구조 전환을 추진 중입니다. 계획 단계에서 다국적 기업 본사 유치와 지역화율 45% 달성을 목표로 하고 있습니다.",
+      "summary_en": "For decades, foreign direct investment has helped fuel Hà Nội's economic growth. Now the capital is raising its ambitions, shifting its focus towards technology-intensive, innovation-driven investment that can reshape its economy for the decades ahead.",
+      "source": "vietnamnews_vn",
+      "url": "https://vietnamnews.vn/economy/1796999/ha-noi-seeks-new-generation-of-fdi-to-power-tech-innovation-led-growth.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-TRAN-2055",
       "plan_id": "VN-TRAN-2055",
@@ -1234,42 +1090,66 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.82)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
-      "date": "2026-08-07",
+      "date": "2026-08-08",
       "province": "",
       "sector": "Transport",
-      "title_ko": "에어프레미아, 11월부터 인천-호치민 노선 재개",
-      "title_en": "Air Premia to resume Incheon–Ho Chi Minh City route from November",
-      "summary_ko": "기사는 에어프리미아의 인천-호치민시 노선 11월 재개를 주제로 하나, 실제 전문은 베트남 장기 지연 프로젝트 해결(8,002개 중 4,938개 완료), 베트남-중국 반도체 협력, 스미토모의 칸토 산업단지 개발 탐색 등 다양한 인프라 소식을 다룸. VN-TRAN-2055와 직접 연관성 부족.",
-      "summary_en": "Flights will depart Incheon International Airport at 6:40 pm (RoK time) and arrive at Tan Son Nhat International Airport in Ho Chi Minh City at 11 pm (Vietnam time). Return flights will leave Ho Chi Minh City at 12:30 am on Mondays, Tuesdays, Thursdays, Fridays and Sundays, landing in Incheon at 7:4",
+      "title_ko": "폭탄과 납치 혐의로 인도네시아에서 두 번째로 바쁜 공항에서 탑승한 항공편 2대를 검색했습니다.",
+      "title_en": "Bomb and hijack claim sent Indonesia's second-busiest airport searching two boarded flights",
+      "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/traffic/bomb-and-hijack-claim-sent-indonesia-s-second-busiest-airport-searching-two-boarded-flights-5106580.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/08/07/images-1786100897-2070-1786100932.jpg?w=900&h=0&q=100&dpr=1&fit=crop&s=hTSt-k1xkqXHOZRivIxfew\" /></a>발리의 주요 공항은 한 여성이 폭탄을 소지하고 있으며 출발하는 비행기를 납치할 계획이라는 거짓 경고 메시지가 나온 후 탑승한 국제선 두 대를 검색했습니다.",
+      "summary_en": "<a href=\"https://e.vnexpress.net/news/news/traffic/bomb-and-hijack-claim-sent-indonesia-s-second-busiest-airport-searching-two-boarded-flights-5106580.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/08/07/images-1786100897-2070-1786100932.jpg?w=900&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=hTSt-k1xkqXHOZRivIxfew\" /></a>Bali's main airport searched two boarded international flights after a message falsely warned that a woman was carrying a bomb and planned to hijack a departing plane.",
+      "source": "VnExpress International",
+      "url": "https://e.vnexpress.net/news/news/traffic/bomb-and-hijack-claim-sent-indonesia-s-second-busiest-airport-searching-two-boarded-flights-5106580.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "",
+      "plan_id": "VN-TRAN-2055",
+      "rule_stage": "COMPLETION",
+      "rule_conf": 0.9,
+      "stage": "COMPLETION",
+      "confidence": 0.9,
+      "milestone": "준공·운영 개시",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 0.90)",
+      "haiku_used": false,
+      "analyzed_at": "2026-08-15 02:34"
+    },
+    {
+      "date": "2026-08-09",
+      "province": "",
+      "sector": "Transport",
+      "title_ko": "토 람(To Lam) 당 총서기, 국가주석의 호주 국빈 방문 시작",
+      "title_en": "Party General Secretary, State President To Lam begins state visit to Australia",
+      "summary_ko": "기사는 베트남 당서기장 겸 국가주석 또우람의 호주 국빈방문 개시에 대한 외교 활동을 다루고 있습니다. 구체적 인프라 사업 규모, 예산, 착공일정 등 정량적 데이터가 없어 VN-TRAN-2055 마스터플랜과의 직접적 연계를 확인하기 어렵습니다. 고위급 외교 활동 기사로 인프라 프로젝트 정보 부재합니다.",
+      "summary_en": "The visit demonstrates the importance Vietnam attaches to Australia as a key partner in the Indo-Pacific and the Southeast Asian nation's determination to deepen the new partnership framework in a substantive and effective manner. Science, technology to become new pillar of Vietnam-Australia ties: e",
       "source": "vietnamplus",
-      "url": "https://en.vietnamplus.vn/air-premia-to-resume-incheonho-chi-minh-city-route-from-november-post349669.vnp",
+      "url": "https://en.vietnamplus.vn/party-general-secretary-state-president-to-lam-begins-state-visit-to-australia-post349756.vnp",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-TRAN-2055",
       "plan_id": "VN-TRAN-2055",
-      "rule_stage": "UNKNOWN",
-      "rule_conf": 0.0,
+      "rule_stage": "PLANNING",
+      "rule_conf": 0.644,
       "stage": "UNKNOWN",
       "confidence": 0.95,
-      "milestone": "기사 내용 VN-TRAN-2055와 무관",
-      "next_watch": "마스터플랜 관련 공식 발표 모니터링",
-      "insight": "기사는 항공노선, 반도체협력, 산업단지 등 다루며 VN-TRAN-2055 교통인프라 사업과 직접 연관 없음",
-      "stage_reason": "사업 관련 내용 부재로 UNKNOWN 판정",
+      "milestone": "호주 국빈방문 외교 활동",
+      "next_watch": "베트남-호주 인프라 협력 발표 모니터링",
+      "insight": "VN-TRAN-2055와 무관한 고위급 외교 활동. 구체적 인프라 사업 정보 부재로 단계 판단 불가.",
+      "stage_reason": "인프라 프로젝트 정보 전무",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
-      "date": "2026-08-07",
+      "date": "2026-08-09",
       "province": "",
       "sector": "Transport",
-      "title_ko": "이달 말 2025년 FTA 지수 발표",
-      "title_en": "FTA Index 2025 to be unveiled later this month",
-      "summary_ko": "사업명: FTA Index 2025 공개, 계획: VN-TRAN-2055. 베트남-중국 반도체 협력이 논의 단계에서 실행 단계로 전환. 스미토모 코퍼레이션이 캔토시 산업단지 개발 기회 탐색 중. 주요 기관: 베트남 정부, 중국 산업인터넷센터, 일본 스미토모. 일정: 2026년 8월 중순 FTA Index 공개 예정.",
-      "summary_en": "The index is designed to provide valuable information not only for State management agencies but also as an important reference for businesses, foreign investors, and industry associations in planning investment and business activities in Vietnam. Vietnam – EFTA FTA expected to create new growth opp",
+      "title_ko": "국회의원들은 은행 안전, 디지털 경제 지원에 대해 논의합니다.",
+      "title_en": "Lawmakers discuss banking safety, digital economy support",
+      "summary_ko": "기사는 베트남 입법자들의 금융안전성 및 디지털경제 지원 논의를 다루고 있으나, 제공된 본문에는 구체적인 인프라 사업 정보가 부재합니다. 제시된 VN-TRAN-2055 마스터플랜과의 연계성도 명확하지 않습니다. 기사 전문의 실제 내용이 필요합니다.",
+      "summary_en": "Lawmakers on August 9 discussed a draft law amending and supplementing a number of articles of the Law on the State Bank of Vietnam, the Law on Anti-Money Laundering and the Law on Credit Institutions, focusing on strengthening safeguards for the banking system and establishing a sound legal framewo",
       "source": "vietnamplus",
-      "url": "https://en.vietnamplus.vn/fta-index-2025-to-be-unveiled-later-this-month-post349695.vnp",
+      "url": "https://en.vietnamplus.vn/lawmakers-discuss-banking-safety-digital-economy-support-post349758.vnp",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-TRAN-2055",
       "plan_id": "VN-TRAN-2055",
@@ -1282,7 +1162,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
+    },
+    {
+      "date": "2026-08-10",
+      "province": "",
+      "sector": "Transport",
+      "title_ko": "국제 여행사 성장은 여행 수요 증가를 나타냅니다.",
+      "title_en": "International tour operator growth signals increased travel demand",
+      "summary_ko": "사업명: 베트남 관광교통 인프라 확충(VN-TRAN-2055)\n규모: Vietjet 국경절 8.2만석 추가, Sun PhuQuoc A330 8대 도입\n단계: 운영 중\n기관: Vietjet, Sun Phuquoc Airways, 러시아투어협회(ATOR)\n일정: 2026년 8월 국경절 피크시즌, 러시아 관광수요 지속증가 전망",
+      "summary_en": "As of July 15, Vietnam had 4,652 licensed international travel businesses, with tourism-related enterprises and services. Localities turn cultural heritage into driver of tourism, economic development Vietnam takes smart tourism to new heights Sports tourism puts Vietnam on regional map",
+      "source": "vietnamplus",
+      "url": "https://en.vietnamplus.vn/international-tour-operator-growth-signals-increased-travel-demand-post349815.vnp",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-TRAN-2055",
+      "plan_id": "VN-TRAN-2055",
+      "rule_stage": "OPERATION",
+      "rule_conf": 1.0,
+      "stage": "OPERATION",
+      "confidence": 1.0,
+      "milestone": "운영 성과 업데이트",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-09-02",
@@ -1301,36 +1205,12 @@
       "rule_conf": 1.0,
       "stage": "CONSTRUCTION",
       "confidence": 0.85,
-      "milestone": "2026년 4개 도시철도 동시 착공",
-      "next_watch": "Thu Thiem-Long Thanh 노선 착공 진척률 및 자금 투입 현황",
-      "insight": "호찌민시 교통 인프라 확충 본격화. 마스터플랜 이행 단계 진입으로 관련 산업 수혜 기대",
-      "stage_reason": "2026년 착공 예정 명시로 CONSTRUCTION 진입",
+      "milestone": "2026년 4개 도시철도 착공 추진",
+      "next_watch": "실제 착공 진행률 및 투자금 집행 현황 모니터링",
+      "insight": "VN-URB-METRO-2030 마스터플랜 핵심 사업으로 호찌민시 교통 인프라 개선. 착공 예정 표명으로 건설 단계 진입 임박. 투자자는 공사 진행도 및 자금 조달 현황 주시 필요.",
+      "stage_reason": "2026년 착공 예정 표명으로 CONSTRUCTION 단계 진입 직전",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
-    },
-    {
-      "date": "2026-08-07",
-      "province": "Dak Lak",
-      "sector": "Smart City",
-      "title_ko": "닥락성, 스마트시티 모니터링 및 운영센터 운영",
-      "title_en": "Dak Lak province operates Smart City Monitoring and Operations Centre",
-      "summary_ko": "이 센터는 스마트 시티 운영을 위한 지방 데이터 센터와 공유 디지털 플랫폼을 관리합니다.",
-      "summary_en": "The center manages the provincial data center and shared digital platforms for smart city operations.",
-      "source": "People's Army Newspaper Online",
-      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGYr3SJn1UKk-1yaDGYx2tbx3jsPQrjbwvtyXxlrzb9TFlcN96dXlwp-U2IPxhm6Sy9anXZXlf6klQWOH98UxZAYD0BR3oB2w7L0wjXjrT-j0aDHyrFc2XGQMzi7lLMX3O4208n8tTLFdLPOHE9yPLhZoVY9hLsIyQJUxNWXVYg27hVceMBc_Q9zJa8yvz6-C4HtCb2a6qhQ_CM_w==",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "",
-      "plan_id": "VN-URB-METRO-2030",
-      "rule_stage": "UNKNOWN",
-      "rule_conf": 0.0,
-      "stage": "OPERATION",
-      "confidence": 0.85,
-      "milestone": "스마트시티 모니터링·운영센터 가동",
-      "next_watch": "닥락성 스마트시티 확장 단계 및 추가 기반시설 구축",
-      "insight": "센터 운영으로 스마트시티 인프라가 실제 상용화 단계 진입. 데이터 센터·디지털 플랫폼 통합운영으로 도시 기능 고도화 추진 중",
-      "stage_reason": "운영센터 가동으로 완성 이후 운영 단계",
-      "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-11",
@@ -1338,7 +1218,7 @@
       "sector": "General",
       "title_ko": "호치민시, 교통 전기화 및 배출 억제 전략 초안",
       "title_en": "Ho Chi Minh City drafts strategy to electrify transport and curb emissions",
-      "summary_ko": "①호찌민시 운송 전기화 및 배출 저감 전략 ②2026~2040년 단계별 추진, 1,282만 대 차량 관리 ③계획 단계(2026년 8월 전략 수립 중) ④호찌민시정부, 총리 결정 876호 기반 ⑤4개 지역대별 실행(콘다오 우선, 저배출존 강화, 2050년 순배출 제로)",
+      "summary_ko": "① 호치민시 차량 배출 제어 전략 ② 2026~2040년 구간, 1,282만 대 차량 대상 ③ 계획 단계 ④ 호치민시 정부, 프라임 미니스터 결정 No. 876/QD-TTg ⑤ 콘다오 특구에서 우선 추진, 저배출존(LEZ) 조성으로 2050년 넷제로 달성 목표",
       "summary_en": "Ho Chi Minh City is finalizing a comprehensive vehicle emission control strategy for the phase from 2026 to 2040, aiming to accelerate green transport transition, establish low-emission zones, and achieve net-zero targets by 2050.",
       "source": "sggp_org_vn",
       "url": "https://en.sggp.org.vn/ho-chi-minh-city-drafts-strategy-to-electrify-transport-and-curb-emissions-post128768.html",
@@ -1354,7 +1234,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-13",
@@ -1362,23 +1242,23 @@
       "sector": "General",
       "title_ko": "하띤(Ha Tinh), 람동(Lam Dong), 꽝응아이(Quang Ngai) 지역 환경오염 발생 위험이 높은 시설 5개소 감독",
       "title_en": "Supervise 5 facilities with high risk of causing environmental pollution in Ha Tinh, Lam Dong and Quang Ngai",
-      "summary_ko": "①하띠엔, 람동, 꽝응아이 지역 고위험 환경오염시설 5곳 감시 프로젝트 ②5개 시설 ③운영 중 ④베트남 환경부 ⑤지속적인 환경감시 및 오염방지 조치. 관련 마스터플랜: VN-ENV-IND-1894",
+      "summary_ko": "①하띠엔·람동·꽝응아이 지역 고위험 환경오염 시설 5곳 감시 ②5개 시설(구체적 규모 미기재) ③운영 중 감시 단계 ④베트남 환경부(모니터링), 해당 지역 환경청 ⑤지속적인 환경오염 위험 감시 및 관리",
       "summary_en": "According to the direction of the Ministry of Agriculture and Environment, 5 facilities with a high risk of environmental pollution continue to be under supervision including: Hung Nghiep Formosa Ha Tinh Iron and Steel Company Limited, Lam Dong Aluminum Company Limited - TKV, Dak Nong Aluminum Company - TKV, Vinh Tan Electricity Center, VNT19 Pulp - Paper Joint Stock Company.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/giam-sat-5-co-so-co-nguy-co-cao-gay-o-nhiem-moi-truong-o-ha-tinh-lam-dong-va-quang-ngai-101640.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-ENV-IND-1894",
       "plan_id": "VN-ENV-IND-1894",
-      "rule_stage": "PLANNING",
-      "rule_conf": 0.6,
+      "rule_stage": "OPERATION",
+      "rule_conf": 1.0,
       "stage": "OPERATION",
-      "confidence": 0.85,
-      "milestone": "5개 고위험 시설 환경감시 프로젝트 진행중",
-      "next_watch": "환경부의 정기적 감독결과 및 오염방지 조치 이행 현황",
-      "insight": "기존 운영시설에 대한 환경규제 강화 단계로 진입. 오염방지 투자 수요 및 환경 컴플라이언스 비용 증가 예상",
-      "stage_reason": "5개 시설 운영중이며 지속적 감시·오염방지 조치 실행",
-      "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
+      "confidence": 1.0,
+      "milestone": "운영 성과 업데이트",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-13",
@@ -1386,7 +1266,7 @@
       "sector": "General",
       "title_ko": "목록을 작성해야 하는 온실가스 배출 시설 2,441개 목록",
       "title_en": "List of 2,441 establishments emitting greenhouse gases that must be inventoried",
-      "summary_ko": "①온실가스 배출 시설 목록 관리 ②2,441개 시설 대상 ③계획·운영 단계 ④베트남 환경부 ⑤온실가스 배출 시설에 대한 의무 재고조사 시행. 주요 산업 및 에너지 부문 시설들의 탄소배출 모니터링 강화로 국가 감축 목표 달성 추진",
+      "summary_ko": "①온실가스 배출 시설 목록 ②2,441개 시설 ③운영 중 (재고 조사 단계) ④베트남 환경부 ⑤온실가스 배출 시설 의무 재고 조사 시행 - 2030년 탄소중립 목표 달성을 위해 국가가 지정한 주요 배출원 2,441개 시설에 대한 체계적 관리 및 모니터링 강화",
       "summary_en": "Decision 42/2026/QD-TTg updates the list of 2,441 establishments that must inventory greenhouse gases, in 6 sectors including energy, transportation, construction, industry, agriculture-forestry and waste.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/danh-muc-2-441-co-so-phat-thai-khi-nha-kinh-phai-thuc-hien-kiem-ke-101605.html",
@@ -1402,7 +1282,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-10",
@@ -1421,12 +1301,12 @@
       "rule_conf": 1.0,
       "stage": "PLANNING",
       "confidence": 0.95,
-      "milestone": "2025년 4월 Decision 768 승인",
-      "next_watch": "2035년 6,000-17,032MW 목표 달성을 위한 세부사업계획 수립",
-      "insight": "영국 정부 참여로 국제 자금 조달 통로 개설. 해상풍력 대규모 투자 예상으로 장비·부품 납품 기회 확대",
-      "stage_reason": "정부 승인 완료, 입찰·건설 미진행",
+      "milestone": "Decision 768 승인(2025년 4월)",
+      "next_watch": "2035년 6,000~17,032MW 목표 달성 로드맵",
+      "insight": "정부 승인 완료로 입찰 단계 진입 임박. 영국 정부·개발사 참여로 재정 확보 가능성 높음",
+      "stage_reason": "Decision 768 승인 완료, 2035년 달성 목표 설정",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:34"
     },
     {
       "date": "2026-08-12",
@@ -1446,11 +1326,11 @@
       "stage": "PLANNING",
       "confidence": 0.95,
       "milestone": "PDP8 정책 개혁 및 에너지 전략 수립",
-      "next_watch": "LNG, 재생에너지, 원자력 등 세부 사업별 입찰 공고 예정",
-      "insight": "에너지부 주도 국가 정책 개혁 단계. 다원화된 에너지원 포트폴리오 추진으로 장기 에너지 안보 강화. 재정 투자 규모 및 사업 분할 방식 확정 대기",
-      "stage_reason": "정책 수립 단계, 구체적 사업 입찰 미실시",
+      "next_watch": "LNG, 재생에너지, 원자력 등 구체적 사업 입찰 공고",
+      "insight": "베트남 정부의 에너지 다원화 정책이 본격화 중. PDP8 승인 후 민간 투자자 참여 기회 확대 예상",
+      "stage_reason": "정책 수립 단계, 구체적 발주 미공시",
       "haiku_used": true,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:35"
     },
     {
       "date": "2026-08-14",
@@ -1458,7 +1338,7 @@
       "sector": "General",
       "title_ko": "폭염으로 인해 전원 공급 장치가 위협받고 많은 국가에서 산불이 발생합니다.",
       "title_en": "Extreme heat threatens power supplies and causes forest fires in many countries",
-      "summary_ko": "극심한 폭염이 여러 국가의 전력 공급을 위협하고 산림화재를 촉발하고 있습니다. 기후변화로 인한 극한 날씨가 에너지 수급과 산림 생태계에 심각한 영향을 미치고 있는 상황입니다.",
+      "summary_ko": "①극한 폭염으로 인한 전력공급 위협 및 산불 확산 ②구체적 수치 미포함 ③현황 보도 단계 ④베트남 전력청(EVN) 등 관련 기관 ⑤실시간 모니터링 및 대응 체계 강화 필요. VN-PWR-PDP8의 재생에너지 및 에너지 안정성 강화 필요성을 강조하는 이슈",
       "summary_en": "The low water level of the Danube River forced Hungary to urgently build an underground dam to ensure the operation of the Paks nuclear power plant, while France recorded a decrease in nuclear power capacity of more than 20%. In Algeria, dozens of forest fires broke out amid prolonged heat and drought.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/nang-nong-cuc-doan-de-doa-nguon-dien-va-lam-bung-phat-chay-rung-tai-nhieu-nuoc-101641.html",
@@ -1474,7 +1354,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.70)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:35"
+    },
+    {
+      "date": "2026-08-15",
+      "province": "",
+      "sector": "General",
+      "title_ko": "극심한 더위가 에너지 안보를 위협하다",
+      "title_en": "Extreme heat threatens energy security",
+      "summary_ko": "극한 폭염이 베트남의 에너지 안보를 위협하고 있습니다. 높은 기온으로 인한 전력 수요 증가와 에너지 공급 불안정성이 주요 우려사항입니다. 기후변화로 인한 에너지 인프라의 취약성 강화가 필요합니다.",
+      "summary_en": "Extreme heat waves are becoming increasingly severe in Europe and Asia, causing great economic damage, depleting water resources, affecting agricultural production, threatening energy security and increasing the risk of forest fires.",
+      "source": "Moi truong & Cuoc song",
+      "url": "https://moitruong.net.vn/nang-nong-cuc-doan-de-doa-an-ninh-nang-luong-101663.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-PWR-PDP8",
+      "plan_id": "VN-PWR-PDP8",
+      "rule_stage": "PLANNING",
+      "rule_conf": 0.45,
+      "stage": "OPERATION",
+      "confidence": 0.75,
+      "milestone": "에너지 안보 강화 정책 수립",
+      "next_watch": "전력 공급 인프라 확충 계획 발표",
+      "insight": "극심한 폭염으로 인한 전력 수요 급증이 기존 인프라의 한계를 노출. 에너지 안보 강화를 위한 대규모 인프라 확충 투자 기회 증가 예상",
+      "stage_reason": "운영 중인 기존 전력시설의 한계 노출로 기반시설 확충 요구",
+      "haiku_used": true,
+      "analyzed_at": "2026-08-15 02:35"
     },
     {
       "date": "2026-08-08",
@@ -1498,7 +1402,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-08-14 11:56"
+      "analyzed_at": "2026-08-15 02:35"
     }
   ]
 }
