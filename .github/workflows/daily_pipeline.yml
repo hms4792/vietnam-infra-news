@@ -57,6 +57,9 @@ jobs:
   pipeline:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    concurrency:
+      group: infra-news-pipeline
+      cancel-in-progress: false
 
     steps:
 
