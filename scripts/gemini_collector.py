@@ -50,7 +50,7 @@ def _call_gemini_api(query: str, gemini_key: str) -> str:
     payload = {
         "contents": [{
             "parts": [{
-                "text": f"반드시 JSON 배열만 출력하세요. 검색 쿼리: {query} 출력 형식: [{{\"title_en\":\"영어 제목\",\"summary_en\":\"100자 이내 영어 요약\",\"province\":\"관련 지역(예: Hanoi, Ho Chi Minh, Binh Duong, Da Nang 등, 특정 지역이 없으면 Nationwide)\",\"source\":\"출처\",\"date\":\"YYYY-MM-DD\",\"url\":\"URL\",\"tit_ko\":\"한국어 제목 번역\",\"sum_ko\":\"한국어 3~4문장 상세 요약\"}}]"
+                "text": f"반드시 JSON 배열만 출력하세요. 검색 쿼리: {query} 출력 형식: [{{\"title_en\":\"영어 제목\",\"summary_en\":\"100자 이내 영어 요약\",\"province\":\"관련 지역(예: Hanoi, Ho Chi Minh, Binh 단, Da Nang 등, 특정 지역이 없으면 Nationwide)\",\"source\":\"출처\",\"date\":\"YYYY-MM-DD\",\"url\":\"URL\",\"tit_ko\":\"한국어 제목 번역\",\"sum_ko\":\"한국어 3~4문장 상세 요약\"}}]"
             }]
         }],
         "tools": [{"googleSearch": {}}]
@@ -59,17 +59,34 @@ def _call_gemini_api(query: str, gemini_key: str) -> str:
     body = json.dumps(payload).encode('utf-8')
     req = urllib.request.Request(url, data=body, headers={'Content-Type': 'application/json'}, method='POST')
 
-    try:
-        with urllib.request.urlopen(req, timeout=GEMINI_TIMEOUT) as resp:
-            data = json.loads(resp.read().decode('utf-8'))
-            return data['candidates'][0]['content']['parts'][0]['text'].strip()
-    except HTTPError as e:
-        error_msg = e.read().decode("utf-8")
-        log.warning(f'API 호출 실패 (코드 {e.code}): {error_msg}')
-        return '[]'
-    except Exception as e:
-        log.warning(f'Gemini API 연결 오류: {e}')
-        return '[]'
+    import time # 재시도 대기 시간을 위한 모듈
+
+    # 최대 3회까지 점진적으로 시간을 늘려가며 재시도 (지수 백오프)
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req, timeout=GEMINI_TIMEOUT) as resp:
+                data = json.loads(resp.read().decode('utf-8'))
+                return data['candidates'][0]['content']['parts'][0]['text'].strip()
+        
+        except HTTPError as e:
+            error_msg = e.read().decode("utf-8")
+            if e.code == 429: # API 호출 한도 초과 에러일 경우
+                wait_time = (2 ** attempt) * 2
+                log.warning(f'API 호출 한도 초과(429). {wait_time}초 대기 후 재시도... ({attempt+1}/3)')
+                time.sleep(wait_time)
+                continue
+            else:
+                log.warning(f'API 호출 실패 (코드 {e.code}): {error_msg}')
+                return '[]'
+                
+        except Exception as e: # Time out 등 연결 오류 발생 시
+            wait_time = (2 ** attempt) * 2
+            log.warning(f'Gemini API 연결 오류 발생: {e}. {wait_time}초 대기 후 재시도... ({attempt+1}/3)')
+            time.sleep(wait_time)
+            
+    # 3번 모두 실패한 경우에만 빈 리스트 반환
+    log.error('최대 재시도 횟수를 초과하여 Gemini API 호출을 건너뜁니다.')
+    return '[]'
 
 def collect_gemini_articles(gemini_key: str) -> list:
     all_articles = []
