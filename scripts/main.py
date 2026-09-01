@@ -11,7 +11,26 @@ import os
 import sys
 import logging
 import argparse
+import signal # [추가] 운영체제 시그널 감지용
 from datetime import datetime
+
+# ==========================================
+# [추가] 강제 종료 방어막 (Graceful Shutdown)
+# 시스템이 타임아웃 등으로 강제 종료 시그널(SIGTERM)을 보냈을 때,
+# 즉사하지 않고 열려있는 파일들을 안전하게 정리하기 위한 장치
+# ==========================================
+def graceful_exit_handler(signum, frame):
+    logging.warning(f"\n🚨 시스템 강제 종료 시그널({signum}) 수신! 즉시 작업을 중단하고 안전하게 종료합니다.")
+    logging.warning("데이터 손상을 막기 위해 프로세스를 강제 중지합니다.")
+    sys.exit(1)
+
+# GitHub Actions 등이 보내는 강제 종료 신호(SIGTERM, SIGINT)를 감지하여 위 함수를 실행
+try:
+    signal.signal(signal.SIGINT, graceful_exit_handler)
+    signal.signal(signal.SIGTERM, graceful_exit_handler)
+except ValueError:
+    pass # 메인 스레드가 아닌 곳에서 실행될 때의 오류 무시
+# ==========================================
 
 logging.basicConfig(
     level=logging.INFO,
