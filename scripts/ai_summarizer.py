@@ -392,78 +392,78 @@ class AISummarizer:
     def summarize_articles(self, articles: list[dict]) -> list[dict]:
         """
         기사 목록 번역/요약 처리 (main.py Step 2에서 호출).
-        
-        처리 로직:
-          - 베트남어(vi) 기사: vi→en, vi→ko 번역
-          - 영어(en) 기사: EN 원본 보존, en→ko 번역만 수행
-        
-        Args:
-            articles: 수집된 기사 목록 (title, summary 등 포함)
-        
-        Returns:
-            번역 완료된 기사 목록
+        * ThreadPoolExecutor를 이용한 병렬(비동기) 처리로 속도 대폭 개선 *
         """
+        import concurrent.futures
+        
         total = len(articles)
-        log.info(f"[AISummarizer] {total}건 번역 시작")
+        log.info(f"[AISummarizer] {total}건 번역 시작 (병렬 처리 적용)")
 
         processed = []
         success_count = 0
 
-        for i, article in enumerate(articles, 1):
-            title_orig = article.get("title", "") or article.get("title_en", "") or ""
-            title_vi   = article.get("title_vi", "")
-            summary    = article.get("summary", "") or article.get("summary_en", "") or ""
+        # 개별 기사 처리를 위한 내부 함수 (오류 발생 시 안전하게 원본 반환)
+        def _process_single(args):
+            idx, article = args
+            try:
+                title_orig = article.get("title", "") or article.get("title_en", "") or ""
+                title_vi   = article.get("title_vi", "")
+                summary    = article.get("summary", "") or article.get("summary_en", "") or ""
 
-            # 언어 감지
-            src_lang = self._detect_lang(title_orig) if title_orig else "en"
-            log.info(f"  [{i}/{total}] {src_lang.upper()} → EN/KO: {title_orig[:60]}...")
+                src_lang = self._detect_lang(title_orig) if title_orig else "en"
+                log.info(f"  [{idx}/{total}] {src_lang.upper()} → EN/KO: {title_orig[:60]}...")
 
-            title_ko  = ""
-            title_en  = ""
-            summary_ko = ""
-            summary_en = ""
+                title_ko  = ""
+                title_en  = ""
+                summary_ko = ""
+                summary_en = ""
 
-            if src_lang == "vi":
-                # 베트남어 기사: vi→EN, vi→KO 번역
-                title_en   = self._translate_one(title_orig,  "vi", "en") or title_orig
-                title_ko   = self._translate_one(title_orig,  "vi", "ko") or title_en
-                summary_en = self._translate_one(summary,     "vi", "en") if summary else ""
-                summary_ko = self._translate_one(summary,     "vi", "ko") if summary else ""
-                if not summary_en:
+                if src_lang == "vi":
+                    title_en   = self._translate_one(title_orig,  "vi", "en") or title_orig
+                    title_ko   = self._translate_one(title_orig,  "vi", "ko") or title_en
+                    summary_en = self._translate_one(summary,     "vi", "en") if summary else ""
+                    summary_ko = self._translate_one(summary,     "vi", "ko") if summary else ""
+                    if not summary_en:
+                        summary_en = summary
+                else:
+                    title_en   = title_orig
+                    title_ko   = self._translate_one(title_orig, "en", "ko") or title_orig
                     summary_en = summary
-            else:
-                # 영어 기사: EN 원본 보존, en→KO만 번역
-                title_en   = title_orig
-                title_ko   = self._translate_one(title_orig, "en", "ko") or title_orig
-                summary_en = summary
-                summary_ko = self._translate_one(summary, "en", "ko") if summary else ""
+                    summary_ko = self._translate_one(summary, "en", "ko") if summary else ""
 
-            # 번역 성공 여부 판단 (한글 포함 여부로 확인)
-            has_ko = any('\uAC00' <= c <= '\uD7A3' for c in title_ko)
-            if has_ko:
-                success_count += 1
+                has_ko = any('\uAC00' <= c <= '\uD7A3' for c in title_ko)
+                
+                updated = article.copy()
+                updated.update({
+                    "title_en":   title_en  or title_orig,
+                    "title_ko":   title_ko  or title_en or title_orig,
+                    "title_vi":   title_vi  or (title_orig if src_lang == "vi" else ""),
+                    "summary_en": summary_en or summary or "",
+                    "summary_ko": summary_ko or "",
+                    "summary_vi": article.get("summary_vi", "") or (summary if src_lang == "vi" else ""),
+                })
+                return updated, has_ko
+            except Exception as e:
+                log.error(f"  [{idx}/{total}] 번역 중 오류 발생 (건너뜀): {e}")
+                return article, False
 
-            # 기사 객체 갱신
-            updated = article.copy()
-            updated.update({
-                "title_en":   title_en  or title_orig,
-                "title_ko":   title_ko  or title_en or title_orig,
-                "title_vi":   title_vi  or (title_orig if src_lang == "vi" else ""),
-                "summary_en": summary_en or summary or "",
-                "summary_ko": summary_ko or "",
-                "summary_vi": article.get("summary_vi", "") or (summary if src_lang == "vi" else ""),
-            })
-            processed.append(updated)
+        # 인덱스와 기사를 짝지어서 리스트로 준비
+        args_list = [(i, article) for i, article in enumerate(articles, 1)]
 
-            # rate limit 방지 (번역 엔진 과부하 방지)
-            time.sleep(0.2)
+        # max_workers=8 로 설정하여 8개의 기사를 동시에 번역 진행 (약 8배 속도 향상)
+        # map을 사용하면 병렬 처리하더라도 원래의 기사 순서(Order)가 섞이지 않고 완벽히 유지됩니다.
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+            for updated_article, is_success in executor.map(_process_single, args_list):
+                processed.append(updated_article)
+                if is_success:
+                    success_count += 1
 
         # ── 번역 통계 출력 ──────────────────────────────────────────────
         log.info(f"[AISummarizer] 번역 완료: {success_count}/{total}건 성공")
-        log.info(f"  엔진별: Google={self._stats['google']} | "
-                 f"MyMemory={self._stats['mymemory']} | "
-                 f"LibreTranslate={self._stats['libretranslate']} | "
-                 f"실패={self._stats['failed']}")
+        log.info(f"  엔진별: Google={self._stats.get('google', 0)} | "
+                 f"MyMemory={self._stats.get('mymemory', 0)} | "
+                 f"LibreTranslate={self._stats.get('libretranslate', 0)} | "
+                 f"실패={self._stats.get('failed', 0)}")
 
         return processed
 
