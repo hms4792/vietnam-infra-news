@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-01 15:41",
+  "generated_at": "2026-09-02 11:44",
   "plans": {
     "VN-WAT-RESOURCES": {
       "plan_id": "VN-WAT-RESOURCES",
@@ -42,13 +42,20 @@
           "milestone": "정책·법령 발표",
           "source": "Asian Development Bank (ADB)",
           "title_ko": "베트남의 탄력적인 인프라 및 적응 전략을 위한 AI"
+        },
+        {
+          "date": "2026-08-28",
+          "stage": "PLANNING",
+          "milestone": "Vietwater 2026 전시회 개최 (11월 4-6일)",
+          "source": "Vietwater 2026 Organizers, Environmental Business Review",
+          "title_ko": "호치민에서 물 및 폐수 처리 기술을 선보이는 Vietwater 2026 전시회"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-XX-XX",
-      "article_count": 1,
-      "haiku_count": 0,
+      "article_count": 2,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-WW-2030": {
@@ -64,7 +71,7 @@
         {
           "date": "Not explic",
           "stage": "PLANNING",
-          "milestone": "ADB 프로젝트 승인 및 기본설계",
+          "milestone": "ADB 자금 지원 승인 및 프로젝트 설계",
           "source": "Asian Development Bank",
           "title_ko": "베트남: 호치민시 폐수 및 배수 시스템 개선 프로젝트"
         },
@@ -78,7 +85,7 @@
         {
           "date": "2026-12-31",
           "stage": "PLANNING",
-          "milestone": "ADB 지원 프로젝트 승인 및 기본설계",
+          "milestone": "ADB 지원 프로젝트 승인 및 계획 수립",
           "source": "Asian Development Bank",
           "title_ko": "호치민시 폐수 및 배수 시스템 개선 프로젝트"
         },
@@ -92,13 +99,13 @@
         {
           "date": "2026-08-27",
           "stage": "PLANNING",
-          "milestone": "ADB 2조 3천억 VND 지원 승인",
+          "milestone": "ADB 2.3조 VND 자금지원 확정",
           "source": "Vietnam Plus",
           "title_ko": "ADB, Khanh Hoa의 폐수 인프라에 2조 3천억 VND 제공"
         }
       ],
-      "next_watch": "타당성조사 완료 및 정부 예산 편성 현황",
-      "latest_insight": "호치민시 도시화에 따른 폐수 처리 수요 증가로 대규모 인프라 투자 필요. ADB 지원으로 자금 조달 안정성 높음.",
+      "next_watch": "상세설계 완료 및 입찰 공고 시점",
+      "latest_insight": "호치민 도시 인프라 현대화 사업으로 환경 개선 및 도시 용량 확충에 기여. ADB 지원으로 자금 안정성 높음",
       "latest_article_date": "Not explic",
       "article_count": 5,
       "haiku_count": 3,
@@ -109,15 +116,15 @@
       "title_ko": "VN-OG-2030",
       "sector": "Oil & Gas",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
         {
           "date": "2026-09-01",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
+          "stage": "UNKNOWN",
+          "milestone": "중동 유가 변동",
           "source": "channelnewsasia",
           "title_ko": "최근의 전투가 중동 공급 중단 위험을 부활시킴에 따라 유가 상승"
         },
@@ -126,14 +133,21 @@
           "stage": "UNKNOWN",
           "milestone": "해당 없음",
           "source": "channelnewsasia",
+          "title_ko": "미국-이란 파업이 재개됨에 따라 공급에 대한 두려움이 커짐에 따라 2% 이상 석유 공급 증가"
+        },
+        {
+          "date": "2026-09-01",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "channelnewsasia",
           "title_ko": "미국-이란의 파업 재개로 공급 우려가 촉발되면서 유가는 약 2% 상승했습니다."
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
-      "latest_insight": "",
+      "next_watch": "베트남 에너지 정책 대응 모니터링",
+      "latest_insight": "본 기사는 VN-OG-2030과 무관한 중동 유가 동향 보도. 베트남 석유·가스 사업의 구체적 진행상황 정보 부재.",
       "latest_article_date": "2026-09-01",
       "article_count": 3,
-      "haiku_count": 1,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-LNG": {
@@ -166,20 +180,27 @@
       "title_ko": "VN-PWR-PDP8-NUCLEAR",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
       "stage_history": [
         {
           "date": "2026-08-31",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
           "source": "vietnamplus",
           "title_ko": "해외 베트남 전문가들이 국내 원자력 발전 발전을 위해 노력에 동참"
+        },
+        {
+          "date": "2026-08-30",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Facebook (UnboxFactory)",
+          "title_ko": "베트남의 해상 풍력 야망: 첫 번째 프로젝트 승인 및 2035년까지 17GW 목표"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
       "latest_insight": "",
       "latest_article_date": "2026-08-31",
       "article_count": 2,
@@ -199,14 +220,46 @@
         {
           "date": "2026-08-30",
           "stage": "PLANNING",
+          "milestone": "2026년 5월 첫 해상풍력 프로젝트 승인",
+          "source": "Facebook (UnboxFactory)",
+          "title_ko": "베트남은 2026년 5월 첫 해상 풍력 프로젝트를 승인했으며 2035년까지 최대 17GW를 목표로 하고 있다."
+        },
+        {
+          "date": "2026-08-30",
+          "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "Facebook (UnboxFactory)",
           "title_ko": "베트남의 해상 풍력 야망: 첫 번째 프로젝트 승인 및 2035년까지 17GW 목표"
         }
       ],
+      "next_watch": "2035년 목표 17GW 달성을 위한 프로젝트 입찰 및 투자유치 일정",
+      "latest_insight": "베트남 정부의 재생에너지 정책 추진으로 해상풍력 시장 진입 초기 단계. 대규모 용량 목표로 향후 입찰 및 건설 사업 확대 예상",
+      "latest_article_date": "2026-08-30",
+      "article_count": 2,
+      "haiku_count": 1,
+      "kpi_targets": []
+    },
+    "VN-HAN-URBAN-2045": {
+      "plan_id": "VN-HAN-URBAN-2045",
+      "title_ko": "VN-HAN-URBAN-2045",
+      "sector": "Smart City",
+      "area": "도시·교통 (Urban & Transport)",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-09-01",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "The Star",
+          "title_ko": "개정된 통신법은 디지털 인프라의 길을 열어줍니다."
+        }
+      ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-08-30",
+      "latest_article_date": "2026-09-01",
       "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": []
@@ -229,18 +282,32 @@
           "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
         },
         {
-          "date": "2026-08-30",
+          "date": "2026-09-01",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
-          "source": "The Star, VnEconomy, VietNamNet, Cushman & Wakefield, Vietnam Economic Times, Vietnam Plus, SOA, B-Company, Vietnam News",
-          "title_ko": "베트남 산업단지, 2026년 고품질 FDI 및 인프라 투자 유치"
+          "source": "Vertex AI Search",
+          "title_ko": "2026~2030년 개발 기간 동안 베트남에서 상당한 인프라 투자가 진행 중"
+        },
+        {
+          "date": "2026-08-31",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "VnExpress Business",
+          "title_ko": "Tan Lan 3 산업단지, Tay Ninh에 제조 능력 추가"
+        },
+        {
+          "date": "2026-08-30",
+          "stage": "UNKNOWN",
+          "milestone": "기사 콘텐츠 미제공",
+          "source": "VnEconomy, GTI Partner",
+          "title_ko": "베트남, 첨단기술과 녹색 FDI로 전환해 2026년 산업단지를 통합 생태계로 재배치"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 2,
-      "haiku_count": 0,
+      "article_count": 6,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-TRAN-2055": {
@@ -256,14 +323,14 @@
         {
           "date": "2026-12-31",
           "stage": "CONSTRUCTION",
-          "milestone": "2025년 8월 착공, 현재 55% 진행 중",
+          "milestone": "2025년 8월 착공, 2026년 12월 현재 55% 진행률",
           "source": "Tuoi tre news",
           "title_ko": "호치민시 - 롱탄 - 저우저이(Dau Giay) 고속도로 확장"
         },
         {
           "date": "2026-09-30",
           "stage": "COMPLETION",
-          "milestone": "여객터미널 내부마감 완료, 2026년 Q3 준공",
+          "milestone": "2026년 Q3 여객터미널 내부마감 완료",
           "source": "Investify",
           "title_ko": "Ben Luc – Long Thanh 고속도로 개통"
         },
@@ -277,44 +344,44 @@
         {
           "date": "2026-09-02",
           "stage": "CONSTRUCTION",
-          "milestone": "2026년 9월 착공 예정",
+          "milestone": "2026년 9월 착공, 2030년 준공 목표",
           "source": "Vietnam Investment Review",
           "title_ko": "Thu Thiem-Long Thanh 철도 프로젝트 제안, 2026년 9월 착공 예정"
         },
         {
-          "date": "2026-08-31",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "vietnamplus",
-          "title_ko": "하노이 기업, 수출 촉진을 위해 자본, 물류 병목 현상에 대한 조치 촉구"
-        },
-        {
-          "date": "2026-08-29",
-          "stage": "UNKNOWN",
-          "milestone": "기사 내용 불가용",
-          "source": "SGGP, Vietnam News",
-          "title_ko": "호치민시 순환도로 3호"
-        },
-        {
-          "date": "2026-08-29",
+          "date": "2026-09-01",
           "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "SGGP",
-          "title_ko": "25C 도로(동나이성)"
+          "milestone": "첫 55km 구간 2026년 9월 완공 목표",
+          "source": "Tuoi tre news, DTiNews, Báo Đồng Nai điện tử, YouTube",
+          "title_ko": "Ben Luc-Long Thanh 고속도로 2026년 9월 완전 개통 목표"
         },
         {
           "date": "2026-08-27",
           "stage": "PLANNING",
-          "milestone": "시간당 47,000명 수송능력 설계 완료",
+          "milestone": "Long Thanh 공항 연결 메트로 노선 계획 수립",
           "source": "The Star, DTiNews, Vietnam News, Silverland Hotels, VnExpress International",
           "title_ko": "투티엠-롱탄 도시철도(메트로 노선 연장)"
+        },
+        {
+          "date": "2026-08-27",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "SGGP English Edition, Tuoi Tre News, DTiNews",
+          "title_ko": "롱탄공항까지 지하철 1호선 확장 긴급 승인"
+        },
+        {
+          "date": "2026-08-27",
+          "stage": "UNKNOWN",
+          "milestone": "도쿄 하네다 공항 사항 - VN-TRAN-2055 무관",
+          "source": "VnExpress Business",
+          "title_ko": "세계 최고의 국내공항, 내달 터미널 확장한다"
         }
       ],
-      "next_watch": "2027년 완공 목표, 8-10차선 확대 및 롱탄교 5차선 추가",
-      "latest_insight": "VEC 주도 14.945조동 규모 사업으로 롱탄국제공항 연계 핵심 인프라. 본격 시공 단계로 2027년 준공 예상, 호치민-탄손낫 축 교통 혼잡 완화 기대",
+      "next_watch": "2027년 준공 목표, 8-10차선 확대 및 롱탄교 5차선 추가 완료",
+      "latest_insight": "롱탄국제공항 연계 주요 인프라로 3년 내 완공 예정. 14.9조동 규모 사업으로 호치민-동남부 교통 허브 역할 강화",
       "latest_article_date": "2026-12-31",
       "article_count": 8,
-      "haiku_count": 6,
+      "haiku_count": 7,
       "kpi_targets": []
     },
     "VN-URB-METRO-2030": {
@@ -330,13 +397,13 @@
         {
           "date": "2026-09-02",
           "stage": "CONSTRUCTION",
-          "milestone": "2026년 4개 도시철도 착공 예정",
+          "milestone": "2026년 4개 도시철도 사업 착공",
           "source": "DTI News, Tuoi Tre News",
           "title_ko": "호치민시 투티엠-롱탄 철도 건설"
         }
       ],
-      "next_watch": "실제 착공 시점 확인 및 공정률 모니터링",
-      "latest_insight": "호찌민시 주요 인프라 프로젝트로 2026년부터 본격 시공 단계 진입. 도시철도 네트워크 확대로 장기 운영 수익성 기대",
+      "next_watch": "Thu Thiem-Long Thanh 노선 실제 착공 여부 확인",
+      "latest_insight": "호찌민시 정부 주도 도시철도 확대 추진. 2026년 착공 예정으로 건설 단계 진입 임박. 구체적 예산·공정관리 정보 추적 필요.",
       "latest_article_date": "2026-09-02",
       "article_count": 1,
       "haiku_count": 1,
@@ -355,16 +422,16 @@
         {
           "date": "2026-09-01",
           "stage": "PLANNING",
-          "milestone": "자연기반솔루션(NbS) 전략 수립 및 개념 설계",
+          "milestone": "정책·법령 발표",
           "source": "en_prnasisa",
           "title_ko": "Nature Conservancy는 기후 영향을 해결하고 경제적 회복력과 장기적인 발전을 지원하기 위해 자연 기반 솔루션을 탐구합니다."
         }
       ],
-      "next_watch": "아시아 지역 맹그로브 복원·도시 숲 프로젝트 승인 및 펀딩 확보",
-      "latest_insight": "기후 적응형 생태계 기반 인프라에 대한 국제 관심 증대. 정부·NGO 협력을 통한 초기 투자 단계 진입 가능성 높음",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
       "latest_article_date": "2026-09-01",
       "article_count": 1,
-      "haiku_count": 1,
+      "haiku_count": 0,
       "kpi_targets": []
     },
     "VN-SMART-2025": {
@@ -380,13 +447,13 @@
         {
           "date": "2026-08-31",
           "stage": "PLANNING",
-          "milestone": "2030년 글로벌 스마트시티 상위 50위 목표 수립",
+          "milestone": "2030년 글로벌 상위 50위 달성 목표 수립",
           "source": "The Star",
           "title_ko": "박닌성, 디지털 변혁에 초점을 맞춰 2030년까지 글로벌 스마트시티 순위 상위 50위 달성 목표"
         }
       ],
-      "next_watch": "구체적 사업 계획서 및 투자 규모 발표 시점 주목",
-      "latest_insight": "박닌성의 스마트시티 구상 초기 단계로 계획 수립 중. 디지털 변혁 전략 확정 및 마스터플랜 승인 대기. 향후 연도별 예산 편성과 사업 세부안 공개 시 사업 진전도 판단 가능",
+      "next_watch": "디지털 인프라 세부 계획 및 투자 규모 공시",
+      "latest_insight": "박닌성의 스마트시티 개발이 계획 초기 단계로, 향후 투자 기회 창출 예정. 디지털 혁신과 거버넌스 개선이 핵심 추진 과제.",
       "latest_article_date": "2026-08-31",
       "article_count": 1,
       "haiku_count": 1,
