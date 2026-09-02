@@ -62,7 +62,7 @@ on:
         default: 'false'
 
 concurrency:
-  group: weekly-collection
+  group: infra-news-pipeline
   cancel-in-progress: false
 
 jobs:
