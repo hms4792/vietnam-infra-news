@@ -673,15 +673,18 @@ def fetch_newsdata(api_key: str, hours_back: int = 24) -> list:
             'ctx_plans':      plan_id if plan_id else '',
         }
 
-    # ── A: 섹터 기본 쿼리 (매일) — 14크레딧 ─────────────────────────
-    log.info('[NewsData.io] 방법1-A: 섹터 기본 쿼리 (14크레딧)')
-    for q_info in NEWSDATA_SECTOR_QUERIES:
-        if credit_exhausted or credit_used >= CREDIT_MAX: break
-        results = call_api(q_info['q'], q_info['language'])
-        for raw in results:
-            parsed = parse_result(raw, sector=q_info.get('sector', ''))
-            if parsed: articles.append(parsed)
-        time.sleep(1.2)
+    # ── A: 섹터 기본 쿼리 (매일) — 비활성화 (선택과 집중) ─────────────
+    # [설명] Gemini API가 범용 인프라 뉴스를 이미 훌륭하게 수집하고 있으므로,
+    # 무료 크레딧을 절약하여 마스터플랜(방법B) 및 로컬 지역(방법C) 검색에 전액 투자합니다.
+    log.info('[NewsData.io] 방법1-A: 섹터 기본 쿼리 건너뜀 (크레딧 절약 모드)')
+    # for q_info in NEWSDATA_SECTOR_QUERIES:
+    #     if credit_exhausted or credit_used >= CREDIT_MAX: break
+    #     results = call_api(q_info['q'], q_info['language'])
+    #     for raw in results:
+    #         parsed = parse_result(raw, sector=q_info.get('sector', ''))
+    #         if parsed: articles.append(parsed)
+    #     time.sleep(1.2)
+    # ──────────────────────────────────────────────────────────────────
 
     # ── ★ D: 한국 ODA 기관 쿼리 (홀수일) — 방법A 직후로 이동 ─────────
     # v8.6 핵심: A(14크레딧) 소비 직후 D(5크레딧) 실행
