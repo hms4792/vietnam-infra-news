@@ -277,8 +277,12 @@ jobs:
           # 변경사항이 있으면 커밋
           git commit -m "chore: daily pipeline $(date +'%Y-%m-%d') [automated]" || true
 
-          # 원격 변경사항 병합 (rebase)
-          git pull --rebase origin main || true
+          # 기존 코드:
+          # git pull --rebase origin main || true
+          # git push origin main || true
 
-          # 푸시
+          # 변경할 코드:
+          git stash || true
+          git pull --rebase origin main || true
+          git stash pop || true
           git push origin main || true
