@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-03 15:14",
+  "generated_at": "2026-09-04 14:58",
   "plans": {
     "VN-SWM-NATIONAL-2030": {
       "plan_id": "VN-SWM-NATIONAL-2030",
@@ -14,15 +14,47 @@
         {
           "date": "2026-09-01",
           "stage": "OPERATION",
-          "milestone": "탄미 MRF 시설 운영 중, 2027년 분리배출제 시행 예정",
+          "milestone": "탄미 MRF 파일럿 운영 중(2026년 4월~), 2027년 의무 분류 시행",
           "source": "VAN (Vietnam News Agency)",
           "title_ko": "호치민시의 가정 폐기물 수집, 운송 및 처리에 대한 새로운 가격 규정"
         }
       ],
-      "next_watch": "2027년 의무 분리배출제 시행 준비 상황 및 추가 시설 확대",
-      "latest_insight": "호치민시가 이미 MRF 운영으로 폐기물 처리 인프라 구축 진행 중. 2027년 제도 확대 시 시설 투자 및 운영 기회 증가",
+      "next_watch": "2027년 의무 분류 시행 현황 및 전국 확대 일정",
+      "latest_insight": "호치민시 파일럿 성공(5.5톤 수거, 시민 700명 참여)을 바탕으로 2027년 의무화 추진. 전국 확대 단계 진입 시 대규모 투자 기회 창출 예상",
       "latest_article_date": "2026-09-01",
       "article_count": 1,
+      "haiku_count": 1,
+      "kpi_targets": []
+    },
+    "VN-WAT-RESOURCES": {
+      "plan_id": "VN-WAT-RESOURCES",
+      "title_ko": "VN-WAT-RESOURCES",
+      "sector": "Water Supply/Drainage",
+      "area": "환경 인프라 (Environment)",
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
+      "stage_history": [
+        {
+          "date": "2026-11-04",
+          "stage": "UNKNOWN",
+          "milestone": "Vietwater 2026 전시회 개최 (11월 4-6일)",
+          "source": "환경타임즈, 마이페어",
+          "title_ko": "Vietwater 2026 Expo – 물 및 폐수 처리 기술 기업을 위한 최고의 비즈니스 플랫폼"
+        },
+        {
+          "date": "2026-09-04",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Nghe An: 장마 전 배수 병목 현상의 과감한 처리"
+        }
+      ],
+      "next_watch": "전시회 참가 기업 및 기술 동향 모니터링",
+      "latest_insight": "베트남 수자원 관련 기업들의 기술 교류 및 비즈니스 협력 플랫폼. 구체적인 인프라 사업 추진과는 무관한 업계 전시회 행사",
+      "latest_article_date": "2026-11-04",
+      "article_count": 2,
       "haiku_count": 1,
       "kpi_targets": []
     },
@@ -71,7 +103,7 @@
         {
           "date": "2026-09-03",
           "stage": "UNKNOWN",
-          "milestone": "해당 없음",
+          "milestone": "과학 연구 결과 발표",
           "source": "VnExpress International",
           "title_ko": "베트남 과학자, 미생물이 폐수에서 오염물질을 먹을 수 있는 거품 개발"
         },
@@ -81,20 +113,13 @@
           "milestone": "착공·건설 진행 중",
           "source": "VietNamNet",
           "title_ko": "ADB, Khanh Hoa의 폐수 인프라에 2조 3천억 VND 제공"
-        },
-        {
-          "date": "2026-08-27",
-          "stage": "PLANNING",
-          "milestone": "ADB 2.3조 VND 자금 조성 확정",
-          "source": "Vietnam Plus",
-          "title_ko": "ADB, Khanh Hoa의 폐수 인프라에 2조 3천억 VND 제공"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 4,
-      "haiku_count": 2,
+      "article_count": 3,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-OG-2030": {
@@ -102,31 +127,38 @@
       "title_ko": "VN-OG-2030",
       "sector": "Oil & Gas",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
         {
           "date": "2026-09-01",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "UNKNOWN",
+          "milestone": "해당 없음",
           "source": "channelnewsasia",
           "title_ko": "최근의 전투가 중동 공급 중단 위험을 부활시킴에 따라 유가 상승"
         },
         {
           "date": "2026-09-01",
           "stage": "UNKNOWN",
-          "milestone": "해당 없음",
+          "milestone": "VN-OG-2030과의 연계 불명확",
+          "source": "channelnewsasia",
+          "title_ko": "미국-이란 파업이 재개됨에 따라 공급에 대한 두려움이 커짐에 따라 2% 이상 석유 공급 증가"
+        },
+        {
+          "date": "2026-09-01",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "channelnewsasia",
           "title_ko": "미국-이란의 파업 재개로 공급 우려가 촉발되면서 유가는 약 2% 상승했습니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "latest_insight": "",
+      "next_watch": "VN-OG-2030 구체적 사업 진전 소식 모니터링",
+      "latest_insight": "기사는 중동 유가 변동만 다루며 베트남 석유·가스 사업의 구체적 진행 정보 부재. 국제유가 영향 모니터링 수준의 자료.",
       "latest_article_date": "2026-09-01",
       "article_count": 3,
-      "haiku_count": 1,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-LNG": {
@@ -253,7 +285,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-09-03",
-      "article_count": 4,
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -262,45 +294,59 @@
       "title_ko": "VN-IP-NORTH-2030",
       "sector": "Industrial Parks",
       "area": "도시·교통 (Urban & Transport)",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
-          "date": "None",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Hanoi Times",
-          "title_ko": "호아팟, 베트남 북부에 미화 1억 3천만 달러 규모의 산업단지 건설"
+          "date": "2026-09-04",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "VnExpress Business",
+          "title_ko": "삼성베트남, 상반기 23억 달러 수익 기록"
         },
         {
-          "date": "2026-08-31",
+          "date": "2026-09-02",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "VnExpress Business",
-          "title_ko": "Tan Lan 3 산업단지, Tay Ninh에 제조 능력 추가"
+          "source": "Vertex AI Search, Vietnam Plus",
+          "title_ko": "호치민시 산업단지는 51억 4천만 달러로 2026년 투자 목표를 초과했습니다."
+        },
+        {
+          "date": "2026-09-01",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Vietnam seeks to channel growing capital into quality, investment-ready projects",
+          "title_ko": "베트남, AI 데이터센터와 철도 등 2026~2030년 인프라 투자 가속화"
         },
         {
           "date": "2026-08-30",
           "stage": "PLANNING",
-          "milestone": "산업단지 생태계 재배치 계획 수립",
-          "source": "VnEconomy, GTI Partner",
-          "title_ko": "베트남, 첨단기술과 녹색 FDI로 전환해 2026년 산업단지를 통합 생태계로 재배치"
+          "milestone": "FDI 유치 및 인프라 투자 전략 수립",
+          "source": "VnEconomy, Savills, YouTube",
+          "title_ko": "베트남, 2026년까지 산업 성장을 지원하기 위해 전략적 인프라 투자 가속화"
         },
         {
           "date": "2026-08-30",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
-          "source": "The Star, VnEconomy, VietNamNet, Cushman & Wakefield, Vietnam Economic Times, Vietnam Plus, SOA, B-Company, Vietnam News",
-          "title_ko": "베트남 산업단지, 2026년 고품질 FDI 및 인프라 투자 유치"
+          "source": "VnEconomy, VietNamNet, Vietnam Real Estate 2026",
+          "title_ko": "베트남, 2026년 첨단 기술 및 지속 가능한 FDI를 위한 산업단지를 재배치"
+        },
+        {
+          "date": "2026-08-30",
+          "stage": "PLANNING",
+          "milestone": "산업단지 생태계 재배치 정책 수립",
+          "source": "VnEconomy, GTI Partner",
+          "title_ko": "베트남, 첨단기술과 녹색 FDI로 전환해 2026년 산업단지를 통합 생태계로 재배치"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
       "latest_insight": "",
-      "latest_article_date": "None",
-      "article_count": 5,
-      "haiku_count": 1,
+      "latest_article_date": "2026-09-04",
+      "article_count": 8,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-TRAN-2055": {
@@ -308,66 +354,66 @@
       "title_ko": "VN-TRAN-2055",
       "sector": "Transport",
       "area": "도시·교통 (Urban & Transport)",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
           "date": "2026-12-01",
-          "stage": "COMPLETION",
-          "milestone": "제1터미널 기술적 개항 (2025.12.19)",
+          "stage": "OPERATION",
+          "milestone": "2026년 12월 상업운영 개시",
           "source": "Wikipedia",
           "title_ko": "롱탄(Long Thanh) 국제공항 도로 접근 및 순환도로 3 완성"
         },
         {
+          "date": "2026-09-04",
+          "stage": "PLANNING",
+          "milestone": "2026년 12월 착공 목표 설정",
+          "source": "Facebook, Freshfields, AHK Vietnam",
+          "title_ko": "베트남, 2026년 말까지 남북 고속철도 건설 시작 목표"
+        },
+        {
           "date": "2026-09-01",
           "stage": "PLANNING",
-          "milestone": "2027년 APEC 대비 1단계 완공 목표",
+          "milestone": "2026-2030 전략적 인프라 투자 계획 승인",
           "source": "Industry Report",
           "title_ko": "베트남, 2026~2030년 전략적 인프라 투자 가속화"
         },
         {
           "date": "2026-09-01",
           "stage": "PLANNING",
-          "milestone": "2026-2030년 투자계획 수립, PPP 추진 중",
+          "milestone": "2026-2030년 외자유치 사업 리스트 등재, PPP 방식 추진 결정",
           "source": "Vertex AI Search",
           "title_ko": "2026~2030년 개발 기간 동안 베트남에서 상당한 인프라 투자가 진행 중"
         },
         {
           "date": "2026-08-28",
           "stage": "PLANNING",
-          "milestone": "롱탄공항 연장노선 긴급프로젝트 검토",
+          "milestone": "기사 콘텐츠 접근 불가",
           "source": "Vietnam News Agency (VNA)",
           "title_ko": "호치민시 최초의 지하철 노선이 긴급 프로젝트로 롱탄 국제공항까지 연장된다"
         },
         {
-          "date": "2026-08-27",
-          "stage": "PLANNING",
-          "milestone": "호찌민시 정부-교통부 계획 승인",
-          "source": "The Star, DTiNews, Vietnam News, Silverland Hotels, VnExpress International",
-          "title_ko": "투티엠-롱탄 도시철도(메트로 노선 연장)"
+          "date": "2026-08-28",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "VnExpress International",
+          "title_ko": "동남아시아 최대 공항 항공기 바퀴실에서 시신 발견"
         },
         {
-          "date": "2026-08-27",
+          "date": "2026-08-28",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "DTiNews - Dân trí",
-          "title_ko": "베트남, 롱탄공항까지 벤탄-쑤오이티엔 지하철 노선 긴급 연장 승인"
-        },
-        {
-          "date": "2026-08-27",
-          "stage": "UNKNOWN",
-          "milestone": "베트남 사업과 무관",
-          "source": "VnExpress Business",
-          "title_ko": "세계 최고의 국내공항, 내달 터미널 확장한다"
+          "source": "VnExpress International",
+          "title_ko": "5일간의 연휴가 시작되면서 베트남에서 가장 붐비는 공항으로 가는 도로가 교통체증을 겪습니다."
         }
       ],
-      "next_watch": "도로·순환도로 3 완성에 따른 상용화 단계 진행",
-      "latest_insight": "공항 기본 인프라 완성 단계. 접근도로 및 순환도로 완공으로 운영 체계 정비 중. 향후 추가 터미널 확장 및 운영 효율화 주목",
+      "next_watch": "공항 도로접근성 및 순환도로 3 운영 안정화 모니터링",
+      "latest_insight": "기술적 개통(2025년 12월) 완료 후 상업운영(2026년 12월) 개시 단계. 롱탄공항 접근도로 인프라의 운영 단계 진입으로 공항 물동량 확대 기대",
       "latest_article_date": "2026-12-01",
       "article_count": 8,
-      "haiku_count": 6,
+      "haiku_count": 5,
       "kpi_targets": []
     },
     "VN-URB-METRO-2030": {
@@ -386,19 +432,12 @@
           "milestone": "착공·건설 진행 중",
           "source": "VNPT",
           "title_ko": "전국 스마트 시티 연결을 위한 VNPT의 지능형 운영 센터(IOC) 시스템"
-        },
-        {
-          "date": "2026-08-27",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Ruliweb",
-          "title_ko": "2026 스마트시티 아시아 전시회, 10월 하노이에서 개최"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-09-03",
-      "article_count": 2,
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -407,20 +446,20 @@
       "title_ko": "VN-ENV-NATURA",
       "sector": "Environment",
       "area": "환경 인프라 (Environment)",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-09-01",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "en_prnasisa",
           "title_ko": "Nature Conservancy는 기후 영향을 해결하고 경제적 회복력과 장기적인 발전을 지원하기 위해 자연 기반 솔루션을 탐구합니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-09-01",
       "article_count": 1,
@@ -452,8 +491,8 @@
           "title_ko": "다낭 남탕빈 산업단지 폐수처리장"
         }
       ],
-      "next_watch": "폐수처리장 용량 증가 공사 진행률 및 완공 예정시기 확인",
-      "latest_insight": "VN-HOUSING-2030 마스터플랜 연계 폐수처리 인프라 확충 중. 빈즈엉성 주요 환경기초시설 사업으로 건설단계 진입 확인",
+      "next_watch": "폐수처리장 확대공사 진행상황 및 완공 일정 모니터링",
+      "latest_insight": "VN-HOUSING-2030 마스터플랜 연계 폐수처리 인프라 확충으로 빈즈엉성 주택개발 환경 개선 추진 중",
       "latest_article_date": "2026-08-29",
       "article_count": 2,
       "haiku_count": 2,
@@ -472,13 +511,13 @@
         {
           "date": "2026-08-31",
           "stage": "PLANNING",
-          "milestone": "2030년 글로벌 스마트시티 상위 50위 진입 목표",
+          "milestone": "2030년 글로벌 스마트시티 상위 50위 목표 설정",
           "source": "The Star",
           "title_ko": "박닌성, 디지털 변혁에 초점을 맞춰 2030년까지 글로벌 스마트시티 순위 상위 50위 달성 목표"
         }
       ],
-      "next_watch": "세부 마스터플랜 수립, 투자자 모집, 국제 파트너십 체결",
-      "latest_insight": "박닌성 정부의 디지털 변혁 중심 스마트시티 추진으로 글로벌 수준의 도시 인프라 개발 초기 단계. 향후 3년 내 본격적인 투자 유치 및 착공 전환 시점 주목",
+      "next_watch": "디지털 변환 세부 계획 수립 및 정부 승인",
+      "latest_insight": "박닌성 정부 주도의 초기 계획 단계. 2030년 목표 달성을 위해 향후 입찰, 투자 유치 등 TENDERING 단계 진입 시점 주목",
       "latest_article_date": "2026-08-31",
       "article_count": 1,
       "haiku_count": 1,
