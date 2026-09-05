@@ -125,11 +125,18 @@ KH_WIDTHS  = [22,18,12,55,40,18,8,22]
 SECT_PRI = {s:i for i,s in enumerate(SECTOR_ORDER)}
 
 
-def _is_infra_article(title_en: str, title_ko: str, plan_id: str) -> bool:
+# [수정] 요약문(summary)까지 검사 범위를 넓히고 필수 인프라 키워드를 대폭 추가하여 알짜 기사 탈락 방지
+def _is_infra_article(title_en: str, title_ko: str, plan_id: str, summary_en: str = "", summary_ko: str = "") -> bool:
     if str(plan_id or '').strip():
         return True
-    text = (str(title_en or '') + ' ' + str(title_ko or '')).lower()
-    if any(kw in text for kw in INFRA_KEYWORDS['en']): return True
+    
+    # 제목뿐만 아니라 요약문 내용까지 모두 합쳐서 검사
+    text = (str(title_en or '') + ' ' + str(title_ko or '') + ' ' + str(summary_en or '') + ' ' + str(summary_ko or '')).lower()
+    
+    # 억울하게 탈락하는 것을 막기 위해 'project', 'investment', 'funding', 'loan', 'oda', 'facility', 'fdi', 'development', 'plant' 등 필수 키워드 추가
+    extra_keywords = ['project', 'investment', 'funding', 'loan', 'oda', 'facility', 'fdi', 'development', 'plant']
+    
+    if any(kw in text for kw in INFRA_KEYWORDS['en'] + extra_keywords): return True
     if any(kw in text for kw in INFRA_KEYWORDS['vi']): return True
     if any(kw in text for kw in INFRA_KEYWORDS['ko']): return True
     return False
@@ -316,8 +323,15 @@ class ExcelUpdater:
             title_ko = a.get("title_ko", "")
             plan_id  = a.get("plan_id", "") or a.get("ctx_plans", "")
 
-            if not _is_infra_article(title, title_ko, plan_id):
+            # [수정1] 억울하게 탈락하는 기사 구출 (요약문까지 검사 범위 확대)
+            if not _is_infra_article(title, title_ko, plan_id, a.get("summary_en", ""), a.get("summary_ko", "")):
                 continue
+
+            # [수정2] 미래 날짜(AI 환각) 방지: 기사 날짜가 오늘보다 미래면 오늘 날짜로 덮어쓰기
+            article_date = str(a.get("date", ""))[:10]
+            if article_date > self.today:
+                a["date"] = self.today
+                a["published_date"] = self.today
 
             if not a.get("sector"):
                 # ★ v4.0: or 'Power' → or 'General' (과분류 원천 차단)
@@ -363,7 +377,8 @@ class ExcelUpdater:
                 for ci, h in enumerate(NEWS_HEADERS, 1):
                     _hdr(ws, 1, ci, h)
 
-        for a in sorted(articles, key=lambda x: str(x.get("date","") or ""), reverse=True):
+        # [수정] reverse=False 로 변경 (과거 기사부터 밀어 넣어야 최신 기사가 최종적으로 맨 위에 남음)
+        for a in sorted(articles, key=lambda x: str(x.get("date","") or ""), reverse=False):
             ws.insert_rows(2)
             self._write_news_row(ws, 2, a)
 
@@ -500,10 +515,11 @@ class ExcelUpdater:
             })
 
         # ★ v4.0: 날짜 역순 정렬 후 Row3에 insert_rows로 삽입 (최신 상단)
+        # [수정] 위와 동일한 이유로 reverse=False 적용
         new_articles_sorted = sorted(
             new_articles,
             key=lambda x: str(x.get('date', '')),
-            reverse=True
+            reverse=False
         )
 
         for a in new_articles_sorted:
