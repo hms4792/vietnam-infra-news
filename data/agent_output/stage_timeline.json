@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-05 05:44",
+  "generated_at": "2026-09-05 15:25",
   "plans": {
     "VN-SWM-NATIONAL-2030": {
       "plan_id": "VN-SWM-NATIONAL-2030",
@@ -14,7 +14,7 @@
         {
           "date": "2026-09-05",
           "stage": "OPERATION",
-          "milestone": "탄호아성 도시질서 회복 및 환경미화 활동 추진",
+          "milestone": "탄호아성 환경미화 활동 본격 추진 (2026.09)",
           "source": "Moi truong & Cuoc song",
           "title_ko": "탄화 (Thanh Hoa): 도시 질서 대폭 회복 - 환경 청소에 공무원과 지도자 참여"
         },
@@ -28,13 +28,13 @@
         {
           "date": "2026-09-01",
           "stage": "PLANNING",
-          "milestone": "2027년 분리배출 정책 시행 예정",
+          "milestone": "2027년 의무적 폐기물 분류 시행 규정 확정",
           "source": "VAN (Vietnam News Agency)",
           "title_ko": "호치민시의 가정 폐기물 수집, 운송 및 처리에 대한 새로운 가격 규정"
         }
       ],
-      "next_watch": "폐기물 처리시설 확충 및 위생 개선 성과 모니터링",
-      "latest_insight": "도시 환경 개선 사업이 운영 단계로 진입. 공무원 참여 강화로 지속적 관리체계 구축 중. 향후 인프라 투자 확대 가능성",
+      "next_watch": "도시질서 회복 성과지표 모니터링 및 확대 지역 선정",
+      "latest_insight": "VN-SWM-NATIONAL-2030 마스터플랜 하에 지자체 주도의 현장 운영단계 진입. 공무원·지도부 참여로 정책 실행력 강화 중",
       "latest_article_date": "2026-09-05",
       "article_count": 3,
       "haiku_count": 2,
@@ -45,30 +45,55 @@
       "title_ko": "VN-WAT-RESOURCES",
       "sector": "Water Supply/Drainage",
       "area": "환경 인프라 (Environment)",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
           "date": "2026-11-04",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
           "source": "환경타임즈, 마이페어",
           "title_ko": "Vietwater 2026 Expo – 물 및 폐수 처리 기술 기업을 위한 최고의 비즈니스 플랫폼"
         },
         {
-          "date": "2026-09-04",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Nghe An: 장마 전 배수 병목 현상의 과감한 처리"
+          "date": "2026-09-03",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Asian Development Bank",
+          "title_ko": "ADB, 베트남은 현대적이고 탄력적인 관개 시스템을 구축하기 위해 4,276만 달러의 자금 조달 패키지에 서명했습니다."
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-11-04",
-      "article_count": 2,
+      "article_count": 3,
+      "haiku_count": 0,
+      "kpi_targets": []
+    },
+    "VN-WAT-URBAN": {
+      "plan_id": "VN-WAT-URBAN",
+      "title_ko": "VN-WAT-URBAN",
+      "sector": "Water Supply/Drainage",
+      "area": "환경 인프라 (Environment)",
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
+      "stage_history": [
+        {
+          "date": "2026-09-03",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Asian Development Bank",
+          "title_ko": "ADB, 베트남은 현대적이고 탄력적인 관개 시스템을 구축하기 위해 4,276만 달러의 자금 조달 패키지에 서명했습니다."
+        }
+      ],
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-09-03",
+      "article_count": 1,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -92,7 +117,7 @@
         {
           "date": "2026-09-03",
           "stage": "UNKNOWN",
-          "milestone": "과학 연구 성과 발표",
+          "milestone": "폐수처리 미생물 폼 개발 완료",
           "source": "VnExpress International",
           "title_ko": "베트남 과학자, 미생물이 폐수에서 오염물질을 먹을 수 있는 거품 개발"
         }
@@ -100,7 +125,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 3,
+      "article_count": 4,
       "haiku_count": 1,
       "kpi_targets": []
     },
@@ -109,11 +134,18 @@
       "title_ko": "VN-OG-2030",
       "sector": "Oil & Gas",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
       "stage_history": [
+        {
+          "date": "2026-09-04",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "en_prnasisa",
+          "title_ko": "Sinopec과 국제 파트너, 글로벌 CCUS 협력 발전을 위한 이니셔티브 개시"
+        },
         {
           "date": "2026-09-01",
           "stage": "OPERATION",
@@ -129,10 +161,10 @@
           "title_ko": "미국-이란 파업이 재개됨에 따라 공급에 대한 두려움이 커짐에 따라 2% 이상 석유 공급 증가"
         }
       ],
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
       "latest_insight": "",
-      "latest_article_date": "2026-09-01",
-      "article_count": 3,
+      "latest_article_date": "2026-09-04",
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -213,7 +245,7 @@
         {
           "date": "2026-08-30",
           "stage": "PLANNING",
-          "milestone": "베트남 정부 해상풍력 첫 프로젝트 승인(2026년 5월)",
+          "milestone": "2026년 5월 첫 해상풍력 프로젝트 정부 승인",
           "source": "Facebook (UnboxFactory)",
           "title_ko": "베트남은 2026년 5월 첫 해상 풍력 프로젝트를 승인했으며 2035년까지 최대 17GW를 목표로 하고 있다."
         },
@@ -255,13 +287,20 @@
           "milestone": "정책·법령 발표",
           "source": "The Star",
           "title_ko": "개정된 통신법은 디지털 인프라의 길을 열어줍니다."
+        },
+        {
+          "date": "2026-08-30",
+          "stage": "UNKNOWN",
+          "milestone": "기사 본문 미제공",
+          "source": "Báo Đồng Nai điện tử",
+          "title_ko": "동나이, 2026년 중반까지 IOC 통합으로 스마트 도시 관리 강화"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-10-01",
-      "article_count": 4,
-      "haiku_count": 0,
+      "article_count": 5,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-IP-NORTH-2030": {
@@ -291,14 +330,7 @@
         {
           "date": "2026-08-30",
           "stage": "PLANNING",
-          "milestone": "2026년 상반기 FDI 380.6억 달러 유치로 투자유치국 입지 강화",
-          "source": "VnEconomy, Savills, YouTube",
-          "title_ko": "베트남, 2026년까지 산업 성장을 지원하기 위해 전략적 인프라 투자 가속화"
-        },
-        {
-          "date": "2026-08-30",
-          "stage": "PLANNING",
-          "milestone": "산업단지 생태계 통합 재배치 계획",
+          "milestone": "기사 콘텐츠 미확보 - 단계 판단 불가",
           "source": "VnEconomy, GTI Partner",
           "title_ko": "베트남, 첨단기술과 녹색 FDI로 전환해 2026년 산업단지를 통합 생태계로 재배치"
         },
@@ -314,7 +346,7 @@
       "latest_insight": "",
       "latest_article_date": "2026-09-04",
       "article_count": 8,
-      "haiku_count": 2,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-TRAN-2055": {
@@ -330,28 +362,35 @@
         {
           "date": "2026-12-01",
           "stage": "COMPLETION",
-          "milestone": "2026년 12월 상용개장 완료",
+          "milestone": "2026년 12월 상업운영 개시",
           "source": "Wikipedia",
           "title_ko": "롱탄(Long Thanh) 국제공항 도로 접근 및 순환도로 3 완성"
         },
         {
           "date": "2026-09-04",
           "stage": "PLANNING",
-          "milestone": "2026년 12월 31일 착공 목표",
+          "milestone": "2026년 12월 31일 착공 예정",
           "source": "Facebook, Freshfields, AHK Vietnam",
           "title_ko": "베트남, 2026년 말까지 남북 고속철도 건설 시작 목표"
         },
         {
+          "date": "2026-09-02",
+          "stage": "CONSTRUCTION",
+          "milestone": "2026년 착공 개시, 46.5km 철도 노선 건설",
+          "source": "Future Southeast Asia, The Star",
+          "title_ko": "투티엠(Thu Thiem) – 롱탄(Long Thanh) 철도, 2026년 착공, 호치민시와 공항 연결"
+        },
+        {
           "date": "2026-09-01",
           "stage": "PLANNING",
-          "milestone": "2026-2030 전략 인프라 투자 계획 수립",
+          "milestone": "2026-2030 전략적 인프라 투자계획 수립",
           "source": "Industry Report",
           "title_ko": "베트남, 2026~2030년 전략적 인프라 투자 가속화"
         },
         {
           "date": "2026-09-01",
           "stage": "PLANNING",
-          "milestone": "2027년 APEC 개최 대비 인프라 투자 계획 수립",
+          "milestone": "2027년 APEC 개최 대비 기아빈공항·철도 4개 프로젝트 추진",
           "source": "Vertex AI Search",
           "title_ko": "2026~2030년 개발 기간 동안 베트남에서 상당한 인프라 투자가 진행 중"
         },
@@ -370,11 +409,11 @@
           "title_ko": "호치민 순환도로 3호 2026년 완공 예정"
         }
       ],
-      "next_watch": "T1 터미널 연간 2,500만 명 처리 용량 달성 여부",
-      "latest_insight": "롱탄공항 도로접근 및 3호 환상도로 완성으로 공항 접근성 확보. 상용개장으로 베트남 항공 허브 기능 본격화 예상",
+      "next_watch": "터미널1 확장 및 추가 링로드 개발 계획",
+      "latest_insight": "롱탄공항 기본 인프라 완성으로 호치민 대도시권 항공 수송 허브 역할 개시. 향후 터미널 확장 및 철도 연결 등 후속 투자 기회 주목",
       "latest_article_date": "2026-12-01",
       "article_count": 8,
-      "haiku_count": 4,
+      "haiku_count": 5,
       "kpi_targets": []
     },
     "VN-URB-METRO-2030": {
@@ -393,13 +432,20 @@
           "milestone": "착공·건설 진행 중",
           "source": "VNPT",
           "title_ko": "전국 스마트 시티 연결을 위한 VNPT의 지능형 운영 센터(IOC) 시스템"
+        },
+        {
+          "date": "2026-08-30",
+          "stage": "UNKNOWN",
+          "milestone": "기사 본문 불가용",
+          "source": "Báo Đồng Nai điện tử",
+          "title_ko": "동나이, 2026년 중반까지 IOC 통합으로 스마트 도시 관리 강화"
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-09-03",
-      "article_count": 1,
-      "haiku_count": 0,
+      "article_count": 2,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-ENV-NATURA": {
@@ -465,20 +511,20 @@
         {
           "date": "2026-08-29",
           "stage": "CONSTRUCTION",
-          "milestone": "2026년 8월 29일 사업 출범식 개최",
+          "milestone": "2026년 8월 29일 출범식 개최, 착공 단계 진입",
           "source": "Vietnam Plus",
           "title_ko": "Binh Duong성 Thuan An 폐수처리장 용량 증가"
         },
         {
           "date": "2026-08-29",
           "stage": "CONSTRUCTION",
-          "milestone": "9월 국경절 전 준공 예정",
+          "milestone": "2026년 9월 국경절 전 준공 예정",
           "source": "Vietnam Plus",
           "title_ko": "다낭 남탕빈 산업단지 폐수처리장"
         }
       ],
-      "next_watch": "확대공사 진행일정 및 용량 증설 목표 달성도 모니터링",
-      "latest_insight": "VN-HOUSING-2030 마스터플랜 연계 인프라 사업으로 베트남 정부의 주택·도시개발 전략에 포함. 폐수처리 인프라 확충으로 도시 지속가능성 강화",
+      "next_watch": "시공 진도율, 용량 증설 완료 일정 모니터링",
+      "latest_insight": "호치민시 폐수 처리 인프라 확충으로 도시 용수 수요 충족. VN-HOUSING-2030과 연계되어 장기 도시개발 전략의 일환으로 평가됨",
       "latest_article_date": "2026-08-29",
       "article_count": 2,
       "haiku_count": 2,
@@ -497,13 +543,13 @@
         {
           "date": "2026-08-31",
           "stage": "PLANNING",
-          "milestone": "2030년 글로벌 스마트시티 상위 50위 목표 설정",
+          "milestone": "2030년 글로벌 스마트시티 상위 50위 목표 수립",
           "source": "The Star",
           "title_ko": "박닌성, 디지털 변혁에 초점을 맞춰 2030년까지 글로벌 스마트시티 순위 상위 50위 달성 목표"
         }
       ],
-      "next_watch": "디지털 변환 상세 계획 및 투자 규모 공시 시점",
-      "latest_insight": "박닌성 정부 주도의 스마트시티 개발 계획 초기 단계. 2030년 목표 달성을 위한 구체적 사업 승인 및 투자 유치 단계로의 진행 예상",
+      "next_watch": "마스터플랜 상세 설계 및 정부 승인, 예산 배분 계획",
+      "latest_insight": "박닌성의 디지털 전환 중심 스마트시티 구상 단계. 2030년 목표 달성을 위한 구체적 투자 계획 및 입찰 단계 진입 시점 모니터링 필요",
       "latest_article_date": "2026-08-31",
       "article_count": 1,
       "haiku_count": 1,

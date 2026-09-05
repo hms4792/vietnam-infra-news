@@ -7,10 +7,10 @@
 
 | Sector | Count |
 |--------|-------|
-| Waste Water | 4 |
-| Water Supply/Drainage | 0 |
+| Waste Water | 5 |
+| Water Supply/Drainage | 1 |
 | Solid Waste | 2 |
 | Power | 5 |
-| Oil & Gas | 0 |
+| Oil & Gas | 1 |
 | Industrial Parks | 11 |
-| Smart City | 3 |
+| Smart City | 4 |
