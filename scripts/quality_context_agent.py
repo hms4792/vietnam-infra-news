@@ -275,10 +275,19 @@ def score_article(title_en: str, title_ko: str, summary_en: str, summary_ko: str
     ko_text = (title_ko + ' ' + summary_ko).lower()
     all_text = en_text + ' ' + ko_text
 
-    # 기존 v3.5 키워드 매칭
+    # [수정] 치명적인 부분 단어 매칭 오류 방지 헬퍼 함수
+    # 'port'가 'opportunities'에 매칭되는 것을 막기 위해 단어 경계(\b)를 사용합니다.
+    def contains_en_kw(kw: str, text: str) -> bool:
+        kw_clean = kw.lower().strip()
+        if not kw_clean: return False
+        if re.match(r'^[a-z0-9\s-]+$', kw_clean):
+            return bool(re.search(rf'\b{re.escape(kw_clean)}\b', text))
+        return kw_clean in text
+
+    # 기존 v3.5 키워드 매칭 (수정된 함수 적용)
     for kw in plan['keywords_en']:
-        if kw in en_text:
-            score += 25 if kw in title_en.lower() else 10
+        if contains_en_kw(kw, en_text):
+            score += 25 if contains_en_kw(kw, title_en.lower()) else 10
 
     for kw in plan['keywords_vi']:
         if kw in ko_text:
@@ -289,8 +298,8 @@ def score_article(title_en: str, title_ko: str, summary_en: str, summary_ko: str
     if sector in SECTOR_SUPPLEMENT_KEYWORDS:
         extra_en, extra_vi = SECTOR_SUPPLEMENT_KEYWORDS[sector]
         for kw in extra_en:
-            if kw.lower() in en_text:
-                score += 15 if kw.lower() in title_en.lower() else 6
+            if contains_en_kw(kw, en_text):
+                score += 15 if contains_en_kw(kw, title_en.lower()) else 6
         for kw in extra_vi:
             if kw.lower() in all_text:
                 score += 12 if kw.lower() in title_ko.lower() else 5
