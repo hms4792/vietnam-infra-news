@@ -134,7 +134,7 @@ def _is_infra_article(title_en: str, title_ko: str, plan_id: str, summary_en: st
     text = (str(title_en or '') + ' ' + str(title_ko or '') + ' ' + str(summary_en or '') + ' ' + str(summary_ko or '')).lower()
     
     # 억울하게 탈락하는 것을 막기 위해 'project', 'investment', 'funding', 'loan', 'oda', 'facility', 'fdi', 'development', 'plant' 등 필수 키워드 추가
-    extra_keywords = ['project', 'investment', 'funding', 'loan', 'oda', 'facility', 'fdi', 'development', 'plant']
+    extra_keywords = ['project', 'investment', 'funding', 'loan', 'oda', 'facility', 'fdi', 'development', 'plant', 'construction', 'expansion', 'approval', 'master plan', 'expressway', 'metro', 'Enviornment', 'Waste water Treatment', 'Solid Waste Treatment', 'Water supply', 'Urban Development', 'Industrial Park']
     
     if any(kw in text for kw in INFRA_KEYWORDS['en'] + extra_keywords): return True
     if any(kw in text for kw in INFRA_KEYWORDS['vi']): return True
@@ -378,7 +378,7 @@ class ExcelUpdater:
                     _hdr(ws, 1, ci, h)
 
         # [수정] reverse=False 로 변경 (과거 기사부터 밀어 넣어야 최신 기사가 최종적으로 맨 위에 남음)
-        for a in sorted(articles, key=lambda x: str(x.get("date","") or ""), reverse=False):
+        for a in sorted(articles, key=lambda x: str(x.get("date","") or ""), reverse=True):
             ws.insert_rows(2)
             self._write_news_row(ws, 2, a)
 
@@ -519,7 +519,7 @@ class ExcelUpdater:
         new_articles_sorted = sorted(
             new_articles,
             key=lambda x: str(x.get('date', '')),
-            reverse=False
+            reverse=True
         )
 
         for a in new_articles_sorted:
