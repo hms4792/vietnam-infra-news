@@ -378,7 +378,7 @@ class ExcelUpdater:
                     _hdr(ws, 1, ci, h)
 
         # [수정] reverse=False 로 변경 (과거 기사부터 밀어 넣어야 최신 기사가 최종적으로 맨 위에 남음)
-        for a in sorted(articles, key=lambda x: str(x.get("date","") or ""), reverse=True):
+        for a in sorted(articles, key=lambda x: str(x.get("date","") or ""), reverse=False):
             ws.insert_rows(2)
             self._write_news_row(ws, 2, a)
 
@@ -519,7 +519,7 @@ class ExcelUpdater:
         new_articles_sorted = sorted(
             new_articles,
             key=lambda x: str(x.get('date', '')),
-            reverse=True
+            reverse=False
         )
 
         for a in new_articles_sorted:
