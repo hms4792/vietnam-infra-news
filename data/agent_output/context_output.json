@@ -1,41 +1,17 @@
 {
-  "generated_at": "2026-09-24 16:01",
+  "generated_at": "2026-09-25 16:06",
   "model": "claude-haiku-4-5-20251001",
-  "total_articles": 75,
-  "haiku_used": 23,
+  "total_articles": 80,
+  "haiku_used": 21,
   "stage_summary": {
-    "PLANNING": 43,
-    "TENDERING": 6,
-    "CONSTRUCTION": 8,
-    "COMPLETION": 4,
-    "OPERATION": 6,
-    "UNKNOWN": 8
+    "PLANNING": 48,
+    "TENDERING": 7,
+    "CONSTRUCTION": 9,
+    "COMPLETION": 5,
+    "OPERATION": 4,
+    "UNKNOWN": 7
   },
   "articles": [
-    {
-      "date": "2026-09-17",
-      "province": "",
-      "sector": "Solid Waste",
-      "title_ko": "하노이: Cua Nam Ward, 쓰레기 수거를 위한 표준 가방, 전기 자동차 시범 운영",
-      "title_en": "Hanoi: Cua Nam Ward piloted standard bags, electric vehicles to collect garbage",
-      "summary_ko": "① 하노이 쿠아남 워드 표준 쓰레기봉투 및 전기차 수거 시범사업\n② 전기차 도입, 표준 쓰레기봉투 시범 운영\n③ 시범 운영 중\n④ 하노이시, 쿠아남 워드\n⑤ 지속적인 확대 추진",
-      "summary_en": "Cua Nam Ward (Hanoi) piloted standard bags, 3-wheel electric vehicles specializing in garbage collection from September 20, aiming to solve shortcomings in the collection and classification of domestic solid waste in crowded residential areas and many small alleys.",
-      "source": "Moi truong & Cuoc song",
-      "url": "https://moitruong.net.vn/ha-noi-phuong-cua-nam-thi-diem-tui-tieu-chuan-xe-dien-thu-gom-rac-102438.html",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "VN-SWM-NATIONAL-2030",
-      "plan_id": "VN-SWM-NATIONAL-2030",
-      "rule_stage": "OPERATION",
-      "rule_conf": 1.0,
-      "stage": "OPERATION",
-      "confidence": 1.0,
-      "milestone": "운영 성과 업데이트",
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
-    },
     {
       "date": "2026-09-18",
       "province": "",
@@ -58,7 +34,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.98)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-19",
@@ -82,7 +58,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.99)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-22",
@@ -106,7 +82,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-23",
@@ -114,23 +90,23 @@
       "sector": "Solid Waste",
       "title_ko": "응에안: 많은 도로가 쓰레기 수거 장소로 바뀌었습니다.",
       "title_en": "Nghe An: Many roads have been turned into places to collect waste",
-      "summary_ko": "①사업명: 베트남 국가 폐기물 관리 계획(VN-SWM-NATIONAL-2030) ②사업규모: 응에안성 QL46B 등 주요 도로 구간의 불법 폐기물 집적 문제 ③현재진행단계: 운영 중 ④주요기관: 응에안성 정부, 쑤언람 및 흥응웬 지역 자치정부 ⑤핵심일정: 지속적인 모니터링 카메라 설치 및 주민 계도",
+      "summary_ko": "①베트남 내 폐기물 관리 마스터플랜(VN-SWM-NATIONAL-2030) ②응에안성 QL46B 국도 등 다수 노선에 비공식 폐기물 집적소 형성 ③계획/운영단계(폐기물 수거·집적 계획 수립 및 실행 중) ④응에안성 선룸·대동 지역 인민위원회 ⑤지역 주민 인식 개선 및 불법 투기 단속 강화 필요",
       "summary_en": "The situation of gathering and dumping garbage in the wrong place and at the right time is taking place in many rural areas of Nghe An. Not only in residential areas, many national highways, expressways and main roads have also become spontaneous garbage collection places, causing loss of aesthetics and potential environmental pollution.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/nghe-an-nhieu-tuyen-duong-bi-bien-thanh-noi-tap-ket-rac-thai-102640.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-SWM-NATIONAL-2030",
       "plan_id": "VN-SWM-NATIONAL-2030",
-      "rule_stage": "CONSTRUCTION",
-      "rule_conf": 0.524,
-      "stage": "OPERATION",
-      "confidence": 0.9,
-      "milestone": "응에안성 주요 도로 폐기물 관리 모니터링 강화",
-      "next_watch": "모니터링 카메라 설치 완료율 및 불법 폐기물 집적 감소율 추적",
-      "insight": "국가 폐기물 관리 계획이 운영 단계에 진입했으나, 지역 차원의 집행력 강화가 필수. 지속적 감시·단속 체계 구축이 성공 핵심.",
-      "stage_reason": "모니터링·주민 계도 등 운영 활동이 진행 중",
-      "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:00"
+      "rule_stage": "PLANNING",
+      "rule_conf": 1.0,
+      "stage": "PLANNING",
+      "confidence": 1.0,
+      "milestone": "정책·법령 발표",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-21",
@@ -154,7 +130,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-24",
@@ -178,7 +154,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
+    },
+    {
+      "date": "2026-09-25",
+      "province": "",
+      "sector": "General",
+      "title_ko": "적극적으로 물을 축적하고, 엘니뇨의 위험에 대비하여 수원을 확보합니다.",
+      "title_en": "Proactively accumulate water, ensure water sources against the risk of El Nino",
+      "summary_ko": "베트남이 엘니뇨 현상으로 인한 가뭄 위협에 대비해 적극적으로 수자원을 확보하고 있다. 저수지 및 수원 확보를 통해 물 공급 안정성을 보장하려는 정책을 추진 중이다.",
+      "summary_en": "Deputy Prime Minister Ho Quoc Dung asked ministries, sectors and localities to actively monitor weather developments, develop scenarios to respond to the risk of water shortage due to El Nino; prioritize ensuring domestic water, production, food security, energy security and limit impacts on economic growth.",
+      "source": "Moi truong & Cuoc song",
+      "url": "https://moitruong.net.vn/chu-dong-tich-nuoc-bao-dam-nguon-nuoc-truoc-nguy-co-el-nino-102685.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-WAT-RESOURCES",
+      "plan_id": "VN-WAT-RESOURCES",
+      "rule_stage": "PLANNING",
+      "rule_conf": 1.0,
+      "stage": "PLANNING",
+      "confidence": 1.0,
+      "milestone": "정책·법령 발표",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-11-04",
@@ -202,7 +202,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-24",
@@ -221,12 +221,12 @@
       "rule_conf": 1.0,
       "stage": "PLANNING",
       "confidence": 0.85,
-      "milestone": "2026-2030년 환경 인프라 개선 투자 모색",
-      "next_watch": "사업 선정 및 예산 배정 확정, 입찰 공고 시점",
-      "insight": "HCMC의 오폐수 처리 시스템 현대화 추진으로 도시 환경 개선 사업 확대 예상. 투자 유치 단계 진입 가능성 높음",
-      "stage_reason": "투자 모색 단계로 기본값 PLANNING 적용",
+      "milestone": "2026-2030년 환경 인프라 투자 계획 수립",
+      "next_watch": "남사이곤 폐수 시스템 1단계 입찰 공고 및 시간표 발표",
+      "insight": "호치민시의 대규모 오폐수 처리 프로젝트군 추진으로 환경 인프라 수주 기회 증대. 향후 2-3년 내 입찰 진행 예상",
+      "stage_reason": "투자 모색 단계, 구체적 발주 일정 미확정",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-21",
@@ -250,7 +250,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-21",
@@ -274,7 +274,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.87)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-24",
@@ -294,11 +294,11 @@
       "stage": "PLANNING",
       "confidence": 0.85,
       "milestone": "2026-2030년 환경 인프라 개선 계획 수립",
-      "next_watch": "탐루옹-벤깟·박사이곤2 처리장 사업 승인 및 입찰 공고",
-      "insight": "호찌민시 대규모 폐수처리 인프라 현대화 추진으로 2040년 일일 처리용량 140K-230K㎥ 목표. 환경규제 강화에 따른 시정부 의지 반영",
-      "stage_reason": "사업 계획 수립 단계, 구체적 입찰 정보 미확인",
+      "next_watch": "입찰 공고 및 투자자 모집 시작 시점",
+      "insight": "호찌민시 대규모 폐수처리 인프라 현대화 추진으로 환경 개선과 도시 확장 지원. 2040년 목표 처리용량 140,000~230,000㎥ 규모의 성장성 높은 프로젝트",
+      "stage_reason": "계획 단계 중, 아직 입찰 및 계약 단계 미진입",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-24",
@@ -316,13 +316,13 @@
       "rule_stage": "PLANNING",
       "rule_conf": 0.762,
       "stage": "PLANNING",
-      "confidence": 0.85,
-      "milestone": "2026-2030년 투자 모색 및 용량 목표 설정",
-      "next_watch": "입찰공고 및 투자자 선정 일정 공시 주목",
-      "insight": "호치민시 장기 하수처리 용량 확충 계획. 2040-2060년 목표 용량 설정으로 30년 장기사업 추진. 환경기반시설 투자 기회",
-      "stage_reason": "투자 모색 단계, 구체 공사 시행 전 계획 수립 중",
+      "confidence": 0.95,
+      "milestone": "2026-2030년 투자계획 수립 단계",
+      "next_watch": "환경영향평가 및 자금조달 방안 발표 예정",
+      "insight": "호치민시 2단계 하수처리 확대 프로젝트로 2040년 40만㎥/일 처리 목표. 환경기반시설 투자 수요 증대로 관련 사업 기회 확대 예상",
+      "stage_reason": "투자 모색 중, 목표 용량만 수립된 초기 계획 단계",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-23",
@@ -341,12 +341,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.95,
-      "milestone": "기사 본문 확인 불가",
-      "next_watch": "실제 뉴스 콘텐츠 재수집 필요",
-      "insight": "Vietwater 2026 전시회 관련 기사이나 CAPTCHA 검증으로 인해 실질적 인프라 사업 정보 미확보",
-      "stage_reason": "기사 내용 부재로 인프라 진행 상황 판단 불가",
+      "milestone": "기사 내용 확인 불가",
+      "next_watch": "Vietwater 2026 전시회 공식 보도 자료 추적",
+      "insight": "CAPTCHA 차단으로 인해 상하수도 사업 진행 현황을 판단할 수 없으며, 추가 신뢰도 높은 출처 필요",
+      "stage_reason": "기사 본문 미확인으로 인프라 정보 분석 불가",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-23",
@@ -354,23 +354,23 @@
       "sector": "Waste Water",
       "title_ko": "2026년 말까지 마무리되는 두 번째 호치민시 환경 위생 프로젝트",
       "title_en": "Second Ho Chi Minh City Environmental Sanitation Project to Conclude by End of 2026",
-      "summary_ko": "죄송하지만 제공된 기사 전문이 404 오류로 인해 접근 불가능한 상태입니다. 기사 내용을 확인할 수 없어 요청하신 5가지 항목(사업명, 사업규모, 진행단계, 주요기관, 핵심일정)을 포함한 요약을 작성할 수 없습니다. 유효한 기사 링크나 전문 제공을 요청드립니다.",
+      "summary_ko": "기사 내용을 확인할 수 없습니다. 제공된 URL이 404 오류를 반환하여 기사 전문에 접근할 수 없습니다. 제목만으로는 '호치민시 제2환경위생사업(Second Ho Chi Minh City Environmental Sanitation Project)'이 2026년 말 완료 예정이며, VN-WW-2030 마스터플랜과 관련된 것으로 보이나, 구체적인 사업규모, 진행단계, 주요기관, 일정 등 필수 정보를 확인할 수 없습니다. 유효한 기사 원문 제공이 필요합니다.",
       "summary_en": "The World Bank-funded Second HCMC Environmental Sanitation Project, including the Nhieu Loc-Thi Nghe wastewater treatment plant, is set to be completed by December 31, 2026.",
       "source": "The World Bank",
       "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHmLq-s7ZslngfWvAW4WGHsKfPePtqaAWFXAqC5E9u-74A6omWnzvDCZacucVUJWiVcN8akWCxTHitZ15MUXW2NKj57EBu5Mmxw-mk7zYpQE6vu0SBrQfR0be2eIEETb9dV38S5E2RPFOuE4fc2xH04X34OoQowNVdNRo7Er7TGIcoo1dvABuTyx-bccfMX76ye3ZnFyliexCph3zSWaLJZO-Hsqh1saNAPVa1AYBc=",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-WW-2030",
       "plan_id": "VN-WW-2030",
-      "rule_stage": "COMPLETION",
-      "rule_conf": 0.75,
-      "stage": "COMPLETION",
-      "confidence": 0.75,
-      "milestone": "준공·운영 개시",
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "rule_stage": "PLANNING",
+      "rule_conf": 0.967,
+      "stage": "PLANNING",
+      "confidence": 0.967,
+      "milestone": "정책·법령 발표",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.75)",
+      "stage_reason": "규칙기반 (신뢰도 0.97)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-24",
@@ -394,7 +394,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-24",
@@ -412,13 +412,13 @@
       "rule_stage": "CONSTRUCTION",
       "rule_conf": 0.419,
       "stage": "PLANNING",
-      "confidence": 0.75,
-      "milestone": "2026-2030년 투자 계획 수립 단계",
-      "next_watch": "사업 예산 배정 및 입찰 공고 시점 모니터링",
-      "insight": "호치민시 환경 인프라 현대화 추진으로 하수처리 사업 수요 증가. 2단계 프로젝트는 계획 단계이므로 투자 심화 전 타당성 조사 완료 시점 주시 필요.",
-      "stage_reason": "투자 모색 단계, 아직 구체적 계약·착공 단계 아님",
+      "confidence": 0.85,
+      "milestone": "2026-2030년 환경 인프라 투자 계획 수립",
+      "next_watch": "입찰 공고 및 자금 조달 방안 발표 모니터링",
+      "insight": "호치민시 수질 개선 정책의 일환으로 탐루옹-벤캣 2단계 등 다층 하수처리 인프라 투자 추진. 환경 규제 강화에 따른 지속적 수요 예상.",
+      "stage_reason": "2026-2030 투자 계획 수립 단계, 구체적 계약·착공 시점 미정",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-24",
@@ -426,47 +426,47 @@
       "sector": "Water Supply/Drainage",
       "title_ko": "탄호아 (Thanh Hoa): 환경 위생, 홍수 이후 사람들에게 깨끗한 물 보장",
       "title_en": "Thanh Hoa: Environmental sanitation, ensuring clean water for people after floods",
-      "summary_ko": "태국의 홍수 이후 환경 위생 관리와 주민을 위한 깨끗한 수원 확보에 관한 기사. 감염병 예방 및 수질 오염 방지를 위한 환경 정화 작업의 중요성을 다룬다.",
+      "summary_ko": "사업명: 탄호아성 홍수 후 환경위생 및 청정수 공급 사업\n규모: 구체적 수치 미기재\n단계: 운영/계획\n기관: 탄호아성 정부, 환경부\n일정: 2026년 9월 기준 진행 중 - 홍수 피해 후 환경위생 복구 및 식수 안전성 확보를 위한 긴급 대응 체계 구축",
       "summary_en": "After the floodwaters receded, people in flooded areas in Thanh Hoa province urgently cleaned up environmental sanitation, cleared the flow, and at the same time disinfected to prevent epidemics and ensure clean water for daily life.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/thanh-hoa-ve-sinh-moi-truong-dam-bao-nguon-nuoc-sach-cho-nguoi-dan-sau-lu-102667.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-WW-2030",
       "plan_id": "VN-WW-2030",
-      "rule_stage": "UNKNOWN",
-      "rule_conf": 0.0,
-      "stage": "UNKNOWN",
-      "confidence": 0.95,
-      "milestone": "홍수 피해 이후 환경 위생 관리",
-      "next_watch": "탄호아 지역 수질 오염 방지 및 감염병 예방 현황",
-      "insight": "기사는 VN-WW-2030 인프라 사업과 무관한 환경 위생 관리 및 재난 복구 관련 일반 뉴스로, 구체적 인프라 사업 진행 정보 부재",
-      "stage_reason": "인프라 사업과 무관한 재난 복구 및 환경 관리 기사",
-      "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:00"
+      "rule_stage": "CONSTRUCTION",
+      "rule_conf": 0.695,
+      "stage": "CONSTRUCTION",
+      "confidence": 0.695,
+      "milestone": "착공·건설 진행 중",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 0.70)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
-      "date": "None",
+      "date": "2026-09-25",
       "province": "",
       "sector": "Waste Water",
-      "title_ko": "None",
-      "title_en": "Hanoi Yen Xa WWTP begins trial operation — milestone for To Lich river cleanup",
-      "summary_ko": "",
-      "summary_en": "",
-      "source": "Unknown",
-      "url": "",
+      "title_ko": "PetroVietnam Phong Tho School의 지붕 아래 첫 번째 추석이 기대됩니다.",
+      "title_en": "Looking forward to the first Mid-Autumn Festival under the roof of PETROVIETNAM Phong Tho School",
+      "summary_ko": "사업명: PETROVIETNAM 풍토 학교 건설 및 STEM 교실 기증 | 규모: 1,055명 학생 수용 | 단계: 준공 | 기관: PETROVIETNAM(발주·투자), 풍토 초·중학교 | 일정: 2026년 9월 첫 추석 축제 개최, STEM 교실 준공식 진행",
+      "summary_en": "Before the opening of the Mid-Autumn Festival, the PETROVIETNAM Phong Tho schoolyard was bustling with a bustling atmosphere. This year's Mid-Autumn Festival was even more special when the children welcomed the first full moon festival at the spacious new school and witnessed the inauguration of a modern stem room and learning space.",
+      "source": "petrotimes",
+      "url": "https://petrovietnam.petrotimes.vn/ron-rang-cho-don-mua-trung-thu-dau-tien-duoi-mai-truong-petrovietnam-phong-tho-745938.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-WW-2030",
       "plan_id": "VN-WW-2030",
-      "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
-      "stage": "PLANNING",
-      "confidence": 1.0,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "rule_stage": "COMPLETION",
+      "rule_conf": 0.95,
+      "stage": "COMPLETION",
+      "confidence": 0.95,
+      "milestone": "준공·운영 개시",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "stage_reason": "규칙기반 (신뢰도 0.95)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-18",
@@ -490,7 +490,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
+    },
+    {
+      "date": "2026-09-25",
+      "province": "Ba Ria Vung Tau",
+      "sector": "Oil & Gas",
+      "title_ko": "BSR, ExxonMobil Asia Pacific과 원유 구매 프레임워크 계약 체결 Dung Quat Refinery에 대한 공급원료 공급 확대",
+      "title_en": "BSR signs crude oil purchase framework agreement with ExxonMobil Asia Pacific expanding feedstock supply for Dung Quat Refinery",
+      "summary_ko": "베트남 석유정제회사(BSR)가 ExxonMobil Asia Pacific과 원유 구매 기본협약을 체결했다. 이를 통해 동깟 정유소의 원료유 공급을 확대할 예정이다.",
+      "summary_en": "On the morning of September 23 2026 in New York City United States General Secretary of the Communist Party of Vietnam Central Committee and State President To Lam attended a high level roundtable with executives from leading U S corporations",
+      "source": "petrotimes",
+      "url": "https://petrovietnam.petrotimes.vn/bsr-signs-crude-oil-purchase-framework-agreement-with-exxonmobil-asia-pacific-expanding-feedstock-supply-for-dung-quat-refinery-745970.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-OG-2030",
+      "plan_id": "VN-OG-2030",
+      "rule_stage": "TENDERING",
+      "rule_conf": 0.905,
+      "stage": "TENDERING",
+      "confidence": 0.905,
+      "milestone": "입찰·계약 진행",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 0.91)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-18",
@@ -514,7 +538,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-21",
@@ -532,13 +556,13 @@
       "rule_stage": "UNKNOWN",
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
-      "confidence": 0.95,
+      "confidence": 0.9,
       "milestone": "국제 원자력 협력 강화",
-      "next_watch": "Vinatom의 구체적 사업 추진 계획 발표",
-      "insight": "기사는 국제 협력 논의 단계로, VN-PWR-PDP8-LNG 사업의 구체적 진행 상황을 반영하지 않음",
-      "stage_reason": "LNG 인프라와 무관한 일반 협력 뉴스",
+      "next_watch": "베트남 LNG 발전소 구체적 진행 소식 모니터링",
+      "insight": "기사는 Vinatom의 국제 협력 현황을 다루며, VN-PWR-PDP8-LNG 사업의 직접적 진행 정보 부재",
+      "stage_reason": "LNG 발전소 사업과 무관한 원자력 국제 협력 소식",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-21",
@@ -562,7 +586,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
+    },
+    {
+      "date": "2026-09-22",
+      "province": "Nationwide",
+      "sector": "Power",
+      "title_ko": "베트남, 더 빠른 옥상 태양광 배치 촉구",
+      "title_en": "Vietnam Calls For Faster Rooftop Solar Deployment",
+      "summary_ko": "베트남 정부는 총리 지시 10/CT-TTg에 따라 2027년 3월까지 옥상 태양광 설치를 가속화하고 가정용 태양광-저장 시스템을 지원할 것을 지방 정부와 기관에 촉구하고 있다. 현재 34개 성 중 박닌(Bac Ninh)과 라이쩌우(Lai Chau) 두 곳만이 지원 정책을 도입했다. 산업통상부는 전력공사(EVN)에 전력망 연결 및 검사를 신속히 처리하여 배포를 가속화할 것을 요청했다. 이러한 조치들은 2026-2028년 동안 전력 수급 균형을 개선하는 데 중점을 두고 있다.",
+      "summary_en": "Vietnam urges provinces to accelerate rooftop solar adoption and support solar-plus-storage systems by March 2027, as only two of 34 provinces have introduced support policies.",
+      "source": "TaiyangNews",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHmHVJwQWkaIn3yVyNPerOL097Q6QKhRm-gIo7ovCdGrJQt9xpWdjgOPD1QYha8xdCFku2g1r11RNXvqnr9we7rSuh22PnWM8GYVaUbZ9YUDaxj3mdJ6XTe2ROqTn3yBmm5VEKwRRFkWEFLD8YcnWA6Ng93V7CcKUZzoL16WMmwP6YqwCgqGglEHCGmCTU=",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-PWR-PDP8-LNG",
+      "plan_id": "VN-PWR-PDP8-LNG",
+      "rule_stage": "CONSTRUCTION",
+      "rule_conf": 0.982,
+      "stage": "CONSTRUCTION",
+      "confidence": 0.982,
+      "milestone": "착공·건설 진행 중",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 0.98)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-22",
@@ -586,7 +634,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.79)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-22",
@@ -610,7 +658,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-22",
@@ -634,7 +682,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.67)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-23",
@@ -658,7 +706,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-18",
@@ -682,7 +730,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:00"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-21",
@@ -700,13 +748,13 @@
       "rule_stage": "UNKNOWN",
       "rule_conf": 0.0,
       "stage": "PLANNING",
-      "confidence": 0.6,
-      "milestone": "국제 원자력 협력 협정 체결",
-      "next_watch": "베트남 원전 사업 실행계획 및 입지선정 발표",
-      "insight": "Vinatom의 국제협력 강화는 기술이전과 국제표준 준수를 위한 기반조성 단계. 실질적 건설 진행까지는 추가 정부승인 필요",
-      "stage_reason": "국제협력회의 참석으로 정책추진 단계 확인",
+      "confidence": 0.55,
+      "milestone": "국제 원자력 협력 협약 체결",
+      "next_watch": "베트남 원전 마스터플랜 공식 발표 및 국제 입찰 공고",
+      "insight": "Vinatom의 국제 협력 강화는 베트남 원전 사업의 초기 계획 단계를 반영. 기술 협력과 국제 표준 수립이 진행 중이며, 실질적 건설 단계 진입까지 상당한 시간 소요 예상.",
+      "stage_reason": "국제 협력 논의 단계로 사업 승인 전 준비 활동",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-21",
@@ -730,7 +778,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-22",
@@ -754,7 +802,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-22",
@@ -778,7 +826,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-23",
@@ -802,7 +850,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:05"
+    },
+    {
+      "date": "2026-09-25",
+      "province": "Lam Dong, Ho Chi Minh City",
+      "sector": "Power",
+      "title_ko": "Pacifico Energy, 베트남 람동성에서 1.3GW Nam Trung Bo 3 해상 풍력 프로젝트에 대한 해상 조사 라이센스 확보",
+      "title_en": "Pacifico Energy secures sea survey license for 1.3 GW Nam Trung Bo 3 offshore wind project in Lam Dong Province, Vietnam",
+      "summary_ko": "Pacifico Energy는 베트남의 조정된 제8차 전력개발계획(PDP8)에 포함된 람동성 1.3GW 남중부 3 해상풍력 프로젝트에 대한 해상조사 면허를 확보했다. 이 프로젝트는 2031-2035년 상업 운전을 목표로 한다. 이번 승인은 2026년 2월 호치민시 500MW 남부 PE2.1 해상풍력 프로젝트에 대한 해상조사 면허에 이은 것으로, Pacifico Energy의 베트남 해상풍력 파이프라인은 총 1.8GW에 달한다. 이 프로젝트들은 베트남의 에너지 안보와 지속 가능한 성장을 지원할 것으로 기대된다.",
+      "summary_en": "Pacifico Energy received a sea survey license for the 1.3 GW Nam Trung Bo 3 offshore wind project in Lam Dong, part of Vietnam's PDP8. This follows a February 2026 license for a 500MW project in Ho Chi Minh City, bringing their pipeline to 1.8 GW.",
+      "source": "Asian Power, Business Wire",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQE5jcct7XkA0vTo3Xfhzo03uqhLrYRm3dxrFSYkfA5RkNEDdztAZKMdlTqMWxa3K84XJAA5WcNP1GFIXpznMMnb7QvuRINWJuVWFWl5FMhemC-nvzCeXrMBOcCS7Zfz5EGbrf6t5Bod2yr2P-Nhl-3TZN6p2xCZT_zpDw4-WxzGaUcnz_R_sFVSFm81KOl3LqtjbPlVgMs=",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "",
+      "plan_id": "VN-PWR-PDP8-NUCLEAR",
+      "rule_stage": "PLANNING",
+      "rule_conf": 1.0,
+      "stage": "PLANNING",
+      "confidence": 1.0,
+      "milestone": "정책·법령 발표",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-18",
@@ -822,11 +894,11 @@
       "stage": "PLANNING",
       "confidence": 0.95,
       "milestone": "2025년 4월 PDP8 승인, 2025년 6월 직접전력구매 메커니즘 운영",
-      "next_watch": "2030년 재생에너지 28~36% 목표 달성을 위한 입찰 공고 및 투자유치",
-      "insight": "글로벌 공급업체의 재생에너지 요구 증가로 베트남 정부의 재정 지원 및 규제 개선이 예상되며, 향후 대규모 TENDERING 단계 진입 가능성 높음",
-      "stage_reason": "정책승인·메커니즘 운영 중이나 구체적 사업 발주 미진행",
+      "next_watch": "2030년 재생에너지 28~36% 달성을 위한 입찰 공고 및 프로젝트 선정",
+      "insight": "베트남 정부의 재생에너지 전환 정책 공식화 단계. 글로벌 제조업체 수요 증가로 발전사업 기회 확대 예상. 인프라 구축 본격화 임박.",
+      "stage_reason": "PDP8 승인 후 메커니즘 운영 중인 정책·제도 수립 단계",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-19",
@@ -845,12 +917,12 @@
       "rule_conf": 1.0,
       "stage": "PLANNING",
       "confidence": 0.95,
-      "milestone": "PDP8 해상풍력 계획 수립 및 재정 투입 계획 승인",
-      "next_watch": "2030년 3GW 발전용량 확대 목표 달성 진행, 송전망 업그레이드 실행 시점",
-      "insight": "베트남 정부의 1,360억 달러 재정 투입 계획으로 해상풍력 시장 본격 진입 예상. REE사 주도 3GW 목표 달성 여부가 사업 성공 키포인트",
-      "stage_reason": "PDP8 계획 단계, 재정투입 및 송전망 업그레이드 사전 추진 중",
+      "milestone": "PDP8 해상풍력 계획 수립, 2030-2035년 6-17GW 목표 설정",
+      "next_watch": "송전망 업그레이드 진행, REE사 3,000MW 용량 확대 사업 착수",
+      "insight": "2030년까지 1,360억 달러 투입 계획 중. 아직 계획 단계로 입찰·시공 단계 진입 전. 장기 성장성 높으나 정부 정책 변화 리스크 모니터링 필요.",
+      "stage_reason": "PDP8 계획 단계, 정부 재정 투입 목표만 수립",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:05"
     },
     {
       "date": "2026-09-23",
@@ -858,7 +930,7 @@
       "sector": "Power",
       "title_ko": "투안남에서 베트남 최대의 태양광 발전소를 완공하기 위한 긴급한 노력",
       "title_en": "Urgent effort to complete Vietnam's largest solar power plant in Thuan Nam",
-      "summary_ko": "베트남의 녹색에너지 전환 가속화에 따라 기업들의 에너지효율 개선 압박이 증가하고 있습니다. 높은 투자비용과 기술적 난제를 극복하기 위해 에너지서비스회사(ESCO)가 기술전문성과 금융을 결합하여 기업의 에너지절감 시스템 도입을 촉진하는 솔루션을 제공합니다.",
+      "summary_ko": "요청하신 기사 내용이 태양광 발전소 완공 관련 구체적인 프로젝트 정보를 포함하지 않고 있습니다. 제공된 기사는 베트남의 에너지 효율화 및 에너지서비스회사(ESCO)에 대한 일반적인 설명만 담고 있어, 사업명·규모·진행단계·주요기관·일정 등 5가지 필수항목을 파악할 수 없습니다. Thuan Nam 태양광 발전소 관련 구체적인 프로젝트 정보가 필요합니다.",
       "summary_en": "Trung Nam Group's 450 MW Thuan Nam solar power plant in Ninh Thuan, Vietnam's largest, is nearing completion.",
       "source": "Facebook (Vietnam Today)",
       "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEakKxaAzE6Hz5oUNXDHtSUxGgULOJTzgE-4aN3pKDZF41_nhUByGKSHsVdjefHDBMB0CVSFfr2zseOLoHiX_2U3Ru5QKOPef0l1gLkDlzR_0HeEJB089gnW3X3yX94WNHG9o7pbcZyhhZV-hrFA5n5OYG7vhjaPpJvCRlKCZbyXc8hDvVMl1IBBC0OhWC1iELrkMo8cqKOS_kHdu2ezLzM7WjXaTuGFLhDXpMrqpCv_smseDlmBuAsnMQWr6OAyKwlJvH1lu3s70n6KomIn9Iku3cVnWurfg==",
@@ -868,13 +940,13 @@
       "rule_stage": "COMPLETION",
       "rule_conf": 0.8,
       "stage": "PLANNING",
-      "confidence": 0.45,
-      "milestone": "태양광 발전소 완공 추진",
-      "next_watch": "투안남 프로젝트 착공 시점 및 자금조달 진전",
-      "insight": "베트남 녹색에너지 전환 정책으로 태양광 투자 수요 증가. ESCO 모델을 통한 기금조달 방식 주목. 구체적 공정률 미공개로 실질 진행 단계 불명확.",
-      "stage_reason": "완공 목표 언급이나 구체적 공정 데이터 부재",
+      "confidence": 0.35,
+      "milestone": "구체적 프로젝트 정보 부재로 단계 판단 불가",
+      "next_watch": "Thuan Nam 태양광 발전소 상세 프로젝트 정보 필요",
+      "insight": "기사에서 구체적 사업명·규모·진행단계·주요기관·일정 등 필수정보 미포함. 마스터플랜과의 연계성 확인 필요",
+      "stage_reason": "필수정보 부재로 기본값 PLANNING 적용",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-23",
@@ -882,7 +954,7 @@
       "sector": "Power",
       "title_ko": "Pacifico Energy, 베트남 람동성 1.3GW Nam Trung Bo 3 해상 풍력 프로젝트에 대한 해상 조사 라이센스 확보",
       "title_en": "Pacifico Energy Secures Sea Survey License for 1.3 GW Nam Trung Bo 3 Offshore Wind Project in Lam Dong Province, Vietnam",
-      "summary_ko": "Pacifico Energy가 라엠동성의 남중보 3 해상풍력 프로젝트(1.3GW)에 대해 베트남 농업환경부로부터 해양조사 허가를 획득했습니다. 이 프로젝트는 베트남 전력개발계획 VIII에 포함되며 2031-2035년 상용화 목표입니다.",
+      "summary_ko": "①남트룽보3 해상풍력 프로젝트 ②1,300MW ③해상조사 승인(계획단계) ④발주처:베트남 농업환경부, 개발사:파시피코에너지 ⑤2027년 현장조사 착수, 2031-2035년 상업운영 목표",
       "summary_en": "Pacifico Energy secured a sea survey license for 1.3 GW Nam Trung Bo 3 offshore wind project off Lam Dong.",
       "source": "Business Wire",
       "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHiBHbCk0Ad6N7BTkznBJ2K90Fdcn9XVEVHrdByaRemm2AAktskDAYm2HxzOMKKGgjzpcB1xkQQeQBjhJB8aN8h6u1Kc4jrMLOZXE28JyF__pA0yqgHie4HRLkkorPnD4nr4oczBqtxGsZYQHhPOO-Gk8LqJuu_dEiBOHvy_Y8Ul3nXMWarMzj1Z94sdNw1QuS8f2i_quBXt25qwfNNRo-yAvvyu39DG003N8hpOXeCRcBNnrq69AZqwjb4NYo-5Bbi5wNzOR843B-xWF7nL13tJpzB_3KWKxUKxCdtkJWvICyxVXo_ydQR3IC0",
@@ -893,12 +965,12 @@
       "rule_conf": 1.0,
       "stage": "PLANNING",
       "confidence": 0.95,
-      "milestone": "농업환경부 해양조사 허가 획득",
-      "next_watch": "환경영향평가 완료 및 투자허가 승인 추진",
-      "insight": "2031-2035년 상용화 목표로 계획 초기 단계. 해조사 허가는 EIA 선행 단계로 아직 기본설계 및 투자심사 미완료",
-      "stage_reason": "허가 단계 진행 중, 공식 착공 미선포",
+      "milestone": "해상조사 라이센스 확보 (2026년)",
+      "next_watch": "2027년 해상 현장조사 착수 및 타당성 조사 진행",
+      "insight": "1.3GW 대규모 해상풍력 프로젝트의 초기 계획 단계 진입. 2027년 조사 착수 후 2031-2035년 상업운영 목표로 약 5-9년 개발 일정 예상. 정부 승인 획득으로 프로젝트 실행 가능성 확보.",
+      "stage_reason": "해상조사 라이센스 확보로 계획 단계 진입",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-18",
@@ -922,7 +994,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-21",
@@ -942,11 +1014,11 @@
       "stage": "UNKNOWN",
       "confidence": 0.95,
       "milestone": "국제 원자력 협력 협정 참석",
-      "next_watch": "베트남 원전 프로젝트 구체적 계획 발표 모니터링",
-      "insight": "Vinatom의 국제 협력 강화는 향후 원전 사업 추진의 기초이나, 현재 기사는 재생에너지 인프라 사업과 직접 관련 없음",
-      "stage_reason": "원자력 협력 회의로 인프라 사업과 무관",
+      "next_watch": "Vinatom의 구체적 재정 에너지 사업 추진 현황",
+      "insight": "기사는 Vinatom의 국제 협력 논의이며, VN-PWR-PDP8-RENEWABLE 재정 에너지 사업과 직접 관련 없음",
+      "stage_reason": "인프라 사업 진행과 무관한 국제 협력 회의 참석",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-22",
@@ -970,7 +1042,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-23",
@@ -994,31 +1066,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
-    },
-    {
-      "date": "2026-09-17",
-      "province": "",
-      "sector": "General",
-      "title_ko": "[VIDEO] 장시간의 폭우에도 불구하고 하노이 버클, 많은 홍수 지역이 재발합니다.",
-      "title_en": "[VIDEO] Hanoi buckles in the face of prolonged heavy rains, many flooding spots recur",
-      "summary_ko": "① 하노이 도시 홍수 대응 인프라 사업\n② 구체적 규모 미기재\n③ 진행 중 (운영 중)\n④ 하노이시 정부, 환경부\n⑤ 지속적인 폭우로 인한 반복적 침수 현상 발생, 긴급 대응 필요",
-      "summary_en": "On the morning of September 17, Hanoi entered rush hour in heavy rain that lasted all night, causing many streets to be submerged in the sea of water, chaotic traffic and thousands of people struggling on their way to work and school. The heavy rain at the peak of the morning has put great pressure on the transport system and drainage infrastructure of the Capital.",
-      "source": "Moi truong & Cuoc song",
-      "url": "https://moitruong.net.vn/video-ha-noi-oan-minh-truoc-mua-lon-keo-dai-nhieu-diem-ngap-tai-dien-102433.html",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "VN-HAN-URBAN-2045",
-      "plan_id": "VN-HAN-URBAN-2045",
-      "rule_stage": "CONSTRUCTION",
-      "rule_conf": 0.695,
-      "stage": "CONSTRUCTION",
-      "confidence": 0.695,
-      "milestone": "착공·건설 진행 중",
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.70)",
-      "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-19",
@@ -1037,12 +1085,12 @@
       "rule_conf": 0.564,
       "stage": "PLANNING",
       "confidence": 0.85,
-      "milestone": "스마트시티 운영센터 개발 프로젝트 승인 및 기본설계",
-      "next_watch": "상세설계 완료 및 입찰공고 시점",
-      "insight": "AI/IoT 기반 도시관리 체계 구축으로 운영 효율화. 정부 주도 추진으로 안정성 높음. 향후 확대 가능성 존재.",
-      "stage_reason": "개발 프로젝트 기획·추진 단계, 구체적 공사 일정 미확정",
+      "milestone": "스마트시티 운영센터 개발 프로젝트 착수",
+      "next_watch": "AI·IoT 기술 통합 설계 및 예산 확정 일정",
+      "insight": "하노이의 도시 인프라 디지털화 전략 초기 단계. 정부 주도의 스마트시티 구축으로 기술 파트너십 기회 창출 예상",
+      "stage_reason": "계획 단계 초기, 구체적 시공 또는 입찰 정보 부재",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-22",
@@ -1061,12 +1109,12 @@
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
       "confidence": 0.95,
-      "milestone": "기사 콘텐츠 불가용",
-      "next_watch": "VN-HAN-URBAN-2045 공식 소식 추적 필요",
-      "insight": "제공된 기사는 404 오류로 인해 VN-HAN-URBAN-2045 사업 진행상황 분석 불가. 신뢰성 높은 공식 소식통 모니터링 권고",
-      "stage_reason": "기사 본문 부재로 단계 판단 불가",
+      "milestone": "기사 본문 불가 (404 오류)",
+      "next_watch": "Viettel Solutions 공식 채널 재확인 필요",
+      "insight": "제공된 기사가 404 오류로 인해 VN-HAN-URBAN-2045 사업 진행현황 분석 불가능. 신뢰할 수 있는 대체 소스 확보 필요.",
+      "stage_reason": "기사 본문 미수집으로 인프라 사업 단계 판단 불가",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-22",
@@ -1090,7 +1138,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
+    },
+    {
+      "date": "2026-09-23",
+      "province": "Nationwide",
+      "sector": "Smart City",
+      "title_ko": "한국철도연구원 (KRRI) 과 FPT코퍼레이션, 베트남 도시철도 및 스마트시티 협력",
+      "title_en": "Korea Railroad Research Institute (KRRI) and FPT Corporation Collaborate on Urban Railways and Smart Cities in Vietnam",
+      "summary_ko": "한국철도기술연구원(철도연)은 베트남 ICT 기업 FPT 코퍼레이션과 철도산업 분야의 장기적, 전략적 협력을 위한 업무협약(MOU) 및 컨설팅 계약을 체결했습니다. 이 협약은 베트남 철도 인프라 확충에 발맞춰 도시철도 및 스마트시티 분야에서 공동 R&D, 기술 실증, 사업화를 추진하는 것을 목표로 합니다. 철도연은 FPT에 도시철도 기술 이전을 위한 컨설팅을 제공하고, 베트남 철도산업의 기술 역량 강화 및 인력 양성에 협력할 예정입니다. 이는 한국 철도 기술의 베트남 시장 진출을 촉진하고 양국 철도산업의 새로운 협력 모델을 구축하는 데 기여할 것입니다.",
+      "summary_en": "KRRI and FPT Corp. signed an MOU for urban railway and smart city tech transfer, joint R&D, and commercialization in Vietnam.",
+      "source": "매일건설신문",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFQVA0vcijcevA7wum54NorjiS-H_FoR6IuhaC9y6eiuk4DTnPOlOqqkPMNKbw7zecc8c51MFqZQJzxdSV1_ulDWRj9zhNP6AQ75dx041h_hIbzEZAoPhTrig==",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "",
+      "plan_id": "VN-HAN-URBAN-2045",
+      "rule_stage": "TENDERING",
+      "rule_conf": 1.0,
+      "stage": "TENDERING",
+      "confidence": 1.0,
+      "milestone": "입찰·계약 진행",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-23",
@@ -1098,7 +1170,7 @@
       "sector": "General",
       "title_ko": "하노이는 맨홀 커버 및 맨홀 커버 도난에 대한 심각한 조사 및 처리를 요청합니다.",
       "title_en": "Hanoi requests serious investigation and handling of theft of manhole covers and manhole covers",
-      "summary_ko": "①하노이 맨홀뚜껑·하수도뚜껑 도난 문제 ②구체적 규모 미상 ③운영 중(문제 대응 단계) ④하노이시 정부 ⑤즉시 수사·처벌 강화. 도시 인프라(VN-HAN-URBAN-2045) 유지관리 차원의 긴급 대응으로, 도난된 뚜껑으로 인한 안전사고 및 시설 손상 방지가 목표.",
+      "summary_ko": "사업명: 하노이 맨홀뚜껑 도난 방지 대책\n사업규모: 미상(맨홀뚜껑·하수구뚜껑 도난 억제)\n진행단계: 계획\n주요기관: 하노이시(발주처), 경찰 및 관련부처\n일정: 2026년 9월 23일 조사 및 강화 조치 요청",
       "summary_en": "Vice Chairman of Hanoi People's Committee Truong Viet Dung asked the city police to urgently investigate and strictly handle the theft and consumption of manhole covers and manhole covers on the streets and roadbeds; at the same time, strengthen the inspection and maintenance of the drainage system, ensure the safety of people in the event of heavy rain and flooding.",
       "source": "Moi truong & Cuoc song",
       "url": "https://moitruong.net.vn/ha-noi-yeu-cau-dieu-tra-xu-ly-nghiem-nan-trom-cap-nap-ho-ga-nap-cong-102574.html",
@@ -1106,15 +1178,15 @@
       "ctx_plans": "VN-HAN-URBAN-2045",
       "plan_id": "VN-HAN-URBAN-2045",
       "rule_stage": "TENDERING",
-      "rule_conf": 0.684,
+      "rule_conf": 0.785,
       "stage": "TENDERING",
-      "confidence": 0.684,
+      "confidence": 0.785,
       "milestone": "입찰·계약 진행",
       "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.68)",
+      "stage_reason": "규칙기반 (신뢰도 0.79)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-24",
@@ -1138,7 +1210,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-10-01",
@@ -1162,79 +1234,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.69)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
-    },
-    {
-      "date": "2026-09-17",
-      "province": "Southern Vietnam",
-      "sector": "Industrial Parks",
-      "title_ko": "인프라, 베트남 남부 부동산의 새로운 '가치 축'을 열다",
-      "title_en": "Infrastructure Opens New 'Value Axis' for Southern Vietnam Real Estate",
-      "summary_ko": "베트남 남부 지역의 부동산 시장은 대규모 인프라 투자로 인해 새로운 가치 축을 형성하고 있으며, 이는 도시, 산업 및 물류 개발 공간을 확장하고 있습니다. 2026-2030년 동안 호치민시는 성장을 촉진하고 지역 연결성을 강화하기 위해 약 250개의 주요 투자 프로젝트를 실행할 계획입니다. 고속도로, 지하철 노선 및 롱탄 국제공항 연결 개선은 부동산 가치를 결정하는 데 있어 도시 중심과의 거리를 넘어 고용, 제조 및 물류 허브에 대한 접근성을 중요하게 만들고 있습니다.",
-      "summary_en": "Southern Vietnam's real estate gains value from infrastructure, expanding urban, industrial, and logistics development.",
-      "source": "The Investor",
-      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGfTo1ysiiMYsDxr-MlgQYwG_Q4Q_dfpkr8UvB1J5lUAbjfptbC38l5QqVOyhWn-KB_ejAsVSAEzwSLDkUDVTYygADLvgBK0sIZyQCvIXFfdOmudUP2ImwSFUnJX8HfTdsrOX13o-Vzov6aZSB6_5dlNmRQA42Ab-hn5DihzXMbBpKWXUbgfzhiC0MngkohlOeZ4m8fQLpT5nP2AMw3qQ4HNw==",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "",
-      "plan_id": "VN-IP-NORTH-2030",
-      "rule_stage": "CONSTRUCTION",
-      "rule_conf": 0.654,
-      "stage": "CONSTRUCTION",
-      "confidence": 0.654,
-      "milestone": "착공·건설 진행 중",
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.65)",
-      "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
-    },
-    {
-      "date": "2026-09-17",
-      "province": "Ho Chi Minh City, Binh Duong, Dong Nai, Hai Phong",
-      "sector": "Industrial Parks",
-      "title_ko": "KCN 베트남, 130,000㎡ 규모의 'KCN Song Than 3' 공개, 남부 산업 입지 확대",
-      "title_en": "KCN Vietnam unveils 130,000 sqm \"KCN Song Than 3\", expanding southern industrial footprint",
-      "summary_ko": "요청된 URL을 찾을 수 없습니다. 404 오류 페이지입니다. 베트남 인프라 관련 기사 내용이 없습니다.",
-      "summary_en": "KCN Vietnam broke ground on Song Than 3 Industrial Park in Ho Chi Minh City, adding 130,000 sqm of sustainable industrial space.",
-      "source": "ACROFAN",
-      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFKo0DF2Cv2lM-wqhb6diUpo220zqDxSGPbEp3nA9PCQS_KgStAP9PlFjXkm_mR-4TNsScGHNyDys0q2GVX8-wz34wfyI1DvwcVHOSKoXWZQTaEW0Z_Ux5506MNUbiKwtHofy63S42E8VwzOQ==",
-      "ctx_grade": "LOW",
-      "ctx_plans": "",
-      "plan_id": "VN-IP-NORTH-2030",
-      "rule_stage": "OPERATION",
-      "rule_conf": 1.0,
-      "stage": "OPERATION",
-      "confidence": 1.0,
-      "milestone": "운영 성과 업데이트",
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
-    },
-    {
-      "date": "2026-09-17",
-      "province": "Quang Ninh",
-      "sector": "General",
-      "title_ko": "2026년 북부산업무역박람회가 박닌에서 개막",
-      "title_en": "2026 Northern Industry and Trade Fair opens in Bac Ninh",
-      "summary_ko": "① 2026 북부산업무역박람회(Northern Industry and Trade Fair)\n② 박닌성 개최, 구체적 규모 미기재\n③ 운영 중(2026년 9월 개최)\n④ 박닌성 정부, 베트남 북부 지역 관련 기관\n⑤ 2026년 9월 21일 개최 확정\n\n북부 산업 및 무역 협력 촉진을 위한 박람회로 VN-IP-NORTH-2030 마스터플랜과 연계된 북부 산업단지 발전 전략의 일환.",
-      "summary_en": "The Bac Ninh Provincial People’s Committee, in coordination with the Ministry of Industry and Trade, held the opening ceremony of the 2026 Northern Industry and Trade Fair in Bac Giang Ward, Bac Ninh Province on September 16. “Industrial capital” Bac Ninh enters new era of opportunity Bac Ninh seeks",
-      "source": "nhandan_vn",
-      "url": "https://en.nhandan.vn/2026-northern-industry-and-trade-fair-opens-in-bac-ninh-post166736.html",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "VN-IP-NORTH-2030",
-      "plan_id": "VN-IP-NORTH-2030",
-      "rule_stage": "COMPLETION",
-      "rule_conf": 0.979,
-      "stage": "COMPLETION",
-      "confidence": 0.979,
-      "milestone": "준공·운영 개시",
-      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.98)",
-      "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-18",
@@ -1258,7 +1258,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.81)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-18",
@@ -1277,12 +1277,12 @@
       "rule_conf": 0.579,
       "stage": "UNKNOWN",
       "confidence": 0.1,
-      "milestone": "인프라 사업과 무관한 기사",
-      "next_watch": "VN-IP-NORTH-2030 관련 구체적 사업 정보 필요",
-      "insight": "현 기사는 베트남-태국 무역 및 농수산물 수출 관련 내용으로, 북부 인프라 마스터플랜과의 연관성 없음. 사업 추적 재검토 필요.",
-      "stage_reason": "인프라 사업 관련 정보 부재",
+      "milestone": "인프라 사업과 무관한 상품 수출 기사",
+      "next_watch": "VN-IP-NORTH-2030 관련 인프라 뉴스 모니터링 필요",
+      "insight": "본 기사는 베트남-태국 간 상품 수출 협력에 관한 내용으로 북부 인프라 마스터플랜과 직접 연관성 없음",
+      "stage_reason": "인프라 사업 정보 부재로 UNKNOWN 판정",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-18",
@@ -1306,7 +1306,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
+    },
+    {
+      "date": "2026-09-21",
+      "province": "Northern Vietnam, Hanoi, Thai Nguyen, Bac Ninh, Hai Phong",
+      "sector": "Industrial Parks",
+      "title_ko": "MTA 하노이 2026, 북부 제조의 다음 단계 추진",
+      "title_en": "MTA Hanoi 2026 powers next phase of northern manufacturing",
+      "summary_ko": "2026년 상반기 베트남 북부 제조업 허브가 확장되면서 산업생산지수(IIP)는 10.8% 상승했습니다. 타이응우옌(Thai Nguyen)은 2026년 6월까지 산업 단지에 80억 달러의 FDI를 유치하며 주요 FDI 목적지로 부상했습니다. 박닌(Bac Ninh)은 계속해서 주요 전자 및 첨단 기술 제조 허브로서 2026년 상반기에 산업 단지에 22억 달러 이상의 FDI를 확보하여 다양한 제조 생태계를 조성했습니다.",
+      "summary_en": "Northern Vietnam's manufacturing hubs are expanding, with the Industrial Production Index (IIP) rising 10.8% in H1 2026. Thai Nguyen emerged as a major FDI destination, attracting $8 billion into its industrial parks by June 2026. Bac Ninh continues as a key electronics and high-tech manufacturing h",
+      "source": "MTA Hanoi 2026",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFi6-YX7Sh7PGc9ZQoyhfOSBKghhREyo0udVRC476rgI8fUbAXUeiz95baT8f3_yD1k-_dkYlo3ekdpCmqw4gwPrvr6swpGqtlQMgj50-OSTwzLxsS4zZFeSalfx0m7peVxPBG3Wu09NjHmoMP80daRWbCZsDysf8KG-uKRw70NBGYbVCYWcWcvf4XXiqTw0x0M9uC2",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "",
+      "plan_id": "VN-IP-NORTH-2030",
+      "rule_stage": "OPERATION",
+      "rule_conf": 1.0,
+      "stage": "OPERATION",
+      "confidence": 1.0,
+      "milestone": "운영 성과 업데이트",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-21",
@@ -1330,7 +1354,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-21",
@@ -1354,7 +1378,55 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
+    },
+    {
+      "date": "2026-09-21",
+      "province": "",
+      "sector": "Industrial Parks",
+      "title_ko": "당 사무총장 겸 대표가 뉴욕에서 미국 무역대표부(USTR) 대표와 회담",
+      "title_en": "Party General Secretary and President meets with US Trade Representative in New York",
+      "summary_ko": "베트남 당 총서기이자 대통령이 뉴욕에서 미국 무역대표와 만났다. 베트남 주인도 대사는 타밀나두와의 투자, 무역, 산업, 기술 협력을 촉진하기 위해 인도 당국과 기업들과 회의를 개최했다.",
+      "summary_en": "General Secretary of the Communist Party of Vietnam Central Committee and President To Lam stressed that economic, trade and investment cooperation is one of the most important pillars of bilateral relations, directly benefiting businesses and people and contributing to the development of both count",
+      "source": "vietnamplus",
+      "url": "https://en.vietnamplus.vn/party-general-secretary-and-president-meets-with-us-trade-representative-in-new-york-post352317.vnp",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "",
+      "plan_id": "VN-IP-NORTH-2030",
+      "rule_stage": "COMPLETION",
+      "rule_conf": 0.706,
+      "stage": "COMPLETION",
+      "confidence": 0.706,
+      "milestone": "준공·운영 개시",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 0.71)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:06"
+    },
+    {
+      "date": "2026-09-21",
+      "province": "Nationwide, Hung Yen",
+      "sector": "Industrial Parks",
+      "title_ko": "FDI 흐름은 베트남 산업용 부동산 시장의 성장을 촉진합니다",
+      "title_en": "FDI flows fuel growth of Vietnam's industrial property market",
+      "summary_ko": "요청된 URL을 찾을 수 없습니다. 404 오류가 발생했습니다. 베트남 인프라 관련 기사 본문이 없어 요약이 불가능합니다.",
+      "summary_en": "Steady FDI growth, especially in manufacturing, is driving Vietnam's industrial property market and strengthening its global supply chain position.",
+      "source": "Vietnam News Agency (VNA)",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFqP2WVIY9T6sSJZCQEIbZQa4Xvd2Skis78wvrEzxtQklauxxsEuDuYBOUiMPtHefZdGOXj9wp1xKyAUnbck1zV1o3FLP2CUzY8FOq4Dc2I-Bw1sYpMJSfxlon80B4MibGvD9EXVCEr5qPNMMvmTwXtCOLLu2NFu-kHAgHNCP9y-UEurxIC8IVZLxX9ul6yJASX32_ETY7vfkyFCRrEKG6O",
+      "ctx_grade": "LOW",
+      "ctx_plans": "",
+      "plan_id": "VN-IP-NORTH-2030",
+      "rule_stage": "UNKNOWN",
+      "rule_conf": 0.0,
+      "stage": "UNKNOWN",
+      "confidence": 0.1,
+      "milestone": "기사 본문 미제공",
+      "next_watch": "VN-IP-NORTH-2030 관련 공식 발표 모니터링",
+      "insight": "404 오류로 기사 본문 부재, 인프라 사업 분석 불가. 베트남 FDI 동향과 산업용 부동산 시장 성장은 간접적 관련성만 존재",
+      "stage_reason": "기사 본문 없음, 마스터플랜과의 직접적 연관성 불명",
+      "haiku_used": true,
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-23",
@@ -1362,7 +1434,7 @@
       "sector": "Transport",
       "title_ko": "공항 연결 HCMC-롱탄 고속도로 확장 공사 완료",
       "title_en": "HCMC-Long Thanh Expressway Expansion Nears Completion for Airport Link",
-      "summary_ko": "롱탄 국제공항 접근성 향상을 위해 호치민시-롱탄 고속도로 확장 사업이 진행 중입니다. 2025년 8월 착공 이후 약 10개월 만에 본격적인 시공 단계에 진입했으며, 베트남 고속도로공사(VEC)가 주도하고 있습니다. 총 투자액은 149억 4,500만 동(5억 7,000만 달러)입니다.",
+      "summary_ko": "①호찌민-롱탄 고속도로 확장사업 ②총 투자규모 VND14.945조(5억7천만달러), 4차선→8~10차선 확대 ③착공(2025년8월 시작, 현재 55% 진행) ④발주: 베트남고속도로공사(VEC) ⑤2026년7월 현재 피크 건설단계 진행 중, 장기탄 국제공항 연결 주요 인프라",
       "summary_en": "The Ho Chi Minh City–Long Thanh Expressway expansion, widening to 8-10 lanes, is advancing for completion by December 2026, crucial for Long Thanh Airport connectivity.",
       "source": "Tuoi Tre News",
       "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGGs-UMqcWXTHoz3J_CEOcIZv5L6iBE4uF004PcuiOri030gkMv_fRbeCjXjl1t6duS9B6yHxUf8R_DR-HoP1Ak6mgmR_njx5xbEom7iUiA-bS4NaVfBu_G-qempOxlB8N3OrjySGYRBesCvpKbgyoYdRGrMw4tZfu_g7pyYfjA0ZNjRc2boVoZv8gXd1tkYz9ILhUlPcdpk9PGfRm5jjRYAHuAYV08zV3L9xsr0KW80jhxDP8N6qkmG1WQJ-fJNZLxElDcLS21HQWq_2Hs",
@@ -1373,12 +1445,12 @@
       "rule_conf": 1.0,
       "stage": "CONSTRUCTION",
       "confidence": 0.95,
-      "milestone": "2025년 8월 착공, 2026년 9월 본격 시공 단계",
-      "next_watch": "2027년 상반기 준공 예정, VEC 주도 진행상황 모니터링",
-      "insight": "롱탄 공항 접근성 향상 프로젝트로 항공 수송 인프라 강화. 5억 7,000만 달러 규모 사업으로 동남아 물류 거점화 기여.",
-      "stage_reason": "2025년 8월 착공 이후 10개월 경과하여 본격 시공 단계 진행 중",
+      "milestone": "2025년 8월 착공, 2026년 7월 피크 건설 단계 진행 중 (55% 진행률)",
+      "next_watch": "2026년 말~2027년 상반기 준공 예정, 공항 연결 개통일 확인",
+      "insight": "VND14.945조 규모 대형 SOC 사업이 정상 진행 중. 2027년 개통 시 호찌민-바리아 지역 접근성 대폭 개선으로 경제 파급효과 기대",
+      "stage_reason": "착공 후 55% 진행 중인 피크 건설단계로 명확한 CONSTRUCTION 진행",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-12-01",
@@ -1398,120 +1470,144 @@
       "stage": "COMPLETION",
       "confidence": 0.95,
       "milestone": "2026년 12월 상업운영 개시",
-      "next_watch": "공항 전체 운영 안정화 및 기타 인프라 연계사업 진행",
-      "insight": "기술개통(2025년 12월) 완료 후 상업운영 단계 진입. 호치민 대도시권 핵심 교통 허브로서 경제적 파급효과 기대. 향후 추가 터미널 및 철도 연계 계획 주목.",
-      "stage_reason": "기술개통 완료, 2026년 12월 상업운영 시작 시점 도래",
+      "next_watch": "공항 도로접근성 및 링로드3 상업운영 안정화 모니터링",
+      "insight": "롱탄공항 접근도로 완성으로 공항 기능 본격화. 호치민 대도시권 교통인프라 확충으로 경제 활성화 기대",
+      "stage_reason": "2026년 12월 상업운영 개시 예정으로 준공 단계 진입",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
-      "date": "2026-09-17",
+      "date": "2026-09-18",
       "province": "",
       "sector": "Transport",
-      "title_ko": "국가 신뢰도 - ASEAN의 Fabulous Five에 대한 투자 이점: 전문가",
-      "title_en": "National credibility – investment advantage for ASEAN’s Fabulous Five: expert",
-      "summary_ko": "기사는 투자 관점의 의견 제시물로, 구체적 인프라 프로젝트 정보 부재. 베트남-인도 항공협정(주간 여객 용량 8,000→16,800석 확대), 미국 R3 리튬 투자 논의, 항공사 평가 등 산발적 내용 포함. 인프라 개발 사업명·규모·진행단계·일정 등 필수 정보 없어 요약 불가능. Plan_ID VN-TRAN-2055와 직접 연계되는 구체적 교통인프라 프로젝트 내용 미포함.",
-      "summary_en": "Investors are drawing a clearer distinction between economies driven by cyclical growth and those capable of converting growth momentum into sustainable, risk-adjusted returns. Vietnam to remain regional growth leader for 2026-2035: Report Thailand upgrades GDP growth to 2.5% in 2026 Southeast Asia’",
-      "source": "vietnamplus",
-      "url": "https://en.vietnamplus.vn/national-credibility-investment-advantage-for-aseans-fabulous-five-expert-post352102.vnp",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "VN-TRAN-2055",
-      "plan_id": "VN-TRAN-2055",
-      "rule_stage": "TENDERING",
-      "rule_conf": 0.789,
-      "stage": "TENDERING",
-      "confidence": 0.789,
-      "milestone": "입찰·계약 진행",
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.79)",
-      "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
-    },
-    {
-      "date": "2026-09-17",
-      "province": "",
-      "sector": "Transport",
-      "title_ko": "Can Tho는 FDI 품질을 개선하고 새로운 성장 모멘텀을 창출하고자 합니다.",
-      "title_en": "Can Tho seeks to improve FDI quality, create new growth momentum",
-      "summary_ko": "①캔토시 FDI 품질 개선 및 성장동력 창출 계획 ②구체적 규모 미명시 ③계획 단계 ④캔토시 정부 ⑤FDI 선택적 유치 정책 전환 추진",
-      "summary_en": "Can Tho is now facing a “window of opportunity” to upgrade the quality of FDI, but needs to shift from a mindset of attracting capital to one focused on selecting, absorbing and spreading investment value. Ready-built factories gain from new manufacturing FDI wave Northern Vietnam attracts 80.5% of",
-      "source": "vietnamplus",
-      "url": "https://en.vietnamplus.vn/can-tho-seeks-to-improve-fdi-quality-create-new-growth-momentum-post352083.vnp",
+      "title_ko": "4교시 서커스에 도움이 될 공간",
+      "title_en": "Period 4 Which space will help the circus",
+      "summary_ko": "프로젝트명: 베트남 산업-에너지 중심지 개발(VN-TRAN-2055 관련)\n규모: 대규모 산업-에너지 프로젝트(Quỳnh Lập LNG 등)\n단계: 계획/개발단계\n주요기관: 베트남 정부, 지방정부, 에너지 관련부처\n핵심내용: 단순 산업용지 제공을 넘어 기반시설·에너지·항만·물류·폐기물처리·기술서비스 등 완전한 산업-에너지 생태계 구축이 필수. 영국 Humber 사례처럼 장기 프로젝트 포트폴리오 유지로 인프라·인력을 미리 준비해야 투자 유치 경쟁력 확보 가능",
+      "summary_en": "All the features of the project include having a safe and secure fund, having a safe and secure fund, having a set of regulations to maintain the dependency on other banks, having a good time at the logistics store, having a bad and bad service, and having a good time saying the same thing about having a bad time and having a good time.",
+      "source": "petrotimes",
+      "url": "https://petrovietnam.petrotimes.vn/ky-4-khong-gian-nao-de-giu-chan-dong-von-745709.html",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-TRAN-2055",
       "plan_id": "VN-TRAN-2055",
       "rule_stage": "PLANNING",
-      "rule_conf": 0.676,
+      "rule_conf": 0.644,
       "stage": "PLANNING",
-      "confidence": 0.676,
+      "confidence": 0.95,
+      "milestone": "산업-에너지 생태계 기본구상 수립",
+      "next_watch": "기반시설·항만·물류 등 종합계획 수립 공식 발표",
+      "insight": "Quỳnh Lập LNG 등 다층 프로젝트 포트폴리오 구축으로 장기 경쟁력 강화 필요. 영국 Humber 모델 참고하여 인프라 선제 투자 필수.",
+      "stage_reason": "계획/개발 단계, 구체적 착공 시점 미정",
+      "haiku_used": true,
+      "analyzed_at": "2026-09-25 16:06"
+    },
+    {
+      "date": "2026-09-18",
+      "province": "",
+      "sector": "Transport",
+      "title_ko": "호치민시는 병목 현상을 완화하고 기업을 지원하기 위해 움직입니다",
+      "title_en": "Ho Chi Minh City moves to ease bottlenecks, support businesses",
+      "summary_ko": "호찌민시 병목 해소 및 사업 지원 계획 (VN-TRAN-2055). 호찌민시가 교통 및 물류 병목 현상을 완화하고 기업 지원을 위한 종합 대책을 추진 중. 탄깡-까이멥 국제터미널 등 핵심 물류 인프라 개선을 통해 화물 처리 효율화. 현재 계획·추진 단계이며 구체적 예산·일정은 추가 정책 발표 예정.",
+      "summary_en": "At a business and trade association dialogue conference organized by the HCMC Department of Industry and Trade on September 17, departments and agencies focused on addressing difficulties related to capital, costs, administrative procedures, markets.",
+      "source": "sggp_org_vn",
+      "url": "https://en.sggp.org.vn/ho-chi-minh-city-moves-to-ease-bottlenecks-support-businesses-post129774.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-TRAN-2055",
+      "plan_id": "VN-TRAN-2055",
+      "rule_stage": "PLANNING",
+      "rule_conf": 1.0,
+      "stage": "PLANNING",
+      "confidence": 1.0,
       "milestone": "정책·법령 발표",
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.68)",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
-      "date": "2026-09-17",
+      "date": "2026-09-18",
       "province": "",
       "sector": "Transport",
-      "title_ko": "Jabra, 다양한 업무 스타일을 지원하기 위해 Evolve3 제품군 확장",
-      "title_en": "Jabra expands Evolve3 range to support different workstyles",
-      "summary_ko": "【기사 분석 불가】이 기사는 Jabra 헤드셋 제품 출시 소식으로, 베트남 인프라 사업과 무관합니다. 요청하신 마스터플랜 ID(VN-TRAN-2055)와도 연결되지 않습니다. 베트남 인프라·건설·에너지·수자원·교통·환경 관련 사업 기사를 제공해주시기 바랍니다.",
-      "summary_en": "Evolve3 45, Evolve3 65 and Evolve3 65 Flex expand the new Evolve3 professional-grade headset range, bringing advanced voice pickup, in-call ANC and audio optimized for AI-driven communication to desk-based, open-office and flexible workstyles Allows organizations to equip different roles and environ",
-      "source": "en_prnasisa",
-      "url": "https://en.prnasia.com/story/548252-0.shtml",
+      "title_ko": "정치국, 사무국 인사 결정 발표",
+      "title_en": "Political Bureau, Secretariat’s personnel decisions announced",
+      "summary_ko": "베트남 정치국과 서기실의 인사 결정이 발표되었습니다. 기사는 주로 정치 지도부의 인사 변동에 관한 내용으로, 구체적인 인프라 개발 계획과는 직접적인 연관이 없습니다.",
+      "summary_en": "The Party Central Committee’s Political Bureau and Secretariat convened a conference in Hanoi on September 18 to announce a series of personnel decisions, which was attended by Politburo Member and Standing Member of the Secretariat Tran Cam Tu. PM hands over appointment decisions for important pers",
+      "source": "vietnamplus",
+      "url": "https://en.vietnamplus.vn/political-bureau-secretariats-personnel-decisions-announced-post352190.vnp",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-TRAN-2055",
       "plan_id": "VN-TRAN-2055",
-      "rule_stage": "OPERATION",
-      "rule_conf": 0.665,
-      "stage": "OPERATION",
-      "confidence": 0.665,
-      "milestone": "운영 성과 업데이트",
-      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "rule_stage": "PLANNING",
+      "rule_conf": 1.0,
+      "stage": "PLANNING",
+      "confidence": 1.0,
+      "milestone": "정책·법령 발표",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.67)",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
-      "date": "2026-09-17",
+      "date": "2026-09-18",
       "province": "",
       "sector": "Transport",
-      "title_ko": "산업 회사는 38개의 5m 조달 수요를 활용합니다",
-      "title_en": "Industrial firms tap into 38 5m procurement demand",
-      "summary_ko": "기사 제목이 'Industrial firms tap into $38.5m procurement demand'이나 본문 내용이 제공되지 않아 정확한 분석이 불가능합니다. 제목에서 유추되는 $38.5백만 규모의 산업 부문 조달 수요와 관련하여, VN-TRAN-2055 마스터플랜과의 연계성 검토가 필요하며, 구체적인 사업명, 시공사, 발주처, 진행단계, 일정 등의 상세 정보 확인이 필수입니다.",
-      "summary_en": "More than 38 5 million in procurement demand for 2026 2027 and 350 one to one business matching sessions on the opening day are creating opportunities for industrial companies to access projects find partners and expand their business",
-      "source": "vir_vn",
-      "url": "https://vir.com.vn/industrial-firms-tap-into-385m-procurement-demand-160938.html",
+      "title_ko": "Dien Bien 컨퍼런스는 국경 무역의 디지털, 녹색 변화를 촉진합니다",
+      "title_en": "Dien Bien conference promotes digital, green transformation in border trade",
+      "summary_ko": "베트남 북부 지역 무역 활성화를 위한 디젠성 회의가 9월 18일 개최되었습니다. 산업통상부와 지방정부가 공동 주최한 이 행사에는 북부 지역 대표와 라오스, 중국 대표단이 참석했습니다. 디지털 전환, 녹색 물류, 수출 품질 향상 등 국제 무역의 새로운 요구사항에 대응하고 지역 연결성 강화를 강조했습니다.",
+      "summary_en": "Once external transport routes, particularly the Son La-Dien Bien-Tay Trang Border Gate expressway, are completed, they are expected to reduce cargo transport costs and time and attract investment in warehousing, logistics, processing and distribution.",
+      "source": "vietnamplus",
+      "url": "https://en.vietnamplus.vn/dien-bien-conference-promotes-digital-green-transformation-in-border-trade-post352181.vnp",
       "ctx_grade": "MEDIUM",
       "ctx_plans": "VN-TRAN-2055",
       "plan_id": "VN-TRAN-2055",
-      "rule_stage": "TENDERING",
-      "rule_conf": 0.991,
-      "stage": "TENDERING",
-      "confidence": 0.991,
-      "milestone": "입찰·계약 진행",
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "rule_stage": "COMPLETION",
+      "rule_conf": 0.706,
+      "stage": "COMPLETION",
+      "confidence": 0.706,
+      "milestone": "준공·운영 개시",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
       "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 0.99)",
+      "stage_reason": "규칙기반 (신뢰도 0.71)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
-      "date": "2026-09-17",
+      "date": "2026-09-18",
       "province": "",
       "sector": "Transport",
-      "title_ko": "동남아시아에서 가장 인구가 많은 대도시는 두 번째로 스마트한 도시로 꼽힙니다.",
-      "title_en": "Southeast Asia's most populous metropolis ranks its 2nd smartest city",
-      "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/southeast-asia-s-most-populous-metropolis-ranks-its-2nd-smartest-city-5120123.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/09/14/afif-ramdhasuma-xyqpyn4kkiy-un-9149-9783-1789374470.jpg?w=900&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=R2J4skNI54iV988LstJ_dw\" /></a>인도네시아의 수도 자카르타는 동남아시아를 대표하는 지능형 도시 중심지 중 하나로 부상했으며, AI 및 디지털 기술을 사용하는 도시에 대한 평가에서 이 지역에서 2위를 차지했습니다.",
-      "summary_en": "<a href=\"https://e.vnexpress.net/news/news/southeast-asia-s-most-populous-metropolis-ranks-its-2nd-smartest-city-5120123.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/09/14/afif-ramdhasuma-xyqpyn4kkiy-un-9149-9783-1789374470.jpg?w=900&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=R2J4skNI54iV988LstJ_dw\" /></a>Indonesia's capital Jakarta has emerged as one of Southeast Asia's leading intelligent urban centers, ranking second in the region in an assessment of cities using AI and digital t",
-      "source": "VnExpress International",
-      "url": "https://e.vnexpress.net/news/news/southeast-asia-s-most-populous-metropolis-ranks-its-2nd-smartest-city-5120123.html",
+      "title_ko": "디지털, 녹색 무역으로 남라오스-중국 국경 연결 심화",
+      "title_en": "Digital, green trade to deepen Việt Nam–Laos–China border links",
+      "summary_ko": "①2026 베트남-라오스-중국 국경지역 무역촉진회의 ②국경지역 교역규모 380억 달러(2025년, 전국 40%) ③계획 단계 ④베트남 산업통상부 산하 무역촉진청, 디엔비엔성 정부, 라오스·중국 관계기관 ⑤9월 18일 디엔비엔성 개최, 디지털 국경게이트 및 녹색물류 기반 공급망 강화 추진",
+      "summary_en": "Northern Việt Nam plays a major role in the country's foreign trade, recording more than $380 billion in import-export turnover in 2025, accounting for around 40 per cent of the national total.",
+      "source": "vietnamnews_vn",
+      "url": "https://vietnamnews.vn/economy/1800063/digital-green-trade-to-deepen-viet-nam-laos-china-border-links.html",
       "ctx_grade": "MEDIUM",
-      "ctx_plans": "",
+      "ctx_plans": "VN-TRAN-2055",
+      "plan_id": "VN-TRAN-2055",
+      "rule_stage": "PLANNING",
+      "rule_conf": 1.0,
+      "stage": "PLANNING",
+      "confidence": 1.0,
+      "milestone": "정책·법령 발표",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:06"
+    },
+    {
+      "date": "2026-09-18",
+      "province": "",
+      "sector": "Transport",
+      "title_ko": "OCTF 2026 LINKS 비이티남차이나 공급망",
+      "title_en": "OCTF 2026 links Việt Nam-China supply chains",
+      "summary_ko": "기사 전문이 불완전하여 정확한 요약이 불가능합니다. 제공된 마크다운 콘텐츠는 웹사이트 네비게이션 구조만 포함하고 있으며, 실제 기사 본문이 누락되어 있습니다. OCTF 2026 베트남-중국 공급망 연결 프로젝트에 대한 구체적인 정보(사업규모, 진행단계, 주요 기관, 일정 등)를 파악할 수 없습니다. 완전한 기사 본문 제공을 요청드립니다.",
+      "summary_en": "The opening ceremony's highlight was a strategic Memorandum of Understanding signed by the Vietnam Industrial Park Supply Enterprises Association and the Korea-Việt Nam Association of Science and Technology, aimed at helping thousands of firms expand globally.",
+      "source": "vietnamnews_vn",
+      "url": "https://vietnamnews.vn/economy/1800084/octf-2026-links-viet-nam-china-supply-chains.html",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-TRAN-2055",
       "plan_id": "VN-TRAN-2055",
       "rule_stage": "COMPLETION",
       "rule_conf": 1.0,
@@ -1522,55 +1618,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
-    },
-    {
-      "date": "2026-09-17",
-      "province": "",
-      "sector": "Transport",
-      "title_ko": "방콕 공항에서 중국인 관광객의 짐을 훔친 혐의로 체포된 베트남 여성",
-      "title_en": "Vietnamese woman arrested for stealing Chinese tourist's luggage at Bangkok airport",
-      "summary_ko": "<a href=\"https://e.vnexpress.net/news/news/crime/vietnamese-woman-arrested-for-stealing-chinese-tourist-s-luggage-at-bangkok-airport-5121445.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/09/17/pexels-ron-lach-1789634485-1974-1789634501.jpg?w=900&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=8uuWrm1iczCBFWf4Krnh6A\" /></a>태국 수완나품 공항의 수하물 캐러셀에서 고급 여행 가방을 훔친 혐의로 27세의 베트남 국적이 9월 15일 체포되었습니다.",
-      "summary_en": "<a href=\"https://e.vnexpress.net/news/news/crime/vietnamese-woman-arrested-for-stealing-chinese-tourist-s-luggage-at-bangkok-airport-5121445.html\"><img src=\"https://vcdn1-english.vnecdn.net/2026/09/17/pexels-ron-lach-1789634485-1974-1789634501.jpg?w=900&amp;h=0&amp;q=100&amp;dpr=1&amp;fit=crop&amp;s=8uuWrm1iczCBFWf4Krnh6A\" /></a>A 27-year-old Vietnamese national was arrested on Sept. 15 for allegedly stealing a luxury suitcase from a baggage carousel at Suvarnabhumi airport, Thai authorities sai",
-      "source": "VnExpress International",
-      "url": "https://e.vnexpress.net/news/news/crime/vietnamese-woman-arrested-for-stealing-chinese-tourist-s-luggage-at-bangkok-airport-5121445.html",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "",
-      "plan_id": "VN-TRAN-2055",
-      "rule_stage": "UNKNOWN",
-      "rule_conf": 0.0,
-      "stage": "UNKNOWN",
-      "confidence": 1.0,
-      "milestone": "인프라 사업과 무관",
-      "next_watch": "VN-TRAN-2055 관련 공식 소식 모니터링",
-      "insight": "제공된 기사는 태국 공항의 절도 범죄 사건으로, 베트남 인프라 사업과 무관한 일반 뉴스입니다.",
-      "stage_reason": "인프라 사업과 완전히 무관한 범죄 기사",
-      "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
-    },
-    {
-      "date": "2026-09-17",
-      "province": "",
-      "sector": "General",
-      "title_ko": "폭우로 침수된 도로: \"보이지 않는\" 위험에 주의",
-      "title_en": "Flooded Roads in Heavy Rain: Beware of “Unseen” Dangers",
-      "summary_ko": "베트남 도시 지역 폭우 시 도로 침수 문제 관련 기사입니다. VN-URB-METRO-2030 마스터플랜 내 도시 배수 및 홍수 관리 과제를 다룹니다. 현재 단계는 계획 및 인식 제고 단계이며, 주요 기관은 베트남 환경부 및 도시 운영 당국입니다. 도로 침수로 인한 보이지 않는 위험 요소 경고가 핵심 내용입니다.",
-      "summary_en": "Heavy rain caused many roads to be inundated, not only causing traffic jams but also potential dangers such as manholes losing their covers, fast flowing water, broken trees, leaking wires and dead vehicles in the middle of the water.",
-      "source": "Moi truong & Cuoc song",
-      "url": "https://moitruong.net.vn/duong-ngap-khi-mua-lon-can-trong-voi-nhung-nguy-hiem-khong-nhin-thay-102435.html",
-      "ctx_grade": "MEDIUM",
-      "ctx_plans": "VN-URB-METRO-2030",
-      "plan_id": "VN-URB-METRO-2030",
-      "rule_stage": "PLANNING",
-      "rule_conf": 1.0,
-      "stage": "PLANNING",
-      "confidence": 1.0,
-      "milestone": "정책·법령 발표",
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "insight": "",
-      "stage_reason": "규칙기반 (신뢰도 1.00)",
-      "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-21",
@@ -1594,7 +1642,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.75)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-22",
@@ -1612,13 +1660,13 @@
       "rule_stage": "UNKNOWN",
       "rule_conf": 0.0,
       "stage": "UNKNOWN",
-      "confidence": 0.1,
-      "milestone": "기사 본문 불가용 - 404 오류",
-      "next_watch": "Viettel Solutions 공식 채널에서 스마트시티 사업 공시 추적",
-      "insight": "기사 접근 불가로 사업 진행상황 판단 불가. 공식 발표 자료 또는 베트남 정부 인프라 포털 확인 필요.",
-      "stage_reason": "사업 정보 부재로 판단 불가",
+      "confidence": 0.95,
+      "milestone": "기사 콘텐츠 불가용",
+      "next_watch": "원본 기사 재확인 및 신규 소식 모니터링",
+      "insight": "404 오류로 인해 메트로 프로젝트 진행상황 파악 불가. 공식 소스에서 최신 정보 확인 필요.",
+      "stage_reason": "기사 콘텐츠 미확인",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-22",
@@ -1642,7 +1690,31 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
+    },
+    {
+      "date": "2026-09-23",
+      "province": "Nationwide",
+      "sector": "Smart City",
+      "title_ko": "한국철도연구원 (KRRI) 과 FPT코퍼레이션, 베트남 도시철도 및 스마트시티 협력",
+      "title_en": "Korea Railroad Research Institute (KRRI) and FPT Corporation Collaborate on Urban Railways and Smart Cities in Vietnam",
+      "summary_ko": "한국철도기술연구원(철도연)은 베트남 ICT 기업 FPT 코퍼레이션과 철도산업 분야의 장기적, 전략적 협력을 위한 업무협약(MOU) 및 컨설팅 계약을 체결했습니다. 이 협약은 베트남 철도 인프라 확충에 발맞춰 도시철도 및 스마트시티 분야에서 공동 R&D, 기술 실증, 사업화를 추진하는 것을 목표로 합니다. 철도연은 FPT에 도시철도 기술 이전을 위한 컨설팅을 제공하고, 베트남 철도산업의 기술 역량 강화 및 인력 양성에 협력할 예정입니다. 이는 한국 철도 기술의 베트남 시장 진출을 촉진하고 양국 철도산업의 새로운 협력 모델을 구축하는 데 기여할 것입니다.",
+      "summary_en": "KRRI and FPT Corp. signed an MOU for urban railway and smart city tech transfer, joint R&D, and commercialization in Vietnam.",
+      "source": "매일건설신문",
+      "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFQVA0vcijcevA7wum54NorjiS-H_FoR6IuhaC9y6eiuk4DTnPOlOqqkPMNKbw7zecc8c51MFqZQJzxdSV1_ulDWRj9zhNP6AQ75dx041h_hIbzEZAoPhTrig==",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "",
+      "plan_id": "VN-URB-METRO-2030",
+      "rule_stage": "TENDERING",
+      "rule_conf": 1.0,
+      "stage": "TENDERING",
+      "confidence": 1.0,
+      "milestone": "입찰·계약 진행",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-24",
@@ -1666,7 +1738,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-18",
@@ -1690,7 +1762,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-22",
@@ -1714,7 +1786,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.81)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-24",
@@ -1722,7 +1794,7 @@
       "sector": "Waste Water",
       "title_ko": "베트남 중부의 생물다양성 보전 강화 및 기후 취약성 감소",
       "title_en": "Enhancing biodiversity conservation and reducing climate vulnerability in Central Vietnam",
-      "summary_ko": "중부 베트남의 생물다양성 보호에 관한 기사. WWF의 가을 멤버십 모금 캠페인을 통해 전 세계 야생동물과 자연 보호를 위한 기금 모집 중입니다.",
+      "summary_ko": "①중앙베트남 생물다양성 보전 및 기후취약성 감소 프로젝트 ②구체적 예산·규모 미기재 ③계획단계 ④WWF, 베트남 정부 ⑤2030년 목표 설정. VN-ENV-NATURA 마스터플랜 기반으로 중앙베트남 자연보호구역 생물다양성 증진 및 기후변화 적응력 강화를 목표로 하는 환경보전사업.",
       "summary_en": "The Ministry of Natural Resources and Environment (MONRE) is the executing agency for this GEF-funded project with WWF-US, focusing on biodiversity conservation and climate change mitigation in Central Vietnam.",
       "source": "WWF",
       "url": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHLU0tKNE4vRIOaMJtjw6CcLfJqLsaAd-IQGiFvThepX3Ax0avZUUqvLc4KORA3hz1fLXnWG8EQa8fOIbfoN48MhHzHNCsm6MskX1gh8MZj10jJunXjaOfVyj_xRvYDG-drcw2ui1MyXVUZWUtN5e3bOnkYNGdJOwl5HnNHOcjNIWCBOo8bAFPty2Tme__ySuM_IQsIYSQst0zwKgeLUZERiabdxOGOktbEQFkSBZ7oRD72lsv-xLmqSBDTGM7HZMiEkzau4xkEuMRXI9WeYlmtOqVeAxoTu34HBXgLv-1ILYzcaKJLQZ46HQLStGgOD6F1RZ_wkFAfna7qJwamNpUojzthgJ58HRhRgIUJPzKc",
@@ -1730,15 +1802,15 @@
       "ctx_plans": "VN-ENV-NATURA",
       "plan_id": "VN-ENV-NATURA",
       "rule_stage": "PLANNING",
-      "rule_conf": 0.45,
+      "rule_conf": 1.0,
       "stage": "PLANNING",
-      "confidence": 0.65,
-      "milestone": "WWF 기금 모금 캠페인 시작",
-      "next_watch": "베트남 정부의 생물다양성 보전 정책 및 투자 계획 공시",
-      "insight": "생태 보전 인프라에 대한 국제 기구의 관심 증대. 향후 정부 차원의 보전 프로젝트 착수 시 민간 투자 기회 발생 가능",
-      "stage_reason": "기금 모금과 정책 수립 단계의 초기 계획 추진 중",
-      "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "confidence": 1.0,
+      "milestone": "정책·법령 발표",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-21",
@@ -1758,11 +1830,11 @@
       "stage": "PLANNING",
       "confidence": 0.95,
       "milestone": "PDP8 재검토 및 신규 수요 반영",
-      "next_watch": "2027년 전력부족 해소 방안 및 발전소 추가 승인",
-      "insight": "AI·데이터센터·전철 등 신규 수요로 4,256MW 부족 예상. PDP8 재검토 통해 발전소 신규 프로젝트 승인 가능성 높음",
-      "stage_reason": "PDP8 재검토 중, 계획 수립 단계",
+      "next_watch": "2027년 전력부족 대응 방안 및 발전설비 추가 계획 공시",
+      "insight": "AI·데이터센터 수요 급증으로 전력 공급 부족 위험. PDP8 재검토 완료 후 대규모 발전프로젝트 입찰 예상으로 관련 기업 주목 필요",
+      "stage_reason": "계획 재검토 중, 미공고 상태",
       "haiku_used": true,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-22",
@@ -1786,7 +1858,55 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 0.81)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
+    },
+    {
+      "date": "2026-09-25",
+      "province": "",
+      "sector": "Power",
+      "title_ko": "미국 기업, 베트남에서 수억 배럴의 유전 발견: 10 년 이상 조용히 사업을 해왔으며 현재 일련의 프로젝트에 대한 투자를 늘리고 있습니다.",
+      "title_en": "US corporation discovers hundreds of millions of barrels of oil field in Vietnam: More than a decade of quietly doing business, now increasing investment in a series of projects",
+      "summary_ko": "①Golden Camel 유전 개발 프로젝트 ②4억 3천만 배럴 규모, 2026년 1억 9,500만 달러 투자 ③착공 단계(2026년 4분기 첫 산유 예정) ④Murphy Oil(미국 석유회사, 운영사), 베트남 정부 ⑤2026년 4분기 첫 산유, 파이프라인 건설 진행 중",
+      "summary_en": "After the discovery of the Golden Lion, Murphy Oil continued to expand its operations in Vietnam - one of the three key global exploration areas of the US oil and gas corporation, next to the Gulf of Mexico and Côte d 'Ivoire.",
+      "source": "cafef",
+      "url": "https://cafef.vn/tap-doan-my-phat-hien-mo-dau-tram-trieu-thung-o-viet-nam-hon-chuc-nam-am-tham-lam-an-nay-tang-dau-tu-vao-loat-du-an-188260925101408572.chn",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-PWR-PDP8",
+      "plan_id": "VN-PWR-PDP8",
+      "rule_stage": "CONSTRUCTION",
+      "rule_conf": 0.939,
+      "stage": "CONSTRUCTION",
+      "confidence": 0.939,
+      "milestone": "착공·건설 진행 중",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 0.94)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:06"
+    },
+    {
+      "date": "2026-09-25",
+      "province": "",
+      "sector": "Power",
+      "title_ko": "기름값이 치솟고, 세계에서 가장 부유한 나라 사람들이 갑자기 전기차에 대한 태도를 바꿉니다.",
+      "title_en": "Gas prices skyrocket, people in the world's richest country suddenly change their attitude to electric cars",
+      "summary_ko": "사업명: 미국 전기차 시장 확대(VN-PWR-PDP8 관련)\n규모: 전기차 시장점유율 5.37%(2026년)\n진행단계: 운영 중\n주요기관: HERE-SBD, 자동차혁신연맹\n핵심내용: 휘발유 가격 상승과 충전 인프라 확대로 미국 소비자의 전기차 구매 의향이 증가. 전기차 구매 장애물이 없다고 생각하는 비율이 6%에서 12%로 배증. 충전 기술 개선으로 소비자 신뢰도 상승 중",
+      "summary_en": "Many factors are driving the transition to electric vehicles in the United States.",
+      "source": "cafef",
+      "url": "https://cafef.vn/gia-xang-tang-vot-nguoi-dan-quoc-gia-giau-co-nhat-the-gioi-bat-ngo-thay-doi-thai-do-voi-xe-dien-188260925102923193.chn",
+      "ctx_grade": "MEDIUM",
+      "ctx_plans": "VN-PWR-PDP8",
+      "plan_id": "VN-PWR-PDP8",
+      "rule_stage": "OPERATION",
+      "rule_conf": 1.0,
+      "stage": "OPERATION",
+      "confidence": 1.0,
+      "milestone": "운영 성과 업데이트",
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "insight": "",
+      "stage_reason": "규칙기반 (신뢰도 1.00)",
+      "haiku_used": false,
+      "analyzed_at": "2026-09-25 16:06"
     },
     {
       "date": "2026-09-23",
@@ -1794,7 +1914,7 @@
       "sector": "General",
       "title_ko": "러시아 투자자들이 베트남 부동산 시장에서 기회를 모색하다",
       "title_en": "Russian investors explore opportunities in Vietnam’s real estate market",
-      "summary_ko": "러시아 투자자들의 베트남 부동산 시장 관심이 증가하고 있습니다. 2026년 러시아 투자자들의 상업용 부동산 프로젝트 문의가 증가했으며, 투자 다각화 추진과 동남아 신시장 진출이 주요 원인입니다. 주거용 부동산은 전년 대비 39% 감소했습니다.",
+      "summary_ko": "①베트남 부동산시장 진출 ②구체적 규모 미정(상업용·주거용 프로젝트) ③계획단계 ④러시아 투자자·Tranio·NF Group ⑤2026년 문의 증가 추세 모니터링",
       "summary_en": "Vietnam is seen as a potential market, with considerable room for growth in real estate, particularly commercial property, compared with some regional markets. Strong Vietnam-Russia ties and opportunities to establish foreign-invested enterprises are also considered favourable for Russian investors.",
       "source": "vietnamplus",
       "url": "https://en.vietnamplus.vn/russian-investors-explore-opportunities-in-vietnams-real-estate-market-post352446.vnp",
@@ -1810,7 +1930,7 @@
       "insight": "",
       "stage_reason": "규칙기반 (신뢰도 1.00)",
       "haiku_used": false,
-      "analyzed_at": "2026-09-24 16:01"
+      "analyzed_at": "2026-09-25 16:06"
     }
   ]
 }
