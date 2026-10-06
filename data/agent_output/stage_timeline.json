@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03 06:25",
+  "generated_at": "2026-10-06 17:24",
   "plans": {
     "VN-SWM-NATIONAL-2030": {
       "plan_id": "VN-SWM-NATIONAL-2030",
@@ -12,25 +12,25 @@
       "stage_order": 3,
       "stage_history": [
         {
-          "date": "2026-10-02",
+          "date": "2026-10-06",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
-          "source": "sggp_org_vn",
-          "title_ko": "Swire Coca-Cola cùng Evergreen Labs thúc đếy mạng lưếi thu gom, tái chế rác thải bao bì"
+          "source": "tienphong_vn",
+          "title_ko": "노이바이 - 라오까이 고속도로의 훌륭한 건설 현장에서 거의 3,000명의 사람들이 열심히 일했습니다."
+        },
+        {
+          "date": "2026-10-06",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "tienphong_vn",
+          "title_ko": "하노이 - 하이퐁 고속도로 및 국도 5호선 반대 장면"
         },
         {
           "date": "2026-10-02",
-          "stage": "OPERATION",
-          "milestone": "2026년 181억 VND 예산 배정 및 운영",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
           "source": "Moi truong & Cuoc song",
           "title_ko": "Lang Son은 2026년 국내 폐기물 처리에 181억 VND 이상을 지출합니다."
-        },
-        {
-          "date": "2026-10-01",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "박닌은 반도체, AI 중심으로 새로운 산업 공간을 형성합니다."
         },
         {
           "date": "2026-09-29",
@@ -42,9 +42,9 @@
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-10-02",
-      "article_count": 4,
-      "haiku_count": 1,
+      "latest_article_date": "2026-10-06",
+      "article_count": 6,
+      "haiku_count": 0,
       "kpi_targets": []
     },
     "VN-WAT-RESOURCES": {
@@ -65,6 +65,13 @@
           "title_ko": "Vietwater 2026 Expo – 물 및 폐수 처리 기술 기업을 위한 최고의 비즈니스 플랫폼"
         },
         {
+          "date": "2026-10-06",
+          "stage": "UNKNOWN",
+          "milestone": "자연재해 대응 체계 강화",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Dong Thap: 극심한 날씨가 발생하기 전에 비, 홍수, 만조 및 산사태에 적극적으로 대응"
+        },
+        {
           "date": "2026-10-01",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
@@ -74,30 +81,16 @@
         {
           "date": "2026-09-29",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 불가용 (404 오류)",
+          "milestone": "기사 내용 불가 (404 오류)",
           "source": "UNDP Vietnam",
           "title_ko": "베트남의 기후 변화에 적응하는 스마트 해안 지역 사회 (VN-CSCC)"
-        },
-        {
-          "date": "2026-09-28",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "World Bank",
-          "title_ko": "기후 복원력 프로젝트를 위한 메콩 델타 지역 연결성 향상"
-        },
-        {
-          "date": "2026-09-28",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "World Bank",
-          "title_ko": "하이퐁 기후복원도시 개발사업"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-11-04",
-      "article_count": 6,
-      "haiku_count": 1,
+      "article_count": 5,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-WAT-URBAN": {
@@ -127,29 +120,15 @@
         {
           "date": "2026-09-29",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 불가 (404 오류)",
+          "milestone": "페이지 오류로 사업 정보 확인 불가",
           "source": "UNDP Vietnam",
           "title_ko": "베트남의 기후 변화에 적응하는 스마트 해안 지역 사회 (VN-CSCC)"
-        },
-        {
-          "date": "2026-09-28",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "World Bank",
-          "title_ko": "기후 복원력 프로젝트를 위한 메콩 델타 지역 연결성 향상"
-        },
-        {
-          "date": "2026-09-28",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "World Bank",
-          "title_ko": "하이퐁 기후복원도시 개발사업"
         }
       ],
       "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
       "latest_article_date": "2026-09-30",
-      "article_count": 7,
+      "article_count": 3,
       "haiku_count": 1,
       "kpi_targets": []
     },
@@ -173,9 +152,16 @@
         {
           "date": "2026-10-01",
           "stage": "PLANNING",
-          "milestone": "Aves Future Mobility Challenge 2026 공모 진행 중",
+          "milestone": "2026년 9월 전기오토바이 설계 공모 개시",
           "source": "vnexpress",
           "title_ko": "84세 할머니의 전기 오토바이 '원뿔모자' 아이디어"
+        },
+        {
+          "date": "2026-09-30",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Ho Chi Minh City Portal",
+          "title_ko": "HCMC와 네덜란드, Di An - Thuan An - Tan Uyen 폐수 처리 프로젝트 2단계 협력"
         },
         {
           "date": "2026-09-30",
@@ -183,13 +169,6 @@
           "milestone": "준공·운영 개시",
           "source": "stockbiz",
           "title_ko": "북부의 두 가지 주요 고속도로 프로젝트의 자본 병목 현상 제거"
-        },
-        {
-          "date": "2026-09-29",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "nhipsongkinhdoanh",
-          "title_ko": "2026-2030년 동안 29개의 주요 고속도로 프로젝트에 대한 투자 자본 요청"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
@@ -204,24 +183,24 @@
       "title_ko": "VN-OG-2030",
       "sector": "Oil & Gas",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "OPERATION",
-      "stage_label_ko": "운영·확장 단계",
-      "stage_color": "6366F1",
-      "stage_order": 5,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-10-05",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "petrotimes",
+          "title_ko": "Các s\\ n\\ n\\ n\\ nPETROVIETNAM TRONG THANG 9 2026"
+        },
         {
           "date": "2026-10-01",
           "stage": "OPERATION",
-          "milestone": "2026년 3월 호르무즈 해협 폐쇄로 공급 차질 심화",
+          "milestone": "2026년 3월 호르무즈 해협 폐쇄로 공급 차질",
           "source": "asiatimes",
           "title_ko": "석유 및 가스 산업은 흑자를 예상했지만 전쟁으로 인한 부족"
-        },
-        {
-          "date": "2026-09-30",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "htv_vn",
-          "title_ko": "보트손트르엉 30/9: VN-Index thu hếp đà giạm | NewZMoney"
         },
         {
           "date": "2026-09-29",
@@ -238,9 +217,9 @@
           "title_ko": "페트로베트남: 해양 석유 및 가스 공사를 위한 EPC 협력업체의 역량 보유"
         }
       ],
-      "next_watch": "전략비축유 방출 효과 모니터링 및 대체 공급선 확보",
-      "latest_insight": "VN-OG-2030은 운영 중이며 글로벌 공급 부족으로 베트남 석유가스의 전략적 중요성 증대. 에너지 안보 강화와 수출 경쟁력 향상 예상",
-      "latest_article_date": "2026-10-01",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-10-05",
       "article_count": 7,
       "haiku_count": 1,
       "kpi_targets": []
@@ -250,11 +229,18 @@
       "title_ko": "VN-PWR-PDP8-LNG",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-10-04",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Vietnam Plus",
+          "title_ko": "옥상 태양광 발전 개발 목표 미달: 차관"
+        },
         {
           "date": "2026-10-02",
           "stage": "CONSTRUCTION",
@@ -268,26 +254,12 @@
           "milestone": "입찰·계약 진행",
           "source": "Multiple sources (PRNewswire, The Straits Times, Energías Renovables)",
           "title_ko": "베스타스는 총 16개의 풍력 터빈을 보유한 PDP8 산하의 두 개의 새로운 풍력 프로젝트로 베트남의 청정 에너지 야망을 강화합니다"
-        },
-        {
-          "date": "2026-09-28",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "en_prnasisa",
-          "title_ko": "Hoymiles, 부다페스트에서 HoyUltra 2000M 풀 시나리오 C&I 에너지 스토리지 출시, 유럽 로드쇼 시작"
-        },
-        {
-          "date": "2026-09-27",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Global Law Experts",
-          "title_ko": "베트남 재생 에너지 투자: 주요 포인트 - 글로벌 법률 전문가"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-10-02",
-      "article_count": 5,
+      "latest_article_date": "2026-10-04",
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -296,11 +268,18 @@
       "title_ko": "VN-PWR-PDP8-NUCLEAR",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-10-02",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "PR Newswire",
+          "title_ko": "베스타스는 두 가지 새로운 풍력 프로젝트로 베트남의 청정 에너지 야망을 강화합니다"
+        },
         {
           "date": "2026-10-02",
           "stage": "CONSTRUCTION",
@@ -314,26 +293,12 @@
           "milestone": "입찰·계약 진행",
           "source": "Multiple sources (PRNewswire, The Straits Times, Energías Renovables)",
           "title_ko": "베스타스는 총 16개의 풍력 터빈을 보유한 PDP8 산하의 두 개의 새로운 풍력 프로젝트로 베트남의 청정 에너지 야망을 강화합니다"
-        },
-        {
-          "date": "2026-09-28",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "soha",
-          "title_ko": "러시아, 베트남에 대한 최신 '핵 불가사의' 공식 폐쇄: 전 세계 7개국만 소유"
-        },
-        {
-          "date": "2026-09-28",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "en_prnasisa",
-          "title_ko": "Hoymiles, 부다페스트에서 HoyUltra 2000M 풀 시나리오 C&I 에너지 스토리지 출시, 유럽 로드쇼 시작"
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-10-02",
-      "article_count": 7,
+      "article_count": 3,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -350,9 +315,16 @@
         {
           "date": "2026-10-02",
           "stage": "PLANNING",
-          "milestone": "베트남 수소 개발 전략 수립 및 정책 방향 제시",
+          "milestone": "Decision 165/QĐ-TTg 수소 전략 승인 (2024년)",
           "source": "Reccessary",
           "title_ko": "구매자에서 인프라까지: 베트남 수소 개발의 6가지 우선순위"
+        },
+        {
+          "date": "2026-10-02",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "PR Newswire",
+          "title_ko": "베스타스는 두 가지 새로운 풍력 프로젝트로 베트남의 청정 에너지 야망을 강화합니다"
         },
         {
           "date": "2026-10-02",
@@ -362,24 +334,24 @@
           "title_ko": "코펜하겐 인프라 파트너스, 새로운 스코틀랜드 배터리 저장 프로젝트에 2억 7천만 유로 투자 발표"
         },
         {
+          "date": "2026-10-02",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Multiple sources (PRNewswire, The Straits Times, Energías Renovables)",
+          "title_ko": "베스타스는 총 16개의 풍력 터빈을 보유한 PDP8 산하의 두 개의 새로운 풍력 프로젝트로 베트남의 청정 에너지 야망을 강화합니다"
+        },
+        {
           "date": "2026-10-01",
           "stage": "COMPLETION",
           "milestone": "준공·운영 개시",
           "source": "Click Orlando (AP Photo/Hau Dinh)",
           "title_ko": "판도라, 신재생 에너지로 가동되는 베트남 보석 공장 $ 150,000,000 개설"
-        },
-        {
-          "date": "2026-09-28",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "en_prnasisa",
-          "title_ko": "Envision Energy, TG Pro에 대한 DNV 인증을 통해 글로벌 풍력 기술의 발전 가속화"
         }
       ],
-      "next_watch": "수소 산업 로드맵 확정, 규제 프레임워크 공식화",
-      "latest_insight": "베트남이 재생에너지 기반 수소 산업 진출을 본격화하는 초기 단계. 태양광·풍력 자원 활용 및 기존 산업 기반 연계 전략 추진 중",
+      "next_watch": "수소 인프라 구축 계획 및 표준 제정 착수",
+      "latest_insight": "2030년 10-50만톤, 2050년 1,000-2,000만톤 목표의 재정능력 평가 진행 중. 정부 주도 초기 단계로 인프라 투자 기회 선제적 검토 필요",
       "latest_article_date": "2026-10-02",
-      "article_count": 8,
+      "article_count": 6,
       "haiku_count": 1,
       "kpi_targets": []
     },
@@ -388,11 +360,18 @@
       "title_ko": "VN-HAN-URBAN-2045",
       "sector": "Smart City",
       "area": "도시·교통 (Urban & Transport)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
       "stage_history": [
+        {
+          "date": "2026-10-06",
+          "stage": "COMPLETION",
+          "milestone": "2026년 말까지 15개 교통 프로젝트 개통",
+          "source": "VietNamNet",
+          "title_ko": "하노이, 2026년 연말까지 15개 주요 운송 프로젝트 개설 예정"
+        },
         {
           "date": "2026-10-02",
           "stage": "PLANNING",
@@ -401,11 +380,11 @@
           "title_ko": "스마트시티 핵심으로서의 다낭시 지능형운영센터 (IOC)"
         },
         {
-          "date": "2026-10-01",
+          "date": "2026-10-02",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
-          "source": "en_prnasisa",
-          "title_ko": "SEMIFIVE, 'K-온-디바이스 AI 반도체' 프로그램에 따라 로봇 AI 칩 개발을 위해 Mobilint와 턴키 계약 체결"
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "도시 환경의 오염 (4강): 주거 지역 간의 쓰레기 수거 지점: \"쓰레기와 함께 사는\" 장면이 끝날 것인가?"
         },
         {
           "date": "2026-10-01",
@@ -417,7 +396,7 @@
         {
           "date": "2026-09-30",
           "stage": "UNKNOWN",
-          "milestone": "해당 사항 없음",
+          "milestone": "인프라 사업 무관",
           "source": "en_prnasisa",
           "title_ko": "Transmart, 고주파 전력 및 AI 데이터 센터 애플리케이션을 위한 소프트 마그네틱 코어 기술 발전"
         },
@@ -427,18 +406,11 @@
           "milestone": "2026년 9월 Gia Lam-Hung Yen 전기버스 노선 개통",
           "source": "Moi truong & Cuoc song",
           "title_ko": "녹색 교통을 장려하는 하노이는 새로운 지방 간 전기 버스 노선 Gia Lam - Hung Yen을 개설합니다."
-        },
-        {
-          "date": "2026-09-26",
-          "stage": "CONSTRUCTION",
-          "milestone": "2026-2027년 AI·디지털 트윈 시범운영",
-          "source": "VietNamNet",
-          "title_ko": "호치민시, 2029년까지 스마트시티 운영센터 완전 운영"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-10-02",
+      "next_watch": "개통된 프로젝트들의 교통 흐름 개선 효과 검증",
+      "latest_insight": "하노이 도시 연결성 개선 완료 임박. 완공 후 운영 단계 진입 예상되며, 도시 교통 인프라 최적화 수요 지속",
+      "latest_article_date": "2026-10-06",
       "article_count": 8,
       "haiku_count": 3,
       "kpi_targets": []
@@ -463,44 +435,44 @@
         {
           "date": "2026-09-30",
           "stage": "PLANNING",
-          "milestone": "산업단지 인프라 고도화 정책 수립",
+          "milestone": "정책 수립 및 투자자 수요 분석 완료",
           "source": "Vietnam Investment Review - VIR",
           "title_ko": "산업 투자자는 비용보다 실행과 인프라를 우선시합니다"
         },
         {
           "date": "2026-09-29",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Groupe IDEC International",
+          "title_ko": "베트남 산업재산권 시장 2026 전망 가이드"
+        },
+        {
+          "date": "2026-09-29",
           "stage": "UNKNOWN",
-          "milestone": "베트남 산업용 부동산 시장 FDI 성장",
+          "milestone": "베트남 산업부동산 시장 FDI 호조",
           "source": "Vietnam Briefing",
           "title_ko": "2026년 FDI가 주도하는 베트남 산업용 부동산 시장의 강력한 성장"
         },
         {
-          "date": "2026-09-28",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Vietnam Investment Review, Vietnam Industrial Real Estate Association",
-          "title_ko": "베트남 산업재산권 포럼 2026: \"불확실성 속에서 기회\""
+          "date": "2026-09-29",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Nhan Dan Online",
+          "title_ko": "베트남, 차세대 대규모 하이테크 제조 FDI 유치"
         },
         {
-          "date": "2026-09-27",
-          "stage": "UNKNOWN",
-          "milestone": "산업단지 생태계 전략 수립",
-          "source": "The Investor",
-          "title_ko": "베트남 산업단지가 차세대 FDI를 위한 생태계로 진화해야 함"
-        },
-        {
-          "date": "2026-09-27",
-          "stage": "UNKNOWN",
-          "milestone": "산업단지 생태계 정책 방향 재검토",
-          "source": "The Investor",
-          "title_ko": "베트남 산업단지는 FDI 기준 변화에 따라 생태계로 진화해야 합니다."
+          "date": "2026-09-29",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "Vietnam Briefing (Groupe IDEC's outlook)",
+          "title_ko": "베트남 산업재산권 시장 2026 전망: 수요가 있는 기성 공간"
         }
       ],
-      "next_watch": "2027년 본격운영 개시 여부 및 입주기업 확보 추이",
-      "latest_insight": "An Phat 5 산업단지는 150ha 규모로 현재 착공단계이며, 인프라 완공(2026년 12월)과 통합운영 개시(2027년)가 임박한 상황. 하이퐁시 전략적 위치와 고속 진행속도는 외자 유입 가능성을 시사.",
+      "next_watch": "2027년 통합운영 개시, 테넌트 입주 진행 상황",
+      "latest_insight": "150ha 규모 산업단지로 69% 산업용지 확보. 한중일 FDI 유치 가속화 중. 2027년 본격 운영 시작 예상으로 투자 진입 타이밍 적절",
       "latest_article_date": "2026-10-02",
       "article_count": 8,
-      "haiku_count": 5,
+      "haiku_count": 3,
       "kpi_targets": []
     },
     "VN-TRAN-2055": {
@@ -528,32 +500,39 @@
           "title_ko": "베트남, 고속도로를 위한 $ 32B 민간 자본 모색 (2026-2030)"
         },
         {
-          "date": "2026-09-28",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "Savills Vietnam, SGGP (via Vertex AI Search)",
-          "title_ko": "호치민시 지하철 6호선(탄손누트공항~푸후우) 개통"
-        },
-        {
-          "date": "2026-09-28",
+          "date": "2026-09-29",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
-          "source": "sggp_org_vn",
-          "title_ko": "국경을 초월한 QR 결제는 베트남 비즈니스에 새로운 기회를 열어줍니다."
+          "source": "Tuoi tre news",
+          "title_ko": "호치민-롱탄 고속도로 확장 완료 임박"
         },
         {
-          "date": "2026-09-27",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "nhandan_vn",
-          "title_ko": "레드 리버 델타를 위한 내륙 수로 운송 잠금 해제"
+          "date": "2026-09-29",
+          "stage": "OPERATION",
+          "milestone": "2026년 세계관광상 12개 수상, 아시아 최고 민간공항 7년 연속 선정",
+          "source": "kenh14",
+          "title_ko": "베트남은 \"2026년 세계 관광 오스카상\" 에서 12개의 상을 수상한 \"빅맨\" 을 보유하고 있습니다: 7년 연속 아시아 최고의 민간 공항에서 4개의 세계 기록을 세운 케이블카 노선까지"
+        },
+        {
+          "date": "2026-09-29",
+          "stage": "OPERATION",
+          "milestone": "기업 입주 확대 및 지속적 투자유치",
+          "source": "tienphong_vn",
+          "title_ko": "VSIP 꽝응아이 - 중부 지역의 역동적인 투자 목적지"
+        },
+        {
+          "date": "2026-09-29",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamplus",
+          "title_ko": "세계에서 가장 많이 연결되는 상위 50개 공항 중 베트남 공항"
         }
       ],
-      "next_watch": "공항 터미널 연계 도로망 완전 운영화",
-      "latest_insight": "롱탄 공항 접근성 향상으로 호치민시 대도시권 교통 인프라 완성. 항공 수송 수요 증대 기대. 관련 부동산·물류 사업 기회 확대.",
+      "next_watch": "공항 터미널1 통합운영 안정화 및 교통량 데이터",
+      "latest_insight": "롱탄 공항 접근도로 완성으로 호치민 대도시권 교통 인프라 고도화. 상업운영 개시 단계로 운영효율성 모니터링 필요",
       "latest_article_date": "2026-12-01",
       "article_count": 8,
-      "haiku_count": 1,
+      "haiku_count": 3,
       "kpi_targets": []
     },
     "VN-URB-METRO-2030": {
@@ -567,16 +546,23 @@
       "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-10-01",
+          "date": "2026-10-02",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "Public Services Portal - Da Nang City",
-          "title_ko": "스마트 시티 아키텍처의 핵심 구성 요소인 다낭의 지능형 운영 센터 (IOC)"
+          "source": "sputniknews",
+          "title_ko": "후에시 경찰국장 Nguyen Dinh Duong은 자신의 개인 전화번호를 연중무휴 24시간 공개적으로 공개했습니다."
+        },
+        {
+          "date": "2026-10-01",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "en_prnasisa",
+          "title_ko": "SEMIFIVE, 'K-온-디바이스 AI 반도체' 프로그램에 따라 로봇 AI 칩 개발을 위해 Mobilint와 턴키 계약 체결"
         },
         {
           "date": "2026-09-30",
           "stage": "UNKNOWN",
-          "milestone": "해당 없음",
+          "milestone": "인프라 사업과 무관",
           "source": "en_prnasisa",
           "title_ko": "Transmart, 고주파 전력 및 AI 데이터 센터 애플리케이션을 위한 소프트 마그네틱 코어 기술 발전"
         },
@@ -590,23 +576,41 @@
         {
           "date": "2026-09-29",
           "stage": "CONSTRUCTION",
-          "milestone": "2026년 4분기 3개 노선 동시 착공",
+          "milestone": "2026년 4분기 3개 노선 착공 개시",
           "source": "VnEconomy, Tuoi tre news",
           "title_ko": "호치민시, 2026년 4분기에 3개의 새로운 지하철 노선 건설 착수"
-        },
-        {
-          "date": "2026-09-26",
-          "stage": "CONSTRUCTION",
-          "milestone": "2026-2027년 AI·디지털 트윈 시범운영",
-          "source": "VietNamNet",
-          "title_ko": "호치민시, 2029년까지 스마트시티 운영센터 완전 운영"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-10-01",
+      "latest_article_date": "2026-10-02",
       "article_count": 8,
-      "haiku_count": 3,
+      "haiku_count": 2,
+      "kpi_targets": []
+    },
+    "VN-ENV-IND-1894": {
+      "plan_id": "VN-ENV-IND-1894",
+      "title_ko": "VN-ENV-IND-1894",
+      "sector": "Environment",
+      "area": "환경 인프라 (Environment)",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-10-06",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Quy Nhon 대화: 녹색 변화와 기후 변화 적응을 위한 자원 연결"
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-10-06",
+      "article_count": 1,
+      "haiku_count": 0,
       "kpi_targets": []
     },
     "VN-PWR-PDP8": {
@@ -614,30 +618,30 @@
       "title_ko": "VN-PWR-PDP8",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
       "stage_history": [
+        {
+          "date": "2026-10-06",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "stockbiz",
+          "title_ko": "AI는 산업단지 부동산 게임의 규칙을 바꾼다"
+        },
         {
           "date": "2026-10-02",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
           "source": "nhandan_vn",
           "title_ko": "전기조명부터 바다의 활력까지"
-        },
-        {
-          "date": "2026-10-02",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "vneconomy",
-          "title_ko": "JBIC는 송전 프로젝트를 우선시하고 베트남에 미화 2,700만 달러의 자금 조달을 전개합니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-10-02",
-      "article_count": 3,
+      "latest_article_date": "2026-10-06",
+      "article_count": 4,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -664,31 +668,6 @@
       "latest_article_date": "2026-10-01",
       "article_count": 1,
       "haiku_count": 0,
-      "kpi_targets": []
-    },
-    "VN-SMART-2025": {
-      "plan_id": "VN-SMART-2025",
-      "title_ko": "VN-SMART-2025",
-      "sector": "Smart City",
-      "area": "도시·교통 (Urban & Transport)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
-      "stage_history": [
-        {
-          "date": "2026-09-26",
-          "stage": "PLANNING",
-          "milestone": "2026년 환경모니터링 네트워크 구축 및 AI·디지털트윈 시범",
-          "source": "Unknown (News article related to Decision No. 4714/QD-UBND)",
-          "title_ko": "친환경 스마트 시티를 위한 데이터 기반 거버넌스"
-        }
-      ],
-      "next_watch": "2027년 제도정비 완료 및 스마트운영센터 구축 일정",
-      "latest_insight": "호찌민시 공식 결정(QD-UBND 4714)에 따른 3단계 로드맵 시행 중. 2026-27년 기초인프라 구축 단계로 본격 진행 예정",
-      "latest_article_date": "2026-09-26",
-      "article_count": 1,
-      "haiku_count": 1,
       "kpi_targets": []
     }
   }
