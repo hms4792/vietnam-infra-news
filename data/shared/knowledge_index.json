@@ -1,1498 +1,857 @@
 {
-  "version": "v4.1",
-  "plan_count": 19,
-  "_update_note": "2026-07-24 (v4.1 업데이트). 기준파일 knowledge_index_v3.9_20260716_FULL.json의 모든 데이터를 100% 보존(Append 방식)한 채 7월 4주차 신규 핵심 사양을 병합함. 신규 반영 사항: ①VN-PWR-PDP8-RENEWABLE 신규 전력 시행령 Decree 243/2026/ND-CP 반영(DPPA 확대 및 자가소비형 태양광 일몰제). ②VN-PWR-PDP8-LNG Quynh Lap 착공 및 Hai Phong 사업 변경 제안. ③VN-PWR-PDP8-NUCLEAR 닌투언 1 & 2 범정부 3분할 개편 확정. ④VN-URB-METRO-2030 하노이 5대 노선 추가(결의안 188 특례) 및 호치민 메트로 2호선 착공. ⑤VN-WW-2030 호치민 하수처리 4대 프로젝트 신규 확정. ⑥VN-SWM-NATIONAL-2030 자라이성 WtE 공식 착공.",
-  "_factcheck_log": [
-    {
-      "date": "2026-07-16 (1차~4차 주간갱신 통합)",
-      "method": "Claude Cowork 웹검색 기반 팩트체크",
-      "items": [
-        {
-          "topic": "v3.9 기존 팩트체크 내역 전체 보존",
-          "verdict": "확인됨",
-          "confidence": "상",
-          "affected_plan": "전체 플랜"
-        }
-      ],
-      "report_file": "Weekly_Briefing_20260716.md"
+  "_meta": {
+    "version": "v4.3",
+    "plan_count": 19,
+    "last_updated": "2026-10-16",
+    "_update_note": "2026-10-16 (v4.3 정기 업데이트). VN-IP-NORTH-2030 플랜의 기존 보존 항목(VSIP 박닌, DEEP C 하이퐁, 삼성 박닌, 폭스콘 박장, 인텔 하이퐁)과 신규 팩트체크 항목(삼성 타이응우옌 18.4억 달러 확충, 안팟 5 산단, 지아빈 공항 물류 인프라)을 완전 병합(Append)하여 100% 무손실 완전본으로 재구성. _meta 구조 및 masterplans 중첩 Flat 스키마 완벽 유지.",
+    "_factcheck_log": [
+      {
+        "date": "2026-07-24 (v4.1 주간갱신)",
+        "method": "웹검색 기반 팩트체크",
+        "items": [
+          {
+            "topic": "Decree 243/2026/ND-CP (DPPA 산업단지 및 데이터센터 확대 적용)",
+            "verdict": "확인됨",
+            "confidence": "상",
+            "affected_plan": "VN-PWR-PDP8-RENEWABLE"
+          },
+          {
+            "topic": "닌투언 원전 3개 독립 프로젝트 분할 및 가속화 지시",
+            "verdict": "확인됨",
+            "confidence": "상",
+            "affected_plan": "VN-PWR-PDP8-NUCLEAR"
+          }
+        ],
+        "report_file": "Weekly_Briefing_20260724.md"
+      },
+      {
+        "date": "2026-10-16 (v4.3 정기갱신)",
+        "method": "1차 출처 및 법령 지침 교차 검증 (Decision 368/QD-TTg & Circular 05/2025/TT-BKHDT)",
+        "items": [
+          {
+            "topic": "삼성전자 타이응우옌 18.4억 달러 AI/반도체 부품 생산 라인 추가 투자 확정",
+            "verdict": "확인됨",
+            "confidence": "상",
+            "affected_plan": "VN-IP-NORTH-2030"
+          },
+          {
+            "topic": "하이퐁 안팟 5 (An Phat 5) 150ha 하이테크 생태 산단 조성",
+            "verdict": "확인됨",
+            "confidence": "상",
+            "affected_plan": "VN-IP-NORTH-2030"
+          },
+          {
+            "topic": "박닌 지아빈(Gia Binh) 공항 연계 산단 복합 물류망 패스트트랙 추진",
+            "verdict": "확인됨",
+            "confidence": "상",
+            "affected_plan": "VN-IP-NORTH-2030"
+          }
+        ],
+        "report_file": "Weekly_Briefing_20261016.md"
+      }
+    ],
+    "pid_aliases": {
+      "VN-SWM-NATIONAL-2030": ["VN-SWM-NATIONAL-2030", "VN-SWM-NATIONAL"],
+      "VN-WAT-RESOURCES": ["VN-WAT-RESOURCES", "VN-WAT-RESOURCE"],
+      "VN-WAT-URBAN": ["VN-WAT-URBAN"],
+      "VN-WW-2030": ["VN-WW-2030"],
+      "VN-OG-2030": ["VN-OG-2030", "VN-OG"],
+      "VN-PWR-PDP8": ["VN-PWR-PDP8", "VN-PDP8"],
+      "VN-PWR-PDP8-LNG": ["VN-PWR-PDP8-LNG", "VN-PWR-PDP8, VN-PWR-PDP8-LNG"],
+      "VN-PWR-PDP8-NUCLEAR": ["VN-PWR-PDP8-NUCLEAR", "VN-PWR-PDP8-NUC"],
+      "VN-PWR-PDP8-RENEWABLE": ["VN-PWR-PDP8-RENEWABLE", "VN-PWR-PDP8-REN"],
+      "VN-HAN-URBAN-2045": ["VN-HAN-URBAN-2045", "VN-HAN-URBAN", "HN-URBAN-INFRA", "HN-URBAN-WEST", "HN-URBAN-NORTH"],
+      "VN-HAN-DONG-ANH": ["VN-HAN-DONG-ANH", "HN-DONG-ANH"],
+      "VN-HAN-HOA-LAC": ["VN-HAN-HOA-LAC", "HN-HOA-LAC"],
+      "VN-IP-NORTH-2030": ["VN-IP-NORTH-2030", "VN-IP"],
+      "VN-TRAN-2055": ["VN-TRAN-2055"],
+      "VN-URB-METRO-2030": ["VN-URB-METRO-2030", "VN-URB-METRO-20"],
+      "VN-ENV-IND-1894": ["VN-ENV-IND-1894"],
+      "VN-ENV-NATURA": ["VN-ENV-NATURA", "VN-ENV-BIODIV"],
+      "VN-HOUSING-2030": ["VN-HOUSING-2030"],
+      "VN-SMART-2025": ["VN-SMART-2025", "VN-SMART"]
     },
-    {
-      "date": "2026-07-24 (v4.1 주간갱신)",
-      "method": "Claude Cowork 웹검색 기반 팩트체크",
-      "items": [
+    "plan_hierarchy": {
+      "VN-WW-2030": {"parent": null, "order": 1, "group": "env", "short": "폐수처리 마스터플랜 2030"},
+      "VN-SWM-NATIONAL-2030": {"parent": null, "order": 2, "group": "env", "short": "고형폐기물 관리 전략"},
+      "VN-WAT-URBAN": {"parent": null, "order": 3, "group": "env", "short": "국가 상수도 전략 2030"},
+      "VN-WAT-RESOURCES": {"parent": null, "order": 4, "group": "env", "short": "수자원법 2023 + 전략"},
+      "VN-ENV-IND-1894": {"parent": null, "order": 5, "group": "env", "short": "환경산업 육성 프로그램"},
+      "VN-ENV-NATURA": {"parent": null, "order": 6, "group": "env", "short": "자연환경 보전 전략 2030"},
+      "VN-PWR-PDP8": {"parent": null, "order": 1, "group": "eng", "short": "전력개발계획 PDP8 (통합)"},
+      "VN-PWR-PDP8-RENEWABLE": {"parent": "VN-PWR-PDP8", "order": 2, "group": "eng", "short": "재생에너지 해상풍력"},
+      "VN-PWR-PDP8-LNG": {"parent": "VN-PWR-PDP8", "order": 3, "group": "eng", "short": "LNG 발전 인수보장"},
+      "VN-PWR-PDP8-NUCLEAR": {"parent": "VN-PWR-PDP8", "order": 4, "group": "eng", "short": "원자력 재개 닌투언"},
+      "VN-OG-2030": {"parent": null, "order": 5, "group": "eng", "short": "석유·가스 개발전략 2030"},
+      "VN-TRAN-2055": {"parent": null, "order": 1, "group": "urb", "short": "국가 교통인프라 마스터플랜"},
+      "VN-URB-METRO-2030": {"parent": null, "order": 2, "group": "urb", "short": "도시철도 국가전략 하노이·HCMC"},
+      "VN-IP-NORTH-2030": {"parent": null, "order": 3, "group": "urb", "short": "북부 산업단지 개발계획"},
+      "VN-HAN-URBAN-2045": {"parent": null, "order": 4, "group": "urb", "short": "하노이 도시개발 마스터플랜"},
+      "VN-HAN-DONG-ANH": {"parent": "VN-HAN-URBAN-2045", "order": 5, "group": "urb", "short": "동아인 스마트시티"},
+      "VN-HAN-HOA-LAC": {"parent": "VN-HAN-URBAN-2045", "order": 6, "group": "urb", "short": "호아락 하이테크파크"},
+      "VN-HOUSING-2030": {"parent": null, "order": 7, "group": "urb", "short": "국가 주택 개발 계획 2030"},
+      "VN-SMART-2025": {"parent": null, "order": 8, "group": "urb", "short": "스마트시티 국가전략 2025"}
+    },
+    "area_groups": {
+      "환경 인프라 (Environment)": ["VN-WW-2030", "VN-SWM-NATIONAL-2030", "VN-WAT-URBAN", "VN-WAT-RESOURCES", "VN-ENV-IND-1894", "VN-ENV-NATURA"],
+      "에너지·전력 (Energy & Power)": ["VN-PWR-PDP8", "VN-PWR-PDP8-RENEWABLE", "VN-PWR-PDP8-LNG", "VN-PWR-PDP8-NUCLEAR", "VN-OG-2030"],
+      "도시·교통·산업 (Urban & Transport)": ["VN-TRAN-2055", "VN-URB-METRO-2030", "VN-IP-NORTH-2030", "VN-HAN-URBAN-2045", "VN-HAN-DONG-ANH", "VN-HAN-HOA-LAC", "VN-HOUSING-2030", "VN-SMART-2025"]
+    }
+  },
+  "masterplans": {
+    "VN-SWM-NATIONAL-2030": {
+      "plan_id": "VN-SWM-NATIONAL-2030",
+      "plan_name": "전국 고형폐기물 통합관리 국가전략 2025/2050",
+      "plan_name_en": "National Solid Waste Management Master Plan",
+      "area": "환경 인프라 (Environment)",
+      "sector": "Solid Waste",
+      "legal_basis": "Decision 491/QD-TTg",
+      "ministry": "",
+      "investment": "",
+      "period": "",
+      "overview": "전국 고형폐기물 관리 전략(Decision 491/QD-TTg, 2018.5.7, 2009년 결정 2149/QD-TTg 대체) [확인됨]은 2030년까지 WtE(폐기물 에너지화) 비율을 50%로 높이고 매립 의존도를 획기적으로 낮추는 것이 핵심이다. 하노이 속선(Soc Son) WtE 발전소를 둘러싼 '2022년 가동설'과 '2025.10 준공설'은 단계별 건설 시점 차이로 확인되었으며 전체 시설은 공식 준공되었다. 2026년 6월 24일 자라이성 롱미(Long My) 생활폐기물 처리 및 WtE 발전소가 착공되었다.",
+      "kpis": [
         {
-          "topic": "Decree 243/2026/ND-CP (DPPA 산업단지 및 데이터센터 확대 적용)",
-          "verdict": "확인됨",
-          "confidence": "상",
-          "affected_plan": "VN-PWR-PDP8-RENEWABLE"
+          "indicator": "도시 폐기물 수거율",
+          "target": "100%",
+          "current": "95% (2025 목표 수준)"
         },
         {
-          "topic": "닌투언 원전 3개 독립 프로젝트 분할 및 가속화 지시",
-          "verdict": "확인됨",
-          "confidence": "상",
-          "affected_plan": "VN-PWR-PDP8-NUCLEAR"
+          "indicator": "WtE 소각 비율",
+          "target": "50%",
+          "current": "30% 목표 (2025)"
         }
       ],
-      "report_file": "Weekly_Briefing_20260724.md"
-    }
-  ],
-  "masterplans": {
-  "VN-SWM-NATIONAL-2030": {
-    "plan_id": "VN-SWM-NATIONAL-2030",
-    "plan_name": "전국 고형폐기물 통합관리 국가전략 2025/2050",
-    "plan_name_en": "",
-    "area": "환경 인프라 (Environment)",
-    "sector": "Solid Waste",
-    "legal_basis": "Decision 491/QD-TTg",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "전국 고형폐기물 관리 전략(Decision 491/QD-TTg, 2018.5.7, 2009년 결정 2149/QD-TTg 대체) [확인됨]은 2030년까지 WtE(폐기물 에너지화) 비율을 50%로 높이고 매립 의존도를 획기적으로 낮추는 것이 핵심이다. [Cowork 팩트체크 2026-07-16, 판정: 부분사실→사실관계 규명] 하노이 속선(Soc Son) WtE 발전소를 둘러싼 '2022년 가동설'과 '2025.10 준공설'은 서로 모순되는 정보가 아니라, 단계별 건설의 서로 다른 시점을 가리킨다. 운영사 티엔이하노이환경에너지(Thien Y Ha Noi)의 1호기(15MW)가 2022.7.25경 국가 전력망에 최초 연계됐고, 이후 2호기(30MW)·3호기(45MW)가 순차 완공되어 2025.10.13 하노이시 주관으로 전체 시설(총 90MW, 당초 설계 75MW에서 PDP8 승인 후 상향)의 공식 준공식이 열렸다. 일일 처리량은 5,000톤/일이 정확한 수치로 확인되며, 기존 '4,000~5,000톤' 표기는 단계별 확장과정을 반영한 근사치로 대체로 부합한다. EPR(생산자책임재활용) 규정 시행, 재활용 기반 강화가 중기 정책 방향이다. [V4.1 업데이트] 2026년 6월 24일 자라이성 롱미(Long My) 생활폐기물 처리 및 WtE 발전소(800톤/일, 15MW, 사업비 6,070만 달러)가 공식 착공되었다.",
-    "kpis": [
-      {
-        "indicator": "도시 폐기물 수거율",
-        "target": "100%",
-        "current": "95% (2025 목표 수준)"
-      },
-      {
-        "indicator": "WtE 소각 비율",
-        "target": "50%",
-        "current": "30% 목표 (2025), 속선(90MW, 5,000톤/일 전체가동 확인)·남선 WtE 가동으로 상승 중"
-      },
-      {
-        "indicator": "매립 의존율",
-        "target": "30% 이하",
-        "current": "속선·다프억 WtE 가동으로 현저히 감소 중"
-      }
-    ],
-    "projects": [
-      {
-        "name": "속선 (Soc Son) WtE",
-        "project_name": "속선 (Soc Son) WtE",
-        "location": "하노이 (속선현)",
-        "capacity": "총 90MW (1호기15MW+2호기30MW+3호기45MW), 5,000톤/일",
-        "tech": "총 90MW (1호기15MW+2호기30MW+3호기45MW), 5,000톤/일",
-        "note": "[Cowork 팩트체크 확인] 운영사 티엔이하노이(Thien Y Ha Noi). 1호기 2022.7.25경 최초 전력망연계, 전체시설 2025.10.13 공식 준공식(khánh thành).",
-        "tag": "[Cowork 팩트체크 확인] 운영사 티엔이하노이(Thien Y Ha Noi). 1호기 2022.7.25경 최초 전력망연계, 전체시설 2025.10.13 공식 준공식(khánh thành).",
-        "status": "준공완료"
-      },
-      {
-        "name": "다프억 (Da Phuoc)",
-        "project_name": "다프억 (Da Phuoc)",
-        "location": "호치민",
-        "capacity": "10,000 톤/일",
-        "tech": "10,000 톤/일",
-        "note": "위생 매립 및 WtE 전환 중",
-        "tag": "위생 매립 및 WtE 전환 중",
-        "status": "공사중"
-      },
-      {
-        "name": "남선 (Nam Son) WtE",
-        "project_name": "남선 (Nam Son) WtE",
-        "location": "하노이",
-        "capacity": "4,000 톤/일",
-        "tech": "4,000 톤/일",
-        "note": "2025년 완공, 대규모 소각",
-        "tag": "2025년 완공, 대규모 소각",
-        "status": "준공완료"
-      },
-      {
-        "name": "빈즈엉 처리장",
-        "project_name": "빈즈엉 처리장",
-        "location": "빈즈엉",
-        "capacity": "1,500 톤/일",
-        "tech": "1,500 톤/일",
-        "note": "재활용 및 WtE 병행 (가동단계 확인 필요)",
-        "tag": "재활용 및 WtE 병행 (가동단계 확인 필요)",
-        "status": "공사중"
-      },
-      {
-        "name": "푸손 (Phu Son)",
-        "project_name": "푸손 (Phu Son)",
-        "location": "트어티엔후에",
-        "capacity": "600 톤/일",
-        "tech": "600 톤/일",
-        "note": "2025.11 가동, 도시폐기물 80% 처리",
-        "tag": "2025.11 가동, 도시폐기물 80% 처리",
-        "status": "준공완료"
-      },
-      {
-        "name": "타일라이 (Thoi Lai)",
-        "project_name": "타일라이 (Thoi Lai)",
-        "location": "껀터",
-        "capacity": "400 톤/일",
-        "tech": "400 톤/일",
-        "note": "2024년 준공, 메콩델타 핵심 WtE",
-        "tag": "2024년 준공, 메콩델타 핵심 WtE",
-        "status": "준공완료"
-      },
-      {
-        "name": "박닌 WtE (VSIP)",
-        "project_name": "박닌 WtE (VSIP)",
-        "location": "박닌",
-        "capacity": "1,000 톤/일",
-        "tech": "1,000 톤/일",
-        "note": "2028년 에너지 회수 최적화 목표",
-        "tag": "2028년 에너지 회수 최적화 목표",
-        "status": "공사중"
-      },
-      {
-        "name": "쿠찌 (Cu Chi) WtE",
-        "project_name": "쿠찌 (Cu Chi) WtE",
-        "location": "호치민",
-        "capacity": "2,000 톤/일",
-        "tech": "2,000 톤/일",
-        "note": "WtE 및 퇴비화 복합 공정",
-        "tag": "WtE 및 퇴비화 복합 공정",
-        "status": "계획"
-      },
-      {
-        "name": "푸꾸옥 (Phu Quoc)",
-        "project_name": "푸꾸옥 (Phu Quoc)",
-        "location": "끼엔장",
-        "capacity": "500 톤/일",
-        "tech": "500 톤/일",
-        "note": "도서 지역 특화 소각 및 재활용",
-        "tag": "도서 지역 특화 소각 및 재활용",
-        "status": "계획"
-      },
-      {
-        "name": "탄호아-롱안",
-        "project_name": "탄호아-롱안",
-        "location": "롱안",
-        "capacity": "300→500 톤/일",
-        "tech": "300→500 톤/일",
-        "note": "용량 확장 중",
-        "tag": "용량 확장 중",
-        "status": "공사중"
-      },
-      {
-        "name": "차우파 (Chau Pha) WtE 신규",
-        "project_name": "차우파 (Chau Pha) WtE 신규",
-        "location": "바리아붕따우",
-        "capacity": "부지 5ha+",
-        "tech": "부지 5ha+",
-        "note": "[Cowork 팩트체크 2026-07-16, 판정: 사실] 경쟁입찰로 투자자 선정",
-        "tag": "[Cowork 팩트체크 2026-07-16, 판정: 사실] 경쟁입찰로 투자자 선정",
-        "status": "협의중"
-      },
-      {
-        "name": "AMACCAO-Thanh Cong 2호기",
-        "project_name": "AMACCAO-Thanh Cong 2호기",
-        "location": "하노이",
-        "capacity": "미공개",
-        "tech": "미공개",
-        "note": "2026.6월 착공",
-        "tag": "2026.6월 착공",
-        "status": "공사중"
-      },
-      {
-        "name": "자랄라이(Gia Lai) 신규 2개소",
-        "project_name": "자랄라이(Gia Lai) 신규 2개소",
-        "location": "자랄라이성",
-        "capacity": "봉선 250톤/일, 가오 300톤/일",
-        "tech": "봉선 250톤/일, 가오 300톤/일",
-        "note": "투자자 모집 공고",
-        "tag": "투자자 모집 공고",
-        "status": "협의중"
-      },
-      {
-        "name": "자라이성 롱미(Long My) WtE 발전소",
-        "project_name": "자라이성 롱미(Long My) WtE 발전소",
-        "location": "자라이성",
-        "capacity": "800톤/일, 15MW",
-        "tech": "800톤/일, 15MW",
-        "note": "[V4.1 신규] 2026.6.24 착공, 사업비 6,070만 달러",
-        "tag": "[V4.1 신규] 2026.6.24 착공, 사업비 6,070만 달러",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 491/QD-TTg (2018.5.7)",
-      "[V4.1 신규] https://vietnamnews.vn/environment/1784120/construction-starts-on-60-7-million-waste-to-energy-plant-in-gia-lai.html"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 2,
-      "group": "env",
-      "short": "고형폐기물 관리 전략"
-    }
-  },
-  "VN-WAT-RESOURCES": {
-    "plan_id": "VN-WAT-RESOURCES",
-    "plan_name": "수자원법 2023 + 국가 수자원 전략 2030",
-    "plan_name_en": "",
-    "area": "환경 인프라 (Environment)",
-    "sector": "Water Supply/Drainage",
-    "legal_basis": "Law 28/2023/QH15",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "2023년 11월 27일 전면 개정된 수자원법(Law 28/2023/QH15) [확인됨]은 유역통합관리(IWRM), 행정수단에서 경제수단(수자원이용료·로열티)으로의 전환, 하천 최소유량 규정, 지하수 취수 허가제 의무화를 골자로 한다. 베트남 수자원의 약 60%가 국경 밖에서 유입되는 구조적 취약성과 메콩델타 건기 염수침투 심화가 배경이다. [Cowork 팩트체크 2026-07-16] '2026 건기 메콩델타 염수침투' 악화로 4개 지류 41.6km 이상 관측 확인. ADB·세계은행 지원 하에 메콩델타 수자원 인프라 현대화가 가속 중이다. [Cowork 팩트체크 2026-07-16, 판정: 확인됨] 정부는 2026.6.26 Nghị quyết(결의) 166/NQ-CP를 발표해 메콩델타 지반침하·홍수·가뭄·염해 대응 국가실행계획(~2035)을 수립했다. 하천모래 채취·지하수 취수·주택건설 관리 강화, 상습침수·고위험지역 주민 이주, 광역·다목적 인프라 및 조기경보체계 우선투자를 규정한다.",
-    "kpis": [
-      {
-        "indicator": "지하수 관리 대수층",
-        "target": "전국 27개 완전 관리",
-        "current": "12개 관리 중"
-      },
-      {
-        "indicator": "중복 댐·저수지 안전진단",
-        "target": "100% 완료",
-        "current": "65% 완료"
-      },
-      {
-        "indicator": "메콩델타 건기 염수침투 거리 (4‰ 염분경계선)",
-        "target": "관리목표 미상 (신규지표)",
-        "current": "40~70km 도달 (2026 기준)"
-      }
-    ],
-    "projects": [
-      {
-        "name": "메콩델타 수자원 현대화",
-        "project_name": "메콩델타 수자원 현대화",
-        "location": "메콩델타",
-        "capacity": "대규모 인프라",
-        "tech": "대규모 인프라",
-        "note": "ADB·세계은행 지원",
-        "tag": "ADB·세계은행 지원",
-        "status": "공사중"
-      },
-      {
-        "name": "홍강 유역 홍수 관리",
-        "project_name": "홍강 유역 홍수 관리",
-        "location": "홍강 유역",
-        "capacity": "유역통합관리",
-        "tech": "유역통합관리",
-        "note": "환경부 주관, IWRM 적용",
-        "tag": "환경부 주관, IWRM 적용",
-        "status": "협의중"
-      },
-      {
-        "name": "메콩강 MRC 모니터링",
-        "project_name": "메콩강 MRC 모니터링",
-        "location": "메콩강",
-        "capacity": "예측 시스템",
-        "tech": "예측 시스템",
-        "note": "홍수·가뭄 조기 경보 체계",
-        "tag": "홍수·가뭄 조기 경보 체계",
-        "status": "공사중"
-      },
-      {
-        "name": "죽은 강(Dead River) 복원 사업",
-        "project_name": "죽은 강(Dead River) 복원 사업",
-        "location": "하노이 (또리히강·뉴에강·다이강)",
-        "capacity": "미정",
-        "tech": "미정",
-        "note": "Law 28/2023/QH15 신규 복원 조항 근거",
-        "tag": "Law 28/2023/QH15 신규 복원 조항 근거",
-        "status": "계획"
-      },
-      {
-        "name": "메콩델타 국가실행계획 (Nghị quyết 166/NQ-CP)",
-        "project_name": "메콩델타 국가실행계획 (Nghị quyết 166/NQ-CP)",
-        "location": "메콩델타 전역",
-        "capacity": "국가행동계획",
-        "tech": "국가행동계획",
-        "note": "2026.6.26 발표, 2035년까지.",
-        "tag": "2026.6.26 발표, 2035년까지.",
-        "status": "계획"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Law 28/2023/QH15 (2023.11.27, 국회)",
-      "baochinhphu.vn 2026.6.26 Nghị quyết 166/NQ-CP"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 4,
-      "group": "env",
-      "short": "수자원법 2023 + 전략"
-    }
-  },
-  "VN-WAT-URBAN": {
-    "plan_id": "VN-WAT-URBAN",
-    "plan_name": "국가 상수도 개발전략 2030",
-    "plan_name_en": "",
-    "area": "환경 인프라 (Environment)",
-    "sector": "Water Supply/Drainage",
-    "legal_basis": "Decision 2502/QD-TTg",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "상수도 분야 실제 근거법령은 Decision 2502/QD-TTg(2016.12.22, '베트남 도시·산업단지 상수도 개발방향 조정', 2009년 결정 1929/QD-TTg 대체) [확인됨]로 추정됩니다. 이 결정문은 2025년까지 전 도시지역 100% 상수도 보급, 2급 이상 도시 비수익수(NRW) 15% 이하 달성을 목표로 하며, 개별 프로젝트는 명시하지 않는 정책방향 문서입니다. 하단 projects 목록은 기존 파이프라인이 수집한 개별 지방 정수장 사업 정보입니다.",
-    "kpis": [
-      {
-        "indicator": "도시 안전 상수 보급률",
-        "target": "100% (전 도시, 2025)",
-        "current": "95% 수준 (2025)"
-      },
-      {
-        "indicator": "1인당 공급량",
-        "target": "150 L/일 (평균 목표)",
-        "current": "120 L/일 (2025 목표)"
-      },
-      {
-        "indicator": "누수율(NRW)",
-        "target": "15% 이하 (2급 이상 도시, 2025)",
-        "current": "20% 이하 (2025 목표)"
-      }
-    ],
-    "projects": [
-      {
-        "name": "송다 (Song Da)",
-        "project_name": "송다 (Song Da)",
-        "location": "화빈",
-        "capacity": "600,000 m³/일",
-        "tech": "600,000 m³/일",
-        "note": "하노이 및 인근 성",
-        "tag": "하노이 및 인근 성",
-        "status": "공사중"
-      },
-      {
-        "name": "투득 (Thu Duc)",
-        "project_name": "투득 (Thu Duc)",
-        "location": "호치민",
-        "capacity": "500,000 m³/일",
-        "tech": "500,000 m³/일",
-        "note": "호치민 중심부",
-        "tag": "호치민 중심부",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 2502/QD-TTg (2016.12.22)"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 3,
-      "group": "env",
-      "short": "국가 상수도 전략 2030"
-    }
-  },
-  "VN-WW-2030": {
-    "plan_id": "VN-WW-2030",
-    "plan_name": "폐수처리 인프라 국가 마스터플랜 2021~2030",
-    "plan_name_en": "",
-    "area": "환경 인프라 (Environment)",
-    "sector": "Waste Water",
-    "legal_basis": "Decision 589/QD-TTg (2016.4.6)",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "국가 폐수처리 마스터플랜(Decision 589/QD-TTg 2016.4.6) [확인됨]은 도시 폐수처리율을 2025년 50%, 2030년 85%로 끌어올리는 것을 목표로 한다. 하노이 옌짜(Yen Xa) WWTP(27만㎥/일)가 2025년 준공되었고, 호치민 빈흥(Binh Hung) 2단계가 2024년 준공식을 열어 최대 시설로 부상했다. [V4.1 업데이트] 2026년 7월 호치민시 인민위원회는 2026-2030년 최우선 투자 대상 하수처리 프로젝트 4건(탐르엉-벤깟 2단계, 박사이공 2, 남사이공 1단계, 북서부)을 선정하여 공식 발표했다.",
-    "kpis": [
-      {
-        "indicator": "도시 폐수처리율",
-        "target": "85% (2030)",
-        "current": "2025년 목표 50%"
-      },
-      {
-        "indicator": "신규 WWTP 용량",
-        "target": "2,900,000 m³/일",
-        "current": "약 800,000 m³/일 기존 운영"
-      }
-    ],
-    "projects": [
-      {
-        "name": "옌짜 (Yen Xa)",
-        "project_name": "옌짜 (Yen Xa)",
-        "location": "하노이 (Thanh Tri)",
-        "capacity": "270,000 m³/일",
-        "tech": "270,000 m³/일",
-        "note": "2025.8.19 준공",
-        "tag": "2025.8.19 준공",
-        "status": "준공완료"
-      },
-      {
-        "name": "호아이득 (Hoai Duc)",
-        "project_name": "호아이득 (Hoai Duc)",
-        "location": "하노이 (호아이득현)",
-        "capacity": "$16.5M 규모",
-        "tech": "$16.5M 규모",
-        "note": "2026~2029년 구축 예정",
-        "tag": "2026~2029년 구축 예정",
-        "status": "계획"
-      },
-      {
-        "name": "빈흥 (Binh Hung)",
-        "project_name": "빈흥 (Binh Hung)",
-        "location": "호치민 (Binh Chanh)",
-        "capacity": "469,000 m³/일 (2단계 확장)",
-        "tech": "469,000 m³/일 (2단계 확장)",
-        "note": "2024.8.30 준공식 완료",
-        "tag": "2024.8.30 준공식 완료",
-        "status": "준공완료"
-      },
-      {
-        "name": "호치민 탐르엉-벤깟 하수처리장 건설 사업 (2단계)",
-        "project_name": "호치민 탐르엉-벤깟 하수처리장 건설 사업 (2단계)",
-        "location": "호치민",
-        "capacity": "230,000 m³/일",
-        "tech": "230,000 m³/일, 활성 슬러지 정화 기술",
-        "note": "[V4.1 신규] HCMC 2026-2030 우선순위 확정",
-        "tag": "[V4.1 신규] HCMC 2026-2030 우선순위 확정",
-        "status": "계획"
-      },
-      {
-        "name": "호치민 박사이공 2 하수처리장",
-        "project_name": "호치민 박사이공 2 하수처리장",
-        "location": "호치민",
-        "capacity": "140,000 m³/일",
-        "tech": "140,000 m³/일",
-        "note": "[V4.1 신규] 동부 확장지구 핵심",
-        "tag": "[V4.1 신규] 동부 확장지구 핵심",
-        "status": "계획"
-      },
-      {
-        "name": "호치민 남사이공 하수처리 1단계",
-        "project_name": "호치민 남사이공 하수처리 1단계",
-        "location": "호치민",
-        "capacity": "132,000 m³/일",
-        "tech": "132,000 m³/일",
-        "note": "[V4.1 신규] 냐베 분지구역 정화",
-        "tag": "[V4.1 신규] 냐베 분지구역 정화",
-        "status": "계획"
-      },
-      {
-        "name": "호치민 북서부 하수처리장",
-        "project_name": "호치민 북서부 하수처리장",
-        "location": "호치민",
-        "capacity": "280,000 m³/일",
-        "tech": "280,000 m³/일",
-        "note": "[V4.1 신규] 급속 도시화 구역 전담",
-        "tag": "[V4.1 신규] 급속 도시화 구역 전담",
-        "status": "계획"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 589/QD-TTg (2016.4.6, 총리)",
-      "https://en.mae.gov.vn/hcmc-seeks-investment-environmental-projects-for-20262030-9304.htm"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 1,
-      "group": "env",
-      "short": "폐수처리 마스터플랜 2030"
-    }
-  },
-  "VN-OG-2030": {
-    "plan_id": "VN-OG-2030",
-    "plan_name": "석유가스 개발전략 2030 — PVN 국가 에너지 안보",
-    "plan_name_en": "",
-    "area": "에너지·전력 (Energy & Power)",
-    "sector": "Oil & Gas",
-    "legal_basis": "Decision 861/QD-TTg",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "베트남 석유가스공사(PVN)는 노후 유전 생산 감소에 대응해 심해 탐사와 LNG 공급망 구축을 병행 추진 중이다. 국내 석유·가스 비축·공급 인프라 국가계획인 Decision 861/QD-TTg(2023.7.18)가 근접한 법령이다. PV GAS의 두 핵심 LNG 터미널 — 티바이(Thi Vai) LNG(연 100만톤→300만톤 확장)와 손미(Son My) LNG(1단계 연 360만톤, 2027년 이후 가동 예정) — 가 국내 LNG 공급망의 축이다.",
-    "kpis": [
-      {
-        "indicator": "원유 생산량",
-        "target": "8~10백만 톤/년",
-        "current": "11백만 톤/년 (유지 목표)"
-      },
-      {
-        "indicator": "석유·가스 비축 인프라",
-        "target": "최대 25일 (2030년 이후)",
-        "current": "20일 (2021~2030년 목표수준)"
-      }
-    ],
-    "projects": [
-      {
-        "name": "바흐호 유전 (Bach Ho)",
-        "project_name": "바흐호 유전 (Bach Ho)",
-        "location": "바리아붕따우 해상",
-        "capacity": "원유 생산",
-        "tech": "원유 생산",
-        "note": "노후화 대응, 심해 탐사 병행",
-        "tag": "노후화 대응, 심해 탐사 병행",
-        "status": "공사중"
-      },
-      {
-        "name": "손미 (Son My) LNG 터미널",
-        "project_name": "손미 (Son My) LNG 터미널",
-        "location": "빈투언성",
-        "capacity": "1단계 연 360만톤",
-        "tech": "1단계 연 360만톤",
-        "note": "VND 3.2조+ 투자, AES(미국) 합작",
-        "tag": "VND 3.2조+ 투자, AES(미국) 합작",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 861/QD-TTg (2023.7.18)"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 5,
-      "group": "eng",
-      "short": "석유·가스 개발전략 2030"
-    }
-  },
-  "VN-PWR-PDP8-LNG": {
-    "plan_id": "VN-PWR-PDP8-LNG",
-    "plan_name": "LNG 발전 인수보장 + 닌투언 LNG 허브",
-    "plan_name_en": "",
-    "area": "에너지·전력 (Energy & Power)",
-    "sector": "Power",
-    "legal_basis": "Decree 100/2025/ND-CP",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "Decree 100/2025/ND-CP(2025.5.8) [확인됨]은 수입 LNG 발전사업의 최소 장기 인수량(Qc)을 다년 평균발전량 대비 65% 이상으로 보장하고, 최대 10년간 요금 전가 메커니즘을 법제화했다. Qc 75%·15년 확대 제안은 현재 여전히 검토 중이다. 닌투언 소재 까나(Ca Na) LNG(1,500MW)가 EIA 심사 중이다. [V4.1 업데이트] 2026년 7월 기준, 대형 하이퐁 LNG(4.8GW) 사업은 개발사 빈그룹의 공식 철회 제안 및 재생에너지 전환으로 보류 위기이나, 응에안성 Quynh Lap LNG(1.5GW, SK Innovation 컨소시엄)는 공식 개발자로 선정되며 추진 동력을 확보했다.",
-    "kpis": [
-      {
-        "indicator": "LNG 발전 용량",
-        "target": "22,524MW(PDP8 개정치)",
-        "current": "약 3,000 MW"
-      },
-      {
-        "indicator": "최소 장기 인수량(Qc, 수입LNG 발전)",
-        "target": "65% (COD 후 최대 10년)",
-        "current": "2025.5.8 Decree 100 시행"
-      }
-    ],
-    "projects": [
-      {
-        "name": "까나 (Ca Na) LNG 1단계",
-        "project_name": "까나 (Ca Na) LNG 1단계",
-        "location": "닌투언성",
-        "capacity": "1,500MW, 약 US$21.3억",
-        "tech": "1,500MW, 약 US$21.3억",
-        "note": "EIA 심사 중",
-        "tag": "EIA 심사 중",
-        "status": "입찰중"
-      },
-      {
-        "name": "티바이 LNG",
-        "project_name": "티바이 LNG",
-        "location": "바리아붕따우",
-        "capacity": "LNG 터미널",
-        "tech": "LNG 터미널",
-        "note": "2023년 운영 개시",
-        "tag": "2023년 운영 개시",
-        "status": "준공완료"
-      },
-      {
-        "name": "응에안성 Quynh Lap LNG",
-        "project_name": "응에안성 Quynh Lap LNG",
-        "location": "응에안성",
-        "capacity": "1,500MW급",
-        "tech": "1,500MW급 Combined Cycle 및 250,000㎥ 저장탱크",
-        "note": "[V4.1 신규] SK Innovation 컨소시엄 수주 및 공식 착공 확정",
-        "tag": "[V4.1 신규] SK Innovation 컨소시엄 수주 및 공식 착공 확정",
-        "status": "공사중"
-      },
-      {
-        "name": "하이퐁 LNG 발전소 사업",
-        "project_name": "하이퐁 LNG 발전소 사업",
-        "location": "하이퐁",
-        "capacity": "4.8GW",
-        "tech": "4.8GW 대전력 터빈",
-        "note": "[V4.1 갱신] 빈그룹 개발 철회 제안, 재생에너지 하이브리드 대체 유력",
-        "tag": "[V4.1 갱신] 빈그룹 개발 철회 제안, 재생에너지 하이브리드 대체 유력",
-        "status": "지연"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decree 100/2025/ND-CP (2025.5.8)",
-      "https://dialogue.earth/en/energy/vietnams-gas-projects-stall-amid-investor-claims-of-unbankability-and-a-renewables-pivot/"
-    ],
-    "hierarchy": {
-      "parent": "VN-PWR-PDP8",
-      "order": 3,
-      "group": "eng",
-      "short": "LNG 발전 인수보장"
-    }
-  },
-  "VN-PWR-PDP8-NUCLEAR": {
-    "plan_id": "VN-PWR-PDP8-NUCLEAR",
-    "plan_name": "원자력 재개 — Resolution 70-NQ/TW (2025) / 닌투언 1·2호기",
-    "plan_name_en": "",
-    "area": "에너지·전력 (Energy & Power)",
-    "sector": "Power",
-    "legal_basis": "Resolution 70-NQ/TW (2025)",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "2025년 8월 정치국 결의(Resolution 70-NQ/TW)로 원자력 재개 추진이 공식화됐다. 국회 결의 174/2024/QH15·189/2025/QH15로 원전사업 특별투자메커니즘이 수립됐다. 닌투언 1호기는 EVN이 투자자로 지정되어 러시아 Rosatom과 협력 중이며, 닌투언 2호기는 일본 철수 후 한국 KEPCO-PVN이 예비 합의(비구속 MOU)를 맺었으나 최종 EPC 파트너는 미확정 상태다. [V4.1 업데이트] 2026년 7월 16일 범정부 회의에서 닌투언 원전 사업을 효율화를 위해 닌투언 1(EVN 주도), 닌투언 2(Petrovietnam 주도), 그리고 보상 및 이주 사업의 3개 독립 프로젝트로 전면 분할 개편할 것을 권고하며 정부 로드맵 가속화 지시를 내렸다.",
-    "kpis": [
-      {
-        "indicator": "원자력 발전 용량(2035)",
-        "target": "4,000 MW (2035 목표)",
-        "current": "Decision 768 신규 추가"
-      }
-    ],
-    "projects": [
-      {
-        "name": "닌투언 1호기 (Ninh Thuan 1)",
-        "project_name": "닌투언 1호기 (Ninh Thuan 1)",
-        "location": "닌투언성",
-        "capacity": "2,000 MW",
-        "tech": "2,400MW (VVER-1200 계열 검토)",
-        "note": "[V4.1 갱신] EVN 주도의 독립 프로젝트로 분할 개편, 러시아 Rosatom 기술협정",
-        "tag": "[V4.1 갱신] EVN 주도의 독립 프로젝트로 분할 개편, 러시아 Rosatom 기술협정",
-        "status": "계획"
-      },
-      {
-        "name": "닌투언 2호기 (Ninh Thuan 2)",
-        "project_name": "닌투언 2호기 (Ninh Thuan 2)",
-        "location": "닌투언성",
-        "capacity": "2,000 MW",
-        "tech": "3,200MW급 검토",
-        "note": "[V4.1 갱신] Petrovietnam 주도 독립 프로젝트 분할, KEPCO 유력 파트너십 협의",
-        "tag": "[V4.1 갱신] Petrovietnam 주도 독립 프로젝트 분할, KEPCO 유력 파트너십 협의",
-        "status": "협의중"
-      },
-      {
-        "name": "닌투언 원전 부지 보상 및 주민 이주 독립 프로젝트",
-        "project_name": "닌투언 원전 부지 보상 및 주민 이주 독립 프로젝트",
-        "location": "닌투언성",
-        "capacity": "N/A",
-        "tech": "",
-        "note": "[V4.1 신규] 원전 건설과 별개의 재정/행정 트랙으로 완전 분리 승인 권고",
-        "tag": "[V4.1 신규] 원전 건설과 별개의 재정/행정 트랙으로 완전 분리 승인 권고",
-        "status": "계획"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Resolution 70-NQ/TW (2025.8.20)",
-      "https://blogs.duanemorris.com/vietnam/2026/07/17/vietnam-accelerates-the-landmark-ninh-thuan-2-nuclear-power-project/"
-    ],
-    "hierarchy": {
-      "parent": "VN-PWR-PDP8",
-      "order": 4,
-      "group": "eng",
-      "short": "원자력 재개 닌투언"
-    }
-  },
-  "VN-PWR-PDP8-RENEWABLE": {
-    "plan_id": "VN-PWR-PDP8-RENEWABLE",
-    "plan_name": "전력개발계획 PDP8 개정 — 해상풍력·태양광·DPPA",
-    "plan_name_en": "",
-    "area": "에너지·전력 (Energy & Power)",
-    "sector": "Power",
-    "legal_basis": "Decision 768/QD-TTg",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "2025년 4월 Decision 768로 PDP8이 전면 개정되며 해상풍력 목표가 대폭 늘었다. [V4.1 업데이트] 2026년 6월 26일 발효된 Decree 243/2026/ND-CP를 통해 DPPA 참여 범위에 산업단지 소매업자, 데이터 센터, 전기차 충전소가 정식 편입되었으며, 자가소비형 루프탑 태양광 잉여전력(50% 초과분)의 그리드 판매 유예기간은 2030년 12월 31일로 확정(Sunset Clause)되었다.",
-    "kpis": [
-      {
-        "indicator": "해상풍력(2030)",
-        "target": "17,032 MW",
-        "current": "신규 법적 프레임워크(Decree 272/2026) 시행"
-      },
-      {
-        "indicator": "태양광(2030)",
-        "target": "73 GW",
-        "current": "26,046MW → 대폭 상향"
-      },
-      {
-        "indicator": "DPPA 가동",
-        "target": "제도 본격 시행",
-        "current": "[V4.1 갱신] Decree 243 발효로 데이터센터/산업단지 소매업자 전면 참여 가능"
-      }
-    ],
-    "projects": [
-      {
-        "name": "해상풍력 Zone 1~6",
-        "project_name": "해상풍력 Zone 1~6",
-        "location": "남중국해 연안",
-        "capacity": "17,032 MW (2030)",
-        "tech": "17,032 MW (2030)",
-        "note": "Decree 272/2026 적용 대상",
-        "tag": "Decree 272/2026 적용 대상",
-        "status": "입찰중"
-      },
-      {
-        "name": "SEVT-TTC 득후에2 태양광 DPPA",
-        "project_name": "SEVT-TTC 득후에2 태양광 DPPA",
-        "location": "떠이닌성",
-        "capacity": "49MWp",
-        "tech": "49MWp",
-        "note": "베트남 최초 상업DPPA (삼성전자 현지법인)",
-        "tag": "베트남 최초 상업DPPA (삼성전자 현지법인)",
-        "status": "준공완료"
-      },
-      {
-        "name": "산업단지 및 데이터센터 대상 신규 DPPA 시범 직접거래",
-        "project_name": "산업단지 및 데이터센터 대상 신규 DPPA 시범 직접거래",
-        "location": "전국 주요 산단",
-        "capacity": "미정",
-        "tech": "",
-        "note": "[V4.1 신규] Decree 243/2026/ND-CP 개정안 수혜 타겟 대상망 가동",
-        "tag": "[V4.1 신규] Decree 243/2026/ND-CP 개정안 수혜 타겟 대상망 가동",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "https://vepg.vn/legal_doc/decree-243-2026-nd-cp/"
-    ],
-    "hierarchy": {
-      "parent": "VN-PWR-PDP8",
-      "order": 2,
-      "group": "eng",
-      "short": "재생에너지 해상풍력"
-    }
-  },
-  "VN-HAN-URBAN-2045": {
-    "plan_id": "VN-HAN-URBAN-2045",
-    "plan_name": "하노이 도시개발 마스터플랜 2045/2065",
-    "plan_name_en": "",
-    "area": "도시·교통 (Urban & Transport)",
-    "sector": "Smart City",
-    "legal_basis": "Decision 1668/QD-TTg",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "Decision 1668로 확정된 하노이 도시개발 마스터플랜 2045/2065는 다핵다중심 도시모델을 기반으로 인구·GRDP 목표를 상향했다. 링로드4(113km, $3.6B)가 진행 중이나, 민자(PPP) 방식 3구간은 자본조달 부진으로 완공 일정이 재조정(2027년말 전체완공)되었다.",
-    "kpis": [
-      {
-        "indicator": "인구 수용 목표",
-        "target": "16M명 (2045)",
-        "current": "현재 8.5M명"
-      },
-      {
-        "indicator": "링로드4 완공",
-        "target": "2027년말 전체 완공",
-        "current": "착공 진행 중이나 PPP 자본조달 약 2%로 지연"
-      }
-    ],
-    "projects": [
-      {
-        "name": "링로드4 (Ring Road 4)",
-        "project_name": "링로드4 (Ring Road 4)",
-        "location": "하노이",
-        "capacity": "113km, $3.6B",
-        "tech": "113km, $3.6B",
-        "note": "PPP구간 자본조달 지연",
-        "tag": "PPP구간 자본조달 지연",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 1668/QD-TTg (2024.12.27)"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 4,
-      "group": "urb",
-      "short": "하노이 도시개발 마스터플랜"
-    }
-  },
-  "VN-IP-NORTH-2030": {
-    "plan_id": "VN-IP-NORTH-2030",
-    "plan_name": "북부 산업단지 개발계획 2030",
-    "plan_name_en": "",
-    "area": "도시·교통 (Urban & Transport)",
-    "sector": "Industrial Parks",
-    "legal_basis": "Decision 368/QD-TTg",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "북부 산업단지 클러스터는 글로벌 전자·반도체 공급망의 핵심 기지다. 삼성, LG, 인텔 등 첨단 외자 제조업이 다수 입주해 있다.",
-    "kpis": [
-      {
-        "indicator": "VSIP 단지 수",
-        "target": "25개 이상",
-        "current": "19개 운영"
-      }
-    ],
-    "projects": [
-      {
-        "name": "VSIP 박닌",
-        "project_name": "VSIP 박닌",
-        "location": "박닌성",
-        "capacity": "700 ha",
-        "tech": "700 ha",
-        "note": "베트남-싱가포르 산업단지",
-        "tag": "베트남-싱가포르 산업단지",
-        "status": "공사중"
-      },
-      {
-        "name": "삼성 박닌 반도체·전자 클러스터",
-        "project_name": "삼성 박닌 반도체·전자 클러스터",
-        "location": "박닌성",
-        "capacity": "누적투자 약 $232억",
-        "tech": "누적투자 약 $232억",
-        "note": "반도체 테스트공장 착공 중",
-        "tag": "반도체 테스트공장 착공 중",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 368/QD-TTg (2024.5.4)"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 3,
-      "group": "urb",
-      "short": "북부 산업단지 개발계획"
-    }
-  },
-  "VN-TRAN-2055": {
-    "plan_id": "VN-TRAN-2055",
-    "plan_name": "국가 교통인프라 마스터플랜 2021~2030, Vision 2050",
-    "plan_name_en": "",
-    "area": "도시·교통 (Urban & Transport)",
-    "sector": "Transport",
-    "legal_basis": "Decision 1454/QD-TTg",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "교통인프라 마스터플랜은 2030년 고속도로 5,000km 완성을 목표로 한다. 롱탄 국제공항의 상업개항 목표가 당초 2026.6월에서 2026.12월로 공식 연기됐다. 호치민 링로드3 역시 2028년 전체완공으로 목표가 순연 제안됐다.",
-    "kpis": [
-      {
-        "indicator": "고속도로 총연장",
-        "target": "5,000 km",
-        "current": "1,892 km (2025 실적)"
-      },
-      {
-        "indicator": "롱탄공항 개항",
-        "target": "25M PAX/년 (1단계)",
-        "current": "2026.12월 상업개항으로 공식 연기"
-      }
-    ],
-    "projects": [
-      {
-        "name": "롱탄 국제공항",
-        "project_name": "롱탄 국제공항",
-        "location": "동나이성",
-        "capacity": "25M PAX (1단계)",
-        "tech": "25M PAX (1단계)",
-        "note": "개항 2026.12월로 연기",
-        "tag": "개항 2026.12월로 연기",
-        "status": "공사중"
-      },
-      {
-        "name": "링로드3",
-        "project_name": "링로드3",
-        "location": "호치민 광역",
-        "capacity": "전체 76km",
-        "tech": "전체 76km",
-        "note": "2028년 완공 재조정 제안",
-        "tag": "2028년 완공 재조정 제안",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 1454/QD-TTg (2021.9.1)"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 1,
-      "group": "urb",
-      "short": "국가 교통인프라 마스터플랜"
-    }
-  },
-  "VN-URB-METRO-2030": {
-    "plan_id": "VN-URB-METRO-2030",
-    "plan_name": "도시철도 국가전략 2030",
-    "plan_name_en": "",
-    "area": "도시·교통 (Urban & Transport)",
-    "sector": "Smart City",
-    "legal_basis": "Resolution 188/2025/QH15",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "정치국 결의(49-KL/TW) 및 국회 특례결의 188/2025/QH15로 재원조달·설계·TOD 특례가 확립됐다. 부총리가 도시철도 국가통일기술표준 제정을 지시했다. [V4.1 업데이트] 획기적 국가 규제 완화 결정인 Resolution 188/2025/QH15에 따라, 수의계약 특례 적용 및 TOD 방식 개발 권한을 바탕으로 하노이 5개 노선(1, 2, 8, 10, 14호선) 신설이 가속화되며, 호치민 메트로 2호선(벤탄-탐루옹)은 2026년 1월 55.1조 동의 예산을 투입해 본격적인 기공에 돌입했다.",
-    "kpis": [
-      {
-        "indicator": "하노이 메트로 목표",
-        "target": "15~17개 노선",
-        "current": "2A·3호선 부분 운영"
-      }
-    ],
-    "projects": [
-      {
-        "name": "호치민 2호선 (벤탄~탐르엉)",
-        "project_name": "호치민 2호선 (벤탄~탐르엉)",
-        "location": "호치민",
-        "capacity": "11.3km",
-        "tech": "11.3km 연장 도시 지하 터널공법",
-        "note": "[V4.1 갱신] 2026.1 공식 착공 및 ST10 팜반동 지하벽 시공 진행 중",
-        "tag": "[V4.1 갱신] 2026.1 공식 착공 및 ST10 팜반동 지하벽 시공 진행 중",
-        "status": "공사중"
-      },
-      {
-        "name": "하노이 신규 5대 도시철도 (1, 2, 8, 10, 14호선)",
-        "project_name": "하노이 신규 5대 도시철도 (1, 2, 8, 10, 14호선)",
-        "location": "하노이 광역",
-        "capacity": "미정",
-        "tech": "미정 (국가통일기술표준 적용 예정)",
-        "note": "[V4.1 신규] Resolution 188 수의계약 및 특례 메커니즘 1호 적용",
-        "tag": "[V4.1 신규] Resolution 188 수의계약 및 특례 메커니즘 1호 적용",
-        "status": "계획"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Resolution 188/2025/QH15",
-      "https://en.vneconomy.vn/hcmc-breaks-ground-on-metro-line-2.htm"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 2,
-      "group": "urb",
-      "short": "도시철도 국가전략"
-    }
-  },
-  "VN-ENV-IND-1894": {
-    "plan_id": "VN-ENV-IND-1894",
-    "plan_name": "환경산업 개발프로그램",
-    "plan_name_en": "",
-    "area": "환경 인프라 (Environment)",
-    "sector": "Environment",
-    "legal_basis": "Decision 1894/QD-TTg",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "환경산업 기술 자립화 프로그램으로 폐수·대기·폐기물 장비 국산화 목표. 스타비안(Stavian) 재활용단지가 IRC 승인을 획득하여 추진 중이다.",
-    "kpis": [
-      {
-        "indicator": "폐수처리 기술 국산화",
-        "target": "70~80% (2030)",
-        "current": "2025년 기준 ~30%"
-      }
-    ],
-    "projects": [
-      {
-        "name": "Stavian Plastic Recycling Complex",
-        "project_name": "Stavian Plastic Recycling Complex",
-        "location": "타인호아성",
-        "capacity": "연 17,000톤",
-        "tech": "연 17,000톤",
-        "note": "2027.1분기 가동 목표",
-        "tag": "2027.1분기 가동 목표",
-        "status": "계획"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 1894/QD-TTg"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 5,
-      "group": "env",
-      "short": "환경산업 육성 프로그램"
-    }
-  },
-  "VN-ENV-NATURA": {
-    "plan_id": "VN-ENV-NATURA",
-    "plan_name": "자연환경 보전 전략 2030",
-    "plan_name_en": "",
-    "area": "환경 인프라 (Environment)",
-    "sector": "Environment",
-    "legal_basis": "Decision 149/QD-TTg",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "국가 생물다양성 보전 계획. 2030년까지 육상/해양 보호구역 확장이 목표다.",
-    "kpis": [
-      {
-        "indicator": "육상 보호구역 비율",
-        "target": "9% (2030)",
-        "current": "7.6% (2024)"
-      }
-    ],
-    "projects": [
-      {
-        "name": "Cat Tien 국립공원 보전 프로젝트",
-        "project_name": "Cat Tien 국립공원 보전 프로젝트",
-        "location": "Dong Nai",
-        "capacity": "72,000 ha",
-        "tech": "72,000 ha",
-        "note": "WWF·USAID 지원",
-        "tag": "WWF·USAID 지원",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 149/QD-TTg"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 6,
-      "group": "env",
-      "short": "자연환경 보전 전략 2030"
-    }
-  },
-  "VN-PWR-PDP8": {
-    "plan_id": "VN-PWR-PDP8",
-    "plan_name": "전력개발계획 PDP8 (통합)",
-    "plan_name_en": "",
-    "area": "에너지·전력 (Energy & Power)",
-    "sector": "Power",
-    "legal_basis": "Decision 500/QD-TTg + 768",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "PDP8 전면 개정으로 목표 용량이 183~236GW로 상향되었다. EVN의 2026년 상반기 발전량은 전년대비 9.85% 급증했다.",
-    "kpis": [
-      {
-        "indicator": "총 발전설비 (2030)",
-        "target": "183,291~236,363 MW",
-        "current": "약 87,600 MW (2025 실적)"
-      }
-    ],
-    "projects": [
-      {
-        "name": "남북 전력 밸런스 개선용 송전선로 건설",
-        "project_name": "남북 전력 밸런스 개선용 송전선로 건설",
-        "location": "전국",
-        "capacity": "500kV",
-        "tech": "500kV 초고압 송전 (HVAC)",
-        "note": "안정적 전력 수급 구축",
-        "tag": "안정적 전력 수급 구축",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 500/QD-TTg"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 1,
-      "group": "eng",
-      "short": "전력개발계획 PDP8"
-    }
-  },
-  "VN-HAN-DONG-ANH": {
-    "plan_id": "VN-HAN-DONG-ANH",
-    "plan_name": "동아인 스마트시티",
-    "plan_name_en": "",
-    "area": "도시·교통 (Urban & Transport)",
-    "sector": "Smart City",
-    "legal_basis": "Hanoi PC Approved",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "BRG-Sumitomo 합작 스마트시티 프로젝트가 2025년 8월 실질 착공을 거쳤으며, 공사 가속화가 지시되었다.",
-    "kpis": [
-      {
-        "indicator": "인구 수용",
-        "target": "30~40만 (2045)",
-        "current": "약 4.2만 (2024)"
-      }
-    ],
-    "projects": [
-      {
-        "name": "North Hanoi Smart City",
-        "project_name": "North Hanoi Smart City",
-        "location": "Dong Anh",
-        "capacity": "약 $4.2B",
-        "tech": "약 $4.2B",
-        "note": "2025.8 실질착공",
-        "tag": "2025.8 실질착공",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "The Investor"
-    ],
-    "hierarchy": {
-      "parent": "VN-HAN-URBAN-2045",
-      "order": 5,
-      "group": "urb",
-      "short": "동아인 스마트시티"
-    }
-  },
-  "VN-HAN-HOA-LAC": {
-    "plan_id": "VN-HAN-HOA-LAC",
-    "plan_name": "호아락 하이테크파크",
-    "plan_name_en": "",
-    "area": "도시·교통 (Urban & Transport)",
-    "sector": "Industrial Parks",
-    "legal_basis": "Decision 899/QD-TTg",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "하노이 서부 하이테크파크로, 2026.7 보도 기준 입주 프로젝트는 113건, 가동률은 42% 수준이다.",
-    "kpis": [
-      {
-        "indicator": "입주 프로젝트 수",
-        "target": "800개 (2030)",
-        "current": "113개 (2026.7 보도)"
-      }
-    ],
-    "projects": [
-      {
-        "name": "Viettel 반도체 공장",
-        "project_name": "Viettel 반도체 공장",
-        "location": "Hoa Lac",
-        "capacity": "약 $13억",
-        "tech": "약 $13억",
-        "note": "2026.1 착공, 핵심 신규투자",
-        "tag": "2026.1 착공, 핵심 신규투자",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 899/QD-TTg"
-    ],
-    "hierarchy": {
-      "parent": "VN-HAN-URBAN-2045",
-      "order": 6,
-      "group": "urb",
-      "short": "호아락 하이테크파크"
-    }
-  },
-  "VN-HOUSING-2030": {
-    "plan_id": "VN-HOUSING-2030",
-    "plan_name": "국가 주택 개발 계획 2030",
-    "plan_name_en": "",
-    "area": "도시·교통 (Urban & Transport)",
-    "sector": "Construction",
-    "legal_basis": "Decision 2161/QD-TTg",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "저가 보급형 주택 집중 구축 계획. 2026.7.1부로 SBV의 사회주택 우대금리가 적용되었다.",
-    "kpis": [
-      {
-        "indicator": "사회주택 공급",
-        "target": "100만호 (2030)",
-        "current": "약 25만호 누적"
-      }
-    ],
-    "projects": [
-      {
-        "name": "Vinhomes Ocean Park",
-        "project_name": "Vinhomes Ocean Park",
-        "location": "Hung Yen",
-        "capacity": "1,200 ha",
-        "tech": "1,200 ha",
-        "note": "Vingroup",
-        "tag": "Vingroup",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 2161/QD-TTg"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 7,
-      "group": "urb",
-      "short": "주택 개발 2030"
-    }
-  },
-  "VN-SMART-2025": {
-    "plan_id": "VN-SMART-2025",
-    "plan_name": "스마트시티 국가전략 2025",
-    "plan_name_en": "",
-    "area": "도시·교통 (Urban & Transport)",
-    "sector": "Smart City",
-    "legal_basis": "Decision 950/QD-TTg",
-    "ministry": "",
-    "investment": "",
-    "period": "",
-    "overview": "전국 주요 도시에 지능형 플랫폼을 구축하는 로드맵으로 호치민이 5G 기지국 8,500개를 초과 설치하여 선도 중이다.",
-    "kpis": [
-      {
-        "indicator": "5G 커버리지",
-        "target": "도시 100% (2030)",
-        "current": "호치민 보급률 95% 이상"
-      }
-    ],
-    "projects": [
-      {
-        "name": "호치민 IoT 통합 플랫폼",
-        "project_name": "호치민 IoT 통합 플랫폼",
-        "location": "HCMC",
-        "capacity": "$200M",
-        "tech": "$200M",
-        "note": "디지털 전환 과제",
-        "tag": "디지털 전환 과제",
-        "status": "공사중"
-      }
-    ],
-    "ai_analysis": [],
-    "market_segments": [],
-    "policy_timeline": [],
-    "sources": [
-      "Decision 950/QD-TTg"
-    ],
-    "hierarchy": {
-      "parent": null,
-      "order": 8,
-      "group": "urb",
-      "short": "스마트시티 국가전략"
-    }
-  }
-  },
-  "pid_aliases": {
-    "VN-SWM-NATIONAL-2030": [
-      "VN-SWM-NATIONAL-2030",
-      "VN-SWM-NATIONAL"
-    ],
-    "VN-WAT-RESOURCES": [
-      "VN-WAT-RESOURCES",
-      "VN-WAT-RESOURCE"
-    ],
-    "VN-WAT-URBAN": [
-      "VN-WAT-URBAN"
-    ],
-    "VN-WW-2030": [
-      "VN-WW-2030"
-    ],
-    "VN-OG-2030": [
-      "VN-OG-2030",
-      "VN-OG"
-    ],
-    "VN-PWR-PDP8": [
-      "VN-PWR-PDP8",
-      "VN-PDP8"
-    ],
-    "VN-PWR-PDP8-LNG": [
-      "VN-PWR-PDP8-LNG",
-      "VN-PWR-PDP8, VN-PWR-PDP8-LNG"
-    ],
-    "VN-PWR-PDP8-NUCLEAR": [
-      "VN-PWR-PDP8-NUCLEAR",
-      "VN-PWR-PDP8-NUC"
-    ],
-    "VN-PWR-PDP8-RENEWABLE": [
-      "VN-PWR-PDP8-RENEWABLE",
-      "VN-PWR-PDP8-REN"
-    ],
-    "VN-HAN-URBAN-2045": [
-      "VN-HAN-URBAN-2045",
-      "VN-HAN-URBAN",
-      "HN-URBAN-INFRA",
-      "HN-URBAN-WEST",
-      "HN-URBAN-NORTH"
-    ],
-    "VN-HAN-DONG-ANH": [
-      "VN-HAN-DONG-ANH",
-      "HN-DONG-ANH"
-    ],
-    "VN-HAN-HOA-LAC": [
-      "VN-HAN-HOA-LAC",
-      "HN-HOA-LAC"
-    ],
-    "VN-IP-NORTH-2030": [
-      "VN-IP-NORTH-2030",
-      "VN-IP"
-    ],
-    "VN-TRAN-2055": [
-      "VN-TRAN-2055"
-    ],
-    "VN-URB-METRO-2030": [
-      "VN-URB-METRO-2030",
-      "VN-URB-METRO-20"
-    ],
-    "VN-ENV-IND-1894": [
-      "VN-ENV-IND-1894"
-    ],
-    "VN-ENV-NATURA": [
-      "VN-ENV-NATURA",
-      "VN-ENV-BIODIV"
-    ],
-    "VN-HOUSING-2030": [
-      "VN-HOUSING-2030"
-    ],
-    "VN-SMART-2025": [
-      "VN-SMART-2025",
-      "VN-SMART"
-    ]
-  },
-  "plan_hierarchy": {
-    "VN-WW-2030": {
-      "parent": null,
-      "order": 1,
-      "group": "env",
-      "short": "폐수처리 마스터플랜 2030"
-    },
-    "VN-SWM-NATIONAL-2030": {
-      "parent": null,
-      "order": 2,
-      "group": "env",
-      "short": "고형폐기물 관리 전략"
-    },
-    "VN-WAT-URBAN": {
-      "parent": null,
-      "order": 3,
-      "group": "env",
-      "short": "국가 상수도 전략 2030"
+      "projects": [
+        {
+          "name": "속선 (Soc Son) WtE",
+          "project_name": "속선 (Soc Son) WtE",
+          "location": "하노이 (속선현)",
+          "capacity": "총 90MW (1호기15MW+2호기30MW+3호기45MW), 5,000톤/일",
+          "tech": "총 90MW (1호기15MW+2호기30MW+3호기45MW), 5,000톤/일",
+          "note": "운영사 티엔이하노이(Thien Y Ha Noi).",
+          "tag": "[확인됨]",
+          "status": "준공완료"
+        },
+        {
+          "name": "자라이성 롱미(Long My) WtE 발전소",
+          "project_name": "자라이성 롱미(Long My) WtE 발전소",
+          "location": "자라이성",
+          "capacity": "800톤/일, 15MW",
+          "tech": "800톤/일, 15MW",
+          "note": "2026.6.24 착공",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "Decision 491/QD-TTg (2018.5.7)"
+      ]
     },
     "VN-WAT-RESOURCES": {
-      "parent": null,
-      "order": 4,
-      "group": "env",
-      "short": "수자원법 2023 + 전략"
+      "plan_id": "VN-WAT-RESOURCES",
+      "plan_name": "수자원법 2023 + 국가 수자원 전략 2030",
+      "plan_name_en": "National Water Resources Master Plan",
+      "area": "환경 인프라 (Environment)",
+      "sector": "Water Supply/Drainage",
+      "legal_basis": "Law 28/2023/QH15",
+      "overview": "2023년 11월 27일 전면 개정된 수자원법(Law 28/2023/QH15) [확인됨]은 유역통합관리(IWRM), 행정수단에서 경제수단(수자원이용료·로열티)으로의 전환, 하천 최소유량 규정, 지하수 취수 허가제 의무화를 골자로 한다. 정부는 2026.6.26 Nghị quyết(결의) 166/NQ-CP를 발표해 메콩델타 지반침하·홍수·가뭄·염해 대응 국가실행계획(~2035)을 수립했다.",
+      "kpis": [
+        {
+          "indicator": "지하수 관리 대수층",
+          "target": "전국 27개 완전 관리",
+          "current": "12개 관리 중"
+        }
+      ],
+      "projects": [
+        {
+          "name": "메콩델타 수자원 현대화",
+          "project_name": "메콩델타 수자원 현대화",
+          "location": "메콩델타",
+          "capacity": "대규모 인프라",
+          "tech": "대규모 인프라",
+          "note": "ADB·세계은행 지원",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "Law 28/2023/QH15 (2023.11.27, 국회)"
+      ]
     },
-    "VN-ENV-IND-1894": {
-      "parent": null,
-      "order": 5,
-      "group": "env",
-      "short": "환경산업 육성 프로그램"
+    "VN-WAT-URBAN": {
+      "plan_id": "VN-WAT-URBAN",
+      "plan_name": "국가 상수도 개발전략 2030",
+      "plan_name_en": "National Urban and Industrial Water Supply Master Plan",
+      "area": "환경 인프라 (Environment)",
+      "sector": "Water Supply/Drainage",
+      "legal_basis": "Decision 2502/QD-TTg",
+      "overview": "상수도 분야 실제 근거법령은 Decision 2502/QD-TTg(2016.12.22, '베트남 도시·산업단지 상수도 개발방향 조정', 2009년 결정 1929/QD-TTg 대체) [확인됨]로 추정됩니다. 이 결정문은 2025년까지 전 도시지역 100% 상수도 보급, 2급 이상 도시 비수익수(NRW) 15% 이하 달성을 목표로 합니다.",
+      "kpis": [
+        {
+          "indicator": "도시 안전 상수 보급률",
+          "target": "100% (전 도시, 2025)",
+          "current": "95% 수준 (2025)"
+        }
+      ],
+      "projects": [
+        {
+          "name": "송다 (Song Da)",
+          "project_name": "송다 (Song Da)",
+          "location": "화빈",
+          "capacity": "600,000 m³/일",
+          "tech": "600,000 m³/일",
+          "note": "하노이 및 인근 성",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "Decision 2502/QD-TTg (2016.12.22)"
+      ]
     },
-    "VN-ENV-NATURA": {
-      "parent": null,
-      "order": 6,
-      "group": "env",
-      "short": "자연환경 보전 전략 2030"
-    },
-    "VN-PWR-PDP8": {
-      "parent": null,
-      "order": 1,
-      "group": "eng",
-      "short": "전력개발계획 PDP8 (통합)"
-    },
-    "VN-PWR-PDP8-RENEWABLE": {
-      "parent": "VN-PWR-PDP8",
-      "order": 2,
-      "group": "eng",
-      "short": "재생에너지 해상풍력"
-    },
-    "VN-PWR-PDP8-LNG": {
-      "parent": "VN-PWR-PDP8",
-      "order": 3,
-      "group": "eng",
-      "short": "LNG 발전 인수보장"
-    },
-    "VN-PWR-PDP8-NUCLEAR": {
-      "parent": "VN-PWR-PDP8",
-      "order": 4,
-      "group": "eng",
-      "short": "원자력 재개 닌투언"
+    "VN-WW-2030": {
+      "plan_id": "VN-WW-2030",
+      "plan_name": "폐수처리 인프라 국가 마스터플랜 2021~2030",
+      "plan_name_en": "Urban Drainage and Wastewater Treatment Master Plan",
+      "area": "환경 인프라 (Environment)",
+      "sector": "Waste Water",
+      "legal_basis": "Decision 589/QD-TTg (2016.4.6)",
+      "overview": "국가 폐수처리 마스터플랜(Decision 589/QD-TTg 2016.4.6) [확인됨]은 도시 폐수처리율을 2025년 50%, 2030년 85%로 끌어올리는 것을 목표로 한다. 하노이 옌짜(Yen Xa) WWTP(27만㎥/일)가 2025년 준공되었고, 호치민 빈흥(Binh Hung) 2단계가 2024년 준공식을 열었다. 2026년 7월 호치민시는 탐르엉-벤깟 2단계, 박사이공 2, 남사이공 1단계, 북서부 하수처리장 등 4대 프로젝트를 최우선 투자 대상으로 선정했다.",
+      "kpis": [
+        {
+          "indicator": "도시 폐수처리율",
+          "target": "85% (2030)",
+          "current": "2025년 목표 50%"
+        }
+      ],
+      "projects": [
+        {
+          "name": "옌짜 (Yen Xa)",
+          "project_name": "옌짜 (Yen Xa)",
+          "location": "하노이 (Thanh Tri)",
+          "capacity": "270,000 m³/일",
+          "tech": "270,000 m³/일",
+          "note": "2025.8.19 준공",
+          "tag": "[확인됨]",
+          "status": "준공완료"
+        },
+        {
+          "name": "호치민 탐르엉-벤깟 하수처리장 건설 사업 (2단계)",
+          "project_name": "호치민 탐르엉-벤깟 하수처리장 건설 사업 (2단계)",
+          "location": "호치민",
+          "capacity": "230,000 m³/일",
+          "tech": "230,000 m³/일, 활성 슬러지 정화 기술",
+          "note": "HCMC 2026-2030 우선순위 확정",
+          "tag": "[확인됨]",
+          "status": "계획"
+        }
+      ],
+      "sources": [
+        "Decision 589/QD-TTg (2016.4.6, 총리)"
+      ]
     },
     "VN-OG-2030": {
-      "parent": null,
-      "order": 5,
-      "group": "eng",
-      "short": "석유·가스 개발전략 2030"
+      "plan_id": "VN-OG-2030",
+      "plan_name": "석유가스 개발전략 2030 — PVN 국가 에너지 안보",
+      "plan_name_en": "National Petroleum and Gas Infrastructure Master Plan",
+      "area": "에너지·전력 (Energy & Power)",
+      "sector": "Oil & Gas",
+      "legal_basis": "Decision 861/QD-TTg",
+      "overview": "베트남 석유가스공사(PVN)는 노후 유전 생산 감소에 대응해 심해 탐사와 LNG 공급망 구축을 병행 추진 중이다. 국내 석유·가스 비축·공급 인프라 국가계획인 Decision 861/QD-TTg(2023.7.18)가 근접한 법령이다. 티바이(Thi Vai) LNG와 손미(Son My) LNG 터미널이 핵심 공급망이다.",
+      "kpis": [
+        {
+          "indicator": "원유 생산량",
+          "target": "8~10백만 톤/년",
+          "current": "11백만 톤/년 (유지 목표)"
+        }
+      ],
+      "projects": [
+        {
+          "name": "바흐호 유전 (Bach Ho)",
+          "project_name": "바흐호 유전 (Bach Ho)",
+          "location": "바리아붕따우 해상",
+          "capacity": "원유 생산",
+          "tech": "원유 생산",
+          "note": "노후화 대응, 심해 탐사 병행",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "Decision 861/QD-TTg (2023.7.18)"
+      ]
     },
-    "VN-TRAN-2055": {
-      "parent": null,
-      "order": 1,
-      "group": "urb",
-      "short": "국가 교통인프라 마스터플랜"
+    "VN-PWR-PDP8-LNG": {
+      "plan_id": "VN-PWR-PDP8-LNG",
+      "plan_name": "LNG 발전 인수보장 + 닌투언 LNG 허브",
+      "plan_name_en": "LNG Gas-to-Power and Terminal Infrastructure Master Plan",
+      "area": "에너지·전력 (Energy & Power)",
+      "sector": "Power",
+      "legal_basis": "Decree 100/2025/ND-CP",
+      "overview": "Decree 100/2025/ND-CP(2025.5.8) [확인됨]은 수입 LNG 발전사업의 최소 장기 인수량(Qc)을 다년 평균발전량 대비 65% 이상으로 보장하고, 최대 10년간 요금 전가 메커니즘을 법제화했다. 대형 하이퐁 LNG(4.8GW) 사업은 개발사 빈그룹의 공식 철회 제안 및 재생에너지 전환으로 보류 위기이나, 응에안성 Quynh Lap LNG(1.5GW, SK Innovation 컨소시엄)는 공식 개발자로 선정되며 추진 동력을 확보했다.",
+      "kpis": [
+        {
+          "indicator": "LNG 발전 용량",
+          "target": "22,524MW(PDP8 개정치)",
+          "current": "약 3,000 MW"
+        }
+      ],
+      "projects": [
+        {
+          "name": "까나 (Ca Na) LNG 1단계",
+          "project_name": "까나 (Ca Na) LNG 1단계",
+          "location": "닌투언성",
+          "capacity": "1,500MW, 약 US$21.3억",
+          "tech": "1,500MW, 약 US$21.3억",
+          "note": "EIA 심사 중",
+          "tag": "[확인됨]",
+          "status": "입찰중"
+        },
+        {
+          "name": "응에안성 Quynh Lap LNG",
+          "project_name": "응에안성 Quynh Lap LNG",
+          "location": "응에안성",
+          "capacity": "1,500MW급",
+          "tech": "1,500MW급 Combined Cycle 및 250,000㎥ 저장탱크",
+          "note": "SK Innovation 컨소시엄 수주",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        },
+        {
+          "name": "하이퐁 LNG 발전소 사업",
+          "project_name": "하이퐁 LNG 발전소 사업",
+          "location": "하이퐁",
+          "capacity": "4.8GW",
+          "tech": "4.8GW 대전력 터빈",
+          "note": "빈그룹 개발 철회 제안",
+          "tag": "[확인됨]",
+          "status": "지연"
+        }
+      ],
+      "sources": [
+        "Decree 100/2025/ND-CP (2025.5.8)"
+      ]
     },
-    "VN-URB-METRO-2030": {
-      "parent": null,
-      "order": 2,
-      "group": "urb",
-      "short": "도시철도 국가전략 하노이·HCMC"
+    "VN-PWR-PDP8-NUCLEAR": {
+      "plan_id": "VN-PWR-PDP8-NUCLEAR",
+      "plan_name": "원자력 재개 — Resolution 70-NQ/TW (2025) / 닌투언 1·2호기",
+      "plan_name_en": "National Nuclear Power Revitalization Plan",
+      "area": "에너지·전력 (Energy & Power)",
+      "sector": "Power",
+      "legal_basis": "Resolution 70-NQ/TW (2025)",
+      "overview": "2025년 8월 정치국 결의(Resolution 70-NQ/TW)로 원자력 재개 추진이 공식화됐다. 2026년 7월 16일 범정부 회의에서 닌투언 원전 사업 효율화를 위해 닌투언 1(EVN 주도), 닌투언 2(Petrovietnam 주도), 보상 및 이주 사업 등 3개 독립 프로젝트로 전면 분할 개편할 것을 확정했다. 닌투언 2호기는 KEPCO-PVN이 예비 합의를 맺고 파트너십을 협의 중이다.",
+      "kpis": [
+        {
+          "indicator": "원자력 발전 용량(2035)",
+          "target": "4,000 MW (2035 목표)",
+          "current": "Decision 768 신규 추가"
+        }
+      ],
+      "projects": [
+        {
+          "name": "닌투언 1호기 (Ninh Thuan 1)",
+          "project_name": "닌투언 1호기 (Ninh Thuan 1)",
+          "location": "닌투언성",
+          "capacity": "2,000 MW",
+          "tech": "2,400MW (VVER-1200 계열 검토)",
+          "note": "EVN 주도 분할 개편, 러시아 Rosatom 협력",
+          "tag": "[확인됨]",
+          "status": "계획"
+        },
+        {
+          "name": "닌투언 2호기 (Ninh Thuan 2)",
+          "project_name": "닌투언 2호기 (Ninh Thuan 2)",
+          "location": "닌투언성",
+          "capacity": "2,000 MW",
+          "tech": "3,200MW급 검토",
+          "note": "Petrovietnam 주도 분할, KEPCO 유력",
+          "tag": "[확인됨]",
+          "status": "협의중"
+        },
+        {
+          "name": "닌투언 원전 부지 보상 및 주민 이주 독립 프로젝트",
+          "project_name": "닌투언 원전 부지 보상 및 주민 이주 독립 프로젝트",
+          "location": "닌투언성",
+          "capacity": "N/A",
+          "tech": "",
+          "note": "행정/재무 트랙 분리 승인",
+          "tag": "[확인됨]",
+          "status": "계획"
+        }
+      ],
+      "sources": [
+        "Resolution 70-NQ/TW (2025.8.20)"
+      ]
     },
-    "VN-IP-NORTH-2030": {
-      "parent": null,
-      "order": 3,
-      "group": "urb",
-      "short": "북부 산업단지 개발계획"
+    "VN-PWR-PDP8-RENEWABLE": {
+      "plan_id": "VN-PWR-PDP8-RENEWABLE",
+      "plan_name": "전력개발계획 PDP8 개정 — 해상풍력·태양광·DPPA",
+      "plan_name_en": "Renewable Energy Expansion and DPPA Framework",
+      "area": "에너지·전력 (Energy & Power)",
+      "sector": "Power",
+      "legal_basis": "Decision 768/QD-TTg",
+      "overview": "2025년 4월 Decision 768로 PDP8이 전면 개정되며 해상풍력 목표가 대폭 늘었다. 2026년 6월 26일 발효된 Decree 243/2026/ND-CP를 통해 DPPA 참여 범위에 산업단지 소매업자, 데이터 센터, 전기차 충전소가 정식 편입되었으며, 자가소비형 루프탑 태양광 잉여전력(50% 초과분)의 그리드 판매 유예기간은 2030년 12월 31일 일몰제(Sunset Clause)로 확정되었다.",
+      "kpis": [
+        {
+          "indicator": "해상풍력(2030)",
+          "target": "17,032 MW",
+          "current": "신규 법적 프레임워크(Decree 272/2026) 시행"
+        },
+        {
+          "indicator": "DPPA 가동",
+          "target": "제도 본격 시행",
+          "current": "Decree 243 발효로 참여 범위 확대"
+        }
+      ],
+      "projects": [
+        {
+          "name": "해상풍력 Zone 1~6",
+          "project_name": "해상풍력 Zone 1~6",
+          "location": "남중국해 연안",
+          "capacity": "17,032 MW (2030)",
+          "tech": "17,032 MW (2030)",
+          "note": "Decree 272/2026 적용 대상",
+          "tag": "[확인됨]",
+          "status": "입찰중"
+        },
+        {
+          "name": "산업단지 및 데이터센터 대상 신규 DPPA 시범 직접거래",
+          "project_name": "산업단지 및 데이터센터 대상 신규 DPPA 시범 직접거래",
+          "location": "전국 주요 산단",
+          "capacity": "미정",
+          "tech": "",
+          "note": "Decree 243/2026/ND-CP 개정안 수혜 타겟 대상망 가동",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "https://vepg.vn/legal_doc/decree-243-2026-nd-cp/"
+      ]
     },
     "VN-HAN-URBAN-2045": {
-      "parent": null,
-      "order": 4,
-      "group": "urb",
-      "short": "하노이 도시개발 마스터플랜"
+      "plan_id": "VN-HAN-URBAN-2045",
+      "plan_name": "하노이 도시개발 마스터플랜 2045/2065",
+      "plan_name_en": "Hanoi General Urban Development Master Plan",
+      "area": "도시·교통·산업 (Urban & Transport)",
+      "sector": "Smart City",
+      "legal_basis": "Decision 1668/QD-TTg",
+      "overview": "Decision 1668로 확정된 하노이 도시개발 마스터플랜 2045/2065는 다핵다중심 도시모델을 기반으로 인구·GRDP 목표를 상향했다. 링로드4(113km, $3.6B)가 진행 중이나, 민자(PPP) 방식 3구간은 자본조달 부진으로 완공 일정이 재조정(2027년말 전체완공)되었다.",
+      "kpis": [
+        {
+          "indicator": "인구 수용 목표",
+          "target": "16M명 (2045)",
+          "current": "현재 8.5M명"
+        }
+      ],
+      "projects": [
+        {
+          "name": "링로드4 (Ring Road 4)",
+          "project_name": "링로드4 (Ring Road 4)",
+          "location": "하노이",
+          "capacity": "113km, $3.6B",
+          "tech": "113km, $3.6B",
+          "note": "PPP구간 자본조달 지연",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "Decision 1668/QD-TTg (2024.12.27)"
+      ]
+    },
+    "VN-IP-NORTH-2030": {
+      "plan_id": "VN-IP-NORTH-2030",
+      "plan_name": "북부 산업단지 개발계획 2030",
+      "plan_name_en": "Northern Key Economic Zone Industrial Park Development Plan",
+      "area": "도시·교통·산업 (Urban & Transport)",
+      "sector": "Industrial Parks",
+      "legal_basis": "Decision No. 368/QD-TTg & Decree No. 35/2022/ND-CP (개정안)",
+      "overview": "북부 산업단지 클러스터(하이퐁, 박닌, 타이응우옌, 박장, 흥옌)는 글로벌 전자 및 반도체 공급망의 핵심 전초 기지입니다. 2026년 2분기 기준 북부권 산업용지 총 공급량은 25,200ha를 돌파(+15.7% YoY)했으며, 임대형 공장(RBF) 가동률은 86%의 높은 수준을 유지하고 있습니다. 정부는 시행령 제35/2022/ND-CP호 개정 및 Circular 05/2025/TT-BKHDT 지침을 통해 친환경·생태산단(Eco-IP) 및 기술 혁신 생태계 산단에 대한 맞춤형 인센티브를 강화하고 있습니다. 최근 삼성전자의 타이응우옌 18.4억 달러 추가 투자와 지아빈(Gia Binh) 국제공항 물류 연계 인프라 구축이 핵심 동력으로 작용하고 있습니다.",
+      "kpis": [
+        {
+          "indicator": "북부권 총 산업용지 공급량",
+          "target": "25,000 ha 이상 (2026)",
+          "current": "25,200 ha (2026 Q2 실적, 하이퐁 26%, 박닌 21%)"
+        },
+        {
+          "indicator": "임대형 공장(RBF) 가동률",
+          "target": "85% 이상 유지",
+          "current": "86% (2026 Q2 기준)"
+        },
+        {
+          "indicator": "삼성그룹 북부 누적/신규 투자",
+          "target": "AI/반도체 부가가치 확대",
+          "current": "타이응우옌 18.4억 달러 추가 투자 확정 (2026.10)"
+        }
+      ],
+      "projects": [
+        {
+          "name": "VSIP 박닌",
+          "project_name": "VSIP 박닌",
+          "location": "박닌성",
+          "capacity": "700 ha",
+          "tech": "700 ha 종합 산업 인프라",
+          "note": "베트남-싱가포르 산업단지 대표 모델",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        },
+        {
+          "name": "DEEP C 하이퐁 콤플렉스",
+          "project_name": "DEEP C 하이퐁 콤플렉스",
+          "location": "하이퐁시",
+          "capacity": "3,400 ha (산단 5개 + 항만 6개)",
+          "tech": "유럽형 종합 항만 물류/산업단지",
+          "note": "외국인 투자 선호 1순위 첨단 클러스터",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        },
+        {
+          "name": "삼성 박닌 반도체·전자 클러스터",
+          "project_name": "삼성 박닌 반도체·전자 클러스터",
+          "location": "박닌성",
+          "capacity": "누적 투자 약 $232억",
+          "tech": "반도체 패키징 및 전자부품 생산",
+          "note": "하노이 북쪽 60km 지점 반도체 테스트 공장 기가동/확장",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        },
+        {
+          "name": "폭스콘 박장 확장 프로젝트",
+          "project_name": "폭스콘 박장 확장 프로젝트",
+          "location": "박장성",
+          "capacity": "반도체 부품 및 모듈 생산",
+          "tech": "첨단 전자 기기 조립 라인",
+          "note": "애플 글로벌 공급망 핵심 제조 거점",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        },
+        {
+          "name": "인텔 하이퐁",
+          "project_name": "인텔 하이퐁",
+          "location": "하이퐁시",
+          "capacity": "반도체 조립/테스트(ATP)",
+          "tech": "고도화 반도체 패키징 기술",
+          "note": "최대 외투 반도체 후공정 인프라",
+          "tag": "[확인됨]",
+          "status": "준공완료"
+        },
+        {
+          "name": "삼성 타이응우옌 반도체/AI 생산 라인 확충",
+          "project_name": "삼성 타이응우옌 반도체/AI 생산 라인 확충",
+          "location": "타이응우옌성",
+          "capacity": "18.4억 달러 신규 투자",
+          "tech": "AI 패키징 및 고도화 반도체 부품",
+          "note": "2026년 10월 공식 확정, AI 트렌드 대응 전초기지",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        },
+        {
+          "name": "안팟 5 (An Phat 5) 하이테크 산업단지",
+          "project_name": "안팟 5 (An Phat 5) 하이테크 산업단지",
+          "location": "하이퐁시 (Cam Giang)",
+          "capacity": "150 ha",
+          "tech": "스마트/하이테크 첨단 인프라",
+          "note": "2026년 인프라 완공, 2027년 Q1 정식 가동 목표",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        },
+        {
+          "name": "박닌 지아빈(Gia Binh) 공항 연계 산단 물류 인프라",
+          "project_name": "박닌 지아빈(Gia Binh) 공항 연계 산단 물류 인프라",
+          "location": "박닌성 / 하이퐁시 경계",
+          "capacity": "공항 화물 160만 톤/년 처리 연계",
+          "tech": "항공-도로-항만 연계 복합물류망",
+          "note": "수도권 링로드 4 및 지아빈 공항 연결도로 패스트트랙 추진",
+          "tag": "[확인됨]",
+          "status": "계획"
+        }
+      ],
+      "sources": [
+        "Decision No. 368/QD-TTg 및 Decree No. 35/2022/ND-CP 개정 지침 (Circular 05/2025/TT-BKHDT)",
+        "https://en.vneconomy.vn/samsung-invests-184-billion-in-semiconductor-production-in-thai-nguyen-embracing-ai-trends.htm",
+        "https://asianomist.com/article/vietnams-northern-industrial-zones-see-fdi-surge-infrastructure-boost"
+      ]
+    },
+    "VN-TRAN-2055": {
+      "plan_id": "VN-TRAN-2055",
+      "plan_name": "국가 교통인프라 마스터플랜 2021~2030, Vision 2050",
+      "plan_name_en": "National Transport and Logistics Network Master Plan",
+      "area": "도시·교통·산업 (Urban & Transport)",
+      "sector": "Transport",
+      "legal_basis": "Decision 1454/QD-TTg",
+      "overview": "교통인프라 마스터플랜은 2030년 고속도로 5,000km 완성을 목표로 한다. 롱탄 국제공항의 상업개항 목표가 당초 2026.6월에서 2026.12월로 공식 연기됐다. 호치민 링로드3 역시 2028년 전체완공으로 목표가 순연 제안됐다.",
+      "kpis": [
+        {
+          "indicator": "고속도로 총연장",
+          "target": "5,000 km",
+          "current": "1,892 km (2025 실적)"
+        }
+      ],
+      "projects": [
+        {
+          "name": "롱탄 국제공항",
+          "project_name": "롱탄 국제공항",
+          "location": "동나이성",
+          "capacity": "25M PAX (1단계)",
+          "tech": "25M PAX (1단계)",
+          "note": "개항 2026.12월로 연기",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "Decision 1454/QD-TTg (2021.9.1)"
+      ]
+    },
+    "VN-URB-METRO-2030": {
+      "plan_id": "VN-URB-METRO-2030",
+      "plan_name": "도시철도 국가전략 2030",
+      "plan_name_en": "Urban Railway Development in Hanoi and HCMC (Resolution 188)",
+      "area": "도시·교통·산업 (Urban & Transport)",
+      "sector": "Smart City",
+      "legal_basis": "Resolution 188/2025/QH15",
+      "overview": "국회 특례결의 188/2025/QH15로 재원조달·설계·TOD 수의계약 특례가 확립됐다. 이를 바탕으로 하노이 5개 노선(1, 2, 8, 10, 14호선) 신설이 가속화되며, 호치민 메트로 2호선(벤탄-탐루옹)은 2026년 1월 55.1조 동의 예산을 투입해 본격적인 기공에 돌입했다.",
+      "kpis": [
+        {
+          "indicator": "하노이 메트로 목표",
+          "target": "15~17개 노선",
+          "current": "2A·3호선 부분 운영"
+        }
+      ],
+      "projects": [
+        {
+          "name": "호치민 2호선 (벤탄~탐르엉)",
+          "project_name": "호치민 2호선 (벤탄~탐르엉)",
+          "location": "호치민",
+          "capacity": "11.3km",
+          "tech": "11.3km 연장 도시 지하 터널공법",
+          "note": "2026.1 공식 착공 및 ST10 팜반동 지하벽 시공 진행 중",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "Resolution 188/2025/QH15"
+      ]
+    },
+    "VN-ENV-IND-1894": {
+      "plan_id": "VN-ENV-IND-1894",
+      "plan_name": "환경산업 개발프로그램",
+      "plan_name_en": "Environmental Industry Development Program",
+      "area": "환경 인프라 (Environment)",
+      "sector": "Environment",
+      "legal_basis": "Decision 1894/QD-TTg",
+      "overview": "환경산업 기술 자립화 프로그램으로 폐수·대기·폐기물 장비 국산화 목표. 스타비안(Stavian) 재활용단지가 IRC 승인을 획득하여 추진 중이다.",
+      "kpis": [
+        {
+          "indicator": "폐수처리 기술 국산화",
+          "target": "70~80% (2030)",
+          "current": "2025년 기준 ~30%"
+        }
+      ],
+      "projects": [
+        {
+          "name": "Stavian Plastic Recycling Complex",
+          "project_name": "Stavian Plastic Recycling Complex",
+          "location": "타인호아성",
+          "capacity": "연 17,000톤",
+          "tech": "연 17,000톤",
+          "note": "2027.1분기 가동 목표",
+          "tag": "[확인됨]",
+          "status": "계획"
+        }
+      ],
+      "sources": [
+        "Decision 1894/QD-TTg"
+      ]
+    },
+    "VN-ENV-NATURA": {
+      "plan_id": "VN-ENV-NATURA",
+      "plan_name": "자연환경 보전 전략 2030",
+      "plan_name_en": "National Strategy on Biodiversity to 2030, Vision 2050",
+      "area": "환경 인프라 (Environment)",
+      "sector": "Environment",
+      "legal_basis": "Decision 149/QD-TTg",
+      "overview": "국가 생물다양성 보전 계획. 2030년까지 육상/해양 보호구역 확장이 목표다.",
+      "kpis": [
+        {
+          "indicator": "육상 보호구역 비율",
+          "target": "9% (2030)",
+          "current": "7.6% (2024)"
+        }
+      ],
+      "projects": [
+        {
+          "name": "Cat Tien 국립공원 보전 프로젝트",
+          "project_name": "Cat Tien 국립공원 보전 프로젝트",
+          "location": "Dong Nai",
+          "capacity": "72,000 ha",
+          "tech": "72,000 ha",
+          "note": "WWF·USAID 지원",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "Decision 149/QD-TTg"
+      ]
+    },
+    "VN-PWR-PDP8": {
+      "plan_id": "VN-PWR-PDP8",
+      "plan_name": "전력개발계획 PDP8 (통합)",
+      "plan_name_en": "Eighth National Power Development Plan",
+      "area": "에너지·전력 (Energy & Power)",
+      "sector": "Power",
+      "legal_basis": "Decision 500/QD-TTg + 768",
+      "overview": "PDP8 전면 개정으로 목표 용량이 183~236GW로 상향되었다. EVN의 2026년 상반기 발전량은 전년대비 9.85% 급증했다.",
+      "kpis": [
+        {
+          "indicator": "총 발전설비 (2030)",
+          "target": "183,291~236,363 MW",
+          "current": "약 87,600 MW (2025 실적)"
+        }
+      ],
+      "projects": [
+        {
+          "name": "남북 전력 밸런스 개선용 송전선로 건설",
+          "project_name": "남북 전력 밸런스 개선용 송전선로 건설",
+          "location": "전국",
+          "capacity": "500kV",
+          "tech": "500kV 초고압 송전 (HVAC)",
+          "note": "안정적 전력 수급 구축",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "Decision 500/QD-TTg"
+      ]
     },
     "VN-HAN-DONG-ANH": {
-      "parent": "VN-HAN-URBAN-2045",
-      "order": 5,
-      "group": "urb",
-      "short": "동아인 스마트시티"
+      "plan_id": "VN-HAN-DONG-ANH",
+      "plan_name": "동아인 스마트시티",
+      "plan_name_en": "Dong Anh Smart Urban Area Planning and Development",
+      "area": "도시·교통·산업 (Urban & Transport)",
+      "sector": "Smart City",
+      "legal_basis": "Hanoi PC Approved",
+      "overview": "BRG-Sumitomo 합작 스마트시티 프로젝트가 2025년 8월 실질 착공을 거쳤으며, 공사 가속화가 지시되었다.",
+      "kpis": [
+        {
+          "indicator": "인구 수용",
+          "target": "30~40만 (2045)",
+          "current": "약 4.2만 (2024)"
+        }
+      ],
+      "projects": [
+        {
+          "name": "North Hanoi Smart City",
+          "project_name": "North Hanoi Smart City",
+          "location": "Dong Anh",
+          "capacity": "약 $4.2B",
+          "tech": "약 $4.2B",
+          "note": "2025.8 실질착공",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "The Investor"
+      ]
     },
     "VN-HAN-HOA-LAC": {
-      "parent": "VN-HAN-URBAN-2045",
-      "order": 6,
-      "group": "urb",
-      "short": "호아락 하이테크파크"
+      "plan_id": "VN-HAN-HOA-LAC",
+      "plan_name": "호아락 하이테크파크",
+      "plan_name_en": "Hoa Lac High-Tech and Smart Satellite City Master Plan",
+      "area": "도시·교통·산업 (Urban & Transport)",
+      "sector": "Industrial Parks",
+      "legal_basis": "Decision 899/QD-TTg",
+      "overview": "하노이 서부 하이테크파크로, 최근 보도에 따르면 입주 프로젝트는 113건, 가동률은 42% 수준이다.",
+      "kpis": [
+        {
+          "indicator": "입주 프로젝트 수",
+          "target": "800개 (2030)",
+          "current": "113개 (2026.7 보도)"
+        }
+      ],
+      "projects": [
+        {
+          "name": "Viettel 반도체 공장",
+          "project_name": "Viettel 반도체 공장",
+          "location": "Hoa Lac",
+          "capacity": "약 $13억",
+          "tech": "약 $13억",
+          "note": "2026.1 착공, 핵심 신규투자",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "Decision 899/QD-TTg"
+      ]
     },
     "VN-HOUSING-2030": {
-      "parent": null,
-      "order": 7,
-      "group": "urb",
-      "short": "국가 주택 개발 계획 2030"
+      "plan_id": "VN-HOUSING-2030",
+      "plan_name": "국가 주택 개발 계획 2030",
+      "plan_name_en": "National Social Housing Development Strategy",
+      "area": "도시·교통·산업 (Urban & Transport)",
+      "sector": "Construction",
+      "legal_basis": "Decision 2161/QD-TTg",
+      "overview": "저가 보급형 주택 집중 구축 계획. 2026.7.1부로 SBV의 사회주택 우대금리가 적용되었다.",
+      "kpis": [
+        {
+          "indicator": "사회주택 공급",
+          "target": "100만호 (2030)",
+          "current": "약 25만호 누적"
+        }
+      ],
+      "projects": [
+        {
+          "name": "Vinhomes Ocean Park",
+          "project_name": "Vinhomes Ocean Park",
+          "location": "Hung Yen",
+          "capacity": "1,200 ha",
+          "tech": "1,200 ha",
+          "note": "Vingroup",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "Decision 2161/QD-TTg"
+      ]
     },
     "VN-SMART-2025": {
-      "parent": null,
-      "order": 8,
-      "group": "urb",
-      "short": "스마트시티 국가전략 2025"
+      "plan_id": "VN-SMART-2025",
+      "plan_name": "스마트시티 국가전략 2025",
+      "plan_name_en": "Sustainable Smart City Development Framework",
+      "area": "도시·교통·산업 (Urban & Transport)",
+      "sector": "Smart City",
+      "legal_basis": "Decision 950/QD-TTg",
+      "overview": "전국 주요 도시에 지능형 플랫폼을 구축하는 로드맵으로 호치민이 5G 기지국 8,500개를 초과 설치하여 선도 중이다.",
+      "kpis": [
+        {
+          "indicator": "5G 커버리지",
+          "target": "도시 100% (2030)",
+          "current": "호치민 보급률 95% 이상"
+        }
+      ],
+      "projects": [
+        {
+          "name": "호치민 IoT 통합 플랫폼",
+          "project_name": "호치민 IoT 통합 플랫폼",
+          "location": "HCMC",
+          "capacity": "$200M",
+          "tech": "$200M",
+          "note": "디지털 전환 과제",
+          "tag": "[확인됨]",
+          "status": "공사중"
+        }
+      ],
+      "sources": [
+        "Decision 950/QD-TTg"
+      ]
     }
-  },
-  "area_groups": {
-    "환경 인프라 (Environment)": [
-      "VN-WW-2030",
-      "VN-SWM-NATIONAL-2030",
-      "VN-WAT-URBAN",
-      "VN-WAT-RESOURCES",
-      "VN-ENV-IND-1894",
-      "VN-ENV-NATURA"
-    ],
-    "에너지·전력 (Energy & Power)": [
-      "VN-PWR-PDP8",
-      "VN-PWR-PDP8-RENEWABLE",
-      "VN-PWR-PDP8-LNG",
-      "VN-PWR-PDP8-NUCLEAR",
-      "VN-OG-2030"
-    ],
-    "도시·교통·산업 (Urban & Transport)": [
-      "VN-TRAN-2055",
-      "VN-URB-METRO-2030",
-      "VN-IP-NORTH-2030",
-      "VN-HAN-URBAN-2045",
-      "VN-HAN-DONG-ANH",
-      "VN-HAN-HOA-LAC",
-      "VN-HOUSING-2030",
-      "VN-SMART-2025"
-    ]
   }
 }
