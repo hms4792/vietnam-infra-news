@@ -7,25 +7,53 @@ from google.genai import types
 def update_knowledge_index():
     print("[SA-10] Knowledge Updater Agent 시작...")
     
-    # 1. 파일 경로 설정
     json_path = 'docs/shared/knowledge_index.json'
     
     if not os.path.exists(json_path):
-        print(f"[시스템 에러] {json_path} 파일을 찾을 수 없습니다. 작업을 중단합니다.")
+        print(f"[시스템 에러] {json_path} 파일을 찾을 수 없습니다.")
         sys.exit(1)
         
     with open(json_path, 'r', encoding='utf-8') as f:
         current_index = json.load(f)
         
-    # 2. 환경변수 확인
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        print("[인증 에러] GEMINI_API_KEY 환경변수가 설정되지 않았습니다. 작업을 중단합니다.")
+        print("[인증 에러] GEMINI_API_KEY 환경변수가 설정되지 않았습니다.")
         sys.exit(1)
         
     client = genai.Client(api_key=api_key)
+
+    # ---------------------------------------------------------
+    # [NEW] 동적 모델 탐색 및 자동 선택 로직 (404 에러 원천 차단)
+    # ---------------------------------------------------------
+    print("[SA-10] 구글 서버에서 접근 가능한 모델 목록을 조회 중입니다...")
+    target_model = None
+    try:
+        # API 키로 접근 가능한 모든 모델 리스트 불러오기
+        available_models = [m.name for m in client.models.list()]
+        print(f"-> 접근 가능한 전체 모델: {available_models}")
+        
+        # 1순위: 'flash' 가 포함된 모델 탐색
+        target_model = next((m for m in available_models if 'flash' in m), None)
+        # 2순위: flash가 없으면 'pro' 가 포함된 모델 탐색
+        if not target_model:
+            target_model = next((m for m in available_models if 'pro' in m), None)
+        # 3순위: 둘 다 없으면 리스트의 첫 번째 모델 강제 할당
+        if not target_model and available_models:
+            target_model = available_models[0]
+            
+        if not target_model:
+            raise ValueError("사용 가능한 텍스트 모델이 없습니다.")
+            
+        # 최신 SDK 규격에 맞게 'models/' 접두사가 있다면 제거
+        target_model = target_model.replace('models/', '')
+        print(f"[SA-10] 🚀 자동 선택 및 확정된 모델: {target_model}")
+        
+    except Exception as e:
+        print(f"[API 조회 에러] 모델 목록을 불러오는 중 실패했습니다: {e}")
+        sys.exit(1)
+    # ---------------------------------------------------------
     
-    # 3. 프롬프트 엔지니어링
     prompt = f"""
     당신은 베트남 인프라 마켓 인텔리전스 시스템의 핵심인 'Knowledge Index Manager (SA-10)'입니다.
     현재 베트남 시장은 단순 토목/건설을 넘어 하이테크 FDI(반도체 패키징, 데이터센터, AI, 스마트물류) 중심으로 급변하고 있습니다.
@@ -40,12 +68,11 @@ def update_knowledge_index():
     {json.dumps(current_index, ensure_ascii=False, indent=2)}
     """
     
-    print("[SA-10] Gemini Pro 모델에 지식 사전 분석 및 업데이트 요청 중...")
+    print(f"[SA-10] {target_model} 모델에 지식 사전 분석 및 업데이트 요청 중...")
     
-    # 4. 모델 호출 (gemini-pro로 롤백 및 예외 처리)
     try:
         response = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model=target_model,  # 동적으로 찾은 모델 변수 투입
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_mime_type="application/json",
@@ -53,28 +80,23 @@ def update_knowledge_index():
         )
     except Exception as e:
         print(f"[API 호출 에러] Gemini API 통신 중 문제가 발생했습니다: {e}")
-        sys.exit(1) # 강제 종료
+        sys.exit(1)
     
-    # 5. 결과물 3단계 품질 검증 (Quality Assurance)
     try:
         updated_json = json.loads(response.text)
         
-        # [검증 1] 데이터가 비어있는지 확인
         if not updated_json:
-            print("[품질 에러] AI가 빈 데이터를 반환했습니다. 파이프라인을 중단합니다.")
+            print("[품질 에러] AI가 빈 데이터를 반환했습니다.")
             sys.exit(1)
             
-        # [검증 2] 데이터 구조 훼손 확인 (기존과 동일한 자료형인지)
         if type(current_index) != type(updated_json):
             print(f"[품질 에러] JSON 최상위 구조가 변형되었습니다. (기존: {type(current_index)}, 반환: {type(updated_json)})")
             sys.exit(1)
             
-        # [검증 3] 데이터 유실 확인 (플랜 개수가 기존보다 줄어들었는지 방어)
         if len(updated_json) < len(current_index):
             print(f"[품질 에러] 데이터 손실 감지됨. 기존 플랜 수({len(current_index)}개)보다 반환된 플랜 수({len(updated_json)}개)가 적습니다.")
             sys.exit(1)
             
-        # 모든 검증 통과 시 파일 덮어쓰기
         with open(json_path, 'w', encoding='utf-8') as f:
             json.dump(updated_json, f, ensure_ascii=False, indent=4)
         print("[SA-10] 품질 검증 통과. knowledge_index.json 업데이트 완료.")
@@ -82,7 +104,7 @@ def update_knowledge_index():
     except json.JSONDecodeError:
         print("[품질 에러] AI가 유효하지 않은 JSON 형식을 반환하여 파싱할 수 없습니다.")
         print(f"--- [AI 반환 텍스트 원본] ---\n{response.text}\n-----------------------------")
-        sys.exit(1) # 강제 종료
+        sys.exit(1)
 
 if __name__ == "__main__":
     update_knowledge_index()
