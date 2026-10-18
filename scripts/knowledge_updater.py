@@ -63,6 +63,7 @@ def update_knowledge_index():
     2. 최근 누락된 민간 첨단 산업 키워드(Semiconductor, Packaging, FC-BGA, Data Center, AI, Amkor, Samsung Electronics 등)가 적절한 마스터플랜에 없다면 논리적으로 추가하십시오.
     3. 기존의 JSON 구조(플랜 ID, 메타데이터 등)와 트리 구조는 절대 훼손하지 마십시오.
     4. 반드시 완벽하고 유효한 JSON 형식으로만 응답해야 합니다. 마크다운 기호도 포함하지 마십시오.
+    5. 키워드 추가가 발생했다면, _meta 객체의 version을 현재 버전에서 0.1 올려서(예: v4.3 -> v4.4) 업데이트하고, last_updated를 오늘 날짜로 변경하십시오.
     
     [현재 knowledge_index.json 데이터]:
     {json.dumps(current_index, ensure_ascii=False, indent=2)}
