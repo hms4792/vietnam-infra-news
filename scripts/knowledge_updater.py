@@ -45,7 +45,7 @@ def update_knowledge_index():
     # 4. 모델 호출 (gemini-pro로 롤백 및 예외 처리)
     try:
         response = client.models.generate_content(
-            model='gemini-pro',
+            model='gemini-1.5-flash',
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_mime_type="application/json",
