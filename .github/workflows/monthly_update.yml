@@ -1,4 +1,4 @@
-name: SA-10 Monthly Knowledge Index Update
+name: SA-10 & 11 Monthly Knowledge Index Update
 
 on:
   schedule:
@@ -22,26 +22,28 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
           
-      - name: 3. 의존성 패키지 설치 (최신 라이브러리 반영)
+      - name: 3. 의존성 패키지 설치
         run: pip install google-genai
         
-      - name: 4. SA-10 에이전트 실행 (JSON 업데이트)
+      - name: 4. 기존 지식 사전 백업 (SA-11 델타 분석용)
+        run: cp docs/shared/knowledge_index.json docs/shared/knowledge_index_old.json
+        
+      - name: 5. SA-10 에이전트 실행 (지식 사전 JSON 업데이트)
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} # 👈 Anthropic 키에서 Gemini 키로 수정됨
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python scripts/knowledge_updater.py
         
-      - name: 5. Pull Request 생성 (관리자 검토용)
+      - name: 6. SA-11 품질 보증 에이전트 실행 (분석 리포트 생성)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python scripts/sa11_quality_assurance.py
+        
+      - name: 7. Pull Request 생성 (SA-11 리포트 포함)
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: SA-10 AI Agent 업데이트 제안"
-          title: "🤖 [SA-10] 이번 달 Knowledge Index 업데이트 제안"
-          body: |
-            ## SA-10 Knowledge Updater Agent 보고서
-            최신 베트남 하이테크 인프라 및 FDI 동향을 반영하여 `knowledge_index.json` 업데이트를 제안합니다.
-            
-            **[관리자 조치 사항]**
-            1. 'Files changed' 탭을 눌러 추가된 키워드를 확인하십시오.
-            2. 이상이 없다면 아래 `Merge pull request` 버튼을 눌러 승인하십시오.
+          commit-message: "chore: SA-10 Knowledge Index 업데이트 및 SA-11 품질 평가 반영"
+          title: "🤖 [SA-10 & 11] 이번 달 Knowledge Index 업데이트 및 품질 평가"
+          body-path: docs/shared/sa11_pr_body.md
           branch: "sa-10-knowledge-update"
           delete-branch: true
