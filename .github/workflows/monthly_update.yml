@@ -1,0 +1,49 @@
+name: SA-10 Monthly Knowledge Index Update
+
+on:
+  schedule:
+    # 매월 1일 KST 오전 9시 (UTC 0시)에 실행
+    - cron: '0 0 1 * *'
+  workflow_dispatch: # 관리자가 원할 때 언제든 수동 실행 가능 버튼
+
+jobs:
+  agent-update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      
+    steps:
+      - name: 1. 저장소 체크아웃
+        uses: actions/checkout@v4
+        
+      - name: 2. Python 환경 구축
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          
+      - name: 3. 의존성 패키지 설치
+        run: pip install google-generativeai
+        
+      - name: 4. SA-10 에이전트 실행 (JSON 업데이트)
+        env:
+          GEMINI_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }} # 기존 사용 중인 키 이름에 맞춰 변경 (예: GEMINI_API_KEY)
+        run: python scripts/knowledge_updater.py
+        
+      - name: 5. Pull Request 생성 (관리자 검토용)
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: SA-10 AI Agent 업데이트 제안"
+          title: "🤖 [SA-10] 이번 달 Knowledge Index 업데이트 제안"
+          body: |
+            ## SA-10 Knowledge Updater Agent 보고서
+            최신 베트남 하이테크 인프라 및 FDI 동향을 반영하여 `knowledge_index.json` 업데이트를 제안합니다.
+            
+            **[관리자 조치 사항]**
+            1. 'Files changed' 탭을 눌러 추가된 키워드를 확인하십시오.
+            2. 이상이 없다면 아래 `Merge pull request` 버튼을 눌러 승인하십시오.
+            3. 승인 즉시 다음 주간 뉴스 수집 파이프라인부터 적용됩니다.
+          branch: "sa-10-knowledge-update"
+          delete-branch: true
