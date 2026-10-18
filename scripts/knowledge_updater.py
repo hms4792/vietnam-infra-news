@@ -44,7 +44,7 @@ def update_knowledge_index():
     
     # 5. 모델 호출 (최신 문법 적용 및 JSON 강제 출력)
     response = client.models.generate_content(
-        model='gemini-1.5-pro-latest',
+        model='gemini-1.5-pro',
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
