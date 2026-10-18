@@ -2,9 +2,8 @@ name: SA-10 Monthly Knowledge Index Update
 
 on:
   schedule:
-    # 매월 1일 KST 오전 9시 (UTC 0시)에 실행
     - cron: '0 0 1 * *'
-  workflow_dispatch: # 관리자가 원할 때 언제든 수동 실행 가능 버튼
+  workflow_dispatch:
 
 jobs:
   agent-update:
@@ -23,12 +22,12 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
           
-      - name: 3. 의존성 패키지 설치
-        run: pip install google-generativeai
+      - name: 3. 의존성 패키지 설치 (최신 라이브러리 반영)
+        run: pip install google-genai
         
       - name: 4. SA-10 에이전트 실행 (JSON 업데이트)
         env:
-          GEMINI_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }} # 기존 사용 중인 키 이름에 맞춰 변경 (예: GEMINI_API_KEY)
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} # 👈 Anthropic 키에서 Gemini 키로 수정됨
         run: python scripts/knowledge_updater.py
         
       - name: 5. Pull Request 생성 (관리자 검토용)
@@ -44,6 +43,5 @@ jobs:
             **[관리자 조치 사항]**
             1. 'Files changed' 탭을 눌러 추가된 키워드를 확인하십시오.
             2. 이상이 없다면 아래 `Merge pull request` 버튼을 눌러 승인하십시오.
-            3. 승인 즉시 다음 주간 뉴스 수집 파이프라인부터 적용됩니다.
           branch: "sa-10-knowledge-update"
           delete-branch: true
