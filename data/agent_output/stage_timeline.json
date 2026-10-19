@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-17 05:47",
+  "generated_at": "2026-10-19 17:30",
   "plans": {
     "VN-SWM-NATIONAL-2030": {
       "plan_id": "VN-SWM-NATIONAL-2030",
@@ -21,14 +21,14 @@
         {
           "date": "2026-10-15",
           "stage": "UNKNOWN",
-          "milestone": "기사 내용 불완전 - 인프라 사업 정보 부재",
+          "milestone": "기사 내용 인프라 사업 무관",
           "source": "tienphong_vn",
           "title_ko": "쿠아로 해변의 기묘한 풍경"
         },
         {
           "date": "2026-10-15",
           "stage": "UNKNOWN",
-          "milestone": "해안 환경오염 이슈 발생",
+          "milestone": "해안 환경오염 현황 보도",
           "source": "Moi truong & Cuoc song",
           "title_ko": "홍수 후 쿠아로 해변을 따라 검은 진흙, 쓰레기"
         },
@@ -49,7 +49,7 @@
         {
           "date": "2026-10-12",
           "stage": "OPERATION",
-          "milestone": "4년 연속 플라스틱 병 재활용 운영 중",
+          "milestone": "4년 연속 플라스틱 병 재활용 사업 운영 중",
           "source": "vneconomy",
           "title_ko": "4년 연속 플라스틱 병 재활용 여정으로 GenZ 유치"
         },
@@ -89,7 +89,7 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-11-04",
-      "article_count": 4,
+      "article_count": 5,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -98,30 +98,37 @@
       "title_ko": "VN-WAT-URBAN",
       "sector": "Water Supply/Drainage",
       "area": "환경 인프라 (Environment)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
         {
-          "date": "2026-10-16",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "Báo Đồng Tháp (Dong Thap Newspaper)",
-          "title_ko": "Dong Thap은 해안 도로 프로젝트에서 ADB와 협력합니다."
-        },
-        {
-          "date": "2026-10-13",
+          "date": "2026-10-19",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
-          "source": "vietnamplus",
-          "title_ko": "Phu Quoc은 APEC 2027에 대한 공급을 보장하기 위해 물 프로젝트를 가속화합니다."
+          "source": "cafef",
+          "title_ko": "예정보다 늦어진 1,300억 VND 규모의 다낭 프로젝트 건설 현장 클로즈업"
+        },
+        {
+          "date": "2026-10-19",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "엘니뇨 2027: 깨끗한 물을 적극적으로 확보하세요"
+        },
+        {
+          "date": "2026-10-18",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "stockbiz",
+          "title_ko": "Vinhomes - SGC는 하노이에 5개 도시 철도 노선 배치에 참여합니다. CII는 7개의 남북 고속도로 구간을 완성하는 데 투자할 것을 제안합니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-10-16",
-      "article_count": 5,
+      "latest_article_date": "2026-10-19",
+      "article_count": 8,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -143,6 +150,20 @@
           "title_ko": "None"
         },
         {
+          "date": "2026-10-19",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "SBS systems for business solutions GmbH",
+          "title_ko": "물 및 폐수 관리 기회를 위해 베트남에 독일 비즈니스 대표단(2026)"
+        },
+        {
+          "date": "2026-10-19",
+          "stage": "CONSTRUCTION",
+          "milestone": "Ba Don 도시 배수 프로젝트 69% 진행률 달성",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "Quang Tri는 폐수 처리 프로젝트를 정리하고 도시 기반 시설을 개선하기 위해 자본을 찾고 있습니다."
+        },
+        {
           "date": "2026-10-16",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
@@ -160,8 +181,8 @@
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 6,
-      "haiku_count": 0,
+      "article_count": 8,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-ENV-IND-1894": {
@@ -184,7 +205,7 @@
         {
           "date": "2026-10-15",
           "stage": "UNKNOWN",
-          "milestone": "환경 규제 단속 및 벌금 부과",
+          "milestone": "환경 규제 위반 적발 및 벌금 부과",
           "source": "Moi truong & Cuoc song",
           "title_ko": "탄화 (Thanh Hoa) 는 환경 위반으로 6억 6,300만 VND 이상의 돼지 농장을 제재했습니다."
         },
@@ -215,36 +236,43 @@
       "title_ko": "VN-PWR-PDP8",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
         {
           "date": "2026-10-16",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
+          "stage": "UNKNOWN",
+          "milestone": "베트남 인프라와 무관",
           "source": "vneconomy",
           "title_ko": "러시아는 미국과의 합의에 따라 디젤 수출을 재개했다고 확인했다."
         },
         {
+          "date": "2026-10-16",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "[동영상] 하이퐁(Hai Phong): Vingroup의 178조 VND LNG 발전소에 새로운 제안이 있습니다"
+        },
+        {
           "date": "2026-10-14",
           "stage": "PLANNING",
-          "milestone": "에너지 전환 정책 수립 및 LNG 확장 방향 결정",
+          "milestone": "에너지 전환 정책 수립 및 LNG 확장 계획 수립",
           "source": "IEEFA",
           "title_ko": "베트남의 에너지 안보: LNG 확장을 통한 청정 에너지 전환 가속화"
         },
         {
           "date": "2026-10-14",
           "stage": "PLANNING",
-          "milestone": "PDP8 재생에너지 확대 정책 수립",
+          "milestone": "PDP8 국내 재생에너지 확대 계획 수립",
           "source": "IEEFA",
           "title_ko": "베트남의 PDP8, LNG 비용 상승 속에서 국내 재생 에너지 강조"
         },
         {
           "date": "2026-10-13",
           "stage": "PLANNING",
-          "milestone": "PDP8 전력프로젝트 검토 지시",
+          "milestone": "PDP8 프로젝트 재검토 지시",
           "source": "Theinvestor.vn",
           "title_ko": "베트남 PM, 지연되고 실현 불가능한 전력 프로젝트에 대한 주문 검토"
         },
@@ -256,11 +284,11 @@
           "title_ko": "FE CREDIT, 3년 연속 상위 5대 소비자 금융 기업으로 선정"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
+      "next_watch": "VN-PWR-PDP8 관련 기사 모니터링 필요",
+      "latest_insight": "본 기사는 러시아-미국 디젤 수출 협정으로 베트남 전력 인프라 사업과 직접 연관 없음. 사업별 독립적 추적 필요.",
       "latest_article_date": "2026-10-16",
       "article_count": 6,
-      "haiku_count": 3,
+      "haiku_count": 4,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-LNG": {
@@ -276,6 +304,13 @@
         {
           "date": "2026-10-15",
           "stage": "PLANNING",
+          "milestone": "PDP8 LNG 2030년 22.5GW 목표 수립",
+          "source": "SolarQuarter",
+          "title_ko": "태양광과 풍력은 LNG보다 더 빠르고 낮은 비용으로 베트남의 증가하는 전력 수요를 충족시킬 수 있다고 IEEFA 보고서는 밝혔습니다."
+        },
+        {
+          "date": "2026-10-15",
+          "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "IEEFA / SolarQuarter",
           "title_ko": "IEEFA 보고서: 베트남은 에너지 안보를 위해 LNG보다 태양광과 풍력을 우선시해야 한다"
@@ -283,7 +318,7 @@
         {
           "date": "2026-10-15",
           "stage": "PLANNING",
-          "milestone": "LNG 프로젝트 타당성 재검토 및 대체 에너지 계획 수립",
+          "milestone": "LNG 발전 계획 재검토 및 정책 조정",
           "source": "SolarQuarter",
           "title_ko": "IEEFA: 2026년 베트남 전력 수요에 태양광 및 풍력이 LNG보다 저렴"
         },
@@ -302,11 +337,11 @@
           "title_ko": "선그로우, 스리랑카에서 40MWh 에너지 저장 시스템 커미션"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
+      "next_watch": "LNG 발전소 입찰 공고 및 계약 체결 여부 모니터링",
+      "latest_insight": "IEEFA 보고서가 LNG 사업의 경제성 악화를 지적하면서 정책 재검토 가능성 대두. 투자자는 규제 리스크 모니터링 필요",
       "latest_article_date": "2026-10-15",
-      "article_count": 7,
-      "haiku_count": 1,
+      "article_count": 8,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-NUCLEAR": {
@@ -322,6 +357,13 @@
         {
           "date": "2026-10-15",
           "stage": "PLANNING",
+          "milestone": "PDP8 수정안 검토 및 LNG vs 재생에너지 정책 평가",
+          "source": "SolarQuarter",
+          "title_ko": "태양광과 풍력은 LNG보다 더 빠르고 낮은 비용으로 베트남의 증가하는 전력 수요를 충족시킬 수 있다고 IEEFA 보고서는 밝혔습니다."
+        },
+        {
+          "date": "2026-10-15",
+          "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "IEEFA / SolarQuarter",
           "title_ko": "IEEFA 보고서: 베트남은 에너지 안보를 위해 LNG보다 태양광과 풍력을 우선시해야 한다"
@@ -329,7 +371,7 @@
         {
           "date": "2026-10-15",
           "stage": "PLANNING",
-          "milestone": "정부 에너지 정책 방향 전환 검토 중",
+          "milestone": "재생에너지 우선정책 전환 논의",
           "source": "SolarQuarter",
           "title_ko": "IEEFA: 2026년 베트남 전력 수요에 태양광 및 풍력이 LNG보다 저렴"
         },
@@ -348,11 +390,11 @@
           "title_ko": "선그로우, 스리랑카에서 40MWh 에너지 저장 시스템 커미션"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
+      "next_watch": "베트남 정부의 PDP8 최종 승인 및 2030년 에너지 믹스 조정 발표",
+      "latest_insight": "IEEFA 보고서가 LNG 사업의 경제성을 도전하고 있으며, 정부의 에너지 정책 조정 가능성이 높음. 태양광·풍력 투자 기회 증대 vs 원전사업 영향 모니터링 필요",
       "latest_article_date": "2026-10-15",
-      "article_count": 7,
-      "haiku_count": 1,
+      "article_count": 8,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-RENEWABLE": {
@@ -368,6 +410,13 @@
         {
           "date": "2026-10-15",
           "stage": "PLANNING",
+          "milestone": "PDP8 재검토 및 재생에너지 우선순위 결정",
+          "source": "SolarQuarter",
+          "title_ko": "태양광과 풍력은 LNG보다 더 빠르고 낮은 비용으로 베트남의 증가하는 전력 수요를 충족시킬 수 있다고 IEEFA 보고서는 밝혔습니다."
+        },
+        {
+          "date": "2026-10-15",
+          "stage": "PLANNING",
           "milestone": "정책·법령 발표",
           "source": "IEEFA / SolarQuarter",
           "title_ko": "IEEFA 보고서: 베트남은 에너지 안보를 위해 LNG보다 태양광과 풍력을 우선시해야 한다"
@@ -375,16 +424,9 @@
         {
           "date": "2026-10-15",
           "stage": "PLANNING",
-          "milestone": "재정신재생에너지 우선순위 정책 수립",
+          "milestone": "재생에너지 정책 우선순위 전환",
           "source": "SolarQuarter",
           "title_ko": "IEEFA: 2026년 베트남 전력 수요에 태양광 및 풍력이 LNG보다 저렴"
-        },
-        {
-          "date": "2026-10-15",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "닥락: 이아르베 태양광 발전소 건설을 위해 21,138억 VND 투자"
         },
         {
           "date": "2026-10-14",
@@ -396,7 +438,7 @@
         {
           "date": "2026-10-14",
           "stage": "UNKNOWN",
-          "milestone": "베트남 인프라 사업 정보 없음",
+          "milestone": "해당 없음",
           "source": "Moi truong & Cuoc song",
           "title_ko": "스위스, 휠을 통해 버스 배터리를 충전하는 기술 개발"
         },
@@ -408,11 +450,36 @@
           "title_ko": "선그로우, 스리랑카에서 40MWh 에너지 저장 시스템 커미션"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
+      "next_watch": "2027년 재생에너지 용량 배분 계획 발표 및 입찰 일정",
+      "latest_insight": "IEEFA 보고서가 LNG 대비 태양광·풍력의 경제성을 강조하며 정책 방향 전환 압박. PDP8 실행 단계에서 재생에너지 비중 확대 예상.",
       "latest_article_date": "2026-10-15",
       "article_count": 8,
-      "haiku_count": 2,
+      "haiku_count": 3,
+      "kpi_targets": []
+    },
+    "VN-OG-2030": {
+      "plan_id": "VN-OG-2030",
+      "title_ko": "VN-OG-2030",
+      "sector": "Oil & Gas",
+      "area": "에너지·전력 (Energy & Power)",
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
+      "stage_history": [
+        {
+          "date": "2026-10-14",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "astroawani",
+          "title_ko": "트럼프 대통령은 대만이 알래스카 파이프라인 프로젝트에서 LNG의 30% 를 구매하는 데 동의한다고 말했습니다."
+        }
+      ],
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-10-14",
+      "article_count": 1,
+      "haiku_count": 0,
       "kpi_targets": []
     },
     "VN-HAN-URBAN-2045": {
@@ -420,15 +487,22 @@
       "title_ko": "VN-HAN-URBAN-2045",
       "sector": "Smart City",
       "area": "도시·교통·산업 (Urban & Transport)",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
+        {
+          "date": "2026-10-19",
+          "stage": "OPERATION",
+          "milestone": "운영 성과 업데이트",
+          "source": "nhandan_vn",
+          "title_ko": "디지털 혁신은 사람들의 요구에서 시작됩니다"
+        },
         {
           "date": "2026-10-13",
           "stage": "COMPLETION",
-          "milestone": "링로드 2.5호선 10월 개통, 1호선 플라이오버 연말 개통 예정",
+          "milestone": "링로드 2.5호선 10월 개통, 1호선 플라이오버 연말 개통",
           "source": "nhandan_vn",
           "title_ko": "하노이, 새로운 기회에 앞서 가속화"
         },
@@ -438,19 +512,12 @@
           "milestone": "정책·법령 발표",
           "source": "Da Nang City Public Services Portal",
           "title_ko": "다낭 IOC 센터: 현대 다낭의 디지털 두뇌"
-        },
-        {
-          "date": "2026-10-10",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "Vertex AI Search, VOV World",
-          "title_ko": "베트남 스마트시티 시장, 2026년부터 연평균 8.9% 성장 예상, 지방 IOC 확산"
         }
       ],
-      "next_watch": "링로드 1호선 플라이오버 연말 개통 달성 여부 및 후속 인프라사업 착공",
-      "latest_insight": "하노이 도시개발 가속화로 부지보상 병목 해소, 다수 인프라사업 동시 진행 중. 완공 임박 단계로 운영 단계 전환 임박",
-      "latest_article_date": "2026-10-13",
-      "article_count": 3,
+      "next_watch": "분기 성과 및 확장 투자 계획 발표 여부",
+      "latest_insight": "",
+      "latest_article_date": "2026-10-19",
+      "article_count": 4,
       "haiku_count": 1,
       "kpi_targets": []
     },
@@ -467,7 +534,7 @@
         {
           "date": "2026-10-13",
           "stage": "PLANNING",
-          "milestone": "WHA 그룹, 다낭 산업단지 400ha 개발 승인",
+          "milestone": "WHA 그룹 다낭 산업단지 승인 완료",
           "source": "Nation Thailand",
           "title_ko": "태국의 WHA 그룹은 2027년 다낭을 시작으로 베트남에 $ 10억 규모의 산업단지 투자를 계획하고 있습니다."
         },
@@ -488,27 +555,27 @@
         {
           "date": "2026-10-12",
           "stage": "OPERATION",
-          "milestone": "2026년 FDI 504억 달러 기록, 북부 산업용지 217ha 흡수",
+          "milestone": "2026년 FDI 76.4% 증가, 산업단지 운영 중",
           "source": "Asianomist, The Investor",
           "title_ko": "베트남 산업단지 이익은 2026년 첫 9개월 동안 76.4% 의 FDI 급증에도 불구하고 40% 감소"
         },
         {
           "date": "2026-10-12",
           "stage": "CONSTRUCTION",
-          "milestone": "무균 포장 공장 기공식 개최 (2026년 10월)",
+          "milestone": "기공식 개최 (2026년 10월)",
           "source": "en_prnasisa",
           "title_ko": "미국 $ 110M Oji Liquid Pak 무균 포장 공장, Oji Group의 동남아시아 확장에 기여"
         },
         {
-          "date": "2026-10-11",
+          "date": "2026-10-12",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
-          "source": "Vietnam Economic Times",
-          "title_ko": "2027년 산업단지 부동산 이익 급격히 증가할 것으로 예상"
+          "source": "vietnamplus",
+          "title_ko": "베트남의 제조업 부문은 9월에도 성장세를 유지하고 있습니다."
         }
       ],
-      "next_watch": "2027년 4분기 개발 착공 및 1단계 200ha 사업 개시",
-      "latest_insight": "태국 WHA 그룹의 베트남 진출 본격화. 다낭 산업단지는 2027-2030년 1단계 개발로 약 1조5천억원 규모 투자. 2031년 2단계 확장 계획으로 중장기 성장 동력 확보.",
+      "next_watch": "2027년 4분기 개발 착공 및 1단계 200ha 시작",
+      "latest_insight": "태국 WHA Group의 베트남 진출 신호로 동남아 산업단지 경쟁 심화. 2027-2030년 1단계 개발로 3년 건설 예상",
       "latest_article_date": "2026-10-13",
       "article_count": 8,
       "haiku_count": 3,
@@ -519,49 +586,49 @@
       "title_ko": "VN-TRAN-2055",
       "sector": "Transport",
       "area": "도시·교통·산업 (Urban & Transport)",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
           "date": "2026-12-01",
-          "stage": "COMPLETION",
+          "stage": "OPERATION",
           "milestone": "2026년 12월 상업운영 개시",
           "source": "Wikipedia",
           "title_ko": "롱탄(Long Thanh) 국제공항 도로 접근 및 순환도로 3 완성"
         },
         {
-          "date": "2026-10-11",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "VnExpress, The Star, Lao Dong Newspaper, The Myst Dong Khoi",
-          "title_ko": "투티엠 – 롱탄 도시철도, 2026년 말 착공"
+          "date": "2026-10-12",
+          "stage": "UNKNOWN",
+          "milestone": "베트남 인프라와 무관",
+          "source": "astroawani",
+          "title_ko": "후티 파업 하루 후 사우디 공항에 대한 새로운 공격으로 1명이 사망하고 13명이 사망했습니다."
         },
         {
-          "date": "2026-10-11",
+          "date": "2026-10-12",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "입법 지도자가 베이징에 도착하여 중국 공식 방문을 시작합니다."
+          "source": "vneconomy",
+          "title_ko": "지아빈 공항: APEC 2027을 향한 인프라 가속화"
         },
         {
-          "date": "2026-10-10",
-          "stage": "CONSTRUCTION",
-          "milestone": "2025년 8월 착공, 현재 55% 진행 중",
-          "source": "Tuoi tre news",
-          "title_ko": "HCMC-Long Thanh-Dau Giay 고속도로 확장"
+          "date": "2026-10-12",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "giavang",
+          "title_ko": "$ 4,175의 가격에 구멍을 뚫고 제동 없이 금 가격이 급락할까요? 투자자가 알아야 할 최악의 시나리오!"
         },
         {
-          "date": "2026-10-10",
+          "date": "2026-10-12",
           "stage": "COMPLETION",
           "milestone": "준공·운영 개시",
-          "source": "VnExpress International",
-          "title_ko": "방콕 공항에서 스피커 내부에 178,000달러의 금을 숨긴 인도 승객이 적발되었습니다."
+          "source": "vietnamplus",
+          "title_ko": "은행에 AI를 도입하려면 엄격한 감독이 필요합니다."
         }
       ],
-      "next_watch": "공항 터미널1 연계 도로망 완전 개통 및 운영 안정화",
-      "latest_insight": "롱탄 공항 접근성 완비로 호치민 대도시권 교통 인프라 구축 완료 단계. 상업운영 개시에 따른 공항 수하물 처리량 및 교통량 증가 추적 필요",
+      "next_watch": "공항 접근도로 및 링로드3 운영 안정성 모니터링",
+      "latest_insight": "롱탄 공항 도로 인프라 완성으로 호치민시 대도시권 교통 네트워크 구축 완료. 공항 운영 확대에 따른 운영 효율성 및 수익성 개선 기대",
       "latest_article_date": "2026-12-01",
       "article_count": 8,
       "haiku_count": 2,
@@ -597,19 +664,12 @@
           "milestone": "착공·건설 진행 중",
           "source": "nhandan_vn",
           "title_ko": "PM, 호치민시 주요 인프라 프로젝트 점검"
-        },
-        {
-          "date": "2026-10-10",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "Vertex AI Search, VOV World",
-          "title_ko": "베트남 스마트시티 시장, 2026년부터 연평균 8.9% 성장 예상, 지방 IOC 확산"
         }
       ],
       "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
       "latest_insight": "",
       "latest_article_date": "2026-10-16",
-      "article_count": 7,
+      "article_count": 6,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -618,11 +678,18 @@
       "title_ko": "VN-SMART-2025",
       "sector": "Smart City",
       "area": "도시·교통·산업 (Urban & Transport)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
+        {
+          "date": "2026-10-19",
+          "stage": "UNKNOWN",
+          "milestone": "베트남-ASOCIO 스마트시티 포럼 개최",
+          "source": "VOV, Smart City Summit",
+          "title_ko": "하노이, 12월 베트남 스마트 시티 포럼 – ASOCIO 2026 개최"
+        },
         {
           "date": "2026-10-16",
           "stage": "PLANNING",
@@ -638,11 +705,11 @@
           "title_ko": "중소기업의 디지털 전환 장벽을 제거하기 위한 조치"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-10-16",
-      "article_count": 2,
-      "haiku_count": 0,
+      "next_watch": "포럼 결과 발표 및 구체적 프로젝트 공개",
+      "latest_insight": "스마트시티 정책 방향 논의 단계로 구체적 인프라 사업과 무관한 컨퍼런스 행사",
+      "latest_article_date": "2026-10-19",
+      "article_count": 3,
+      "haiku_count": 1,
       "kpi_targets": []
     }
   }
