@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-28 17:03",
+  "generated_at": "2026-10-29 17:28",
   "plans": {
     "VN-SWM-NATIONAL-2030": {
       "plan_id": "VN-SWM-NATIONAL-2030",
@@ -20,24 +20,24 @@
         },
         {
           "date": "2026-10-26",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
+          "stage": "UNKNOWN",
+          "milestone": "인프라 사업과 무관",
           "source": "tienphong_vn",
           "title_ko": "Thanh niên Tuyên Quang chung tay hỗ trợ Lễ hội Hoa Tam giác mạch"
         },
         {
-          "date": "2026-10-23",
-          "stage": "OPERATION",
-          "milestone": "Vietnam Waste Solutions 폐기물 처리·재활용 인프라 운영 중",
-          "source": "en_prnasisa",
-          "title_ko": "캘리포니아 웨이스트 솔루션(California Waste Solutions)은 설립자 David Duong이 베트남에서 계속 \"재투자\"할 것이라고 말함에 따라 청소년 교육, 근로자 프로그램 및 정부 대표단을 이끌고 있습니다."
-        },
-        {
-          "date": "2026-10-22",
+          "date": "2026-10-26",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
-          "source": "stockbiz",
-          "title_ko": "하노이: 쓰레기 경로의 병목 현상 제거"
+          "source": "vietnamplus",
+          "title_ko": "하노이, \"5가지 병목 현상\" 해결: 초기 결과 달성"
+        },
+        {
+          "date": "2026-10-23",
+          "stage": "OPERATION",
+          "milestone": "Vietnam Waste Solutions 자회사 운영 중",
+          "source": "en_prnasisa",
+          "title_ko": "캘리포니아 웨이스트 솔루션(California Waste Solutions)은 설립자 David Duong이 베트남에서 계속 \"재투자\"할 것이라고 말함에 따라 청소년 교육, 근로자 프로그램 및 정부 대표단을 이끌고 있습니다."
         },
         {
           "date": "2026-10-22",
@@ -51,7 +51,7 @@
       "latest_insight": "",
       "latest_article_date": "2026-10-26",
       "article_count": 8,
-      "haiku_count": 1,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-WAT-RESOURCES": {
@@ -72,6 +72,13 @@
           "title_ko": "Vietwater 2026 Expo – 물 및 폐수 처리 기술 기업을 위한 최고의 비즈니스 플랫폼"
         },
         {
+          "date": "2026-10-29",
+          "stage": "TENDERING",
+          "milestone": "입찰·계약 진행",
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "저수지 간 운영: 물 착취의 효율성 개선 필요"
+        },
+        {
           "date": "2026-10-26",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
@@ -81,16 +88,9 @@
         {
           "date": "2026-10-26",
           "stage": "UNKNOWN",
-          "milestone": "인프라 사업과 무관",
+          "milestone": "해당사항 없음",
           "source": "tienphong_vn",
           "title_ko": "Lien Chieu Electricity Party의 구성원 3명이 당에서 추방되었습니다."
-        },
-        {
-          "date": "2026-10-23",
-          "stage": "TENDERING",
-          "milestone": "입찰·계약 진행",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "Tri An Hydropower는 오버플로를 762m ³/s로 증가시킵니다."
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
@@ -105,24 +105,24 @@
       "title_ko": "VN-WAT-URBAN",
       "sector": "Water Supply/Drainage",
       "area": "환경 인프라 (Environment)",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
+        {
+          "date": "2026-10-28",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "vietnamplus",
+          "title_ko": "호치민시: 500km 지하철 및 자원 동원 문제"
+        },
         {
           "date": "2026-10-28",
           "stage": "TENDERING",
           "milestone": "입찰·계약 진행",
           "source": "Moi truong & Cuoc song",
           "title_ko": "도시의 물(제3과): 도시의 폐수 - 잊혀진 물줄기"
-        },
-        {
-          "date": "2026-10-27",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "Moi truong & Cuoc song",
-          "title_ko": "도시의 깨끗한 물(제2과): 공장에서 수돗물까지 가는 길은 안전한가요?"
         },
         {
           "date": "2026-10-26",
@@ -139,7 +139,7 @@
           "title_ko": "개인용 자동차에 이어 전기버스가 점차 전 세계로 확산될 차례"
         }
       ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-10-28",
       "article_count": 6,
@@ -151,22 +151,29 @@
       "title_ko": "VN-WW-2030",
       "sector": "Waste Water",
       "area": "환경 인프라 (Environment)",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
         {
-          "date": "2026-10-23",
+          "date": "None",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "Unknown",
+          "title_ko": "None"
+        },
+        {
+          "date": "2026-10-29",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
-          "source": "vnexpress",
-          "title_ko": "베트남 엔지니어들이 도시 지역 지하 건설 기술을 습득하는 방법"
+          "source": "Moi truong & Cuoc song",
+          "title_ko": "도시 배수 (4과): 왜 폭우로 범람합니까?"
         },
         {
           "date": "2026-10-23",
           "stage": "OPERATION",
-          "milestone": "Hoa Phat Agriculture 고기술 농업 Top 10 인증 완료",
+          "milestone": "고기술 농업산업 Top 10 기업 인증 완료",
           "source": "tienphong_vn",
           "title_ko": "Hoa Phat Agriculture는 하이테크 농업 산업에서 상위 10대 권위 있는 기업에 속해 있습니다."
         },
@@ -183,18 +190,11 @@
           "milestone": "해당 없음",
           "source": "Moi truong & Cuoc song",
           "title_ko": "다낭은 폭풍우가 치는 계절에 적극적으로 폐기물을 처리하고 배수 시스템을 청소합니다."
-        },
-        {
-          "date": "2026-10-21",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "DTiNews - Dân trí",
-          "title_ko": "Khanh Hoa는 세계은행 지원을 받아 5조 5천억 VND 규모의 물 관리 프로젝트를 계획하고 있습니다."
         }
       ],
-      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-10-23",
+      "latest_article_date": "None",
       "article_count": 8,
       "haiku_count": 2,
       "kpi_targets": []
@@ -204,15 +204,15 @@
       "title_ko": "VN-PWR-PDP8",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "TENDERING",
+      "stage_label_ko": "입찰·계약 단계",
+      "stage_color": "F59E0B",
+      "stage_order": 2,
       "stage_history": [
         {
           "date": "2026-10-28",
-          "stage": "CONSTRUCTION",
-          "milestone": "HSBC 녹색대출 1억 500만 USD 조달 완료",
+          "stage": "TENDERING",
+          "milestone": "HSBC 그린론 1억 500만 USD 승인 및 차입금 실행",
           "source": "vneconomy",
           "title_ko": "HSBC thu xếp khoản vay xanh 105 triu USD cho EVNNPC đầu tù pin lùu trữ năng lòợng"
         },
@@ -252,8 +252,8 @@
           "title_ko": "Kezao Electric: 중국 최고의 오일 침수 변압기 제조업체"
         }
       ],
-      "next_watch": "배터리 저장소 구축 진행 상황 및 설비 설치 일정",
-      "latest_insight": "HSBC의 대규모 녹색금융 지원으로 EVNNPC 에너지저장 프로젝트 자금조달 완료. 베트남 재생에너지 전환 가속화 신호로 관련 투자 모멘텀 기대",
+      "next_watch": "차입금 실행 완료 및 프로젝트 착공 시점",
+      "latest_insight": "EVNNPC ESS 투자사업이 금융조달 단계 완료. 그린론 확보로 착공 임박. 베트남 에너지저장 인프라 확충 본격화 신호",
       "latest_article_date": "2026-10-28",
       "article_count": 8,
       "haiku_count": 2,
@@ -264,17 +264,24 @@
       "title_ko": "VN-PWR-PDP8-LNG",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
         {
-          "date": "2026-10-27",
+          "date": "2026-10-28",
+          "stage": "UNKNOWN",
+          "milestone": "해당 없음",
+          "source": "en_prnasisa",
+          "title_ko": "Envision Energy, 올 에너지 오스트레일리아 (All Energy Australia) 에서 채광 및 제련 산업을 위한 AI 기반의 새로운 에너지 시스템 공개"
+        },
+        {
+          "date": "2026-10-28",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamnews_vn",
-          "title_ko": "베트남과 노르웨이가 해상풍력 분야에서 큰 협력 가능성을 주목하고 있다"
+          "source": "petrotimes",
+          "title_ko": "베트남에서 말레이시아와 싱가포르로 신재생에너지를 수출하는 프로젝트가 중요한 이정표에 도달했습니다."
         },
         {
           "date": "2026-10-23",
@@ -282,20 +289,13 @@
           "milestone": "입찰·계약 진행",
           "source": "36氪",
           "title_ko": "PowerChina 해외 프로젝트: 한 번의 해상 풍력 EPC 성공과 한 번의 좌절 – 상업 운영 이정표를 일괄적으로 복제할 수 있습니까?"
-        },
-        {
-          "date": "2026-10-21",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "en_prnasisa",
-          "title_ko": "HiTHIUM, 극한 추위에 적합한 최초의 8시간 BESS 및 나트륨 이온 솔루션으로 캐나다 진출"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-10-27",
-      "article_count": 6,
-      "haiku_count": 0,
+      "next_watch": "베트남 LNG 인프라와 무관",
+      "latest_insight": "기사는 호주의 AI 에너지 시스템으로 VN-PWR-PDP8-LNG 사업과 직접 연관 없음",
+      "latest_article_date": "2026-10-28",
+      "article_count": 7,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-PWR-PDP8-NUCLEAR": {
@@ -303,17 +303,24 @@
       "title_ko": "VN-PWR-PDP8-NUCLEAR",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
         {
-          "date": "2026-10-27",
+          "date": "2026-10-28",
+          "stage": "UNKNOWN",
+          "milestone": "해당 없음",
+          "source": "en_prnasisa",
+          "title_ko": "Envision Energy, 올 에너지 오스트레일리아 (All Energy Australia) 에서 채광 및 제련 산업을 위한 AI 기반의 새로운 에너지 시스템 공개"
+        },
+        {
+          "date": "2026-10-28",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamnews_vn",
-          "title_ko": "베트남과 노르웨이가 해상풍력 분야에서 큰 협력 가능성을 주목하고 있다"
+          "source": "petrotimes",
+          "title_ko": "베트남에서 말레이시아와 싱가포르로 신재생에너지를 수출하는 프로젝트가 중요한 이정표에 도달했습니다."
         },
         {
           "date": "2026-10-23",
@@ -321,25 +328,11 @@
           "milestone": "입찰·계약 진행",
           "source": "36氪",
           "title_ko": "PowerChina 해외 프로젝트: 한 번의 해상 풍력 EPC 성공과 한 번의 좌절 – 상업 운영 이정표를 일괄적으로 복제할 수 있습니까?"
-        },
-        {
-          "date": "2026-10-21",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "en_prnasisa",
-          "title_ko": "HiTHIUM, 극한 추위에 적합한 최초의 8시간 BESS 및 나트륨 이온 솔루션으로 캐나다 진출"
-        },
-        {
-          "date": "2026-10-21",
-          "stage": "OPERATION",
-          "milestone": "2026년 9월 반껀 공항 개설 완료",
-          "source": "asiatimes",
-          "title_ko": "캄보디아와 라오스는 중국 포위의 볼모가 아닙니다"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-10-27",
+      "next_watch": "베트남 원전 사업과 무관",
+      "latest_insight": "호주 채광·제련업 대상 AI 에너지 시스템 공개로 베트남 PDP8 원전 프로젝트와는 직접 관련성 없음",
+      "latest_article_date": "2026-10-28",
       "article_count": 7,
       "haiku_count": 1,
       "kpi_targets": []
@@ -349,11 +342,18 @@
       "title_ko": "VN-PWR-PDP8-RENEWABLE",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "UNKNOWN",
+      "stage_label_ko": "단계 미확정",
+      "stage_color": "9CA3AF",
+      "stage_order": 0,
       "stage_history": [
+        {
+          "date": "2026-10-28",
+          "stage": "UNKNOWN",
+          "milestone": "해당 사항 없음",
+          "source": "en_prnasisa",
+          "title_ko": "Envision Energy, 올 에너지 오스트레일리아 (All Energy Australia) 에서 채광 및 제련 산업을 위한 AI 기반의 새로운 에너지 시스템 공개"
+        },
         {
           "date": "2026-10-27",
           "stage": "PLANNING",
@@ -367,20 +367,13 @@
           "milestone": "입찰·계약 진행",
           "source": "36氪",
           "title_ko": "PowerChina 해외 프로젝트: 한 번의 해상 풍력 EPC 성공과 한 번의 좌절 – 상업 운영 이정표를 일괄적으로 복제할 수 있습니까?"
-        },
-        {
-          "date": "2026-10-21",
-          "stage": "COMPLETION",
-          "milestone": "준공·운영 개시",
-          "source": "en_prnasisa",
-          "title_ko": "HiTHIUM, 극한 추위에 적합한 최초의 8시간 BESS 및 나트륨 이온 솔루션으로 캐나다 진출"
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
-      "latest_insight": "",
-      "latest_article_date": "2026-10-27",
+      "next_watch": "베트남 재생에너지 사업과 무관",
+      "latest_insight": "기사는 호주 광산업 대상 AI 에너지 시스템 소개로, VN-PWR-PDP8-RENEWABLE 사업과 직접 연관성 없음",
+      "latest_article_date": "2026-10-28",
       "article_count": 8,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-OG-2030": {
@@ -388,15 +381,22 @@
       "title_ko": "VN-OG-2030",
       "sector": "Oil & Gas",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "UNKNOWN",
-      "stage_label_ko": "단계 미확정",
-      "stage_color": "9CA3AF",
-      "stage_order": 0,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-10-28",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "en_prnasisa",
+          "title_ko": "시노펙, 아프리카 지속가능성 보고서 발표 및 카이로에서 WE17 글로벌 커뮤니케이션 브랜드 론칭"
+        },
         {
           "date": "2026-10-27",
           "stage": "UNKNOWN",
-          "milestone": "휘발유 가격안정화기금 정책 논의",
+          "milestone": "인프라 사업과 무관",
           "source": "vietnamnews_vn",
           "title_ko": "VINPA 회장, 휘발유 가격 안정 기금의 중앙 집중식 관리 제안"
         },
@@ -406,19 +406,12 @@
           "milestone": "착공·건설 진행 중",
           "source": "nhandan_vn",
           "title_ko": "발전하는 베트남-미국 에너지 관계의 최전선에 있는 페트로베트남"
-        },
-        {
-          "date": "2026-10-22",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "TNGlobal",
-          "title_ko": "베트남 PVN, 덴마크 CIP, 40억 달러 규모 해상 풍력 발전 프로젝트 공동 개발"
         }
       ],
-      "next_watch": "2027년 1월 기금 폐지 추진 현황",
-      "latest_insight": "본 기사는 석유 산업 정책 논의로 VN-OG-2030 인프라 사업과 무관합니다. 에너지 가격 안정화 기금 관리 체계 개편 사안입니다.",
-      "latest_article_date": "2026-10-27",
-      "article_count": 3,
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "latest_insight": "",
+      "latest_article_date": "2026-10-28",
+      "article_count": 4,
       "haiku_count": 1,
       "kpi_targets": []
     },
@@ -435,13 +428,13 @@
         {
           "date": "2026-10-22",
           "stage": "UNKNOWN",
-          "milestone": "환경 문제 현황 분석",
+          "milestone": "해당 없음",
           "source": "Moi truong & Cuoc song",
           "title_ko": "하노이는 동기식 솔루션이 필요한 4가지 주요 환경 문제에 직면해 있습니다."
         }
       ],
-      "next_watch": "하노이 환경 개선 정책 수립 및 인프라 계획 공시",
-      "latest_insight": "기사는 하노이 환경 문제 현황을 언급하나 VN-HAN-URBAN-2045 사업과의 직접적 연관성 부족. 구체적 인프라 사업 추진 정보 없음.",
+      "next_watch": "하노이 환경 정책 및 인프라 마스터플랜 공식 발표",
+      "latest_insight": "기사는 환경 문제 현황 분석일 뿐 VN-HAN-URBAN-2045 사업과 직접 연계되지 않음. 환경 인프라 투자 수요 배경으로만 의미 있음.",
       "latest_article_date": "2026-10-22",
       "article_count": 1,
       "haiku_count": 1,
@@ -467,7 +460,7 @@
         {
           "date": "2026-10-25",
           "stage": "OPERATION",
-          "milestone": "탐힙항만물류산업단지 417ha, 41개 2차 사업 진행 중",
+          "milestone": "탐힙항만물류산업단지 417ha, 41개 사업 유치",
           "source": "vietnamplus",
           "title_ko": "다낭, 산업 성장을 촉진하기 위해 FDI 유치 강화"
         },
@@ -481,7 +474,7 @@
         {
           "date": "2026-10-23",
           "stage": "PLANNING",
-          "milestone": "한국 기업 투자 유치 협력 체계 구축",
+          "milestone": "한국 기업 투자 정책 협력 체계 구축",
           "source": "vir_vn",
           "title_ko": "베트남, 한국 기업에 투명한 조세 및 관세 정책 약속"
         },
@@ -491,20 +484,13 @@
           "milestone": "운영 성과 업데이트",
           "source": "Vietnam Plus",
           "title_ko": "북중부 해안을 따라 산업 발전을 촉진하기 위한 조치"
-        },
-        {
-          "date": "2026-10-21",
-          "stage": "UNKNOWN",
-          "milestone": "베트남-싱가포르 디지털 ID 상호운용성 테스트",
-          "source": "vietnamplus",
-          "title_ko": "베트남-싱가포르 디지털 ID 링크: ASEAN 상호 운용성을 위한 테스트"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-10-25",
       "article_count": 8,
-      "haiku_count": 3,
+      "haiku_count": 2,
       "kpi_targets": []
     },
     "VN-TRAN-2055": {
@@ -512,15 +498,15 @@
       "title_ko": "VN-TRAN-2055",
       "sector": "Transport",
       "area": "도시·교통·산업 (Urban & Transport)",
-      "current_stage": "COMPLETION",
-      "stage_label_ko": "준공·개통 완료",
-      "stage_color": "10B981",
-      "stage_order": 4,
+      "current_stage": "OPERATION",
+      "stage_label_ko": "운영·확장 단계",
+      "stage_color": "6366F1",
+      "stage_order": 5,
       "stage_history": [
         {
           "date": "2026-12-01",
-          "stage": "COMPLETION",
-          "milestone": "2026년 12월 상업운영 개시",
+          "stage": "OPERATION",
+          "milestone": "롱탄공항 도로접근성·링로드3 상업운영 개시(2026년12월)",
           "source": "Wikipedia",
           "title_ko": "롱탄(Long Thanh) 국제공항 도로 접근 및 순환도로 3 완성"
         },
@@ -546,22 +532,22 @@
           "title_ko": "우크라이나의 전투 능력을 갖춘 미국의 '생명의 은인'"
         },
         {
-          "date": "2026-10-21",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "kenh14",
-          "title_ko": "2조 8천억 VND를 동원하여 국내 최초의 대형 항구 건설, 100% 중국이 건설, 연간 60,000톤의 물품 수령, 30,000개의 일자리 창출"
-        },
-        {
-          "date": "2026-10-21",
+          "date": "2026-10-22",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "soha",
-          "title_ko": "시간당 전기요금 계산: \"요금이 오르지 않는 한 어떤 방법이든 괜찮습니다.\""
+          "source": "vietnamplus",
+          "title_ko": "베트남 현지, 헝가리와의 협력 심화 모색"
+        },
+        {
+          "date": "2026-10-22",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "petrotimes",
+          "title_ko": "PVSM은 20/10 베트남 여성의 날을 맞아 파도의 시작 부분에 강철 장미를 기립니다."
         }
       ],
-      "next_watch": "공항 터미널 확장 및 추가 인프라 구축 계획 모니터링",
-      "latest_insight": "롱탄 국제공항 기본 인프라 완성으로 호치민 지역 항공 거점 기능 본격화. 후속 터미널 확장 및 관련 운송 인프라 투자 기회 창출 예상",
+      "next_watch": "공항 연계도로 교통량 및 운영 효율성 모니터링",
+      "latest_insight": "롱탄공항 기본시설 완성으로 호치민시 대도시권 인프라 허브화. 항공물류 거점 확보로 인프라 투자 수익성 가시화 단계",
       "latest_article_date": "2026-12-01",
       "article_count": 8,
       "haiku_count": 2,
@@ -583,13 +569,6 @@
           "milestone": "입찰·계약 진행",
           "source": "vneconomy",
           "title_ko": "CEO 500: 투자자들은 도시에 새로운 세대의 FDI를 유치하는 데 기여합니다. 호치민"
-        },
-        {
-          "date": "2026-10-26",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "vietnamplus",
-          "title_ko": "호치민시, 글로벌 투자자들에게 인프라, 금융, 에너지, 기술 홍보"
         },
         {
           "date": "2026-10-23",
@@ -629,20 +608,13 @@
           "milestone": "정책·법령 발표",
           "source": "SGGP English Edition",
           "title_ko": "호치민시, 친환경 스마트 도시 개발을 위해 무인항공기로 저고도 경제 개발"
-        },
-        {
-          "date": "2026-10-21",
-          "stage": "PLANNING",
-          "milestone": "ASOCIO 스마트시티 정상회담 2026년 12월 하노이 개최",
-          "source": "VINASA",
-          "title_ko": "베트남 – ASOCIO 스마트 시티 서밋 2026"
         }
       ],
       "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
       "latest_article_date": "2026-10-22",
-      "article_count": 2,
-      "haiku_count": 1,
+      "article_count": 1,
+      "haiku_count": 0,
       "kpi_targets": []
     }
   }
