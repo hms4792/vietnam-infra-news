@@ -50,19 +50,19 @@ def update_knowledge_index():
         print(f"[API 조회 에러] 모델 목록을 불러오는 중 실패했습니다: {e}")
         sys.exit(1)
     
-    # 시스템의 현재 날짜를 YYYY-MM-DD 형식으로 추출
     today_date = datetime.now().strftime("%Y-%m-%d")
     
     prompt = f"""
     당신은 베트남 인프라 마켓 인텔리전스 시스템의 핵심인 'Knowledge Index Manager (SA-10)'입니다.
-    현재 베트남 시장은 단순 토목/건설을 넘어 하이테크 FDI(반도체 패키징, 데이터센터, AI, 스마트물류) 중심으로 급변하고 있습니다.
+    현재 베트남 시장은 단순 토목/건설을 넘어 하이테크 FDI와 친환경/순환경제 인프라 중심으로 급변하고 있습니다.
     
     아래 제공된 현재의 knowledge_index.json을 분석하여 다음 작업을 수행하십시오:
     1. 기존 마스터플랜의 'keywords' 배열을 검토하십시오.
-    2. 최근 누락된 민간 첨단 산업 키워드(Semiconductor, Packaging, FC-BGA, Data Center, AI, Amkor, Samsung Electronics 등)가 적절한 마스터플랜에 없다면 논리적으로 추가하십시오.
-    3. 기존의 JSON 구조(플랜 ID, 메타데이터 등)와 트리 구조는 절대 훼손하지 마십시오.
-    4. 반드시 완벽하고 유효한 JSON 형식으로만 응답해야 합니다. 마크다운 기호도 포함하지 마십시오.
-    5. 키워드 추가가 발생했다면, _meta 객체의 version을 현재 버전에서 0.1 올려서 업데이트하고, last_updated 값을 반드시 정확히 "{today_date}"로 변경하십시오.
+    2. 첨단 산업 키워드(Semiconductor, FC-BGA, Data Center, AI 등)를 관련 마스터플랜에 논리적으로 추가하십시오.
+    3. [집중 추적 지시] 'VN-IP-NORTH-2030' (북부 산업단지 개발) 플랜과 'VN-ENV-IND-1894' (환경산업 육성) 플랜을 집중 분석하여, '자원재활용 산업단지(Resource Recycling Industrial Park)', '순환경제(Circular Economy)', '폐기물 에너지화(WtE)' 관련 최신 키워드가 누락되어 있다면 반드시 추가하십시오.
+    4. 기존의 JSON 구조(플랜 ID, 메타데이터 등)와 트리 구조는 절대 훼손하지 마십시오.
+    5. 반드시 완벽하고 유효한 JSON 형식으로만 응답해야 합니다. 마크다운 기호도 포함하지 마십시오.
+    6. 키워드 추가가 발생했다면, _meta 객체의 version을 현재 버전에서 0.1 올려서 업데이트하고, last_updated 값을 반드시 정확히 "{today_date}"로 변경하십시오.
     
     [현재 knowledge_index.json 데이터]:
     {json.dumps(current_index, ensure_ascii=False)}
