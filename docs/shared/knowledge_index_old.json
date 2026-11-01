@@ -1,9 +1,9 @@
 {
     "_meta": {
-        "version": "v4.3",
+        "version": "v4.4",
         "plan_count": 19,
-        "last_updated": "2026-10-16",
-        "_update_note": "2026-10-16 (v4.3 품질 재점검 완전본). v3.9 FULL 데이터베이스의 모든 히스토리 프로젝트, KPI, ai_analysis, market_segments, policy_timeline 100% 전수 복구 및 v4.1~v4.3 최신 팩트체크 항목 무손실 병합 완료. _meta 및 masterplans 중첩 Flat 구조 준수.",
+        "last_updated": "2026-11-01",
+        "_update_note": "2026-11-01 (v4.4 키워드 업데이트). 민간 첨단 산업 키워드(FC-BGA) 추가 및 메타데이터 업데이트 완료.",
         "_factcheck_log": [
             {
                 "date": "2026-07-16 (v3.9 통합)",
@@ -44,6 +44,18 @@
                         "verdict": "확인됨",
                         "confidence": "상",
                         "affected_plan": "전체 19개 플랜"
+                    }
+                ]
+            },
+            {
+                "date": "2026-11-01 (v4.4 키워드 업데이트)",
+                "method": "Knowledge Index Manager (SA-10) 수동 검토",
+                "items": [
+                    {
+                        "topic": "민간 첨단 산업 키워드 (FC-BGA) 추가",
+                        "verdict": "확인됨",
+                        "confidence": "상",
+                        "affected_plan": "VN-HAN-HOA-LAC"
                     }
                 ]
             }
@@ -1851,7 +1863,8 @@
                 "Semiconductor",
                 "Packaging",
                 "Data Center",
-                "AI"
+                "AI",
+                "FC-BGA"
             ]
         },
         "VN-HOUSING-2030": {
