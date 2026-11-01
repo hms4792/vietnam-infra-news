@@ -1,9 +1,9 @@
 {
     "_meta": {
-        "version": "v4.4",
+        "version": "v4.5",
         "plan_count": 19,
         "last_updated": "2026-11-01",
-        "_update_note": "2026-11-01 (v4.4 키워드 업데이트). 민간 첨단 산업 키워드(FC-BGA) 추가 및 메타데이터 업데이트 완료.",
+        "_update_note": "2026-11-01 (v4.5 키워드 업데이트). 첨단 산업 및 순환경제 키워드 추가 및 메타데이터 업데이트 완료.",
         "_factcheck_log": [
             {
                 "date": "2026-07-16 (v3.9 통합)",
@@ -56,6 +56,18 @@
                         "verdict": "확인됨",
                         "confidence": "상",
                         "affected_plan": "VN-HAN-HOA-LAC"
+                    }
+                ]
+            },
+            {
+                "date": "2026-11-01 (v4.5 키워드 업데이트)",
+                "method": "Knowledge Index Manager (SA-10) 수동 검토",
+                "items": [
+                    {
+                        "topic": "첨단 산업 및 순환경제 키워드 추가",
+                        "verdict": "확인됨",
+                        "confidence": "상",
+                        "affected_plan": "VN-IP-NORTH-2030, VN-ENV-IND-1894, VN-HAN-DONG-ANH, VN-TRAN-2055"
                     }
                 ]
             }
@@ -443,7 +455,7 @@
                 {
                     "name": "자라이성 롱미(Long My) WtE 발전소",
                     "project_name": "자라이성 롱미(Long My) WtE 발전소",
-                    "location": "자라이성",
+                    "location": "자랄라이성",
                     "capacity": "800톤/일, 15MW",
                     "tech": "소각 열회수 발전 (15MW)",
                     "note": "2026.6.24 공식 착공, 사업비 6,070만 달러",
@@ -965,7 +977,12 @@
                 "order": 5,
                 "group": "env",
                 "short": "환경산업 육성 프로그램"
-            }
+            },
+            "keywords": [
+                "Resource Recycling Industrial Park",
+                "Circular Economy",
+                "Waste-to-Energy (WtE)"
+            ]
         },
         "VN-ENV-NATURA": {
             "plan_id": "VN-ENV-NATURA",
@@ -1548,7 +1565,10 @@
                 "Data Center",
                 "AI",
                 "Amkor",
-                "Samsung Electronics"
+                "Samsung Electronics",
+                "Resource Recycling Industrial Park",
+                "Circular Economy",
+                "Waste-to-Energy (WtE)"
             ]
         },
         "VN-TRAN-2055": {
@@ -1621,7 +1641,10 @@
                 "order": 1,
                 "group": "urb",
                 "short": "국가 교통인프라 마스터플랜"
-            }
+            },
+            "keywords": [
+                "AI"
+            ]
         },
         "VN-URB-METRO-2030": {
             "plan_id": "VN-URB-METRO-2030",
@@ -1763,7 +1786,12 @@
                 "order": 5,
                 "group": "urb",
                 "short": "동아인 스마트시티"
-            }
+            },
+            "keywords": [
+                "Smart City",
+                "AI",
+                "Data Center"
+            ]
         },
         "VN-HAN-HOA-LAC": {
             "plan_id": "VN-HAN-HOA-LAC",
