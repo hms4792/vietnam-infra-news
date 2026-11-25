@@ -1,16 +1,23 @@
 {
-  "generated_at": "2026-11-24 21:13",
+  "generated_at": "2026-11-25 20:40",
   "plans": {
     "VN-SWM-NATIONAL-2030": {
       "plan_id": "VN-SWM-NATIONAL-2030",
       "title_ko": "VN-SWM-NATIONAL-2030",
       "sector": "Solid Waste",
       "area": "환경 인프라 (Environment)",
-      "current_stage": "PLANNING",
-      "stage_label_ko": "계획·승인 단계",
-      "stage_color": "3B82F6",
-      "stage_order": 1,
+      "current_stage": "CONSTRUCTION",
+      "stage_label_ko": "건설·시공 단계",
+      "stage_color": "EF4444",
+      "stage_order": 3,
       "stage_history": [
+        {
+          "date": "2026-11-24",
+          "stage": "CONSTRUCTION",
+          "milestone": "착공·건설 진행 중",
+          "source": "tienphong_vn",
+          "title_ko": "하노이: Nguyen Van Tuyet 거리에서 대규모 폭발이 발생해 많은 희생자가 응급실로 이송되었습니다."
+        },
         {
           "date": "2026-11-22",
           "stage": "PLANNING",
@@ -27,22 +34,15 @@
         },
         {
           "date": "2026-11-19",
-          "stage": "CONSTRUCTION",
-          "milestone": "착공·건설 진행 중",
-          "source": "vneconomy",
-          "title_ko": "EPR을 가치 창출 기회로 전환하기 위한 재활용 체인 구축"
-        },
-        {
-          "date": "2026-11-19",
           "stage": "OPERATION",
           "milestone": "운영 성과 업데이트",
           "source": "Moi truong & Cuoc song",
           "title_ko": "다낭은 Tam Nghia 폐기물 처리장의 운영을 유지하고 오염 위험을 방지하기 위한 솔루션을 찾습니다."
         }
       ],
-      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
+      "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
-      "latest_article_date": "2026-11-22",
+      "latest_article_date": "2026-11-24",
       "article_count": 8,
       "haiku_count": 0,
       "kpi_targets": []
@@ -82,7 +82,7 @@
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "2026-11-23",
-      "article_count": 8,
+      "article_count": 7,
       "haiku_count": 0,
       "kpi_targets": []
     },
@@ -130,15 +130,22 @@
       "title_ko": "VN-WW-2030",
       "sector": "Waste Water",
       "area": "환경 인프라 (Environment)",
-      "current_stage": "CONSTRUCTION",
-      "stage_label_ko": "건설·시공 단계",
-      "stage_color": "EF4444",
-      "stage_order": 3,
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
       "stage_history": [
+        {
+          "date": "2026-11-21",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "IWA Publishing",
+          "title_ko": "하노이에 Yen Xa 폐수처리장 가동"
+        },
         {
           "date": "2026-11-20",
           "stage": "CONSTRUCTION",
-          "milestone": "2025년 4월 PPP 계약 체결, 착공 단계 진행",
+          "milestone": "2025년 4월 PPP 계약체결, 착공 진행 중",
           "source": "vertexaisearch.cloud.google.com (Technavio, Wikipedia)",
           "title_ko": "SUEZ, 베트남 Thu Duc Water Resilience Plant에 대한 30년 PPP 확보"
         },
@@ -159,21 +166,14 @@
         {
           "date": "2026-11-18",
           "stage": "UNKNOWN",
-          "milestone": "해당 없음",
+          "milestone": "해당 사항 없음",
           "source": "Moi truong & Cuoc song",
           "title_ko": "도시의 폐기물 관리 및 환경 위생에 대한 지방 당국의 책임을 강화합니다. 호치민"
-        },
-        {
-          "date": "2026-11-17",
-          "stage": "OPERATION",
-          "milestone": "운영 성과 업데이트",
-          "source": "ADB, Rights in Development",
-          "title_ko": "호치민시 폐수 및 배수 시스템 개선 프로젝트(제안)."
         }
       ],
-      "next_watch": "2026년~2027년 주요 건설 진행률 모니터링, 준공 예정 시점 확인",
-      "latest_insight": "SUEZ와 베트남 정부의 30년 PPP 계약 체결로 본격 시공 중. 폐수처리 용량 부족 해소 프로젝트로 베트남 환경인프라 투자 확대 추세 반영",
-      "latest_article_date": "2026-11-20",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
+      "latest_insight": "",
+      "latest_article_date": "2026-11-21",
       "article_count": 8,
       "haiku_count": 2,
       "kpi_targets": []
@@ -191,7 +191,7 @@
         {
           "date": "2026-11-24",
           "stage": "OPERATION",
-          "milestone": "나푸만 침출수 긴급 처리 체계 구축",
+          "milestone": "나푸 만 침출수 긴급 처리 개시",
           "source": "Moi truong & Cuoc song",
           "title_ko": "[영상] Khanh Hoa는 Nha Phu Bay로 직접 유입되는 침출수를 긴급 처리합니다."
         },
@@ -210,8 +210,8 @@
           "title_ko": "베트남과 ASEAN은 남아프리카공화국과의 협력을 확대하고 녹색 변혁을 촉진합니다."
         }
       ],
-      "next_watch": "카인호아성 폐기물 처리시설 확충 및 오염도 개선 모니터링",
-      "latest_insight": "베트남 환경오염 대응으로 폐기물 처리 인프라 투자 기회 증가. 지방정부의 적극적 개입으로 관련 사업 추진력 가속화 전망",
+      "next_watch": "침출수 처리 시설 확충 및 환경 개선 효과 모니터링",
+      "latest_insight": "기존 폐기물 처리 인프라의 운영 단계에서 환경 문제 대응. 추가 투자 및 기술 개선 기회 존재",
       "latest_article_date": "2026-11-24",
       "article_count": 3,
       "haiku_count": 1,
@@ -237,7 +237,7 @@
         {
           "date": "2026-11-23",
           "stage": "OPERATION",
-          "milestone": "베트남 석유가스산업 65주년 기념행사 개최",
+          "milestone": "베트남 석유가스산업 65주년 기념 행사 개최",
           "source": "petrotimes",
           "title_ko": "BSR은 고 Vo Van Kiet 총리의 104번째 생일을 축하하고 베트남 석유 및 가스 산업의 65번째 전통의 날을 기대합니다."
         },
@@ -251,7 +251,7 @@
         {
           "date": "2026-11-20",
           "stage": "PLANNING",
-          "milestone": "남딘1화력발전소 1,200MW 프로젝트 승인",
+          "milestone": "남딘1화력발전소 1,200MW 프로젝트 착공 준비",
           "source": "INSIGHT",
           "title_ko": "지금은 석탄, 나중에는 청정에너지? 점점 커지는 베트남의 에너지 안보 딜레마"
         },
@@ -265,7 +265,7 @@
         {
           "date": "2026-11-18",
           "stage": "PLANNING",
-          "milestone": "PDP8 정부 승인 완료(2026년11월)",
+          "milestone": "PDP8 정부 승인 완료(2026.11)",
           "source": "Haskoning",
           "title_ko": "베트남, PDP8 승인 - 미래는 이렇습니다"
         }
@@ -282,11 +282,18 @@
       "title_ko": "VN-PWR-PDP8-LNG",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
+      "current_stage": "PLANNING",
+      "stage_label_ko": "계획·승인 단계",
+      "stage_color": "3B82F6",
+      "stage_order": 1,
       "stage_history": [
+        {
+          "date": "2026-11-25",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "The Investor",
+          "title_ko": "미국 기업, 베트남 중부의 에너지저장장치(ESS) 프로젝트에 1억 1,700만 달러 투자 예정"
+        },
         {
           "date": "2026-11-20",
           "stage": "TENDERING",
@@ -300,18 +307,11 @@
           "milestone": "착공·건설 진행 중",
           "source": "VnExpress International",
           "title_ko": "태양열 발전, 깨끗한 물이 베트남 중부의 외딴 학교에 도달"
-        },
-        {
-          "date": "2026-11-17",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "PV Magazine",
-          "title_ko": "베트남, 축소 압력이 커지면서 2부분 관세로 2026년 스토리지 가격 확정"
         }
       ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "next_watch": "입찰 공고 또는 EPC 계약 발표 여부 확인",
       "latest_insight": "",
-      "latest_article_date": "2026-11-20",
+      "latest_article_date": "2026-11-25",
       "article_count": 8,
       "haiku_count": 0,
       "kpi_targets": []
@@ -321,11 +321,25 @@
       "title_ko": "VN-PWR-PDP8-NUCLEAR",
       "sector": "Power",
       "area": "에너지·전력 (Energy & Power)",
-      "current_stage": "TENDERING",
-      "stage_label_ko": "입찰·계약 단계",
-      "stage_color": "F59E0B",
-      "stage_order": 2,
+      "current_stage": "COMPLETION",
+      "stage_label_ko": "준공·개통 완료",
+      "stage_color": "10B981",
+      "stage_order": 4,
       "stage_history": [
+        {
+          "date": "2026-11-24",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "nguoiviet",
+          "title_ko": "전력 부족을 방지하기 위해 얼마나 친환경적이어야 합니까?"
+        },
+        {
+          "date": "2026-11-23",
+          "stage": "PLANNING",
+          "milestone": "정책·법령 발표",
+          "source": "BigGo Finance",
+          "title_ko": "베트남 VIFC-HCMC, 신규 회원 7곳 가입 승인 및 2027~2030년 50억 달러 자금 조달 목표 설정"
+        },
         {
           "date": "2026-11-20",
           "stage": "TENDERING",
@@ -339,18 +353,11 @@
           "milestone": "착공·건설 진행 중",
           "source": "VnExpress International",
           "title_ko": "태양열 발전, 깨끗한 물이 베트남 중부의 외딴 학교에 도달"
-        },
-        {
-          "date": "2026-11-17",
-          "stage": "PLANNING",
-          "milestone": "정책·법령 발표",
-          "source": "PV Magazine",
-          "title_ko": "베트남, 축소 압력이 커지면서 2부분 관세로 2026년 스토리지 가격 확정"
         }
       ],
-      "next_watch": "낙찰자 선정 및 계약 서명 일정 확인",
+      "next_watch": "상업운전 성과 지표 (처리량·발전량) 첫 보고",
       "latest_insight": "",
-      "latest_article_date": "2026-11-20",
+      "latest_article_date": "2026-11-24",
       "article_count": 8,
       "haiku_count": 0,
       "kpi_targets": []
@@ -373,6 +380,13 @@
           "title_ko": "베트남은 투자 문제에 직면해 전력 부문(2026~2030)에 770억 달러의 녹색 금융을 모색하고 있다."
         },
         {
+          "date": "2026-11-20",
+          "stage": "UNKNOWN",
+          "milestone": "재생에너지 기술 전시회 참여",
+          "source": "en_prnasisa",
+          "title_ko": "Hoymiles, RE+ 2026에서 다양한 주거용 태양광 및 저장 솔루션 선보여"
+        },
+        {
           "date": "2026-11-18",
           "stage": "CONSTRUCTION",
           "milestone": "착공·건설 진행 중",
@@ -391,7 +405,7 @@
       "latest_insight": "",
       "latest_article_date": "2026-11-20",
       "article_count": 8,
-      "haiku_count": 0,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-OG-2030": {
@@ -439,7 +453,7 @@
         {
           "date": "2026-11-20",
           "stage": "COMPLETION",
-          "milestone": "롱탄공항 개항 전 최종 준비 단계",
+          "milestone": "롱탄공항 개항 전 최종 점검 단계",
           "source": "Lao Dong",
           "title_ko": "호치민시와 롱탄공항을 연결하는 도로 25C 및 25B 운영중"
         }
@@ -485,30 +499,16 @@
         {
           "date": "2026-11-18",
           "stage": "PLANNING",
-          "milestone": "2026년 FDI 및 인프라 정책 수립",
+          "milestone": "2030년 마스터플랜 수립 및 FDI 유치전략 수립",
           "source": "Vertex AI Search, Vietnam News, CBRE Vietnam, Roland Berger, Freshfields, GTI Partner, KIRA Research, VnEconomy",
           "title_ko": "2026년 베트남 산업용 부동산 시장: FDI와 인프라가 주도하는 새로운 성장 사이클 진입"
-        },
-        {
-          "date": "2026-11-17",
-          "stage": "CONSTRUCTION",
-          "milestone": "7개 신규 산업단지 2026년 8월 착공",
-          "source": "Vietnam Property Market",
-          "title_ko": "2026년 꽝닌 산업단지: 북부 항구 회랑에 중국 및 대만 기업 유치"
-        },
-        {
-          "date": "2026-11-17",
-          "stage": "PLANNING",
-          "milestone": "한국 기업 투자 의향 표시",
-          "source": "vneconomy",
-          "title_ko": "한국 기업들은 베트남에서 산업 및 에너지 클러스터를 개발하기를 원합니다."
         }
       ],
       "next_watch": "공정률 업데이트 및 준공 예정일 변경 여부",
       "latest_insight": "",
       "latest_article_date": "None",
-      "article_count": 8,
-      "haiku_count": 3,
+      "article_count": 6,
+      "haiku_count": 1,
       "kpi_targets": []
     },
     "VN-TRAN-2055": {
@@ -531,9 +531,16 @@
         {
           "date": "2026-11-23",
           "stage": "COMPLETION",
-          "milestone": "2026년 12월 완공 예정, 동나이성 10km 구간 11월 개통",
+          "milestone": "2026년 12월 완공 예정, 11월 동나이성 10km 구간 개통",
           "source": "VnExpress International, Tuoi tre news, Vietnam News",
           "title_ko": "호치민시-롱탄 고속도로 확장, 2026년 12월 완공 예정"
+        },
+        {
+          "date": "2026-11-19",
+          "stage": "COMPLETION",
+          "milestone": "준공·운영 개시",
+          "source": "news_tuoitre_vn",
+          "title_ko": "베트남 최대 공항, 12월 24일 개장 예정, 매일 최대 30편의 항공편 운행 예정"
         },
         {
           "date": "2026-11-18",
@@ -550,29 +557,29 @@
           "title_ko": "Can Tho는 첨단 기술 농업, 물류 분야에 중국 투자를 모색하고 있습니다."
         },
         {
-          "date": "2026-11-17",
-          "stage": "COMPLETION",
-          "milestone": "2026년 4분기 순환도로 3호선 3단계 완공",
-          "source": "Bao Dong Nai dien tu",
-          "title_ko": "호치민시 순환도로 3호선 3요소 완공"
-        },
-        {
-          "date": "2026-11-17",
+          "date": "2026-11-18",
           "stage": "UNKNOWN",
-          "milestone": "베트남 인프라와 무관",
-          "source": "humanresourcesonline_net",
-          "title_ko": "케다 이민자 구금 후 중국인 137명 송환"
+          "milestone": "기사 내용이 인프라 사업과 무관함",
+          "source": "vietnamplus",
+          "title_ko": "Sun Group은 James Bond의 프로듀서와 협력하여 Symphony of the Sea Phu Quoc 시즌 3에 12대의 제트 스키를 배치했습니다."
         },
         {
-          "date": "2026-11-17",
+          "date": "2026-11-18",
           "stage": "PLANNING",
           "milestone": "정책·법령 발표",
-          "source": "vietnamplus",
-          "title_ko": "실업보험 가입자 수 10.54% 증가"
+          "source": "menafn",
+          "title_ko": "장소 기반 공유 충전 네트워크는 관광지를 넘어 일상적인 소비자 편의성을 변화시킵니다."
+        },
+        {
+          "date": "2026-11-18",
+          "stage": "UNKNOWN",
+          "milestone": "베트남 인프라 사업과 무관한 국제정상회담 보도",
+          "source": "VnExpress International",
+          "title_ko": "시, 푸틴 대통령과 정상회담 앞두고 중국 공항에서 트럼프 영접"
         }
       ],
-      "next_watch": "공항터미널 연계 도로망 완성도 및 초기 운영 안정성 모니터링",
-      "latest_insight": "롱탄공항 접근도로 및 순환도로3 완성으로 공항 인프라 연계성 확보. 2026년 12월 상업운영 개시 임박으로 운영 단계 진입 준비 중",
+      "next_watch": "공항 연계도로 완전 개통 및 운영 안정성 확보",
+      "latest_insight": "롱탄공항 접근성 인프라 완성으로 호치민 대도시권 광역교통 네트워크 형성. 2026년 말 상업운영 개시로 공항 본격 활용 단계 진입 예상",
       "latest_article_date": "2026-12-01",
       "article_count": 8,
       "haiku_count": 5,
@@ -598,7 +605,7 @@
         {
           "date": "2026-11-20",
           "stage": "OPERATION",
-          "milestone": "2026년 FDI 목표 220억 달러 대비 191.3억 달러 달성(87%)",
+          "milestone": "2026년 FDI 220억 달러 유치 목표",
           "source": "htv_vn",
           "title_ko": "호치민시는 2026년에 220억 달러의 FDI 자본을 유치하는 것을 목표로 하고 있습니다."
         },
@@ -612,7 +619,7 @@
         {
           "date": "2026-11-18",
           "stage": "CONSTRUCTION",
-          "milestone": "2027년 2분기 생산 개시 예정",
+          "milestone": "2027년 2분기 생산 개시",
           "source": "cafef",
           "title_ko": "베트남의 전기 오토바이 생산은 점점 더 많은 투자 자본 흐름을 끌어들이고 있습니다."
         }
